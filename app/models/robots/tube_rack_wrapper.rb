@@ -6,7 +6,7 @@ module Robots
   #
   class TubeRackWrapper
     attr_accessor :barcode, :parent, :tubes
-    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :last, allow_nil: true
+    delegate :purpose_name, :purpose, :human_barcode, :state, :uuid, to: :last_tube, allow_nil: true
 
     # Initializes a new instance of the class.
     #
@@ -26,18 +26,18 @@ module Robots
     # certain methods to make it behave like a like a labware object.
     #
     # @return [Tube] the last tube
-    def last
+    def last_tube
       @tubes.last
     end
 
-    # Appends a tube to the tube rack. If there is an existing tube with the
-    # same position, the tube with the latest creation date is kept. The
-    # instance is returned for method chaining.
+    # Appends a tube to the tube rack or replaces an existing tube. If there
+    # is an existing tube with the same position, the tube with the latest
+    # creation date is kept.
     #
     # @param [Tube] tube the tube to be added
-    # @return [TubeRackWrapper] the instance of the class
+    # @return [Void]
     #
-    def push(tube)
+    def push_tube(tube)
       index = @tube_positions[tube_rack_position(tube)]
       if index.present?
         @tubes[index] = tube if tube.created_at >= @tubes[index].created_at

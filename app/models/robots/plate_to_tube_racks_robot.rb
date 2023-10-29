@@ -13,13 +13,16 @@ module Robots
   # the tube racks depend on the verification of the plate.
   #
   # The destination tube racks are distinguished by their barcodes. We assume
-  # that the tubes on the same tube rack have the same labware purpose. We also
-  # assume that there cannot be two tube racks with the tubes of the same
-  # labware purpose on the robot at the same time. For bed verification, only
-  # the etched barcode of the tube racks are scanned, not the individual tubes.
-  # The number of tube racks to be verified not only depends on the robot's
-  # configured relationships but also whether the plate has children with those
-  # purposes.
+  # that the tubes on the same tube rack have the same labware purpose. When
+  # multiple tubes of the same purpose and the same position are found, the
+  # latest tube is assumed to be on the tube rack and the other tubes are
+  # ignored. We also assume that there cannot be multiple tube racks with the
+  # tubes of the same labware purpose on the robot at the same time.
+  #
+  # For bed verification, only the etched barcode of the tube racks are scanned,
+  # not the individual tubes. The number of tube racks to be verified not only
+  # depends on the robot's configured relationships but also whether the plate
+  # has children with those purposes.
   #
   class PlateToTubeRacksRobot < Robots::Robot
     attr_writer :relationships # Hash from robot config into @relationships
@@ -38,11 +41,11 @@ module Robots
     # by the robot controller when the user clicks the start robot button. The
     # method first initializes the labware store with the plate and tube racks.
     #
-    # @param [Hash] bed_settings bed_labwares hash from request parameters
+    # @param [Hash] bed_labwares the bed_labwares hash from request parameters
     # @return [void]
     #
-    def perform_transfer(bed_settings)
-      init_labware_store(bed_settings)
+    def perform_transfer(bed_labwares)
+      init_labware_store(bed_labwares)
       super
     end
 
@@ -105,6 +108,8 @@ module Robots
       labware_store.values.select { |labware| labware.respond_to?(:parent) && labware.parent.uuid == plate.uuid }
     end
 
+    private
+
     # Prepares the labware store before handling robot actions. This method is
     # called before the robot's bed verification and perform transfer actions.
     #
@@ -120,8 +125,6 @@ module Robots
         add_tube_racks_to_labware_store(plate)
       end
     end
-
-    private
 
     # Returns an array of sanitised barcodes from the bed_labwares hash from
     # request parameters.
@@ -185,7 +188,7 @@ module Robots
           next if well.downstream_tubes.blank?
           well.downstream_tubes.each do |tube|
             barcode = tube.custom_metadatum_collection.metadata[:tube_rack_barcode]
-            find_or_create_tube_rack(racks, barcode, plate).push(tube)
+            find_or_create_tube_rack(racks, barcode, plate).push_tube(tube)
           end
         end
     end
