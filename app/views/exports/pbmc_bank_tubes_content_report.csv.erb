@@ -53,14 +53,12 @@
     sample_uuid = source_well.aliquots.first.sample.uuid
     source_well_posn = source_well.position['name']
 
-    # e.g. SEQ:CHILD_TUBE:A1
-    child_tube_name_array = child_tube_v2.name.split(':')
-
     sample_metadata = source_well.aliquots.first.sample.sample_metadata
 
     # sourced from deep behind sample manifest UAT action on the SS side
-    donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
-    purpose = ((child_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
+    donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nils
+    child_tube_purpose = child_tube_v2.purpose.name
+    destination = ((child_tube_purpose == 'LRC Blood Seq') ? 'Sequencing' : 'Contingency')
     volume = 135
 
     rows_array << [
@@ -69,7 +67,7 @@
       @ancestor_tubes[sample_uuid].labware_barcode.human, # LRC Blood Vac purpose barcode
       child_tube_v2.barcode, # FluidX barcode
       child_tube_v2.created_at, # Extraction and freeze date
-      purpose, # Sequencing or contingency
+      destination, # Sequencing or contingency
       source_well.latest_live_cell_count.value, # Cell count
       source_well.latest_cell_viability.value, # Viability
       volume, # Volume
