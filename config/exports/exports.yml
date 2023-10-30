@@ -149,14 +149,10 @@ hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
   csv: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
   workflow: scRNA Core PBMC Bank
   plate_includes:
+    - wells.downstream_tubes
     - wells.aliquots
     - wells.aliquots.sample
-    - wells.aliquots.sample.component_samples
     - wells.aliquots.sample.sample_metadata
-    - wells.downstream_tubes
-    - wells.qc_results
-    - wells.transfer_requests_as_target.source_asset
-    - wells.upstream_tubes
   ancestor_tube_purpose: LRC Blood Vac
 hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
   csv: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
