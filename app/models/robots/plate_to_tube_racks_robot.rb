@@ -154,7 +154,7 @@ module Robots
 
     # Deletes the beds and their relationships from the robot's configuration.
     # This method is called by the prepare_beds method after finding which
-    # beds should not be verified. For scRNA, this means either we need to
+    # beds should not be verified. For the scRNA Core pipeline, this means either we need to
     # verify the parent bed first as it has a problem, or we have to remove
     # the sequencing tube-rack from the robot's config as the parent has only
     # contingency-only tube rack to be verified.
