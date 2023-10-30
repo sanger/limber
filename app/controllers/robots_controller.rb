@@ -32,8 +32,10 @@ class RobotsController < ApplicationController
     end
   end
 
-  # Updates all bed labware metadata with robot barcode.
-  # Beds with no transitions and labware are ignored.
+  # Saves the scanned robot barcode against all the target labware involved in
+  # this bed verification (using the 'labware metadata' model). Beds that are
+  # not involved in this bed verification (no 'transitions', and no labware
+  # scanned into them) are ignored.
   #
   # @param [String] robot_barcode
   # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
