@@ -186,7 +186,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
         [
           'Well name',
           'Donor ID',
-          'Parent barcode',
+          'Stock barcode',
           'FluidX barcode',
           'Extraction and freeze date',
           'Sequencing or contingency',
@@ -252,7 +252,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           [
             'Well name',
             'Donor ID',
-            'Parent barcode',
+            'Stock barcode',
             'FluidX barcode',
             'Extraction and freeze date',
             'Sequencing or contingency',
@@ -345,7 +345,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           [
             'Well name',
             'Donor ID',
-            'Parent barcode',
+            'Stock barcode',
             'FluidX barcode',
             'Extraction and freeze date',
             'Sequencing or contingency',
@@ -440,7 +440,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           [
             'Well name',
             'Donor ID',
-            'Parent barcode',
+            'Stock barcode',
             'FluidX barcode',
             'Extraction and freeze date',
             'Sequencing or contingency',
