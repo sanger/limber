@@ -3088,12 +3088,7 @@ ROBOT_CONFIG =
       },
       class: 'Robots::PlateToTubeRacksRobot',
       relationships: [
-        {
-          'options' => {
-            'parent' => bed(12).barcode,
-            'children' => [bed(15).barcode, bed(14).barcode]
-          }
-        }
+        { 'options' => { 'parent' => bed(12).barcode, 'children' => [bed(15).barcode, bed(14).barcode] } }
       ]
     )
   end
