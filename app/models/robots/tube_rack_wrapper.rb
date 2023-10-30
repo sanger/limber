@@ -19,7 +19,7 @@ module Robots
       @parent = parent
       @tubes = []
       @tube_positions = {} # Keep track of tube positions for push performance
-      tubes.each { |tube| push(tube) } # Eliminate duplicate tubes by position
+      tubes.each { |tube| push_tube(tube) } # Eliminate duplicate tubes by position
     end
 
     # Returns the last tube on the tube rack. This method used for delegating
