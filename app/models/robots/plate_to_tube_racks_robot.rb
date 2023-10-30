@@ -48,7 +48,7 @@ module Robots
     # Performs the transfer between plate and tube racks. This method is called
     # by the robot controller when the user clicks the start robot button.
     #
-    # @param [Hash] bed_labwares the bed_labwares hash from request parameters
+    # @param [Hash] bed_labwares the bed_labwares hash from request parameters (from user scanning labware into beds)
     # @return [void]
     #
     def perform_transfer(bed_labwares)
