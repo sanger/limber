@@ -52,8 +52,9 @@ class RobotsController < ApplicationController
     end
   end
 
-  # Updates bed labware metadata with robot barcode. If the bed has its own
-  # method for updating, use that, otherwise use the method of this controller.
+  # Saves the scanned robot barcode against the labware scanned into this bed
+  # (using the 'labware metadata' model). If the bed has its own method for
+  # updating, use that, otherwise use the method of this controller.
   #
   # @param [String] labware_barcode
   # @param [String] robot_barcode
