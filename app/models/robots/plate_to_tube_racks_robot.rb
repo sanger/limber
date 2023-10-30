@@ -135,7 +135,7 @@ module Robots
     # override the bed configuration based on availability of labware here.
     #
     # NB. The child labware are tube-rack wrapper objects, not actual labware.
-    # The information about tube-racks for are found using the metadata of the
+    # The information about tube-racks are found using the metadata of the
     # downstream tubes, included in the Sequencescape API response.
     #
     # @ return [void]
