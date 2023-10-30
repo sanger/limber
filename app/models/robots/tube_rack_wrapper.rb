@@ -23,7 +23,7 @@ module Robots
     end
 
     # Returns the last tube on the tube rack. This method is used for delegating
-    # certain methods to make it behave like a like a labware object.
+    # certain methods to make it behave like a labware object.
     #
     # @return [Tube] the last tube
     def last_tube
