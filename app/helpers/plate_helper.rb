@@ -49,7 +49,6 @@ module PlateHelper # rubocop:todo Style/Documentation
   #    { pool_id: 123, order_id: 401, wells: ['A1','B1','D1'] },
   #    { pool_id: 122, order_id: 402, wells: ['C1','E1','F1'] }
   #   ]
-  # rubocop:todo Metrics/MethodLength
   def sorted_pre_cap_pool_json(current_plate) # rubocop:todo Metrics/AbcSize
     unsorted =
       current_plate
@@ -71,5 +70,4 @@ module PlateHelper # rubocop:todo Style/Documentation
     sorted = unsorted.sort_by { |k| k[:order_id] }
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
   end
-  # rubocop:enable Metrics/MethodLength
 end

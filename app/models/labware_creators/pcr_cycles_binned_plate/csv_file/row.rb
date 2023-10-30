@@ -68,7 +68,7 @@ module LabwareCreators
              :coverage_column,
              to: :header
 
-    # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+    # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
     def initialize(row_config, header, index, row_data)
       @row_config = row_config
       @header = header
@@ -92,7 +92,7 @@ module LabwareCreators
       @coverage = @row_data[coverage_column]&.strip&.to_i
     end
 
-    # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
 
     def submit_for_sequencing?
       @submit_for_sequencing ||= (@submit_for_sequencing_as_string == 'Y')
