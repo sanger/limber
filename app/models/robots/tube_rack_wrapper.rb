@@ -2,7 +2,7 @@
 module Robots
   # This wrapper class is for tube racks that are not actual recorded labware.
   # The instance acts as a labware wrapper and provides access to the tubes.
-  # Labware methods are delegated to the first tube on the tube rack.
+  # Labware methods are delegated to the last tube on the tube rack.
   #
   class TubeRackWrapper
     attr_accessor :barcode, :parent, :tubes
