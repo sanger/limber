@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Robots
   # This wrapper class is for tube racks that are not actual recorded labware.
-  # The instances acts as a labware wrapper and provides access to the tubes.
+  # The instance acts as a labware wrapper and provides access to the tubes.
   # Labware methods are delegated to the first tube on the tube rack.
   #
   class TubeRackWrapper
