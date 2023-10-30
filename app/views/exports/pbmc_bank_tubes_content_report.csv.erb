@@ -55,7 +55,7 @@
 
     sample_metadata = source_well.aliquots.first.sample.sample_metadata
 
-    # sourced from deep behind sample manifest UAT action on the SS side
+    # donor_id is sourced from the sample metadata provided by Sequencescape
     donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nils
     child_tube_purpose = child_tube_v2.purpose.name
     destination = ((child_tube_purpose == 'LRC Blood Seq') ? 'Sequencing' : 'Contingency')
