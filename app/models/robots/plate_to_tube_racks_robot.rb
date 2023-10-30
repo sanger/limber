@@ -230,7 +230,7 @@ module Robots
           next if well.downstream_tubes.blank?
           well.downstream_tubes.each do |tube|
             barcode = tube.custom_metadatum_collection.metadata[:tube_rack_barcode]
-            find_or_create_tube_rack(racks, barcode, plate).push_tube(tube)
+            find_or_create_tube_rack_wrapper(racks, barcode, plate).push_tube(tube)
           end
         end
     end
@@ -242,7 +242,7 @@ module Robots
     # @param [Plate] plate the parent plate
     # @return [TubeRackWrapper] the tube rack wrapper object
     #
-    def find_or_create_tube_rack(racks, barcode, plate)
+    def find_or_create_tube_rack_wrapper(racks, barcode, plate)
       rack = racks.detect { |tube_rack| tube_rack.barcode.human == barcode }
       return rack if rack.present?
       labware_barcode = LabwareBarcode.new(human: barcode, machine: barcode)
