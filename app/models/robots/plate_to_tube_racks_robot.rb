@@ -30,6 +30,14 @@ module Robots
     # Option for including downstream tubes and metadata in Plate API response.
     PLATE_INCLUDES = 'purpose,wells,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
+    # Returns the well order for getting wells from the plate.
+    #
+    # @return [Symbol] the well order
+    #
+    def well_order
+      :coordinate
+    end
+
     # Returns the bed class for this robot.
     #
     # @return [Class] the bed class
