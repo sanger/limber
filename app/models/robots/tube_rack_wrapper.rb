@@ -22,7 +22,7 @@ module Robots
       tubes.each { |tube| push_tube(tube) } # Eliminate duplicate tubes by position
     end
 
-    # Returns the last tube on the tube rack. This method used for delegating
+    # Returns the last tube on the tube rack. This method is used for delegating
     # certain methods to make it behave like a like a labware object.
     #
     # @return [Tube] the last tube
