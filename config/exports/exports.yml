@@ -164,3 +164,7 @@ hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
     - wells.transfer_requests_as_target.source_asset
   ancestor_tube_purpose: LRC Blood Vac
   ancestor_purpose: LRC Blood Bank
+rvi_pcr_xp_concentrations_for_custom_pooling:
+  csv: rvi_pcr_xp_concentrations_for_custom_pooling
+  plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
+  ancestor_purpose: RVI Cherrypick
