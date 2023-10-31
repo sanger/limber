@@ -18,7 +18,10 @@ module Robots
       @barcode = barcode
       @parent = parent
       @tubes = []
-      @tube_positions = {} # Keep track of tube positions for push performance
+
+      # Keep track of tube positions, tube coordinate on rack => index in
+      # @tubes array, e.g. 'C1' => 0 .
+      @tube_positions = {}
       tubes.each { |tube| push_tube(tube) } # Eliminate duplicate tubes by position
     end
 
