@@ -386,7 +386,9 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
 
     it 'performs transfers for all tubes on the tube-racks' do
       robot.perform_transfer(scanned_layout)
+
       expect(state_change_requests[0]).to have_been_requested
+      tube_uuids.each_with_index { |_tube_uuid, index| expect(state_change_requests[index]).to have_been_requested }
     end
   end
 end
