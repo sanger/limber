@@ -15,7 +15,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     # samples
 
     let(:sample_metadata1) { create(:v2_sample_metadata, donor_id: 'Donor1') }
-    let(:sample_metadata2) { create(:v2_sample_metadata, donor_id: 'Donor2') }
+    let(:sample_metadata2) { create(:v2_sample_metadata) }
 
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }
@@ -206,12 +206,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           'Study name',
           'Collection site'
         ],
-        %W[DN1S:A1 Donor1 NT1O FX4B #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B1 Donor2 NT2P FX7E #{created_at} Sequencing 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:A2 Donor1 NT1O FX5C #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B2 Donor2 NT2P FX8F #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:A3 Donor1 NT1O FX6D #{created_at} Contingency 20000 75 135 #{study_name} Sanger],
-        %W[DN1S:B3 Donor2 NT2P FX9G #{created_at} Contingency 20000 75 135 #{study_name} Sanger]
+        ['DN1S:A1', 'Donor1', 'NT1O', 'FX4B', created_at, 'Sequencing', '20000', '75', '135', study_name, 'Sanger'],
+        ['DN1S:B1', '', 'NT2P', 'FX7E', created_at, 'Sequencing', '20000', '75', '135', study_name, 'Sanger'],
+        ['DN1S:A2', 'Donor1', 'NT1O', 'FX5C', created_at, 'Contingency', '20000', '75', '135', study_name, 'Sanger'],
+        ['DN1S:B2', '', 'NT2P', 'FX8F', created_at, 'Contingency', '20000', '75', '135', study_name, 'Sanger'],
+        ['DN1S:A3', 'Donor1', 'NT1O', 'FX6D', created_at, 'Contingency', '20000', '75', '135', study_name, 'Sanger'],
+        ['DN1S:B3', '', 'NT2P', 'FX9G', created_at, 'Contingency', '20000', '75', '135', study_name, 'Sanger']
       ]
     end
 
