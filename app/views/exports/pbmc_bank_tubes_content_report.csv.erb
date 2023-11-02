@@ -56,7 +56,7 @@
     sample_metadata = source_well.aliquots.first.sample.sample_metadata
 
     # donor_id is sourced from the sample metadata provided by Sequencescape
-    donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nils
+    donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
     child_tube_purpose = child_tube_v2.purpose.name
     destination = ((child_tube_purpose == 'LRC Blood Seq') ? 'Sequencing' : 'Contingency')
     volume = 135
@@ -77,5 +77,5 @@
   end
 %>
 <% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[0]) }.each do |row| %>
-<%= CSV.generate_line row, row_sep: '' %>
+<%= CSV.generate_line(row.map(&:to_s), row_sep: '').html_safe %>
 <% end %>
