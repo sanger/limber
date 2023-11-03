@@ -10,9 +10,9 @@ module Robots
 
     # Initializes a new instance of the class.
     #
-    # @param [LabwareBarcode] barcode the barcode object of the tube rack
-    # @param [Plate] parent the parent plate
-    # @tubes [Array<Tube>] the tubes on the tube rack
+    # @param barcode [LabwareBarcode] the barcode object of the tube rack
+    # @param parent [Plate] the parent plate
+    # @param tubes [Array<Tube>] the tubes on the tube rack
     #
     def initialize(barcode, parent, tubes: [])
       @barcode = barcode
@@ -37,7 +37,7 @@ module Robots
     # is an existing tube with the same position, the tube with the latest
     # creation date is kept.
     #
-    # @param [Tube] tube the tube to be added
+    # @param tube [Tube] the tube to be added
     # @return [Void]
     #
     def push_tube(tube)
@@ -62,7 +62,7 @@ module Robots
 
     # Returns the tube rack position of a tube from its metadata
     #
-    # @param [Tube] tube the tube
+    # @param tube [Tube] the tube
     # @return [String] the tube rack position
     #
     def tube_rack_position(tube)

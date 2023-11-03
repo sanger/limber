@@ -48,7 +48,7 @@ module Robots
     # Performs the transfer between plate and tube racks. This method is called
     # by the robot controller when the user clicks the start robot button.
     #
-    # @param [Hash] bed_labwares the bed_labwares hash from request parameters (from user scanning labware into beds)
+    # @param bed_labwares [Hash] the bed_labwares hash from request parameters (from user scanning labware into beds)
     # @return [void]
     #
     def perform_transfer(bed_labwares)
@@ -60,7 +60,7 @@ module Robots
     # called by the robot controller when the user clicks the validate layout
     # button.
     #
-    # @param [Hash] params request parameters
+    # @param params [Hash] request parameters
     # @return [Report]
     #
     def verify(params)
@@ -73,7 +73,7 @@ module Robots
     # labware. The labware returned can be Plate objects or labware-like
     # wrapper objects for tube racks.
     #
-    # @param [Array<String>] barcodes array of barcodes
+    # @param barcodes [Array<String>] array of barcodes
     # @return [Array<Plate, TubeRackWrapper>]
     #
     def find_bed_labware(barcodes)
@@ -83,7 +83,7 @@ module Robots
     # Returns an array of child labware from the robot's labware store for
     # the given Plate.
     #
-    # @param [Plate] plate the parent plate
+    # @param plate [Plate] the parent plate
     # @return [Array<TubeRackWrapper>] array of tube rack wrapper objects
     #
     def child_labware(plate)
@@ -94,7 +94,7 @@ module Robots
 
     # Prepares the robot before handling actions.
     #
-    # @param [Hash] bed_labwares hash from request parameters
+    # @param bed_labwares [Hash] the hash from request parameters
     # @return [void]
     def prepare_robot(bed_labwares)
       prepare_labware_store(bed_labwares)
@@ -104,7 +104,7 @@ module Robots
     # Prepares the labware store before handling robot actions. This method is
     # called before the robot's bed verification and perform transfer actions.
     #
-    # @param [Hash] bed_labwares hash from request parameters
+    # @param bed_labwares [Hash] the hash from request parameters
     # @return [void]
     #
     def prepare_labware_store(bed_labwares)
@@ -159,8 +159,8 @@ module Robots
     # the sequencing tube-rack from the robot's config as the parent has only
     # contingency-only tube rack to be verified.
     #
-    # @param [Array<String>] barcodes array of barcodes to be removed
-    # @param [Array<String>] relationship_children array of child barcodes
+    # @param barcodes [Array<String>] array of barcodes to be removed
+    # @param relationship_children [Array<String>] array of child barcodes
     # @return [void]
     #
     def delete_beds(barcodes, relationship_children)
@@ -171,7 +171,7 @@ module Robots
     # Returns an array of sanitised barcodes from the bed_labwares hash from
     # request parameters.
     #
-    # @param [Hash] bed_labwares hash from request parameters
+    # @param bed_labwares [Hash] the hash from request parameters
     # @return [Array<String>] array of barcodes
     #
     def stripped_barcodes(bed_labwares)
@@ -180,7 +180,7 @@ module Robots
 
     # Adds the plate to the robot's labware store.
     #
-    # @param [Plate] plate the parent plate
+    # @param plate [Plate] the parent plate
     # @return [void]
     #
     def add_plate_to_labware_store(plate)
@@ -189,7 +189,7 @@ module Robots
 
     # Adds the tube racks wrappers from plate includes to the labware store.
     #
-    # @param [Plate] plate the parent plate
+    # @param plate [Plate] the parent plate
     # @return [void]
     #
     def add_tube_racks_to_labware_store(plate)
@@ -209,7 +209,7 @@ module Robots
     # Returns the Plate for the given barcode from the Sequencescape API.
     # The call includes downstream tubes and their metadata as well.
     #
-    # @param [String] barcode the barcode of the plate
+    # @param barcode [String] the barcode of the plate
     # @return [Plate] the plate
     #
     def find_plate(barcode)
@@ -219,7 +219,7 @@ module Robots
     # Returns an array of tube rack wrapper objects that from the downstream tubes
     # of the given plate.
     #
-    # @param [Plate] plate the parent plate
+    # @param plate [Plate] the parent plate
     # @return [Array<TubeRackWrapper>] array of tube rack wrapper objects
     #
     def find_tube_racks(plate)
@@ -237,9 +237,9 @@ module Robots
 
     # Returns an existing or new tube rack wrapper object.
     #
-    # @param [Array<TubeRackWrapper>] racks the tube racks found so far
-    # @param [String] barcode the barcode of the tube rack
-    # @param [Plate] plate the parent plate
+    # @param racks [Array<TubeRackWrapper>] the tube racks found so far
+    # @param barcode[String] the barcode of the tube rack
+    # @param plate [Plate] the parent plate
     # @return [TubeRackWrapper] the tube rack wrapper object
     #
     def find_or_create_tube_rack_wrapper(racks, barcode, plate)

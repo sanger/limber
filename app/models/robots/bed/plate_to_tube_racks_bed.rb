@@ -11,7 +11,7 @@ module Robots::Bed
     # This method is called inside the robot controller's start action for
     # tube-rack wrappers and it sets the created_with_robot metadata field.
     #
-    # @param [String] robot_barcode the robot barcode
+    # @param robot_barcode [String] the robot barcode
     # @return [void]
     #
     def labware_created_with_robot(robot_barcode)
@@ -35,7 +35,7 @@ module Robots::Bed
 
     # Loads labware into this bed from the robot's labware store.
     #
-    # @param [Array<String>] barcodes array containing the barcode of the labware
+    # @param barcodes [Array<String>] array containing the barcode of the labware
     # @return [void]
     #
     def load(barcodes)
@@ -57,7 +57,7 @@ module Robots::Bed
     # Changes the state of one tube to the target state. This method is called
     # by the transition method.
     #
-    # @param [Tube] tube the tube
+    # @param tube [Tube] the tube for which the state should be changed
     def change_tube_state(tube)
       state_changer = StateChangers.lookup_for(tube.purpose.uuid)
       state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")

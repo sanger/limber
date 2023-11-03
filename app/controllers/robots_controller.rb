@@ -37,7 +37,7 @@ class RobotsController < ApplicationController
   # not involved in this bed verification (no 'transitions', and no labware
   # scanned into them) are ignored.
   #
-  # @param [String] robot_barcode
+  # @param robot_barcode [String] the robot barcode scanned
   # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
   #
   def update_all_labware_metadata(robot_barcode)
@@ -56,8 +56,8 @@ class RobotsController < ApplicationController
   # (using the 'labware metadata' model). If the bed has its own method for
   # updating, use that, otherwise use the method of this controller.
   #
-  # @param [String] labware_barcode
-  # @param [String] robot_barcode
+  # @param labware_barcode [String] the barcode of the labware on the bed
+  # @param robot_barcode [String] the robot barcode scanned
   # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
   #
   def update_bed_labware_metadata(bed, robot_barcode)
@@ -68,8 +68,8 @@ class RobotsController < ApplicationController
 
   # Updates labware metadata with robot barcode.
   #
-  # @param [String] labware_barcode
-  # @param [String] robot_barcode
+  # @param labware_barcode [String] the barcode of the labware on the bed
+  # @param robot_barcode [String] the robot barcode scanned
   # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
   #
   def labware_created_with_robot(labware_barcode, robot_barcode)
