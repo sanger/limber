@@ -43,10 +43,16 @@ RVI Lib PCR XP:
     - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
       id: rvi_pcr_xp_concentrations_for_custom_pooling
 
+RVI Lib PrePool:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::MultiPlatePool
+  :csv_template: 'show_extended'
+
 RVI Hyb:
   :asset_type: plate
   :default_printer_type: :plate_b
-  :creator_class: LabwareCreators::BaitedPlate
+  # :creator_class: LabwareCreators::BaitedPlate
   :csv_template: 'show_extended'
 
 RVI Cap Lib:
@@ -66,3 +72,11 @@ RVI Cap Lib Pool:
   :default_printer_type: :plate_b
   :creator_class: LabwareCreators::PlateWithTemplate
   :transfer_template: 'Pool wells based on submission'
+
+RVI Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
