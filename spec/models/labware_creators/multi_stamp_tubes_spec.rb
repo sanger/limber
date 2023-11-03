@@ -147,9 +147,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
 
         describe '#autodetect_studies' do
           it 'returns true when specified in the config' do
-            expect(subject).to receive(:configured_params).and_return(
-              { autodetect_studies: true, request_options: {} }
-            )
+            expect(subject).to receive(:configured_params).and_return({ autodetect_studies: true, request_options: {} })
             expect(subject.send(:autodetect_studies)).to eq(true)
           end
           it 'returns false when specified in the config' do
