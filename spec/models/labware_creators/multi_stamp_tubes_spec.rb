@@ -145,22 +145,41 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           end
         end
 
-        describe '#autodetect_studies_project' do
+        describe '#autodetect_studies' do
           it 'returns true when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
-              { autodetect_studies_project: true, request_options: {} }
+              { autodetect_studies: true, request_options: {} }
             )
-            expect(subject.send(:autodetect_studies_project)).to eq(true)
+            expect(subject.send(:autodetect_studies)).to eq(true)
           end
           it 'returns false when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
-              { autodetect_studies_project: false, request_options: {} }
+              { autodetect_studies: false, request_options: {} }
             )
-            expect(subject.send(:autodetect_studies_project)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to eq(false)
           end
           it 'returns false if not specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ request_options: {} })
-            expect(subject.send(:autodetect_studies_project)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to eq(false)
+          end
+        end
+
+        describe '#autodetect_projects' do
+          it 'returns true when specified in the config' do
+            expect(subject).to receive(:configured_params).and_return(
+              { autodetect_projects: true, request_options: {} }
+            )
+            expect(subject.send(:autodetect_projects)).to eq(true)
+          end
+          it 'returns false when specified in the config' do
+            expect(subject).to receive(:configured_params).and_return(
+              { autodetect_projects: false, request_options: {} }
+            )
+            expect(subject.send(:autodetect_projects)).to eq(false)
+          end
+          it 'returns false if not specified in the config' do
+            expect(subject).to receive(:configured_params).and_return({ request_options: {} })
+            expect(subject.send(:autodetect_projects)).to eq(false)
           end
         end
       end
