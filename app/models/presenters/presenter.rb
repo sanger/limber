@@ -53,7 +53,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   #
   # @return [String] Human formatted date of creation
   def created_on
-    labware.created_at.to_formatted_s(:date_created)
+    labware.created_at.to_fs(:date_created)
   end
 
   # Formatted barcode string for display

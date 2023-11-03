@@ -89,7 +89,6 @@ module LabwareCreators
       control_locations
     end
 
-    # rubocop:todo Metrics/MethodLength
     def validate_control_rules_from_config(control_locations)
       list_of_rules.each do |rule|
         case rule.type
@@ -107,8 +106,6 @@ module LabwareCreators
       end
       true
     end
-
-    # rubocop:enable Metrics/MethodLength
 
     def create_plate_with_standard_transfer!
       plate_creation = create_plate_from_parent!
@@ -219,7 +216,7 @@ module LabwareCreators
     # an aliquot containing the control and link it to the selected child well
     def create_control_in_child_well(control, child_well_v2, well_location)
       # check the well should be empty
-      unless child_well_v2.aliquots.length.zero?
+      unless child_well_v2.aliquots.empty?
         errors.add(:base, "Expecting child plate well to be empty at location #{well_location}")
       end
 

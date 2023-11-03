@@ -20,7 +20,6 @@ module FactoryBot
     # comments { { "size" => comments_count, "actions" => { "read" => resource_url + '/comments' } } }
     # @param [*String] names 1 or more association names
     # @return [nil] nil
-    # rubocop:todo Metrics/MethodLength
     def with_has_many_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
@@ -39,9 +38,6 @@ module FactoryBot
       nil
     end
 
-    # rubocop:enable Metrics/MethodLength
-
-    # rubocop:todo Metrics/MethodLength
     def with_belongs_to_associations(*names, actions: ['read'])
       transient do
         names.each do |association|
@@ -60,6 +56,5 @@ module FactoryBot
       end
       nil
     end
-    # rubocop:enable Metrics/MethodLength
   end
 end
