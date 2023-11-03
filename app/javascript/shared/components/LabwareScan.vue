@@ -42,6 +42,7 @@
 <script>
 import { checkSize } from './plateScanValidators'
 import { aggregate } from './scanValidators'
+import { checkState } from './tubeScanValidators'
 
 // Incrementing counter to ensure all instances of LabwareScan
 // have a unique id. Ensures labels correctly match up with
@@ -101,13 +102,6 @@ export default {
       //   devour can actually follow the association. (eg. plate should have the field wells if you also include wells)
       // defaults are set based on labwareType, in method 'fieldsToRetrieve'
       type: Object,
-      default: null,
-    },
-    validators: {
-      // An array of validators. See plateScanValidators.js and tubeScanValidators.js for examples and details
-      // defaults are set based on labwareType, in method 'computedValidators'
-      type: Array,
-      required: false,
       default: null,
     },
     scanDisabled: {
@@ -184,12 +178,8 @@ export default {
       }
     },
     computedValidators() {
-      if (this.validators) {
-        return this.validators
-      }
-
       if (this.labwareType == 'tube') {
-        return []
+        return [checkState(['passed'])]
       } else {
         return [checkSize(12, 8)]
       }
@@ -233,7 +223,7 @@ export default {
 
       if (this.labwareType == 'tube') {
         return {
-          tubes: 'labware_barcode,uuid,receptacle',
+          tubes: 'labware_barcode,uuid,receptacle,state',
           receptacles: 'uuid',
         }
       } else {
