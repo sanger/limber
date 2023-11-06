@@ -21,8 +21,6 @@ class Settings
       config_file_descriptor = File.open(configuration_filename, 'r:bom|utf-8')
       @instance = Hashie::Mash.new(YAML.safe_load(config_file_descriptor, permitted_classes: [Symbol]))
 
-      #@instance = Hashie::Mash.new(safe_content)
-
       # To view a list of pipeline groups and respective pipelines:
       # e.g. Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipelines| pipelines.map(&:name) }
       @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
