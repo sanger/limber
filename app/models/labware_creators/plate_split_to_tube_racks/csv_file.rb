@@ -23,6 +23,9 @@ module LabwareCreators
 
     validate :correctly_parsed?
     validates_nested :tube_rack_scan, if: :correctly_formatted?
+    validate :check_for_rack_barcodes_the_same, if: :correctly_formatted?
+    validate :check_no_duplicate_well_coordinates, if: :correctly_formatted?
+    validate :check_no_duplicate_tube_barcodes, if: :correctly_formatted?
 
     NO_TUBE_TEXTS = ['NO READ', 'NOSCAN'].freeze
 
@@ -95,6 +98,33 @@ module LabwareCreators
     # Gates looking for tube locations if the file is invalid
     def correctly_formatted?
       correctly_parsed?
+    end
+
+    def check_for_rack_barcodes_the_same
+      tube_rack_barcodes = tube_rack_scan.group_by(&:tube_rack_barcode).keys
+
+      return unless tube_rack_barcodes.size > 1
+
+      barcodes_str = tube_rack_barcodes.join(',')
+      errors.add(:base, "Should not contain different rack barcodes (#{barcodes_str})")
+    end
+
+    def check_no_duplicate_well_coordinates
+      duplicated_well_coordinates =
+        tube_rack_scan.group_by(&:tube_position).select { |_position, tubes| tubes.size > 1 }.keys.join(',')
+
+      return if duplicated_well_coordinates.empty?
+
+      errors.add(:base, "Contains duplicate well coordinates (#{duplicated_well_coordinates})")
+    end
+
+    def check_no_duplicate_tube_barcodes
+      duplicated_tube_barcodes =
+        tube_rack_scan.group_by(&:tube_barcode).select { |_tube_barcode, tubes| tubes.size > 1 }.keys.join(',')
+
+      return if duplicated_tube_barcodes.empty?
+
+      errors.add(:base, "Contains duplicate tube barcodes (#{duplicated_tube_barcodes})")
     end
 
     # Generates a hash of position details based on the tube rack scan data in the CSV file.
