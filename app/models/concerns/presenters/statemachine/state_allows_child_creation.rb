@@ -4,7 +4,7 @@ module Presenters::Statemachine
   # Supports creation of child assets in this state
   module StateAllowsChildCreation
     extend ActiveSupport::Concern
-    included do 
+    included do
       def control_additional_creation
         yield
       end

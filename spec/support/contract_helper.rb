@@ -29,7 +29,6 @@ module ContractHelper
       \g<headers>\g<eol>
       (\g<eol>\g<body>?)?
     }mx
-      .freeze
 
     # rubocop:enable Lint/MixedRegexpCaptureTypes
     # rubocop:todo Metrics/AbcSize Metrics/MethodLength

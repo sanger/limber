@@ -4,7 +4,7 @@
 module Presenters::Statemachine
   module DoesNotAllowLibraryPassing # rubocop:todo Style/Documentation
     extend ActiveSupport::Concern
-    included do 
+    included do
       def control_library_passing
         false
       end
