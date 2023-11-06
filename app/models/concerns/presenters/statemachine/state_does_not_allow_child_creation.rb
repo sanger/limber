@@ -3,8 +3,11 @@
 module Presenters::Statemachine
   # Prevent creation of child assets while in this state
   module StateDoesNotAllowChildCreation
-    def control_additional_creation(&block)
-      # Does nothing because you can't!
+    extend ActiveSupport::Concern
+    included do 
+      def control_additional_creation(&block)
+        # Does nothing because you can't!
+      end
     end
   end
 end

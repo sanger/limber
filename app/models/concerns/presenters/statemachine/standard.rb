@@ -4,6 +4,7 @@ require_dependency 'presenters/statemachine'
 module Presenters::Statemachine
   module Standard # rubocop:todo Style/Documentation
     extend ActiveSupport::Concern
+
     included do
       include Shared
 
@@ -20,6 +21,7 @@ module Presenters::Statemachine
         state :started do
           include StateDoesNotAllowChildCreation
           include DoesNotAllowLibraryPassing
+
         end
 
         state :processed_1 do
