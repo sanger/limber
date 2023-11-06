@@ -78,5 +78,5 @@ RVI Lib Pool Norm:
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::FinalTubeFromPlate
-  :presenter_class: Presenters::SimpleTubePresenter
+  :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube

@@ -199,8 +199,8 @@ GnT MDA Norm
 
 {include:Presenters::SimpleTubePresenter}
 
-Used directly in 37 purposes:
-LBC 5p GLibPS, LBC 5p Pool Norm, Cap Lib Pool Norm, LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, LCMB Custom Pool, pWGS-384 Lib Pool XP, LRC Blood Aliquot, LRC Bank Seq, LRC Bank Spare, LTHR-384 Pool XP, LBSN-384 PCR 2 Pool, LBSN-9216 Lib PCR Pool, LTN Custom Pool, LBC BCR LibPS, LBC BCR Pool Norm, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, RVI Lib Pool Norm, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LBC TCR Pool Norm, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
+Used directly in 36 purposes:
+LBC 5p GLibPS, LBC 5p Pool Norm, Cap Lib Pool Norm, LB Custom Pool, CLCM DNA Pool, CLCM RNA Pool, LCMB Custom Pool, pWGS-384 Lib Pool XP, LRC Blood Aliquot, LRC Bank Seq, LRC Bank Spare, LTHR-384 Pool XP, LBSN-384 PCR 2 Pool, LBSN-9216 Lib PCR Pool, LTN Custom Pool, LBC BCR LibPS, LBC BCR Pool Norm, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Lib Pool, LDS Custom Pool, LHR-384 Pool XP, GBS PCR2 Pool Stock, GBS PCR Pool, GBS PCR Pool Selected, LCA Custom Pool, LBC TCR LibPS, LBC TCR Pool Norm, LTHR Pool XP, LBB Lib Pool Stock, LBC 3pV3 GLibPS, scRNA Lib Pool, scRNA-384 Lib Pool XP, scRNA Lib Pool XP, LHR Lib Pool, LHR Lib Pool XP, 
 
 {Presenters::SimpleTubePresenter View class documentation}
 
@@ -219,8 +219,8 @@ LCA Bank Stock,
 
 {include:Presenters::FinalTubePresenter}
 
-Used directly in 10 purposes:
-LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LCMB Custom Pool Norm, LB Lib Pool Norm, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm, 
+Used directly in 11 purposes:
+LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LCMB Custom Pool Norm, LB Lib Pool Norm, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool Norm, LDS Custom Pool Norm, RVI Lib Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm, 
 
 {Presenters::FinalTubePresenter View class documentation}
 
