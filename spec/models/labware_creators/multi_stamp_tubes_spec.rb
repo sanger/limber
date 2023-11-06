@@ -265,7 +265,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
                 assets: parent_receptacle_uuids,
                 request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
                 user: user_uuid,
-                autodetect_studies_projects: false
+                autodetect_studies: false,
+                autodetect_projects: false
               }
             },
             body: '{"order":{"uuid":"order-uuid"}}'
