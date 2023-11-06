@@ -61,7 +61,7 @@ module LabwareCreators
     validates_nested :contingency_csv_file, if: :contingency_file
 
     # validate there are sufficient tubes in the racks for the number of parent wells
-    validate :must_have_sufficient_tubes_in_rack, if: :contingency_file
+    validate :must_have_sufficient_tubes_in_rack_files, if: :contingency_file
 
     # validate that the tube barcodes do not already exist in the system
     validate :tube_barcodes_are_unique?
@@ -151,25 +151,38 @@ module LabwareCreators
       @num_parent_wells ||= well_filter.filtered.length
     end
 
-    # Validation method that checks whether there are enough tubes in the rack.
-    #
-    # @return [void]
-    def must_have_sufficient_tubes_in_rack
-      errors.add(:tube_rack_file, 'Must have sufficient tubes in rack') unless sufficient_tubes_in_racks?
-    end
-
-    # Checks if there are sufficient tubes in the child tube racks for all the parent wells.
+    # Validation that checks if there are sufficient tubes in the child tube racks for all the parent wells.
     # This depends on the number of unique samples in the parent plate, and the number of parent wells,
     # as well as whether they are using both sequencing tubes and contingency tubes or just contingency.
     #
-    # @return [Boolean] `true` if there are sufficient tubes, `false` otherwise.
-    def sufficient_tubes_in_racks?
+    # Sets errors if there are insufficient tubes.
+    def must_have_sufficient_tubes_in_rack_files
+      return unless files_correctly_parsed?
+
       if require_contingency_tubes_only?
-        num_contingency_tubes >= num_parent_wells
+        add_error_if_insufficient_tubes(:contingency_csv_file, num_contingency_tubes, num_parent_wells)
       else
-        (num_sequencing_tubes >= num_parent_unique_samples) &&
-          (num_contingency_tubes >= (num_parent_wells - num_parent_unique_samples))
+        add_error_if_insufficient_tubes(
+          :contingency_csv_file,
+          num_contingency_tubes,
+          num_parent_wells - num_parent_unique_samples
+        )
+        add_error_if_insufficient_tubes(:sequencing_csv_file, num_sequencing_tubes, num_parent_unique_samples)
       end
+    end
+
+    # Checks the files parsed correctly
+    def files_correctly_parsed?
+      if require_contingency_tubes_only?
+        contingency_csv_file.correctly_parsed?
+      else
+        contingency_csv_file.correctly_parsed? && sequencing_csv_file.correctly_parsed?
+      end
+    end
+
+    # Adds an error when there are insufficient tubes in the given file
+    def add_error_if_insufficient_tubes(file, num_tubes, required_tubes)
+      errors.add(file, 'contains insufficient tubes') unless num_tubes >= required_tubes
     end
 
     # Validation that the tube barcodes are unique and do not already exist in the system.
