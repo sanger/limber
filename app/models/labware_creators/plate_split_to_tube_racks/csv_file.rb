@@ -13,8 +13,8 @@ module LabwareCreators
   # and the tube locations then used to create a driver file for the liquid handler.
   # The filename of the file should also contain the tube rack barcode.
   # Example of file content (NB. no header line):
-  # TR00012345, A1, FX05653780
-  # TR00012345, A2, NO READ
+  # TR00012345,A1,FX05653780
+  # TR00012345,A2,NO READ
   # etc.
   #
   class PlateSplitToTubeRacks::CsvFile
