@@ -38,6 +38,7 @@ FactoryBot.define do
     collected_by { 'Sanger' }
     cohort { 'Cohort' }
     sample_description { 'Description' }
+    sequence(:donor_id) { |i| "donor#{i}" }
   end
 
   factory :v2_sample_metadata_for_mbrave, class: Sequencescape::Api::V2::SampleMetadata do
