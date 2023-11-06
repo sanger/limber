@@ -53,12 +53,15 @@ FactoryBot.define do
       # Use the stock well factory if you want the request comming out of the well
       outer_request { create request_factory, state: library_state }
 
+      study { create :v2_study, name: 'Well Study' }
+      project { create :v2_project, name: 'Well Project' }
+
       # The factory to use for aliquots
       aliquot_factory { :v2_aliquot }
       aliquots do
         # Conditional to avoid generating requests when not required
         if aliquot_count > 0
-          create_list aliquot_factory, aliquot_count, outer_request: outer_request
+          create_list aliquot_factory, aliquot_count, outer_request: outer_request, study: study, project: project
         else
           []
         end
@@ -256,8 +259,8 @@ FactoryBot.define do
       # Alias for request: The request set on the aliquot itself
       outer_request { create :library_request, state: library_state }
       well_location { 'A1' }
-      study_id { 1 }
-      project_id { 1 }
+      study { create :v2_study, name: 'Test Aliquot Study' }
+      project { create :v2_project, name: 'Test Aliquot Project' }
       sample_attributes { {} }
     end
 
@@ -271,8 +274,11 @@ FactoryBot.define do
     request { outer_request }
 
     after(:build) do |aliquot, evaluator|
-      aliquot._cached_relationship(:request) { evaluator.request }
-      aliquot._cached_relationship(:sample) { evaluator.sample }
+      # Set up relationships downstream
+      Sequencescape::Api::V2::Aliquot.associations.each do |association|
+        aliquot._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
+      end
+
       aliquot.relationships.study = {
         'links' => {
           'self' => "http://localhost:3000/api/v2/aliquots/#{aliquot.id}/relationships/study",
@@ -280,7 +286,7 @@ FactoryBot.define do
         },
         'data' => {
           'type' => 'studies',
-          'id' => evaluator.study_id.to_s
+          'id' => evaluator.study.id.to_s
         }
       }
       aliquot.relationships.project = {
@@ -290,7 +296,7 @@ FactoryBot.define do
         },
         'data' => {
           'type' => 'projects',
-          'id' => evaluator.project_id.to_s
+          'id' => evaluator.project.id.to_s
         }
       }
     end
