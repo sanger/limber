@@ -9,30 +9,35 @@ const dummyApiKey = 'mock_api_key'
 
 // Nice user readable summary of the request object
 const requestFormatter = function (request) {
+  // order keys alphabetically
+  const sorted_keys = Object.keys(request.params).sort()
+  const parameters = sorted_keys.map((key) => `"${key}": ${JSON.stringify(request.params[key])}`).join(', ')
   return `
---------------------------------------------------------------------------------
+  --------------------------------------------------------------------------------
   Method: ${request.method}
   Url:    ${request.url}
-  Params: ${JSON.stringify(request.params)}
---------------------------------------------------------------------------------
-  `
+  Params: {${parameters}}
+  --------------------------------------------------------------------------------
+  `.trim()
 }
 
 // Fail the test if we receive an unexpected request and provide information
 // to assist with debugging
-const unexpectedRequest = function (request, expectedRequests) {
-  const baseError = `Unexpected Request:
-${requestFormatter(request)}
-Expected Requests:`
-  const errorMessage = expectedRequests.reduce((error, expectedRequest) => {
-    return error + requestFormatter(expectedRequest.req)
-  }, baseError)
-  fail(errorMessage)
+const raiseUnexpectedRequest = (request, expectedRequests) => {
+  const formattedExpectedRequests = expectedRequests.map((req) => requestFormatter(req.req)).join('\n  ')
+  const formattedRequest = requestFormatter(request)
+  throw new Error(`
+  Unexpected request:
+  ${formattedRequest}
+  Expected one of:
+  ${formattedExpectedRequests}`)
 }
 
 const mockApi = function (resources = sequencescapeResources) {
   const devour = devourApi({ apiUrl: dummyApiUrl }, resources, dummyApiKey)
   const mockedRequests = []
+  // Find a request in the mockedRequests array that matches the request
+  // object. If no match is found, return undefined.
   const findRequest = (request) => {
     return mockedRequests.find((requestResponse) => {
       // devour is a little inconsistent in when it records a data payload
@@ -47,20 +52,22 @@ const mockApi = function (resources = sequencescapeResources) {
     name: 'mock-request-response',
     mockedRequests: [],
     req: (payload) => {
-      const mockedRequest = findRequest(payload.req)
+      const incomingRequest = payload.req
+      const mockedRequest = findRequest(incomingRequest)
 
       if (mockedRequest) {
         mockedRequest.called += 1
-        payload.req.adapter = function () {
+        incomingRequest.adapter = function () {
           return mockedRequest.res
         }
       } else {
         // Stop things going further, otherwise we risk generating real traffic
-        payload.req.adapter = function () {
+        incomingRequest.adapter = function () {
           return Promise.reject({ message: 'unregistered request' })
         }
-        unexpectedRequest(payload.req, mockedRequests)
+        raiseUnexpectedRequest(incomingRequest, mockedRequests)
       }
+
       return payload
     },
     mockGet: (url, params, response) => {
