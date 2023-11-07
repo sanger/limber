@@ -113,47 +113,6 @@ describe('LabwareScan', () => {
     expect(wrapper.find('.well').exists()).toBe(false)
   })
 
-  it('is invalid if there are api troubles', async () => {
-    const api = mockApi()
-    api.mockFail(
-      'tubes',
-      {
-        filter: { barcode: 'Good barcode' },
-        include: '',
-        fields: {
-          tubes: 'labware_barcode,uuid,receptacle,state',
-          receptacles: 'uuid',
-        },
-      },
-      {
-        errors: [
-          {
-            title: 'Not good',
-            detail: 'Very not good',
-            code: 500,
-            status: 500,
-          },
-        ],
-      }
-    )
-    const wrapper = wrapperFactoryTube(api)
-
-    wrapper.find('input').setValue('Good barcode')
-    await wrapper.find('input').trigger('change')
-
-    expect(wrapper.find('.wait-labware').exists()).toBe(true)
-
-    await flushPromises()
-
-    // JG: Can't seem to get the mock api to correctly handle errors. THis would be the
-    // desired behaviour, and seems to actually work in reality.
-    // expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
-    expect(wrapper.find('.invalid-feedback').text()).toEqual('Unknown error')
-    expect(wrapper.emitted()).toEqual({
-      change: [[{ state: 'searching', labware: null }], [{ state: 'invalid', labware: null }]],
-    })
-  })
-
   describe('When labwareType is tube', () => {
     const goodTubeUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
     const pendingTubeUuid = '123e4567-e89b-12d3-a456-426614174000'
@@ -257,6 +216,47 @@ describe('LabwareScan', () => {
       expect(events.change[0]).toEqual([{ state: 'searching', labware: null }])
       expect(events.change[1][0].state).toEqual('invalid')
       expect(events.change[1][0].labware.uuid).toEqual(pendingTubeUuid)
+    })
+
+    it('is invalid if there are api troubles', async () => {
+      const api = mockApi()
+      api.mockFail(
+        'tubes',
+        {
+          filter: { barcode: 'Good barcode' },
+          include: '',
+          fields: {
+            tubes: 'labware_barcode,uuid,receptacle,state',
+            receptacles: 'uuid',
+          },
+        },
+        {
+          errors: [
+            {
+              title: 'Not good',
+              detail: 'Very not good',
+              code: 500,
+              status: 500,
+            },
+          ],
+        }
+      )
+      const wrapper = wrapperFactoryTube(api)
+
+      wrapper.find('input').setValue('Good barcode')
+      await wrapper.find('input').trigger('change')
+
+      expect(wrapper.find('.wait-labware').exists()).toBe(true)
+
+      await flushPromises()
+
+      // JG: Can't seem to get the mock api to correctly handle errors. THis would be the
+      // desired behaviour, and seems to actually work in reality.
+      // expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
+      expect(wrapper.find('.invalid-feedback').text()).toEqual('Unknown error')
+      expect(wrapper.emitted()).toEqual({
+        change: [[{ state: 'searching', labware: null }], [{ state: 'invalid', labware: null }]],
+      })
     })
   })
 
@@ -370,6 +370,46 @@ describe('LabwareScan', () => {
       expect(events.change[0]).toEqual([{ state: 'searching', plate: null }])
       expect(events.change[1][0].state).toEqual('invalid')
       expect(events.change[1][0].plate.uuid).toEqual(badPlateUuid)
+    })
+
+    it('is invalid if there are api troubles', async () => {
+      const api = mockApi()
+      api.mockFail(
+        'plates',
+        {
+          filter: { barcode: 'Good barcode' },
+          include: 'wells.requests_as_source,wells.aliquots.request',
+          fields: {
+            plates: 'labware_barcode,uuid,number_of_rows,number_of_columns',
+          },
+        },
+        {
+          errors: [
+            {
+              title: 'Not good',
+              detail: 'Very not good',
+              code: 500,
+              status: 500,
+            },
+          ],
+        }
+      )
+      const wrapper = wrapperFactoryPlate(api)
+
+      wrapper.find('input').setValue('Good barcode')
+      await wrapper.find('input').trigger('change')
+
+      expect(wrapper.find('.wait-labware').exists()).toBe(true)
+
+      await flushPromises()
+
+      // JG: Can't seem to get the mock api to correctly handle errors. THis would be the
+      // desired behaviour, and seems to actually work in reality.
+      // expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
+      expect(wrapper.find('.invalid-feedback').text()).toEqual('Unknown error')
+      expect(wrapper.emitted()).toEqual({
+        change: [[{ state: 'searching', plate: null }], [{ state: 'invalid', plate: null }]],
+      })
     })
   })
 })
