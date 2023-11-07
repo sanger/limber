@@ -3061,4 +3061,234 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # RVI Bait Capture Library prep pipeline bed verifications
+    custom_robot(
+      'bravo-rvi-cherrypick-to-rvi-rt',
+      name: 'Bravo RVI Cherrypick => RVI RT',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVI Cherrypick',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(6).barcode => {
+          purpose: 'RVI RT',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Commented out until we understand a plate with multiple states steps
+    # custom_robot(
+    #   'mosquito-rvi-rt',
+    #   name: 'Mosquito RVI RT Random Primers',
+    #   beds: {
+    #     bed(5).barcode => {
+    #       purpose: 'RVI RT',
+    #       states: ['pending'],
+    #       label: 'Bed 5',
+    #       target_state: 'started'
+    #     }
+    #   }
+    # )
+  
+    # custom_robot(
+    #   'bravo-rvi-rt-1',
+    #   name: 'Bravo RVI RT Mix',
+    #   beds: {
+    #     bed(8).barcode => {
+    #       purpose: 'RVI RT',
+    #       states: ['started'],
+    #       label: 'Bed 8',
+    #       target_state: 'processed_1'
+    #     }
+    #   }
+    # )
+
+    # custom_robot(
+    #   'bravo-rvi-rt-2',
+    #   name: 'Bravo RVI RT First Strand Mix',
+    #   beds: {
+    #     bed(8).barcode => {
+    #       purpose: 'RVI RT',
+    #       states: ['processed_1'],
+    #       label: 'Bed 8',
+    #       target_state: 'processed_2'
+    #     }
+    #   }
+    # )
+
+    # custom_robot(
+    #   'bravo-rvi-rt-3',
+    #   name: 'Bravo RVI RT Second Strand Mix',
+    #   beds: {
+    #     bed(8).barcode => {
+    #       purpose: 'RVI RT',
+    #       states: ['processed_2'],
+    #       label: 'Bed 8',
+    #       target_state: 'passed'
+    #     }
+    #   }
+    # )
+
+    custom_robot(
+      'bravo-rvi-rt-to-rvi-cdna-xp',
+      name: 'Bravo RVI RT => RVI cDNA XP',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('4,3').barcode => {
+          purpose: 'RVI cDNA XP',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        },
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-cdna-xp-to-rvi-lib-pcr',
+      name: 'Bravo RVI cDNA XP => RVI Lib PCR',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'RVI cDNA XP',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(6).barcode => {
+          purpose: 'RVI Lib PCR',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvi-lib-pcr-to-rvi-lib-pcr-xp',
+      name: 'Hamilton RVI Lib PCR => RVI Lib PCR XP',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'RVI Lib PCR',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'RVI Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        },
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-hyb-to-rvi-cap-lib',
+      name: 'Bravo RVI Hyb => RVI Cap Lib',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVI Hyb',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,3').barcode => {
+          purpose: 'RVI Cap Lib',
+          states: ['pending'],
+          label: 'Carousel 1,3',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        },
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-cap-lib-to-rvi-cap-lib-pcr',
+      name: 'Bravo RVI Cap Lib => RVI Cap Lib PCR',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVI Cap Lib',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('4,5').barcode => {
+          purpose: 'RVI Cap Lib PCR',
+          states: ['pending'],
+          label: 'Carousel 4,5',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        },
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvi-cap-lib-pcr-to-rvi-cap-lib-pcr-xp',
+      name: 'Hamilton RVI Cap Lib PCR => RVI Cap Lib PCR XP',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'RVI Cap Lib PCR',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Cap Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'RVI Cap Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'RVI Cap Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        },
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
+      name: 'Bravo RVI Cap Lib PCR XP => RVI Cap Lib Pool',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVI Cap Lib PCR XP',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(2).barcode => {
+          purpose: 'RVI Cap Lib Pool',
+          states: ['pending'],
+          label: 'Bed 2',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        },
+      }
+    )
   end
