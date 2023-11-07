@@ -1,3 +1,5 @@
+// Note: strictly speaking this is an integration test, not a unit test, as it includes mocks at the API level
+
 // Import the component being tested
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
@@ -219,6 +221,21 @@ describe('LabwareScan', () => {
     })
 
     it('is invalid if there are api troubles', async () => {
+      // Devour automatically logs the error, which looks like:
+      //   console.log
+      //     devour error {
+      //       error: {
+      //         errors: [
+      //           {
+      //             title: 'Not good',
+      //             detail: 'Very not good',
+      //             code: 500,
+      //             status: 500
+      //           }
+      //         ]
+      //       }
+      //     }
+      // Please do not panic, but it would be nice to suppress _only this output_ this in the console
       const api = mockApi()
       api.mockFail(
         'tubes',
@@ -250,10 +267,7 @@ describe('LabwareScan', () => {
 
       await flushPromises()
 
-      // JG: Can't seem to get the mock api to correctly handle errors. THis would be the
-      // desired behaviour, and seems to actually work in reality.
-      // expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
-      expect(wrapper.find('.invalid-feedback').text()).toEqual('Unknown error')
+      expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
       expect(wrapper.emitted()).toEqual({
         change: [[{ state: 'searching', labware: null }], [{ state: 'invalid', labware: null }]],
       })
@@ -373,6 +387,21 @@ describe('LabwareScan', () => {
     })
 
     it('is invalid if there are api troubles', async () => {
+      // Devour automatically logs the error, which looks like:
+      //   console.log
+      //     devour error {
+      //       error: {
+      //         errors: [
+      //           {
+      //             title: 'Not good',
+      //             detail: 'Very not good',
+      //             code: 500,
+      //             status: 500
+      //           }
+      //         ]
+      //       }
+      //     }
+      // Please do not panic, but it would be nice to suppress _only this output_ this in the console
       const api = mockApi()
       api.mockFail(
         'plates',
@@ -403,10 +432,7 @@ describe('LabwareScan', () => {
 
       await flushPromises()
 
-      // JG: Can't seem to get the mock api to correctly handle errors. THis would be the
-      // desired behaviour, and seems to actually work in reality.
-      // expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
-      expect(wrapper.find('.invalid-feedback').text()).toEqual('Unknown error')
+      expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
       expect(wrapper.emitted()).toEqual({
         change: [[{ state: 'searching', plate: null }], [{ state: 'invalid', plate: null }]],
       })

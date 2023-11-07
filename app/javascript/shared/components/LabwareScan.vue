@@ -209,12 +209,16 @@ export default {
       }
     },
     async findLabware() {
-      const labware = await this.api.findAll(this.labwareType, {
-        include: this.includes,
-        filter: { barcode: this.labwareBarcode },
-        fields: this.fieldsToRetrieve(),
-      })
-      return labware.data[0]
+      // returns a promise that can later be caught should the request fail
+      return await this.api
+        .findAll(this.labwareType, {
+          include: this.includes,
+          filter: { barcode: this.labwareBarcode },
+          fields: this.fieldsToRetrieve(),
+        })
+        .then((response) => {
+          return response.data[0]
+        })
     },
     fieldsToRetrieve() {
       if (this.fields) {
@@ -236,14 +240,15 @@ export default {
       this.labware = result
       this.apiActivity = { state: 'valid', message: 'Search complete' }
     },
-    apiError(err) {
-      if (!err) {
+    apiError(response) {
+      if (!response) {
         this.apiActivity = { state: 'invalid', message: 'Unknown error' }
-      } else if (err[0]) {
-        const message = `${err[0].title}: ${err[0].detail}`
+      } else if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
+        const error = response.errors[0]
+        const message = `${error.title}: ${error.detail}`
         this.apiActivity = { state: 'invalid', message }
       } else {
-        this.apiActivity = { ...err, state: 'invalid' }
+        this.apiActivity = { ...response, state: 'invalid' }
       }
     },
     focus() {

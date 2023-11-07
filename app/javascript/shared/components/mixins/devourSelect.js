@@ -132,25 +132,30 @@ export default {
     },
     // Override this method when you need different behaviour
     async performFind() {
-      const qryResult = await this.api.findAll(this.resourceName, {
-        include: this.includes,
-        filter: this.filter,
-        fields: this.fields,
-      })
-      return qryResult.data
+      // returns a promise that can later be caught should the request fail
+      return await this.api
+        .findAll(this.resourceName, {
+          include: this.includes,
+          filter: this.filter,
+          fields: this.fields,
+        })
+        .then((response) => {
+          return response.data[0]
+        })
     },
     apiSuccess(results) {
       this.results = results
       this.apiActivity = { state: 'valid', message: 'Search complete' }
     },
-    apiError(err) {
-      if (!err) {
+    apiError(response) {
+      if (!response) {
         this.apiActivity = { state: 'invalid', message: 'Unknown error' }
-      } else if (err[0] && err[0].title && err[0].detail) {
-        const msg = `${err[0].title}: ${err[0].detail}`
-        this.apiActivity = { state: 'invalid', message: msg }
+      } else if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
+        const error = response.errors[0]
+        const message = `${error.title}: ${error.detail}`
+        this.apiActivity = { state: 'invalid', message }
       } else {
-        this.apiActivity = { ...err, state: 'invalid' }
+        this.apiActivity = { ...response, state: 'invalid' }
       }
     },
   },
