@@ -62,7 +62,7 @@ class ExportsController < ApplicationController
 
   def ancestor_tube_details(ancestor_results)
     ancestor_results.each_with_object({}) do |ancestor_result, tube_list|
-      tube = Sequencescape::Api::V2::Tube.find_by(uuid: ancestor_result.uuid)
+      tube = Sequencescape::Api::V2::Tube.find_by({uuid: ancestor_result.uuid})
       tube_sample_uuid = tube.aliquots.first.sample.uuid
       tube_list[tube_sample_uuid] = tube if tube_sample_uuid.present?
     end
