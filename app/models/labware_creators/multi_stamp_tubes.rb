@@ -101,7 +101,7 @@ module LabwareCreators
     end
 
     def request_hash(transfer, child_plate)
-      tube = Sequencescape::Api::V2::Tube.find_by({uuid: transfer[:source_tube]})
+      tube = Sequencescape::Api::V2::Tube.find_by({ uuid: transfer[:source_tube] })
 
       {
         'source_asset' => transfer[:source_asset],

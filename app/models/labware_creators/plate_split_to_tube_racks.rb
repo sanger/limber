@@ -190,7 +190,7 @@ module LabwareCreators
     def check_tube_rack_scan_file(tube_rack_file, msg_prefix)
       tube_rack_file.position_details.each do |tube_posn, tube_details|
         foreign_barcode = tube_details['tube_barcode']
-        tube_in_db = Sequencescape::Api::V2::Tube.find_by({barcode: foreign_barcode})
+        tube_in_db = Sequencescape::Api::V2::Tube.find_by({ barcode: foreign_barcode })
         next if tube_in_db.blank?
 
         msg = "#{msg_prefix} tube barcode #{foreign_barcode} (at rack position #{tube_posn}) already exists in the LIMS"
@@ -224,7 +224,7 @@ module LabwareCreators
       return {} if ancestor_results.blank?
 
       ancestor_results.each_with_object({}) do |ancestor_result, tube_list|
-        tube = Sequencescape::Api::V2::Tube.find_by({uuid: ancestor_result.uuid})
+        tube = Sequencescape::Api::V2::Tube.find_by({ uuid: ancestor_result.uuid })
         tube_sample_uuid = tube.aliquots.first.sample.uuid
         tube_list[tube_sample_uuid] = tube if tube_sample_uuid.present?
       end
