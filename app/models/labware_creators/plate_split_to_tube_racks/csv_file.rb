@@ -119,12 +119,15 @@ module LabwareCreators
     end
 
     def check_no_duplicate_tube_barcodes
-      duplicated_tube_barcodes =
-        tube_rack_scan.group_by(&:tube_barcode).select { |_tube_barcode, tubes| tubes.size > 1 }.keys.join(',')
+      duplicates = tube_rack_scan.group_by(&:tube_barcode).select { |_tube_barcode, tubes| tubes.size > 1 }.keys
 
-      return if duplicated_tube_barcodes.empty?
+      # remove any NO READ or NOSCAN values
+      ignore_list = ['NO READ', 'NOSCAN']
+      duplicates = duplicates.reject { |barcode| ignore_list.include?(barcode) }
 
-      errors.add(:base, "Contains duplicate tube barcodes (#{duplicated_tube_barcodes})")
+      return if duplicates.empty?
+
+      errors.add(:base, "Contains duplicate tube barcodes (#{duplicates.join(',')})")
     end
 
     # Generates a hash of position details based on the tube rack scan data in the CSV file.

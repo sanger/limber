@@ -355,7 +355,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'should not be valid' do
         expect(subject.valid?).to be false
       end
 

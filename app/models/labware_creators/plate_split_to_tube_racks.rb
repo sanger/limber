@@ -185,11 +185,6 @@ module LabwareCreators
       )
     end
 
-    # def both_files_correctly_parsed?
-    #   (sequencing_file.present? && sequencing_csv_file.correctly_parsed?) &&
-    #     (contingency_file.present? && contingency_csv_file.correctly_parsed?)
-    # end
-
     def same_tube_rack_barcode?
       seq_tube_rack = extract_tube_rack_barcode(sequencing_csv_file)
       cont_tube_rack = extract_tube_rack_barcode(contingency_csv_file)
