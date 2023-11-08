@@ -42,14 +42,13 @@ module LabwareCreators
   #
   # rubocop:disable Metrics/ClassLength
   class PlateSplitToTubeRacks < Base
+    include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
+    self.page = 'plate_split_to_tube_racks'
     self.attributes += %i[sequencing_file contingency_file]
 
-    self.page = 'plate_split_to_tube_racks'
-
     attr_accessor :sequencing_file, :contingency_file
-
     attr_reader :child_sequencing_tubes, :child_contingency_tubes
 
     validates_nested :well_filter
@@ -71,6 +70,7 @@ module LabwareCreators
       'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
     def save
+      # NB. need the && true!!
       super && upload_tube_rack_files && true
     end
 

@@ -3076,7 +3076,7 @@ ROBOT_CONFIG =
           purpose: 'RVI RT',
           states: ['pending'],
           label: 'Bed 6',
-          parent: bed(4).barcode,
+          parent: bed(4).barcode
         }
       }
     )
@@ -3093,7 +3093,7 @@ ROBOT_CONFIG =
         }
       }
     )
-  
+
     custom_robot(
       'bravo-rvi-rt-1',
       name: 'Bravo RVI RT Mix',
@@ -3148,7 +3148,7 @@ ROBOT_CONFIG =
           label: 'Carousel 4,3',
           parent: bed(8).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
 
@@ -3167,7 +3167,7 @@ ROBOT_CONFIG =
           label: 'Bed 6',
           parent: bed(7).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
 
@@ -3198,7 +3198,7 @@ ROBOT_CONFIG =
           label: 'Bed 14',
           parent: bed(12).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
 
@@ -3217,7 +3217,7 @@ ROBOT_CONFIG =
           label: 'Carousel 1,3',
           parent: bed(4).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
 
@@ -3236,7 +3236,7 @@ ROBOT_CONFIG =
           label: 'Carousel 4,5',
           parent: bed(4).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
 
@@ -3267,7 +3267,7 @@ ROBOT_CONFIG =
           label: 'Bed 14',
           parent: bed(12).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
 
@@ -3286,7 +3286,7 @@ ROBOT_CONFIG =
           label: 'Bed 2',
           parent: bed(4).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
   end
