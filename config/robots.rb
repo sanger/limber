@@ -3077,63 +3077,61 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 6',
           parent: bed(4).barcode,
-          target_state: 'passed'
         }
       }
     )
 
-    # Commented out until we understand a plate with multiple states steps
-    # custom_robot(
-    #   'mosquito-rvi-rt',
-    #   name: 'Mosquito RVI RT Random Primers',
-    #   beds: {
-    #     bed(5).barcode => {
-    #       purpose: 'RVI RT',
-    #       states: ['pending'],
-    #       label: 'Bed 5',
-    #       target_state: 'started'
-    #     }
-    #   }
-    # )
+    custom_robot(
+      'mosquito-rvi-rt',
+      name: 'Mosquito RVI RT Random Primers',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI RT',
+          states: ['pending'],
+          label: 'Bed 5',
+          target_state: 'processed_1'
+        }
+      }
+    )
   
-    # custom_robot(
-    #   'bravo-rvi-rt-1',
-    #   name: 'Bravo RVI RT Mix',
-    #   beds: {
-    #     bed(8).barcode => {
-    #       purpose: 'RVI RT',
-    #       states: ['started'],
-    #       label: 'Bed 8',
-    #       target_state: 'processed_1'
-    #     }
-    #   }
-    # )
+    custom_robot(
+      'bravo-rvi-rt-1',
+      name: 'Bravo RVI RT Mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['processed_1'],
+          label: 'Bed 8',
+          target_state: 'processed_2'
+        }
+      }
+    )
 
-    # custom_robot(
-    #   'bravo-rvi-rt-2',
-    #   name: 'Bravo RVI RT First Strand Mix',
-    #   beds: {
-    #     bed(8).barcode => {
-    #       purpose: 'RVI RT',
-    #       states: ['processed_1'],
-    #       label: 'Bed 8',
-    #       target_state: 'processed_2'
-    #     }
-    #   }
-    # )
+    custom_robot(
+      'bravo-rvi-rt-2',
+      name: 'Bravo RVI RT First Strand Mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['processed_2'],
+          label: 'Bed 8',
+          target_state: 'processed_3'
+        }
+      }
+    )
 
-    # custom_robot(
-    #   'bravo-rvi-rt-3',
-    #   name: 'Bravo RVI RT Second Strand Mix',
-    #   beds: {
-    #     bed(8).barcode => {
-    #       purpose: 'RVI RT',
-    #       states: ['processed_2'],
-    #       label: 'Bed 8',
-    #       target_state: 'passed'
-    #     }
-    #   }
-    # )
+    custom_robot(
+      'bravo-rvi-rt-3',
+      name: 'Bravo RVI RT Second Strand Mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['processed_3'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
 
     custom_robot(
       'bravo-rvi-rt-to-rvi-cdna-xp',
