@@ -76,7 +76,7 @@ module LabwareCreators
     end
 
     def parent_tubes
-      Sequencescape::Api::V2::Tube.find_all({ uuid: parent_uuids }, includes: 'receptacle,aliquots,aliquots.study')
+      Sequencescape::Api::V2::Tube.find_all(uuid: parent_uuids, includes: 'receptacle,aliquots,aliquots.study')
     end
 
     def transfer_material_from_parent!(child_plate)
@@ -101,7 +101,7 @@ module LabwareCreators
     end
 
     def request_hash(transfer, child_plate)
-      tube = Sequencescape::Api::V2::Tube.find_by({ uuid: transfer[:source_tube] })
+      tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube])
 
       {
         'source_asset' => transfer[:source_asset],

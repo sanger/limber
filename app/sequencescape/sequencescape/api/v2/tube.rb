@@ -26,11 +26,16 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
 
-  def self.find_by(options, includes: DEFAULT_INCLUDES)
+  def self.find_by(params)
+    options = params.dup
+    includes = options.delete(:includes) || DEFAULT_INCLUDES
     Sequencescape::Api::V2::Tube.includes(*includes).find(**options).first
   end
 
-  def self.find_all(options, includes: DEFAULT_INCLUDES, paginate: {})
+  def self.find_all(params)
+    options = params.dup
+    includes = options.delete(:includes) || DEFAULT_INCLUDES
+    paginate = options.delete(:paginate) || {}
     Sequencescape::Api::V2::Tube.includes(*includes).where(**options).paginate(paginate).all
   end
 
