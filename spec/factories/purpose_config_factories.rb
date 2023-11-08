@@ -239,6 +239,19 @@ FactoryBot.define do
       ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
     end
 
+    # Configuration to set number_of_source_wells argument
+    factory :pooled_wells_by_sample_in_groups_purpose_config do
+      transient { number_of_source_wells { 2 } }
+      creator_class do
+        {
+          name: 'LabwareCreators::PooledWellsBySampleInGroups',
+          args: {
+            number_of_source_wells: number_of_source_wells
+          }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }

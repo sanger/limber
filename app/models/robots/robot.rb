@@ -23,7 +23,7 @@ module Robots
         bed.load(bed_settings[id]) if bed.transitions?
         bed.valid? || raise(Bed::BedError, bed.error_messages)
       end
-      beds.values.each(&:transition)
+      beds.each_value(&:transition)
     end
 
     def formatted_message

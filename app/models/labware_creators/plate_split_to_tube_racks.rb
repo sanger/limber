@@ -42,14 +42,13 @@ module LabwareCreators
   #
   # rubocop:disable Metrics/ClassLength
   class PlateSplitToTubeRacks < Base
+    include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
+    self.page = 'plate_split_to_tube_racks'
     self.attributes += %i[sequencing_file contingency_file]
 
-    self.page = 'plate_split_to_tube_racks'
-
     attr_accessor :sequencing_file, :contingency_file
-
     attr_reader :child_sequencing_tubes, :child_contingency_tubes
 
     validates_nested :well_filter
@@ -62,15 +61,16 @@ module LabwareCreators
     validates_nested :contingency_csv_file, if: :contingency_file
 
     # validate there are sufficient tubes in the racks for the number of parent wells
-    validate :sufficient_tubes_in_racks?
+    validate :must_have_sufficient_tubes_in_rack, if: :contingency_file
 
     # validate that the tube barcodes do not already exist in the system
     validate :tube_barcodes_are_unique?
 
-    # TODO: check need all this in the includes e.g. metadata
-    PARENT_PLATE_INCLUDES = 'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+    PARENT_PLATE_INCLUDES =
+      'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
     def save
+      # NB. need the && true!!
       super && upload_tube_rack_files && true
     end
 
@@ -84,19 +84,13 @@ module LabwareCreators
       @parent_v1 ||= api.plate.find(parent_uuid)
     end
 
-    # Sets the filter parameters for the well filter.
-    #
-    # @param filter_parameters [Hash] The filter parameters to assign.
-    # @return [void]
-    def filters=(filter_parameters)
-      well_filter.assign_attributes(filter_parameters)
-    end
-
-    # Returns the unfiltered list of wells of the parent labware.
+    # Returns the list of wells of the parent labware.
+    # In column order (A1, B1, C1 etc.)
+    # Used in WellFilter.
     #
     # @return [Array<Well>] The wells of the parent labware.
     def labware_wells
-      parent.wells
+      parent.wells_in_columns
     end
 
     # Creates child sequencing and contingency tubes, performs transfers.
@@ -157,14 +151,19 @@ module LabwareCreators
       @num_parent_wells ||= well_filter.filtered.length
     end
 
+    # Validation method that checks whether there are enough tubes in the rack.
+    #
+    # @return [void]
+    def must_have_sufficient_tubes_in_rack
+      errors.add(:tube_rack_file, 'Must have sufficient tubes in rack') unless sufficient_tubes_in_racks?
+    end
+
     # Checks if there are sufficient tubes in the child tube racks for all the parent wells.
     # This depends on the number of unique samples in the parent plate, and the number of parent wells,
     # as well as whether they are using both sequencing tubes and contingency tubes or just contingency.
     #
     # @return [Boolean] `true` if there are sufficient tubes, `false` otherwise.
     def sufficient_tubes_in_racks?
-      return if contingency_file.blank?
-
       if require_contingency_tubes_only?
         num_contingency_tubes >= num_parent_wells
       else
@@ -202,7 +201,6 @@ module LabwareCreators
     private
 
     # Returns a new instance of WellFilter with the current object as the creator.
-    # NB. filters failed and cancelled wells by default
     #
     # @return [WellFilter] A new instance of WellFilter.
     def well_filter
@@ -427,7 +425,6 @@ module LabwareCreators
     # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
     #
     # @return [String] The name prefix for the child tubes.
-    # rubocop:disable Metrics/MethodLength
     def tube_name_prefix(tube_type)
       config_arg = ''
       name_prefix =
@@ -444,8 +441,6 @@ module LabwareCreators
       name_prefix
     end
 
-    # rubocop:enable Metrics/MethodLength
-
     # Adds a mapping between a well and a tube name to the appropriate hash based on the tube type.
     # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
     # @param well [Well] The well to add the mapping for.
@@ -457,10 +452,10 @@ module LabwareCreators
     # @return [void]
     def add_to_well_to_tube_hash(tube_type, well, tube_name)
       if tube_type == 'sequencing'
-        @sequencing_wells_to_tube_names = {} if @sequencing_wells_to_tube_names.nil?
+        @sequencing_wells_to_tube_names ||= {}
         @sequencing_wells_to_tube_names[well] = tube_name
       else
-        @contingency_wells_to_tube_names = {} if @contingency_wells_to_tube_names.nil?
+        @contingency_wells_to_tube_names ||= {}
         @contingency_wells_to_tube_names[well] = tube_name
       end
     end
@@ -476,7 +471,6 @@ module LabwareCreators
     #
     # @return [Hash] A hash of attributes to use for the contingency tubes.
     # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def generate_tube_attributes(tube_type, csv_file, wells)
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
@@ -499,8 +493,6 @@ module LabwareCreators
     end
 
     # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
-
     # Returns a hash of details to use for generating a tube name based on the given prefix,
     # stock tube barcode, and destination tube position.
     #

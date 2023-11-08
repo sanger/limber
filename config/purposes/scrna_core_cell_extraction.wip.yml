@@ -52,6 +52,13 @@ LRC Blood Bank:
 # Output plate from Hamilton PBMC isolation protocol / input plate for the cell counting and cell banking protocols
 LRC PBMC Bank:
   :asset_type: plate
+  # Labware creator for pooling isolations by sample before cell counting
+  :creator_class:
+    name: LabwareCreators::PooledWellsBySampleInGroups
+    args:
+      # number of source wells to pool into a single destination well by sample from LRC Bank to LRC PBMC Bank
+      # e.g. 6 copies of sample in 6 wells, '2' in the config, pool to make 3 child wells
+      number_of_source_wells: 2
   :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
   :file_links:
     - name: 'Download Cellaca Input QC1'
@@ -70,8 +77,12 @@ LRC PBMC Bank:
       id: cellaca_input_file
       params:
         page: 3
+    - name: 'Download Hamilton LRC Blood Bank plate to LRC PBMC Bank plate CSV'
+      id: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
     - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
       id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
+    - name: 'Download PBMC Bank Tubes Content Report'
+      id: pbmc_bank_tubes_content_report
   :qc_thresholds:
     viability:
       units: '%'

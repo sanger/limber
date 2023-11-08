@@ -14,7 +14,7 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
     requests.select { |r| @request_state.blank? || @request_state.include?(r.state) }
   end
 
-  def filter_requests(requests, well) # rubocop:todo Metrics/MethodLength
+  def filter_requests(requests, well)
     return nil if well.requests_as_source.empty?
 
     filtered_requests_by_rt = filter_by_request_type(requests)
@@ -41,13 +41,12 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
   def well_transfers
     @well_transfers ||=
       wells.each_with_object([]) do |well, transfers|
-        next if well.empty? || (@transfer_failed && well.failed?)
+        next if well.empty? || !well.passed?
 
         filtered_requests = filter_requests(well.active_requests, well)
 
-        # rubocop:todo Layout/LineLength
-        # don't add wells to the transfers list if they have no filtered requests, i.e. only those submitted for library prep
-        # rubocop:enable Layout/LineLength
+        # don't add wells to the transfers list if they have no filtered requests,
+        # i.e. only those submitted for library prep
         transfers << [well, filtered_requests] unless filtered_requests.nil?
       end
   end

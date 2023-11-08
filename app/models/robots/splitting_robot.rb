@@ -16,7 +16,6 @@ module Robots
     # Also adds any errors describing invalid bed states
     #
     # @return [Hash<String => Boolean>] Hash of boolean indexed by bed barcode
-    # rubocop:todo Metrics/MethodLength
     def valid_relationships # rubocop:todo Metrics/AbcSize
       raise StandardError, "Relationships for #{name} are empty" if @relationships.empty?
 
@@ -35,8 +34,6 @@ module Robots
         end
       end
     end
-
-    # rubocop:enable Metrics/MethodLength
 
     def bed_class
       Robots::Bed::Splitting
