@@ -27,10 +27,6 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     Rails.env
   end
 
-  def environment_type_class
-    Rails.env.production? ? 'production' : 'nonproduction'
-  end
-
   def each_robot(&block)
     Robots.each_robot(&block)
   end

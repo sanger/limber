@@ -12,7 +12,7 @@
     <ul class="navbar-nav mr-auto mt-2 mt-md-0">
       <!-- No nav items -->
     </ul>
-    <span class='navbar-text float-sm-right navbar-dark text-white'>
+    <span class='navbar-text float-sm-right'>
       <% if logged_in? %>
         Currently logged in as, <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span> <%= session_switcher %></span>
       <% else %>
