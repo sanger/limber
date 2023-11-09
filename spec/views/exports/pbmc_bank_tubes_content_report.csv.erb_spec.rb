@@ -107,14 +107,14 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube6_uuid) { SecureRandom.uuid }
 
     # destination purposes
-    let(:lrc_blood_seq) { create(:v2_purpose, name: 'LRC Blood Seq') }
-    let(:lrc_blood_spare) { create(:v2_purpose, name: 'LRC Blood Spare') }
+    let(:lrc_bank_seq) { create(:v2_purpose, name: 'LRC Bank Seq') }
+    let(:lrc_bank_spare) { create(:v2_purpose, name: 'LRC Bank Spare') }
 
     # destination tubes
     let(:dest_tube1) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_seq,
+        purpose: lrc_bank_seq,
         uuid: dest_tube1_uuid,
         barcode_prefix: 'FX',
         barcode_number: 4,
@@ -126,7 +126,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube2) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube2_uuid,
         barcode_prefix: 'FX',
         barcode_number: 5,
@@ -138,7 +138,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube3) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube3_uuid,
         barcode_prefix: 'FX',
         barcode_number: 6,
@@ -150,7 +150,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube4) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_seq,
+        purpose: lrc_bank_seq,
         uuid: dest_tube4_uuid,
         barcode_prefix: 'FX',
         barcode_number: 7,
@@ -162,7 +162,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube5) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube5_uuid,
         barcode_prefix: 'FX',
         barcode_number: 8,
@@ -174,7 +174,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube6) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube6_uuid,
         barcode_prefix: 'FX',
         barcode_number: 9,

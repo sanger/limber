@@ -58,7 +58,7 @@
     # donor_id is sourced from the sample metadata provided by Sequencescape
     donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
     child_tube_purpose = child_tube_v2.purpose.name
-    destination = ((child_tube_purpose == 'LRC Blood Seq') ? 'Sequencing' : 'Contingency')
+    destination = ((child_tube_purpose == 'LRC Bank Seq') ? 'Sequencing' : 'Contingency')
     volume = 135
 
     rows_array << [
