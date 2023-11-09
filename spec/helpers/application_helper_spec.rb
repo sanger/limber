@@ -1,6 +1,8 @@
-require './app/helpers/application_helper'
+# frozen_string_literal: true
 
-describe ApplicationHelper do
+require 'spec_helper'
+
+RSpec.describe ApplicationHelper do
   describe '#favicon' do
     subject(:favicon) { helper.favicon }
 

@@ -49,7 +49,7 @@ body {
     @extend .btn-light;
     @extend .border;
   }
-  @extend .border-bottom;  // add border to bottom to increase visibility
+  @extend .border-bottom; // add border to bottom to increase visibility
   border-bottom-color: #eaecef !important; // set border color to match jumbotron background
 }
 
@@ -82,7 +82,7 @@ header.limber-header {
 // Set the background color of the navbar based on the environment
 .production {
   header.limber-header {
-  @extend %navbar-dark-style;
+    @extend %navbar-dark-style;
     nav {
       @extend .bg-production;
     }
@@ -98,26 +98,26 @@ header.limber-header {
 
 .training {
   header.limber-header {
-  @extend %navbar-dark-style;
+    @extend %navbar-dark-style;
     nav {
       @extend .bg-training;
     }
     .btn-logout {
       @extend .btn-success;
-      border-color: darken($training, 5%) !important
+      border-color: darken($training, 5%) !important;
     }
   }
 }
 
 .staging {
   header.limber-header {
-  @extend %navbar-dark-style;
+    @extend %navbar-dark-style;
     nav {
       @extend .bg-staging;
     }
     .btn-logout {
       @extend .btn-danger;
-      border-color: darken($staging, 5%) !important
+      border-color: darken($staging, 5%) !important;
     }
   }
 }
