@@ -12,7 +12,8 @@ Bait Capture Library: # Top of the pipeline (Library Prep)
   relationships:
     RVI Cherrypick: RVI RT
     RVI RT: RVI cDNA XP
-    RVI cDNA XP: RVI Lib PCR
+    RVI cDNA XP: RVI Lig Bind
+    RVI Lig Bind: RVI Lib PCR
     RVI Lib PCR: RVI Lib PCR XP
     RVI Lib PCR XP: RVI Lib PrePool
     RVI Lib PrePool: RVI Hyb

@@ -3147,17 +3147,49 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Carousel 4,3',
           parent: bed(8).barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-cdna-xp-frag-mix',
+      name: 'Bravo RVI cDNA XP Frag Mix',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI cDNA XP',
+          states: ['started'],
+          label: 'Bed 5',
           target_state: 'passed'
         }
       }
     )
 
     custom_robot(
-      'bravo-rvi-cdna-xp-to-rvi-lib-pcr',
-      name: 'Bravo RVI cDNA XP => RVI Lib PCR',
+      'bravo-rvi-cdna-xp-to-rvi-lig-bind',
+      name: 'Bravo RVI cDNA XP => RVI Lig Bind',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI cDNA XP',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('3,5').barcode => {
+          purpose: 'RVI Lig Bind',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-lig-bind-to-rvi-lib-pcr',
+      name: 'Bravo RVI Lig Bind => RVI Lib PCR',
       beds: {
         bed(7).barcode => {
-          purpose: 'RVI cDNA XP',
+          purpose: 'RVI Lig Bind',
           states: ['passed'],
           label: 'Bed 7'
         },
@@ -3272,8 +3304,8 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'bravo-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
-      name: 'Bravo RVI Cap Lib PCR XP => RVI Cap Lib Pool',
+      'beckman-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
+      name: 'Beckman RVI Cap Lib PCR XP => RVI Cap Lib Pool',
       beds: {
         bed(4).barcode => {
           purpose: 'RVI Cap Lib PCR XP',

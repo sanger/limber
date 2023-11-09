@@ -13,6 +13,10 @@ RVI cDNA XP:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
 
+RVI Lig Bind:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+
 RVI Lib PCR:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
