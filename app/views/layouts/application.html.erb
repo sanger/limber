@@ -21,9 +21,10 @@
       <script>$.fx.off = true;</script>
     <% end %>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/<%= apple_icon %>" />
     <link rel="icon" sizes="32x32" href="/icon32.png" />
     <link rel="icon" sizes="16x16" href="/icon16.png" />
+    <link rel="shortcut icon" href="/<%= favicon %>" type="image/x-icon" />
   </head>
   <body class='<%= environment %> <%= logged_in_class %>'>
     <div id='app'>
