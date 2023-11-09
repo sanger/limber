@@ -186,6 +186,14 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
+  let(:sequencing_file) do
+    fixture_file_upload('spec/fixtures/files/scrna_core_sequencing_tube_rack_scan.csv', 'sequencescape/qc_file')
+  end
+
+  let(:contingency_file) do
+    fixture_file_upload('spec/fixtures/files/scrna_core_contingency_tube_rack_scan.csv', 'sequencescape/qc_file')
+  end
+
   before do
     # need both child tubes to have a purpose config here
     create(
@@ -220,7 +228,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#sufficient_tubes_in_racks?' do
+  context '#must_have_sufficient_tubes_in_rack_files' do
     let(:num_parent_wells) { 96 }
     let(:num_parent_unique_samples) { 48 }
     let(:num_sequencing_tubes) { 48 }
@@ -242,13 +250,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
     context 'when a contingency file is not present' do
       it 'does not call the validation' do
-        expect(subject).not_to receive(:sufficient_tubes_in_racks?)
+        subject.validate
+        expect(subject).not_to be_valid
+        expect(subject).not_to receive(:must_have_sufficient_tubes_in_rack_files)
       end
     end
 
     context 'when require_contingency_tubes_only? is true' do
-      let(:contingency_file) { 'somefile' }
-
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
@@ -258,29 +266,29 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      before { allow(subject).to receive(:require_contingency_tubes_only?).and_return(true) }
+      before do
+        allow(subject).to receive(:require_contingency_tubes_only?).and_return(true)
+        subject.must_have_sufficient_tubes_in_rack_files
+      end
 
       context 'when there are enough contingency tubes' do
         let(:num_contingency_tubes) { 96 }
 
-        it 'returns true' do
-          expect(subject.sufficient_tubes_in_racks?).to be true
+        it 'is valid' do
+          expect(subject.errors[:contingency_csv_file]).to be_empty
         end
       end
 
       context 'when there are not enough contingency tubes' do
         let(:num_contingency_tubes) { 47 }
 
-        it 'returns false' do
-          expect(subject.sufficient_tubes_in_racks?).to be false
+        it 'is not valid' do
+          expect(subject.errors.full_messages).to include('Contingency csv file contains insufficient tubes')
         end
       end
     end
 
     context 'when require_contingency_tubes_only? is false' do
-      let(:sequencing_file) { 'somefile' }
-      let(:contingency_file) { 'somefile' }
-
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
@@ -291,28 +299,187 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      before { allow(subject).to receive(:require_contingency_tubes_only?).and_return(false) }
+      before do
+        allow(subject).to receive(:require_contingency_tubes_only?).and_return(false)
+        subject.must_have_sufficient_tubes_in_rack_files
+      end
 
       context 'when there are enough tubes' do
-        it 'returns true' do
-          expect(subject.sufficient_tubes_in_racks?).to be true
+        it 'is valid' do
+          expect(subject.errors.full_messages).to be_empty
         end
       end
 
       context 'when there are not enough sequencing tubes' do
         let(:num_sequencing_tubes) { 47 }
 
-        it 'returns false' do
-          expect(subject.sufficient_tubes_in_racks?).to be false
+        it 'is not valid' do
+          expect(subject.errors.full_messages).to include('Sequencing csv file contains insufficient tubes')
         end
       end
 
       context 'when there are not enough contingency tubes' do
         let(:num_contingency_tubes) { 47 }
 
-        it 'returns false' do
-          expect(subject.sufficient_tubes_in_racks?).to be false
+        it 'is not valid' do
+          expect(subject.errors.full_messages).to include('Contingency csv file contains insufficient tubes')
         end
+      end
+    end
+  end
+
+  context '#check_tube_rack_barcodes_differ_between_files' do
+    before do
+      stub_v2_plate(
+        parent_plate,
+        stub_search: false,
+        custom_includes:
+          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
+            'wells.downstream_tubes.custom_metadatum_collection'
+      )
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000001').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000002').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000011').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000012').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000013').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000014').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000015').and_return(nil)
+    end
+
+    context 'when files are not present' do
+      before { subject.valid? }
+
+      it 'does not call the validation' do
+        expect(subject).not_to receive(:check_tube_rack_barcodes_differ_between_files)
+      end
+    end
+
+    context 'when a file is not correctly parsed' do
+      let(:form_attributes) do
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_contingency_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
+        }
+      end
+
+      before do
+        allow(subject.sequencing_csv_file).to receive(:correctly_parsed?).and_return(false)
+        subject.valid?
+      end
+
+      it 'does not call the validation' do
+        expect(subject).not_to receive(:check_tube_rack_barcodes_differ_between_files)
+      end
+    end
+
+    context 'when the tube rack barcodes are the same' do
+      let(:form_attributes) do
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_contingency_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          sequencing_file: contingency_file,
+          contingency_file: contingency_file
+        }
+      end
+
+      it 'is not valid' do
+        expect(subject.valid?).to be false
+        expect(subject.errors[:contingency_csv_file]).to include(
+          'The tube rack barcodes within the contingency and sequencing files must be different'
+        )
+      end
+    end
+  end
+
+  context '#check_tube_barcodes_differ_between_files' do
+    before do
+      stub_v2_plate(
+        parent_plate,
+        stub_search: false,
+        custom_includes:
+          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
+            'wells.downstream_tubes.custom_metadatum_collection'
+      )
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000001').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000002').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000011').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000012').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000013').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000014').and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000015').and_return(nil)
+    end
+
+    context 'when files are not present' do
+      before { subject.valid? }
+
+      it 'does not call the validation' do
+        expect(subject).not_to receive(:check_tube_barcodes_differ_between_files)
+      end
+    end
+
+    context 'when a file is not correctly parsed' do
+      let(:form_attributes) do
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_contingency_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
+        }
+      end
+
+      before do
+        allow(subject.sequencing_csv_file).to receive(:correctly_parsed?).and_return(false)
+        subject.valid?
+      end
+
+      it 'does not call the validation' do
+        expect(subject).not_to receive(:check_tube_barcodes_differ_between_files)
+      end
+    end
+
+    context 'when there are duplicate tube barcodes between files' do
+      let(:form_attributes) do
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_contingency_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
+        }
+      end
+      let(:seq_tube_details) do
+        {
+          'A1' => {
+            'tube_rack_barcode' => 'TR00000001',
+            'tube_barcode' => 'FX00000001'
+          },
+          'B1' => {
+            'tube_rack_barcode' => 'TR00000001',
+            'tube_barcode' => 'FX00000002'
+          },
+          'C1' => {
+            'tube_rack_barcode' => 'TR00000001',
+            'tube_barcode' => 'FX00000011'
+          },
+          'D1' => {
+            'tube_rack_barcode' => 'TR00000001',
+            'tube_barcode' => 'FX00000012'
+          }
+        }
+      end
+
+      before { allow(subject.sequencing_csv_file).to receive(:position_details).and_return(seq_tube_details) }
+
+      it 'is not valid' do
+        expect(subject.valid?).to be false
+        expect(subject.errors[:contingency_csv_file]).to include(
+          'Tube barcodes are duplicated across contingency and sequencing files (FX00000011, FX00000012)'
+        )
       end
     end
   end
@@ -444,14 +611,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
 
     context 'with both sequencing and contingency files' do
-      let(:sequencing_file) do
-        fixture_file_upload('spec/fixtures/files/scrna_core_sequencing_tube_rack_scan.csv', 'sequencescape/qc_file')
-      end
-
-      let(:contingency_file) do
-        fixture_file_upload('spec/fixtures/files/scrna_core_contingency_tube_rack_scan.csv', 'sequencescape/qc_file')
-      end
-
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
