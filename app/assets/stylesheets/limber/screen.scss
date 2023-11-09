@@ -65,8 +65,17 @@ header.limber-header {
 }
 
 .environment {
-  @extend .badge;
-  @extend .badge-light;
+  // surround in bold square brackets
+  &:before {
+    content: '[';
+    font-weight: bold;
+  }
+  &:after {
+    content: ']';
+    font-weight: bold;
+  }
+  @extend .navbar-text;
+  @extend .small;
   @extend .mr-2;
 }
 
@@ -193,6 +202,7 @@ nav.robots-list {
   font-style: oblique;
   font-stretch: ultra-condensed;
   font-weight: lighter;
+  @extend .mr-2;
 }
 
 .btn-logout {
