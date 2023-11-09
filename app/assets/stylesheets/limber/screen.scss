@@ -31,6 +31,9 @@ body {
   .navbar-text {
     @extend .text-light;
   }
+  .icon-user {
+    @extend .icon-user-light;
+  }
 }
 %navbar-light-style {
   nav {
@@ -38,6 +41,13 @@ body {
   }
   .navbar-text {
     @extend .text-dark;
+  }
+  .icon-user {
+    @extend .icon-user-secondary;
+  }
+  .btn-logout {
+    @extend .btn-light;
+    @extend .border;
   }
   @extend .border-bottom;  // add border to bottom to increase visibility
   border-bottom-color: #eaecef !important; // set border color to match jumbotron background
@@ -70,6 +80,10 @@ header.limber-header {
     .environment {
       display: none;
     }
+    .btn-logout {
+      @extend .btn-danger;
+      @extend .border-0;
+    }
   }
 }
 
@@ -79,6 +93,10 @@ header.limber-header {
     nav {
       @extend .bg-training;
     }
+    .btn-logout {
+      @extend .btn-success;
+      border-color: darken($training, 5%) !important
+    }
   }
 }
 
@@ -87,6 +105,10 @@ header.limber-header {
   @extend %navbar-dark-style;
     nav {
       @extend .bg-staging;
+    }
+    .btn-logout {
+      @extend .btn-danger;
+      border-color: darken($staging, 5%) !important
     }
   }
 }
@@ -171,6 +193,12 @@ nav.robots-list {
   font-style: oblique;
   font-stretch: ultra-condensed;
   font-weight: lighter;
+}
+
+.btn-logout {
+  @extend .btn;
+  @extend .btn-secondary;
+  @extend .rounded;
 }
 
 .logged_in {

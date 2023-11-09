@@ -12,11 +12,14 @@
     <ul class="navbar-nav mr-auto mt-2 mt-md-0">
       <!-- No nav items -->
     </ul>
-    <span class='navbar-text float-sm-right'>
       <% if logged_in? %>
-        Currently logged in as, <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span> <%= session_switcher %></span>
+        <span class="icon icon-user mr-1"></span>
+        <span class='navbar-text mr-sm-2'>
+          <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span>
+        </span>
+        <%= session_switcher %>
       <% else %>
-        Not logged in
+        <span class='navbar-text'>Not logged in</span>
       <% end %>
   </div>
 </nav>
