@@ -76,6 +76,9 @@ const mockApi = function (resources = sequencescapeResources) {
 
       return payload
     },
+    error: function (payload) {
+      return Promise.reject(payload)
+    },
     mockGet: (url, params, response) => {
       mockedRequests.unshift({
         req: { method: 'GET', url: `${dummyApiUrl}/${url}`, data: {}, params }, // Request
@@ -85,7 +88,7 @@ const mockApi = function (resources = sequencescapeResources) {
     mockFail: (url, params, response) => {
       mockedRequests.unshift({
         req: { method: 'GET', url: `${dummyApiUrl}/${url}`, data: {}, params }, // Request
-        res: Promise.reject({ data: response }), // Response
+        res: Promise.reject(response), // Response
       })
     },
     devour,
