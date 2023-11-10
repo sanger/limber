@@ -56,7 +56,7 @@ RVI Lib PrePool:
 RVI Hyb:
   :asset_type: plate
   :default_printer_type: :plate_b
-  # :creator_class: LabwareCreators::BaitedPlate
+  :creator_class: LabwareCreators::BaitedPlate
   :csv_template: 'show_extended'
 
 RVI Cap Lib:
