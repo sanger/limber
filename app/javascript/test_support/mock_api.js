@@ -1,3 +1,14 @@
+/*
+Mock the devour api to allow us to test the UI without making real requests to
+the server. This is done by adding a mock middleware to the devour api. The
+mock middleware intercepts requests and returns a mocked response. The mocked
+response is defined by calling mockGet() or mockFail() on the mock middleware.
+
+The mock middleware also keeps track of how many times a mocked request has
+been called. This allows us to test that the UI is making the correct number
+of requests.
+*/
+
 import devourApi from 'shared/devourApi'
 import sequencescapeResources from 'shared/resources'
 // Provides object equality comparisons. eg.
@@ -48,7 +59,7 @@ const mockApi = function (resources = sequencescapeResources) {
     })
   }
 
-  const mockResponse = {
+  const mockResponseMiddleware = {
     name: 'mock-request-response',
     mockedRequests: [],
     req: (payload) => {
@@ -87,17 +98,18 @@ const mockApi = function (resources = sequencescapeResources) {
     devour,
   }
 
+  // Ensure that a 'mock-request-response' middleware is always present in
+  // the devour.middleware array, either by adding a new one or replacing an existing one.
   let mockMiddlewareIndex = devour.middleware.findIndex((mw) => {
     mw.name === 'mock-request-response'
   })
-
   if (mockMiddlewareIndex === -1) {
-    devour.middleware.unshift(mockResponse)
+    devour.middleware.unshift(mockResponseMiddleware)
   } else {
-    devour.middleware[mockMiddlewareIndex] = mockResponse
+    devour.middleware[mockMiddlewareIndex] = mockResponseMiddleware
   }
 
-  return mockResponse
+  return mockResponseMiddleware
 }
 
 export default mockApi
