@@ -100,9 +100,9 @@ const mockApi = function (resources = sequencescapeResources) {
     mw.name === 'mock-request-response'
   })
   if (mockMiddlewareIndex === -1) {
-    devour.middleware.unshift(mockResponseMiddleware)
+    devour.middleware.unshift(mockResponseMiddleware) // add mock middleware as the first middleware
   } else {
-    devour.middleware[mockMiddlewareIndex] = mockResponseMiddleware
+    devourApi.replaceMiddleware('mock-request-response', mockResponseMiddleware)
   }
 
   return mockResponseMiddleware
