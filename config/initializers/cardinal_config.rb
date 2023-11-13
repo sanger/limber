@@ -4,7 +4,10 @@ require 'csv'
 cardinal_pooling_csv =
   CSV.read(
     'config/cardinal_pooling.csv',
-    { encoding: 'UTF-8', headers: true, header_converters: :symbol, converters: :all }
+    encoding: 'UTF-8',
+    headers: true,
+    header_converters: :symbol,
+    converters: :all
   )
 
 Rails.application.config.cardinal_pooling_config = {}
