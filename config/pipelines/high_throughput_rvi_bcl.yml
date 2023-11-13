@@ -25,7 +25,7 @@ Bait Capture Library MX:
   pipeline_group: Bait Capture Library
   filters:
     request_type_key:
-      - limber_bait_capture_library_prep_multiplexing
+      - limber_multiplexing
   relationships:
     RVI Cap Lib PCR XP: RVI Cap Lib Pool
-    RVI Cap Lib Pool: RVI Lib Pool Norm
+    RVI Cap Lib Pool: Cap Lib Pool Norm

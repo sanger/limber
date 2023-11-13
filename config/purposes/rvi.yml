@@ -76,11 +76,3 @@ RVI Cap Lib Pool:
   :default_printer_type: :plate_b
   :creator_class: LabwareCreators::PlateWithTemplate
   :transfer_template: 'Pool wells based on submission'
-
-RVI Lib Pool Norm:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::MxTubePurpose
-  :creator_class: LabwareCreators::FinalTubeFromPlate
-  :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube

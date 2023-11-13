@@ -3085,10 +3085,10 @@ ROBOT_CONFIG =
       'mosquito-rvi-rt',
       name: 'Mosquito RVI RT Random Primers',
       beds: {
-        bed(5).barcode => {
+        bed(3).barcode => {
           purpose: 'RVI RT',
           states: ['pending'],
-          label: 'Bed 5',
+          label: 'Bed 3',
           target_state: 'processed_1'
         }
       }
@@ -3153,25 +3153,12 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'bravo-rvi-cdna-xp-frag-mix',
-      name: 'Bravo RVI cDNA XP Frag Mix',
-      beds: {
-        bed(5).barcode => {
-          purpose: 'RVI cDNA XP',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    custom_robot(
       'bravo-rvi-cdna-xp-to-rvi-lig-bind',
       name: 'Bravo RVI cDNA XP => RVI Lig Bind',
       beds: {
         bed(8).barcode => {
           purpose: 'RVI cDNA XP',
-          states: ['passed'],
+          states: ['started'],
           label: 'Bed 8'
         },
         car('3,5').barcode => {
@@ -3179,6 +3166,19 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Carousel 3,5',
           parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-cdna-xp-frag-mix',
+      name: 'Bravo RVI cDNA XP Frag Mix',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI cDNA XP',
+          states: ['started'],
+          label: 'Bed 5',
           target_state: 'passed'
         }
       }

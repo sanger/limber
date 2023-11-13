@@ -219,8 +219,8 @@ LCA Bank Stock,
 
 {include:Presenters::FinalTubePresenter}
 
-Used directly in 11 purposes:
-LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LCMB Custom Pool Norm, LB Lib Pool Norm, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool Norm, LDS Custom Pool Norm, RVI Lib Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm, 
+Used directly in 10 purposes:
+LB Custom Pool Norm, CLCM DNA Pool Norm, CLCM RNA Pool Norm, LCMB Custom Pool Norm, LB Lib Pool Norm, LBSN-9216 Lib PCR Pool XP, LTN Custom Pool Norm, LDS Custom Pool Norm, GBS MiSeq Pool, LCA Custom Pool Norm, 
 
 {Presenters::FinalTubePresenter View class documentation}
 
