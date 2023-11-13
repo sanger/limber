@@ -241,15 +241,22 @@ export default {
       this.apiActivity = { state: 'valid', message: 'Search complete' }
     },
     apiError(response) {
-      if (!response) {
-        this.apiActivity = { state: 'invalid', message: 'Unknown error' }
-      } else if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
-        const error = response.errors[0]
-        const message = `${error.title}: ${error.detail}`
-        this.apiActivity = { state: 'invalid', message }
-      } else {
-        this.apiActivity = { ...response, state: 'invalid' }
+      // switch statement on 'response' against differing error formats
+      // falsy -> { state: 'invalid', message: 'Unknown error' }
+      // {0: {title: '...', detail: '...'}} -> { state: 'invalid', message: '...' }
+      // default -> { ...response, state: 'invalid' }
+      let errorResponse
+      switch (true) {
+        case !response:
+          errorResponse = { state: 'invalid', message: 'Unknown error' }
+          break
+        case Boolean(response[0] && response[0].title && response[0].detail):
+          errorResponse = { state: 'invalid', message: `${response[0].title}: ${response[0].detail}` }
+          break
+        default:
+          errorResponse = { ...response, state: 'invalid' }
       }
+      this.apiActivity = errorResponse
     },
     focus() {
       this.$refs.scan.$el.focus()
