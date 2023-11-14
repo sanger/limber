@@ -10,6 +10,9 @@
           :wells="targetWells"
         />
       </b-card>
+      <b-card bg-variant="dark" text-variant="white">
+        <lb-tube-array-summary :tubes="tubes" />
+      </b-card>
     </lb-main-content>
     <lb-sidebar>
       <b-card header="Scan tubes" header-tag="h3">
@@ -54,6 +57,7 @@ import { transferTubesCreator } from 'shared/transfersCreators'
 import Plate from 'shared/components/Plate'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
+import TubeArraySummary from './TubeArraySummary'
 import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
@@ -66,6 +70,7 @@ export default {
   name: 'MultiStampTubes',
   components: {
     'lb-plate': Plate,
+    'lb-tube-array-summary': TubeArraySummary,
     'lb-labware-scan': LabwareScan,
     'lb-loading-modal': LoadingModal,
     'lb-multi-stamp-tubes-transfers': MultiStampTubesTransfers,
