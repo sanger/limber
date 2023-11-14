@@ -1,3 +1,9 @@
+/* Colours defined per environment */
+$production: $gray-800 !default;
+$training: $green !default;
+$staging: $red !default;
+$development: $gray-100 !default;
+
 @mixin shade-aliquot($base_colour, $text_colour) {
   &.aliquot,
   &.pool_name {
