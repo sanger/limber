@@ -32,32 +32,32 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  describe '#apple_icon' do
-    subject(:apple_icon) { helper.apple_icon }
+  describe '#apple_touch_icon' do
+    subject(:apple_touch_icon) { helper.apple_touch_icon }
 
-    it 'returns the apple icon path for the production environment' do
+    it 'returns the apple-touch-icon path for the production environment' do
       allow(Rails).to receive(:env).and_return('production')
-      expect(apple_icon).to eq('apple-icon.png')
+      expect(apple_touch_icon).to eq('apple-touch-icon.png')
     end
 
-    it 'returns the apple icon path for the training environment' do
+    it 'returns the apple-touch-icon path for the training environment' do
       allow(Rails).to receive(:env).and_return('training')
-      expect(apple_icon).to eq('apple-icon-training.png')
+      expect(apple_touch_icon).to eq('apple-touch-icon-training.png')
     end
 
-    it 'returns the apple icon path for the staging environment' do
+    it 'returns the apple-touch-icon path for the staging environment' do
       allow(Rails).to receive(:env).and_return('staging')
-      expect(apple_icon).to eq('apple-icon-staging.png')
+      expect(apple_touch_icon).to eq('apple-touch-icon-staging.png')
     end
 
-    it 'returns the apple icon path for the development environment' do
+    it 'returns the apple-touch-icon path for the development environment' do
       allow(Rails).to receive(:env).and_return('development')
-      expect(apple_icon).to eq('apple-icon-development.png')
+      expect(apple_touch_icon).to eq('apple-touch-icon-development.png')
     end
 
-    it 'returns the apple icon path for an unknown environment' do
+    it 'returns the apple-touch-icon path for an unknown environment' do
       allow(Rails).to receive(:env).and_return('unknown')
-      expect(apple_icon).to eq('apple-icon-development.png')
+      expect(apple_touch_icon).to eq('apple-touch-icon-development.png')
     end
   end
 end

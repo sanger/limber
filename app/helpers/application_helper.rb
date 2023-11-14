@@ -60,9 +60,9 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     "favicon#{icon_suffix}.ico"
   end
 
-  # Return the appropriate apple icon for the current environment
-  # @return [String] The path to the apple icon
-  def apple_icon
-    "apple-icon#{icon_suffix}.png"
+  # Return the appropriate apple-touch-icon for the current environment
+  # @return [String] The path to the apple-touch-icon
+  def apple_touch_icon
+    "apple-touch-icon#{icon_suffix}.png"
   end
 end
