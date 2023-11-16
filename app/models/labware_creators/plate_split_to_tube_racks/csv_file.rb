@@ -13,8 +13,8 @@ module LabwareCreators
   # and the tube locations then used to create a driver file for the liquid handler.
   # The filename of the file should also contain the tube rack barcode.
   # Example of file content (NB. no header line):
-  # TR00012345, A1, FX05653780
-  # TR00012345, A2, NO READ
+  # TR00012345,A1,FX05653780
+  # TR00012345,A2,NO READ
   # etc.
   #
   class PlateSplitToTubeRacks::CsvFile
@@ -23,6 +23,9 @@ module LabwareCreators
 
     validate :correctly_parsed?
     validates_nested :tube_rack_scan, if: :correctly_formatted?
+    validate :check_for_rack_barcodes_the_same, if: :correctly_formatted?
+    validate :check_no_duplicate_well_coordinates, if: :correctly_formatted?
+    validate :check_no_duplicate_tube_barcodes, if: :correctly_formatted?
 
     NO_TUBE_TEXTS = ['NO READ', 'NOSCAN'].freeze
 
@@ -95,6 +98,36 @@ module LabwareCreators
     # Gates looking for tube locations if the file is invalid
     def correctly_formatted?
       correctly_parsed?
+    end
+
+    def check_for_rack_barcodes_the_same
+      tube_rack_barcodes = tube_rack_scan.group_by(&:tube_rack_barcode).keys
+
+      return unless tube_rack_barcodes.size > 1
+
+      barcodes_str = tube_rack_barcodes.join(',')
+      errors.add(:base, "Should not contain different rack barcodes (#{barcodes_str})")
+    end
+
+    def check_no_duplicate_well_coordinates
+      duplicated_well_coordinates =
+        tube_rack_scan.group_by(&:tube_position).select { |_position, tubes| tubes.size > 1 }.keys.join(',')
+
+      return if duplicated_well_coordinates.empty?
+
+      errors.add(:base, "Contains duplicate well coordinates (#{duplicated_well_coordinates})")
+    end
+
+    def check_no_duplicate_tube_barcodes
+      duplicates = tube_rack_scan.group_by(&:tube_barcode).select { |_tube_barcode, tubes| tubes.size > 1 }.keys
+
+      # remove any NO READ or NOSCAN values
+      ignore_list = ['NO READ', 'NOSCAN']
+      duplicates = duplicates.reject { |barcode| ignore_list.include?(barcode) }
+
+      return if duplicates.empty?
+
+      errors.add(:base, "Contains duplicate tube barcodes (#{duplicates.join(',')})")
     end
 
     # Generates a hash of position details based on the tube rack scan data in the CSV file.

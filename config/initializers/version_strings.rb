@@ -10,7 +10,7 @@ rescue LoadError
     ENVIRONMENT = 'Dev'
 
     VERSION_ID = 'LOCAL'
-    VERSION_STRING = "Limber LOCAL [#{Deployed::ENVIRONMENT}]"
+    VERSION_STRING = "Limber LOCAL [#{Deployed::ENVIRONMENT}]".freeze
 
     APP_NAME = 'Limber'
     RELEASE_NAME = 'DEV'
