@@ -107,14 +107,14 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube6_uuid) { SecureRandom.uuid }
 
     # destination purposes
-    let(:lrc_blood_seq) { create(:v2_purpose, name: 'LRC Blood Seq') }
-    let(:lrc_blood_spare) { create(:v2_purpose, name: 'LRC Blood Spare') }
+    let(:lrc_bank_seq) { create(:v2_purpose, name: 'LRC Bank Seq') }
+    let(:lrc_bank_spare) { create(:v2_purpose, name: 'LRC Bank Spare') }
 
     # destination tubes
     let(:dest_tube1) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_seq,
+        purpose: lrc_bank_seq,
         uuid: dest_tube1_uuid,
         barcode_prefix: 'FX',
         barcode_number: 4,
@@ -126,7 +126,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube2) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube2_uuid,
         barcode_prefix: 'FX',
         barcode_number: 5,
@@ -138,7 +138,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube3) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube3_uuid,
         barcode_prefix: 'FX',
         barcode_number: 6,
@@ -150,7 +150,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube4) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_seq,
+        purpose: lrc_bank_seq,
         uuid: dest_tube4_uuid,
         barcode_prefix: 'FX',
         barcode_number: 7,
@@ -162,7 +162,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube5) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube5_uuid,
         barcode_prefix: 'FX',
         barcode_number: 8,
@@ -174,7 +174,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_tube6) do
       create(
         :v2_tube_with_metadata,
-        purpose: lrc_blood_spare,
+        purpose: lrc_bank_spare,
         uuid: dest_tube6_uuid,
         barcode_prefix: 'FX',
         barcode_number: 9,
@@ -243,6 +243,42 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
 
     it 'renders the expected content row by row' do
       CSV.parse(render).each { |row| expect(row).to eq(expected_content.shift) }
+    end
+
+    context 'when some data is missing' do
+      # qc results, no viability_qc
+      let(:live_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: nil, units: 'cells/ml') }
+      let(:qc_results) { [live_cell_count_qc] }
+
+      # expected file content
+      let(:expected_content) do
+        [
+          ['Workflow', workflow_name],
+          [],
+          [
+            'Well name',
+            'Donor ID',
+            'Stock barcode',
+            'FluidX barcode',
+            'Extraction and freeze date',
+            'Sequencing or contingency',
+            'Cell count (cells/ml)',
+            'Viability (%)',
+            'Volume (µl)',
+            'Study name',
+            'Collection site'
+          ],
+          ['DN1S:A1', 'Donor1', 'NT1O', 'FX4B', created_at, 'Sequencing', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:B1', '', 'NT2P', 'FX7E', created_at, 'Sequencing', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:A2', 'Donor1', 'NT1O', 'FX5C', created_at, 'Contingency', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:B2', '', 'NT2P', 'FX8F', created_at, 'Contingency', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:A3', 'Donor1', 'NT1O', 'FX6D', created_at, 'Contingency', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:B3', '', 'NT2P', 'FX9G', created_at, 'Contingency', '', '', '135', study_name, 'Sanger']
+        ]
+      end
+      it 'shows blanks in the missing columns, row by row' do
+        CSV.parse(render).each { |row| expect(row).to eq(expected_content.shift) }
+      end
     end
 
     context 'when transfers are not done yet' do

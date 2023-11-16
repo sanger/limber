@@ -6,7 +6,7 @@ require 'csv'
 # show => Looks up the presenter for the giver purpose and renders the appropriate show page
 # update => Used to update the state of a plate/tube
 class LabwareController < ApplicationController
-  UUID = /\A[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}\z/.freeze
+  UUID = /\A[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}\z/
 
   before_action :locate_labware, only: :show
   before_action :find_printers, only: [:show]
