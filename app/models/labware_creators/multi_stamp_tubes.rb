@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  class MultiStampTubes < Base # rubocop:todo Style/Documentation
+  class MultiStampTubes < Base # rubocop:todo Style/Documentation, Metrics/ClassLength
     include LabwareCreators::CustomPage
     include SupportParent::TubeOnly
 
@@ -139,8 +139,12 @@ module LabwareCreators
     # Otherwise, Project and Study can be specified explicitly on the Submission Template
     # (submission_parameters field) if autodetection is not appropriate (for instance in Cardinal,
     # where one tube will contain samples from multiple different studies).
-    def autodetect_studies_project
-      configured_params[:autodetect_studies_project] || false
+    def autodetect_studies
+      configured_params[:autodetect_studies] || false
+    end
+
+    def autodetect_projects
+      configured_params[:autodetect_projects] || false
     end
 
     # Creates a submission in Sequencescape based on the parent tubes
@@ -148,7 +152,9 @@ module LabwareCreators
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
-        asset_groups: [{ assets: asset_uuids, autodetect_studies_projects: autodetect_studies_project }],
+        asset_groups: [
+          { assets: asset_uuids, autodetect_studies: autodetect_studies, autodetect_projects: autodetect_projects }
+        ],
         api: api,
         user: user_uuid
       }
