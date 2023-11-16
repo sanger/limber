@@ -1,3 +1,5 @@
+import { validateError } from 'shared/devourApiValidators'
+
 const boolToString = { true: 'valid', false: 'invalid' }
 
 /**
@@ -148,15 +150,7 @@ export default {
       this.apiActivity = { state: 'valid', message: 'Search complete' }
     },
     apiError(response) {
-      if (!response) {
-        this.apiActivity = { state: 'invalid', message: 'Unknown error' }
-      } else if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
-        const error = response.errors[0]
-        const message = `${error.title}: ${error.detail}`
-        this.apiActivity = { state: 'invalid', message }
-      } else {
-        this.apiActivity = { ...response, state: 'invalid' }
-      }
+      this.apiActivity = validateError(response)
     },
   },
   render() {

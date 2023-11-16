@@ -86,9 +86,14 @@ const mockApi = function (resources = sequencescapeResources) {
       })
     },
     mockFail: (url, params, response) => {
+      // for each error in response.errors, create an object with the indices as keys and the error items as values
+      const errors = response.errors.reduce((accumulator, error, index) => {
+        accumulator[index] = error
+        return accumulator
+      }, {})
       mockedRequests.unshift({
         req: { method: 'GET', url: `${dummyApiUrl}/${url}`, data: {}, params }, // Request
-        res: Promise.reject(response), // Response
+        res: Promise.reject(errors), // Response
       })
     },
     devour,

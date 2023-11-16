@@ -49,9 +49,6 @@ describe('mockApi', () => {
         return err
       })
 
-    expect(response.data).toEqual(undefined)
-    expect(response.errors).toEqual([{ code: 500, detail: 'A server error occurred', status: 500 }])
-    expect(response.meta).toEqual(undefined)
-    expect(response.links).toEqual(undefined)
+    expect(response).toEqual({ 0: { detail: 'A server error occurred', code: 500, status: 500 } })
   })
 })
