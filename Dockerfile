@@ -12,10 +12,26 @@ RUN apt-get install -y build-essential
 RUN apt-get install -y curl
 RUN apt-get install -y git
 
+# DEPRECATED:
 # Set Node to install version 14
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update
 RUN apt-get install -y nodejs
+
+# TODO:
+# Set Node to install version 16
+#   https://github.com/nodesource/distributions
+# RUN set -uex \
+#     && apt-get update \
+#     && apt-get install -y ca-certificates curl gnupg \
+#     && mkdir -p /etc/apt/keyrings \
+#     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+#     | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+#     && NODE_MAJOR=16 \
+#     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
+#     | tee /etc/apt/sources.list.d/nodesource.list \
+#     && apt-get update \
+#     && apt-get install nodejs -y;
 
 # Change the working directory for all proceeding operations
 #   https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#workdir
