@@ -144,6 +144,25 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     stub_api_post('sub-uuid', 'submit')
   end
 
+  before do
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
+      .with(
+        include_used: false,
+        purpose_name: ['example-purpose'],
+        includes: 'purpose',
+        paginate: {
+          size: 30,
+          number: 1
+        }
+      )
+      .and_return([example_v2_tube, example_v2_tube2])
+
+    # Parent lookup
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
+      .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
+      .and_return([example_v2_tube, example_v2_tube2])
+  end
+
   background do
     create :tube_config, name: parent_purpose_name, uuid: 'example-purpose-uuid'
     create :pooled_tube_from_tubes_purpose_config,
@@ -165,7 +184,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     # Available tubes search
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
       .with(
-        { include_used: false, purpose_name: ['example-purpose'] },
+        include_used: false,
+        purpose_name: ['example-purpose'],
         includes: 'purpose',
         paginate: {
           size: 30,
@@ -176,7 +196,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with({ barcode: [tube_barcode_1, tube_barcode_2] }, includes: [])
+      .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
       .and_return([example_v2_tube, example_v2_tube2])
 
     # Old API still used when loading parent

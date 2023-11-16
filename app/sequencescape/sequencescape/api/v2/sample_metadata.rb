@@ -7,6 +7,6 @@ class Sequencescape::Api::V2::SampleMetadata < Sequencescape::Api::V2::Base
   DEFAULT_INCLUDES = [].freeze
 
   def self.find_by(options, includes: DEFAULT_INCLUDES)
-    Sequencescape::Api::V2::SampleMetadata.includes(*includes).find(options).first
+    Sequencescape::Api::V2::SampleMetadata.includes(*includes).find(**options).first
   end
 end

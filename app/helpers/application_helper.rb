@@ -7,7 +7,7 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     rescue LoadError
       module Deployed
         VERSION_ID = 'LOCAL'
-        VERSION_STRING = "Limber LOCAL [#{ENV.fetch('RACK_ENV', nil)}]"
+        VERSION_STRING = "Limber LOCAL [#{ENV.fetch('RACK_ENV', nil)}]".freeze
       end
     end
 

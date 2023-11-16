@@ -6,7 +6,7 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   def grouping(_data_role, options = {}, &block)
-    tag.div(options, &block)
+    tag.div(**options, &block)
   end
   private :grouping
 
@@ -47,7 +47,7 @@ module PageHelper # rubocop:todo Style/Documentation
     options[:class] ||= +''
     options[:class] << ' jumbotron'
     options[:id] = jumbotron_id
-    tag.div(options, &block)
+    tag.div(**options, &block)
   end
 
   # eg. state_badge('pending')

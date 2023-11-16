@@ -3,7 +3,7 @@
 
 require 'uri'
 
-CONFIG_FILE = "#{Dir.home}/.limber.environments.yml"
+CONFIG_FILE = "#{Dir.home}/.limber.environments.yml".freeze
 
 if ARGV[0].nil?
   $stdout.puts <<-HELP
