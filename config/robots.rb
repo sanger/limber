@@ -2809,7 +2809,7 @@ ROBOT_CONFIG =
       beds: {
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
-          states: ['passed'],
+          states: ['started'],
           label: 'Bed 9',
           target_state: 'passed'
         }
