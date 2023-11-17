@@ -224,7 +224,7 @@ module LabwareCreators
     #
     # Sets errors if there are insufficient tubes.
     def must_have_sufficient_tubes_in_rack_files
-      return unless files_correctly_parsed?
+      return unless files_valid?
 
       if require_contingency_tubes_only?
         add_error_if_insufficient_tubes(:contingency_csv_file, num_contingency_tubes, num_parent_wells)
@@ -238,19 +238,19 @@ module LabwareCreators
       end
     end
 
-    # Checks the files parsed correctly
-    def files_correctly_parsed?
+    # Checks the files passed their validations
+    def files_valid?
       return contingency_file_valid? if require_contingency_tubes_only?
 
       contingency_file_valid? && sequencing_file_valid?
     end
 
     def sequencing_file_valid?
-      sequencing_file.present? && sequencing_csv_file&.correctly_parsed? && sequencing_csv_file&.valid?
+      sequencing_file.present? && sequencing_csv_file&.valid?
     end
 
     def contingency_file_valid?
-      contingency_file.present? && contingency_csv_file&.correctly_parsed? && contingency_csv_file&.valid?
+      contingency_file.present? && contingency_csv_file&.valid?
     end
 
     # Adds an error when there are insufficient tubes in the given file
