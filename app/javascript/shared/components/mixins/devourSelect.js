@@ -142,7 +142,7 @@ export default {
           fields: this.fields,
         })
         .then((response) => {
-          return response.data[0]
+          return response.data
         })
     },
     apiSuccess(results) {
