@@ -44,7 +44,8 @@ LRC Blood Bank:
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
-      autodetect_studies_project: false
+      autodetect_studies: true
+      autodetect_projects: false
   :file_links:
     - name: 'Download Scanned Tube Layout for LRC Blood Bank Plate'
       id: scrna_core_cell_extraction_sample_arraying_tube_layout

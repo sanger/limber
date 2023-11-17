@@ -7,7 +7,7 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     rescue LoadError
       module Deployed
         VERSION_ID = 'LOCAL'
-        VERSION_STRING = "Limber LOCAL [#{ENV.fetch('RACK_ENV', nil)}]"
+        VERSION_STRING = "Limber LOCAL [#{ENV.fetch('RACK_ENV', nil)}]".freeze
       end
     end
 
@@ -27,10 +27,6 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     Rails.env
   end
 
-  def environment_type_class
-    Rails.env.production? ? 'production' : 'nonproduction'
-  end
-
   def each_robot(&block)
     Robots.each_robot(&block)
   end
@@ -39,5 +35,34 @@ module ApplicationHelper # rubocop:todo Style/Documentation
   def pipeline_groups
     return [] if Settings.pipelines.list.empty?
     Settings.pipelines.map(&:pipeline_group).uniq.sort
+  end
+
+  # Returns the appropriate icon suffix for the current environment
+  # Returns empty string for production
+  # Returns "-#{environment}" for training, staging
+  # Returns "-development" for any other environment
+  # @return [String] The suffix to append to the icon name
+  def icon_suffix
+    environment = Rails.env
+    case environment
+    when 'production'
+      ''
+    when 'training', 'staging'
+      "-#{environment}"
+    else
+      '-development'
+    end
+  end
+
+  # Return the appropriate favicon for the current environment
+  # @return [String] The path to the favicon
+  def favicon
+    "favicon#{icon_suffix}.ico"
+  end
+
+  # Return the appropriate apple-touch-icon for the current environment
+  # @return [String] The path to the apple-touch-icon
+  def apple_touch_icon
+    "apple-touch-icon#{icon_suffix}.png"
   end
 end

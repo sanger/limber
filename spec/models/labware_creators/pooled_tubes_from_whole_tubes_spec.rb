@@ -100,7 +100,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
 
     before do
       allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-        .with({ barcode: barcodes }, includes: [])
+        .with(barcode: barcodes, includes: [])
         .and_return([parent, parent2])
 
       tube_creation_request

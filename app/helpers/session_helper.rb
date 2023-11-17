@@ -30,6 +30,6 @@ module SessionHelper
   end
 
   def session_switcher
-    link_to 'Log Out', logout_sessions_path, class: 'btn btn-danger' if logged_in?
+    link_to 'Log Out', logout_sessions_path, class: 'btn-logout' if logged_in?
   end
 end
