@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import eventBus from 'shared/eventBus'
 import filterProps from './filterProps'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 import MultiStampTubesTransfers from './MultiStampTubesTransfers'
@@ -239,6 +240,14 @@ export default {
         })
         .catch((error) => {
           // Something has gone wrong
+          // generate an alert on the page
+          const title = error.response.data.message[1]
+          const messages = error.response.data.message[0].join(', ')
+          eventBus.$emit('push-alert', {
+            level: 'danger',
+            title: title,
+            message: messages,
+          })
           console.error(error)
           this.loading = false
         })
