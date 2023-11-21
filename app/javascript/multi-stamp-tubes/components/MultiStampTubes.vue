@@ -66,6 +66,20 @@ import { checkDuplicates } from 'shared/components/tubeScanValidators'
 import { validScanMessage } from 'shared/components/scanValidators'
 import { indexToName } from 'shared/wellHelpers'
 
+// Multistamp tubes is used in Cardinal and scRNA pipelines to record the transfers of samples from
+// tubes to a plate.
+//
+// In the Lab there are three steps to this process:
+// 1. The Lab user arrays the tubes in an (untracked) tube rack. This component is responsible for tracking that
+// arraying of tubes into the rack, by scanning each into a position. Limber LIMS records that arrangement
+// of tubes as transfers into the wells of a new child plate (we do not model the rack).
+// 2. The Lab user can then download from LIMS a printed version of that arrangement of tubes to paper, and print
+// a label for the child plate.
+// 3. The Lab user takes the paper printout, the rack of tubes, and the labeled child plate to the fume hood and
+// manually transfers the samples from the tubes to the plate according to the plan. The printout is their
+// checklist. Once done they click the Manual Transfer button in LIMS to action the transfers of samples into
+// the child plate.
+
 export default {
   name: 'MultiStampTubes',
   components: {

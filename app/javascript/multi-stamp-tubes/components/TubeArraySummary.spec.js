@@ -87,7 +87,7 @@ describe('TubeArraySummary', () => {
   it('renders the provided caption', () => {
     const wrapper = wrapperTubeArraySummaryWithDuplicates()
 
-    expect(wrapper.find('caption').text()).toEqual('Summary of tubes scanned into the rack')
+    expect(wrapper.find('caption').text()).toEqual('Summary of scanned tubes')
   })
 
   it('renders the provided tubes summary headers', () => {

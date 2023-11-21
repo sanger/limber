@@ -2,7 +2,7 @@
   <table id="tube_scan_summary" :class="['plate-view', 'pool-colours']">
     <caption>
       {{
-        'Summary of tubes scanned into the rack'
+        'Summary of scanned tubes'
       }}
     </caption>
     <thead>
@@ -36,11 +36,15 @@
 export default {
   name: 'TubeArraySummary',
   props: {
-    // Array of tube objects from the parent component.
-    // Represents the tubes scanned into the MultiStampTubes arraying component.
+    // See parent component MultiStampTubes for more details about the Lab process.
+    // This prop is the array of tube objects from the parent component, it represents the tubes
+    // scanned into the MultiStampTubes arraying component. It gets updated every time there is
+    // a change to the tubes in the parent component.
+    //
     // Each tube object contains the following:
     //  - index: the index of the tube in the array, related to the position in the tube rack
-    //  - labware: the labware object scanned into the parent screen, null if position is empty
+    //  - labware: the labware object scanned into the parent screen, null if position is empty, here
+    //    we are most interested in the barcodes of the labware
     //  - state: the state of the tube at this index, or 'empty' if nothing scanned yet
     tubes: {
       type: Array,
