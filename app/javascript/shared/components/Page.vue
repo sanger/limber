@@ -31,12 +31,7 @@ export default {
   },
   data() {
     return {
-      alerts: [
-        { level: 'info', title: 'Hello', message: 'This is an info message' },
-        { level: 'success', title: 'Hello', message: 'This is a success message' },
-        { level: 'warning', title: 'Hello', message: 'This is a warning message' },
-        { level: 'danger', title: 'Hello', message: 'This is a danger message' },
-      ],
+      alerts: [],
     }
   },
   mounted() {
