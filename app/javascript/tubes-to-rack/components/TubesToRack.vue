@@ -154,7 +154,7 @@ export default {
         })
         .catch((error) => {
           // Something has gone wrong
-          console.error(error)
+          handleFailedRequest(error)
           this.loading = false
         })
     },

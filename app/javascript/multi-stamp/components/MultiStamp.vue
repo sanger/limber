@@ -65,6 +65,7 @@ import buildPlateObjs from 'shared/plateHelpers'
 import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
 import { transfersFromRequests } from 'shared/transfersLayouts'
 import { checkSize, checkDuplicates } from 'shared/components/plateScanValidators'
+import { handleFailedRequest } from 'shared/requestHelpers'
 
 export default {
   name: 'MultiStamp',
@@ -295,7 +296,7 @@ export default {
         })
         .catch((error) => {
           // Something has gone wrong
-          console.error(error)
+          handleFailedRequest(error)
           this.loading = false
         })
     },

@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import eventBus from 'shared/eventBus'
 import filterProps from './filterProps'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 import MultiStampTubesTransfers from './MultiStampTubesTransfers'
@@ -62,6 +61,7 @@ import { transfersForTubes } from 'shared/transfersLayouts'
 import { checkDuplicates } from 'shared/components/tubeScanValidators'
 import { validScanMessage } from 'shared/components/scanValidators'
 import { indexToName } from 'shared/wellHelpers'
+import { handleFailedRequest } from 'shared/requestHelpers'
 
 export default {
   name: 'MultiStampTubes',
@@ -239,16 +239,7 @@ export default {
           this.locationObj.href = response.data.redirect
         })
         .catch((error) => {
-          // Something has gone wrong
-          // generate an alert on the page
-          const title = error.response.data.message[1]
-          const messages = error.response.data.message[0].join(', ')
-          eventBus.$emit('push-alert', {
-            level: 'danger',
-            title: title,
-            message: messages,
-          })
-          console.error(error)
+          handleFailedRequest(error)
           this.loading = false
         })
     },
