@@ -88,8 +88,8 @@ LDS AL Lib Dil and LTN AL Lib Dil
 
 {include:Presenters::StandardPresenter}
 
-Used directly in 93 purposes:
-CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM Lysate DNA, CLCM Lysate RNA, CLCM RNA End Prep, CLCM RNA Lib PCR XP, CLCM RT PreAmp, CLCM Stock, GnT Pico End Prep, GnT Pico-XP, GnT scDNA, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, LB End Prep, LB Hyb, LB Lib PCR-XP, LB Lib PrePool, LB Post Shear, LB Shear, LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, LBB Enriched TCR HT, LBB Lib-XP, LBB Ligation, LBC 3pV3 GEX Frag 2XP, LBC 5p GEX Frag 2XP, LBC Aggregate, LBC BCR Dil 1, LBC BCR Dil 2, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, LBC Cherrypick, LBC TCR Dil 1, LBC TCR Dil 2, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LBR Frag cDNA, LBR Globin, LCA 10X cDNA, LCA Blood Array, LCA Blood Bank, LCA PBMC, LCA PBMC Bank, LCA PBMC Pools, LCMB End Prep, LCMB Lib PCR-XP, LDS AL Lib, LDS Lib PCR XP, LDS Stock XP, LHR End Prep, LHR PCR 1, LHR PCR 2, LHR XP, LHR-384 AL Lib, LHR-384 cDNA, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LRC Blood Bank, LRC PBMC Bank, LSW-96 Stock, LTHR Lib PCR pool, LTHR PCR 1, LTHR PCR 2, LTHR RT-S, LTHR-384 Lib PCR pool, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 RT-Q, LTN AL Lib, LTN Lib PCR XP, LTN Post Shear, LTN Shear, LTN Stock XP, PF End Prep, PF Lib XP, PF Lib XP2, PF Post Shear, PF Post Shear XP, PF Shear, PF-384 End Prep, PF-384 Lib XP2, PF-384 Post Shear XP, pWGS-384 AL Lib, pWGS-384 Post Shear XP, RVI Cherrypick, scRNA cDNA-XP, and scRNA End Prep
+Used directly in 99 purposes:
+CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM Lysate DNA, CLCM Lysate RNA, CLCM RNA End Prep, CLCM RNA Lib PCR XP, CLCM RT PreAmp, CLCM Stock, GnT Pico End Prep, GnT Pico-XP, GnT scDNA, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, LB End Prep, LB Hyb, LB Lib PCR-XP, LB Lib PrePool, LB Post Shear, LB Shear, LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, LBB Enriched TCR HT, LBB Lib-XP, LBB Ligation, LBC 3pV3 GEX Frag 2XP, LBC 5p GEX Frag 2XP, LBC Aggregate, LBC BCR Dil 1, LBC BCR Dil 2, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, LBC Cherrypick, LBC TCR Dil 1, LBC TCR Dil 2, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LBR Frag cDNA, LBR Globin, LCA 10X cDNA, LCA Blood Array, LCA Blood Bank, LCA PBMC, LCA PBMC Bank, LCA PBMC Pools, LCMB End Prep, LCMB Lib PCR-XP, LDS AL Lib, LDS Lib PCR XP, LDS Stock XP, LHR End Prep, LHR PCR 1, LHR PCR 2, LHR XP, LHR-384 AL Lib, LHR-384 cDNA, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LRC Blood Bank, LRC PBMC Bank, LSW-96 Stock, LTHR Lib PCR pool, LTHR PCR 1, LTHR PCR 2, LTHR RT-S, LTHR-384 Lib PCR pool, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 RT-Q, LTN AL Lib, LTN Lib PCR XP, LTN Post Shear, LTN Shear, LTN Stock XP, PF End Prep, PF Lib XP, PF Lib XP2, PF Post Shear, PF Post Shear XP, PF Shear, PF-384 End Prep, PF-384 Lib XP2, PF-384 Post Shear XP, pWGS-384 AL Lib, pWGS-384 Post Shear XP, RVI Cap Lib, RVI Cap Lib PCR, RVI Cap Lib PCR XP, RVI Cap Lib Pool, RVI Hyb, RVI Lib PCR XP, RVI Lib PrePool, scRNA cDNA-XP, and scRNA End Prep
 
 {Presenters::StandardPresenter View class documentation}
 
@@ -98,8 +98,8 @@ CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM Lysate DNA, CLCM Lysate RNA, CLCM R
 
 {include:Presenters::PcrPresenter}
 
-Used directly in 19 purposes:
-CLCM DNA Lib PCR, CLCM RNA Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LBB Chromium Tagged, LBB Lib PCR-XP, LBB Ligation Tagged, LBC 3pV3 GEX LigXP, LBC 3pV3 GEX PCR 2XP, LBC 5p GEX LigXP, LBC 5p GEX PCR 2XP, LBC BCR Post Lig 1XSPRI, LBC TCR Post Lig 1XSPRI, LCA Connect PCRXP, LCMB Lib PCR, LDS Lib PCR, LHR Lib PCR, LTN Lib PCR, and scRNA Lib PCR
+Used directly in 20 purposes:
+CLCM DNA Lib PCR, CLCM RNA Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LBB Chromium Tagged, LBB Lib PCR-XP, LBB Ligation Tagged, LBC 3pV3 GEX LigXP, LBC 3pV3 GEX PCR 2XP, LBC 5p GEX LigXP, LBC 5p GEX PCR 2XP, LBC BCR Post Lig 1XSPRI, LBC TCR Post Lig 1XSPRI, LCA Connect PCRXP, LCMB Lib PCR, LDS Lib PCR, LHR Lib PCR, LTN Lib PCR, RVI Lib PCR, and scRNA Lib PCR
 
 {Presenters::PcrPresenter View class documentation}
 
@@ -108,8 +108,8 @@ CLCM DNA Lib PCR, CLCM RNA Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LBB Chromium T
 
 {include:Presenters::PermissivePresenter}
 
-Used directly in 10 purposes:
-LB cDNA, LB cDNA XP, LBR Frag, LBR Globin DNase, LBR mRNA Cap, LBR Ribo DNase, LBR RiboGlobin DNase, LHR-384 End Prep, PF Lib, and PF-384 Lib
+Used directly in 14 purposes:
+LB cDNA, LB cDNA XP, LBR Frag, LBR Globin DNase, LBR mRNA Cap, LBR Ribo DNase, LBR RiboGlobin DNase, LHR-384 End Prep, PF Lib, PF-384 Lib, RVI cDNA XP, RVI Cherrypick, RVI Lig Bind, and RVI RT
 
 {Presenters::PermissivePresenter View class documentation}
 
