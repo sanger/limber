@@ -47,21 +47,21 @@
 </template>
 
 <script>
-import filterProps from './filterProps'
-import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
-import MultiStampTubesTransfers from './MultiStampTubesTransfers'
-import { transferTubesCreator } from 'shared/transfersCreators'
-import Plate from 'shared/components/Plate'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
-import devourApi from 'shared/devourApi'
-import resources from 'shared/resources'
-import { buildTubeObjs } from 'shared/tubeHelpers'
-import { transfersForTubes } from 'shared/transfersLayouts'
-import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import Plate from 'shared/components/Plate'
 import { validScanMessage } from 'shared/components/scanValidators'
-import { indexToName } from 'shared/wellHelpers'
+import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import devourApi from 'shared/devourApi'
 import { handleFailedRequest } from 'shared/requestHelpers'
+import resources from 'shared/resources'
+import { transferTubesCreator } from 'shared/transfersCreators'
+import { transfersForTubes } from 'shared/transfersLayouts'
+import { buildTubeObjs } from 'shared/tubeHelpers'
+import { indexToName } from 'shared/wellHelpers'
+import MultiStampTubesTransfers from './MultiStampTubesTransfers'
+import filterProps from './filterProps'
+import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 
 export default {
   name: 'MultiStampTubes',

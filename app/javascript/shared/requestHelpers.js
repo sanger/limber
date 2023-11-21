@@ -1,6 +1,5 @@
-import { requestsForWell } from './wellHelpers'
-
 import eventBus from 'shared/eventBus'
+import { requestsForWell } from './wellHelpers'
 
 const requestIsActive = function (request) {
   return request.state !== 'passed' && request.state !== 'cancelled' && request.state !== 'failed'
@@ -41,4 +40,4 @@ const handleFailedRequest = function (request) {
   })
 }
 
-export { handleFailedRequest, requestIsActive, requestsFromPlates, requestIsLibraryCreation }
+export { handleFailedRequest, requestIsActive, requestIsLibraryCreation, requestsFromPlates }

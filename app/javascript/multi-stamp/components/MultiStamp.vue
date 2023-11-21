@@ -48,24 +48,23 @@
 </template>
 
 <script>
-import PlateSummary from './PlateSummary'
-import filterProps from './filterProps'
-import PrimerPanelFilter from './PrimerPanelFilter'
-import NullFilter from './NullFilter'
-import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
-import MultiStampTransfers from './MultiStampTransfers'
-import VolumeTransfers from './VolumeTransfers'
-import { baseTransferCreator } from 'shared/transfersCreators'
-import Plate from 'shared/components/Plate'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
+import Plate from 'shared/components/Plate'
+import { checkDuplicates, checkSize } from 'shared/components/plateScanValidators'
 import devourApi from 'shared/devourApi'
-import resources from 'shared/resources'
 import buildPlateObjs from 'shared/plateHelpers'
-import { requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
+import { handleFailedRequest, requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
+import resources from 'shared/resources'
+import { baseTransferCreator } from 'shared/transfersCreators'
 import { transfersFromRequests } from 'shared/transfersLayouts'
-import { checkSize, checkDuplicates } from 'shared/components/plateScanValidators'
-import { handleFailedRequest } from 'shared/requestHelpers'
+import MultiStampTransfers from './MultiStampTransfers'
+import NullFilter from './NullFilter'
+import PlateSummary from './PlateSummary'
+import PrimerPanelFilter from './PrimerPanelFilter'
+import VolumeTransfers from './VolumeTransfers'
+import filterProps from './filterProps'
+import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 
 export default {
   name: 'MultiStamp',
