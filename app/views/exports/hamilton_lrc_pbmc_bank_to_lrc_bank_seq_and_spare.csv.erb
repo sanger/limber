@@ -32,7 +32,7 @@
     next if source_well.downstream_tubes.empty?
 
     # expecting 1 sample tube
-    destination_tube = source_well.downstream_tubes.first
+    destination_tube = source_well.downstream_tubes.last
     destination_tube_v2 = Sequencescape::Api::V2.tube_with_custom_includes(
                             'custom_metadatum_collection',
                             nil,
