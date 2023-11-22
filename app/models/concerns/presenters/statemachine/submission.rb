@@ -50,6 +50,10 @@ module Presenters::Statemachine
           include StateDoesNotAllowChildCreation
         end
 
+        state :processed_3 do
+          include StateDoesNotAllowChildCreation
+        end
+
         state :passed do
           include StateAllowsChildCreation
         end

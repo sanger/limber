@@ -106,7 +106,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
   end
 
   def fill_in_with_terminate(terminate, field, options)
-    fill_in(field, options)
+    fill_in(field, **options)
     find_field(field).send_keys terminate
   end
 

@@ -84,7 +84,7 @@ module Deployed # rubocop:todo Style/Documentation
     end
 
     def read_file(filename)
-      File.open(Rails.root.join(filename), 'r', &:readline)
+      Rails.root.join(filename).open('r', &:readline)
     rescue Errno::ENOENT, EOFError
       ''
     end
@@ -107,8 +107,8 @@ module Deployed # rubocop:todo Style/Documentation
   COMMIT = REPO_DATA.revision.presence || 'unknown_revision'
   ABBREV_COMMIT = REPO_DATA.revision_short.presence || 'unknown_revision'
 
-  VERSION_STRING = "#{APP_NAME} #{VERSION_ID} [#{ENVIRONMENT}]"
-  VERSION_COMMIT = "#{BRANCH}@#{ABBREV_COMMIT}"
+  VERSION_STRING = "#{APP_NAME} #{VERSION_ID} [#{ENVIRONMENT}]".freeze
+  VERSION_COMMIT = "#{BRANCH}@#{ABBREV_COMMIT}".freeze
   REPO_URL = REPO_DATA.release_url.presence || '#'
   HOSTNAME = Socket.gethostname
 

@@ -5,7 +5,7 @@
 
 # Exports yaml files
 
-There are a number of `*.yml` files located in `app/config/exports` these
+There are a number of `*.yml` files located in `config/exports` these
 configure the exports via the {ExportsController}. Limber automatically
 loads all `.yml` files within this directory into {Export}.
 Filenames, and the grouping of pipelines within files, have no functional
@@ -38,7 +38,7 @@ The rest of the document describes the structure of this file, and what each of 
 
 ## Top level
 
-Each file is a `.yml` file located in `app/config/exports`, it contains the
+Each file is a `.yml` file located in `config/exports`, it contains the
 configuration for one or more {Export exports}.
 
 The top level structure consists of series of keys, uniquely identifying each

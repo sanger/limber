@@ -22,7 +22,7 @@ RSpec.describe 'exports/cardinal_sample_arraying_tube_layout.csv.erb' do
   before { assign(:plate, labware) }
 
   def get_column(csv, index)
-    csv[1..].map { |r| r[index] }
+    csv[1..].pluck(index)
   end
 
   it 'renders the expected content' do
