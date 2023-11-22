@@ -26,7 +26,7 @@
   <% end %>
   <%= sidebar do %>
     <%= card title: 'Upload tube rack scan files' do %>
-      <p>For this parent plate with <b><%= @labware_creator.num_parent_unique_samples %></b> distinct samples and a total of <b><%= @labware_creator.num_parent_wells %></b> transferable wells, you will need at least <b><%= @labware_creator.num_parent_unique_samples %></b> sequencing and <b><%= @labware_creator.num_parent_wells - @labware_creator.num_parent_unique_samples %></b> contingency tubes (or if just doing contingency at least <b><%= @labware_creator.num_parent_wells %></b> contingency tubes).</p>
+      <p>For this parent plate with <b><%= @labware_creator.num_parent_unique_samples %></b> distinct samples and a total of <b><%= @labware_creator.num_parent_wells %></b> transferable wells, you will need <b><%= @labware_creator.num_parent_unique_samples %></b> sequencing and <b><%= @labware_creator.num_parent_wells - @labware_creator.num_parent_unique_samples %></b> contingency tubes (or if just doing contingency <b><%= @labware_creator.num_parent_wells %></b> contingency tubes).</p>
       <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
         <%= f.hidden_field :purpose_uuid %>
         <h4>Sequencing tube rack scan file (optional)</h4>
