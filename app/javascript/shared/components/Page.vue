@@ -12,6 +12,7 @@
         :level="alert.level"
         :title="alert.title"
         :message="alert.message"
+        @close="removeAlert(alert.uid)"
       ></lb-alert>
     </div>
     <div class="row">
@@ -21,8 +22,9 @@
 </template>
 
 <script>
-import eventBus from 'shared/eventBus'
 import Alert from 'shared/components/Alert'
+import eventBus from 'shared/eventBus'
+import uniqueSlug from 'unique-slug'
 
 export default {
   name: 'Page',
@@ -46,8 +48,11 @@ export default {
   },
   methods: {
     addAlert(data) {
-      data.uid = Date.now()
+      data.uid = uniqueSlug()
       this.alerts.push(data)
+    },
+    removeAlert(uid) {
+      this.alerts = this.alerts.filter((alert) => alert.uid !== uid)
     },
   },
 }

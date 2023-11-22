@@ -1,7 +1,7 @@
 <template>
-  <div :class="['alert', `alert-${level}`, 'alert-dismissible', 'fade', 'show']" role="alert">
+  <div :class="['alert', `alert-${level}`, 'alert-dismissible', 'show']" role="alert">
     <strong>{{ title }}:</strong> {{ message }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <button type="button" class="close" @click="$emit('close')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
