@@ -22,10 +22,12 @@ describe('Alert.vue', () => {
     expect(wrapper.text()).toContain(':')
   })
 
-  it('closes when close button is clicked', async () => {
+  it('emits close event when close button is clicked', async () => {
     const wrapper = shallowMount(Alert)
+    expect(wrapper.emitted('close')).toBeUndefined() // check that the event has not been emitted yet
+
     await wrapper.find('button.close').trigger('click')
 
-    expect(wrapper.isVisible()).toBe(false)
+    expect(wrapper.emitted('close')).toHaveLength(1)
   })
 })
