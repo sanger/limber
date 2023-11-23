@@ -105,8 +105,9 @@ export default {
       default: null,
     },
     validators: {
-      // An array of validators. See plateScanValidators.js and tubeScanValidators.js for examples and details
-      // defaults are set based on labwareType, in method 'computedValidators'
+      // An array of validators. See plateScanValidators.js and tubeScanValidators.js for options and details
+      // and ValidatePairedTubes.vue for an usage example.
+      // Defaults are set based on labwareType, in method 'computedValidators'.
       type: Array,
       required: false,
       default: null,
@@ -238,7 +239,7 @@ export default {
 
       if (this.labwareType == 'tube') {
         return {
-          tubes: 'labware_barcode,uuid,receptacle',
+          tubes: 'labware_barcode,uuid,receptacle,state',
           receptacles: 'uuid',
         }
       } else {

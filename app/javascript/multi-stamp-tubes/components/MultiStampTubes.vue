@@ -58,7 +58,7 @@ import devourApi from 'shared/devourApi'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
 import { transfersForTubes } from 'shared/transfersLayouts'
-import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import { checkDuplicates, checkState } from 'shared/components/tubeScanValidators'
 import { validScanMessage } from 'shared/components/scanValidators'
 import { indexToName } from 'shared/wellHelpers'
 
@@ -198,7 +198,7 @@ export default {
         return [validScanMessage]
       }
       const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
-      return [checkDuplicates(currTubes)]
+      return [checkState(['passed']), checkDuplicates(currTubes)]
     },
   },
   methods: {

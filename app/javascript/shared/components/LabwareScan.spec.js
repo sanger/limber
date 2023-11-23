@@ -4,6 +4,7 @@
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import LabwareScan from 'shared/components/LabwareScan.vue'
+import { checkState } from 'shared/components/tubeScanValidators'
 import { jsonCollectionFactory } from 'test_support/factories'
 import mockApi from 'test_support/mock_api'
 
@@ -25,7 +26,7 @@ describe('LabwareScan', () => {
     })
   }
 
-  const wrapperFactoryTube = function (api = mockApi()) {
+  const wrapperFactoryTube = function (api = mockApi(), validators = undefined) {
     return mount(LabwareScan, {
       propsData: {
         labwareType: 'tube',
@@ -34,6 +35,7 @@ describe('LabwareScan', () => {
         api: api.devour,
         includes: '',
         colourIndex: 3,
+        validators: validators,
       },
       localVue,
     })
@@ -187,7 +189,8 @@ describe('LabwareScan', () => {
 
     it('is invalid if the tube is in the pending state', async () => {
       const api = mockApi()
-      const wrapper = wrapperFactoryTube(api)
+      const validators = [checkState(['passed'])]
+      const wrapper = wrapperFactoryTube(api, validators)
 
       api.mockGet(
         'tubes',
