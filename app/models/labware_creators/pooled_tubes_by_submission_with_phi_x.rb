@@ -43,7 +43,8 @@ module LabwareCreators
 
     # Only call this method if the spikedbuffer_tube_barcode is present
     def scanned_tube
-      @scanned_tube ||= Sequencescape::Api::V2::Tube.find_by(barcode: spikedbuffer_tube_barcode)
+      search_params = { barcode: spikedbuffer_tube_barcode }
+      @scanned_tube ||= Sequencescape::Api::V2::Tube.find_by(search_params)
     end
   end
 end

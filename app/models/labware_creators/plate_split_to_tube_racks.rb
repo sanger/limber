@@ -175,7 +175,7 @@ module LabwareCreators
     #
     # Sets errors if the tube rack barcodes are the same
     def check_tube_rack_barcodes_differ_between_files
-      return unless contingency_file_correctly_parsed? && sequencing_file_correctly_parsed?
+      return unless contingency_file_valid? && sequencing_file_valid?
 
       return unless same_tube_rack_barcode?
 
@@ -200,7 +200,7 @@ module LabwareCreators
     #
     # Sets errors if the tube rack barcodes are the same
     def check_tube_barcodes_differ_between_files
-      return unless contingency_file_correctly_parsed? && sequencing_file_correctly_parsed?
+      return unless contingency_file_valid? && sequencing_file_valid?
 
       seq_barcodes = extract_barcodes(sequencing_csv_file)
       cont_barcodes = extract_barcodes(contingency_csv_file)
@@ -224,7 +224,7 @@ module LabwareCreators
     #
     # Sets errors if there are insufficient tubes.
     def must_have_sufficient_tubes_in_rack_files
-      return unless files_correctly_parsed?
+      return unless files_valid?
 
       if require_contingency_tubes_only?
         add_error_if_insufficient_tubes(:contingency_csv_file, num_contingency_tubes, num_parent_wells)
@@ -238,19 +238,19 @@ module LabwareCreators
       end
     end
 
-    # Checks the files parsed correctly
-    def files_correctly_parsed?
-      return contingency_file_correctly_parsed? if require_contingency_tubes_only?
+    # Checks the files passed their validations
+    def files_valid?
+      return contingency_file_valid? if require_contingency_tubes_only?
 
-      contingency_file_correctly_parsed? && sequencing_file_correctly_parsed?
+      contingency_file_valid? && sequencing_file_valid?
     end
 
-    def sequencing_file_correctly_parsed?
-      sequencing_file.present? && sequencing_csv_file.correctly_parsed?
+    def sequencing_file_valid?
+      sequencing_file.present? && sequencing_csv_file&.valid?
     end
 
-    def contingency_file_correctly_parsed?
-      contingency_file.present? && contingency_csv_file.correctly_parsed?
+    def contingency_file_valid?
+      contingency_file.present? && contingency_csv_file&.valid?
     end
 
     # Adds an error when there are insufficient tubes in the given file

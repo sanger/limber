@@ -245,6 +245,42 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
       CSV.parse(render).each { |row| expect(row).to eq(expected_content.shift) }
     end
 
+    context 'when some data is missing' do
+      # qc results, no viability_qc
+      let(:live_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: nil, units: 'cells/ml') }
+      let(:qc_results) { [live_cell_count_qc] }
+
+      # expected file content
+      let(:expected_content) do
+        [
+          ['Workflow', workflow_name],
+          [],
+          [
+            'Well name',
+            'Donor ID',
+            'Stock barcode',
+            'FluidX barcode',
+            'Extraction and freeze date',
+            'Sequencing or contingency',
+            'Cell count (cells/ml)',
+            'Viability (%)',
+            'Volume (µl)',
+            'Study name',
+            'Collection site'
+          ],
+          ['DN1S:A1', 'Donor1', 'NT1O', 'FX4B', created_at, 'Sequencing', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:B1', '', 'NT2P', 'FX7E', created_at, 'Sequencing', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:A2', 'Donor1', 'NT1O', 'FX5C', created_at, 'Contingency', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:B2', '', 'NT2P', 'FX8F', created_at, 'Contingency', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:A3', 'Donor1', 'NT1O', 'FX6D', created_at, 'Contingency', '', '', '135', study_name, 'Sanger'],
+          ['DN1S:B3', '', 'NT2P', 'FX9G', created_at, 'Contingency', '', '', '135', study_name, 'Sanger']
+        ]
+      end
+      it 'shows blanks in the missing columns, row by row' do
+        CSV.parse(render).each { |row| expect(row).to eq(expected_content.shift) }
+      end
+    end
+
     context 'when transfers are not done yet' do
       # source wells
       let(:src_well_a1) { create(:v2_well, location: 'A1', aliquots: [src_aliquot1_s1], downstream_tubes: []) }
