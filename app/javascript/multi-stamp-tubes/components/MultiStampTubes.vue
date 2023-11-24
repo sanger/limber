@@ -50,21 +50,22 @@
 </template>
 
 <script>
-import filterProps from './filterProps'
-import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
-import MultiStampTubesTransfers from './MultiStampTubesTransfers'
-import { transferTubesCreator } from 'shared/transfersCreators'
-import Plate from 'shared/components/Plate'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
-import TubeArraySummary from './TubeArraySummary'
-import devourApi from 'shared/devourApi'
-import resources from 'shared/resources'
-import { buildTubeObjs } from 'shared/tubeHelpers'
-import { transfersForTubes } from 'shared/transfersLayouts'
-import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import Plate from 'shared/components/Plate'
 import { validScanMessage } from 'shared/components/scanValidators'
+import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import devourApi from 'shared/devourApi'
+import { handleFailedRequest } from 'shared/requestHelpers'
+import resources from 'shared/resources'
+import { transferTubesCreator } from 'shared/transfersCreators'
+import { transfersForTubes } from 'shared/transfersLayouts'
+import { buildTubeObjs } from 'shared/tubeHelpers'
 import { indexToName } from 'shared/wellHelpers'
+import MultiStampTubesTransfers from './MultiStampTubesTransfers'
+import TubeArraySummary from './TubeArraySummary'
+import filterProps from './filterProps'
+import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 
 // Multistamp tubes is used in Cardinal and scRNA pipelines to record the transfers of samples from
 // tubes to a plate.
@@ -257,8 +258,7 @@ export default {
           this.locationObj.href = response.data.redirect
         })
         .catch((error) => {
-          // Something has gone wrong
-          console.error(error)
+          handleFailedRequest(error)
           this.loading = false
         })
     },

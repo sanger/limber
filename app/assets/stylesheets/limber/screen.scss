@@ -432,6 +432,12 @@ dl#samples-information {
   @extend .alert-danger;
 }
 
+.js-alerts {
+  .alert {
+    @extend .my-1;
+  }
+}
+
 .labware {
   dl {
     @extend .list-inline;

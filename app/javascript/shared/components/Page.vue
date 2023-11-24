@@ -5,6 +5,16 @@
 -->
 <template>
   <div class="container-fluid">
+    <div class="js-alerts">
+      <lb-alert
+        v-for="alert in alerts"
+        :key="alert.uid"
+        :level="alert.level"
+        :title="alert.title"
+        :message="alert.message"
+        @close="removeAlert(alert.uid)"
+      ></lb-alert>
+    </div>
     <div class="row">
       <slot />
     </div>
@@ -12,7 +22,38 @@
 </template>
 
 <script>
+import Alert from 'shared/components/Alert'
+import eventBus from 'shared/eventBus'
+import uniqueSlug from 'unique-slug'
+
 export default {
   name: 'Page',
+  components: {
+    'lb-alert': Alert,
+  },
+  data() {
+    return {
+      alerts: [],
+    }
+  },
+  mounted() {
+    eventBus.$on('push-alert', (data) => {
+      // data = { level: [str], title: [str], message: [str] }
+      this.addAlert(data)
+    })
+  },
+  beforeDestroy() {
+    // removing eventBus listener
+    eventBus.$off('push-alert')
+  },
+  methods: {
+    addAlert(data) {
+      data.uid = uniqueSlug()
+      this.alerts.push(data)
+    },
+    removeAlert(uid) {
+      this.alerts = this.alerts.filter((alert) => alert.uid !== uid)
+    },
+  },
 }
 </script>
