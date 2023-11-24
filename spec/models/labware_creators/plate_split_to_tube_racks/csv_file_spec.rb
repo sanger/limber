@@ -318,7 +318,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       it 'reports the errors' do
         subject.valid?
         expect(subject.errors.full_messages).to include(
-          'Should not contain different rack barcodes (FX12345678,FX23838838)'
+          'should not contain different rack barcodes (FX12345678,FX23838838)'
         )
       end
     end
@@ -340,7 +340,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
 
       it 'reports the errors' do
         subject.valid?
-        expect(subject.errors.full_messages).to include('Contains duplicate well coordinates (A2,E2)')
+        expect(subject.errors.full_messages).to include('contains duplicate well coordinates (A2,E2)')
       end
     end
   end
@@ -361,7 +361,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
 
       it 'reports the errors' do
         subject.valid?
-        expect(subject.errors.full_messages).to include('Contains duplicate tube barcodes (AB10000009,AB10000011)')
+        expect(subject.errors.full_messages).to include('contains duplicate tube barcodes (AB10000009,AB10000011)')
       end
     end
   end

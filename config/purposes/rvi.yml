@@ -1,6 +1,0 @@
-RVI Cherrypick:
-  :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: true
-  :input_plate: false
-  :presenter_class: Presenters::StandardPresenter

@@ -1,16 +1,17 @@
-import MultiStamp from './MultiStamp'
-import Vue from 'vue'
 import {
-  checkSize,
-  checkDuplicates,
-  checkMaxCountRequests,
-  checkLibraryTypesInAllWells,
   checkAllLibraryRequestsWithSameReadySubmissions,
-  checkPlateWithSameReadyLibrarySubmissions,
-  checkMinCountRequests,
   checkAllSamplesInColumnsList,
+  checkDuplicates,
+  checkLibraryTypesInAllWells,
+  checkMaxCountRequests,
+  checkMinCountRequests,
+  checkPlateWithSameReadyLibrarySubmissions,
+  checkSize,
 } from 'shared/components/plateScanValidators'
+import { handleFailedRequest } from 'shared/requestHelpers'
 import { baseTransferCreator } from 'shared/transfersCreators'
+import Vue from 'vue'
+import MultiStamp from './MultiStamp'
 
 export default Vue.extend({
   mixins: [MultiStamp],
@@ -108,7 +109,7 @@ export default Vue.extend({
         })
         .catch((error) => {
           // Something has gone wrong
-          console.error(error)
+          handleFailedRequest(error)
           this.loading = false
         })
     },
