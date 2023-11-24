@@ -7,7 +7,6 @@ import localVue from 'test_support/base_vue'
 
 describe('AssetLookupByUuid', () => {
   const assetUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
-  const nullPlate = { data: [] }
   const goodPlate = jsonCollectionFactory('plate', [{ uuid: assetUuid }])
 
   const wrapperFactoryPlate = function (api = mockApi()) {
@@ -35,7 +34,7 @@ describe('AssetLookupByUuid', () => {
         filter: { uuid: assetUuid },
         fields: {},
       },
-      nullPlate
+      { data: [] } // no plates found
     )
 
     const wrapper = wrapperFactoryPlate(api)

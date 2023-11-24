@@ -54,7 +54,7 @@ import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import Plate from 'shared/components/Plate'
 import { validScanMessage } from 'shared/components/scanValidators'
-import { checkDuplicates } from 'shared/components/tubeScanValidators'
+import { checkDuplicates, checkState } from 'shared/components/tubeScanValidators'
 import devourApi from 'shared/devourApi'
 import { handleFailedRequest } from 'shared/requestHelpers'
 import resources from 'shared/resources'
@@ -218,7 +218,7 @@ export default {
         return [validScanMessage]
       }
       const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
-      return [checkDuplicates(currTubes)]
+      return [checkState(['passed']), checkDuplicates(currTubes)]
     },
   },
   methods: {
