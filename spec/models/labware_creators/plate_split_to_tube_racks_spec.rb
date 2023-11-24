@@ -1030,7 +1030,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           stub_asset_search(child_tube_4_v2.barcode.machine, child_tube_4_v1)
         end
 
-        # TODO: this one
         it 'does not create a tube for the failed well' do
           expect(subject.valid?).to be_truthy
           expect(subject.save).to be_truthy
