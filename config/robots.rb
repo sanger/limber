@@ -3265,6 +3265,46 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
+      'beckman-rvi-lib-pcr-xp-to-rvi-lib-prepool',
+      name: 'Beckman RVI Lib PCR XP => RVI Lib PrePool',
+      beds: {
+        bed(2).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 2'
+        },
+        bed(5).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 5'
+        },
+        bed(3).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 3'
+        },
+        bed(6).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 6'
+        },
+        bed(4).barcode => {
+          purpose: 'RVI Lib PrePool',
+          states: %w[pending],
+          parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode],
+          target_state: 'passed',
+          label: 'Bed 4'
+        }
+      },
+      destination_bed: bed(4).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    custom_robot(
       'bravo-rvi-hyb-to-rvi-cap-lib',
       name: 'Bravo RVI Hyb => RVI Cap Lib',
       beds: {
