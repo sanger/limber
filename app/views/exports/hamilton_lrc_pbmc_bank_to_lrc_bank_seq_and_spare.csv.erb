@@ -39,6 +39,7 @@
                             barcode: destination_tube.labware_barcode.machine
                           )
 
+    # skip if destination tube not found or doesn't have metadata
     next unless destination_tube_v2 && destination_tube_v2.custom_metadatum_collection
 
     # get tube metadata from destination tube
