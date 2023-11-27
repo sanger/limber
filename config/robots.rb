@@ -2827,8 +2827,7 @@ ROBOT_CONFIG =
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
           states: ['passed'],
-          label: 'Bed 9',
-          target_state: 'passed'
+          label: 'Bed 9'
         },
         bed(14).barcode => {
           purpose: 'LBSN-96 Lysate',
