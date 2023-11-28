@@ -63,7 +63,7 @@ RSpec.describe LabwareCreators::PartialStampedPlateWithoutDilution do
 
   let(:parent_uuid) { 'uuid' }
   let(:plate) do
-    create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: parent_wells.rotate(2) # rotate so that the wells are unsorted
+    create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: parent_wells.rotate(2) # unsorted wells
   end
   let(:child_plate) { create :v2_plate, uuid: 'child-uuid', barcode_number: '3' }
 
