@@ -53,7 +53,6 @@
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import Plate from 'shared/components/Plate'
-import { validScanMessage } from 'shared/components/scanValidators'
 import { checkDuplicates, checkState } from 'shared/components/tubeScanValidators'
 import devourApi from 'shared/devourApi'
 import { handleFailedRequest } from 'shared/requestHelpers'
