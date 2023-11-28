@@ -213,7 +213,7 @@ describe('LabwareScan', () => {
       await flushPromises()
 
       expect(wrapper.find('.is-invalid').exists()).toBe(true)
-      expect(wrapper.find('.invalid-feedback').text()).toEqual('Tube must have a state of: passed')
+      expect(wrapper.find('.invalid-feedback').text()).toEqual('Tube (state: pending) must have a state of: passed')
 
       const events = wrapper.emitted()
 
