@@ -131,6 +131,8 @@ export default {
       type: [Object, Location],
     },
 
+    // Should tube duplication validation be included or skipped
+    // Also referenced as allow-tube-duplicates and allow_tube_duplicates
     allowTubeDuplicates: { type: String, required: true },
   },
   data() {
@@ -214,11 +216,14 @@ export default {
       return filterProps.tubeFields
     },
     scanValidation() {
-      if (this.allowTubeDuplicates === 'true') {
-        return [validScanMessage]
+      const validators = [checkState(['passed'])]
+
+      // If the user has selected to allow tube duplicates, we don't need to check for them
+      if (this.allowTubeDuplicates !== true) {
+        const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
+        validators.push(checkDuplicates(currTubes))
       }
-      const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
-      return [checkState(['passed']), checkDuplicates(currTubes)]
+      return validators
     },
   },
   methods: {

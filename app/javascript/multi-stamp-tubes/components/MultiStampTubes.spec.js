@@ -97,22 +97,6 @@ describe('MultiStampTubes', () => {
     expect(validations.valid).toEqual(false)
   })
 
-  it('is valid when we scan duplicate tubes and this is allowed', () => {
-    const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
-
-    const tube1 = {
-      state: 'valid',
-      labware: tubeFactory({ uuid: 'tube-uuid-1' }),
-    }
-
-    wrapper.vm.updateTube(1, tube1)
-    wrapper.vm.updateTube(2, tube1)
-    const validator = wrapper.vm.scanValidation[0]
-    const validations = validator(tube1.labware)
-
-    expect(validations.valid).toEqual(true)
-  })
-
   it('is not valid when we scan pending tubes', async () => {
     const wrapper = wrapperFactory()
     const pendingTube = {
@@ -282,5 +266,37 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(1, tube1)
 
     expect(wrapper.vm.transfersError).toEqual('')
+  })
+
+  describe('tube duplicates are allowed', () => {
+    it('is valid when we scan duplicate tubes and this is allowed', () => {
+      const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
+
+      const tube1 = {
+        state: 'valid',
+        labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+      }
+
+      wrapper.vm.updateTube(1, tube1)
+      wrapper.vm.updateTube(2, tube1)
+      const validator = wrapper.vm.scanValidation[0]
+      const validations = validator(tube1.labware)
+
+      expect(validations.valid).toEqual(true)
+    })
+
+    it('is not valid when we scan pending tubes', async () => {
+      const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
+      const pendingTube = {
+        state: 'valid',
+        labware: tubeFactory({ state: 'pending' }),
+      }
+
+      wrapper.vm.updateTube(1, pendingTube)
+      const validator = wrapper.vm.scanValidation[0]
+      const validations = validator(pendingTube.labware)
+
+      expect(validations.valid).toEqual(false)
+    })
   })
 })
