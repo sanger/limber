@@ -268,7 +268,7 @@ describe('MultiStampTubes', () => {
     expect(wrapper.vm.transfersError).toEqual('')
   })
 
-  describe('tube duplicates are allowed', () => {
+  describe('when tube duplicates are allowed', () => {
     it('is valid when we scan duplicate tubes and this is allowed', () => {
       const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
 
