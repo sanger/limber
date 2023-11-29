@@ -9,11 +9,116 @@ body {
   margin-bottom: 50px;
 }
 
+/* Background colours for different environments */
+.bg-production {
+  background-color: $production;
+}
+.bg-training {
+  background-color: $training;
+}
+.bg-staging {
+  background-color: $staging;
+}
+.bg-development {
+  background-color: $development;
+}
+
+// navbar styles
+%navbar-dark-style {
+  nav {
+    @extend .navbar-dark;
+  }
+  .navbar-text {
+    @extend .text-light;
+  }
+  .icon-user {
+    @extend .icon-user-light;
+  }
+}
+%navbar-light-style {
+  nav {
+    @extend .navbar-light;
+  }
+  .navbar-text {
+    @extend .text-dark;
+  }
+  .icon-user {
+    @extend .icon-user-secondary;
+  }
+  .btn-logout {
+    @extend .btn-light;
+    @extend .border;
+  }
+  @extend .border-bottom; // add border to bottom to increase visibility
+  border-bottom-color: #eaecef !important; // set border color to match jumbotron background
+}
+
+// development and unknown environments
 header.limber-header {
+  @extend %navbar-light-style;
   nav {
     @extend .navbar;
     @extend .navbar-expand-md;
-    @extend .navbar-dark;
+    @extend .py-3;
+    @extend .bg-development;
+  }
+}
+
+.environment {
+  // surround in bold square brackets
+  &:before {
+    content: '[';
+    font-weight: bold;
+  }
+  &:after {
+    content: ']';
+    font-weight: bold;
+  }
+  @extend .navbar-text;
+  @extend .small;
+  @extend .mr-2;
+}
+
+// Set the background color of the navbar based on the environment
+.production {
+  header.limber-header {
+    @extend %navbar-dark-style;
+    nav {
+      @extend .bg-production;
+    }
+    .environment {
+      display: none;
+    }
+    .btn-logout {
+      @extend .btn-danger;
+      @extend .border-0;
+    }
+  }
+}
+
+.training {
+  header.limber-header {
+    @extend %navbar-dark-style;
+    nav {
+      @extend .bg-training;
+    }
+    .btn-logout {
+      @extend .btn-success;
+      border-color: darken($training, 5%) !important;
+    }
+  }
+}
+
+.staging {
+  header.limber-header {
+    @extend %navbar-dark-style;
+    nav {
+      @extend .bg-staging;
+    }
+    .btn-logout {
+      @extend .btn-danger;
+      border-color: darken($staging, 5%) !important;
+    }
   }
 }
 
@@ -30,29 +135,6 @@ header.limber-header {
 .card-header,
 #tube-rack-title {
   font-weight: 300;
-}
-
-.production {
-  header.limber-header {
-    nav {
-      @extend .bg-dark;
-    }
-    .environment {
-      display: none;
-    }
-  }
-}
-.nonproduction {
-  header.limber-header {
-    nav {
-      @extend .bg-danger;
-    }
-    .environment {
-      @extend .badge;
-      @extend .badge-light;
-      @extend .mr-2;
-    }
-  }
 }
 
 .tube-list,
@@ -120,6 +202,13 @@ nav.robots-list {
   font-style: oblique;
   font-stretch: ultra-condensed;
   font-weight: lighter;
+  @extend .mr-2;
+}
+
+.btn-logout {
+  @extend .btn;
+  @extend .btn-secondary;
+  @extend .rounded;
 }
 
 .logged_in {
@@ -341,6 +430,12 @@ dl#samples-information {
 }
 .alert-invalid {
   @extend .alert-danger;
+}
+
+.js-alerts {
+  .alert {
+    @extend .my-1;
+  }
 }
 
 .labware {

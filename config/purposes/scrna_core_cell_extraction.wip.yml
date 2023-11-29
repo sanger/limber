@@ -44,7 +44,8 @@ LRC Blood Bank:
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
-      autodetect_studies_project: false
+      autodetect_studies: true
+      autodetect_projects: false
   :file_links:
     - name: 'Download Scanned Tube Layout for LRC Blood Bank Plate'
       id: scrna_core_cell_extraction_sample_arraying_tube_layout
@@ -81,6 +82,8 @@ LRC PBMC Bank:
       id: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
     - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
       id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
+    - name: 'Download PBMC Bank Tubes Content Report'
+      id: pbmc_bank_tubes_content_report
   :qc_thresholds:
     viability:
       units: '%'

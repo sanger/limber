@@ -3,7 +3,7 @@
 
 require 'uri'
 
-CONFIG_FILE = "#{Dir.home}/.limber.environments.yml"
+CONFIG_FILE = "#{Dir.home}/.limber.environments.yml".freeze
 
 if ARGV[0].nil?
   $stdout.puts <<-HELP
@@ -26,11 +26,7 @@ def build_config
   api = $stdin.gets.chomp
   $stdout.print 'PMB url: '
   pmb = $stdin.gets.chomp
-  {
-    'sequencescape' => url,
-    'api_key' => api,
-    'pmb' => pmb
-  }
+  { 'sequencescape' => url, 'api_key' => api, 'pmb' => pmb }
 end
 
 def run_environment(config)

@@ -78,22 +78,23 @@
 </template>
 
 <script>
-import Plate from 'shared/components/Plate.vue'
+import {
+  extractChildUsedOligos,
+  extractParentUsedOligos,
+  extractParentWellSubmissionDetails,
+} from 'custom-tagged-plate/tagClashFunctions'
+import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions'
 import AssetLookupByUuid from 'shared/components/AssetLookupByUuid.vue'
 import LoadingModal from 'shared/components/LoadingModal.vue'
-import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
+import Plate from 'shared/components/Plate.vue'
+import devourApi from 'shared/devourApi'
+import { handleFailedRequest } from 'shared/requestHelpers'
+import resources from 'shared/resources'
+import valueConverter from 'shared/valueConverter'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
 import TagLayoutManipulationsMultiple from './TagLayoutManipulationsMultiple.vue'
+import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
 import WellModal from './WellModal.vue'
-import devourApi from 'shared/devourApi'
-import resources from 'shared/resources'
-import { calculateTagLayout } from 'custom-tagged-plate/tagLayoutFunctions'
-import {
-  extractParentWellSubmissionDetails,
-  extractParentUsedOligos,
-  extractChildUsedOligos,
-} from 'custom-tagged-plate/tagClashFunctions'
-import valueConverter from 'shared/valueConverter'
 
 /**
  * Provides a custom tagged plate setup view which allows a user to select and
@@ -597,10 +598,10 @@ export default {
         })
         .catch((error) => {
           // Something has gone wrong
-          this.loading = false
           // TODO Replace this with generic limber logging when available
           // See https://github.com/sanger/limber/issues/836
-          console.error(error)
+          handleFailedRequest(error)
+          this.loading = false
           this.creationRequestInProgress = false
           this.creationRequestSuccessful = false
         })

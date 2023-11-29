@@ -91,7 +91,7 @@ describe('MultiStampTubes', () => {
 
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube1)
-    const validator = wrapper.vm.scanValidation[0]
+    const validator = wrapper.vm.scanValidation[1]
     const validations = validator(tube1.labware)
 
     expect(validations.valid).toEqual(false)
@@ -111,6 +111,20 @@ describe('MultiStampTubes', () => {
     const validations = validator(tube1.labware)
 
     expect(validations.valid).toEqual(true)
+  })
+
+  it('is not valid when we scan pending tubes', async () => {
+    const wrapper = wrapperFactory()
+    const pendingTube = {
+      state: 'valid',
+      labware: tubeFactory({ state: 'pending' }),
+    }
+
+    wrapper.vm.updateTube(1, pendingTube)
+    const validator = wrapper.vm.scanValidation[0]
+    const validations = validator(pendingTube.labware)
+
+    expect(validations.valid).toEqual(false)
   })
 
   it('sends a post request when the button is clicked', async () => {

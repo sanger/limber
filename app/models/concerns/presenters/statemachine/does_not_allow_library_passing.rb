@@ -3,12 +3,15 @@
 # The state never presents the library pass button
 module Presenters::Statemachine
   module DoesNotAllowLibraryPassing # rubocop:todo Style/Documentation
-    def control_library_passing
-      false
-    end
+    extend ActiveSupport::Concern
+    included do
+      def control_library_passing
+        false
+      end
 
-    def control_suggested_library_passing
-      false
+      def control_suggested_library_passing
+        false
+      end
     end
   end
 end

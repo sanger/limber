@@ -43,7 +43,7 @@ RSpec.describe TubeCreationController, type: :controller do
         it 'creates a tube' do
           get :new,
               params: {
-                limber_tube_id: parent_uuid,
+                limber_plate_id: parent_uuid,
                 purpose_uuid: child_purpose_uuid
               },
               session: {
@@ -69,7 +69,7 @@ RSpec.describe TubeCreationController, type: :controller do
         it 'creates a tube' do
           post :create,
                params: {
-                 limber_plate_id: parent_uuid,
+                 limber_tube_id: parent_uuid,
                  tube: {
                    purpose_uuid: child_purpose_uuid
                  }
@@ -88,7 +88,7 @@ RSpec.describe TubeCreationController, type: :controller do
         it 'creates a tube' do
           post :create,
                params: {
-                 limber_tube_id: parent_uuid,
+                 limber_plate_id: parent_uuid,
                  tube: {
                    purpose_uuid: child_purpose_uuid
                  }

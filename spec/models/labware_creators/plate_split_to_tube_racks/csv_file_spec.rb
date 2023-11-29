@@ -300,4 +300,69 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       end
     end
   end
+
+  # there should be only one rack barcode in the file and it should be the same for all rows
+  context 'A file with inconsistant rack barcodes' do
+    let(:file) do
+      fixture_file_upload(
+        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_different_rack_barcodes.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    describe '#valid?' do
+      it 'should be invalid' do
+        expect(subject.valid?).to be false
+      end
+
+      it 'reports the errors' do
+        subject.valid?
+        expect(subject.errors.full_messages).to include(
+          'should not contain different rack barcodes (FX12345678,FX23838838)'
+        )
+      end
+    end
+  end
+
+  # the same well position should not appear more than once in the file
+  context 'A file with duplicated well positions' do
+    let(:file) do
+      fixture_file_upload(
+        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_duplicate_well_positions.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    describe '#valid?' do
+      it 'should be invalid' do
+        expect(subject.valid?).to be false
+      end
+
+      it 'reports the errors' do
+        subject.valid?
+        expect(subject.errors.full_messages).to include('contains duplicate well coordinates (A2,E2)')
+      end
+    end
+  end
+
+  # the same tube barcode should not appear more than once in the file
+  context 'A file with duplicated tube barcodes' do
+    let(:file) do
+      fixture_file_upload(
+        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_duplicate_tubes.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    describe '#valid?' do
+      it 'should not be valid' do
+        expect(subject.valid?).to be false
+      end
+
+      it 'reports the errors' do
+        subject.valid?
+        expect(subject.errors.full_messages).to include('contains duplicate tube barcodes (AB10000009,AB10000011)')
+      end
+    end
+  end
 end

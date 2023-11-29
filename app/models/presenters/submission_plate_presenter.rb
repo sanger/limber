@@ -57,7 +57,7 @@ module Presenters
           .wells
           .compact_blank
           .group_by(&:order_group)
-          .map { |_, wells| { assets: wells.map(&:uuid), autodetect_studies_projects: true } }
+          .map { |_, wells| { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true } }
     end
   end
 end
