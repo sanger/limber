@@ -217,11 +217,12 @@ export default {
     scanValidation() {
       const validators = [checkState(['passed'])]
 
-      // If the user has selected to allow tube duplicates, we don't need to check for them
-      if (this.allowTubeDuplicates !== true) {
-        const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
-        validators.push(checkDuplicates(currTubes))
-      }
+      if (this.allowTubeDuplicates === 'true') return validators
+
+      // add duplicate check to validators
+      const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
+      validators.push(checkDuplicates(currTubes))
+
       return validators
     },
   },

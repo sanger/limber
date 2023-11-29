@@ -1,9 +1,10 @@
 // // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import MultiStampTubes from './MultiStampTubes.vue'
+import flushPromises from 'flush-promises'
+import { aggregate } from 'shared/components/scanValidators'
 import localVue from 'test_support/base_vue.js'
 import { tubeFactory } from 'test_support/factories'
-import flushPromises from 'flush-promises'
+import MultiStampTubes from './MultiStampTubes.vue'
 
 import MockAdapter from 'axios-mock-adapter'
 
@@ -91,10 +92,10 @@ describe('MultiStampTubes', () => {
 
     wrapper.vm.updateTube(1, tube1)
     wrapper.vm.updateTube(2, tube1)
-    const validator = wrapper.vm.scanValidation[1]
-    const validations = validator(tube1.labware)
 
-    expect(validations.valid).toEqual(false)
+    const validationMessage = { message: 'Barcode has been scanned multiple times', valid: false }
+    expect(wrapper.vm.scanValidation.length).toEqual(2)
+    expect(aggregate(wrapper.vm.scanValidation, tube1.labware)).toEqual(validationMessage)
   })
 
   it('is not valid when we scan pending tubes', async () => {
@@ -105,10 +106,9 @@ describe('MultiStampTubes', () => {
     }
 
     wrapper.vm.updateTube(1, pendingTube)
-    const validator = wrapper.vm.scanValidation[0]
-    const validations = validator(pendingTube.labware)
 
-    expect(validations.valid).toEqual(false)
+    const validationMessage = { message: 'Tube (state: pending) must have a state of: passed', valid: false }
+    expect(aggregate(wrapper.vm.scanValidation, pendingTube.labware)).toEqual(validationMessage)
   })
 
   it('sends a post request when the button is clicked', async () => {
@@ -279,10 +279,9 @@ describe('MultiStampTubes', () => {
 
       wrapper.vm.updateTube(1, tube1)
       wrapper.vm.updateTube(2, tube1)
-      const validator = wrapper.vm.scanValidation[0]
-      const validations = validator(tube1.labware)
 
-      expect(validations.valid).toEqual(true)
+      const validationMessage = { valid: true }
+      expect(aggregate(wrapper.vm.scanValidation, tube1.labware)).toEqual(validationMessage)
     })
 
     it('is not valid when we scan pending tubes', async () => {
@@ -293,10 +292,9 @@ describe('MultiStampTubes', () => {
       }
 
       wrapper.vm.updateTube(1, pendingTube)
-      const validator = wrapper.vm.scanValidation[0]
-      const validations = validator(pendingTube.labware)
 
-      expect(validations.valid).toEqual(false)
+      const validationMessage = { message: 'Tube (state: pending) must have a state of: passed', valid: false }
+      expect(aggregate(wrapper.vm.scanValidation, pendingTube.labware)).toEqual(validationMessage)
     })
   })
 })
