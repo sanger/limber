@@ -6,7 +6,7 @@ LILYS-96 Stock:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
+  :presenter_class: Presenters::FailableStockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
 # LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot, or
