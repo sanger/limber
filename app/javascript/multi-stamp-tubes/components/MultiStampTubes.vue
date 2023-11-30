@@ -53,7 +53,6 @@
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import Plate from 'shared/components/Plate'
-import { validScanMessage } from 'shared/components/scanValidators'
 import { checkDuplicates, checkState } from 'shared/components/tubeScanValidators'
 import devourApi from 'shared/devourApi'
 import { handleFailedRequest } from 'shared/requestHelpers'
@@ -131,6 +130,8 @@ export default {
       type: [Object, Location],
     },
 
+    // Should tube duplication validation be included or skipped
+    // Also referenced as allow-tube-duplicates and allow_tube_duplicates
     allowTubeDuplicates: { type: String, required: true },
   },
   data() {
@@ -214,11 +215,15 @@ export default {
       return filterProps.tubeFields
     },
     scanValidation() {
-      if (this.allowTubeDuplicates === 'true') {
-        return [validScanMessage]
-      }
+      const validators = [checkState(['passed'])]
+
+      if (this.allowTubeDuplicates === 'true') return validators
+
+      // add duplicate check to validators
       const currTubes = this.tubes.map((tubeItem) => tubeItem.labware)
-      return [checkState(['passed']), checkDuplicates(currTubes)]
+      validators.push(checkDuplicates(currTubes))
+
+      return validators
     },
   },
   methods: {
