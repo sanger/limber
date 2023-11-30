@@ -50,3 +50,6 @@ en:
           <li>Click 'Create plate'</li>
           <li>This will link up the tag plate.</li>
         </ol>
+  errors:
+    messages:
+      must_be_swiped_in: Sorry, you need to be swiped in for that.'
