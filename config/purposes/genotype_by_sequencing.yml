@@ -22,6 +22,7 @@ GBS PCR1:
   :creator_class: LabwareCreators::QuadrantStampPrimerPanel
   :size: 384
   :pcr_stage: 'pcr 1'
+  :label_template: plate_6mm_double
 GBS PCR2:
   :asset_type: plate
   :stock_plate: false
@@ -36,6 +37,7 @@ GBS PCR2:
   :input_plate: false
   :size: 384
   :pcr_stage: 'pcr 2'
+  :label_template: plate_6mm_double
 GBS PCR2 Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
