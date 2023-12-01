@@ -1,3 +1,5 @@
+import { validateError } from 'shared/devourApiValidators'
+
 const boolToString = { true: 'valid', false: 'invalid' }
 
 /**
@@ -132,26 +134,23 @@ export default {
     },
     // Override this method when you need different behaviour
     async performFind() {
-      const qryResult = await this.api.findAll(this.resourceName, {
-        include: this.includes,
-        filter: this.filter,
-        fields: this.fields,
-      })
-      return qryResult.data
+      // returns a promise that can later be caught should the request fail
+      return await this.api
+        .findAll(this.resourceName, {
+          include: this.includes,
+          filter: this.filter,
+          fields: this.fields,
+        })
+        .then((response) => {
+          return response.data
+        })
     },
     apiSuccess(results) {
       this.results = results
       this.apiActivity = { state: 'valid', message: 'Search complete' }
     },
-    apiError(err) {
-      if (!err) {
-        this.apiActivity = { state: 'invalid', message: 'Unknown error' }
-      } else if (err[0] && err[0].title && err[0].detail) {
-        const msg = `${err[0].title}: ${err[0].detail}`
-        this.apiActivity = { state: 'invalid', message: msg }
-      } else {
-        this.apiActivity = { ...err, state: 'invalid' }
-      }
+    apiError(response) {
+      this.apiActivity = validateError(response)
     },
   },
   render() {

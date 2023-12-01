@@ -367,6 +367,7 @@ GEM
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
+    simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
     sprint_client (0.1.0)
     sprockets (4.1.1)
@@ -448,6 +449,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.1)
   sequencescape-client-api
   simplecov
+  simplecov-lcov
   sprint_client
   sprockets-rails
   state_machines

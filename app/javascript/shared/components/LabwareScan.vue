@@ -42,6 +42,7 @@
 <script>
 import { checkSize } from './plateScanValidators'
 import { aggregate } from './scanValidators'
+import { validateError } from 'shared/devourApiValidators'
 
 // Incrementing counter to ensure all instances of LabwareScan
 // have a unique id. Ensures labels correctly match up with
@@ -104,8 +105,9 @@ export default {
       default: null,
     },
     validators: {
-      // An array of validators. See plateScanValidators.js and tubeScanValidators.js for examples and details
-      // defaults are set based on labwareType, in method 'computedValidators'
+      // An array of validators. See plateScanValidators.js and tubeScanValidators.js for options and details
+      // and ValidatePairedTubes.vue for an usage example.
+      // Defaults are set based on labwareType, in method 'computedValidators'.
       type: Array,
       required: false,
       default: null,
@@ -219,12 +221,16 @@ export default {
       }
     },
     async findLabware() {
-      const labware = await this.api.findAll(this.labwareType, {
-        include: this.includes,
-        filter: { barcode: this.labwareBarcode },
-        fields: this.fieldsToRetrieve(),
-      })
-      return labware.data[0]
+      // returns a promise that can later be caught should the request fail
+      return await this.api
+        .findAll(this.labwareType, {
+          include: this.includes,
+          filter: { barcode: this.labwareBarcode },
+          fields: this.fieldsToRetrieve(),
+        })
+        .then((response) => {
+          return response.data[0]
+        })
     },
     fieldsToRetrieve() {
       if (this.fields) {
@@ -233,7 +239,7 @@ export default {
 
       if (this.labwareType == 'tube') {
         return {
-          tubes: 'labware_barcode,uuid,receptacle',
+          tubes: 'labware_barcode,uuid,receptacle,state',
           receptacles: 'uuid',
         }
       } else {
@@ -246,15 +252,8 @@ export default {
       this.labware = result
       this.apiActivity = { state: 'valid', message: 'Search complete' }
     },
-    apiError(err) {
-      if (!err) {
-        this.apiActivity = { state: 'invalid', message: 'Unknown error' }
-      } else if (err[0]) {
-        const message = `${err[0].title}: ${err[0].detail}`
-        this.apiActivity = { state: 'invalid', message }
-      } else {
-        this.apiActivity = { ...err, state: 'invalid' }
-      }
+    apiError(response) {
+      this.apiActivity = validateError(response)
     },
     focus() {
       this.$refs.scan.$el.focus()

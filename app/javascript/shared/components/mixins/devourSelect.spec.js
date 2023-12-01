@@ -109,11 +109,7 @@ describe('DevourSelect mixin', () => {
 
       await flushPromises()
 
-      // for some reason cannot return the error properly from mockApi
-      // we expect this result:
-      // expect(wrapper.vm.feedback).toEqual('Not good: Very not good')
-      // but because the error doesn't come back we use this:
-      expect(wrapper.vm.feedback).toEqual('Unknown error')
+      expect(wrapper.vm.feedback).toEqual('Not good: Very not good')
       expect(wrapper.emitted()).toEqual({
         change: [[{ state: 'invalid', results: null }]],
       })

@@ -43,14 +43,15 @@
 </template>
 
 <script>
-import devourApi from 'shared/devourApi'
-import filterProps from './filterProps'
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
+import { checkDuplicates, checkMatchingPurposes } from 'shared/components/tubeScanValidators'
+import devourApi from 'shared/devourApi'
+import { handleFailedRequest } from 'shared/requestHelpers'
 import resources from 'shared/resources'
 import { buildTubeObjs } from 'shared/tubeHelpers'
-import { checkDuplicates, checkMatchingPurposes } from 'shared/components/tubeScanValidators'
 import { indexToName } from 'shared/wellHelpers.js'
+import filterProps from './filterProps'
 
 export default {
   name: 'TubesToRack',
@@ -154,7 +155,7 @@ export default {
         })
         .catch((error) => {
           // Something has gone wrong
-          console.error(error)
+          handleFailedRequest(error)
           this.loading = false
         })
     },
