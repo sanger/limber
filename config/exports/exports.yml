@@ -154,6 +154,8 @@ hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
     - wells.aliquots.sample
     - wells.aliquots.sample.sample_metadata
   ancestor_tube_purpose: LRC Blood Vac
+  filename:
+    include_barcode: true
 hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
   csv: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
   workflow: scRNA Core PBMC isolation
@@ -164,6 +166,8 @@ hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
     - wells.transfer_requests_as_target.source_asset
   ancestor_tube_purpose: LRC Blood Vac
   ancestor_purpose: LRC Blood Bank
+  filename:
+    include_barcode: true
 pbmc_bank_tubes_content_report:
   csv: pbmc_bank_tubes_content_report
   workflow: scRNA Core PBMC Bank
