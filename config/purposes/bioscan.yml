@@ -6,6 +6,7 @@ LILYS-96 Stock:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: true
+  :type: PlatePurpose::InputStarted
   :presenter_class: Presenters::FailableStockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
