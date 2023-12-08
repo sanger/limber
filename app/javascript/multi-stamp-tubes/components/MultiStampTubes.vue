@@ -215,7 +215,7 @@ export default {
       return filterProps.tubeFields
     },
     scanValidation() {
-      const validators = [checkState(['passed'])]
+      const validators = [checkState(['unknown', 'passed'])]
 
       if (this.allowTubeDuplicates === 'true') return validators
 
