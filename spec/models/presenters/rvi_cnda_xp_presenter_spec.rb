@@ -17,11 +17,29 @@ RSpec.describe Presenters::RviCdnaXpPresenter do
   context 'when pending' do
     let(:state) { 'pending' }
 
-    it 'allows child creation' do
+    it 'does not allow child creation' do
+      expect { |b| subject.control_additional_creation(&b) }.not_to yield_control
+    end
+
+    it 'allows a default state change' do
+      expect { |b| subject.default_state_change(&b) }.to yield_control
+    end
+
+    it 'suggests child purposes' do
+      expect(subject.suggested_purposes).to be_an Array
+      expect(subject.suggested_purposes.first).to be_a LabwareCreators::CreatorButton
+      expect(subject.suggested_purposes.first.purpose_uuid).to eq('child-purpose')
+    end
+  end
+
+  context 'when started' do
+    let(:state) { 'started' }
+
+    it 'does not allow child creation' do
       expect { |b| subject.control_additional_creation(&b) }.to yield_control
     end
 
-    it 'allows state change' do
+    it 'allows a default state change' do
       expect { |b| subject.default_state_change(&b) }.to yield_control
     end
 

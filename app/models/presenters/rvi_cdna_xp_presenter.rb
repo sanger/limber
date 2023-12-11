@@ -33,9 +33,9 @@ module Presenters
         transition %i[pending started passed] => :failed
       end
 
-      # These are the states, which are really the only things we need ...
+      # We only want child creation to be allowed when the plate is in the 'Started' state.
       state :pending do
-        include Statemachine::StateAllowsChildCreation
+        include Statemachine::StateDoesNotAllowChildCreation
         include Statemachine::DoesNotAllowLibraryPassing
       end
 
@@ -44,27 +44,7 @@ module Presenters
         include Statemachine::DoesNotAllowLibraryPassing
       end
 
-      state :processed_1 do
-        include Statemachine::StateAllowsChildCreation
-        include Statemachine::DoesNotAllowLibraryPassing
-      end
-
-      state :processed_2 do
-        include Statemachine::StateAllowsChildCreation
-        include Statemachine::DoesNotAllowLibraryPassing
-      end
-
-      state :processed_3 do
-        include Statemachine::StateAllowsChildCreation
-        include Statemachine::DoesNotAllowLibraryPassing
-      end
-
       state :passed do
-        include Statemachine::StateAllowsChildCreation
-        include Statemachine::DoesNotAllowLibraryPassing
-      end
-
-      state :qc_complete, human_name: 'QC Complete' do
         include Statemachine::StateAllowsChildCreation
         include Statemachine::DoesNotAllowLibraryPassing
       end
