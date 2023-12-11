@@ -79,7 +79,10 @@ class RobotsController < ApplicationController
   end
 
   def verify
-    render(json: @robot.verify(robot_params))
+    # ActionController::Parameters is no longer a Hash. Ensure the robot params
+    # is Hash and pass only the permitted params to the robot.
+    params = robot_params.to_h
+    render(json: @robot.verify(params))
   end
 
   private

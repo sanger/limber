@@ -18,7 +18,7 @@ RSpec.describe SearchHelper, type: :helper do
 
   let(:data) do
     YAML
-      .safe_load(yaml, [Symbol])
+      .safe_load(yaml, permitted_classes: [Symbol])
       .each_with_object({}) do |list, memo|
         k, v = list
         memo[k] = OpenStruct.new(v) # rubocop:todo Style/OpenStructUse
