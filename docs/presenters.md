@@ -108,10 +108,20 @@ CLCM DNA Lib PCR, CLCM RNA Lib PCR, GnT Pico Lib PCR, LB Lib PCR, LBB Chromium T
 
 {include:Presenters::PermissivePresenter}
 
-Used directly in 14 purposes:
-LB cDNA, LB cDNA XP, LBR Frag, LBR Globin DNase, LBR mRNA Cap, LBR Ribo DNase, LBR RiboGlobin DNase, LHR-384 End Prep, PF Lib, PF-384 Lib, RVI cDNA XP, RVI Cherrypick, RVI Lig Bind, and RVI RT
+Used directly in 13 purposes:
+LB cDNA, LB cDNA XP, LBR Frag, LBR Globin DNase, LBR mRNA Cap, LBR Ribo DNase, LBR RiboGlobin DNase, LHR-384 End Prep, PF Lib, PF-384 Lib, RVI Cherrypick, RVI Lig Bind, and RVI RT
 
 {Presenters::PermissivePresenter View class documentation}
+
+
+### Presenters::RviCdnaXpPresenter
+
+{include:Presenters::RviCdnaXpPresenter}
+
+Used directly in 1 purposes:
+RVI cDNA XP
+
+{Presenters::RviCdnaXpPresenter View class documentation}
 
 
 ### Presenters::SingleChildPermissivePresenter
