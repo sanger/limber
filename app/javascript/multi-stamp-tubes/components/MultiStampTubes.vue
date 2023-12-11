@@ -133,6 +133,10 @@ export default {
     // Should tube duplication validation be included or skipped
     // Also referenced as allow-tube-duplicates and allow_tube_duplicates
     allowTubeDuplicates: { type: String, required: true },
+
+    // Should tubes be required to be in passed state
+    // Also referenced as require-tube-passed and require_tube_passed
+    requireTubePassed: { type: String, required: true },
   },
   data() {
     return {
@@ -215,7 +219,9 @@ export default {
       return filterProps.tubeFields
     },
     scanValidation() {
-      const validators = [checkState(['unknown', 'passed'])]
+      const validators = []
+
+      if (this.requireTubePassed === 'true') validators.push(checkState(['passed']))
 
       if (this.allowTubeDuplicates === 'true') return validators
 
