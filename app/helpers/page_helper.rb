@@ -53,7 +53,7 @@ module PageHelper # rubocop:todo Style/Documentation
   # eg. state_badge('pending')
   # <span class="state-badge-pending">Pending</span>
   def state_badge(state)
-    tag.span(state.titleize, class: "state-badge #{state}")
+    tag.span(state.titleize, class: "state-badge #{state}", title: 'Labware State', data: { toggle: 'tooltip' })
   end
 
   # eg. count_badge(0)

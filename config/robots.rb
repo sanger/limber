@@ -2809,7 +2809,7 @@ ROBOT_CONFIG =
       beds: {
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
-          states: ['passed'],
+          states: ['started'],
           label: 'Bed 9',
           target_state: 'passed'
         }
@@ -2822,13 +2822,12 @@ ROBOT_CONFIG =
     custom_robot(
       'beckman-lilys-96-stock-to-lbsn-96-lysate',
       name: 'Beckman LILYS-96 Stock => LBSN-96 Lysate',
-      verify_robot: true,
+      require_robot: true,
       beds: {
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
           states: ['passed'],
-          label: 'Bed 9',
-          target_state: 'passed'
+          label: 'Bed 9'
         },
         bed(14).barcode => {
           purpose: 'LBSN-96 Lysate',
@@ -3112,6 +3111,24 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
+      'bravo-rvi-rt-to-rvi-cdna-xp',
+      name: 'Bravo verify RVI RT & RVI cDNA XP',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['pending'],
+          label: 'Bed 8'
+        },
+        car('4,3').barcode => {
+          purpose: 'RVI cDNA XP',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: bed(8).barcode
+        }
+      }
+    )
+
+    custom_robot(
       'mosquito-rvi-rt',
       name: 'Mosquito RVI RT Random Primers',
       beds: {
@@ -3164,27 +3181,8 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'bravo-rvi-rt-to-rvi-cdna-xp',
-      name: 'Bravo RVI RT => RVI cDNA XP',
-      beds: {
-        bed(8).barcode => {
-          purpose: 'RVI RT',
-          states: ['passed'],
-          label: 'Bed 8'
-        },
-        car('4,3').barcode => {
-          purpose: 'RVI cDNA XP',
-          states: ['pending'],
-          label: 'Carousel 4,3',
-          parent: bed(8).barcode,
-          target_state: 'started'
-        }
-      }
-    )
-
-    custom_robot(
       'bravo-rvi-cdna-xp-to-rvi-lig-bind',
-      name: 'Bravo RVI cDNA XP => RVI Lig Bind',
+      name: 'Bravo verify RVI cDNA XP & RVI Lig Bind',
       beds: {
         bed(8).barcode => {
           purpose: 'RVI cDNA XP',
@@ -3195,8 +3193,7 @@ ROBOT_CONFIG =
           purpose: 'RVI Lig Bind',
           states: ['pending'],
           label: 'Carousel 3,5',
-          parent: bed(8).barcode,
-          target_state: 'passed'
+          parent: bed(8).barcode
         }
       }
     )

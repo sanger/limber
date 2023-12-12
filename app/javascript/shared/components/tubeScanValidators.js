@@ -120,7 +120,7 @@ const checkState = (allowedStatesList) => {
     if (!allowedStatesList.includes(tube.state)) {
       return {
         valid: false,
-        message: 'Tube must have a state of: ' + allowedStatesList.join(' or '),
+        message: `Tube (state: ${tube.state}) must have a state of: ${allowedStatesList.join(' or ')}`,
       }
     } else {
       return validScanMessage()
