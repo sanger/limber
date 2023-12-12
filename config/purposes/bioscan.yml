@@ -6,7 +6,7 @@ LILYS-96 Stock:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: true
-  :presenter_class: Presenters::FailableStockPlatePresenter
+  :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
 # LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot, or
@@ -21,7 +21,7 @@ LBSN-96 Lysate:
   # LYSATE plate can be created from LILYS as well. The following must be false.
   :input_plate: false
   :type: PlatePurpose::AdditionalInput
-  :presenter_class: Presenters::FailableStockPlatePresenter
+  :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::StampedPlateAddingRandomisedControls
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_bioscan_lysate_prep'

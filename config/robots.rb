@@ -2809,7 +2809,7 @@ ROBOT_CONFIG =
       beds: {
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
-          states: ['started'],
+          states: ['passed'],
           label: 'Bed 9',
           target_state: 'passed'
         }
@@ -2822,12 +2822,13 @@ ROBOT_CONFIG =
     custom_robot(
       'beckman-lilys-96-stock-to-lbsn-96-lysate',
       name: 'Beckman LILYS-96 Stock => LBSN-96 Lysate',
-      require_robot: true,
+      verify_robot: true,
       beds: {
         bed(9).barcode => {
           purpose: 'LILYS-96 Stock',
           states: ['passed'],
-          label: 'Bed 9'
+          label: 'Bed 9',
+          target_state: 'passed'
         },
         bed(14).barcode => {
           purpose: 'LBSN-96 Lysate',
