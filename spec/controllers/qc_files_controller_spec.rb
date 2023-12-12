@@ -103,7 +103,7 @@ RSpec.describe QcFilesController, type: :controller do
 
     it 'returns the qc files as json' do
       get :index, params: { limber_plate_id: plate_uuid }, format: 'json'
-      expect(JSON.parse(response.body)).to eq(expected_response)
+      expect(response.parsed_body).to eq(expected_response)
     end
   end
 end
