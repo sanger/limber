@@ -67,7 +67,7 @@ module ConfigLoader
     def load_config
       @config =
         @files.each_with_object({}) do |file, store|
-          latest_file = YAML.load_file(file)
+          latest_file = YAML.load_file(file, aliases: true)
           if latest_file.nil?
             warn "Cannot parse file: #{file}"
           else

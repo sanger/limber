@@ -26,6 +26,7 @@ describe('MultiStampTubes', () => {
         transfersLayout: 'sequentialtube',
         transfersCreator: 'multi-stamp-tubes',
         allowTubeDuplicates: 'false',
+        requireTubePassed: 'false',
         ...options,
       },
       localVue,
@@ -94,11 +95,11 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(2, tube1)
 
     const validationMessage = { message: 'Barcode has been scanned multiple times', valid: false }
-    expect(wrapper.vm.scanValidation.length).toEqual(2)
+    expect(wrapper.vm.scanValidation.length).toEqual(1)
     expect(aggregate(wrapper.vm.scanValidation, tube1.labware)).toEqual(validationMessage)
   })
 
-  it('is not valid when we scan pending tubes', async () => {
+  it('is valid when we scan pending tubes', async () => {
     const wrapper = wrapperFactory()
     const pendingTube = {
       state: 'valid',
@@ -107,8 +108,23 @@ describe('MultiStampTubes', () => {
 
     wrapper.vm.updateTube(1, pendingTube)
 
-    const validationMessage = { message: 'Tube (state: pending) must have a state of: passed', valid: false }
-    expect(aggregate(wrapper.vm.scanValidation, pendingTube.labware)).toEqual(validationMessage)
+    const validation = aggregate(wrapper.vm.scanValidation, pendingTube.labware)
+    expect(validation).toHaveProperty('valid')
+    expect(validation.valid).toEqual(true)
+  })
+
+  it('is valid when we scan passed tubes', async () => {
+    const wrapper = wrapperFactory()
+    const passedTube = {
+      state: 'valid',
+      labware: tubeFactory({ state: 'passed' }),
+    }
+
+    wrapper.vm.updateTube(1, passedTube)
+
+    const validation = aggregate(wrapper.vm.scanValidation, passedTube.labware)
+    expect(validation).toHaveProperty('valid')
+    expect(validation.valid).toEqual(true)
   })
 
   it('sends a post request when the button is clicked', async () => {
@@ -268,6 +284,53 @@ describe('MultiStampTubes', () => {
     expect(wrapper.vm.transfersError).toEqual('')
   })
 
+  describe('when tubes are required to be in passed state', () => {
+    it('is not valid when we scan duplicate tubes', async () => {
+      const wrapper = wrapperFactory({ requireTubePassed: 'true' })
+      const tube1 = {
+        state: 'valid',
+        labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+      }
+
+      wrapper.vm.updateTube(1, tube1)
+      wrapper.vm.updateTube(2, tube1)
+
+      const validationMessage = { message: 'Barcode has been scanned multiple times', valid: false }
+      expect(wrapper.vm.scanValidation.length).toEqual(2)
+      expect(aggregate(wrapper.vm.scanValidation, tube1.labware)).toEqual(validationMessage)
+    })
+
+    it('is not valid when we scan pending tubes', async () => {
+      const wrapper = wrapperFactory({ requireTubePassed: 'true' })
+      const pendingTube = {
+        state: 'valid',
+        labware: tubeFactory({ state: 'pending' }),
+      }
+
+      wrapper.vm.updateTube(1, pendingTube)
+
+      const validation = aggregate(wrapper.vm.scanValidation, pendingTube.labware)
+      expect(validation).toHaveProperty('message')
+      expect(validation.message).toContain('Tube (state: pending) must have a state of: ')
+      expect(validation).toHaveProperty('valid')
+      expect(validation.valid).toEqual(false)
+    })
+
+    it('is valid when we scan passed tubes', async () => {
+      const wrapper = wrapperFactory({ requireTubePassed: 'true' })
+      const passedTube = {
+        state: 'valid',
+        labware: tubeFactory({ state: 'passed' }),
+      }
+
+      wrapper.vm.updateTube(1, passedTube)
+
+      const validation = aggregate(wrapper.vm.scanValidation, passedTube.labware)
+      expect(validation).toHaveProperty('valid')
+      expect(validation.valid).toEqual(true)
+    })
+  })
+
   describe('when tube duplicates are allowed', () => {
     it('is valid when we scan duplicate tubes and this is allowed', () => {
       const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
@@ -284,7 +347,7 @@ describe('MultiStampTubes', () => {
       expect(aggregate(wrapper.vm.scanValidation, tube1.labware)).toEqual(validationMessage)
     })
 
-    it('is not valid when we scan pending tubes', async () => {
+    it('is valid when we scan pending tubes', async () => {
       const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
       const pendingTube = {
         state: 'valid',
@@ -293,8 +356,70 @@ describe('MultiStampTubes', () => {
 
       wrapper.vm.updateTube(1, pendingTube)
 
-      const validationMessage = { message: 'Tube (state: pending) must have a state of: passed', valid: false }
-      expect(aggregate(wrapper.vm.scanValidation, pendingTube.labware)).toEqual(validationMessage)
+      const validation = aggregate(wrapper.vm.scanValidation, pendingTube.labware)
+      expect(validation).toHaveProperty('valid')
+      expect(validation.valid).toEqual(true)
+    })
+
+    it('is valid when we scan passed tubes', async () => {
+      const wrapper = wrapperFactory({ allowTubeDuplicates: 'true' })
+      const passedTube = {
+        state: 'valid',
+        labware: tubeFactory({ state: 'passed' }),
+      }
+
+      wrapper.vm.updateTube(1, passedTube)
+
+      const validation = aggregate(wrapper.vm.scanValidation, passedTube.labware)
+      expect(validation).toHaveProperty('valid')
+      expect(validation.valid).toEqual(true)
+    })
+  })
+
+  describe('when tube duplicates are allowed and when tubes are required to be in passed state', () => {
+    it('is valid when we scan duplicate tubes and this is allowed', () => {
+      const wrapper = wrapperFactory({ allowTubeDuplicates: 'true', requireTubePassed: 'true' })
+
+      const tube1 = {
+        state: 'valid',
+        labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+      }
+
+      wrapper.vm.updateTube(1, tube1)
+      wrapper.vm.updateTube(2, tube1)
+
+      const validationMessage = { valid: true }
+      expect(aggregate(wrapper.vm.scanValidation, tube1.labware)).toEqual(validationMessage)
+    })
+
+    it('is not valid when we scan pending tubes', async () => {
+      const wrapper = wrapperFactory({ allowTubeDuplicates: 'true', requireTubePassed: 'true' })
+      const pendingTube = {
+        state: 'valid',
+        labware: tubeFactory({ state: 'pending' }),
+      }
+
+      wrapper.vm.updateTube(1, pendingTube)
+
+      const validation = aggregate(wrapper.vm.scanValidation, pendingTube.labware)
+      expect(validation).toHaveProperty('message')
+      expect(validation.message).toContain('Tube (state: pending) must have a state of: ')
+      expect(validation).toHaveProperty('valid')
+      expect(validation.valid).toEqual(false)
+    })
+
+    it('is valid when we scan passed tubes', async () => {
+      const wrapper = wrapperFactory({ allowTubeDuplicates: 'true', requireTubePassed: 'true' })
+      const passedTube = {
+        state: 'valid',
+        labware: tubeFactory({ state: 'passed' }),
+      }
+
+      wrapper.vm.updateTube(1, passedTube)
+
+      const validation = aggregate(wrapper.vm.scanValidation, passedTube.labware)
+      expect(validation).toHaveProperty('valid')
+      expect(validation.valid).toEqual(true)
     })
   })
 })

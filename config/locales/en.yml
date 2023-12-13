@@ -6,9 +6,11 @@ en:
     default:
       transitions:
         passed: 'Manual Transfer'
+        started: 'Manual Transfer'
         qc_complete: 'Mark QC Complete'
       transitioning:
         passed: 'Transferring...'
+        started: 'Transferring...'
         qc_complete: 'Completing QC...'
     pcr:
       transitions:
@@ -50,3 +52,6 @@ en:
           <li>Click 'Create plate'</li>
           <li>This will link up the tag plate.</li>
         </ol>
+  errors:
+    messages:
+      must_be_swiped_in: Sorry, you need to be swiped in for that.'
