@@ -106,7 +106,7 @@ module LabwareCreators
       return unless tube_rack_barcodes.size > 1
 
       barcodes_str = tube_rack_barcodes.join(',')
-      errors.add(:base, "Should not contain different rack barcodes (#{barcodes_str})")
+      errors.add(:base, "should not contain different rack barcodes (#{barcodes_str})")
     end
 
     def check_no_duplicate_well_coordinates
@@ -115,7 +115,7 @@ module LabwareCreators
 
       return if duplicated_well_coordinates.empty?
 
-      errors.add(:base, "Contains duplicate well coordinates (#{duplicated_well_coordinates})")
+      errors.add(:base, "contains duplicate well coordinates (#{duplicated_well_coordinates})")
     end
 
     def check_no_duplicate_tube_barcodes
@@ -127,7 +127,7 @@ module LabwareCreators
 
       return if duplicates.empty?
 
-      errors.add(:base, "Contains duplicate tube barcodes (#{duplicates.join(',')})")
+      errors.add(:base, "contains duplicate tube barcodes (#{duplicates.join(',')})")
     end
 
     # Generates a hash of position details based on the tube rack scan data in the CSV file.

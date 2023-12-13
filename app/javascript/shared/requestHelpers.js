@@ -1,3 +1,4 @@
+import eventBus from 'shared/eventBus'
 import { requestsForWell } from './wellHelpers'
 
 const requestIsActive = function (request) {
@@ -28,4 +29,15 @@ const requestsFromPlates = function (plateObjs) {
   return requestsArray
 }
 
-export { requestIsActive, requestsFromPlates, requestIsLibraryCreation }
+const handleFailedRequest = function (request) {
+  // generate an alert on the page
+  const title = request.response.data.message[1]
+  const messages = request.response.data.message[0].join(', ')
+  eventBus.$emit('push-alert', {
+    level: 'danger',
+    title: title,
+    message: messages,
+  })
+}
+
+export { handleFailedRequest, requestIsActive, requestIsLibraryCreation, requestsFromPlates }

@@ -201,7 +201,7 @@ describe('checkState', () => {
 
     expect(checkState(['available', 'exhausted'], 0)(tube)).toEqual({
       valid: false,
-      message: 'Tube must have a state of: available or exhausted',
+      message: 'Tube (state: destroyed) must have a state of: available or exhausted',
     })
   })
 })

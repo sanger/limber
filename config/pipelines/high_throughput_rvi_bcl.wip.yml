@@ -1,0 +1,31 @@
+---
+# RVI Bait Capture Library pipeline configuration
+RVI Bait Capture Library: # Top of the pipeline (Library Prep)
+  pipeline_group: RVI Bait Capture Library
+  filters:
+    request_type_key:
+      - limber_bait_capture_library_prep
+    library_type:
+      - RVI-BCL
+  library_pass:
+    - RVI Cap Lib PCR XP
+  relationships:
+    RVI Cherrypick: RVI RT
+    RVI RT: RVI cDNA XP
+    RVI cDNA XP: RVI Lig Bind
+    RVI Lig Bind: RVI Lib PCR
+    RVI Lib PCR: RVI Lib PCR XP
+    RVI Lib PCR XP: RVI Lib PrePool
+    RVI Lib PrePool: RVI Hyb
+    RVI Hyb: RVI Cap Lib
+    RVI Cap Lib: RVI Cap Lib PCR
+    RVI Cap Lib PCR: RVI Cap Lib PCR XP
+
+RVI Bait Capture Library MX:
+  pipeline_group: RVI Bait Capture Library
+  filters:
+    request_type_key:
+      - limber_multiplexing
+  relationships:
+    RVI Cap Lib PCR XP: RVI Cap Lib Pool
+    RVI Cap Lib Pool: Cap Lib Pool Norm

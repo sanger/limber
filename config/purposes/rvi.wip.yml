@@ -1,0 +1,78 @@
+RVI Cherrypick:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: true
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
+
+RVI RT:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+
+RVI cDNA XP:
+  :asset_type: plate
+  :presenter_class: Presenters::RviCdnaXpPresenter
+
+RVI Lig Bind:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+
+RVI Lib PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  # TODO: this is the full list of templates copied from WGS/ICS and should be reduced
+  :tag_layout_templates:
+    - Illumina pipeline tagging
+    - 'Sanger_168tags - 10 mer tags in columns ignoring pools (first oligo: ATCACGTT)'
+    - hWGS and RNAseq UDI tag layout v3
+    - pWGS UDI tag layout v2 A
+    - pWGS UDI tag layout v2 B
+    - pWGS UDI tag layout v2 C
+    - pWGS UDI tag layout v2 D
+    - TS_pWGSA_UDI96
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSC_UDI_tag60_61_swap
+    - TS_pWGSD_UDI96
+    - TSRNAhWGS_UDI96
+    - TS_pWGSA_UDI96v2
+    - TSISC_UDI96
+
+RVI Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+  :file_links:
+    - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
+      id: rvi_pcr_xp_concentrations_for_custom_pooling
+
+RVI Lib PrePool:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::MultiPlatePool
+  :csv_template: 'show_extended'
+
+RVI Hyb:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::BaitedPlate
+  :csv_template: 'show_extended'
+
+RVI Cap Lib:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+
+RVI Cap Lib PCR:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+
+RVI Cap Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+
+RVI Cap Lib Pool:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::PlateWithTemplate
+  :transfer_template: 'Pool wells based on submission'
