@@ -32,5 +32,5 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
         with:
           coverageLocations: |
-            ${{github.workspace}}/client/coverage/lcov.info:lcov
-            ${{github.workspace}}/server/coverage/lcov.info:lcov
+            ${{github.workspace}}/lcov.info:lcov # Ruby
+            ${{github.workspace}}/app/javascript/coverage/lcov.info:lcov # JavaScript
