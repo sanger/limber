@@ -3203,10 +3203,10 @@ ROBOT_CONFIG =
       'bravo-rvi-cdna-xp-frag-mix',
       name: 'Bravo RVI cDNA XP Frag Mix',
       beds: {
-        bed(5).barcode => {
+        bed(8).barcode => {
           purpose: 'RVI cDNA XP',
           states: ['started'],
-          label: 'Bed 5',
+          label: 'Bed 8',
           target_state: 'passed'
         }
       }
