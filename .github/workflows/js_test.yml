@@ -4,13 +4,12 @@ on:
   - push
   - pull_request
 
-env:
-  TZ: Europe/London
-
 jobs:
-  test:
-    name: Test
+  js_test: # note: this name is referenced in upload_coverage.yml
     runs-on: ubuntu-latest
+    env:
+      TZ: Europe/London
+
     steps:
       - uses: actions/checkout@v2
       - name: Export node version

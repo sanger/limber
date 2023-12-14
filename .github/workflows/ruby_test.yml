@@ -8,7 +8,7 @@ env:
   BUNDLE_WITHOUT: 'development lint'
 
 jobs:
-  ruby_test:
+  ruby_test: # note: this name is referenced in upload_coverage.yml
     runs-on: ubuntu-latest
     env:
       TZ: Europe/London
@@ -30,9 +30,5 @@ jobs:
             # example if you need more control over bundler.
       - name: Additional setup
         run: bin/setup
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.2.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
-        with:
-          coverageCommand: bundle exec rspec
+      - name: Run rspec
+        run: bundle exec rspec
