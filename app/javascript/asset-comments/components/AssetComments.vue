@@ -20,22 +20,33 @@
 </template>
 
 <script>
-const dateOptions = {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: '2-digit',
-}
-const formatDate = function (date) {
-  const dateObject = new Date(date)
-  return dateObject.toLocaleString('en-GB', dateOptions)
-}
-
 export default {
   name: 'AssetComments',
   filters: {
-    formatDate: formatDate,
+    formatDate(value) {
+      // return date like 30 September 2017, 12:18
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ]
+      const date = new Date(value)
+      const day = date.getDate()
+      const month = months[date.getMonth()]
+      const year = date.getFullYear()
+      const hour = date.getHours().toString().padStart(2, '0')
+      const minute = date.getMinutes().toString().padStart(2, '0')
+      return `${day} ${month} ${year}, ${hour}:${minute}`
+    },
   },
   computed: {
     noComments() {
