@@ -34,6 +34,26 @@ LBC 3pV3 GEX Dil
 {Presenters::ConcentrationBinnedPlatePresenter View class documentation}
 
 
+### Presenters::StockPlatePresenter
+
+{include:Presenters::StockPlatePresenter}
+
+Used directly in 16 purposes:
+GnT Stock, LB Cherrypick, LBB Cherrypick, LBC Stock, LBR Cherrypick, LCMB Cherrypick, LDS Cherrypick, LDS Stock, LHR RT, LHR-384 RT, LTHR RT, LTHR-384 RT, LTN Cherrypick, LTN Stock, PF Cherrypicked, and scRNA Stock
+
+{Presenters::StockPlatePresenter View class documentation}
+
+
+### Presenters::FailableStockPlatePresenter
+
+{include:Presenters::FailableStockPlatePresenter}
+
+Used directly in 2 purposes:
+LBSN-96 Lysate and LILYS-96 Stock
+
+{Presenters::FailableStockPlatePresenter View class documentation}
+
+
 ### Presenters::MinimalPlatePresenter
 
 {include:Presenters::MinimalPlatePresenter}
@@ -132,16 +152,6 @@ Used directly in 1 purposes:
 PF Lib Q-XP2
 
 {Presenters::SplitPresenter View class documentation}
-
-
-### Presenters::StockPlatePresenter
-
-{include:Presenters::StockPlatePresenter}
-
-Used directly in 18 purposes:
-GnT Stock, LB Cherrypick, LBB Cherrypick, LBC Stock, LBR Cherrypick, LBSN-96 Lysate, LCMB Cherrypick, LDS Cherrypick, LDS Stock, LHR RT, LHR-384 RT, LILYS-96 Stock, LTHR RT, LTHR-384 RT, LTN Cherrypick, LTN Stock, PF Cherrypicked, and scRNA Stock
-
-{Presenters::StockPlatePresenter View class documentation}
 
 
 ### Presenters::SubmissionPlatePresenter
