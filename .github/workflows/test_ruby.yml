@@ -32,3 +32,8 @@ jobs:
         run: bin/setup
       - name: Run rspec
         run: bundle exec rspec
+      - name: Cache test coverage
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/lcov.info
+          key: coverage-ruby-cache-${{ github.sha }}

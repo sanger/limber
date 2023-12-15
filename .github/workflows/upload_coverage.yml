@@ -12,13 +12,9 @@ jobs:
     name: Upload test coverage
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for Ruby tests to succeed
-        uses: lewagon/wait-on-check-action@v1.3.1
-        with:
-          ref: ${{ github.ref }}
-          check-name: 'ruby_test'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Wait for JS tests to succeed
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
@@ -26,11 +22,32 @@ jobs:
           check-name: 'js_test'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
+      - name: Retrieve JS coverage
+        uses: actions/cache/restore@v3
+        id: js-cache
+        with:
+          path: ${{ github.workspace }}/app/javascript/coverage/lcov.info
+          key: coverage-js-cache-${{ github.sha }}
+
+      - name: Wait for Ruby tests to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'ruby_test'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+      - name: Retrieve Ruby coverage
+        uses: actions/cache/restore@v3
+        id: ruby-cache
+        with:
+          path: ${{ github.workspace }}/lcov.info
+          key: coverage-ruby-cache-${{ github.sha }}
+
       - name: Perform the upload
         uses: paambaati/codeclimate-action@v3.2.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
         with:
           coverageLocations: |
-            ${{github.workspace}}/lcov.info:lcov # Ruby
-            ${{github.workspace}}/app/javascript/coverage/lcov.info:lcov # JavaScript
+            ${{github.workspace}}/app/javascript/coverage/lcov.info:lcov
+            ${{github.workspace}}/lcov.info:lcov
