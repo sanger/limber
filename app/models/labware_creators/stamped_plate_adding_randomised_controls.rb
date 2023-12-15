@@ -14,6 +14,9 @@ module LabwareCreators
       'wells.requests_as_source,wells.requests_as_source.request_type,' \
         'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
 
+    # the states we expect the request to be in for the displaced sample in the parent well
+    EXPECTED_REQUEST_STATES = %w[pending started].freeze
+
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
     end
@@ -163,16 +166,17 @@ module LabwareCreators
 
     # used to fetch the sample description from a parent well, for use in creating the control sample name
     # (which MUST be unique)
-    # we are assuming this contains a value shared by all samples in the parent plate e.g. this will be the
-    # Specimen plate barcode for Bioscan
     def control_desc
       @control_desc ||= generate_control_sample_desc
     end
 
     def generate_control_sample_desc
-      parent_sample_desc = parent_wells_with_aliquots.first.aliquots.first.sample.sample_metadata.sample_description
-      parent_sample_desc = parent.human_barcode if parent_sample_desc.blank?
-      parent_sample_desc
+      first_aliquot = parent_wells_with_aliquots.first&.aliquots&.first
+
+      # Assumption that sample description is the same for all samples in the parent plate
+      # e.g. this will be the Specimen plate barcode for Bioscan
+      parent_sample_desc = first_aliquot&.sample&.sample_metadata&.sample_description
+      parent_sample_desc.presence || parent.human_barcode
     end
 
     # used to fetch the sample cohort from a parent well, for use in writing to the control sample metadata
@@ -182,12 +186,11 @@ module LabwareCreators
     end
 
     def generate_control_cohort
-      parent_cohort = parent_wells_with_aliquots.first.aliquots.first.sample.sample_metadata.cohort
-      if parent_cohort.blank?
-        # TODO: R&D checking if ok for this field to remain blank i.e. can be blank in mBrave file
-        parent_cohort = parent.human_barcode
-      end
-      parent_cohort
+      first_aliquot = parent_wells_with_aliquots.first&.aliquots&.first
+
+      # Assumption that cohort is the same for all samples in the parent plate
+      parent_cohort = first_aliquot&.sample&.sample_metadata&.cohort
+      parent_cohort.presence || parent.human_barcode
     end
 
     # fetch the api v2 study object for the control study name from the purpose config
@@ -220,16 +223,22 @@ module LabwareCreators
         errors.add(:base, "Expecting child plate well to be empty at location #{well_location}")
       end
 
+      # create the control sample and metadata
       control_v2 = create_control_sample(control, well_location)
-
       update_control_sample_metadata(control_v2, well_location)
 
+      # create aliquot in child well to hold the control sample
       create_aliquot_in_child_well(control_v2, child_well_v2, well_location)
+    end
+
+    # creates a unique sample name for the control sample
+    def generate_sample_name(control, well_location)
+      "#{control.name_prefix}#{control_desc}_#{@child_plate_v2.human_barcode}_#{well_location}".parameterize.underscore
     end
 
     # create the control sample and metadata NB. sample_name cannot contain spaces!!
     def create_control_sample(control, well_location)
-      sample_name = "#{control.name_prefix}#{control_desc}_#{well_location}"
+      sample_name = generate_sample_name(control, well_location)
 
       # sample name must not contain spaces, if it does replace with underscores
       sample_name.parameterize.underscore
@@ -241,10 +250,9 @@ module LabwareCreators
           control_type: control.control_type
         )
       control_v2.relationships.studies = [control_study_v2]
-
-      return control_v2 if control_v2.save
-
-      errors.add(:base, "New control (type #{control.control_type}) did not save for location #{well_location}")
+      control_v2.save ||
+        raise(StandardError, "New control (type #{control.control_type}) did not save for location #{well_location}")
+      control_v2
     end
 
     def update_control_sample_metadata(control_v2, well_location)
@@ -256,7 +264,7 @@ module LabwareCreators
         return
       end
 
-      errors.add(:base, "Could not update description on control for location #{well_location}")
+      raise StandardError, "Could not update description on control for location #{well_location}"
     end
 
     # create aliquot in child well to hold the control sample
@@ -274,14 +282,15 @@ module LabwareCreators
 
       return if control_aliquot_v2.save
 
-      errors.add(:base, "Could not create aliquot for location #{well_location}")
+      raise StandardError, "Could not create aliquot for location #{well_location}"
     end
 
-    # filter on requests matching expected request type
+    # filter on requests matching expected request type and state
     def suitable_request_for_well(parent_well_v2)
       reqs =
         parent_well_v2.requests_as_source.filter do |request|
-          request.request_type.key == purpose_config.fetch(:work_completion_request_type) && request.state == 'pending'
+          request.request_type.key == purpose_config.fetch(:work_completion_request_type) &&
+            EXPECTED_REQUEST_STATES.include?(request.state)
         end
 
       reqs&.sort_by(&:id)&.last
@@ -298,7 +307,7 @@ module LabwareCreators
       # cancel the request
       return if req.update(state: 'cancelled')
 
-      errors.add(:base, "Could not cancel request for well location #{well_location}")
+      raise StandardError, "Could not cancel request for well location #{well_location}"
     end
   end
 end
