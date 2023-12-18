@@ -4,22 +4,22 @@
   <% labels.each do |label| %>
     <!-- main label for this plate -->
     <% label.attributes.each do |k, v|%>
-      <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+      <%= hidden_field_tag "#{f.object_name}[labels][][main_label][#{k}]", v %>
     <%end%>
     <!-- second label for 384-well plates -->
     <% label.extra_attributes.each do |k, v|%>
-      <%= f.hidden_field "labels[][extra_label][#{k}]", value: v %>
+      <%= hidden_field_tag "#{f.object_name}[labels][][extra_label][#{k}]", v %>
     <%end%>
     <!-- extra labels for intermediate plates in Duplex-Seq -->
     <% label.intermediate_attributes.each do |interm|%>
       <% interm.each do |k, v|%>
-        <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+        <%= hidden_field_tag "#{f.object_name}[labels][][main_label][#{k}]", v %>
       <%end%>
     <%end%>
     <!-- extra labels for QC plates in several pipelines -->
     <% label.qc_attributes.each do |qc_label|%>
       <% qc_label.each do |k, v|%>
-        <%= f.hidden_field "labels[][main_label][#{k}]", value: v %>
+        <%= hidden_field_tag "#{f.object_name}[labels][][main_label][#{k}]", v %>
       <%end%>
     <%end%>
   <% end %>
@@ -27,18 +27,18 @@
   <% labels.each do |label| %>
     <!-- this includes main label and extra label in one -->
     <% label.sprint_attributes.each_with_index do |(k, v), index|%>
-      <%= f.hidden_field "labels_sprint[sprint][#{k}]", value: v %>
+      <%= hidden_field_tag "#{f.object_name}[labels_sprint][sprint][#{k}]", v %>
     <%end%>
     <!-- extra labels for intermediate plates in Duplex-Seq -->
     <% label.intermediate_attributes.each_with_index do |interm, index|%>
       <% interm.each do |k, v|%>
-        <%= f.hidden_field "labels_sprint[interm_#{index}][#{k}]", value: v %>
+        <%= hidden_field_tag "#{f.object_name}[labels_sprint][interm_#{index}][#{k}]", v %>
       <%end%>
     <%end%>
     <!-- extra labels for QC plates in several pipelines -->
     <% label.qc_attributes.each_with_index do |qc_label, index|%>
       <% qc_label.each do |k, v|%>
-        <%= f.hidden_field "labels_sprint[qc_#{index}][#{k}]", value: v %>
+        <%= hidden_field_tag "#{f.object_name}[labels_sprint][qc_#{index}][#{k}]", v %>
       <%end%>
     <%end%>
   <% end %>
