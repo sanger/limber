@@ -69,7 +69,7 @@ module LabwareCreators
       return false if control_locations.uniq.length != control_locations.length
 
       # check the chosen locations against the purpose config rules (will add more options as required)
-      validate_control_rules_from_config(control_locations)
+      check_control_rules_from_config(control_locations)
     end
 
     private
@@ -89,7 +89,7 @@ module LabwareCreators
       control_locations
     end
 
-    def validate_control_rules_from_config(control_locations)
+    def check_control_rules_from_config(control_locations)
       list_of_rules.each do |rule|
         case rule.type
         when 'not'
