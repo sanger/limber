@@ -3183,7 +3183,7 @@ ROBOT_CONFIG =
 
     custom_robot(
       'bravo-rvi-rt-4',
-      name: 'Bravo RVI RT Placeholder',
+      name: 'Bravo RVI RT SPRI Cleanup',
       beds: {
         bed(8).barcode => {
           purpose: 'RVI RT',
@@ -3213,7 +3213,7 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'bravo-rvi-cdna-xp-frag-mix',
+      'bravo-rvi-cdna-xp-ligation-mix',
       name: 'Bravo RVI cDNA XP Ligation mix',
       beds: {
         bed(8).barcode => {
