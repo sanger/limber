@@ -11,18 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true # Runs bundle install and caches gems.
-      - name: Export node version
-        id: node_version
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
+          node-version-file: '.nvmrc'
       - name: Install
         run: yarn install
       - name: Run prettier
@@ -34,14 +31,11 @@ jobs:
     name: EsLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Export node version
-        id: node_version
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+      - uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
+          node-version-file: '.nvmrc'
       - name: Node Information
         run: node --version
       - name: Install
