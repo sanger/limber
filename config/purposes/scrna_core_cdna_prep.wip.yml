@@ -1,0 +1,50 @@
+# This configuration file is for the plate and tube purposes required for the
+# high throughput scRNA Core cDNA Prep pipeline
+---
+###
+# scRNA core thawing, donor pooling & cDNA prep
+###
+# Plate representing tube rack received from BioResource.
+# In reality, the rack contains LRC Blood Seq & Spare tubes.
+# Cryostor is the name of the buffer used to freeze the PBMCs.
+LRC PBMC Cryostor:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# Plate containing defrosted PBMCs in PBS buffer.
+LRC PBMC Defrost PBS:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# Plate containing pooled PBMCs from different donors.
+# This plate has come from the LRC PBMC Defrost PBS plate, in SeqOps.
+LRC PBMC Pools:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# Plate containing pooled PBMCs from different donors.
+# This plate has come from faculty and is entering the SeqOps pipeline for the first time here.
+LRC PBMC Pools Input:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# 10X Chromium 16-well chip
+LRC HT 5p Chip:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# GEMs plate, containing wells from the above in duplicate.
+LRC HT 5p GEMs:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# Plate containing cDNA (converted from RNA), straight stamp from above.
+LRC HT 5p cDNA PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# Plate containing cleaned up cDNA, duplicate wells consolidated back together.
+LRC HT 5p cDNA PCR XP:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
