@@ -54,7 +54,7 @@ module ConfigLoader
     end
 
     def in_list?(list, file)
-      (list.nil? || list.include?(file.basename(EXTENSION).to_s))
+      list.nil? || list.include?(file.basename(EXTENSION).to_s)
     end
 
     def work_in_progress?(filename)
