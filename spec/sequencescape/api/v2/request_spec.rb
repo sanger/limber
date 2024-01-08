@@ -3,43 +3,36 @@
 require 'rails_helper'
 
 RSpec.describe Sequencescape::Api::V2::Request do
-  subject(:request) { described_class.new }
+  subject(:request) { create :library_request_with_poly_metadata }
 
   describe '#poly_metadata' do
-    # let(:req_poly_metadata) { request.poly_metadata }
-    let(:test_poly_metadatum) { build_stubbed :v2_poly_metadatum }
+    # In reality, we will not pass metadatable into the initializer as this factory makes it appear.
+    # Instead we would do this in sequence:
+    # 1. select our metadatable request. e.g.
+    #    r = Sequencescape::Api::V2::Request.find(11180).first
+    # 2. create the new poly metadatum, e.g.
+    #    pm1 = Sequencescape::Api::V2::PolyMetadatum.new(key: 'test_key', value: 'test_value')
+    # 3. set the metadatable on the poly metadatum, e.g.
+    #    pm1.relationships.metadatable = r
+    # 4. save the poly metadatum, e.g.
+    #    pm1.save
+    # If we set the metadatable into the initializer, the save fails as the metadatable is treated as
+    # an attribute and not a relationship.
+    let(:test_poly_metadatum) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
+
+    # stub_api_v2_save just checks something is being sent, not specifically what
+    let!(:api_v2_saves_poly_metadata) { stub_api_v2_save('PolyMetadatum') }
 
     context 'when we want to create poly metadata on a request' do
-      it 'creates the new poly metadatum' do
-        expect(request.poly_metadata).to be_empty
-        request.poly_metadata << test_poly_metadatum
-        expect(request.poly_metadata).to include(test_poly_metadatum)
+      it 'triggers save on the poly metadatum via api v2' do
+        expect(test_poly_metadatum.save).to eq true
       end
     end
 
-    context 'when we want to select the poly metadata for a request' do
-      it 'returns the poly metadata for the request' do
-        request.poly_metadata << test_poly_metadatum
-        expect(request.poly_metadata).to include(test_poly_metadatum)
-      end
-    end
-
-    context 'when we want to update poly metadata on a request' do
-      it 'updates the poly metadata for the request' do
-        request.poly_metadata << test_poly_metadatum
-        expect(request.poly_metadata).to include(test_poly_metadatum)
-        test_poly_metadatum.key = 'new_key'
-        test_poly_metadatum.value = 'new_value'
-        expect(request.poly_metadata).to include(test_poly_metadatum)
-      end
-    end
-
-    context 'when we want to delete poly metadata on a request' do
-      it 'deletes the poly metadata for the request' do
-        request.poly_metadata << test_poly_metadatum
-        expect(request.poly_metadata).to include(test_poly_metadatum)
-        request.poly_metadata.delete(test_poly_metadatum)
-        expect(request.poly_metadata).not_to include(test_poly_metadatum)
+    context 'when we want to update existing poly metadata on a request' do
+      it 'triggers an update on the request via api v2' do
+        expect(test_poly_metadatum.save).to eq true
+        expect(test_poly_metadatum.update(value: 'value2')).to eq true
       end
     end
   end

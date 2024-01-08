@@ -2,11 +2,22 @@
 
 FactoryBot.define do
   # API V2 PolyMetadatum
-  factory :v2_poly_metadatum, class: Sequencescape::Api::V2::PolyMetadatum do
+  factory :poly_metadatum, class: Sequencescape::Api::V2::PolyMetadatum do
     skip_create
 
-    metadatable factory: %i[v2_request]
     sequence(:key) { |n| "some_key_#{n}" }
     sequence(:value) { |n| "some_value_#{n}" }
+
+    transient { metadatable { create :library_request } }
+
+    after(:build) do |poly_metadatum, evaluator|
+      poly_metadatum.relationships.metadatable = {
+        'links' => {},
+        'data' => {
+          'type' => 'requests',
+          'id' => evaluator.metadatable.id
+        }
+      }
+    end
   end
 end
