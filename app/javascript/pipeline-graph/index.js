@@ -142,6 +142,8 @@ const renderPipelines = function (data) {
           'background-color': '#666',
           label: 'data(id)',
           color: 'white',
+          'text-wrap': 'wrap',
+          'text-max-width': '90',
         },
       },
       {
