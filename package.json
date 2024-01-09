@@ -6,6 +6,7 @@
     "babel-loader": "^8.2.5",
     "bootstrap-vue": "^2.23.1",
     "cytoscape": "^3.28.1",
+    "cytoscape-klay": "^3.1.4",
     "devour-client": "^2.1.2",
     "flush-promises": "^1.0.0",
     "pluralize": "^7.0.0",

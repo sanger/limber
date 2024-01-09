@@ -2,6 +2,9 @@
 // pipelines.json
 
 import cytoscape from 'cytoscape'
+import klay from 'cytoscape-klay'
+
+cytoscape.use(klay)
 
 // Distinct colours as used in the rest of limber
 const colours = [
@@ -176,6 +179,7 @@ const renderPipelines = function (data) {
         style: {
           width: 3,
           'curve-style': 'bezier',
+          'control-point-step-size': 7,
           'line-color': pipelineColour,
           'target-arrow-color': pipelineColour,
           'target-arrow-shape': 'triangle',
@@ -184,14 +188,14 @@ const renderPipelines = function (data) {
       },
     ],
 
-    // for other layout options see http://js.cytoscape.org/#layouts
+    // for other layout options see https://js.cytoscape.org/#demos
     layout: {
-      name: 'cose',
-      nodeDimensionsIncludeLabels: true,
-      idealEdgeLength: 90,
-      nodeRepulsion: 100000,
-      gravity: 0.01,
-      animate: false,
+      name: 'klay',
+      klay: {
+        direction: 'DOWN', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
+        /* UNDEFINED, RIGHT, LEFT, DOWN, UP */
+        spacing: 45, // Overall setting for the minimal amount of space to be left between objects
+      },
     },
 
     minZoom: 0.2,
