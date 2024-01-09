@@ -101,7 +101,6 @@ module LabwareCreators
         else
           # check for unrecognised rule type
           raise StandardError, "Unrecognised control locations rule type from purpose config #{rule.type}"
-          return false
         end
       end
       true
