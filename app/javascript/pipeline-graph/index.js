@@ -209,10 +209,11 @@ const renderPipelines = function (data) {
         style: {
           width: 3,
           'curve-style': 'bezier',
+          'control-point-step-size': 10,
           'line-color': pipelineColourEdge,
           'target-arrow-color': pipelineColourEdge,
           'target-arrow-shape': 'triangle',
-          'arrow-scale': 3,
+          'arrow-scale': 2,
         },
       },
     ],
