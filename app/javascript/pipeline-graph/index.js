@@ -106,6 +106,8 @@ const colours = [
   '#5B4534',
 ]
 
+let cy = undefined
+
 const pipelineColours = {}
 
 const pipelineColour = function (node) {
@@ -151,11 +153,23 @@ const renderIcon = function (ele) {
   return dataURI
 }
 
+// for other layout options see https://js.cytoscape.org/#demos
+// for elk options see https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html
+const layoutOptions = {
+  name: 'elk',
+  elk: {
+    algorithm: 'layered',
+    'elk.direction': 'DOWN',
+    'elk.layered.spacing.nodeNodeBetweenLayers': 65, // The minimal distance to be preserved between each two nodes on different layers.
+    'elk.spacing.nodeNode': 65, // The minimal distance to be preserved between each two nodes on the same layer.
+  },
+}
+
 const renderPipelines = function (data) {
   const container = document.getElementById('graph')
   const key = document.getElementById('pipelines-key')
 
-  cytoscape({
+  cy = cytoscape({
     container, // container to render in
 
     elements: data.elements,
@@ -221,16 +235,7 @@ const renderPipelines = function (data) {
       },
     ],
 
-    // for other layout options see https://js.cytoscape.org/#demos
-    layout: {
-      name: 'elk',
-      elk: {
-        algorithm: 'layered',
-        'elk.direction': 'DOWN',
-        'elk.layered.spacing.nodeNodeBetweenLayers': 65, // The minimal distance to be preserved between each two nodes on different layers.
-        'elk.spacing.nodeNode': 65, // The minimal distance to be preserved between each two nodes on the same layer.
-      },
-    },
+    layout: layoutOptions,
 
     minZoom: 0.2,
     maxZoom: 3, // referenced in renderIcon above
@@ -247,4 +252,22 @@ const renderPipelines = function (data) {
 // Fetch the result of pipelines.json and then render the graph.
 fetch('pipelines.json').then((response) => {
   response.json().then(renderPipelines)
+})
+
+const searchField = document.getElementById('search')
+let notResults = undefined
+searchField.addEventListener('change', (event) => {
+  if (notResults !== undefined) {
+    notResults.restore()
+  }
+
+  const query = event.target.value
+  const all = cy.$('*')
+  let results = cy.collection()
+  results = results.union(cy.$(`edge[pipeline @^= "${query}"]`))
+  results = results.union(results.connectedNodes())
+  results = results.union(cy.$(`node[id @*= "${query}"]`))
+  notResults = cy.remove(all.not(results))
+
+  results.layout(layoutOptions).run()
 })

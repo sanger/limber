@@ -1,3 +1,19 @@
+
+#search-bar {
+  @extend .card;
+  @extend .bg-dark;
+
+  #search {
+    width: 100%;
+    @extend .bg-dark;
+    @extend .text-light;
+    @extend .form-control;
+    @extend .form-control-lg;
+    @extend .rounded;
+    @extend .border-0;
+  }
+}
+
 #pipeline-graph {
   position: relative;
   width: 100%;
