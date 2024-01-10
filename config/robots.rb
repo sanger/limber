@@ -3159,10 +3159,10 @@ ROBOT_CONFIG =
       'bravo-rvi-rt-2',
       name: 'Bravo RVI RT First Strand Mix',
       beds: {
-        bed(8).barcode => {
+        bed(6).barcode => {
           purpose: 'RVI RT',
           states: ['processed_2'],
-          label: 'Bed 8',
+          label: 'Bed 6',
           target_state: 'processed_3'
         }
       }
