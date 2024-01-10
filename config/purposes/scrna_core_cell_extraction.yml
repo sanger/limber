@@ -63,6 +63,12 @@ LRC PBMC Bank:
       number_of_source_wells: 2
   :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
   :file_links:
+    - name: 'Download Hamilton LRC Blood Bank plate to LRC PBMC Bank plate CSV'
+      id: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
+    - name: 'Download PBMC Bank Tubes Content Report'
+      id: pbmc_bank_tubes_content_report
     - name: 'Download Cellaca Input QC1'
       id: cellaca_input_file
       params:
@@ -79,12 +85,6 @@ LRC PBMC Bank:
       id: cellaca_input_file
       params:
         page: 3
-    - name: 'Download Hamilton LRC Blood Bank plate to LRC PBMC Bank plate CSV'
-      id: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
-    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
-      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
-    - name: 'Download PBMC Bank Tubes Content Report'
-      id: pbmc_bank_tubes_content_report
   :qc_thresholds:
     viability:
       units: '%'
