@@ -3159,10 +3159,10 @@ ROBOT_CONFIG =
       'bravo-rvi-rt-2',
       name: 'Bravo RVI RT First Strand Mix',
       beds: {
-        bed(8).barcode => {
+        bed(6).barcode => {
           purpose: 'RVI RT',
           states: ['processed_2'],
-          label: 'Bed 8',
+          label: 'Bed 6',
           target_state: 'processed_3'
         }
       }
@@ -3175,6 +3175,19 @@ ROBOT_CONFIG =
         bed(8).barcode => {
           purpose: 'RVI RT',
           states: ['processed_3'],
+          label: 'Bed 8',
+          target_state: 'processed_4'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-rt-4',
+      name: 'Bravo RVI RT SPRI Cleanup',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['processed_4'],
           label: 'Bed 8',
           target_state: 'passed'
         }
@@ -3200,13 +3213,13 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'bravo-rvi-cdna-xp-frag-mix',
-      name: 'Bravo RVI cDNA XP Frag Mix',
+      'bravo-rvi-cdna-xp-ligation-mix',
+      name: 'Bravo RVI cDNA XP Ligation mix',
       beds: {
-        bed(5).barcode => {
+        bed(8).barcode => {
           purpose: 'RVI cDNA XP',
           states: ['started'],
-          label: 'Bed 5',
+          label: 'Bed 8',
           target_state: 'passed'
         }
       }

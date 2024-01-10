@@ -14,14 +14,11 @@ jobs:
       TZ: Europe/London
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Export node version
-        id: node_version
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+      - uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
+          node-version-file: '.nvmrc'
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -31,7 +28,7 @@ jobs:
       - name: Additional setup
         run: bin/setup
       - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.2.0
+        uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
         with:
