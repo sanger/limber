@@ -200,6 +200,8 @@ const renderPipelines = function (data) {
 
     elements: data.elements,
 
+    autoungrabify: true, // don't allow nodes to be dragged around
+
     // node dimensions:
     // - type: plate or tube
     // - size: number of wells
