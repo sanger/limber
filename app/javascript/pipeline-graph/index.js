@@ -2,9 +2,9 @@
 // pipelines.json
 
 import cytoscape from 'cytoscape'
-import klay from 'cytoscape-klay'
+import elk from 'cytoscape-elk'
 
-cytoscape.use(klay)
+cytoscape.use(elk)
 
 // Distinct colours as used in the rest of limber
 const colours = [
@@ -221,11 +221,12 @@ const renderPipelines = function (data) {
 
     // for other layout options see https://js.cytoscape.org/#demos
     layout: {
-      name: 'klay',
-      klay: {
-        direction: 'DOWN', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
-        /* UNDEFINED, RIGHT, LEFT, DOWN, UP */
-        spacing: 45, // Overall setting for the minimal amount of space to be left between objects
+      name: 'elk',
+      elk: {
+        algorithm: 'layered',
+        'elk.direction': 'DOWN',
+        'elk.layered.spacing.nodeNodeBetweenLayers': 65, // The minimal distance to be preserved between each two nodes on different layers.
+        'elk.spacing.nodeNode': 65, // The minimal distance to be preserved between each two nodes on the same layer.
       },
     },
 
