@@ -20,9 +20,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   let(:parent_plate_v2) do
     create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
   end
-  let(:child_plate_v2) do
-    create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
-  end
+  let(:child_plate_v2) { create :v2_plate_empty, uuid: 'child-uuid', barcode_number: '3', size: plate_size }
   let(:requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -256,14 +254,11 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
     end
 
     context 'when the rule checks fail' do
-      before do
-        allow(subject).to receive(:validate_control_rules).and_return(false)
-        subject.generate_control_well_locations
-      end
+      before { allow(subject).to receive(:validate_control_rules).and_return(false) }
 
       it 'returns an error' do
         expected_msg = 'Control well location randomisation failed to pass rules after 5 attempts'
-        expect(subject.errors.first.message).to eq expected_msg
+        expect { subject.generate_control_well_locations }.to raise_error(StandardError, expected_msg)
       end
     end
   end
