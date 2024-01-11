@@ -48,12 +48,13 @@
 
     header {
       @extend .card-header;
+      @extend .font-weight-bold;
     }
     ul {
       @extend .list-group;
       @extend .list-group-flush;
       max-height: 500px;
-      overflow-y: scroll;
+      overflow-y: auto;
 
       li {
         @extend .list-group-item;
