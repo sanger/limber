@@ -1,121 +1,66 @@
 // Mounts #graph and renders a summary of the limber pipelines source from
 // pipelines.json
 
+import convert from 'color-convert'
+
 import cytoscape from 'cytoscape'
 import elk from 'cytoscape-elk'
 
 cytoscape.use(elk)
 
-// Distinct colours as used in the rest of limber
-const colours = [
-  '#FFFF00',
-  '#1CE6FF',
-  '#FF34FF',
-  '#FF4A46',
-  '#008941',
-  '#006FA6',
-  '#A30059',
-  '#FFDBE5',
-  '#7A4900',
-  '#0000A6',
-  '#63FFAC',
-  '#B79762',
-  '#004D43',
-  '#8FB0FF',
-  '#997D87',
-  '#5A0007',
-  '#809693',
-  '#FEFFE6',
-  '#1B4400',
-  '#4FC601',
-  '#3B5DFF',
-  '#4A3B53',
-  '#FF2F80',
-  '#61615A',
-  '#BA0900',
-  '#6B7900',
-  '#00C2A0',
-  '#FFAA92',
-  '#FF90C9',
-  '#B903AA',
-  '#D16100',
-  '#DDEFFF',
-  '#000035',
-  '#7B4F4B',
-  '#A1C299',
-  '#300018',
-  '#0AA6D8',
-  '#013349',
-  '#00846F',
-  '#372101',
-  '#FFB500',
-  '#C2FFED',
-  '#A079BF',
-  '#CC0744',
-  '#C0B9B2',
-  '#C2FF99',
-  '#001E09',
-  '#00489C',
-  '#6F0062',
-  '#0CBD66',
-  '#EEC3FF',
-  '#456D75',
-  '#B77B68',
-  '#7A87A1',
-  '#788D66',
-  '#885578',
-  '#FAD09F',
-  '#FF8A9A',
-  '#D157A0',
-  '#BEC459',
-  '#456648',
-  '#0086ED',
-  '#886F4C',
-  '#34362D',
-  '#B4A8BD',
-  '#00A6AA',
-  '#452C2C',
-  '#636375',
-  '#A3C8C9',
-  '#FF913F',
-  '#938A81',
-  '#575329',
-  '#00FECF',
-  '#B05B6F',
-  '#8CD0FF',
-  '#3B9700',
-  '#04F757',
-  '#C8A1A1',
-  '#1E6E00',
-  '#7900D7',
-  '#A77500',
-  '#6367A9',
-  '#A05837',
-  '#6B002C',
-  '#772600',
-  '#D790FF',
-  '#9B9700',
-  '#549E79',
-  '#FFF69F',
-  '#201625',
-  '#72418F',
-  '#BC23FF',
-  '#99ADC0',
-  '#3A2465',
-  '#922329',
-  '#5B4534',
-]
-
 let cy = undefined
 
-const pipelineColours = {}
+let pipelineColours = {}
 
-const pipelineColour = function (node) {
-  var pipeline = node.data('pipeline')
-  if (pipelineColours[pipeline] === undefined) {
-    pipelineColours[pipeline] = colours.shift() || '#666'
+const pipelineColourNode = function (node) {
+  const pipeline = node.data('pipeline')
+  return pipelineColours[pipeline] || '#666'
+}
+
+const calculatePipelineColours = function (sortedPipelines) {
+  pipelineColours = {}
+  // group the pipelines by the first two words of the name
+  const pipelineGroups = {}
+  sortedPipelines.forEach((pipeline) => {
+    const key = pipeline.split(' ').slice(0, 2).join(' ')
+    if (pipelineGroups[key] === undefined) {
+      pipelineGroups[key] = []
+    }
+    pipelineGroups[key].push(pipeline)
+  })
+
+  // create the pipeline colours
+  const numberOfPipelineGroups = Object.keys(pipelineGroups).length
+  const hueStep = 360 / numberOfPipelineGroups
+  let hue = 0
+
+  for (const [pipelineGroup, pipelines] of Object.entries(pipelineGroups)) {
+    const numberOfPipelinesInGroup = pipelines.length
+    const saturationStep = 80 / numberOfPipelinesInGroup // 80% of the saturation range
+    console.log(numberOfPipelinesInGroup, saturationStep)
+    // for each pipeline within the group
+    pipelines.map((pipeline, index) => {
+      const saturation = 100 - index * saturationStep // start at 20% of the saturation range
+      console.log(`${pipeline} ${hue} ${saturation}`)
+      const hex = convert.hsv.hex(hue, 100, saturation)
+      pipelineColours[pipeline] = `#${hex}`
+    })
+    hue += hueStep
   }
-  return pipelineColours[pipeline]
+}
+
+const renderPipelinesKey = function (pipelines) {
+  const key = document.getElementById('pipelines-key')
+  key.innerHTML = ''
+  pipelines.forEach((pipeline) => {
+    const item = document.createElement('li')
+    const pipelineColour = pipelineColours[pipeline] || '#666'
+
+    item.style.borderLeft = `solid 10px ${pipelineColour}`
+    item.textContent = pipeline
+
+    key.appendChild(item)
+  })
 }
 
 // Polygon dimensions represent a series of points defined by alternating x,y co-ordinates
@@ -167,7 +112,6 @@ const layoutOptions = {
 
 const renderPipelines = function (data) {
   const container = document.getElementById('graph')
-  const key = document.getElementById('pipelines-key')
 
   cy = cytoscape({
     container, // container to render in
@@ -227,8 +171,8 @@ const renderPipelines = function (data) {
           width: 3,
           'curve-style': 'bezier',
           'control-point-step-size': 10,
-          'line-color': pipelineColour,
-          'target-arrow-color': pipelineColour,
+          'line-color': pipelineColourNode,
+          'target-arrow-color': pipelineColourNode,
           'target-arrow-shape': 'triangle',
           'arrow-scale': 2,
         },
@@ -241,12 +185,9 @@ const renderPipelines = function (data) {
     maxZoom: 3, // referenced in renderIcon above
   })
 
-  data.pipelines.forEach((pipeline) => {
-    const item = document.createElement('li')
-    item.style = 'border-left: solid 10px ' + pipelineColours[pipeline.name] + ';'
-    item.innerHTML = pipeline.name
-    key.appendChild(item)
-  })
+  const sortedPipelines = data.pipelines.map((pipeline) => pipeline.name).sort()
+  calculatePipelineColours(sortedPipelines)
+  renderPipelinesKey(sortedPipelines)
 }
 
 // Fetch the result of pipelines.json and then render the graph.
@@ -268,6 +209,17 @@ searchField.addEventListener('change', (event) => {
   results = results.union(results.connectedNodes())
   results = results.union(cy.$(`node[id @*= "${query}"]`))
   notResults = cy.remove(all.not(results))
+
+  const sortedPipelines = [
+    ...new Set( // remove duplicates
+      results
+        .edges()
+        .map((edge) => edge.data('pipeline'))
+        .sort()
+    ),
+  ]
+  calculatePipelineColours(sortedPipelines)
+  renderPipelinesKey(sortedPipelines)
 
   results.layout(layoutOptions).run()
 })

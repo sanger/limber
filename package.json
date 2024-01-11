@@ -5,6 +5,7 @@
     "axios": "^0.21.4",
     "babel-loader": "^8.2.5",
     "bootstrap-vue": "^2.23.1",
+    "color-convert": "^2.0.1",
     "cytoscape": "^3.28.1",
     "cytoscape-elk": "^2.2.0",
     "devour-client": "^2.1.2",
