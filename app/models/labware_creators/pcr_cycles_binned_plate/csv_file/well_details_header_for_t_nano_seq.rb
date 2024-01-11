@@ -7,8 +7,9 @@ module LabwareCreators
   #
   # Class WellDetailsHeader provides a simple wrapper for handling and validating
   # the plate barcode header row from the customer csv file
+  # This version is for the Targeted NanoSeq pipeline.
   #
-  class PcrCyclesBinnedPlate::CsvFile::WellDetailsHeader
+  class PcrCyclesBinnedPlate::CsvFile::WellDetailsHeaderForTNanoSeq
     include ActiveModel::Validations
 
     # Return the index of the respective column.
@@ -21,9 +22,7 @@ module LabwareCreators
                 :sample_volume_column,
                 :diluent_volume_column,
                 :pcr_cycles_column,
-                :submit_for_sequencing_column,
-                :sub_pool_column,
-                :coverage_column
+                :hyb_panel_column
 
     WELL_COLUMN = 'Well'
     CONCENTRATION_COLUMN = 'Concentration (nM)'
@@ -34,9 +33,7 @@ module LabwareCreators
     SAMPLE_VOLUME_COLUMN = 'Sample volume'
     DILUENT_VOLUME_COLUMN = 'Diluent volume'
     PCR_CYCLES_COLUMN = 'PCR cycles'
-    SUBMIT_FOR_SEQUENCING_COLUMN = 'Submit for sequencing (Y/N)?'
-    SUB_POOL_COLUMN = 'Sub-Pool'
-    COVERAGE_COLUMN = 'Coverage'
+    HYB_PANEL_COLUMN = 'Hyb Panel'
 
     validates :well_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :concentration_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
@@ -59,19 +56,14 @@ module LabwareCreators
     validates :sample_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :diluent_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :pcr_cycles_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :submit_for_sequencing_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :sub_pool_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :coverage_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :hyb_panel_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
 
     #
     # Generates a well details header from the well details header row array
     #
     # @param [Array] row The array of fields extracted from the CSV file
     #
-    def initialize(row) # rubocop:todo Metrics/AbcSize
+    def initialize(row)
       @row = row || []
 
       @well_column = index_of_header(WELL_COLUMN)
@@ -83,9 +75,7 @@ module LabwareCreators
       @sample_volume_column = index_of_header(SAMPLE_VOLUME_COLUMN)
       @diluent_volume_column = index_of_header(DILUENT_VOLUME_COLUMN)
       @pcr_cycles_column = index_of_header(PCR_CYCLES_COLUMN)
-      @submit_for_sequencing_column = index_of_header(SUBMIT_FOR_SEQUENCING_COLUMN)
-      @sub_pool_column = index_of_header(SUB_POOL_COLUMN)
-      @coverage_column = index_of_header(COVERAGE_COLUMN)
+      @hyb_panel_column = index_of_header(HYB_PANEL_COLUMN)
     end
 
     #

@@ -5,20 +5,15 @@ module LabwareCreators
   require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file'
 
   #
-  # Class CsvRow provides a simple wrapper for handling and validating
-  # individual CSV rows
+  # This version of the row is for the Targeted NanoSeq pipeline.
   #
-  class PcrCyclesBinnedPlate::CsvFile::Row # rubocop:todo Metrics/ClassLength
+  class PcrCyclesBinnedPlate::CsvFile::RowForTNanoSeq
     include ActiveModel::Validations
 
     IN_RANGE = 'is empty or contains a value that is out of range (%s to %s), in %s'
-    SUB_POOL_NOT_BLANK = 'has a value when Submit for Sequencing is N, it should be empty, in %s'
-    SUBMIT_FOR_SEQ_INVALID = 'is empty or has an unrecognised value (should be Y or N), in %s'
-    COVERAGE_MISSING = 'is missing but should be present when Submit for Sequencing is Y, in %s'
-    COVERAGE_NEGATIVE = 'is negative but should be a positive value, in %s'
     WELL_NOT_RECOGNISED = 'contains an invalid well name: %s'
+    HYB_PANEL_MISSING = 'is empty, in %s'
 
-    # TODO: add additional columns
     attr_reader :header,
                 :well,
                 :concentration,
@@ -29,13 +24,9 @@ module LabwareCreators
                 :sample_volume,
                 :diluent_volume,
                 :pcr_cycles,
-                :submit_for_sequencing,
-                :sub_pool,
-                :coverage,
+                :hyb_panel,
                 :index
 
-    # TODO: add validations for additional columns
-    # TODO: make validations dependant on 'if in passed columns list'
     validates :well,
               inclusion: {
                 in: WellHelpers.column_order,
@@ -46,17 +37,7 @@ module LabwareCreators
     validate :sample_volume_within_expected_range?
     validate :diluent_volume_within_expected_range?
     validate :pcr_cycles_within_expected_range?
-    validate :submit_for_sequencing_has_expected_value?
-    validate :sub_pool_within_expected_range?
-    validates :coverage,
-              presence: {
-                message: ->(object, _data) { COVERAGE_MISSING % object }
-              },
-              numericality: {
-                greater_than: 0,
-                message: ->(object, _data) { COVERAGE_NEGATIVE % object }
-              },
-              unless: -> { empty? || !submit_for_sequencing? }
+    validate :hyb_panel_is_present?
     delegate :well_column,
              :concentration_column,
              :sanger_sample_id_column,
@@ -66,12 +47,10 @@ module LabwareCreators
              :sample_volume_column,
              :diluent_volume_column,
              :pcr_cycles_column,
-             :submit_for_sequencing_column,
-             :sub_pool_column,
-             :coverage_column,
+             :hyb_panel_column,
              to: :header
 
-    # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
     def initialize(row_config, header, index, row_data)
       @row_config = row_config
       @header = header
@@ -86,21 +65,14 @@ module LabwareCreators
       @input_amount_available = @row_data[input_amount_available_column]&.strip&.to_f
 
       # initialize customer fields
-      # TODO: if in passed columns list
       @input_amount_desired = @row_data[input_amount_desired_column]&.strip&.to_f
       @sample_volume = @row_data[sample_volume_column]&.strip&.to_f
       @diluent_volume = @row_data[diluent_volume_column]&.strip&.to_f
       @pcr_cycles = @row_data[pcr_cycles_column]&.strip&.to_i
-      @submit_for_sequencing_as_string = @row_data[submit_for_sequencing_column]&.strip&.upcase
-      @sub_pool = @row_data[sub_pool_column]&.strip&.to_i
-      @coverage = @row_data[coverage_column]&.strip&.to_i
+      @hyb_panel = @row_data[hyb_panel_column]&.strip
     end
 
     # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
-
-    def submit_for_sequencing?
-      @submit_for_sequencing ||= (@submit_for_sequencing_as_string == 'Y')
-    end
 
     def to_s
       @well.present? ? "row #{index + 2} [#{@well}]" : "row #{index + 2}"
@@ -127,28 +99,17 @@ module LabwareCreators
       in_range?('pcr_cycles', pcr_cycles, @row_config.pcr_cycles_min, @row_config.pcr_cycles_max)
     end
 
-    def submit_for_sequencing_has_expected_value?
+    # Checks whether the Hyb Panel column is filled in
+    def hyb_panel_is_present?
       return true if empty?
 
-      return true if %w[Y N].include? @submit_for_sequencing_as_string
-
-      errors.add('submit_for_sequencing', format(SUBMIT_FOR_SEQ_INVALID, to_s))
-    end
-
-    def sub_pool_within_expected_range?
-      return true if empty?
-
-      # check the value is within range when we do expect a value to be present
-      if submit_for_sequencing?
-        return in_range?('sub_pool', sub_pool, @row_config.sub_pool_min, @row_config.sub_pool_max)
+      # TODO: can we validate the hyb panel value? Does not appear to be tracked in LIMS.
+      result = hyb_panel.present?
+      unless result
+        msg = format(HYB_PANEL_MISSING, to_s)
+        errors.add('hyb_panel', msg)
       end
-
-      # expect sub-pool field to be blank, possible mistake by user if not
-      return true if sub_pool.blank?
-
-      # sub-pool is NOT blank and should be
-      errors.add('sub_pool', format(SUB_POOL_NOT_BLANK, to_s))
-      false
+      result
     end
 
     # Checks whether a row value it within the specified range using min/max values
