@@ -97,11 +97,16 @@ const renderIcon = function (ele) {
 // for elk options see https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html
 const layoutOptions = {
   name: 'elk',
+  transform: function (node, pos) {
+    // A function that applies a transform to the final node position
+    // scale x coordinates to prevent labels overlapping
+    pos.x *= 2.25
+    pos.y *= 1.35
+    return pos
+  },
   elk: {
     algorithm: 'layered',
     'elk.direction': 'DOWN',
-    'elk.layered.spacing.nodeNodeBetweenLayers': 65, // The minimal distance to be preserved between each two nodes on different layers.
-    'elk.spacing.nodeNode': 65, // The minimal distance to be preserved between each two nodes on the same layer.
   },
 }
 
@@ -132,8 +137,13 @@ const renderPipelines = function (data) {
           'background-width': '100%', // set canvas to fit node
           label: 'data(id)',
           color: 'white',
+          width: 48,
+          height: 48,
+          'text-halign': 'right',
+          'text-valign': 'center',
           'text-wrap': 'wrap',
           'text-max-width': '90',
+          'text-margin-x': '5',
         },
       },
       {
@@ -141,8 +151,6 @@ const renderPipelines = function (data) {
         style: {
           shape: 'polygon',
           'shape-polygon-points': platePolygon,
-          width: 48,
-          height: 48,
         },
       },
       {
@@ -150,8 +158,6 @@ const renderPipelines = function (data) {
         style: {
           shape: 'polygon',
           'shape-polygon-points': tubePolygon,
-          width: 48,
-          height: 48,
         },
       },
       {
