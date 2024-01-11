@@ -19,29 +19,24 @@ const pipelineColourNode = function (node) {
 
 const calculatePipelineColours = function (sortedPipelines) {
   pipelineColours = {}
-  // group the pipelines by the first two words of the name
-  const pipelineGroups = {}
-  sortedPipelines.forEach((pipeline) => {
+
+  // Group pipelines by name
+  const pipelineGroups = sortedPipelines.reduce((groups, pipeline) => {
     const key = pipeline.split(' ').slice(0, 2).join(' ')
-    if (pipelineGroups[key] === undefined) {
-      pipelineGroups[key] = []
-    }
-    pipelineGroups[key].push(pipeline)
-  })
+    groups[key] = groups[key] || []
+    groups[key].push(pipeline)
+    return groups
+  }, {})
 
-  // create the pipeline colours
+  // Calculate colours for each pipeline
   const numberOfPipelineGroups = Object.keys(pipelineGroups).length
-  const hueStep = 360 / numberOfPipelineGroups
+  const hueStep = 360 / Math.max(numberOfPipelineGroups, 5) // a minimum of 5 hues prevents pure red, green, and blue - which just looks bad
   let hue = 0
-
-  for (const [pipelineGroup, pipelines] of Object.entries(pipelineGroups)) {
+  for (const pipelines of Object.values(pipelineGroups)) {
     const numberOfPipelinesInGroup = pipelines.length
     const saturationStep = 80 / numberOfPipelinesInGroup // 80% of the saturation range
-    console.log(numberOfPipelinesInGroup, saturationStep)
-    // for each pipeline within the group
-    pipelines.map((pipeline, index) => {
-      const saturation = 100 - index * saturationStep // start at 20% of the saturation range
-      console.log(`${pipeline} ${hue} ${saturation}`)
+    pipelines.forEach((pipeline, index) => {
+      const saturation = 100 - index * saturationStep
       const hex = convert.hsv.hex(hue, 100, saturation)
       pipelineColours[pipeline] = `#${hex}`
     })
