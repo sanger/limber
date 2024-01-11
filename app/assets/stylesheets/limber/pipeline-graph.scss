@@ -1,11 +1,13 @@
 #pipeline-graph {
   position: relative;
   width: 100%;
-  height: 1000px;
+  height: calc(100vh - (73px + 50px + 50px));
+  /* Adding 73px of header, 50px of search, and 50px of footer */
 
   #graph {
     width: 100%;
-    height: 1000px;
+    height: calc(100vh - (73px + 50px + 50px));
+    /* Adding 73px of header, 50px of search, and 50px of footer */
     display: block;
     @extend .bg-dark;
     @extend .text-white;
