@@ -1,47 +1,126 @@
 // Mounts #graph and renders a summary of the limber pipelines source from
 // pipelines.json
 
-import convert from 'color-convert'
-
 import cytoscape from 'cytoscape'
 import elk from 'cytoscape-elk'
 
 cytoscape.use(elk)
 
+// Distinct colours as used in the rest of limber
+const colours = [
+  '#FFFF00',
+  '#1CE6FF',
+  '#FF34FF',
+  '#FF4A46',
+  '#008941',
+  '#006FA6',
+  '#A30059',
+  '#FFDBE5',
+  '#7A4900',
+  '#0000A6',
+  '#63FFAC',
+  '#B79762',
+  '#004D43',
+  '#8FB0FF',
+  '#997D87',
+  '#5A0007',
+  '#809693',
+  '#FEFFE6',
+  '#1B4400',
+  '#4FC601',
+  '#3B5DFF',
+  '#4A3B53',
+  '#FF2F80',
+  '#61615A',
+  '#BA0900',
+  '#6B7900',
+  '#00C2A0',
+  '#FFAA92',
+  '#FF90C9',
+  '#B903AA',
+  '#D16100',
+  '#DDEFFF',
+  '#000035',
+  '#7B4F4B',
+  '#A1C299',
+  '#300018',
+  '#0AA6D8',
+  '#013349',
+  '#00846F',
+  '#372101',
+  '#FFB500',
+  '#C2FFED',
+  '#A079BF',
+  '#CC0744',
+  '#C0B9B2',
+  '#C2FF99',
+  '#001E09',
+  '#00489C',
+  '#6F0062',
+  '#0CBD66',
+  '#EEC3FF',
+  '#456D75',
+  '#B77B68',
+  '#7A87A1',
+  '#788D66',
+  '#885578',
+  '#FAD09F',
+  '#FF8A9A',
+  '#D157A0',
+  '#BEC459',
+  '#456648',
+  '#0086ED',
+  '#886F4C',
+  '#34362D',
+  '#B4A8BD',
+  '#00A6AA',
+  '#452C2C',
+  '#636375',
+  '#A3C8C9',
+  '#FF913F',
+  '#938A81',
+  '#575329',
+  '#00FECF',
+  '#B05B6F',
+  '#8CD0FF',
+  '#3B9700',
+  '#04F757',
+  '#C8A1A1',
+  '#1E6E00',
+  '#7900D7',
+  '#A77500',
+  '#6367A9',
+  '#A05837',
+  '#6B002C',
+  '#772600',
+  '#D790FF',
+  '#9B9700',
+  '#549E79',
+  '#FFF69F',
+  '#201625',
+  '#72418F',
+  '#BC23FF',
+  '#99ADC0',
+  '#3A2465',
+  '#922329',
+  '#5B4534',
+]
+
 let cy = undefined
 
-let pipelineColours = {}
+const pipelineColours = {}
 
-const pipelineColourNode = function (node) {
-  const pipeline = node.data('pipeline')
-  return pipelineColours[pipeline] || '#666'
+const calculatePipelineColours = function (pipelines) {
+  const coloursCopy = [...colours]
+  pipelines.forEach((pipeline) => {
+    const colour = coloursCopy.shift()
+    pipelineColours[pipeline] = colour
+  })
 }
 
-const calculatePipelineColours = function (sortedPipelines) {
-  pipelineColours = {}
-
-  // Group pipelines by name
-  const pipelineGroups = sortedPipelines.reduce((groups, pipeline) => {
-    const key = pipeline.split(' ').slice(0, 2).join(' ')
-    groups[key] = groups[key] || []
-    groups[key].push(pipeline)
-    return groups
-  }, {})
-
-  // Calculate colours for each pipeline
-  const numberOfPipelineGroups = Object.keys(pipelineGroups).length
-  const hueStep = 360 / Math.max(numberOfPipelineGroups, 5) // a minimum of 5 hues prevents pure red, green, and blue - which just looks bad
-  let hue = 0
-  for (const pipelines of Object.values(pipelineGroups)) {
-    const numberOfPipelinesInGroup = pipelines.length
-    const saturationStep = 80 / numberOfPipelinesInGroup // 80% of the saturation range
-    pipelines.forEach((pipeline, index) => {
-      const saturation = 100 - index * saturationStep
-      const hex = convert.hsv.hex(hue, 100, saturation)
-      pipelineColours[pipeline] = `#${hex}`
-    })
-    hue += hueStep
-  }
+const pipelineColourEdge = function (edge) {
+  var pipeline = edge.data('pipeline')
+  return pipelineColours[pipeline] || '#666'
 }
 
 const renderPipelinesKey = function (pipelines) {
@@ -172,8 +251,8 @@ const renderPipelines = function (data) {
           width: 3,
           'curve-style': 'bezier',
           'control-point-step-size': 10,
-          'line-color': pipelineColourNode,
-          'target-arrow-color': pipelineColourNode,
+          'line-color': pipelineColourEdge,
+          'target-arrow-color': pipelineColourEdge,
           'target-arrow-shape': 'triangle',
           'arrow-scale': 2,
         },
@@ -186,9 +265,9 @@ const renderPipelines = function (data) {
     maxZoom: 3, // referenced in renderIcon above
   })
 
-  const sortedPipelines = data.pipelines.map((pipeline) => pipeline.name).sort()
-  calculatePipelineColours(sortedPipelines)
-  renderPipelinesKey(sortedPipelines)
+  const pipelines = data.pipelines.map((pipeline) => pipeline.name).sort()
+  calculatePipelineColours(pipelines)
+  renderPipelinesKey(pipelines)
 }
 
 // Fetch the result of pipelines.json and then render the graph.
@@ -217,16 +296,9 @@ searchField.addEventListener('change', (event) => {
 
   notResults = cy.remove(all.not(results))
 
-  const sortedPipelines = [
-    ...new Set( // remove duplicates
-      results
-        .edges()
-        .map((edge) => edge.data('pipeline'))
-        .sort()
-    ),
-  ]
-  calculatePipelineColours(sortedPipelines)
-  renderPipelinesKey(sortedPipelines)
+  const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
+  calculatePipelineColours(pipelineNames)
+  renderPipelinesKey(pipelineNames)
 
   results.layout(layoutOptions).run()
 })
