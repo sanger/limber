@@ -14,16 +14,20 @@
   }
 }
 
+@function calculate-graph-height() {
+  /* 73px of header, 50px of search, and 50px of footer */
+  $graphHeight: calc(100vh - (73px + 50px + 50px));
+  @return $graphHeight;
+}
+
 #pipeline-graph {
   position: relative;
   width: 100%;
-  height: calc(100vh - (73px + 50px + 50px));
-  /* Adding 73px of header, 50px of search, and 50px of footer */
+  height: calculate-graph-height();
 
   #graph {
     width: 100%;
-    height: calc(100vh - (73px + 50px + 50px));
-    /* Adding 73px of header, 50px of search, and 50px of footer */
+    height: calculate-graph-height();
     display: block;
     @extend .bg-dark;
     @extend .text-white;
