@@ -206,9 +206,15 @@ searchField.addEventListener('change', (event) => {
   const query = event.target.value
   const all = cy.$('*')
   let results = cy.collection()
-  results = results.union(cy.$(`edge[pipeline @^= "${query}"]`))
-  results = results.union(results.connectedNodes())
-  results = results.union(cy.$(`node[id @*= "${query}"]`))
+
+  let purposes = cy.$(`node[id @*= "${query}"]`)
+  purposes = purposes.union(purposes.neighborhood())
+  results = results.union(purposes)
+
+  let pipelines = cy.$(`edge[pipeline @^= "${query}"]`)
+  pipelines = pipelines.union(pipelines.connectedNodes())
+  results = results.union(pipelines)
+
   notResults = cy.remove(all.not(results))
 
   const sortedPipelines = [
