@@ -219,8 +219,13 @@ const renderPipelines = function (data) {
           'background-width': '100%', // set canvas to fit node
           label: 'data(id)',
           color: 'white',
+          width: 48,
+          height: 48,
+          'text-halign': 'right',
+          'text-valign': 'center',
           'text-wrap': 'wrap',
           'text-max-width': '90',
+          'text-margin-x': '5',
         },
       },
       {
@@ -228,8 +233,6 @@ const renderPipelines = function (data) {
         style: {
           shape: 'polygon',
           'shape-polygon-points': platePolygon,
-          width: 48,
-          height: 48,
         },
       },
       {
@@ -237,8 +240,6 @@ const renderPipelines = function (data) {
         style: {
           shape: 'polygon',
           'shape-polygon-points': tubePolygon,
-          width: 48,
-          height: 48,
         },
       },
       {
