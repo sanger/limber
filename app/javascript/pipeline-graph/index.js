@@ -348,7 +348,7 @@ const applyFilter = function (query) {
 
   notResults = cy.remove(all.not(results))
 
-  const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))]
+  const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
   calculatePipelineColours(pipelineNames)
   renderPipelinesKey(pipelineNames)
 
