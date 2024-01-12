@@ -107,29 +107,28 @@ let cy = undefined
 const pipelineColours = {}
 const filterField = document.getElementById('filter')
 
-const pipelineColour = function (node) {
-  var pipeline = node.data('pipeline')
-  if (pipelineColours[pipeline] === undefined) {
-    pipelineColours[pipeline] = colours.shift() || '#666'
-  }
-  return pipelineColours[pipeline]
+const pipelineColourEdge = function (edge) {
+  var pipeline = edge.data('pipeline')
+  return pipelineColours[pipeline] || '#666'
 }
-
-const calculatePipelineColours = function (pipelines) {
+const calculatePipelineColours = function (pipelineNames) {
   const coloursCopy = [...colours]
-  pipelines.forEach((pipeline) => {
+  pipelineNames.forEach((pipeline) => {
     const colour = coloursCopy.shift()
     pipelineColours[pipeline] = colour
   })
 }
 
-const renderPipelinesKey = function (pipelines) {
+const renderPipelinesKey = function (pipelineNames) {
   const key = document.getElementById('pipelines-key')
   key.innerHTML = ''
-  pipelines.forEach((pipeline) => {
+  pipelineNames.forEach((pipeline) => {
     const item = document.createElement('li')
-    item.style = 'border-left: solid 10px ' + pipelineColours[pipeline] + ';'
-    item.innerHTML = pipeline
+    const pipelineColour = pipelineColours[pipeline] || '#666'
+
+    item.style.borderLeft = `solid 10px ${pipelineColour}`
+    item.textContent = pipeline
+
     key.appendChild(item)
   })
 }
@@ -206,8 +205,8 @@ const renderPipelines = function (data) {
         style: {
           width: 3,
           'curve-style': 'bezier',
-          'line-color': pipelineColour,
-          'target-arrow-color': pipelineColour,
+          'line-color': pipelineColourEdge,
+          'target-arrow-color': pipelineColourEdge,
           'target-arrow-shape': 'triangle',
           'arrow-scale': 3,
         },
