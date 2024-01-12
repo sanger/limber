@@ -14,7 +14,7 @@ FactoryBot.define do
       poly_metadatum.relationships.metadatable = {
         'links' => {},
         'data' => {
-          'type' => 'requests',
+          'type' => 'Request',
           'id' => evaluator.metadatable.id
         }
       }

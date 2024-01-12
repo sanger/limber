@@ -7,17 +7,15 @@ RSpec.describe Sequencescape::Api::V2::Request do
 
   describe '#poly_metadata' do
     # In reality, we will not pass metadatable into the initializer as this factory makes it appear.
-    # Instead we would do this in sequence:
-    # 1. select our metadatable request. e.g.
-    #    r = Sequencescape::Api::V2::Request.find(11180).first
-    # 2. create the new poly metadatum, e.g.
+    # To use this we found we had to do these steps:
+    # 1. select the metadatable object instance (e.g. a request here) e.g.
+    #    r = Sequencescape::Api::V2::Request.find(1234).first
+    # 2. create the new poly metadatum instance, e.g.
     #    pm1 = Sequencescape::Api::V2::PolyMetadatum.new(key: 'test_key', value: 'test_value')
-    # 3. set the metadatable on the poly metadatum, e.g.
+    # 3. then set the metadatable on the new poly metadatum, e.g.
     #    pm1.relationships.metadatable = r
-    # 4. save the poly metadatum, e.g.
+    # 4. then finally save the poly metadatum to persist it, i.e.
     #    pm1.save
-    # If we set the metadatable into the initializer, the save fails as the metadatable is treated as
-    # an attribute and not a relationship.
     let(:test_poly_metadatum) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
 
     # stub_api_v2_save just checks something is being sent, not specifically what
