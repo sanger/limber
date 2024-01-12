@@ -63,3 +63,14 @@
     }
   }
 }
+
+.graph-tooltip {
+  @extend .tooltip;
+  @extend .show;
+  font-size: 0.8em;
+  pointer-events: none; // prevent tooltip from blocking mouse events
+}
+.graph-tooltip-inner {
+  @extend .tooltip-inner;
+  @extend .rounded;
+}

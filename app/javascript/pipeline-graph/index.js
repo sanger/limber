@@ -3,7 +3,9 @@
 
 import cytoscape from 'cytoscape'
 import elk from 'cytoscape-elk'
+import popper from 'cytoscape-popper'
 
+cytoscape.use(popper)
 cytoscape.use(elk)
 
 // Distinct colours as used in the rest of limber
@@ -253,7 +255,7 @@ const renderPipelines = function (data) {
         style: {
           width: 3,
           'curve-style': 'bezier',
-          'control-point-step-size': 10,
+          'control-point-step-size': 15,
           'line-color': pipelineColourEdge,
           'target-arrow-color': pipelineColourEdge,
           'target-arrow-shape': 'triangle',
@@ -266,6 +268,34 @@ const renderPipelines = function (data) {
 
     minZoom: 0.2,
     maxZoom: 3, // referenced in renderIcon above
+  })
+
+  // Add popper when mouse enters edge
+  cy.edges().unbind('mouseover')
+  cy.edges().bind('mouseover', (event) => {
+    event.target.popperRefObj = event.target.popper({
+      content: () => {
+        const pipelineData = event.target.data('pipeline')
+        document.body.insertAdjacentHTML(
+          'beforeend',
+          `<div class="graph-tooltip">
+            <div class="graph-tooltip-inner">
+              ${pipelineData}
+            </div>
+          </div>`
+        )
+        return document.querySelector('.graph-tooltip')
+      },
+    })
+  })
+
+  // Remove popper when mouse leaves edge
+  cy.edges().unbind('mouseout')
+  cy.edges().bind('mouseout', (event) => {
+    if (event.target.popper) {
+      event.target.popperRefObj.state.elements.popper.remove()
+      event.target.popperRefObj.destroy()
+    }
   })
 }
 

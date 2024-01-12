@@ -2358,6 +2358,11 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
+"@popperjs/core@^2.0.0", "@popperjs/core@^2.9.0":
+  version "2.11.8"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
+  integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
+
 "@prettier/plugin-ruby@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@prettier/plugin-ruby/-/plugin-ruby-2.1.0.tgz#2df48c1c004fc9dec18a72f441d43d54137b25a6"
@@ -4661,6 +4666,13 @@ cytoscape-elk@^2.2.0:
   integrity sha512-EqXBVRcWeah/oBOifAmne0ImmIKntBVEQh2XCJXY++BgCufehZglRclrJ1DWm5Qm/NDBO/wEDijjgd50xJXw0A==
   dependencies:
     elkjs "^0.8.1"
+
+cytoscape-popper@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cytoscape-popper/-/cytoscape-popper-2.0.0.tgz#d93917695a9b8af3dbda1d8ee433618ac4d4e359"
+  integrity sha512-b7WSOn8qXHWtdIXFNmrgc8qkaOs16tMY0EwtRXlxzvn8X+al6TAFrUwZoYATkYSlotfd/36ZMoeKMEoUck6feA==
+  dependencies:
+    "@popperjs/core" "^2.0.0"
 
 cytoscape@^3.28.1:
   version "3.28.1"
