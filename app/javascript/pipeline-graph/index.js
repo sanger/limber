@@ -110,6 +110,7 @@ const colours = [
 
 let cy = undefined
 const pipelineColours = {}
+const filterField = document.getElementById('filter')
 
 const calculatePipelineColours = function (pipelines) {
   const coloursCopy = [...colours]
@@ -313,17 +314,28 @@ const renderPipelines = function (data) {
 
 // Fetch the result of pipelines.json and then render the graph.
 fetch('pipelines.json').then((response) => {
-  response.json().then(renderPipelines)
+  response.json().then((data) => {
+    // Get filter from url
+    const url = new URL(window.location.href)
+    const filter = url.searchParams.get('filter')
+    filterField.value = filter
+
+    // Render the graph
+    renderPipelines(data)
+
+    // Apply filter if present
+    if (filter) {
+      applyFilter(filter)
+    }
+  })
 })
 
-const searchField = document.getElementById('search')
 let notResults = undefined
-searchField.addEventListener('change', (event) => {
+const applyFilter = function (query) {
   if (notResults !== undefined) {
     notResults.restore()
   }
 
-  const query = event.target.value
   const all = cy.$('*')
   let results = cy.collection()
 
@@ -342,4 +354,15 @@ searchField.addEventListener('change', (event) => {
   renderPipelinesKey(pipelineNames)
 
   results.layout(layoutOptions).run()
+}
+
+filterField.addEventListener('change', (event) => {
+  const query = event.target.value
+
+  // set url to reflect filter
+  const url = new URL(window.location.href)
+  url.searchParams.set('filter', query)
+  window.history.pushState({}, '', url)
+
+  applyFilter(query)
 })

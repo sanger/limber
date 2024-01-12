@@ -1,9 +1,9 @@
 
-#search-bar {
+#filter-bar {
   @extend .card;
   @extend .bg-dark;
 
-  #search {
+  #filter {
     width: 100%;
     @extend .bg-dark;
     @extend .text-light;
@@ -15,7 +15,7 @@
 }
 
 @function calculate-graph-height() {
-  /* 73px of header, 50px of search, and 50px of footer */
+  /* 73px of header, 50px of filter, and 50px of footer */
   $graphHeight: calc(100vh - (73px + 50px + 50px));
   @return $graphHeight;
 }
