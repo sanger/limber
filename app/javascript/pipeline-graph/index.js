@@ -153,6 +153,10 @@ const layoutOptions = {
 }
 
 const renderPipelines = function (data) {
+  const pipelines = data.pipelines.map((pipeline) => pipeline.name).sort()
+  calculatePipelineColours(pipelines)
+  renderPipelinesKey(pipelines)
+
   const container = document.getElementById('graph')
 
   cy = cytoscape({
@@ -218,10 +222,6 @@ const renderPipelines = function (data) {
     minZoom: 0.2,
     maxZoom: 3,
   })
-
-  const pipelines = data.pipelines.map((pipeline) => pipeline.name)
-  calculatePipelineColours(pipelines)
-  renderPipelinesKey(pipelines)
 }
 
 // Fetch the result of pipelines.json and then render the graph.
