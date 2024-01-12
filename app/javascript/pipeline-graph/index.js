@@ -2,6 +2,9 @@
 // pipelines.json
 
 import cytoscape from 'cytoscape'
+import elk from 'cytoscape-elk'
+
+cytoscape.use(elk)
 
 // Distinct colours as used in the rest of limber
 const colours = [
@@ -168,14 +171,21 @@ const renderIcon = function (ele) {
   return dataURI
 }
 
-// for other layout options see http://js.cytoscape.org/#layouts
+// for other layout options see https://js.cytoscape.org/#demos
+// for elk options see https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html
 const layoutOptions = {
-  name: 'cose',
-  nodeDimensionsIncludeLabels: true,
-  idealEdgeLength: 90,
-  nodeRepulsion: 100000,
-  gravity: 0.01,
-  animate: false,
+  name: 'elk',
+  transform: function (node, pos) {
+    // A function that applies a transform to the final node position
+    // scale x coordinates to prevent labels overlapping
+    pos.x *= 2.25
+    pos.y *= 1.35
+    return pos
+  },
+  elk: {
+    algorithm: 'layered',
+    'elk.direction': 'DOWN',
+  },
 }
 
 const renderPipelines = function (data) {
