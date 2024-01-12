@@ -262,6 +262,12 @@ const renderPipelines = function (data) {
           'arrow-scale': 2,
         },
       },
+      {
+        selector: 'edge.highlight',
+        style: {
+          'underlay-opacity': 0.3,
+        },
+      },
     ],
 
     layout: layoutOptions,
@@ -270,9 +276,12 @@ const renderPipelines = function (data) {
     maxZoom: 3, // referenced in renderIcon above
   })
 
-  // Add popper when mouse enters edge
   cy.edges().unbind('mouseover')
   cy.edges().bind('mouseover', (event) => {
+    // Highlight edge when mouse enters edge
+    event.target.addClass('highlight')
+
+    // Add popper when mouse enters edge
     event.target.popperRefObj = event.target.popper({
       content: () => {
         const pipelineData = event.target.data('pipeline')
@@ -289,9 +298,12 @@ const renderPipelines = function (data) {
     })
   })
 
-  // Remove popper when mouse leaves edge
   cy.edges().unbind('mouseout')
   cy.edges().bind('mouseout', (event) => {
+    // Remove highlight when mouse leaves edge
+    event.target.removeClass('highlight')
+
+    // Remove popper when mouse leaves edge
     if (event.target.popper) {
       event.target.popperRefObj.state.elements.popper.remove()
       event.target.popperRefObj.destroy()
