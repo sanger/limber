@@ -284,7 +284,7 @@ module LabwareCreators
           request.request_type.key == purpose_config.fetch(:work_completion_request_type) && request.state == 'pending'
         end
 
-      reqs&.sort_by(&:id)&.last
+      reqs&.max_by(&:id)
     end
 
     # find and close request of type specified by config in the parent well

@@ -43,7 +43,7 @@ module Utility
 
     def calculate_bins
       bins = []
-      @well_details.each do |_well_locn, details|
+      @well_details.each_value do |details|
         pcr_cycles = details['pcr_cycles']
         bins << pcr_cycles unless bins.include? pcr_cycles
       end
@@ -90,7 +90,7 @@ module Utility
 
     # work out what the next row and column will be
     def binner_next_well(binner, bins, bin, bin_index_within_bins, well_index_within_bin)
-      finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
+      finished = (bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1)
       binner.next_well_location(well_index_within_bin, bin.size) unless finished
     end
   end
