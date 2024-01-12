@@ -79,7 +79,7 @@ module Utility
             }
 
             # work out what the next row and column will be
-            finished = ((bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1))
+            finished = (bin_index_within_bins == bins.size - 1) && (well_index_within_bin == bin.size - 1)
             binner.next_well_location(well_index_within_bin, bin.size) unless finished
           end
         end

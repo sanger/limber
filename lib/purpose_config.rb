@@ -35,7 +35,7 @@ class PurposeConfig
     @api = api
     @submission_templates = submission_templates
     @label_templates = label_templates
-    @template_name = (@options.delete(:label_template) || '')
+    @template_name = @options.delete(:label_template) || ''
   end
 
   def config
