@@ -69,8 +69,15 @@
   @extend .show;
   font-size: 0.8em;
   pointer-events: none; // prevent tooltip from blocking mouse events
-}
-.graph-tooltip-inner {
-  @extend .tooltip-inner;
-  @extend .rounded;
+
+  .graph-tooltip-inner {
+    @extend .tooltip-inner;
+    @extend .rounded;
+    @extend .text-left;
+
+    ul {
+      @extend .mb-0;
+      padding-left: 1em;
+    }
+  }
 }

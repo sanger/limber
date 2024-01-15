@@ -145,9 +145,9 @@ const renderPipelinesKey = function (pipelineNames) {
 const platePolygon = '-1.0 -0.6 0.85 -0.6 1.0 -0.45 1.0 0.45 0.85 0.6 -0.85 0.6 -1.0 0.45'
 const tubePolygon = '-0.35 -1 0.35 -1 0.35 -0.55 0.28 -0.55 0.28 0.75 0 1 -0.28 0.75 -0.28 -0.55 -0.35 -0.55'
 
-// Dynamically create an icon based on the node's properties
-const renderIcon = function (ele) {
-  if (ele.data('size') === null || ele.data('size') == 96) {
+const renderCanvas = function (size, input, stock, cherrypickable_target) {
+  const isDefaultSize = size === null || size == 96
+  if (isDefaultSize && !input && !stock && !cherrypickable_target) {
     // return a blank image
     return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
   }
@@ -161,16 +161,122 @@ const renderIcon = function (ele) {
   // Get the context of the canvas
   const ctx = canvas.getContext('2d')
 
-  // Write the node size in the center
-  ctx.font = 'bold 64px sans-serif'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = ele.data('input') ? 'black' : 'white'
-  ctx.fillText(ele.data('size'), canvas.width / 2, canvas.height / 2)
+  if (!isDefaultSize) {
+    // Write the node size in the center
+    ctx.font = 'bold 52px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillStyle = 'white'
+    ctx.fillText(size, canvas.width / 2, canvas.height / 2)
+  }
+
+  // Draw bands to represent the node properties
+  const bands = {
+    input: { present: input, colour: 'cyan' },
+    stock: { present: stock, colour: 'magenta' },
+    cherrypickable_target: { present: cherrypickable_target, colour: 'yellow' },
+  }
+  const bandWidth = 3 * 3 // width of the coloured bands
+
+  let bandOffset = 48 * 3 - bandWidth // start at the right of the canvas
+  Object.keys(bands).forEach((band) => {
+    if (bands[band].present) {
+      ctx.fillStyle = bands[band].colour
+      ctx.fillRect(bandOffset, 0, bandWidth, canvas.height)
+      bandOffset -= bandWidth
+    }
+  })
 
   // Export the canvas to data URI
   const dataURI = canvas.toDataURL()
   return dataURI
+}
+
+// Dynamically create an icon based on the node's properties
+const renderIcon = function (ele) {
+  const size = ele.data('size')
+  const input = ele.data('input')
+  const stock = ele.data('stock')
+  const cherrypickable_target = ele.data('cherrypickable_target')
+  return renderCanvas(size, input, stock, cherrypickable_target)
+}
+
+const generateTooltipContent = function (ele) {
+  // pipeline properties
+  const pipelineName = ele.data('pipeline')
+
+  // purpose node properties
+  const purposeName = ele.data('id')
+  const purposeType = ele.data('type')
+  const size = ele.data('size')
+  const isInput = ele.data('input')
+  const isStock = ele.data('stock')
+  const isCherrypickableTarget = ele.data('cherrypickable_target')
+
+  let content = ''
+  // if element is an edge
+  if (ele.isEdge()) {
+    content = pipelineName
+  } else {
+    content = `${purposeName} [${purposeType}]`
+
+    const properties = {
+      nonStandardSize: { present: size !== null && size != 96, label: `Size: ${size}` },
+      input: { present: isInput, label: 'Input' },
+      stock: { present: isStock, label: 'Stock' },
+      cherrypickableTarget: { present: isCherrypickableTarget, label: 'Cherrypickable Target' },
+    }
+
+    // if any properties are present
+    if (Object.values(properties).some((property) => property.present)) {
+      content += '<ul>'
+      Object.keys(properties).forEach((property) => {
+        if (properties[property].present) {
+          content += `<li>${properties[property].label}</li>`
+        }
+      })
+      content += '</ul>'
+    }
+  }
+
+  return content
+}
+
+const applyMouseEvents = function () {
+  cy.elements().unbind('mouseover')
+  cy.elements().bind('mouseover', (event) => {
+    // Highlight when mouse enters element
+    event.target.addClass('highlight')
+
+    // Add popper when mouse enters element
+    event.target.popperRefObj = event.target.popper({
+      content: () => {
+        const content = generateTooltipContent(event.target)
+
+        document.body.insertAdjacentHTML(
+          'beforeend',
+          `<div class="graph-tooltip">
+            <div class="graph-tooltip-inner">
+              ${content}
+            </div>
+          </div>`
+        )
+        return document.querySelector('.graph-tooltip')
+      },
+    })
+  })
+
+  cy.elements().unbind('mouseout')
+  cy.elements().bind('mouseout', (event) => {
+    // Remove highlight when mouse leaves element
+    event.target.removeClass('highlight')
+
+    // Remove popper when mouse leaves element
+    if (event.target.popper) {
+      event.target.popperRefObj.state.elements.popper.remove()
+      event.target.popperRefObj.destroy()
+    }
+  })
 }
 
 // for other layout options see https://js.cytoscape.org/#demos
@@ -245,12 +351,6 @@ const renderPipelines = function (data) {
         },
       },
       {
-        selector: '[?input]',
-        style: {
-          'background-color': '#ddd',
-        },
-      },
-      {
         selector: 'edge',
         style: {
           width: 3,
@@ -276,42 +376,11 @@ const renderPipelines = function (data) {
     maxZoom: 3, // referenced in renderIcon above
   })
 
-  cy.edges().unbind('mouseover')
-  cy.edges().bind('mouseover', (event) => {
-    // Highlight edge when mouse enters edge
-    event.target.addClass('highlight')
-
-    // Add popper when mouse enters edge
-    event.target.popperRefObj = event.target.popper({
-      content: () => {
-        const pipelineData = event.target.data('pipeline')
-        document.body.insertAdjacentHTML(
-          'beforeend',
-          `<div class="graph-tooltip">
-            <div class="graph-tooltip-inner">
-              ${pipelineData}
-            </div>
-          </div>`
-        )
-        return document.querySelector('.graph-tooltip')
-      },
-    })
-  })
-
-  cy.edges().unbind('mouseout')
-  cy.edges().bind('mouseout', (event) => {
-    // Remove highlight when mouse leaves edge
-    event.target.removeClass('highlight')
-
-    // Remove popper when mouse leaves edge
-    if (event.target.popper) {
-      event.target.popperRefObj.state.elements.popper.remove()
-      event.target.popperRefObj.destroy()
-    }
-  })
+  applyMouseEvents()
 }
 
 // Fetch the result of pipelines.json and then render the graph.
+// pipelines.json is generated by the pipelines controller
 fetch('pipelines.json').then((response) => {
   response.json().then((data) => {
     // Get filter from url
