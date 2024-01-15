@@ -26,7 +26,8 @@ Bundler.require(*Rails.groups)
 
 module Limber
   class Application < Rails::Application # rubocop:todo Style/Documentation
-    config.load_defaults 6.0
+    config.load_defaults 6.1
+    config.active_support.cache_format_version = 7.0
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
