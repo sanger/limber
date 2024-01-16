@@ -1,6 +1,7 @@
 // Mounts #graph and renders a summary of the limber pipelines source from
 // pipelines.json
 
+import { findResults } from './filterFunctions'
 import cytoscape from 'cytoscape'
 import elk from 'cytoscape-elk'
 import popper from 'cytoscape-popper'
@@ -398,24 +399,8 @@ fetch('pipelines.json').then((response) => {
   })
 })
 
-let notResults = undefined
-const applyFilter = function (query) {
-  if (notResults !== undefined) {
-    notResults.restore()
-  }
-
-  const all = cy.$('*')
-  let results = cy.collection()
-
-  let purposes = cy.$(`node[id @*= "${query}"]`)
-  purposes = purposes.union(purposes.neighborhood())
-  results = results.union(purposes)
-
-  let pipelines = cy.$(`edge[pipeline @^= "${query}"]`)
-  pipelines = pipelines.union(pipelines.connectedNodes())
-  results = results.union(pipelines)
-
-  notResults = cy.remove(all.not(results))
+const applyFilter = function (filter) {
+  const results = findResults(cy, filter)
 
   const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
   calculatePipelineColours(pipelineNames)
