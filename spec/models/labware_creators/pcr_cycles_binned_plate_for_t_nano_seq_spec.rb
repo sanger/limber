@@ -468,7 +468,12 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      it 'makes the expected transfer requests to bin the wells' do
+      it 'makes the expected method calls when creating the child plate' do
+        # NB. because we're mocking the API call for the save of the request metadata we cannot
+        # check the metadata values on the requests, only that the method was triggered.
+        # Our child plate has 14 wells with 14 requests, so we expect the method to create metadata
+        # on the requests to be called 14 times.
+        expect(subject).to receive(:create_request_metadata).exactly(14).times
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made
