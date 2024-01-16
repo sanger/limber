@@ -47,8 +47,23 @@
     @extend .small;
 
     header {
+      @extend .d-flex;
       @extend .card-header;
-      @extend .font-weight-bold;
+
+      #pipelines-key-text {
+        @extend .flex-grow-1;
+        @extend .font-weight-bold;
+        @extend .mr-1;
+      }
+
+      #pipelines-back {
+        @extend .icon-arrowleft-light;
+        @extend .ml-1;
+        height: 1.5em;
+        width: 1.5em;
+        background-size: 1.5em;
+        vertical-align: text-bottom;
+      }
     }
     ul {
       @extend .list-group;
@@ -59,6 +74,9 @@
       li {
         @extend .list-group-item;
         @extend .bg-dark;
+      }
+      li:hover {
+        @extend .text-light:hover;
       }
     }
   }

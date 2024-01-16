@@ -112,6 +112,8 @@ const colours = [
 let cy = undefined
 const pipelineColours = {}
 const filterField = document.getElementById('filter')
+const pipelinesBackButton = document.getElementById('pipelines-back')
+let filterHistory = [''] // start with an empty filter
 
 const pipelineColourEdge = function (edge) {
   var pipeline = edge.data('pipeline')
@@ -133,7 +135,21 @@ const renderPipelinesKey = function (pipelineNames) {
     const pipelineColour = pipelineColours[pipeline] || '#666'
 
     item.style.borderLeft = `solid 10px ${pipelineColour}`
+    item.role = 'button'
     item.textContent = pipeline
+
+    // when each pipeline name is hovered over, the corresponding edges are highlighted
+    item.addEventListener('mouseover', () => {
+      cy.elements('edge[pipeline = "' + pipeline + '"]').addClass('highlight')
+    })
+    item.addEventListener('mouseout', () => {
+      cy.elements('edge[pipeline = "' + pipeline + '"]').removeClass('highlight')
+    })
+
+    // when each pipeline key name is clicked, filter the graph to show only that pipeline
+    item.addEventListener('click', () => {
+      applyFilter(pipeline)
+    })
 
     key.appendChild(item)
   })
@@ -278,6 +294,12 @@ const applyMouseEvents = function () {
       event.target.popperRefObj.destroy()
     }
   })
+
+  // when an edge is clicked, filter the graph to show only that pipeline
+  cy.on('click', 'edge', (event) => {
+    const pipeline = event.target.data('pipeline')
+    applyFilter(pipeline)
+  })
 }
 
 // for other layout options see https://js.cytoscape.org/#demos
@@ -387,7 +409,7 @@ fetch('pipelines.json').then((response) => {
     // Get filter from url
     const url = new URL(window.location.href)
     const filter = url.searchParams.get('filter')
-    filterField.value = filter
+    filterField.value = filter // set before rendering the graph for the users benefit
 
     // Render the graph
     renderPipelines(data)
@@ -400,6 +422,31 @@ fetch('pipelines.json').then((response) => {
 })
 
 const applyFilter = function (filter) {
+  // set value in filter field
+  filterField.value = filter
+
+  // set url to reflect filter
+  const url = new URL(window.location.href)
+  url.searchParams.set('filter', filter)
+  window.history.pushState({}, '', url)
+
+  // set page title to reflect filter
+  document.title = `Limber - Pipelines - ${filter}`
+
+  // show or hide back button
+  if (filterHistory.length > 0) {
+    pipelinesBackButton.classList.remove('invisible')
+  } else {
+    pipelinesBackButton.classList.add('invisible')
+  }
+
+  // add filter to (internal - not browser) history
+  if (filterHistory[filterHistory.length - 1] !== filter) {
+    // don't add duplicate filters
+    filterHistory.push(filter)
+  }
+
+  // apply filter to graph
   const results = findResults(cy, filter)
 
   const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
@@ -411,11 +458,13 @@ const applyFilter = function (filter) {
 
 filterField.addEventListener('change', (event) => {
   const query = event.target.value
-
-  // set url to reflect filter
-  const url = new URL(window.location.href)
-  url.searchParams.set('filter', query)
-  window.history.pushState({}, '', url)
-
   applyFilter(query)
+})
+
+pipelinesBackButton.addEventListener('click', () => {
+  // remove and apply previous filter
+  filterHistory.pop() // remove current filter
+  const previousFilter = filterHistory.pop()
+
+  applyFilter(previousFilter)
 })
