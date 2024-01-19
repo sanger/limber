@@ -1,4 +1,4 @@
-name: Test compile build
+name: Test compililation
 
 on:
   - push
