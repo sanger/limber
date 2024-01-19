@@ -36,6 +36,8 @@ class PipelinesController < ApplicationController
           id: purpose[:name],
           type: purpose[:asset_type],
           input: purpose[:input_plate],
+          stock: purpose[:stock_plate],
+          cherrypickable_target: purpose[:cherrypickable_target],
           size: purpose[:size]
         }
       }
