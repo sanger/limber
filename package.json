@@ -21,12 +21,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
-    "@babel/plugin-transform-runtime": "^7.23.7",
     "@babel/plugin-transform-class-properties": "^7.23.3",
     "@babel/plugin-transform-object-rest-spread": "^7.23.4",
     "@babel/plugin-transform-private-methods": "^7.23.3",
     "@babel/plugin-transform-private-property-in-object": "^7.23.4",
     "@babel/plugin-transform-regenerator": "^7.23.3",
+    "@babel/plugin-transform-runtime": "^7.23.7",
     "@prettier/plugin-ruby": "^2.1.0",
     "@vue/test-utils": "^1.0.0-beta.25",
     "axios-mock-adapter": "^1.22.0",
