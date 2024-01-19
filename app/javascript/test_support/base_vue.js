@@ -19,8 +19,8 @@ localVue.use(BootstrapVue)
 localVue.prototype.$axios = axios
 localVue.prototype.$api = mockApi()
 
-localVue.component('lb-main-content', MainContent)
-localVue.component('lb-page', Page)
-localVue.component('lb-sidebar', Sidebar)
+localVue.component('LbMainContent', MainContent)
+localVue.component('LbPage', Page)
+localVue.component('LbSidebar', Sidebar)
 
 export default localVue
