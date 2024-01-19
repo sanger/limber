@@ -27,6 +27,10 @@ module LabwareCreators
       params.fetch('allow_tube_duplicates', false)
     end
 
+    def require_tube_passed?
+      params.fetch('require_tube_passed', false)
+    end
+
     private
 
     def create_labware!

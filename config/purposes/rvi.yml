@@ -11,7 +11,7 @@ RVI RT:
 
 RVI cDNA XP:
   :asset_type: plate
-  :presenter_class: Presenters::PermissivePresenter
+  :presenter_class: Presenters::RviCdnaXpPresenter
 
 RVI Lig Bind:
   :asset_type: plate

@@ -375,7 +375,7 @@ module LabwareCreators
       unique_sample_uuids = []
       parent_wells_for_seq = []
 
-      well_filter.filtered.each do |well, _ignore|
+      well_filter.filtered.each do |(well, _ignore)|
         sample_uuid = well.aliquots.first.sample.uuid
         next if sample_uuid.in?(unique_sample_uuids)
 

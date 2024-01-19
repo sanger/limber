@@ -38,10 +38,9 @@ class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
   end
 
   def first_line
-    # Parent barcode for PCR 2 Pool tube.
-    # This is the asset name (plate barcode and well range)
-    barcode_and_wells_format = /^.+?\s[A-Z]\d{1,2}:[A-Z]\d{1,2}$/
-    return labware.name if labware.name&.match?(barcode_and_wells_format)
+    # Parent barcode followed by well range from labware.name for PCR2 Pool tube.
+    match = labware.name.match(/^.+?\s([A-Z]\d{1,2}:[A-Z]\d{1,2})$/)
+    return "#{labware.parents[0].barcode.human} #{match[1]}" if match
 
     # Parent barcode for Lib PCR Pool and Lib PCR XP tubes
     labware.parents[0].barcode.human

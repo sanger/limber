@@ -3112,6 +3112,24 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
+      'bravo-rvi-rt-to-rvi-cdna-xp',
+      name: 'Bravo verify RVI RT & RVI cDNA XP',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['pending'],
+          label: 'Bed 8'
+        },
+        car('4,3').barcode => {
+          purpose: 'RVI cDNA XP',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: bed(8).barcode
+        }
+      }
+    )
+
+    custom_robot(
       'mosquito-rvi-rt',
       name: 'Mosquito RVI RT Random Primers',
       beds: {
@@ -3141,10 +3159,10 @@ ROBOT_CONFIG =
       'bravo-rvi-rt-2',
       name: 'Bravo RVI RT First Strand Mix',
       beds: {
-        bed(8).barcode => {
+        bed(6).barcode => {
           purpose: 'RVI RT',
           states: ['processed_2'],
-          label: 'Bed 8',
+          label: 'Bed 6',
           target_state: 'processed_3'
         }
       }
@@ -3158,33 +3176,27 @@ ROBOT_CONFIG =
           purpose: 'RVI RT',
           states: ['processed_3'],
           label: 'Bed 8',
+          target_state: 'processed_4'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvi-rt-4',
+      name: 'Bravo RVI RT SPRI Cleanup',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVI RT',
+          states: ['processed_4'],
+          label: 'Bed 8',
           target_state: 'passed'
         }
       }
     )
 
     custom_robot(
-      'bravo-rvi-rt-to-rvi-cdna-xp',
-      name: 'Bravo RVI RT => RVI cDNA XP',
-      beds: {
-        bed(8).barcode => {
-          purpose: 'RVI RT',
-          states: ['passed'],
-          label: 'Bed 8'
-        },
-        car('4,3').barcode => {
-          purpose: 'RVI cDNA XP',
-          states: ['pending'],
-          label: 'Carousel 4,3',
-          parent: bed(8).barcode,
-          target_state: 'started'
-        }
-      }
-    )
-
-    custom_robot(
       'bravo-rvi-cdna-xp-to-rvi-lig-bind',
-      name: 'Bravo RVI cDNA XP => RVI Lig Bind',
+      name: 'Bravo verify RVI cDNA XP & RVI Lig Bind',
       beds: {
         bed(8).barcode => {
           purpose: 'RVI cDNA XP',
@@ -3195,20 +3207,19 @@ ROBOT_CONFIG =
           purpose: 'RVI Lig Bind',
           states: ['pending'],
           label: 'Carousel 3,5',
-          parent: bed(8).barcode,
-          target_state: 'passed'
+          parent: bed(8).barcode
         }
       }
     )
 
     custom_robot(
-      'bravo-rvi-cdna-xp-frag-mix',
-      name: 'Bravo RVI cDNA XP Frag Mix',
+      'bravo-rvi-cdna-xp-ligation-mix',
+      name: 'Bravo RVI cDNA XP Ligation mix',
       beds: {
-        bed(5).barcode => {
+        bed(8).barcode => {
           purpose: 'RVI cDNA XP',
           states: ['started'],
-          label: 'Bed 5',
+          label: 'Bed 8',
           target_state: 'passed'
         }
       }

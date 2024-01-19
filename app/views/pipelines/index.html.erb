@@ -1,10 +1,15 @@
+<div id="filter-bar">
+  <input type="text" id="filter" placeholder="Filter specific pipelines or purposes" />
+</div>
 <div id="pipeline-graph">
   <div id="graph"></div>
   <section id="key" class="card">
-    <header>Key</header>
+    <header>
+      <span id="pipelines-key-text">Pipelines Key</span>
+      <span id="pipelines-back" class="invisible" role="button"></span>
+    </header>
     <ul id='pipelines-key'>
     </ul>
   </section>
 </div>
 <%= javascript_pack_tag 'pipeline-graph' %>
-
