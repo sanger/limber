@@ -10,84 +10,126 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForTNanoSeq, with: 
     let(:expected_well_details) do
       {
         'A1' => {
+          'concentration' => 0.686,
+          'input_amount_available' => 17.150000000000002,
+          'input_amount_desired' => 0.0,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'hyb_panel' => 'My Panel'
         },
         'B1' => {
+          'concentration' => 0.623,
+          'input_amount_available' => 15.575,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'hyb_panel' => 'My Panel'
         },
         'D1' => {
+          'concentration' => 1.874,
+          'input_amount_available' => 46.85,
+          'input_amount_desired' => 49.9,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 16,
           'hyb_panel' => 'My Panel'
         },
         'E1' => {
+          'concentration' => 1.929,
+          'input_amount_available' => 48.225,
+          'input_amount_desired' => 0.1,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'hyb_panel' => 'My Panel'
         },
         'F1' => {
+          'concentration' => 1.700,
+          'input_amount_available' => 42.5,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 4.0,
           'diluent_volume' => 26.0,
           'pcr_cycles' => 12,
           'hyb_panel' => 'My Panel'
         },
         'H1' => {
+          'concentration' => 1.838,
+          'input_amount_available' => 45.95,
+          'input_amount_desired' => 37.3,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'hyb_panel' => 'My Panel'
         },
         'A2' => {
+          'concentration' => 1.581,
+          'input_amount_available' => 39.525,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 3.2,
           'diluent_volume' => 26.8,
           'pcr_cycles' => 12,
           'hyb_panel' => 'My Panel'
         },
         'B2' => {
+          'concentration' => 1.538,
+          'input_amount_available' => 38.45,
+          'input_amount_desired' => 34.8,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'hyb_panel' => 'My Panel'
         },
         'C2' => {
+          'concentration' => 1.560,
+          'input_amount_available' => 39.0,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'hyb_panel' => 'My Panel'
         },
         'D2' => {
+          'concentration' => 1.479,
+          'input_amount_available' => 36.975,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 12,
           'hyb_panel' => 'My Panel'
         },
         'E2' => {
+          'concentration' => 0.734,
+          'input_amount_available' => 18.35,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'hyb_panel' => 'My Panel'
         },
         'F2' => {
+          'concentration' => 0.000,
+          'input_amount_available' => 0.0,
+          'input_amount_desired' => 39.2,
           'sample_volume' => 30.0,
           'diluent_volume' => 0.0,
           'pcr_cycles' => 16,
           'hyb_panel' => 'My Panel'
         },
         'G2' => {
+          'concentration' => 0.741,
+          'input_amount_available' => 18.525,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 5.0,
           'diluent_volume' => 25.0,
           'pcr_cycles' => 14,
           'hyb_panel' => 'My Panel'
         },
         'H2' => {
+          'concentration' => 0.196,
+          'input_amount_available' => 4.9,
+          'input_amount_desired' => 50.0,
           'sample_volume' => 3.621,
           'diluent_volume' => 27.353,
           'pcr_cycles' => 16,
