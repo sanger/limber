@@ -20,12 +20,26 @@ class PipelinesController < ApplicationController
     Settings.pipelines.map { |pl| { name: pl.name, filters: pl.filters } }
   end
 
-  def calculate_edges
+  def calculate_pipeline_edges
     Settings.pipelines.flat_map do |pl|
       pl.relationships.map do |s, t|
         { group: 'edges', data: { id: SecureRandom.uuid, source: s, target: t, pipeline: pl.name } }
       end
     end
+  end
+
+  def calculate_group_edges
+    edges =
+      Settings.pipelines.flat_map do |pl|
+        pl.relationships.map do |s, t|
+          { group: 'edges', data: { id: SecureRandom.uuid, source: s, target: t, group: pl.pipeline_group } }
+        end
+      end
+    edges.uniq { |e| e[:data][:source] + e[:data][:target] + e[:data][:group] }
+  end
+
+  def calculate_edges
+    calculate_pipeline_edges + calculate_group_edges
   end
 
   def calculate_nodes
