@@ -112,6 +112,8 @@ const colours = [
 let cy = undefined
 const pipelineColours = {}
 const filterField = document.getElementById('filter')
+const showSubPiplinesButton = document.getElementById('show-sub-pipelines')
+const hideSubPiplinesButton = document.getElementById('hide-sub-pipelines')
 const pipelinesBackButton = document.getElementById('pipelines-back')
 let filterHistory = [''] // start with an empty filter
 
@@ -409,7 +411,11 @@ fetch('pipelines.json').then((response) => {
     // Get filter from url
     const url = new URL(window.location.href)
     const filter = url.searchParams.get('filter')
-    filterField.value = filter // set before rendering the graph for the users benefit
+    let group = url.searchParams.get('group')
+    group = group === 'true' ? true : group === 'false' ? false : undefined // convert string to boolean
+
+    // set before rendering the graph for the users benefit
+    filterField.value = filter
 
     // Render the graph
     renderPipelines(data)
@@ -417,6 +423,11 @@ fetch('pipelines.json').then((response) => {
     // Apply filter if present
     if (filter) {
       applyFilter(filter)
+    }
+
+    // Apply sub-pipelines-grouping if present
+    if (group !== undefined) {
+      applySubPipelines(group)
     }
   })
 })
@@ -447,7 +458,32 @@ const applyFilter = function (filter) {
   }
 
   // apply filter to graph
-  const results = findResults(cy, filter)
+  const results = findResults(cy, { term: filter })
+
+  const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
+  calculatePipelineColours(pipelineNames)
+  renderPipelinesKey(pipelineNames)
+
+  results.layout(layoutOptions).run()
+}
+
+const applySubPipelines = function (showSubPipelines) {
+  // set url to reflect filter
+  const url = new URL(window.location.href)
+  url.searchParams.set('group', !showSubPipelines)
+  window.history.pushState({}, '', url)
+
+  // show or hide sub-pipelines buttons
+  if (showSubPipelines) {
+    showSubPiplinesButton.classList.add('d-none')
+    hideSubPiplinesButton.classList.remove('d-none')
+  } else {
+    showSubPiplinesButton.classList.remove('d-none')
+    hideSubPiplinesButton.classList.add('d-none')
+  }
+
+  // apply grouping to graph
+  const results = findResults(cy, { showSubPipelines: showSubPipelines })
 
   const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
   calculatePipelineColours(pipelineNames)
@@ -459,6 +495,14 @@ const applyFilter = function (filter) {
 filterField.addEventListener('change', (event) => {
   const query = event.target.value
   applyFilter(query)
+})
+
+showSubPiplinesButton.addEventListener('click', () => {
+  applySubPipelines(true)
+})
+
+hideSubPiplinesButton.addEventListener('click', () => {
+  applySubPipelines(false)
 })
 
 pipelinesBackButton.addEventListener('click', () => {
