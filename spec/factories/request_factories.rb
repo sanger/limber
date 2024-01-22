@@ -79,6 +79,12 @@ FactoryBot.define do
       factory :isc_library_request do
         pre_capture_pool
       end
+
+      factory :library_request_with_poly_metadata do
+        transient { poly_metadata { [] } }
+
+        after(:build) { |request, evaluator| request.poly_metadata = evaluator.poly_metadata }
+      end
     end
 
     # Multiplexing request, representing the pooling steps at the end of most

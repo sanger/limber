@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
+  include Sequencescape::Api::V2::Shared::HasPolyMetadata
+
   FragmentSize = Struct.new(:from, :to)
 
   has_one :submission
