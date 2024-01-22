@@ -435,9 +435,9 @@ const applyFilter = function (filter) {
 
   // show or hide back button
   if (filterHistory.length > 0) {
-    pipelinesBackButton.classList.remove('invisible')
+    pipelinesBackButton.classList.remove('d-none')
   } else {
-    pipelinesBackButton.classList.add('invisible')
+    pipelinesBackButton.classList.add('d-none')
   }
 
   // add filter to (internal - not browser) history
