@@ -33,9 +33,13 @@ LBB Lib Pool Stock:
   :default_printer_type: :tube
 LBB Enriched BCR:
   :asset_type: plate
+  :creator_class: LabwareCreators::PartialStampedPlateWithoutDilution
 LBB Enriched BCR HT:
   :asset_type: plate
+  :creator_class: LabwareCreators::PartialStampedPlateWithoutDilution
 LBB Enriched TCR:
   :asset_type: plate
+  :creator_class: LabwareCreators::PartialStampedPlateWithoutDilution
 LBB Enriched TCR HT:
   :asset_type: plate
+  :creator_class: LabwareCreators::PartialStampedPlateWithoutDilution
