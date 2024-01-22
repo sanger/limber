@@ -18,7 +18,6 @@ module LabwareCreators
     COVERAGE_NEGATIVE = 'is negative but should be a positive value, in %s'
     WELL_NOT_RECOGNISED = 'contains an invalid well name: %s'
 
-    # TODO: add additional columns
     attr_reader :header,
                 :well,
                 :concentration,
@@ -34,8 +33,6 @@ module LabwareCreators
                 :coverage,
                 :index
 
-    # TODO: add validations for additional columns
-    # TODO: make validations dependant on 'if in passed columns list'
     validates :well,
               inclusion: {
                 in: WellHelpers.column_order,
@@ -86,7 +83,6 @@ module LabwareCreators
       @input_amount_available = @row_data[input_amount_available_column]&.strip&.to_f
 
       # initialize customer fields
-      # TODO: if in passed columns list
       @input_amount_desired = @row_data[input_amount_desired_column]&.strip&.to_f
       @sample_volume = @row_data[sample_volume_column]&.strip&.to_f
       @diluent_volume = @row_data[diluent_volume_column]&.strip&.to_f
