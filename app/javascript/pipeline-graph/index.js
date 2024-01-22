@@ -117,8 +117,12 @@ const hideSubPiplinesButton = document.getElementById('hide-sub-pipelines')
 const pipelinesBackButton = document.getElementById('pipelines-back')
 let filterHistory = [''] // start with an empty filter
 
+const getElementPipeline = function (element) {
+  return element.data('group') || element.data('pipeline')
+}
+
 const pipelineColourEdge = function (edge) {
-  var pipeline = edge.data('pipeline')
+  var pipeline = getElementPipeline(edge)
   return pipelineColours[pipeline] || '#666'
 }
 const calculatePipelineColours = function (pipelineNames) {
@@ -222,7 +226,7 @@ const renderIcon = function (ele) {
 
 const generateTooltipContent = function (ele) {
   // pipeline properties
-  const pipelineName = ele.data('pipeline')
+  const pipelineName = getElementPipeline(ele)
 
   // purpose node properties
   const purposeName = ele.data('id')
@@ -322,9 +326,9 @@ const layoutOptions = {
 }
 
 const renderPipelines = function (data) {
-  const pipelines = data.pipelines.map((pipeline) => pipeline.name).sort()
-  calculatePipelineColours(pipelines)
-  renderPipelinesKey(pipelines)
+  const pipelineNames = data.pipelines.map((pipeline) => pipeline.name).sort()
+  calculatePipelineColours(pipelineNames)
+  renderPipelinesKey(pipelineNames)
 
   const container = document.getElementById('graph')
 
@@ -411,8 +415,8 @@ fetch('pipelines.json').then((response) => {
     // Get filter from url
     const url = new URL(window.location.href)
     const filter = url.searchParams.get('filter')
-    let group = url.searchParams.get('group')
-    group = group === 'true' ? true : group === 'false' ? false : undefined // convert string to boolean
+    const group = url.searchParams.get('group')
+    const showSubPipelines = group === 'true' ? false : group === 'false' ? true : undefined // convert string to boolean
 
     // set before rendering the graph for the users benefit
     filterField.value = filter
@@ -427,7 +431,7 @@ fetch('pipelines.json').then((response) => {
 
     // Apply sub-pipelines-grouping if present
     if (group !== undefined) {
-      applySubPipelines(group)
+      applySubPipelines(showSubPipelines)
     }
   })
 })
@@ -460,7 +464,7 @@ const applyFilter = function (filter) {
   // apply filter to graph
   const results = findResults(cy, { term: filter })
 
-  const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
+  const pipelineNames = [...new Set(results.edges().map((edge) => getElementPipeline(edge)))].sort()
   calculatePipelineColours(pipelineNames)
   renderPipelinesKey(pipelineNames)
 
@@ -485,7 +489,7 @@ const applySubPipelines = function (showSubPipelines) {
   // apply grouping to graph
   const results = findResults(cy, { showSubPipelines: showSubPipelines })
 
-  const pipelineNames = [...new Set(results.edges().map((edge) => edge.data('pipeline')))].sort()
+  const pipelineNames = [...new Set(results.edges().map((edge) => getElementPipeline(edge)))].sort()
   calculatePipelineColours(pipelineNames)
   renderPipelinesKey(pipelineNames)
 

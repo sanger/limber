@@ -26,12 +26,13 @@ const findResults = (cy, filter) => {
   const all = cy.$('*')
   let results = cy.collection()
 
+  let edgeType = existingShowSubPipelines ? 'pipeline' : 'group'
+
   let purposes = cy.$(`node[id @*= "${existingFilter}"]`)
-  purposes = purposes.union(purposes.neighborhood())
+  purposes = purposes.union(purposes.neighborhood(`node, edge[${edgeType}]`))
   results = results.union(purposes)
 
-  let edgeParameter = existingShowSubPipelines ? 'pipeline' : 'group'
-  let pipelines = cy.$(`edge[${edgeParameter} @^= "${existingFilter}"]`)
+  let pipelines = cy.$(`edge[${edgeType}][${edgeType} @^= "${existingFilter}"]`)
   pipelines = pipelines.union(pipelines.connectedNodes())
   results = results.union(pipelines)
 
