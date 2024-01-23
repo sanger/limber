@@ -9,8 +9,7 @@
           :columns="targetColumnsNumber"
           :wells="targetWells"
         />
-      </b-card>
-      <b-card bg-variant="dark" text-variant="white">
+        <hr />
         <lb-tube-array-summary :tubes="tubes" />
       </b-card>
     </lb-main-content>
