@@ -2,7 +2,7 @@
   <lb-page>
     <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content>
-      <b-card bg-variant="dark" text-variant="white">
+      <b-card bg-variant="dark" text-variant="white" :header="header" header-tag="h3">
         <lb-plate
           caption="Layout of the new plate"
           :rows="targetRowsNumber"
@@ -98,6 +98,12 @@ export default {
     // Limber plate purpose UUID
     purposeUuid: { type: String, required: true },
 
+    // Limber plate purpose name
+    purposeName: { type: String, required: true },
+
+    // Limber parent purpose name
+    parentPurposeName: { type: String, required: true },
+
     // Limber target Asset URL for posting the transfers
     targetUrl: { type: String, required: true },
 
@@ -160,6 +166,9 @@ export default {
     }
   },
   computed: {
+    header() {
+      return `Sample Arraying: ${this.parentPurposeName} → ${this.purposeName}`
+    },
     sourceTubeNumber() {
       return Number.parseInt(this.sourceTubes)
     },
