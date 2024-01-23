@@ -436,6 +436,10 @@ fetch('pipelines.json').then((response) => {
   })
 })
 
+const getPipelineNamesFromResults = function (results) {
+  return [...new Set(results.edges().map((edge) => getElementPipeline(edge)))].sort()
+}
+
 const applyFilter = function (filter) {
   // set value in filter field
   filterField.value = filter
@@ -464,7 +468,7 @@ const applyFilter = function (filter) {
   // apply filter to graph
   const results = findResults(cy, { term: filter })
 
-  const pipelineNames = [...new Set(results.edges().map((edge) => getElementPipeline(edge)))].sort()
+  const pipelineNames = getPipelineNamesFromResults(results)
   calculatePipelineColours(pipelineNames)
   renderPipelinesKey(pipelineNames)
 
@@ -489,7 +493,7 @@ const applySubPipelines = function (showSubPipelines) {
   // apply grouping to graph
   const results = findResults(cy, { showSubPipelines: showSubPipelines })
 
-  const pipelineNames = [...new Set(results.edges().map((edge) => getElementPipeline(edge)))].sort()
+  const pipelineNames = getPipelineNamesFromResults(results)
   calculatePipelineColours(pipelineNames)
   renderPipelinesKey(pipelineNames)
 
