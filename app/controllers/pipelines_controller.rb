@@ -39,17 +39,19 @@ class PipelinesController < ApplicationController
   end
 
   def calculate_group_edges
-    calculate_edges_with_pipeline_data.map do |edge|
-      {
-        group: 'edges',
-        data: {
-          id: SecureRandom.uuid,
-          source: edge[:source],
-          target: edge[:target],
-          group: edge[:pipeline].pipeline_group
+    calculate_edges_with_pipeline_data
+      .map do |edge|
+        {
+          group: 'edges',
+          data: {
+            id: SecureRandom.uuid,
+            source: edge[:source],
+            target: edge[:target],
+            group: edge[:pipeline].pipeline_group
+          }
         }
-      }
-    end
+      end
+      .uniq { |edge| edge[:data][:source] + edge[:data][:target] + edge[:data][:group] }
   end
 
   def calculate_edges
