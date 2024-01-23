@@ -496,8 +496,6 @@ const applySubPipelines = function (showSubPipelines) {
   const pipelineNames = getPipelineNamesFromResults(results)
   calculatePipelineColours(pipelineNames)
   renderPipelinesKey(pipelineNames)
-
-  results.layout(layoutOptions).run()
 }
 
 filterField.addEventListener('change', (event) => {
