@@ -120,7 +120,7 @@ filters:
   library_type: Standard
 ```
 
-Indicates that this pipeline can be used for requests with a request type of 'limber_wgs', 'limber_lcmb' or 'limber_rnaa', and a library type os 'Standard'.
+Indicates that this pipeline can be used for requests with a request type of 'limber_wgs', 'limber_lcmb' or 'limber_rnaa', and a library type of 'Standard'.
 
 The most common keys to filter on are request_type and library_type.
 
