@@ -20,7 +20,7 @@ each purpose once), although is subject to race conditions if run concurrently.
 `rake config:generate` is run automatically on deployment, and is run in series
 on each host to avoid the race conditions.
 
-Filenames, and the grouping of pipelines within files, have no functional
+Filenames, and the grouping of purposes within files, have no functional
 relevance, and are intended for organizational reasons.
 
 Loading of yaml files is handled by {ConfigLoader::PurposesLoader} which
