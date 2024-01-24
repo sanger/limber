@@ -99,10 +99,10 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
-    context 'where csv id requested is targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling.csv' do
+    context 'where csv id requested is targeted_nanoseq_pcr_xp_merged_file.csv' do
       let(:includes) { well_qc_includes }
-      let(:csv_id) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
-      let(:expected_template) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
+      let(:csv_id) { 'targeted_nanoseq_pcr_xp_merged_file' }
+      let(:expected_template) { 'targeted_nanoseq_pcr_xp_merged_file' }
 
       it_behaves_like 'a csv view'
     end

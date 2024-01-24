@@ -81,9 +81,24 @@ FactoryBot.define do
       end
 
       factory :library_request_with_poly_metadata do
+        # To use this factory create each poly_metadatum individually using the poly_metadatum factory, but don't
+        # set the metadatable relationship to the request. Then pass them in as an array to this request factory
+        # as an array of one or more poly_metadata and it sets the relationship here.
         transient { poly_metadata { [] } }
 
-        after(:build) { |request, evaluator| request.poly_metadata = evaluator.poly_metadata }
+        after(:build) do |request, evaluator|
+          # initialise the poly_metadata array
+          request.poly_metadata = []
+
+          # add each polymetadatum to the request
+          evaluator.poly_metadata.each do |pm|
+            # set the relationship between the polymetadatum and the request
+            pm.relationships.metadatable = request
+
+            # link the polymetadatum to the request
+            request.poly_metadata.push(pm)
+          end
+        end
       end
     end
 

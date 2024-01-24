@@ -1,0 +1,22 @@
+<%= CSV.generate_line ['Original Plate Barcode', 'Original Well ID', 'Concentration (nM)', 'Sanger Sample ID', 'Supplier Sample Name', 'Input amount available (fmol)', 'Input amount desired (fmol)', 'New Plate Barcode', 'New Well ID', 'Concentration (ng/ul)', 'Hyb Panel'], row_sep: "" %>
+<% row_array = [] %>
+<% @plate.wells_in_columns.each_with_index do |well, well_index| %>
+  <% unless well.empty? %>
+    <% request = Array(well.aliquots.first.request).first %>
+    <% sample = well.aliquots.first.sample %>
+    <% sample_id = sample.sanger_sample_id %>
+    <% supplier_sample_name = sample.sample_metadata.supplier_name %>
+    <% md_original_plate_barcode = request.poly_metadata.select { |md| md.key == 'original_plate_barcode' }.first&.value || nil %>
+    <% md_original_well_id = request.poly_metadata.select { |md| md.key == 'original_well_id' }.first&.value || nil %>
+    <% md_concentration_nm = request.poly_metadata.select { |md| md.key == 'concentration_nm' }.first&.value || nil %>
+    <% md_input_amount_available = request.poly_metadata.select { |md| md.key == 'input_amount_available' }.first&.value || nil %>
+    <% md_input_amount_desired = request.poly_metadata.select { |md| md.key == 'input_amount_desired' }.first&.value || nil %>
+    <% md_hyb_panel = request.poly_metadata.select { |md| md.key == 'hyb_panel' }.first&.value || nil %>
+    <% row_array.push([md_original_plate_barcode, md_original_well_id, md_concentration_nm, sample_id, supplier_sample_name, md_input_amount_available, md_input_amount_desired, @plate.human_barcode, well.location, well.latest_concentration&.value, md_hyb_panel]) %>
+  <% end %>
+<% end %>
+<% row_order = ('A'..'H').to_a.product((1..12).to_a).map(&:join) %>
+<% sorted_row_array = row_array.sort_by! { |row| [row[0], row_order.index(row[1])] } %>
+<% sorted_row_array.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>
