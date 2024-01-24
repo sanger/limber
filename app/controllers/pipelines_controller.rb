@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Provides an overview of the pipelines auto-generated from the configuration
-# Currently still very quick and dirty
+# Tailored to the needs of the pipeline graph
 class PipelinesController < ApplicationController
   before_action :configure_api, except: :index
   def index
