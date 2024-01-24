@@ -146,10 +146,10 @@ const renderPipelinesKey = function (pipelineNames) {
 
     // when each pipeline name is hovered over, the corresponding edges are highlighted
     item.addEventListener('mouseover', () => {
-      cy.elements('edge[pipeline = "' + pipeline + '"]').addClass('highlight')
+      cy.elements('edge[pipeline = "' + pipeline + '"],edge[group = "' + pipeline + '"]').addClass('highlight')
     })
     item.addEventListener('mouseout', () => {
-      cy.elements('edge[pipeline = "' + pipeline + '"]').removeClass('highlight')
+      cy.elements('edge[pipeline = "' + pipeline + '"],edge[group = "' + pipeline + '"]').removeClass('highlight')
     })
 
     // when each pipeline key name is clicked, filter the graph to show only that pipeline
