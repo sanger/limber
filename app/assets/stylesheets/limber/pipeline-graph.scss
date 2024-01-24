@@ -56,21 +56,21 @@
         @extend .mr-1;
       }
 
-      #show-sub-pipelines {
-        @extend .icon-pipeline_single-light;
+      #show-pipeline-groups {
+        @extend .icon-pipeline_stack-light;
         @extend .mr-1;
       }
-      #show-sub-pipelines:hover {
-        @extend .icon-pipeline_stack-light;
+      #show-pipeline-groups:hover {
+        @extend .icon-pipeline_single-light;
         @extend .text-light:hover;
       }
 
-      #hide-sub-pipelines {
-        @extend .icon-pipeline_stack-light;
+      #show-pipelines {
+        @extend .icon-pipeline_single-light;
         @extend .mr-1;
       }
-      #hide-sub-pipelines:hover {
-        @extend .icon-pipeline_single-light;
+      #show-pipelines:hover {
+        @extend .icon-pipeline_stack-light;
         @extend .text-light:hover;
       }
 

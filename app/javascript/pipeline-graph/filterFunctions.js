@@ -1,7 +1,7 @@
 let notResults = undefined
 // maintain the existing filters so that individual fields can be updated as required
 let existingFilter = ''
-let existingShowSubPipelines = false
+let existingShowPipelineGroups = true
 /**
  * Searches for nodes and edges in a Cytoscape.js graph that match a given query.
  * Nodes are matched if their 'id' attribute contains the query string.
@@ -12,7 +12,7 @@ let existingShowSubPipelines = false
  * @param {cytoscape.Core} cy - The Cytoscape instance (i.e., the graph).
  * @param {Object} filter - The filter. It has two properties:
  *  - term: The filter term.
- *  - showSubPipelines: Whether to show sub-pipelines.
+ *  - showPipelineGroups: Whether to show pipeline groups.
  * @returns {cytoscape.Collection} - A collection of nodes and edges that match the query.
  */
 const findResults = (cy, filter) => {
@@ -21,12 +21,12 @@ const findResults = (cy, filter) => {
   }
 
   existingFilter = filter?.term ?? existingFilter
-  existingShowSubPipelines = filter?.showSubPipelines ?? existingShowSubPipelines
+  existingShowPipelineGroups = filter?.showPipelineGroups ?? existingShowPipelineGroups
 
   const all = cy.$('*')
   let results = cy.collection()
 
-  let edgeType = existingShowSubPipelines ? 'pipeline' : 'group'
+  let edgeType = existingShowPipelineGroups ? 'group' : 'pipeline'
 
   let purposes = cy.$(`node[id @*= "${existingFilter}"]`)
   purposes = purposes.union(purposes.neighborhood(`node, edge[${edgeType}]`))

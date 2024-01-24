@@ -18,7 +18,7 @@ describe('findResults', () => {
   })
 
   it('should return groups and associated purposes that match the query', () => {
-    const filter = { term: 'groupA', showSubPipelines: false }
+    const filter = { term: 'groupA', showPipelineGroups: true }
     const results = findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
@@ -35,7 +35,7 @@ describe('findResults', () => {
   })
 
   it('should return pipelines and associated purposes that match the query', () => {
-    const filter = { term: 'pipeline1', showSubPipelines: true }
+    const filter = { term: 'pipeline1', showPipelineGroups: false }
     const results = findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
@@ -50,7 +50,7 @@ describe('findResults', () => {
   })
 
   it('should return purposes and neighboring purposes and pipelines that match the query', () => {
-    const filter = { term: 'plateA', showSubPipelines: true } // matches plateA1 and plateA2
+    const filter = { term: 'plateA', showPipelineGroups: false } // matches plateA1 and plateA2
     const results = findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
@@ -67,7 +67,7 @@ describe('findResults', () => {
   })
 
   it('should restore non-matching elements from previous search', () => {
-    const filter1 = { term: 'pipeline1', showSubPipelines: true }
+    const filter1 = { term: 'pipeline1', showPipelineGroups: false }
     const results = findResults(cy, filter1)
     const resultsIds = results.map((ele) => ele.id())
 
@@ -81,7 +81,7 @@ describe('findResults', () => {
     expect(all.length).toEqual(3)
 
     // search for a different query
-    const filter2 = { term: 'pipeline2', showSubPipelines: true }
+    const filter2 = { term: 'pipeline2', showPipelineGroups: false }
     const results2 = findResults(cy, filter2)
     const resultsIds2 = results2.map((ele) => ele.id())
 
@@ -96,7 +96,7 @@ describe('findResults', () => {
   })
 
   it('should retain the existing value of term', () => {
-    const filter = { term: 'plateC', showSubPipelines: false }
+    const filter = { term: 'plateC', showPipelineGroups: true }
     const results = findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
@@ -110,7 +110,7 @@ describe('findResults', () => {
     expect(all.length).toEqual(3)
 
     // search for a different query
-    const filter2 = { showSubPipelines: true }
+    const filter2 = { showPipelineGroups: false }
     const results2 = findResults(cy, filter2)
     const resultsIds2 = results2.map((ele) => ele.id())
 
@@ -124,8 +124,8 @@ describe('findResults', () => {
     expect(all2.length).toEqual(3)
   })
 
-  it('should retain the existing value of showSubPipelines', () => {
-    const filter = { term: 'pipeline1', showSubPipelines: true }
+  it('should retain the existing value of showPipelineGroups', () => {
+    const filter = { term: 'pipeline1', showPipelineGroups: false }
     const results = findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
@@ -166,7 +166,7 @@ describe('findResults', () => {
   })
 
   it('should return all elements if query is empty', () => {
-    const filter = { term: '', showSubPipelines: true }
+    const filter = { term: '', showPipelineGroups: false }
     const results = findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
