@@ -64,13 +64,7 @@ const renderCanvas = function (size, input, stock, cherrypickable_target) {
   canvas.height = 48 * 3 // set canvas size to match node shape, with extra for zoom
   // NOTE: canvas is clipped to shape by cytoscape
 
-  // Get the context of the canvas
-  const ctx = canvas.getContext('2d')
-
-  if (!isDefaultSize) {
-    renderNodeSize(canvas, size)
-  }
-
+  if (!isDefaultSize) renderNodeSize(canvas, size)
   renderNodeProperties(canvas, input, stock, cherrypickable_target)
 
   // Export the canvas to data URI
