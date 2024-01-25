@@ -1,7 +1,20 @@
+// This file contains functions for filtering the graph based on different criteria
+
 let notResults = undefined
+
 // maintain the existing filters so that individual fields can be updated as required
 let existingFilter = '' // default filter (show all)
 let existingShowPipelineGroups = true // default (show groups)
+
+let filterHistory = [existingFilter] // start with the existing (empty) filter
+
+const hasPreviousFilter = () => filterHistory.length > 0
+
+const getPreviousFilter = () => {
+  filterHistory.pop() // remove the current filter
+  return filterHistory.pop() // return the previous filter
+}
+
 /**
  * Searches for nodes and edges in a Cytoscape.js graph that match a given query.
  * Nodes are matched if their 'id' attribute contains the query string.
@@ -19,6 +32,13 @@ const findResults = (cy, filter) => {
   if (notResults !== undefined) {
     notResults.restore()
   }
+
+  if (filter.term !== undefined && filter.term !== null)
+    if (filterHistory[filterHistory.length - 1] !== filter) {
+      // add filter term to (internal - not browser) history
+      // don't add duplicate filters
+      filterHistory.push(filter.term)
+    }
 
   existingFilter = filter?.term ?? existingFilter
   existingShowPipelineGroups = filter?.showPipelineGroups ?? existingShowPipelineGroups
@@ -41,4 +61,4 @@ const findResults = (cy, filter) => {
   return results
 }
 
-export { findResults }
+export default { hasPreviousFilter, getPreviousFilter, findResults }
