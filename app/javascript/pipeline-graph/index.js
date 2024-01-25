@@ -308,6 +308,60 @@ const applyMouseEvents = function () {
   })
 }
 
+// the stylesheet for the graph
+const styleOptions = [
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#666',
+      'background-image': renderIcon,
+      'background-height': '100%', // set canvas to fit node
+      'background-width': '100%', // set canvas to fit node
+      label: 'data(id)',
+      color: 'white',
+      width: 48,
+      height: 48,
+      'text-halign': 'right',
+      'text-valign': 'center',
+      'text-wrap': 'wrap',
+      'text-max-width': '90',
+      'text-margin-x': '5',
+    },
+  },
+  {
+    selector: '[type = "plate"]',
+    style: {
+      shape: 'polygon',
+      'shape-polygon-points': platePolygon,
+    },
+  },
+  {
+    selector: '[type = "tube"]',
+    style: {
+      shape: 'polygon',
+      'shape-polygon-points': tubePolygon,
+    },
+  },
+  {
+    selector: 'edge',
+    style: {
+      width: 3,
+      'curve-style': 'bezier',
+      'control-point-step-size': 15,
+      'line-color': pipelineColourEdge,
+      'target-arrow-color': pipelineColourEdge,
+      'target-arrow-shape': 'triangle',
+      'arrow-scale': 2,
+    },
+  },
+  {
+    selector: 'edge.highlight',
+    style: {
+      'underlay-opacity': 0.3,
+    },
+  },
+]
+
 // for other layout options see https://js.cytoscape.org/#demos
 // for elk options see https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html
 const layoutOptions = {
@@ -345,60 +399,7 @@ const renderPipelines = function (data) {
     // - input: true if the node is an input to the pipeline
     // TODO: add legend for the above
 
-    style: [
-      // the stylesheet for the graph
-      {
-        selector: 'node',
-        style: {
-          'background-color': '#666',
-          'background-image': renderIcon,
-          'background-height': '100%', // set canvas to fit node
-          'background-width': '100%', // set canvas to fit node
-          label: 'data(id)',
-          color: 'white',
-          width: 48,
-          height: 48,
-          'text-halign': 'right',
-          'text-valign': 'center',
-          'text-wrap': 'wrap',
-          'text-max-width': '90',
-          'text-margin-x': '5',
-        },
-      },
-      {
-        selector: '[type = "plate"]',
-        style: {
-          shape: 'polygon',
-          'shape-polygon-points': platePolygon,
-        },
-      },
-      {
-        selector: '[type = "tube"]',
-        style: {
-          shape: 'polygon',
-          'shape-polygon-points': tubePolygon,
-        },
-      },
-      {
-        selector: 'edge',
-        style: {
-          width: 3,
-          'curve-style': 'bezier',
-          'control-point-step-size': 15,
-          'line-color': pipelineColourEdge,
-          'target-arrow-color': pipelineColourEdge,
-          'target-arrow-shape': 'triangle',
-          'arrow-scale': 2,
-        },
-      },
-      {
-        selector: 'edge.highlight',
-        style: {
-          'underlay-opacity': 0.3,
-        },
-      },
-    ],
-
+    style: styleOptions,
     layout: layoutOptions,
 
     minZoom: 0.2,
@@ -496,6 +497,8 @@ const applyGrouping = function (showPipelineGroups) {
   const pipelineNames = getPipelineNamesFromResults(results)
   calculatePipelineColours(pipelineNames)
   renderPipelinesKey(pipelineNames)
+
+  cy.style().fromJson(styleOptions).update()
 }
 
 filterField.addEventListener('change', (event) => {
