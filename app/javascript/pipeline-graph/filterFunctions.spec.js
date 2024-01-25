@@ -1,4 +1,4 @@
-import { findResults } from './filterFunctions'
+import filterFuncs from './filterFunctions'
 import cytoscape from 'cytoscape'
 
 describe('findResults', () => {
@@ -19,7 +19,7 @@ describe('findResults', () => {
 
   it('should return groups and associated purposes that match the query', () => {
     const filter = { term: 'groupA', showPipelineGroups: true }
-    const results = findResults(cy, filter)
+    const results = filterFuncs.findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(5)
@@ -36,7 +36,7 @@ describe('findResults', () => {
 
   it('should return pipelines and associated purposes that match the query', () => {
     const filter = { term: 'pipeline1', showPipelineGroups: false }
-    const results = findResults(cy, filter)
+    const results = filterFuncs.findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(3)
@@ -51,7 +51,7 @@ describe('findResults', () => {
 
   it('should return purposes and neighboring purposes and pipelines that match the query', () => {
     const filter = { term: 'plateA', showPipelineGroups: false } // matches plateA1 and plateA2
-    const results = findResults(cy, filter)
+    const results = filterFuncs.findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(5)
@@ -68,7 +68,7 @@ describe('findResults', () => {
 
   it('should restore non-matching elements from previous search', () => {
     const filter1 = { term: 'pipeline1', showPipelineGroups: false }
-    const results = findResults(cy, filter1)
+    const results = filterFuncs.findResults(cy, filter1)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(3)
@@ -82,7 +82,7 @@ describe('findResults', () => {
 
     // search for a different query
     const filter2 = { term: 'pipeline2', showPipelineGroups: false }
-    const results2 = findResults(cy, filter2)
+    const results2 = filterFuncs.findResults(cy, filter2)
     const resultsIds2 = results2.map((ele) => ele.id())
 
     expect(resultsIds2.length).toEqual(3)
@@ -97,7 +97,7 @@ describe('findResults', () => {
 
   it('should retain the existing value of term', () => {
     const filter = { term: 'plateC', showPipelineGroups: true }
-    const results = findResults(cy, filter)
+    const results = filterFuncs.findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(3)
@@ -111,7 +111,7 @@ describe('findResults', () => {
 
     // search for a different query
     const filter2 = { showPipelineGroups: false }
-    const results2 = findResults(cy, filter2)
+    const results2 = filterFuncs.findResults(cy, filter2)
     const resultsIds2 = results2.map((ele) => ele.id())
 
     expect(resultsIds2.length).toEqual(3)
@@ -126,7 +126,7 @@ describe('findResults', () => {
 
   it('should retain the existing value of showPipelineGroups', () => {
     const filter = { term: 'pipeline1', showPipelineGroups: false }
-    const results = findResults(cy, filter)
+    const results = filterFuncs.findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(3)
@@ -140,7 +140,7 @@ describe('findResults', () => {
 
     // search for a different query
     const filter2 = { term: 'pipeline2' }
-    const results2 = findResults(cy, filter2)
+    const results2 = filterFuncs.findResults(cy, filter2)
     const resultsIds2 = results2.map((ele) => ele.id())
 
     expect(resultsIds2.length).toEqual(3)
@@ -155,7 +155,7 @@ describe('findResults', () => {
 
   it('should return empty collection if no elements match the query', () => {
     const filter = { term: 'no match' }
-    const results = findResults(cy, filter)
+    const results = filterFuncs.findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(0)
@@ -167,7 +167,7 @@ describe('findResults', () => {
 
   it('should return all elements if query is empty', () => {
     const filter = { term: '', showPipelineGroups: false }
-    const results = findResults(cy, filter)
+    const results = filterFuncs.findResults(cy, filter)
     const resultsIds = results.map((ele) => ele.id())
 
     expect(resultsIds.length).toEqual(7)
