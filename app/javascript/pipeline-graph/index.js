@@ -107,10 +107,8 @@ fetch('pipelines.json').then((response) => {
       applyFilter(filter)
     }
 
-    // Apply pipeline grouping if required
-    if (group !== undefined && group !== null) {
-      applyGrouping(showGroup)
-    }
+    // Apply pipeline grouping
+    applyGrouping(showGroup)
   })
 })
 
@@ -144,21 +142,23 @@ const applyFilter = function (filter) {
 }
 
 const applyGrouping = function (showPipelineGroups) {
-  // set url to reflect filter
-  const url = new URL(window.location.href)
-  url.searchParams.set('group', showPipelineGroups)
-  window.history.pushState({}, '', url)
+  if (showPipelineGroups !== undefined) {
+    // set url to reflect filter if defined
+    const url = new URL(window.location.href)
+    url.searchParams.set('group', showPipelineGroups)
+    window.history.pushState({}, '', url)
 
-  // show or hide pipeline-groups buttons
-  if (showPipelineGroups) {
-    showPipelineGroupsButton.classList.add('d-none')
-    showPipelinesButton.classList.remove('d-none')
-  } else {
-    showPipelineGroupsButton.classList.remove('d-none')
-    showPipelinesButton.classList.add('d-none')
+    // show or hide pipeline-groups buttons
+    if (showPipelineGroups) {
+      showPipelineGroupsButton.classList.add('d-none')
+      showPipelinesButton.classList.remove('d-none')
+    } else {
+      showPipelineGroupsButton.classList.remove('d-none')
+      showPipelinesButton.classList.add('d-none')
+    }
   }
 
-  // apply grouping to graph
+  // apply grouping to graph - uses default value in filters if showPipelineGroups is undefined
   const results = filters.findResults(graph.getCore(), { showPipelineGroups: showPipelineGroups })
 
   const pipelineNames = graph.getPipelineNamesFromCollection(results)
