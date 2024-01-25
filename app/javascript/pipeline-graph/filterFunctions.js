@@ -18,7 +18,7 @@ const getPreviousFilter = () => {
 /**
  * Searches for nodes and edges in a Cytoscape.js graph that match a given query.
  * Nodes are matched if their 'id' attribute contains the query string.
- * Edges are matched if their 'pipeline' attribute starts with the query string.
+ * Edges are matched if their 'pipeline' or 'group' attribute starts with the query string.
  * The function also includes neighboring nodes of matched nodes and connected nodes of matched edges.
  * As a side-effect, all non-matching elements are removed from the graph.
  *
