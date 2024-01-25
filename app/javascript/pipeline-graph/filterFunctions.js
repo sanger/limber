@@ -1,7 +1,7 @@
 let notResults = undefined
 // maintain the existing filters so that individual fields can be updated as required
-let existingFilter = ''
-let existingShowPipelineGroups = true
+let existingFilter = '' // default filter (show all)
+let existingShowPipelineGroups = true // default (show groups)
 /**
  * Searches for nodes and edges in a Cytoscape.js graph that match a given query.
  * Nodes are matched if their 'id' attribute contains the query string.

@@ -430,7 +430,7 @@ fetch('pipelines.json').then((response) => {
     }
 
     // Apply pipeline grouping if required
-    if (group !== undefined) {
+    if (group !== undefined && group !== null) {
       applyGrouping(showGroup)
     }
   })
