@@ -17,30 +17,21 @@ let cy = undefined
 const platePolygon = '-1.0 -0.6 0.85 -0.6 1.0 -0.45 1.0 0.45 0.85 0.6 -0.85 0.6 -1.0 0.45'
 const tubePolygon = '-0.35 -1 0.35 -1 0.35 -0.55 0.28 -0.55 0.28 0.75 0 1 -0.28 0.75 -0.28 -0.55 -0.35 -0.55'
 
-const renderCanvas = function (size, input, stock, cherrypickable_target) {
-  const isDefaultSize = size === null || size == 96
-  if (isDefaultSize && !input && !stock && !cherrypickable_target) {
-    // return a blank image
-    return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
-  }
-
-  // Create a temporary canvas
-  const canvas = document.createElement('canvas')
-  canvas.width = 48 * 3 // set canvas size to match node shape, with extra for zoom
-  canvas.height = 48 * 3 // set canvas size to match node shape, with extra for zoom
-  // NOTE: canvas is clipped to shape by cytoscape
-
+const renderNodeSize = function (canvas, size) {
   // Get the context of the canvas
   const ctx = canvas.getContext('2d')
 
-  if (!isDefaultSize) {
-    // Write the node size in the center
-    ctx.font = 'bold 52px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillStyle = 'white'
-    ctx.fillText(size, canvas.width / 2, canvas.height / 2)
-  }
+  // Write the node size in the center
+  ctx.font = 'bold 52px sans-serif'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillStyle = 'white'
+  ctx.fillText(size, canvas.width / 2, canvas.height / 2)
+}
+
+const renderNodeProperties = function (canvas, input, stock, cherrypickable_target) {
+  // Get the context of the canvas
+  const ctx = canvas.getContext('2d')
 
   // Draw bands to represent the node properties
   const bands = {
@@ -58,6 +49,29 @@ const renderCanvas = function (size, input, stock, cherrypickable_target) {
       bandOffset -= bandWidth
     }
   })
+}
+
+const renderCanvas = function (size, input, stock, cherrypickable_target) {
+  const isDefaultSize = size === null || size == 96
+  if (isDefaultSize && !input && !stock && !cherrypickable_target) {
+    // return a blank image
+    return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+  }
+
+  // Create a temporary canvas
+  const canvas = document.createElement('canvas')
+  canvas.width = 48 * 3 // set canvas size to match node shape, with extra for zoom
+  canvas.height = 48 * 3 // set canvas size to match node shape, with extra for zoom
+  // NOTE: canvas is clipped to shape by cytoscape
+
+  // Get the context of the canvas
+  const ctx = canvas.getContext('2d')
+
+  if (!isDefaultSize) {
+    renderNodeSize(canvas, size)
+  }
+
+  renderNodeProperties(canvas, input, stock, cherrypickable_target)
 
   // Export the canvas to data URI
   const dataURI = canvas.toDataURL()
