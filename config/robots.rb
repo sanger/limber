@@ -3052,10 +3052,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 15'
         },
-        bed(3).barcode => {
+        bed(5).barcode => {
           purpose: 'LRC PBMC Bank',
           states: ['pending'],
-          label: 'Bed 3',
+          label: 'Bed 5',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
