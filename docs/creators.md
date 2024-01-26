@@ -101,6 +101,16 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::MergedPlate View class documentation}
 
 
+## LabwareCreators::PartialStampedPlateWithoutDilution
+
+{include:LabwareCreators::PartialStampedPlateWithoutDilution}
+
+  Used directly in 4 purposes:
+  LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, and LBB Enriched TCR HT
+
+{LabwareCreators::PartialStampedPlateWithoutDilution View class documentation}
+
+
 ## LabwareCreators::PcrCyclesBinnedPlate
 
 {include:LabwareCreators::PcrCyclesBinnedPlate}
