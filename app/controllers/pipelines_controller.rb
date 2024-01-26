@@ -54,6 +54,15 @@ class PipelinesController < ApplicationController
       .uniq { |edge| edge[:data][:source] + edge[:data][:target] + edge[:data][:group] }
   end
 
+  # Generate the edges for the graph, consisting of edges for the pipelines and the pipeline groups.
+  #
+  # The edges are a graphing construct rather than a pipeline construct. Combining pipeline and
+  # group properties into a single edge prevents easy toggling between pipelines and groups
+  # down-stream:
+  # In the case where we have 3 different pipelines between node A and node B this is represented by
+  # 3 pipeline edges A ⇶ B, but where we have these 3 different pipelines as part of the same group,
+  # in group view we only want to see a single edge A → B, not 3 identically coloured and labeled
+  # edges.
   def calculate_edges
     calculate_pipeline_edges + calculate_group_edges
   end
