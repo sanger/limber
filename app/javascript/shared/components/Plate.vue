@@ -19,7 +19,11 @@
           {{ row | toLetter }}
         </th>
         <td v-for="column in columns" :key="column">
-          <lb-well v-bind="wellAt(row, column)" @onwellclicked="onWellClicked" />
+          <lb-well
+            v-bind="wellAt(row, column)"
+            :position="position(row, column)"
+            @onwellclicked="onWellClicked"
+          />
         </td>
       </tr>
     </tbody>
@@ -55,6 +59,9 @@ export default {
     },
   },
   methods: {
+    position: function (row, column) {
+      return `${rowNumToLetter(row)}${column}`
+    },
     wellAt: function (row, column) {
       return this.wells[`${rowNumToLetter(row)}${column}`] || {}
     },

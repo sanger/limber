@@ -1,5 +1,5 @@
 <template>
-  <div :id="'well_' + position" :class="['well', position]">
+  <div :id="wellId" :class="['well', position]">
     <div v-if="pool_index" :id="'aliquot_' + position" :class="['aliquot', colourClass]">
       <span :class="[linethroughClass, 'tag']" @click="onWellClicked">{{ tagMapIdDisplay() }}</span>
     </div>
@@ -10,7 +10,7 @@
 export default {
   name: 'Well',
   props: {
-    position: { type: String, default: null },
+    position: { type: String, required: true },
     pool_index: { type: Number, default: null },
     tagMapIds: {
       type: Array,
@@ -31,6 +31,9 @@ export default {
     }
   },
   computed: {
+    wellId() {
+      return `well_${this.position}`
+    },
     colourClass() {
       return this.validity.valid ? `colour-${this.pool_index}` : 'failed'
     },
