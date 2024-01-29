@@ -2,8 +2,10 @@
 
 module LabwareCreators
   # This version of the class is specific to the Targeted NanoSeq pipeline.
-  class PcrCyclesBinnedPlateForTNanoSeq < PcrCyclesBinnedPlate
+  class PcrCyclesBinnedPlateForTNanoSeq < PcrCyclesBinnedPlateBase
     self.page = 'pcr_cycles_binned_plate_for_t_nano_seq'
+
+    CUSTOMER_FILE_NAME = 'targeted_nano_seq_customer_file.csv'
 
     # rubocop:disable Metrics/AbcSize
     def after_transfer!
@@ -56,7 +58,7 @@ module LabwareCreators
         next if pm_v2.save
 
         raise StandardError,
-              "New metadata for request (key: #{metadata[:key]}, value: #{metadata[:value]}) " \
+              "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
                 "did not save for request at child well location #{child_well_location}"
       end
     end
@@ -67,12 +69,12 @@ module LabwareCreators
     # Upload the csv file onto the plate via api v1
     #
     def upload_file
-      parent_v1.qc_files.create_from_file!(file, 'targeted_nano_seq_customer_file.csv')
+      parent_v1.qc_files.create_from_file!(file, CUSTOMER_FILE_NAME)
     end
 
     # Create class that will parse and validate the uploaded file
     def csv_file
-      @csv_file ||= CsvFileForTNanoSeq.new(file, csv_file_upload_config, parent.human_barcode)
+      @csv_file ||= PcrCyclesBinnedPlate::CsvFileForTNanoSeq.new(file, csv_file_upload_config, parent.human_barcode)
     end
   end
 end

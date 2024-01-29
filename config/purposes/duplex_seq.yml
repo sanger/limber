@@ -26,7 +26,7 @@ LDS AL Lib:
 LDS AL Lib Dil:
   :asset_type: plate
   :presenter_class: Presenters::PcrCyclesBinnedPlatePresenter
-  :creator_class: LabwareCreators::PcrCyclesBinnedPlate
+  :creator_class: LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq
   :csv_file_upload:
     :input_amount_desired_min: 0.0
     :input_amount_desired_max: 10000.0

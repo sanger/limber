@@ -2,17 +2,15 @@
 
 # Part of the Labware creator classes
 module LabwareCreators
-  require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file'
-
   #
   # Class WellDetailsHeader provides a simple wrapper for handling and validating
   # the plate barcode header row from the customer csv file
-  # This version is for the Targeted NanoSeq pipeline.
   #
-  class PcrCyclesBinnedPlate::CsvFile::WellDetailsHeaderForTNanoSeq
+  class PcrCyclesBinnedPlate::CsvFile::WellDetailsHeaderBase
     include ActiveModel::Validations
 
     # Return the index of the respective column.
+    # These are common columns shared by all versions of the csv file.
     attr_reader :well_column,
                 :concentration_column,
                 :sanger_sample_id_column,
@@ -21,8 +19,7 @@ module LabwareCreators
                 :input_amount_desired_column,
                 :sample_volume_column,
                 :diluent_volume_column,
-                :pcr_cycles_column,
-                :hyb_panel_column
+                :pcr_cycles_column
 
     WELL_COLUMN = 'Well'
     CONCENTRATION_COLUMN = 'Concentration (nM)'
@@ -33,7 +30,6 @@ module LabwareCreators
     SAMPLE_VOLUME_COLUMN = 'Sample volume'
     DILUENT_VOLUME_COLUMN = 'Diluent volume'
     PCR_CYCLES_COLUMN = 'PCR cycles'
-    HYB_PANEL_COLUMN = 'Hyb Panel'
 
     validates :well_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :concentration_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
@@ -56,7 +52,6 @@ module LabwareCreators
     validates :sample_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :diluent_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
     validates :pcr_cycles_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :hyb_panel_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
 
     #
     # Generates a well details header from the well details header row array
@@ -75,7 +70,8 @@ module LabwareCreators
       @sample_volume_column = index_of_header(SAMPLE_VOLUME_COLUMN)
       @diluent_volume_column = index_of_header(DILUENT_VOLUME_COLUMN)
       @pcr_cycles_column = index_of_header(PCR_CYCLES_COLUMN)
-      @hyb_panel_column = index_of_header(HYB_PANEL_COLUMN)
+
+      initialize_pipeline_specific_columns
     end
 
     #
@@ -88,6 +84,10 @@ module LabwareCreators
     end
 
     private
+
+    def initialize_pipeline_specific_columns
+      raise '#initialize_pipeline_specific_columns must be implemented on subclasses'
+    end
 
     #
     # Returns the index of the given column name. Returns nil if the column can't be found.
