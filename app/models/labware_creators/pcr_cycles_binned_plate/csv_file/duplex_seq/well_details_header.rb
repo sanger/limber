@@ -4,12 +4,12 @@
 module LabwareCreators
   require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file_for_duplex_seq'
 
-  module PcrCyclesBinnedPlate::CsvFile::DuplexSeq
+  module PcrCyclesBinnedPlate::CsvFile
     #
     # Class WellDetailsHeader provides a simple wrapper for handling and validating
     # the plate barcode header row from the customer csv file
     #
-    class WellDetailsHeader < PcrCyclesBinnedPlate::CsvFile::WellDetailsHeaderBase
+    class DuplexSeq::WellDetailsHeader < WellDetailsHeaderBase
       # Return the index of the respective column.
       attr_reader :submit_for_sequencing_column, :sub_pool_column, :coverage_column
 
