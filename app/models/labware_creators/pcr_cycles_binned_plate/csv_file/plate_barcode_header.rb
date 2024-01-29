@@ -2,7 +2,7 @@
 
 # Part of the Labware creator classes
 module LabwareCreators
-  require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file'
+  require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file_base'
 
   #
   # Class PlateBarcodeHeader provides a simple wrapper for handling and validating

@@ -229,14 +229,13 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::MergedPlate View class documentation}
 
 
-## LabwareCreators::PcrCyclesBinnedPlate
+## LabwareCreators::PcrCyclesBinnedPlateBase
 
-{include:LabwareCreators::PcrCyclesBinnedPlate}
+{include:LabwareCreators::PcrCyclesBinnedPlateBase}
 
-  Used directly in 1 purposes:
-  LDS AL Lib Dil
+  **This labware creator is unused**
 
-{LabwareCreators::PcrCyclesBinnedPlate View class documentation}
+{LabwareCreators::PcrCyclesBinnedPlateBase View class documentation}
 
 
 ## LabwareCreators::PlateWithPrimerPanel
@@ -296,6 +295,16 @@ Labware creators are responsible for creating new labware from a parent labware.
   LBC 5p GEX Dil
 
 {LabwareCreators::NormalisedBinnedPlate View class documentation}
+
+
+## LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq
+
+{include:LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq}
+
+  Used directly in 1 purposes:
+  LDS AL Lib Dil
+
+{LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq View class documentation}
 
 
 ## LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq

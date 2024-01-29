@@ -4,10 +4,10 @@ require 'spec_helper'
 require 'labware_creators/base'
 require_relative 'shared_examples'
 
-RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
+RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploader do
   it_behaves_like 'it only allows creation from plates'
 
-  subject { LabwareCreators::PcrCyclesBinnedPlate.new(api, form_attributes) }
+  subject { LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq.new(api, form_attributes) }
 
   it 'should have a custom page' do
     expect(described_class.page).to eq 'pcr_cycles_binned_plate'
@@ -259,7 +259,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlate
+      expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq
     end
   end
 

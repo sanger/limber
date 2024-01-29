@@ -2,17 +2,15 @@
 
 # Part of the Labware creator classes
 module LabwareCreators
-  require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file'
-
   #
-  # This version of the row is for the Targeted NanoSeq pipeline.
+  # Provides a simple wrapper for handling and validating individual CSV rows.
+  # Abstract class, extend for uses in specific pipelines.
   #
-  class PcrCyclesBinnedPlate::CsvFile::RowForTNanoSeq
+  class PcrCyclesBinnedPlate::CsvFile::RowBase
     include ActiveModel::Validations
 
     IN_RANGE = 'is empty or contains a value that is out of range (%s to %s), in %s'
     WELL_NOT_RECOGNISED = 'contains an invalid well name: %s'
-    HYB_PANEL_MISSING = 'is empty, in %s'
 
     attr_reader :header,
                 :well,
@@ -24,7 +22,6 @@ module LabwareCreators
                 :sample_volume,
                 :diluent_volume,
                 :pcr_cycles,
-                :hyb_panel,
                 :index
 
     validates :well,
@@ -37,7 +34,7 @@ module LabwareCreators
     validate :sample_volume_within_expected_range?
     validate :diluent_volume_within_expected_range?
     validate :pcr_cycles_within_expected_range?
-    validate :hyb_panel_is_present?
+
     delegate :well_column,
              :concentration_column,
              :sanger_sample_id_column,
@@ -47,10 +44,9 @@ module LabwareCreators
              :sample_volume_column,
              :diluent_volume_column,
              :pcr_cycles_column,
-             :hyb_panel_column,
              to: :header
 
-    # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+    # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
     def initialize(row_config, header, index, row_data)
       @row_config = row_config
       @header = header
@@ -69,10 +65,15 @@ module LabwareCreators
       @sample_volume = @row_data[sample_volume_column]&.strip&.to_f
       @diluent_volume = @row_data[diluent_volume_column]&.strip&.to_f
       @pcr_cycles = @row_data[pcr_cycles_column]&.strip&.to_i
-      @hyb_panel = @row_data[hyb_panel_column]&.strip
+
+      initialize_pipeline_specific_columns
     end
 
     # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+
+    def initialize_pipeline_specific_columns
+      raise '#initialize_pipeline_specific_columns must be implemented on subclasses'
+    end
 
     def to_s
       @well.present? ? "row #{index + 2} [#{@well}]" : "row #{index + 2}"
@@ -97,19 +98,6 @@ module LabwareCreators
 
     def pcr_cycles_within_expected_range?
       in_range?('pcr_cycles', pcr_cycles, @row_config.pcr_cycles_min, @row_config.pcr_cycles_max)
-    end
-
-    # Checks whether the Hyb Panel column is filled in
-    def hyb_panel_is_present?
-      return true if empty?
-
-      # TODO: can we validate the hyb panel value? Does not appear to be tracked in LIMS.
-      result = hyb_panel.present?
-      unless result
-        msg = format(HYB_PANEL_MISSING, to_s)
-        errors.add('hyb_panel', msg)
-      end
-      result
     end
 
     # Checks whether a row value it within the specified range using min/max values
