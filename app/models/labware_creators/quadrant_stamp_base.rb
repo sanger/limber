@@ -59,7 +59,7 @@ module LabwareCreators
 
         source_plate = Sequencescape::Api::V2::Plate.find_by(uuid: uuid)
         stock_barcode = source_plate&.stock_plate&.barcode&.human
-        quadrants["stock_barcode_q#{index}".to_sym] = stock_barcode unless stock_barcode.nil?
+        quadrants[:"stock_barcode_q#{index}"] = stock_barcode unless stock_barcode.nil?
       end
       quadrants
     end

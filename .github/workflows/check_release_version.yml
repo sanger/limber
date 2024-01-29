@@ -10,11 +10,11 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@4
+      - uses: actions/checkout@v4
 
       - name: Get specific changed files
         id: changed-files-specific
-        uses: tj-actions/changed-files@v23
+        uses: tj-actions/changed-files@v41
         with:
           files: |
             .release-version

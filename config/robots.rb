@@ -3051,10 +3051,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 15'
         },
-        bed(3).barcode => {
+        bed(5).barcode => {
           purpose: 'LRC PBMC Bank',
           states: ['pending'],
-          label: 'Bed 3',
+          label: 'Bed 5',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
@@ -3158,10 +3158,10 @@ ROBOT_CONFIG =
       'bravo-rvi-rt-2',
       name: 'Bravo RVI RT First Strand Mix',
       beds: {
-        bed(8).barcode => {
+        bed(6).barcode => {
           purpose: 'RVI RT',
           states: ['processed_2'],
-          label: 'Bed 8',
+          label: 'Bed 6',
           target_state: 'processed_3'
         }
       }
