@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This is used as part of a take task, and will be run within a console.
+# This is used as part of a rake task, and will be run within a console.
 # rubocop:disable Rails/Output
 # rubocop:disable Metrics/ParameterLists
 

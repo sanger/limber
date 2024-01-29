@@ -23,7 +23,7 @@ LRC Blood Aliquot:
   :type: Tube::Purpose
   :presenter_class: Presenters::SimpleTubePresenter
   :creator_class: LabwareCreators::TubeFromTube
-  :default_printer_type: :tube
+  :label_template: plate_a
 ###
 # scRNA Core Cell Extraction Blood Pipeline
 ###
