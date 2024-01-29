@@ -59,7 +59,7 @@
     donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
     child_tube_purpose = child_tube_v2.purpose.name
     destination = ((child_tube_purpose == 'LRC Bank Seq') ? 'Sequencing' : 'Contingency')
-    volume = 135
+    volume = 125
 
     rows_array << [
       source_well.name, # Well name
