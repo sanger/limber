@@ -238,6 +238,23 @@ FactoryBot.define do
         well_count { 2 }
       end
     end
+
+    factory :v2_plate_empty do
+      wells do
+        Array.new(well_count) do |i|
+          location = WellHelpers.well_at_column_index(i, size)
+          create well_factory,
+                 location: location,
+                 state: well_states[i] || state,
+                 outer_request: nil,
+                 downstream_tubes: nil,
+                 uuid: well_uuid_result % location,
+                 aliquot_count: 0,
+                 study: study,
+                 project: project
+        end
+      end
+    end
   end
 
   # Dummy stock plate for the stock_plate association

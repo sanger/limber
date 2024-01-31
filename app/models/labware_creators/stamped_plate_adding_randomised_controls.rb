@@ -52,7 +52,7 @@ module LabwareCreators
         retries_count += 1
       end
 
-      errors.add(:base, "Control well location randomisation failed to pass rules after #{max_retries} attempts")
+      raise StandardError, "Control well location randomisation failed to pass rules after #{max_retries} attempts"
     end
 
     def control_well_locations
@@ -69,7 +69,7 @@ module LabwareCreators
       return false if control_locations.uniq.length != control_locations.length
 
       # check the chosen locations against the purpose config rules (will add more options as required)
-      validate_control_rules_from_config(control_locations)
+      check_control_rules_from_config(control_locations)
     end
 
     private
@@ -89,7 +89,7 @@ module LabwareCreators
       control_locations
     end
 
-    def validate_control_rules_from_config(control_locations)
+    def check_control_rules_from_config(control_locations)
       list_of_rules.each do |rule|
         case rule.type
         when 'not'
@@ -100,8 +100,7 @@ module LabwareCreators
           return false if control_locations.any? { |location| rule.value.include?(location) }
         else
           # check for unrecognised rule type
-          errors.add(:base, "Unrecognised control locations rule type from purpose config #{rule.type}")
-          return false
+          raise StandardError, "Unrecognised control locations rule type from purpose config #{rule.type}"
         end
       end
       true
@@ -217,7 +216,7 @@ module LabwareCreators
     def create_control_in_child_well(control, child_well_v2, well_location)
       # check the well should be empty
       unless child_well_v2.aliquots.empty?
-        errors.add(:base, "Expecting child plate well to be empty at location #{well_location}")
+        raise StandardError, "Expecting child plate well to be empty at location #{well_location}"
       end
 
       control_v2 = create_control_sample(control, well_location)
@@ -244,7 +243,7 @@ module LabwareCreators
 
       return control_v2 if control_v2.save
 
-      errors.add(:base, "New control (type #{control.control_type}) did not save for location #{well_location}")
+      raise StandardError, "New control (type #{control.control_type}) did not save for location #{well_location}"
     end
 
     def update_control_sample_metadata(control_v2, well_location)
@@ -256,7 +255,7 @@ module LabwareCreators
         return
       end
 
-      errors.add(:base, "Could not update description on control for location #{well_location}")
+      raise StandardError, "Could not update description on control for location #{well_location}"
     end
 
     # create aliquot in child well to hold the control sample
@@ -274,7 +273,7 @@ module LabwareCreators
 
       return if control_aliquot_v2.save
 
-      errors.add(:base, "Could not create aliquot for location #{well_location}")
+      raise StandardError, "Could not create aliquot for location #{well_location}"
     end
 
     # filter on requests matching expected request type
@@ -298,7 +297,7 @@ module LabwareCreators
       # cancel the request
       return if req.update(state: 'cancelled')
 
-      errors.add(:base, "Could not cancel request for well location #{well_location}")
+      raise StandardError, "Could not cancel request for well location #{well_location}"
     end
   end
 end
