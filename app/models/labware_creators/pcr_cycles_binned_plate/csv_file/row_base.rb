@@ -30,10 +30,10 @@ module LabwareCreators
                 message: ->(object, _data) { WELL_NOT_RECOGNISED % object }
               },
               unless: :empty?
-    validate :input_amount_desired_within_expected_range?
-    validate :sample_volume_within_expected_range?
-    validate :diluent_volume_within_expected_range?
-    validate :pcr_cycles_within_expected_range?
+    validate :input_amount_desired_within_expected_range
+    validate :sample_volume_within_expected_range
+    validate :diluent_volume_within_expected_range
+    validate :pcr_cycles_within_expected_range
 
     delegate :well_column,
              :concentration_column,
@@ -79,8 +79,8 @@ module LabwareCreators
       @well.present? ? "row #{index + 2} [#{@well}]" : "row #{index + 2}"
     end
 
-    def input_amount_desired_within_expected_range?
-      in_range?(
+    def input_amount_desired_within_expected_range
+      in_range(
         'input_amount_desired',
         input_amount_desired,
         @row_config.input_amount_desired_min,
@@ -88,16 +88,16 @@ module LabwareCreators
       )
     end
 
-    def sample_volume_within_expected_range?
-      in_range?('sample_volume', sample_volume, @row_config.sample_volume_min, @row_config.sample_volume_max)
+    def sample_volume_within_expected_range
+      in_range('sample_volume', sample_volume, @row_config.sample_volume_min, @row_config.sample_volume_max)
     end
 
-    def diluent_volume_within_expected_range?
-      in_range?('diluent_volume', diluent_volume, @row_config.diluent_volume_min, @row_config.diluent_volume_max)
+    def diluent_volume_within_expected_range
+      in_range('diluent_volume', diluent_volume, @row_config.diluent_volume_min, @row_config.diluent_volume_max)
     end
 
-    def pcr_cycles_within_expected_range?
-      in_range?('pcr_cycles', pcr_cycles, @row_config.pcr_cycles_min, @row_config.pcr_cycles_max)
+    def pcr_cycles_within_expected_range
+      in_range('pcr_cycles', pcr_cycles, @row_config.pcr_cycles_min, @row_config.pcr_cycles_max)
     end
 
     # Checks whether a row value it within the specified range using min/max values
@@ -106,17 +106,13 @@ module LabwareCreators
     # field_name [string] The name of the field being validated
     # field_value [float or int] The value being tested
     # min/max [float or int] The minimum and maximum in the range
-    #
-    # @return [bool]
-    def in_range?(field_name, field_value, min, max)
-      return true if empty?
+    def in_range(field_name, field_value, min, max)
+      return if empty?
 
-      result = (min..max).cover? field_value
-      unless result
-        msg = format(IN_RANGE, min, max, to_s)
-        errors.add(field_name, msg)
-      end
-      result
+      return if (min..max).cover? field_value
+
+      msg = format(IN_RANGE, min, max, to_s)
+      errors.add(field_name, msg)
     end
 
     def empty?

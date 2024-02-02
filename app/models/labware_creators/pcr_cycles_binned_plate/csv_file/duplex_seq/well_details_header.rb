@@ -16,13 +16,11 @@ module LabwareCreators
       SUBMIT_FOR_SEQUENCING_COLUMN = 'Submit for sequencing (Y/N)?'
       SUB_POOL_COLUMN = 'Sub-Pool'
       COVERAGE_COLUMN = 'Coverage'
+      NOT_FOUND = 'could not be found in: '
 
-      validates :submit_for_sequencing_column,
-                presence: {
-                  message: ->(object, _data) { "could not be found in: '#{object}'" }
-                }
-      validates :sub_pool_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-      validates :coverage_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+      validates :submit_for_sequencing_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+      validates :sub_pool_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+      validates :coverage_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
 
       private
 

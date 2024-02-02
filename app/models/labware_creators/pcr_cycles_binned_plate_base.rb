@@ -103,7 +103,12 @@ module LabwareCreators
     # Upload the csv file onto the plate via api v1
     #
     def upload_file
-      raise '#upload_file must be implemented on subclasses'
+      parent_v1.qc_files.create_from_file!(file, customer_filename)
+    end
+
+    # filename for the customer file upload
+    def customer_filename
+      raise '#csv_file must be implemented on subclasses'
     end
 
     # Create class that will parse and validate the uploaded file

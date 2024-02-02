@@ -84,6 +84,7 @@ module LabwareCreators
     end
 
     def plate_barcode_header_row
+      # data[0] here is the first row in the uploaded file, and should contain the plate barcode
       @plate_barcode_header_row ||=
         PcrCyclesBinnedPlate::CsvFile::PlateBarcodeHeader.new(@parent_barcode, @data[0]) if @data[0]
     end
@@ -114,6 +115,7 @@ module LabwareCreators
     end
 
     def transfers
+      # sample row data starts on third row of file, 1st row is plate barcode header row, second blank
       @transfers ||= @data[3..].each_with_index.map { |row_data, index| create_row(index, row_data) }
     end
 

@@ -17,8 +17,9 @@ module LabwareCreators
       attr_reader :hyb_panel_column
 
       HYB_PANEL_COLUMN = 'Hyb Panel'
+      NOT_FOUND = 'could not be found in: '
 
-      validates :hyb_panel_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+      validates :hyb_panel_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
 
       private
 

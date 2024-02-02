@@ -30,7 +30,7 @@ module LabwareCreators
   class PcrCyclesBinnedPlateForDuplexSeq < PcrCyclesBinnedPlateBase
     self.page = 'pcr_cycles_binned_plate'
 
-    CUSTOMER_FILE_NAME = 'duplex_seq_customer_file.csv'
+    CUSTOMER_FILENAME = 'duplex_seq_customer_file.csv'
 
     def after_transfer!
       # called as part of the 'super' call in the 'save' method
@@ -57,11 +57,9 @@ module LabwareCreators
 
     private
 
-    #
-    # Upload the csv file onto the plate via api v1
-    #
-    def upload_file
-      parent_v1.qc_files.create_from_file!(file, CUSTOMER_FILE_NAME)
+    # filename for the customer file upload
+    def customer_filename
+      CUSTOMER_FILENAME
     end
 
     # Create class that will parse and validate the uploaded file

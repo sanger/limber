@@ -18,8 +18,8 @@ module LabwareCreators
 
       attr_reader :submit_for_sequencing, :sub_pool, :coverage
 
-      validate :submit_for_sequencing_has_expected_value?
-      validate :sub_pool_within_expected_range?
+      validate :submit_for_sequencing_has_expected_value
+      validate :sub_pool_within_expected_range
       validates :coverage,
                 presence: {
                   message: ->(object, _data) { COVERAGE_MISSING % object }
@@ -42,28 +42,27 @@ module LabwareCreators
         @submit_for_sequencing ||= (@submit_for_sequencing_as_string == 'Y')
       end
 
-      def submit_for_sequencing_has_expected_value?
-        return true if empty?
+      def submit_for_sequencing_has_expected_value
+        return if empty?
 
-        return true if %w[Y N].include? @submit_for_sequencing_as_string
+        return if %w[Y N].include? @submit_for_sequencing_as_string
 
         errors.add('submit_for_sequencing', format(SUBMIT_FOR_SEQ_INVALID, to_s))
       end
 
-      def sub_pool_within_expected_range?
-        return true if empty?
+      def sub_pool_within_expected_range
+        return if empty?
 
         # check the value is within range when we do expect a value to be present
         if submit_for_sequencing?
-          return in_range?('sub_pool', sub_pool, @row_config.sub_pool_min, @row_config.sub_pool_max)
+          in_range('sub_pool', sub_pool, @row_config.sub_pool_min, @row_config.sub_pool_max)
+        else
+          # expect sub-pool field to be blank, possible mistake by user if not
+          return if sub_pool.blank?
+
+          # sub-pool is NOT blank and should be
+          errors.add('sub_pool', format(SUB_POOL_NOT_BLANK, to_s))
         end
-
-        # expect sub-pool field to be blank, possible mistake by user if not
-        return true if sub_pool.blank?
-
-        # sub-pool is NOT blank and should be
-        errors.add('sub_pool', format(SUB_POOL_NOT_BLANK, to_s))
-        false
       end
     end
   end

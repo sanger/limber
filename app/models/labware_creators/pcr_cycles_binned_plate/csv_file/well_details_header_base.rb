@@ -30,28 +30,17 @@ module LabwareCreators
     SAMPLE_VOLUME_COLUMN = 'Sample volume'
     DILUENT_VOLUME_COLUMN = 'Diluent volume'
     PCR_CYCLES_COLUMN = 'PCR cycles'
+    NOT_FOUND = 'could not be found in: '
 
-    validates :well_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :concentration_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :sanger_sample_id_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :supplier_sample_name_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :input_amount_available_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :input_amount_desired_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :sample_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :diluent_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :pcr_cycles_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :well_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :concentration_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :sanger_sample_id_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :supplier_sample_name_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :input_amount_available_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :input_amount_desired_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :sample_volume_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :diluent_volume_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :pcr_cycles_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
 
     #
     # Generates a well details header from the well details header row array

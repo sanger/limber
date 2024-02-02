@@ -5,7 +5,7 @@ module LabwareCreators
   class PcrCyclesBinnedPlateForTNanoSeq < PcrCyclesBinnedPlateBase
     self.page = 'pcr_cycles_binned_plate_for_t_nano_seq'
 
-    CUSTOMER_FILE_NAME = 'targeted_nano_seq_customer_file.csv'
+    CUSTOMER_FILENAME = 'targeted_nano_seq_customer_file.csv'
 
     # rubocop:disable Metrics/AbcSize
     def after_transfer!
@@ -65,11 +65,9 @@ module LabwareCreators
 
     private
 
-    #
-    # Upload the csv file onto the plate via api v1
-    #
-    def upload_file
-      parent_v1.qc_files.create_from_file!(file, CUSTOMER_FILE_NAME)
+    # filename for the customer file upload
+    def customer_filename
+      CUSTOMER_FILENAME
     end
 
     # Create class that will parse and validate the uploaded file

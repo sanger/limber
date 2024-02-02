@@ -15,7 +15,7 @@ module LabwareCreators
 
       attr_reader :hyb_panel
 
-      validate :hyb_panel_is_present?
+      validate :hyb_panel_is_present
 
       delegate :hyb_panel_column, to: :header
 
@@ -24,16 +24,14 @@ module LabwareCreators
       end
 
       # Checks whether the Hyb Panel column is filled in
-      def hyb_panel_is_present?
-        return true if empty?
+      def hyb_panel_is_present
+        return if empty?
 
         # TODO: can we validate the hyb panel value? Does not appear to be tracked in LIMS.
-        result = hyb_panel.present?
-        unless result
-          msg = format(HYB_PANEL_MISSING, to_s)
-          errors.add('hyb_panel', msg)
-        end
-        result
+        return if hyb_panel.present?
+
+        msg = format(HYB_PANEL_MISSING, to_s)
+        errors.add('hyb_panel', msg)
       end
     end
   end
