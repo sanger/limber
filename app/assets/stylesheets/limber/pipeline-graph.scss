@@ -56,6 +56,24 @@
         @extend .mr-1;
       }
 
+      #show-pipeline-groups {
+        @extend .icon-pipeline_stack-light;
+        @extend .mr-1;
+      }
+      #show-pipeline-groups:hover {
+        @extend .icon-pipeline_single-light;
+        @extend .text-light:hover;
+      }
+
+      #show-pipelines {
+        @extend .icon-pipeline_single-light;
+        @extend .mr-1;
+      }
+      #show-pipelines:hover {
+        @extend .icon-pipeline_stack-light;
+        @extend .text-light:hover;
+      }
+
       #pipelines-back {
         @extend .icon-arrowleft-light;
         @extend .ml-1;
@@ -63,6 +81,9 @@
         width: 1.5em;
         background-size: 1.5em;
         vertical-align: text-bottom;
+      }
+      #pipelines-back:hover {
+        @extend .text-light:hover;
       }
     }
     ul {

@@ -229,6 +229,15 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::MergedPlate View class documentation}
 
 
+## LabwareCreators::PartialStampedPlateWithoutDilution
+
+{include:LabwareCreators::PartialStampedPlateWithoutDilution}
+
+  **This labware creator is unused**
+
+{LabwareCreators::PartialStampedPlateWithoutDilution View class documentation}
+
+
 ## LabwareCreators::PcrCyclesBinnedPlateBase
 
 {include:LabwareCreators::PcrCyclesBinnedPlateBase}
