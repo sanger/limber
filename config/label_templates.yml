@@ -17,6 +17,12 @@ default_printer_type_names:
   :tube_rack: 96 Well Plate
   :tube: 1D Tube
 
+plate_a:
+  :label_class: Labels::PlateLabel
+  :printer_type: 96 Well Plate
+  :pmb_template: sqsc_96plate_label_template_code39
+  :sprint_template: plate_96.yml.erb
+
 # NB. plate_384.yml.erb is for printing double-sticker 384-well plate labels.
 plate_6mm_double:
   :label_class: Labels::PlateDoubleLabel
