@@ -78,7 +78,7 @@ namespace :config do
         configuration[:robots] = ROBOT_CONFIG
 
         label_template_defaults = label_template_config['defaults_by_printer_type']
-        label_template_defaults.keys.each do |key|
+        label_template_defaults.each_key do |key|
           # converting the key to a symbol to keep it consistent with how it was before
           configuration[key.to_sym] = label_template_defaults[key.to_s]
         end
