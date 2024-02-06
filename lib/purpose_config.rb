@@ -27,6 +27,11 @@ class PurposeConfig
     end
   end
 
+  #
+  # @param name [String] name of the purpose, from the keys from the purposes.yml file
+  # @param options [Hash] values under the name key from the purposes.yml file
+  # @param label_template_config [Hash] hash version of the label_template_config.yml file
+  #
   def initialize(name, options, store, api, submission_templates, label_template_config)
     @name = name
     @options = options
