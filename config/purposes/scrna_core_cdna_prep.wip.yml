@@ -14,6 +14,33 @@ LRC PBMC Cryostor:
 # Plate containing defrosted PBMCs in PBS buffer.
 LRC PBMC Defrost PBS:
   :asset_type: plate
+  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
+  :file_links:
+    - name: 'Download Cellaca Input QC1'
+      id: cellaca_input_file
+      params:
+        page: 0
+    - name: 'Download Cellaca Input QC2'
+      id: cellaca_input_file
+      params:
+        page: 1
+    - name: 'Download Cellaca Input QC3'
+      id: cellaca_input_file
+      params:
+        page: 2
+    - name: 'Download Cellaca Input QC4'
+      id: cellaca_input_file
+      params:
+        page: 3
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: 50
+    live_cell_count:
+      name: Cell count
+      units: 'cells/ml'
+      default_threshold: 400000
+      decimal_places: 0
   :stock_plate: false
   :input_plate: false
 # Plate containing pooled PBMCs from different donors.
