@@ -100,15 +100,25 @@ class PurposeConfig
       ]
     }.freeze
 
+    # Registers plate purpose within Sequencescape.
+    #
+    # @return [Sequencescape::Api::V2::PlatePurpose] the registered plate purpose
     def register!
       puts "Creating #{name}"
-      api.plate_purpose.create!(
-        name: name,
-        stock_plate: config.fetch(:stock_plate, false),
-        cherrypickable_target: config.fetch(:cherrypickable_target, false),
-        input_plate: config.fetch(:input_plate, false),
-        size: config.fetch(:size, 96)
-      )
+
+      # Plate purpose is registered using the version 2 of the API. This
+      # maintains the behaviour of version 1, but includes an addditional
+      # asset_shape option if configured. It raises an error if the purpose
+      # cannot be created.
+      options =
+        {
+          name: name,
+          stock_plate: config.fetch(:stock_plate, false),
+          cherrypickable_target: config.fetch(:cherrypickable_target, false),
+          input_plate: config.fetch(:input_plate, false),
+          size: config.fetch(:size, 96)
+        }.merge(config.slice(:asset_shape))
+      Sequencescape::Api::V2::PlatePurpose.create!(options)
     end
   end
 
