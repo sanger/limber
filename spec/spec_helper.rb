@@ -170,9 +170,9 @@ RSpec.configure do |config|
       .parse_file(Rails.root.join('config/label_templates.yml'))
       .to_ruby
       .tap do |label_templates|
-        Settings.default_pmb_templates = label_templates['default_pmb_templates']
-        Settings.default_sprint_templates = label_templates['default_sprint_templates']
-        Settings.default_printer_type_names = label_templates['default_printer_type_names']
+        Settings.default_pmb_templates = label_templates['defaults_by_printer_type']['default_pmb_templates']
+        Settings.default_sprint_templates = label_templates['defaults_by_printer_type']['default_sprint_templates']
+        Settings.default_printer_type_names = label_templates['defaults_by_printer_type']['default_printer_type_names']
       end
   end
 

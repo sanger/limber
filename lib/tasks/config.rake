@@ -23,7 +23,7 @@ namespace :config do
       exit 1
     end
 
-    label_templates = YAML.load_file(Rails.root.join('config/label_templates.yml'))
+    label_template_config = YAML.load_file(Rails.root.join('config/label_templates.yml'))
 
     puts 'Fetching submission_templates...'
     submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
@@ -34,7 +34,7 @@ namespace :config do
 
     purpose_config =
       ConfigLoader::PurposesLoader.new.config.map do |name, options|
-        PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_templates)
+        PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_template_config)
       end
 
     puts 'Preparing purposes...'
@@ -77,8 +77,10 @@ namespace :config do
 
         configuration[:robots] = ROBOT_CONFIG
 
-        %i[default_pmb_templates default_sprint_templates default_printer_type_names].each do |key|
-          configuration[key] = label_templates[key.to_s]
+        label_template_defaults = label_template_config['defaults_by_printer_type']
+        label_template_defaults.keys.each do |key|
+          # converting the key to a symbol to keep it consistent with how it was before
+          configuration[key.to_sym] = label_template_defaults[key.to_s]
         end
 
         configuration[:submission_templates] = submission_templates
