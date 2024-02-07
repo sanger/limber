@@ -26,7 +26,7 @@ LRC PBMC Pools:
 # This plate has come from faculty and is entering the SeqOps pipeline for the first time here.
 LRC PBMC Pools Input:
   :asset_type: plate
-  :stock_plate: false
+  :stock_plate: true
   :input_plate: false
 # 10X Chromium 16-well chip
 LRC HT 5p Chip:
