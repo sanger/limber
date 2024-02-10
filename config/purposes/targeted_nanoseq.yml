@@ -29,7 +29,7 @@ LTN AL Lib:
       id: 'targeted_nanoseq_al_lib_concentrations_for_customer'
 LTN AL Lib Dil:
   :asset_type: plate
-  :presenter_class: Presenters::PcrCyclesBinnedPlatePresenter
+  :presenter_class: Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter
   :creator_class: LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq
   :csv_file_upload:
     :input_amount_desired_min: 0.0
