@@ -1,87 +1,89 @@
 ---
-default_pmb_templates:
-  :plate_double: plate_6mm_double_code39
-  :plate_a: sqsc_96plate_label_template_code39
-  :tube_rack: sqsc_96plate_label_template_code39
-  :tube: tube_label_template_1d
+defaults_by_printer_type:
+  pmb_templates:
+    :plate_double: plate_6mm_double_code39
+    :plate_a: sqsc_96plate_label_template_code39
+    :tube_rack: sqsc_96plate_label_template_code39
+    :tube: tube_label_template_1d
 
-default_sprint_templates:
-  :plate_double: plate_384.yml.erb
-  :plate_a: plate_96.yml.erb
-  :tube_rack: plate_96.yml.erb
-  :tube: tube_label_template_1d.yml.erb
+  sprint_templates:
+    :plate_double: plate_384.yml.erb
+    :plate_a: plate_96.yml.erb
+    :tube_rack: plate_96.yml.erb
+    :tube: tube_label_template_1d.yml.erb
 
-default_printer_type_names:
-  :plate_double: 384 Well Plate Double
-  :plate_a: 96 Well Plate
-  :tube_rack: 96 Well Plate
-  :tube: 1D Tube
+  printer_type_names:
+    :plate_double: 384 Well Plate Double
+    :plate_a: 96 Well Plate
+    :tube_rack: 96 Well Plate
+    :tube: 1D Tube
 
-plate_a:
-  :label_class: Labels::PlateLabel
-  :printer_type: 96 Well Plate
-  :pmb_template: sqsc_96plate_label_template_code39
-  :sprint_template: plate_96.yml.erb
+templates:
+  plate_a:
+    :label_class: Labels::PlateLabel
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96.yml.erb
 
-# NB. plate_384.yml.erb is for printing double-sticker 384-well plate labels.
-plate_6mm_double:
-  :label_class: Labels::PlateDoubleLabel
-  :printer_type: 384 Well Plate Double
-  :pmb_template: plate_6mm_double_code39
-  :sprint_template: plate_384.yml.erb
+  # NB. plate_384.yml.erb is for printing double-sticker 384-well plate labels.
+  plate_6mm_double:
+    :label_class: Labels::PlateDoubleLabel
+    :printer_type: 384 Well Plate Double
+    :pmb_template: plate_6mm_double_code39
+    :sprint_template: plate_384.yml.erb
 
-# The following label definition is not used by the current Heron (LTHR-384) pipeline.
-plate_6mm_double_qc:
-  :label_class: Labels::PlateDoubleLabelQc
-  :printer_type: 384 Well Plate Double
-  :pmb_template: plate_6mm_double_code39
-  :sprint_template: plate_384.yml.erb
+  # The following label definition is not used by the current Heron (LTHR-384) pipeline.
+  plate_6mm_double_qc:
+    :label_class: Labels::PlateDoubleLabelQc
+    :printer_type: 384 Well Plate Double
+    :pmb_template: plate_6mm_double_code39
+    :sprint_template: plate_384.yml.erb
 
-plate_xp:
-  :label_class: Labels::PlateLabelXp
-  :printer_type: 96 Well Plate
-  :pmb_template: sqsc_96plate_label_template_code39
-  :sprint_template: plate_96.yml.erb
+  plate_xp:
+    :label_class: Labels::PlateLabelXp
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96.yml.erb
 
-plate_split:
-  :label_class: Labels::PlateSplit
-  :printer_type: 96 Well Plate
-  :pmb_template: sqsc_96plate_label_template_code39
-  :sprint_template: plate_96.yml.erb
+  plate_split:
+    :label_class: Labels::PlateSplit
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96.yml.erb
 
-plate_lds_al_lib:
-  :label_class: Labels::PlateLabelLdsAlLib
-  :printer_type: 96 Well Plate
-  :pmb_template: sqsc_96plate_label_template_code39
-  :sprint_template: plate_96.yml.erb
+  plate_lds_al_lib:
+    :label_class: Labels::PlateLabelLdsAlLib
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96.yml.erb
 
-plate_ltn_al_lib:
-  :label_class: Labels::PlateLabelLtnAlLib
-  :printer_type: 96 Well Plate
-  :pmb_template: sqsc_96plate_label_template_code39
-  :sprint_template: plate_96.yml.erb
+  plate_ltn_al_lib:
+    :label_class: Labels::PlateLabelLtnAlLib
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96.yml.erb
 
-plate_cellaca_qc:
-  :label_class: Labels::PlateLabelCellacaQc
-  :printer_type: 96 Well Plate
-  :pmb_template: sqsc_96plate_label_template_code39
-  :sprint_template: plate_96.yml.erb
+  plate_cellaca_qc:
+    :label_class: Labels::PlateLabelCellacaQc
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96.yml.erb
 
-# Only Squix printers are used through SPrint for tube_traction_compatible.
-# pmb_template setting is for completeness; it is not used.
-tube_traction_compatible:
-  :label_class: Labels::TubeLabelTractionCompatible
-  :printer_type: 1D Tube
-  :pmb_template: tube_label_template_1d
-  :sprint_template: tube_label_traction_compatible.yml.erb
+  # Only Squix printers are used through SPrint for tube_traction_compatible.
+  # pmb_template setting is for completeness; it is not used.
+  tube_traction_compatible:
+    :label_class: Labels::TubeLabelTractionCompatible
+    :printer_type: 1D Tube
+    :pmb_template: tube_label_template_1d
+    :sprint_template: tube_label_traction_compatible.yml.erb
 
-# Only Squix printers are used through SPrint for plate_384_single.
-# pmb_template setting is for completeness; it is not used. Although
-# it is for printing single-sticker labels, printer_type is set to
-# "384 Well Plate Double" because barcode_printers table of sequencescape
-# database use "384 Well Plate Double" for all 384-well plate printers.
-plate_384_single:
-  :label_class: Labels::Plate384SingleLabel
-  :printer_type: 384 Well Plate Double
-  :pmb_template: sqsc_384plate_label_template_code39
-  :sprint_template: plate_384_single.yml.erb
+  # Only Squix printers are used through SPrint for plate_384_single.
+  # pmb_template setting is for completeness; it is not used. Although
+  # it is for printing single-sticker labels, printer_type is set to
+  # "384 Well Plate Double" because barcode_printers table of sequencescape
+  # database use "384 Well Plate Double" for all 384-well plate printers.
+  plate_384_single:
+    :label_class: Labels::Plate384SingleLabel
+    :printer_type: 384 Well Plate Double
+    :pmb_template: sqsc_384plate_label_template_code39
+    :sprint_template: plate_384_single.yml.erb
