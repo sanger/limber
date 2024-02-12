@@ -141,9 +141,9 @@ class PurposeConfig
     printer_type_key = default_options[:default_printer_type]
     {
       label_class: default_options[:label_class],
-      printer_type: @label_template_defaults.fetch('default_printer_type_names').fetch(printer_type_key),
-      pmb_template: @label_template_defaults.fetch('default_pmb_templates').fetch(printer_type_key),
-      sprint_template: @label_template_defaults.fetch('default_sprint_templates').fetch(printer_type_key)
+      printer_type: @label_template_defaults.fetch('printer_type_names').fetch(printer_type_key),
+      pmb_template: @label_template_defaults.fetch('pmb_templates').fetch(printer_type_key),
+      sprint_template: @label_template_defaults.fetch('sprint_templates').fetch(printer_type_key)
     }
   end
 end

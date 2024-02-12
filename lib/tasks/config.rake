@@ -79,8 +79,8 @@ namespace :config do
 
         label_template_defaults = label_template_config['defaults_by_printer_type']
         label_template_defaults.each_key do |key|
-          # converting the key to a symbol to keep it consistent with how it was before
-          configuration[key.to_sym] = label_template_defaults[key.to_s]
+          # adding 'default_' prefix and converting the key to a symbol, to keep it consistent with how it was before
+          configuration[('default_' + key).to_sym] = label_template_defaults[key.to_s]
         end
 
         configuration[:submission_templates] = submission_templates
