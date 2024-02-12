@@ -537,6 +537,11 @@ footer.version-info {
   line-height: 50px; /* Vertically center the text there */
   overflow: hidden;
   background-color: $gray-100;
+
+  .container {
+    @extend .text-center;
+    @extend .text-nowrap;
+  }
 }
 
 .asset-warnings {
