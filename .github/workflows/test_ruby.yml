@@ -29,8 +29,11 @@ jobs:
         run: bin/setup
       - name: Run rspec
         run: bundle exec rspec
-      - name: Cache test coverage
-        uses: actions/cache@v3
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
         with:
-          path: ${{ github.workspace }}/lcov.info
-          key: coverage-ruby-cache-${{ github.sha }}
+          files: ${{ github.workspace }}/lcov.info
+          flags: ruby
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: sanger/limber
