@@ -49,6 +49,7 @@ LRC PBMC Pools:
   :asset_type: plate
   :creator_class: LabwareCreators::DonorPoolingPlate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_scrna_core_donor_pooling'
   :stock_plate: false
   :input_plate: false
 # Plate containing pooled PBMCs from different donors.
