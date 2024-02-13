@@ -27,7 +27,7 @@
             :includes="tubeIncludes"
             :fields="tubeFields"
             :validators="scanValidation"
-            :colour-index="i"
+            :colour-index="colourIndex(i - 1)"
             :labware-type="'tube'"
             :valid-message="''"
             @change="updateTube(i, $event)"
@@ -64,6 +64,7 @@ import MultiStampTubesTransfers from './MultiStampTubesTransfers'
 import TubeArraySummary from './TubeArraySummary'
 import filterProps from './filterProps'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
+import { findUniqueIndex } from './tubeFunctions'
 
 // Multistamp tubes is used in Cardinal and scRNA pipelines to record the transfers of samples from
 // tubes to a plate.
@@ -243,6 +244,24 @@ export default {
   methods: {
     wellIndexToName(index) {
       return indexToName(index, this.targetRowsNumber)
+    },
+    colourIndex(tubeIndex) {
+      // determine the colour of the tube
+      let colour_index = 'empty'
+
+      const tube = this.tubes[tubeIndex]
+      if (tube.labware === null) return colour_index
+
+      const tube_machine_barcode = tube.labware.labware_barcode.machine_barcode
+      const machine_barcodes = this.tubes
+        .filter((tube) => tube.labware !== null)
+        .map((tube) => tube.labware.labware_barcode.machine_barcode)
+
+      if (tube.labware !== null) {
+        const barcode_index = findUniqueIndex(machine_barcodes, tube_machine_barcode)
+        if (barcode_index !== -1) colour_index = barcode_index + 1
+      }
+      return colour_index
     },
     updateTube(index, data) {
       this.$set(this.tubes, index - 1, { ...data, index: index - 1 })

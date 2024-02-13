@@ -281,5 +281,9 @@ export default {
     border: 2px #343a40 solid;
     border-radius: 7px;
   }
+
+  .colour-empty {
+    background-color: #e9ecef;
+  }
 }
 </style>
