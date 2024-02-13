@@ -48,6 +48,7 @@ LRC PBMC Defrost PBS:
 LRC PBMC Pools:
   :asset_type: plate
   :creator_class: LabwareCreators::DonorPoolingPlate
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :stock_plate: false
   :input_plate: false
 # Plate containing pooled PBMCs from different donors.
