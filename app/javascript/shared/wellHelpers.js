@@ -47,11 +47,11 @@ const rowNumToLetter = function (value) {
  * @param {Object} element - The element to find the unique index of.
  * @returns {Number} - The unique index of the provided index.
  * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 0) => -1
- * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 1) => 0
- * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 2) => 1
- * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 3) => 2
+ * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 1) => 1
+ * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 2) => 2
+ * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 3) => 3
  * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 4) => -1
- * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 5) => 3
+ * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 5) => 0
  * @example - findUniqueIndex([5, 1, 2, 1, 2, 3], 6) => -1
  */
 const findUniqueIndex = (items, element) => {
