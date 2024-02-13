@@ -213,13 +213,11 @@ export default {
     //   ...
     // }
     targetWells() {
-      const wells = {}
-      for (let i = 0; i < this.validTransfers.length; i++) {
-        wells[this.validTransfers[i].targetWell] = {
-          pool_index: this.validTransfers[i].tubeObj.index + 1,
-        }
-      }
-      return wells
+      return this.validTransfers.reduce((acc, transfer) => {
+        const tubeIndex = transfer.tubeObj.index
+        acc[transfer.targetWell] = { pool_index: this.colourIndex(tubeIndex) }
+        return acc
+      }, {})
     },
     tubeIncludes() {
       return filterProps.tubeIncludes
@@ -247,18 +245,18 @@ export default {
     },
     colourIndex(tubeIndex) {
       // determine the colour of the tube
-      let colour_index = 'empty'
+      let colour_index = -1
 
       const tube = this.tubes[tubeIndex]
       if (tube.labware === null) return colour_index
 
       const tube_machine_barcode = tube.labware.labware_barcode.machine_barcode
-      const machine_barcodes = this.tubes
+      const tube_machine_barcodes = this.tubes
         .filter((tube) => tube.labware !== null)
         .map((tube) => tube.labware.labware_barcode.machine_barcode)
 
       if (tube.labware !== null) {
-        const barcode_index = findUniqueIndex(machine_barcodes, tube_machine_barcode)
+        const barcode_index = findUniqueIndex(tube_machine_barcodes, tube_machine_barcode)
         if (barcode_index !== -1) colour_index = barcode_index + 1
       }
       return colour_index

@@ -282,7 +282,7 @@ export default {
     border-radius: 7px;
   }
 
-  .colour-empty {
+  .colour--1 {
     background-color: #e9ecef;
   }
 }
