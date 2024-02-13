@@ -27,6 +27,4 @@ jobs:
         with:
           files: ${{ github.workspace }}/app/javascript/coverage/lcov.info
           flags: javascript
-        env:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: sanger/limber
