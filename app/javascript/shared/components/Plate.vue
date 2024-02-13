@@ -19,11 +19,7 @@
           {{ row | toLetter }}
         </th>
         <td v-for="column in columns" :key="column">
-          <lb-well
-            v-bind="wellAt(row, column)"
-            :position="position(row, column)"
-            @onwellclicked="onWellClicked"
-          />
+          <lb-well v-bind="wellAt(row, column)" :position="position(row, column)" @onwellclicked="onWellClicked" />
         </td>
       </tr>
     </tbody>
