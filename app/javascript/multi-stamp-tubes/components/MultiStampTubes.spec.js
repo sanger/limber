@@ -242,22 +242,22 @@ describe('MultiStampTubes', () => {
     ])
   })
 
-  it('passes on the layout', () => {
+  it('passes on the layout, assigning colour by machine barcode', () => {
     const tube1 = {
       state: 'valid',
-      labware: tubeFactory({ uuid: 'tube-uuid-1' }),
+      labware: tubeFactory({ uuid: 'tube-uuid-1', labware_barcode: { machine_barcode: 'barcode-1' } }),
     }
     const tube2 = {
       state: 'valid',
-      labware: tubeFactory({ uuid: 'tube-uuid-2' }),
+      labware: tubeFactory({ uuid: 'tube-uuid-2', labware_barcode: { machine_barcode: 'barcode-2' } }),
     }
     const tube3 = {
       state: 'valid',
-      labware: tubeFactory({ uuid: 'tube-uuid-3' }),
+      labware: tubeFactory({ uuid: 'tube-uuid-3', labware_barcode: { machine_barcode: 'barcode-2' } }),
     }
     const tube4 = {
       state: 'valid',
-      labware: tubeFactory({ uuid: 'tube-uuid-4' }),
+      labware: tubeFactory({ uuid: 'tube-uuid-4', labware_barcode: { machine_barcode: 'barcode-4' } }),
     }
     const wrapper = wrapperFactory()
     wrapper.vm.updateTube(1, tube1)
@@ -268,8 +268,8 @@ describe('MultiStampTubes', () => {
     expect(wrapper.vm.targetWells).toEqual({
       A1: { pool_index: 1 },
       B1: { pool_index: 2 },
-      C1: { pool_index: 3 },
-      D1: { pool_index: 4 },
+      C1: { pool_index: 2 },
+      D1: { pool_index: 3 },
     })
   })
 
