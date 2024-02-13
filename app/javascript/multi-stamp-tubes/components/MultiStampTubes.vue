@@ -59,12 +59,11 @@ import resources from 'shared/resources'
 import { transferTubesCreator } from 'shared/transfersCreators'
 import { transfersForTubes } from 'shared/transfersLayouts'
 import { buildTubeObjs } from 'shared/tubeHelpers'
-import { indexToName } from 'shared/wellHelpers'
+import { findUniqueIndex, indexToName } from 'shared/wellHelpers'
 import MultiStampTubesTransfers from './MultiStampTubesTransfers'
 import TubeArraySummary from './TubeArraySummary'
 import filterProps from './filterProps'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
-import { findUniqueIndex } from './tubeFunctions'
 
 // Multistamp tubes is used in Cardinal and scRNA pipelines to record the transfers of samples from
 // tubes to a plate.

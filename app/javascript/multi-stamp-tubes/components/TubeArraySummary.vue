@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { findUniqueIndex } from './tubeFunctions'
+import { findUniqueIndex } from 'shared/wellHelpers'
 
 export default {
   name: 'TubeArraySummary',
