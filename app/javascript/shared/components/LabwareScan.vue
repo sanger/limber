@@ -283,6 +283,7 @@ export default {
   }
 
   .colour--1 {
+    // --1 is 'dash minus one': used to indicate an empty well
     background-color: #e9ecef;
   }
 }
