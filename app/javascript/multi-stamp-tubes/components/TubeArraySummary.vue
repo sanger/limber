@@ -8,7 +8,7 @@
     <thead>
       <tr>
         <th class="first-col" />
-        <th id="header_well_colour" class="headingcell">Well Colour</th>
+        <th id="header_tube_colour" class="headingcell">Tube Colour</th>
         <th id="header_human_barcode" class="headingcell">Human Barcode</th>
         <th id="header_machine_barcode" class="headingcell">Machine Barcode</th>
         <th id="header_replicates" class="headingcell">Replicates</th>
@@ -19,7 +19,7 @@
         <th class="first-col">
           {{ (rowIndex + 1).toString() + '.' }}
         </th>
-        <td :id="`row_well_colour_index_${rowIndex}`" class="well_colour_cell">
+        <td :id="`row_tube_colour_index_${rowIndex}`" class="tube_colour_cell">
           <div v-if="value.well_colour" :class="['aliquot', `colour-${value.well_colour}`]"></div>
         </td>
         <td :id="`row_human_barcode_index_${rowIndex}`" class="summarycell">
@@ -116,7 +116,7 @@ export default {
   text-align: left;
   padding: 4px;
 }
-.well_colour_cell {
+.tube_colour_cell {
   @extend .summarycell;
   text-align: center;
 }
