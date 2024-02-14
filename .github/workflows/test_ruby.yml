@@ -8,7 +8,7 @@ env:
   BUNDLE_WITHOUT: 'development lint'
 
 jobs:
-  ruby_test: # note: this name is referenced in upload_coverage.yml
+  ruby_test:
     runs-on: ubuntu-latest
     env:
       TZ: Europe/London

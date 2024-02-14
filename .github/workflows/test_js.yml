@@ -5,7 +5,7 @@ on:
   - pull_request
 
 jobs:
-  js_test: # note: this name is referenced in upload_coverage.yml
+  js_test:
     runs-on: ubuntu-latest
     env:
       TZ: Europe/London
