@@ -37,6 +37,11 @@ module Presenters::Statemachine
           include DoesNotAllowLibraryPassing
         end
 
+        state :processed_4 do
+          include StateAllowsSingleChildCreation
+          include DoesNotAllowLibraryPassing
+        end
+
         state :passed do
           include StateAllowsSingleChildCreation
           include DoesNotAllowLibraryPassing

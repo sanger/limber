@@ -1,10 +1,17 @@
+<div id="filter-bar">
+  <input type="text" id="filter" placeholder="Filter specific pipelines or purposes" />
+</div>
 <div id="pipeline-graph">
   <div id="graph"></div>
   <section id="key" class="card">
-    <header>Key</header>
+    <header>
+      <span id="pipelines-key-text">Pipelines Key</span>
+      <span id="show-pipeline-groups" class="d-none"  role="button" title="Show pipeline groups"></span>
+      <span id="show-pipelines" role="button" title="Show pipelines"></span> <!-- this is the default button as there is no class="d-none" -->
+      <span id="pipelines-back" class="d-none" role="button" title="Show previous filter"></span>
+    </header>
     <ul id='pipelines-key'>
     </ul>
   </section>
 </div>
 <%= javascript_pack_tag 'pipeline-graph' %>
-

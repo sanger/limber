@@ -126,7 +126,7 @@ module LabwareCreators
       current_pool = 0
 
       # wells_grouped_by_collected_by = {0=>['w1', 'w4'], 1=>['w6', 'w2'], 2=>['w9', 'w23']}
-      wells_grouped_by_collected_by.each do |_collected_by, wells|
+      wells_grouped_by_collected_by.each_value do |wells|
         # Loop through the wells for that collected_by
         wells.each do |well|
           # Create pool if it doesnt already exist

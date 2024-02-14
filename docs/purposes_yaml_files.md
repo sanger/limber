@@ -20,7 +20,7 @@ each purpose once), although is subject to race conditions if run concurrently.
 `rake config:generate` is run automatically on deployment, and is run in series
 on each host to avoid the race conditions.
 
-Filenames, and the grouping of pipelines within files, have no functional
+Filenames, and the grouping of purposes within files, have no functional
 relevance, and are intended for organizational reasons.
 
 Loading of yaml files is handled by {ConfigLoader::PurposesLoader} which
@@ -359,8 +359,8 @@ which describes the specific fields (barcode, date, user, etc...) which will be
 displayed on a Plate/Tube label, and a print my barcode template, which
 describes how those fields are physically laid out on the label.
 
-If unspecified, falls back on the default label template for the given printer
-specified in default_pmb_templates in {file:config/label_templates.yml}.
+If unspecified, falls back on the default label template for the given printer type
+specified in the defaults_by_printer_type section in {file:config/label_templates.yml}.
 
 ```yaml
 :label_template: plate_xp
