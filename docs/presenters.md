@@ -176,7 +176,8 @@ GBS Stock, GBS-96 Stock, and scRNA-384 Stock
 
 {include:Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter}
 
-**This presenter is unused**
+Used directly in 1 purposes:
+LTN AL Lib Dil
 
 {Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter View class documentation}
 
@@ -185,7 +186,8 @@ GBS Stock, GBS-96 Stock, and scRNA-384 Stock
 
 {include:Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter}
 
-**This presenter is unused**
+Used directly in 1 purposes:
+LDS AL Lib Dil
 
 {Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter View class documentation}
 
