@@ -69,9 +69,10 @@ module StateChangers
   end
 
   # Plate state changer to automatically complete specified work requests.
-  class AutomaticPlateStateChanger < DefaultStateChanger
+  # This is the abstract version.
+  class AutomaticLabwareStateChanger < DefaultStateChanger
     def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
+      raise 'Must be implemented on subclass'
     end
 
     def purpose_uuid
@@ -95,10 +96,29 @@ module StateChangers
     # rubocop:enable Style/OptionalBooleanParameter
 
     def complete_outstanding_requests
-      in_prog_submissions = v2_labware.in_progress_submission_uuids(request_type_key: work_completion_request_type)
+      in_prog_submissions =
+        v2_labware.in_progress_submission_uuids(request_type_to_complete: work_completion_request_type)
       return if in_prog_submissions.blank?
 
       api.work_completion.create!(submissions: in_prog_submissions, target: v2_labware.uuid, user: user_uuid)
+    end
+  end
+
+  # This version of the AutomaticLabwareStateChanger is used by Plates.
+  class AutomaticPlateStateChanger < AutomaticLabwareStateChanger
+    def v2_labware
+      @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
+    end
+  end
+
+  # This version of the AutomaticLabwareStateChanger is used by Tubes.
+  class AutomaticTubeStateChanger < AutomaticLabwareStateChanger
+    def v2_labware
+      @v2_labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
+    end
+
+    def labware
+      @labware ||= v2_labware
     end
   end
 end
