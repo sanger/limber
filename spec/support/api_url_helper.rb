@@ -108,8 +108,13 @@ module ApiUrlHelper
     # Builds the basic v2 tube finding query.
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
-      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+      if custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
+          .with(custom_includes, nil, { uuid: tube.uuid })
+          .and_return(tube)
+      else
+        allow(Sequencescape::Api::V2).to receive(:tube_for_presenter).with(uuid: tube.uuid).and_return(tube)
+      end
     end
 
     def stub_v2_project(project)
