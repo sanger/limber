@@ -89,7 +89,7 @@
     ul {
       @extend .list-group;
       @extend .list-group-flush;
-      max-height: 500px;
+      max-height: 50vh;
       overflow-y: auto;
 
       li {

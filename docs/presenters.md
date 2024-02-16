@@ -172,24 +172,6 @@ GBS Stock, GBS-96 Stock, and scRNA-384 Stock
 {Presenters::MinimalStockPlatePresenter View class documentation}
 
 
-### Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter
-
-{include:Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter}
-
-**This presenter is unused**
-
-{Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter View class documentation}
-
-
-### Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter
-
-{include:Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter}
-
-**This presenter is unused**
-
-{Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter View class documentation}
-
-
 ### Presenters::PcrPresenter
 
 {include:Presenters::PcrPresenter}
