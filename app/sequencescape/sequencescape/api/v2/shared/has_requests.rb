@@ -61,9 +61,7 @@ module Sequencescape::Api::V2::Shared
       requests = aliquots.flat_map(&:request).compact
 
       if request_type_to_complete.present?
-        requests.select do |r|
-          r.request_type_key == request_type_to_complete
-        end
+        requests.select { |r| r.request_type_key == request_type_to_complete }
       else
         requests
       end
