@@ -252,6 +252,19 @@ FactoryBot.define do
       end
     end
 
+    factory :multi_stamp_tubes_using_tube_rack_scan_purpose_config do
+      creator_class do
+        {
+          name: 'LabwareCreators::MultiStampTubesUsingTubeRackScan',
+          args: {
+            expected_request_type_keys: ['parent_tube_library_request_type'],
+            expected_tube_purpose_names: ['Parent Tube Purpose Type 1', 'Parent Tube Purpose Type 2'],
+            filename_for_tube_rack_scan: 'tube_rack_scan.csv'
+          }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
