@@ -7,6 +7,8 @@ FactoryBot.define do
     sequence(:id, &:to_s)
     uuid
 
+    requests_as_source { [] }
+
     transient { qc_results { [] } }
 
     after(:build) do |receptacle, evaluator|
