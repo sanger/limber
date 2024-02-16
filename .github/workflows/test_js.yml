@@ -4,13 +4,12 @@ on:
   - push
   - pull_request
 
-env:
-  TZ: Europe/London
-
 jobs:
-  test:
-    name: Test
+  js_test:
     runs-on: ubuntu-latest
+    env:
+      TZ: Europe/London
+
     steps:
       - uses: actions/checkout@v4
       - name: Setup node
@@ -23,3 +22,11 @@ jobs:
         run: yarn install
       - name: Run yarn test
         run: yarn test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: javascript,${{ github.event_name }}
+          fail_ci_if_error: true
+          disable_search: true
+          files: ${{ github.workspace }}/app/javascript/coverage/lcov.info
