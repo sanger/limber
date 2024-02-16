@@ -6,7 +6,10 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
 
-  DEFAULT_INCLUDES = [:purpose, 'aliquots.request.request_type'].freeze
+  DEFAULT_INCLUDES = [
+    :purpose,
+    'receptacle.aliquots.request.request_type,receptacle.requests_as_source.request_type'
+  ].freeze
 
   self.tube = true
 
@@ -39,12 +42,9 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2::Tube.includes(*includes).where(**options).paginate(paginate).all
   end
 
-  # Dummied out for the moment. But no real reason not to add it to the API.
-  # This is accessed through the Receptacle
-  # TODO: allow this method and delegate it?
-  def requests_as_source
-    []
-  end
+  delegate :requests_as_source, to: :receptacle
+
+  delegate :aliquots, to: :receptacle
 
   #
   # Override the model used in form/URL helpers
