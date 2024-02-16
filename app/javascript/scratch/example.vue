@@ -11,6 +11,16 @@ export default {
       message: 'Hello, World!',
     }
   },
+  computed: {
+    hello() {
+      return 'Hello'
+    },
+  },
+  methods: {
+    world() {
+      return 'World!'
+    },
+  },
 }
 </script>
 
