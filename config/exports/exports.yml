@@ -15,9 +15,9 @@ duplex_seq_pcr_xp_concentrations_for_custom_pooling:
 targeted_nanoseq_al_lib_concentrations_for_customer:
   csv: targeted_nanoseq_al_lib_concentrations_for_customer
   plate_includes: wells.qc_results,wells.aliquots.sample.sample_metadata
-targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling:
-  csv: targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling
-  plate_includes: wells.qc_results
+targeted_nanoseq_pcr_xp_merged_file:
+  csv: targeted_nanoseq_pcr_xp_merged_file
+  plate_includes: wells.qc_results,wells.aliquots.sample.sample_metadata,wells.aliquots.request.poly_metadata
   ancestor_purpose: LTN AL Lib Dil
 hamilton_aggregate_cherrypick:
   csv: hamilton_aggregate_cherrypick

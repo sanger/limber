@@ -2,7 +2,7 @@
 
 # Part of the Labware creator classes
 module LabwareCreators
-  require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
+  require_dependency 'labware_creators/pcr_cycles_binned_plate/csv_file_base'
 
   #
   # Class PlateBarcodeHeader provides a simple wrapper for handling and validating
@@ -22,9 +22,10 @@ module LabwareCreators
     BARCODE_NOT_MATCHING =
       'The plate barcode in the file (%s) does not match the barcode of ' \
         'the plate being uploaded to (%s), please check you have the correct file.'
+    NOT_FOUND = 'could not be found in: '
 
-    validates :barcode_lbl_index, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :plate_barcode, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :barcode_lbl_index, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :plate_barcode, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
     validate :plate_barcode_matches_parent?
 
     #
