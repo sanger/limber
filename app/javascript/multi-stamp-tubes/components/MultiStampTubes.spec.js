@@ -35,6 +35,12 @@ describe('MultiStampTubes', () => {
     })
   }
 
+  it('renders the header', () => {
+    const wrapper = wrapperFactory()
+
+    expect(wrapper.findComponent('b-card-stub').attributes('header')).toEqual('Sample Arraying: parent → purpose')
+  })
+
   it('disables creation if there are no tubes', () => {
     const wrapper = wrapperFactory()
 
