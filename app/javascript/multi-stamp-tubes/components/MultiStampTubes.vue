@@ -250,17 +250,16 @@ export default {
       let colour_index = -1
 
       const tube = this.tubes[tubeIndex]
-      if (tube.labware === null) return colour_index
+      if (tube.state !== 'valid') return colour_index
 
       const tube_machine_barcode = tube.labware.labware_barcode.machine_barcode
       const tube_machine_barcodes = this.tubes
-        .filter((tube) => tube.labware !== null)
+        .filter((tube) => tube.state === 'valid')
         .map((tube) => tube.labware.labware_barcode.machine_barcode)
 
-      if (tube.labware !== null) {
-        const barcode_index = findUniqueIndex(tube_machine_barcodes, tube_machine_barcode)
-        if (barcode_index !== -1) colour_index = barcode_index + 1
-      }
+      const barcode_index = findUniqueIndex(tube_machine_barcodes, tube_machine_barcode)
+      if (barcode_index !== -1) colour_index = barcode_index + 1
+
       return colour_index
     },
     updateTube(index, data) {
