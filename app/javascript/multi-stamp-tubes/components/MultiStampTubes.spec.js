@@ -266,10 +266,10 @@ describe('MultiStampTubes', () => {
     wrapper.vm.updateTube(4, tube4)
 
     expect(wrapper.vm.targetWells).toEqual({
-      A1: { pool_index: 1 },
-      B1: { pool_index: 2 },
-      C1: { pool_index: 2 },
-      D1: { pool_index: 3 },
+      A1: { colour_index: 1 },
+      B1: { colour_index: 2 },
+      C1: { colour_index: 2 },
+      D1: { colour_index: 3 },
     })
   })
 
