@@ -5,7 +5,7 @@ import Well from 'shared/components/Well.vue'
 
 describe('Well', () => {
   const wrapperWithoutAliquot = shallowMount(Well, {
-    propsData: { pool_index: null },
+    propsData: { position: 'A1', colour_index: null },
   })
 
   it('renders a well', () => {
@@ -57,7 +57,7 @@ describe('Well', () => {
   })
 
   const wrapperWithTagMapIds = shallowMount(Well, {
-    propsData: { colour_index: 1, tagMapIds: [5] },
+    propsData: { position: 'A1', colour_index: 1, tagMapIds: [5] },
   })
 
   it('renders a well with Tag Map Id displayed', () => {
@@ -74,6 +74,7 @@ describe('Well', () => {
 
   const wrapperWithTagClash = shallowMount(Well, {
     propsData: {
+      position: 'A1',
       colour_index: 1,
       tagMapIds: [5],
       validity: { valid: false, message: 'Tag clash detected' },
@@ -90,6 +91,7 @@ describe('Well', () => {
 
   const wrapperWithInvalidTag = shallowMount(Well, {
     propsData: {
+      position: 'A1',
       colour_index: 1,
       tagMapIds: [-1],
       validity: { valid: false, message: 'No tag in this well' },
@@ -103,6 +105,7 @@ describe('Well', () => {
   it('renders a well with multiple Tag Map Ids displayed according to the value of tagIndex', async () => {
     const wrapperWithMultipleAliquots = shallowMount(Well, {
       propsData: {
+        position: 'A1',
         colour_index: 1,
         tagMapIds: [1, 2, 3, 4],
         validity: { valid: true, message: '' },
