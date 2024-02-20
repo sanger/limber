@@ -214,7 +214,7 @@ export default {
     targetWells() {
       return this.validTransfers.reduce((acc, transfer) => {
         const tubeIndex = transfer.tubeObj.index
-        acc[transfer.targetWell] = { pool_index: this.colourIndex(tubeIndex) }
+        acc[transfer.targetWell] = { colour_index: this.colourIndex(tubeIndex) }
         return acc
       }, {})
     },
