@@ -1,12 +1,22 @@
 <template>
   <div :id="wellId" :class="['well', position]">
-    <div v-if="colour_index" :id="'aliquot_' + position" :class="['aliquot', colourClass]">
+    <div
+      v-if="colour_index"
+      :id="'aliquot_' + position"
+      v-b-tooltip.hover="tooltipText"
+      :class="['aliquot', colourClass]"
+    >
       <span :class="[linethroughClass, 'tag']" @click="onWellClicked">{{ tagMapIdDisplay() }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+
+Vue.use(BootstrapVue)
+
 export default {
   name: 'Well',
   props: {
@@ -39,6 +49,9 @@ export default {
     },
     linethroughClass() {
       return this.validity.valid ? '' : 'line-through'
+    },
+    tooltipText() {
+      return `${this.position}`
     },
   },
   created: function () {
