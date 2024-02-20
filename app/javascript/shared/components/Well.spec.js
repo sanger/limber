@@ -45,6 +45,17 @@ describe('Well', () => {
     expect(emitted.onwellclicked[0]).toEqual(['A1'])
   })
 
+  it('provides a tooltip with the well position', () => {
+    expect(wrapperWithAliquot.vm.tooltipText).toEqual('A1')
+  })
+
+  it('renders a tooltip with the specified label', () => {
+    const wrapperWithTooltipLabel = shallowMount(Well, {
+      propsData: { position: 'A1', tooltip_label: 'Test' },
+    })
+    expect(wrapperWithTooltipLabel.vm.tooltipText).toEqual('A1 - Test')
+  })
+
   const wrapperWithTagMapIds = shallowMount(Well, {
     propsData: { colour_index: 1, tagMapIds: [5] },
   })
