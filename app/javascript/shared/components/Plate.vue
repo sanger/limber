@@ -19,7 +19,12 @@
           {{ row | toLetter }}
         </th>
         <td v-for="column in columns" :key="column">
-          <lb-well v-bind="wellAt(row, column)" :position="position(row, column)" @onwellclicked="onWellClicked" />
+          <lb-well
+            v-bind="wellAt(row, column)"
+            :tooltip_label="tooltip_label(row, column)"
+            :position="position(row, column)"
+            @onwellclicked="onWellClicked"
+          />
         </td>
       </tr>
     </tbody>
@@ -55,6 +60,9 @@ export default {
     },
   },
   methods: {
+    tooltip_label: function (row, column) {
+      return this.wellAt(row, column).human_barcode
+    },
     position: function (row, column) {
       return `${rowNumToLetter(row)}${column}`
     },

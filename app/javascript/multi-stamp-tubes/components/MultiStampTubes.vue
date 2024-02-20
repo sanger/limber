@@ -214,7 +214,10 @@ export default {
     targetWells() {
       return this.validTransfers.reduce((acc, transfer) => {
         const tubeIndex = transfer.tubeObj.index
-        acc[transfer.targetWell] = { colour_index: this.colourIndex(tubeIndex) }
+        acc[transfer.targetWell] = {
+          colour_index: this.colourIndex(tubeIndex),
+          human_barcode: this.tubes[tubeIndex].labware.labware_barcode.human_barcode,
+        }
         return acc
       }, {})
     },
