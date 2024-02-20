@@ -152,6 +152,21 @@ FactoryBot.define do
       end
     end
 
+    factory :targeted_nano_seq_customer_csv_file_upload_purpose_config do
+      csv_file_upload do
+        {
+          input_amount_desired_min: 0.0,
+          input_amount_desired_max: 50.0,
+          sample_volume_min: 0.2,
+          sample_volume_max: 50.0,
+          diluent_volume_min: 0.0,
+          diluent_volume_max: 50.0,
+          pcr_cycles_min: 1,
+          pcr_cycles_max: 20
+        }
+      end
+    end
+
     # Configuration for an aggregation plate
     factory :aggregation_purpose_config do
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
