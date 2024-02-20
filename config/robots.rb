@@ -1225,6 +1225,25 @@ ROBOT_CONFIG =
       class: 'Robots::QuadrantRobot'
     )
 
+    custom_robot(
+      'bravo-gbs-pcr1-to-gbs-pcr2',
+      name: 'bravo GBS PCR1 => GBS PCR2',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'GBS PCR1',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(6).barcode => {
+          purpose: 'GBS PCR2',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
     # GnT Stuff, might change a lot.
     custom_robot(
       'hamilton-gnt-stock-to-gnt-scdna-stock',
