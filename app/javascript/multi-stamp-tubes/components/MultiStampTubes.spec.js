@@ -16,10 +16,12 @@ describe('MultiStampTubes', () => {
     // triggering change events on unmounted components
     return shallowMount(MultiStampTubes, {
       propsData: {
+        parentPurposeName: 'parent',
+        purposeName: 'purpose',
+        purposeUuid: 'test',
         targetRows: '8',
         targetColumns: '12',
         sourceTubes: '4',
-        purposeUuid: 'test',
         requestsFilter: 'null',
         targetUrl: 'example/example',
         locationObj: mockLocation,
