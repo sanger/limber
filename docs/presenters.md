@@ -54,14 +54,13 @@ LBC 5p GEX Dil
 {Presenters::NormalisedBinnedPlatePresenter View class documentation}
 
 
-### Presenters::PcrCyclesBinnedPlatePresenter
+### Presenters::PcrCyclesBinnedPlatePresenterBase
 
-{include:Presenters::PcrCyclesBinnedPlatePresenter}
+{include:Presenters::PcrCyclesBinnedPlatePresenterBase}
 
-Used directly in 2 purposes:
-LDS AL Lib Dil and LTN AL Lib Dil
+**This presenter is unused**
 
-{Presenters::PcrCyclesBinnedPlatePresenter View class documentation}
+{Presenters::PcrCyclesBinnedPlatePresenterBase View class documentation}
 
 
 ### Presenters::StandardPresenter

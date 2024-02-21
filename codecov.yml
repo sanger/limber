@@ -1,0 +1,2 @@
+ignore:
+  - '**/*.vue' # ignore all .vue files - TODO: remove this after Vue SFC is supported (see https://github.com/sanger/limber/pull/1585)
