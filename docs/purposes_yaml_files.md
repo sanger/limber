@@ -359,8 +359,8 @@ which describes the specific fields (barcode, date, user, etc...) which will be
 displayed on a Plate/Tube label, and a print my barcode template, which
 describes how those fields are physically laid out on the label.
 
-If unspecified, falls back on the default label template for the given printer
-specified in default_pmb_templates in {file:config/label_templates.yml}.
+If unspecified, falls back on the default label template for the given printer type
+specified in the defaults_by_printer_type section in {file:config/label_templates.yml}.
 
 ```yaml
 :label_template: plate_xp

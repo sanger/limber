@@ -29,8 +29,8 @@ LTN AL Lib:
       id: 'targeted_nanoseq_al_lib_concentrations_for_customer'
 LTN AL Lib Dil:
   :asset_type: plate
-  :presenter_class: Presenters::PcrCyclesBinnedPlatePresenter
-  :creator_class: LabwareCreators::PcrCyclesBinnedPlate
+  :presenter_class: Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter
+  :creator_class: LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq
   :csv_file_upload:
     :input_amount_desired_min: 0.0
     :input_amount_desired_max: 10000.0
@@ -40,11 +40,6 @@ LTN AL Lib Dil:
     :diluent_volume_max: 50.0
     :pcr_cycles_min: 1
     :pcr_cycles_max: 20
-    :submit_for_sequencing_valid_values:
-      - 'Y'
-      - 'N'
-    :sub_pool_min: 1
-    :sub_pool_max: 96
   :file_links:
     - name: 'Download Hamilton AL Lib to Dilution CSV'
       id: 'hamilton_ltn_al_lib_to_ltn_al_lib_dil'
@@ -65,8 +60,8 @@ LTN Lib PCR XP:
   :default_printer_type: :plate_b
   :label_template: plate_xp
   :file_links:
-    - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
-      id: 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling'
+    - name: 'Download Merged File CSV'
+      id: 'targeted_nanoseq_pcr_xp_merged_file'
 LTN Custom Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
