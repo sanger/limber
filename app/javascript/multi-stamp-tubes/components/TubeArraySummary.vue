@@ -63,7 +63,7 @@ export default {
     tubesDict() {
       var summary_dict = {}
       const machine_barcodes = this.tubes.reduce((acc, tube) => {
-        if (tube.labware != null) {
+        if (tube.labware && tube.labware.state == 'passed') {
           acc.push(tube.labware.labware_barcode.machine_barcode)
         }
         return acc

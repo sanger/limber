@@ -58,6 +58,45 @@ describe('TubeArraySummary', () => {
     }
   }
 
+  const mixtureOfTubesWithDifferingStates = []
+  for (let i = 0; i < 96; i++) {
+    switch (true) {
+      case i < 6:
+        mixtureOfTubesWithDifferingStates.push({
+          index: i.toString(),
+          labware: {
+            labware_barcode: { human_barcode: 'PASSED', machine_barcode: '1000000000001' },
+            state: 'passed',
+          },
+          state: 'valid',
+        })
+        break
+      case i < 12:
+        mixtureOfTubesWithDifferingStates.push({
+          index: i.toString(),
+          labware: {
+            labware_barcode: { human_barcode: 'PENDING', machine_barcode: '1000000000002' },
+            state: 'pending',
+          },
+          state: 'valid',
+        })
+        break
+      case i < 18:
+        mixtureOfTubesWithDifferingStates.push({
+          index: i.toString(),
+          labware: {
+            labware_barcode: { human_barcode: 'UNKNOWN', machine_barcode: '1000000000003' },
+            state: 'unknown',
+          },
+          state: 'valid',
+        })
+        break
+      default:
+        mixtureOfTubesWithDifferingStates.push({ index: i.toString(), labware: null, state: 'empty' })
+        break
+    }
+  }
+
   const wrapperTubeArraySummaryEmpty = function () {
     return mount(TubeArraySummary, {
       propsData: {
@@ -84,6 +123,16 @@ describe('TubeArraySummary', () => {
       localVue,
     })
   }
+
+  const wrapperTubeArraySummaryWithDifferingStates = function () {
+    return mount(TubeArraySummary, {
+      propsData: {
+        tubes: mixtureOfTubesWithDifferingStates,
+      },
+      localVue,
+    })
+  }
+
   it('renders the provided caption', () => {
     const wrapper = wrapperTubeArraySummaryWithDuplicates()
 
@@ -103,25 +152,21 @@ describe('TubeArraySummary', () => {
     const wrapper = wrapperTubeArraySummaryWithDuplicates()
 
     // row 1
-    expect(wrapper.find('#row_tube_colour_index_0').element.children[0].classList.contains('colour-1')).toBe(true)
     expect(wrapper.find('#row_human_barcode_index_0').text()).toEqual('NT1001G')
     expect(wrapper.find('#row_machine_barcode_index_0').text()).toEqual('1000000000001')
     expect(wrapper.find('#row_replicates_index_0').text()).toEqual('6')
 
     // row 2
-    expect(wrapper.find('#row_tube_colour_index_1').element.children[0].classList.contains('colour-2')).toBe(true)
     expect(wrapper.find('#row_human_barcode_index_1').text()).toEqual('NT1002H')
     expect(wrapper.find('#row_machine_barcode_index_1').text()).toEqual('1000000000002')
     expect(wrapper.find('#row_replicates_index_1').text()).toEqual('6')
 
     // row 3
-    expect(wrapper.find('#row_tube_colour_index_2').element.children[0].classList.contains('colour-3')).toBe(true)
     expect(wrapper.find('#row_human_barcode_index_2').text()).toEqual('NT1003I')
     expect(wrapper.find('#row_machine_barcode_index_2').text()).toEqual('1000000000003')
     expect(wrapper.find('#row_replicates_index_2').text()).toEqual('6')
 
     // row 4
-    expect(wrapper.find('#row_tube_colour_index_3').element.children.length).toBe(0) // empty
     expect(wrapper.find('#row_human_barcode_index_3').text()).toEqual('Empty')
     expect(wrapper.find('#row_machine_barcode_index_3').text()).toEqual('Empty')
     expect(wrapper.find('#row_replicates_index_3').text()).toEqual('78')
@@ -131,7 +176,6 @@ describe('TubeArraySummary', () => {
     const wrapper = wrapperTubeArraySummaryEmpty()
 
     // row 1
-    expect(wrapper.find('#row_tube_colour_index_0').element.children.length).toBe(0) // empty
     expect(wrapper.find('#row_human_barcode_index_0').text()).toEqual('Empty')
     expect(wrapper.find('#row_machine_barcode_index_0').text()).toEqual('Empty')
     expect(wrapper.find('#row_replicates_index_0').text()).toEqual('96')
@@ -141,15 +185,41 @@ describe('TubeArraySummary', () => {
     const wrapper = wrapperTubeArraySummaryFull()
 
     // row 1
-    expect(wrapper.find('#row_tube_colour_index_0').element.children[0].classList.contains('colour-1')).toBe(true)
     expect(wrapper.find('#row_human_barcode_index_0').text()).toEqual('NT1000G')
     expect(wrapper.find('#row_machine_barcode_index_0').text()).toEqual('1000000000000')
     expect(wrapper.find('#row_replicates_index_0').text()).toEqual('1')
 
     // row 96
-    expect(wrapper.find('#row_tube_colour_index_95').element.children[0].classList.contains('colour-96')).toBe(true)
     expect(wrapper.find('#row_human_barcode_index_95').text()).toEqual('NT1095G')
     expect(wrapper.find('#row_machine_barcode_index_95').text()).toEqual('1000000000095')
     expect(wrapper.find('#row_replicates_index_95').text()).toEqual('1')
+  })
+
+  it('renders tube summary rows based on labware state', () => {
+    const wrapper = wrapperTubeArraySummaryWithDifferingStates()
+
+    // row 1
+    expect(wrapper.find('#row_tube_colour_index_0').element.children[0].classList.contains('colour-1')).toBe(true)
+    expect(wrapper.find('#row_human_barcode_index_0').text()).toEqual('PASSED')
+    expect(wrapper.find('#row_machine_barcode_index_0').text()).toEqual('1000000000001')
+    expect(wrapper.find('#row_replicates_index_0').text()).toEqual('6')
+
+    // row 2
+    expect(wrapper.find('#row_tube_colour_index_1').element.children.length).toBe(0) // no colour should be rendered
+    expect(wrapper.find('#row_human_barcode_index_1').text()).toEqual('PENDING')
+    expect(wrapper.find('#row_machine_barcode_index_1').text()).toEqual('1000000000002')
+    expect(wrapper.find('#row_replicates_index_1').text()).toEqual('6')
+
+    // row 3
+    expect(wrapper.find('#row_tube_colour_index_2').element.children.length).toBe(0) // no colour should be rendered
+    expect(wrapper.find('#row_human_barcode_index_2').text()).toEqual('UNKNOWN')
+    expect(wrapper.find('#row_machine_barcode_index_2').text()).toEqual('1000000000003')
+    expect(wrapper.find('#row_replicates_index_2').text()).toEqual('6')
+
+    // row 4
+    expect(wrapper.find('#row_tube_colour_index_3').element.children.length).toBe(0) // empty
+    expect(wrapper.find('#row_human_barcode_index_3').text()).toEqual('Empty')
+    expect(wrapper.find('#row_machine_barcode_index_3').text()).toEqual('Empty')
+    expect(wrapper.find('#row_replicates_index_3').text()).toEqual('78')
   })
 })
