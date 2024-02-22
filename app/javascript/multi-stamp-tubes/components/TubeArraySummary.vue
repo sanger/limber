@@ -15,21 +15,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(value, machine_barcode, rowIndex) in tubesDict" :key="rowIndex">
+      <tr v-for="(summary, machine_barcode, rowIndex) in tubesDict" :key="rowIndex">
         <th class="first-col">
           {{ (rowIndex + 1).toString() + '.' }}
         </th>
         <td :id="`row_tube_colour_index_${rowIndex}`" class="tube_colour_cell">
-          <div v-if="value.well_colour" :class="['aliquot', `colour-${value.well_colour}`]"></div>
+          <div v-if="summary.well_colour" :class="['aliquot', `colour-${summary.well_colour}`]"></div>
         </td>
         <td :id="`row_human_barcode_index_${rowIndex}`" class="summarycell">
-          {{ value.human_barcode }}
+          {{ summary.human_barcode }}
         </td>
         <td :id="`row_machine_barcode_index_${rowIndex}`" class="summarycell">
           {{ machine_barcode }}
         </td>
         <td :id="`row_replicates_index_${rowIndex}`" class="replicate_cell">
-          {{ value.replicates }}
+          {{ summary.replicates }}
         </td>
       </tr>
     </tbody>
