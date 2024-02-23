@@ -7,6 +7,9 @@ RSpec.describe ExportsController, type: :controller do
   let(:default_plate_includes) { 'wells' }
   let(:well_qc_includes) { 'wells.qc_results' }
   let(:well_qc_sample_includes) { 'wells.qc_results,wells.aliquots.sample.sample_metadata' }
+  let(:well_with_request_metadata_includes) do
+    'wells.qc_results,wells.aliquots.sample.sample_metadata,wells.aliquots.request.poly_metadata'
+  end
   let(:well_src_asset_includes) { 'wells.transfer_requests_as_target.source_asset' }
   let(:plate) { create :v2_plate, barcode_number: 1 }
   let(:plate_barcode) { 'DN1S' }
@@ -99,10 +102,10 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
-    context 'where csv id requested is targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling.csv' do
-      let(:includes) { well_qc_includes }
-      let(:csv_id) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
-      let(:expected_template) { 'targeted_nanoseq_pcr_xp_concentrations_for_custom_pooling' }
+    context 'where csv id requested is targeted_nanoseq_pcr_xp_merged_file.csv' do
+      let(:includes) { well_with_request_metadata_includes }
+      let(:csv_id) { 'targeted_nanoseq_pcr_xp_merged_file' }
+      let(:expected_template) { 'targeted_nanoseq_pcr_xp_merged_file' }
 
       it_behaves_like 'a csv view'
     end

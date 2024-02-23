@@ -5,15 +5,16 @@ require 'csv'
 
 # Part of the Labware creator classes
 module LabwareCreators
-  require_dependency 'labware_creators/pcr_cycles_binned_plate'
+  require_dependency 'labware_creators/pcr_cycles_binned_plate_base'
 
   #
   # Takes the user uploaded csv file, validates the content and extracts the well information.
   # This file will be downloaded from Limber based on the quantification results, then sent out
   # to and filled in by the customer. It describes how to dilute and bin the samples together
   # in the child dilution plate.
+  # This is the abstract version of this labware creator, extend from this class
   #
-  class PcrCyclesBinnedPlate::CsvFile
+  class PcrCyclesBinnedPlate::CsvFileBase
     include ActiveModel::Validations
     extend NestedValidation
 
@@ -33,10 +34,10 @@ module LabwareCreators
              :sample_volume_column,
              :diluent_volume_column,
              :pcr_cycles_column,
-             :submit_for_sequencing_column,
-             :sub_pool_column,
-             :coverage_column,
              to: :well_details_header_row
+
+    # implement on subclasses
+    FIELDS_FOR_WELL_DETAILS = [].freeze
 
     #
     # Passing in the file to be parsed, the configuration that holds validation range thresholds, and
@@ -51,7 +52,7 @@ module LabwareCreators
     end
 
     def initialize_variables(file, config, parent_barcode)
-      @config = Utility::PcrCyclesCsvFileUploadConfig.new(config)
+      @config = get_config_details_from_purpose(config)
       @parent_barcode = parent_barcode
       @data = CSV.parse(file.read)
       remove_bom
@@ -83,15 +84,21 @@ module LabwareCreators
     end
 
     def plate_barcode_header_row
-      @plate_barcode_header_row ||= PlateBarcodeHeader.new(@parent_barcode, @data[0]) if @data[0]
+      # data[0] here is the first row in the uploaded file, and should contain the plate barcode
+      @plate_barcode_header_row ||=
+        PcrCyclesBinnedPlate::CsvFile::PlateBarcodeHeader.new(@parent_barcode, @data[0]) if @data[0]
     end
 
     # Returns the contents of the header row for the well detail columns
     def well_details_header_row
-      @well_details_header_row ||= WellDetailsHeader.new(@data[2]) if @data[2]
+      raise '#well_details_header_row must be implemented on subclasses'
     end
 
     private
+
+    def get_config_details_from_purpose(_config)
+      raise '#get_config_details_from_purpose must be implemented on subclasses'
+    end
 
     # remove byte order marker if present
     def remove_bom
@@ -108,10 +115,12 @@ module LabwareCreators
     end
 
     def transfers
-      @transfers ||=
-        @data[3..].each_with_index.map do |row_data, index|
-          Row.new(@config, well_details_header_row, index + 2, row_data)
-        end
+      # sample row data starts on third row of file, 1st row is plate barcode header row, second blank
+      @transfers ||= @data[3..].each_with_index.map { |row_data, index| create_row(index, row_data) }
+    end
+
+    def create_row(_index, _row_data)
+      raise '#create_row must be implemented on subclasses'
     end
 
     # Gates looking for wells if the file is invalid
@@ -123,7 +132,8 @@ module LabwareCreators
     def generate_well_details_hash
       return {} unless valid?
 
-      fields = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage sample_volume]
+      fields = self.class::FIELDS_FOR_WELL_DETAILS
+
       transfers.each_with_object({}) do |row, well_details_hash|
         next if row.empty?
 

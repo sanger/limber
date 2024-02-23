@@ -4,10 +4,10 @@ require 'spec_helper'
 require 'labware_creators/base'
 require_relative 'shared_examples'
 
-RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
+RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploader do
   it_behaves_like 'it only allows creation from plates'
 
-  subject { LabwareCreators::PcrCyclesBinnedPlate.new(api, form_attributes) }
+  subject { LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq.new(api, form_attributes) }
 
   it 'should have a custom page' do
     expect(described_class.page).to eq 'pcr_cycles_binned_plate'
@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
 
-  let(:well_a1) do
+  let(:parent_well_a1) do
     create(
       :v2_well,
       position: {
@@ -27,7 +27,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_b1) do
+  let(:parent_well_b1) do
     create(
       :v2_well,
       position: {
@@ -38,7 +38,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_d1) do
+  let(:parent_well_d1) do
     create(
       :v2_well,
       position: {
@@ -49,7 +49,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_e1) do
+  let(:parent_well_e1) do
     create(
       :v2_well,
       position: {
@@ -60,7 +60,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_f1) do
+  let(:parent_well_f1) do
     create(
       :v2_well,
       position: {
@@ -71,7 +71,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_h1) do
+  let(:parent_well_h1) do
     create(
       :v2_well,
       position: {
@@ -82,7 +82,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_a2) do
+  let(:parent_well_a2) do
     create(
       :v2_well,
       position: {
@@ -93,7 +93,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_b2) do
+  let(:parent_well_b2) do
     create(
       :v2_well,
       position: {
@@ -104,7 +104,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_c2) do
+  let(:parent_well_c2) do
     create(
       :v2_well,
       position: {
@@ -115,7 +115,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_d2) do
+  let(:parent_well_d2) do
     create(
       :v2_well,
       position: {
@@ -126,7 +126,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_e2) do
+  let(:parent_well_e2) do
     create(
       :v2_well,
       position: {
@@ -137,7 +137,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_f2) do
+  let(:parent_well_f2) do
     create(
       :v2_well,
       position: {
@@ -148,7 +148,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_g2) do
+  let(:parent_well_g2) do
     create(
       :v2_well,
       position: {
@@ -159,7 +159,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
       outer_request: nil
     )
   end
-  let(:well_h2) do
+  let(:parent_well_h2) do
     create(
       :v2_well,
       position: {
@@ -177,28 +177,67 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
            barcode_number: '2',
            size: plate_size,
            wells: [
-             well_a1,
-             well_b1,
-             well_d1,
-             well_e1,
-             well_f1,
-             well_h1,
-             well_a2,
-             well_b2,
-             well_c2,
-             well_d2,
-             well_e2,
-             well_f2,
-             well_g2,
-             well_h2
+             parent_well_a1,
+             parent_well_b1,
+             parent_well_d1,
+             parent_well_e1,
+             parent_well_f1,
+             parent_well_h1,
+             parent_well_a2,
+             parent_well_b2,
+             parent_well_c2,
+             parent_well_d2,
+             parent_well_e2,
+             parent_well_f2,
+             parent_well_g2,
+             parent_well_h2
            ],
            outer_requests: requests
   end
 
   let(:parent_plate_v1) { json :plate, uuid: parent_uuid, stock_plate_barcode: 2, qc_files_actions: %w[read create] }
 
+  # Create child wells in order of the requests they originated from.
+  # Which is to do with how the binning algorithm lays them out based on the value of PCR cycles.
+  let(:child_well_A2) { create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: requests[0]) }
+  let(:child_well_B2) { create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: requests[1]) }
+  let(:child_well_A1) { create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: requests[2]) }
+  let(:child_well_A3) { create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: requests[3]) }
+  let(:child_well_B3) { create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: requests[4]) }
+  let(:child_well_C3) { create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: requests[5]) }
+  let(:child_well_D3) { create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: requests[6]) }
+  let(:child_well_E3) { create(:v2_well, location: 'E3', position: { 'name' => 'E3' }, outer_request: requests[7]) }
+  let(:child_well_F3) { create(:v2_well, location: 'F3', position: { 'name' => 'F3' }, outer_request: requests[8]) }
+  let(:child_well_G3) { create(:v2_well, location: 'G3', position: { 'name' => 'G3' }, outer_request: requests[9]) }
+  let(:child_well_C2) { create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: requests[10]) }
+  let(:child_well_B1) { create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: requests[11]) }
+  let(:child_well_D2) { create(:v2_well, location: 'D2', position: { 'name' => 'D2' }, outer_request: requests[12]) }
+  let(:child_well_C1) { create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: requests[13]) }
+
   let(:child_plate) do
-    create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
+    # Wells listed in the order here to match the order of the list of original library requests,
+    # i.e. the rearranged order after binning. Wells will be laid out by location so this has no
+    # effect on the actual layout of the plate.
+    create :v2_plate,
+           uuid: 'child-uuid',
+           barcode_number: '3',
+           size: plate_size,
+           wells: [
+             child_well_A2,
+             child_well_B2,
+             child_well_A1,
+             child_well_A3,
+             child_well_B3,
+             child_well_C3,
+             child_well_D3,
+             child_well_E3,
+             child_well_F3,
+             child_well_G3,
+             child_well_C2,
+             child_well_B1,
+             child_well_D2,
+             child_well_C1
+           ]
   end
 
   let(:library_type_name) { 'Test Library Type' }
@@ -220,7 +259,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlate
+      expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq
     end
   end
 
@@ -310,86 +349,86 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate, with: :uploader do
         [
           {
             'volume' => '5.0',
-            'source_asset' => well_a1.uuid,
-            'target_asset' => '3-well-A2',
+            'source_asset' => parent_well_a1.uuid,
+            'target_asset' => child_well_A2.uuid,
             'outer_request' => requests[0].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_b1.uuid,
-            'target_asset' => '3-well-B2',
+            'source_asset' => parent_well_b1.uuid,
+            'target_asset' => child_well_B2.uuid,
             'outer_request' => requests[1].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_d1.uuid,
-            'target_asset' => '3-well-A1',
+            'source_asset' => parent_well_d1.uuid,
+            'target_asset' => child_well_A1.uuid,
             'outer_request' => requests[2].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_e1.uuid,
-            'target_asset' => '3-well-A3',
+            'source_asset' => parent_well_e1.uuid,
+            'target_asset' => child_well_A3.uuid,
             'outer_request' => requests[3].uuid
           },
           {
             'volume' => '4.0',
-            'source_asset' => well_f1.uuid,
-            'target_asset' => '3-well-B3',
+            'source_asset' => parent_well_f1.uuid,
+            'target_asset' => child_well_B3.uuid,
             'outer_request' => requests[4].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_h1.uuid,
-            'target_asset' => '3-well-C3',
+            'source_asset' => parent_well_h1.uuid,
+            'target_asset' => child_well_C3.uuid,
             'outer_request' => requests[5].uuid
           },
           {
             'volume' => '3.2',
-            'source_asset' => well_a2.uuid,
-            'target_asset' => '3-well-D3',
+            'source_asset' => parent_well_a2.uuid,
+            'target_asset' => child_well_D3.uuid,
             'outer_request' => requests[6].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_b2.uuid,
-            'target_asset' => '3-well-E3',
+            'source_asset' => parent_well_b2.uuid,
+            'target_asset' => child_well_E3.uuid,
             'outer_request' => requests[7].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_c2.uuid,
-            'target_asset' => '3-well-F3',
+            'source_asset' => parent_well_c2.uuid,
+            'target_asset' => child_well_F3.uuid,
             'outer_request' => requests[8].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_d2.uuid,
-            'target_asset' => '3-well-G3',
+            'source_asset' => parent_well_d2.uuid,
+            'target_asset' => child_well_G3.uuid,
             'outer_request' => requests[9].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_e2.uuid,
-            'target_asset' => '3-well-C2',
+            'source_asset' => parent_well_e2.uuid,
+            'target_asset' => child_well_C2.uuid,
             'outer_request' => requests[10].uuid
           },
           {
             'volume' => '30.0',
-            'source_asset' => well_f2.uuid,
-            'target_asset' => '3-well-B1',
+            'source_asset' => parent_well_f2.uuid,
+            'target_asset' => child_well_B1.uuid,
             'outer_request' => requests[11].uuid
           },
           {
             'volume' => '5.0',
-            'source_asset' => well_g2.uuid,
-            'target_asset' => '3-well-D2',
+            'source_asset' => parent_well_g2.uuid,
+            'target_asset' => child_well_D2.uuid,
             'outer_request' => requests[12].uuid
           },
           {
             'volume' => '3.621',
-            'source_asset' => well_h2.uuid,
-            'target_asset' => '3-well-C1',
+            'source_asset' => parent_well_h2.uuid,
+            'target_asset' => child_well_C1.uuid,
             'outer_request' => requests[13].uuid
           }
         ]

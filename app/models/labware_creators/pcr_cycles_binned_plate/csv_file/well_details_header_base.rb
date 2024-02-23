@@ -2,16 +2,15 @@
 
 # Part of the Labware creator classes
 module LabwareCreators
-  require_dependency 'labware_creators/custom_pooled_tubes/csv_file'
-
   #
   # Class WellDetailsHeader provides a simple wrapper for handling and validating
   # the plate barcode header row from the customer csv file
   #
-  class PcrCyclesBinnedPlate::CsvFile::WellDetailsHeader
+  class PcrCyclesBinnedPlate::CsvFile::WellDetailsHeaderBase
     include ActiveModel::Validations
 
     # Return the index of the respective column.
+    # These are common columns shared by all versions of the csv file.
     attr_reader :well_column,
                 :concentration_column,
                 :sanger_sample_id_column,
@@ -20,10 +19,7 @@ module LabwareCreators
                 :input_amount_desired_column,
                 :sample_volume_column,
                 :diluent_volume_column,
-                :pcr_cycles_column,
-                :submit_for_sequencing_column,
-                :sub_pool_column,
-                :coverage_column
+                :pcr_cycles_column
 
     WELL_COLUMN = 'Well'
     CONCENTRATION_COLUMN = 'Concentration (nM)'
@@ -34,44 +30,24 @@ module LabwareCreators
     SAMPLE_VOLUME_COLUMN = 'Sample volume'
     DILUENT_VOLUME_COLUMN = 'Diluent volume'
     PCR_CYCLES_COLUMN = 'PCR cycles'
-    SUBMIT_FOR_SEQUENCING_COLUMN = 'Submit for sequencing (Y/N)?'
-    SUB_POOL_COLUMN = 'Sub-Pool'
-    COVERAGE_COLUMN = 'Coverage'
+    NOT_FOUND = 'could not be found in: '
 
-    validates :well_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :concentration_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :sanger_sample_id_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :supplier_sample_name_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :input_amount_available_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :input_amount_desired_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :sample_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :diluent_volume_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :pcr_cycles_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :submit_for_sequencing_column,
-              presence: {
-                message: ->(object, _data) { "could not be found in: '#{object}'" }
-              }
-    validates :sub_pool_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
-    validates :coverage_column, presence: { message: ->(object, _data) { "could not be found in: '#{object}'" } }
+    validates :well_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :concentration_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :sanger_sample_id_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :supplier_sample_name_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :input_amount_available_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :input_amount_desired_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :sample_volume_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :diluent_volume_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
+    validates :pcr_cycles_column, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }
 
     #
     # Generates a well details header from the well details header row array
     #
     # @param [Array] row The array of fields extracted from the CSV file
     #
-    def initialize(row) # rubocop:todo Metrics/AbcSize
+    def initialize(row)
       @row = row || []
 
       @well_column = index_of_header(WELL_COLUMN)
@@ -83,9 +59,8 @@ module LabwareCreators
       @sample_volume_column = index_of_header(SAMPLE_VOLUME_COLUMN)
       @diluent_volume_column = index_of_header(DILUENT_VOLUME_COLUMN)
       @pcr_cycles_column = index_of_header(PCR_CYCLES_COLUMN)
-      @submit_for_sequencing_column = index_of_header(SUBMIT_FOR_SEQUENCING_COLUMN)
-      @sub_pool_column = index_of_header(SUB_POOL_COLUMN)
-      @coverage_column = index_of_header(COVERAGE_COLUMN)
+
+      initialize_pipeline_specific_columns
     end
 
     #
@@ -98,6 +73,10 @@ module LabwareCreators
     end
 
     private
+
+    def initialize_pipeline_specific_columns
+      raise '#initialize_pipeline_specific_columns must be implemented on subclasses'
+    end
 
     #
     # Returns the index of the given column name. Returns nil if the column can't be found.

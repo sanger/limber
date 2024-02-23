@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'presenters/pcr_cycles_binned_plate_presenter'
+require 'presenters/pcr_cycles_binned_plate_using_request_metadata_presenter'
 require_relative 'shared_labware_presenter_examples'
 
-RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
+RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
   has_a_working_api
 
   let(:purpose_name) { 'Limber example purpose' }
@@ -27,6 +27,11 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
   #     1   2   3
   # A   *   *   *
   # B       *
+
+  # well A1
+  let(:well_a1_metadata) { build :poly_metadatum, key: 'pcr_cycles', value: '16' }
+
+  let(:well_a1_request) { create :library_request_with_poly_metadata, poly_metadata: [well_a1_metadata] }
   let(:well_a1) do
     create(
       :v2_well,
@@ -34,9 +39,14 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'A1'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '0.6'),
-      pcr_cycles: 16
+      outer_request: well_a1_request
     )
   end
+
+  # well A2
+  let(:well_a2_metadata) { build :poly_metadatum, key: 'pcr_cycles', value: '14' }
+
+  let(:well_a2_request) { create :library_request_with_poly_metadata, poly_metadata: [well_a2_metadata] }
   let(:well_a2) do
     create(
       :v2_well,
@@ -44,9 +54,14 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'A2'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '10.0'),
-      pcr_cycles: 14
+      outer_request: well_a2_request
     )
   end
+
+  # well B2
+  let(:well_b2_metadata) { build :poly_metadatum, key: 'pcr_cycles', value: '14' }
+
+  let(:well_b2_request) { create :library_request_with_poly_metadata, poly_metadata: [well_b2_metadata] }
   let(:well_b2) do
     create(
       :v2_well,
@@ -54,9 +69,14 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'B2'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '12.0'),
-      pcr_cycles: 14
+      outer_request: well_b2_request
     )
   end
+
+  # well A3
+  let(:well_a3_metadata) { build :poly_metadatum, key: 'pcr_cycles', value: '12' }
+
+  let(:well_a3_request) { create :library_request_with_poly_metadata, poly_metadata: [well_a3_metadata] }
   let(:well_a3) do
     create(
       :v2_well,
@@ -64,7 +84,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
         'name' => 'A3'
       },
       qc_results: create_list(:qc_result_concentration, 1, value: '20.0'),
-      pcr_cycles: 12
+      outer_request: well_a3_request
     )
   end
 
@@ -75,18 +95,24 @@ RSpec.describe Presenters::PcrCyclesBinnedPlatePresenter do
           barcode_number: 1,
           pool_sizes: [],
           wells: [well_a1, well_a2, well_b2, well_a3],
-          outer_requests: requests,
+          # outer_requests: requests,
           created_at: '2019-06-10 12:00:00 +0100'
   end
 
-  let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
+  # let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:warnings) { {} }
   let(:label_class) { 'Labels::PlateLabel' }
 
-  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
+  before do
+    stub_v2_plate(
+      labware,
+      stub_search: false,
+      custom_includes: 'wells.aliquots,wells.qc_results,wells.aliquots.request.poly_metadata'
+    )
+  end
 
-  subject(:presenter) { Presenters::PcrCyclesBinnedPlatePresenter.new(api: api, labware: labware) }
+  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter.new(api: api, labware: labware) }
 
   context 'when binning' do
     it_behaves_like 'a labware presenter'
