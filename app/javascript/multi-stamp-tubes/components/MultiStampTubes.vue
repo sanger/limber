@@ -216,7 +216,7 @@ export default {
         const tubeIndex = transfer.tubeObj.index
         acc[transfer.targetWell] = {
           colour_index: this.colourIndex(tubeIndex),
-          human_barcode: this.tubes[tubeIndex].labware.labware_barcode.human_barcode,
+          human_barcode: transfer.tubeObj.tube.labware_barcode.human_barcode
         }
         return acc
       }, {})
