@@ -54,7 +54,6 @@ module LabwareCreators
     # filter, which specifies wells in 'passed' state from the source plates.
     # The 'source_wells_for_pooling' method is used to get the filtered wells.
     #
-    #
     # @return [WellFilter] The WellFilter instance.
     def well_filter
       @well_filter ||= WellFilter.new(creator: self)
@@ -137,7 +136,7 @@ module LabwareCreators
 
     # Returns the well from a plate that matches the specified location. If no
     # well is found at the specified location, nil is returned. Used by the
-    # request_hash method to find the destination well.
+    # 'request_hash' method to find the destination well.
     #
     # @param plate [Sequencescape::Api::V2::Plate] The destination plate.
     # @param well_location [String] The location to match.
@@ -236,7 +235,7 @@ module LabwareCreators
     end
 
     # Splits a single group of wells by donor_ids. Used by the
-    # split_groups_by_donor_id method.
+    # 'split_groups_by_donor_ids' method.
     #
     # @param group [Array<Well>] The group of wells to split.
     # @return [Array<Array<Well>>] An array of subgroups, each containing wells
@@ -255,7 +254,7 @@ module LabwareCreators
     end
 
     # Returns the unique donor_ids from a group of wells. Used by the
-    # split_single_group_by_donor_ids method.
+    # 'split_single_group_by_donor_ids' method.
     #
     # @param group [Array<Well>] The group of wells from which to retrieve donor_ids.
     # @return [Array<String>] An array of unique donor_ids.
