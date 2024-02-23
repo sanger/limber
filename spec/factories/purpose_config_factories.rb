@@ -252,6 +252,16 @@ FactoryBot.define do
       end
     end
 
+    factory :donor_pooling_plate_purpose_config do
+      transient { number_of_source_plates { 2 } }
+      creator_class do
+        {
+          name: 'LabwareCreators::DonorPoolingPlate',
+          args: { number_of_source_plates: number_of_source_plates }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
