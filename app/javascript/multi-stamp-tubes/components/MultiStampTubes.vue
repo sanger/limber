@@ -179,6 +179,8 @@ export default {
     targetColumnsNumber() {
       return Number.parseInt(this.targetColumns)
     },
+    // Returns a boolean indicating whether the provided tubes are valid.
+    // Used to enable and disable the 'Create' button.
     valid() {
       return (
         this.unsuitableTubes.length === 0 && // None of the tubes are invalid
