@@ -1,29 +1,89 @@
+<%
+  # Custom component functions
+  @state_colours = {
+    'pending' => 'warning',
+    'started' => 'info',
+    'passed' => 'success',
+    'failed' => 'danger',
+    'cancelled' => 'secondary'
+  }
+
+  def state_text_badge(state, text)
+    content_tag(:span, text, class: "badge badge-pill badge-#{@state_colours[state]}")
+  end
+%>
+
 <%= content do %>
-  <h1>Work In Progress - Pipeline "<%= @pipeline_group_name -%>"</h1>
+  <h1>Limber Pipeline Progress Overview <small class="text-muted"><br/>
+  <%= @pipeline_group_name -%></small></h1>
 
   <!-- filters - reload the page with a new param -->
   <%= link_to 'All time', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Date.new(1970,1,1)), method: :get, class: "filter-button" %>
   <%= link_to 'Last month', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Date.today.prev_month), method: :get, class: "filter-button" %>
 
-  <!-- one column per purpose, containing cards for each plate / tube -->
+  <!-- two columns, left for the purposes, right for the labware list -->
   <div class="row">
-    <% @ordered_purpose_list.each do |purpose_group| %>
-      <div class="col-md">
-        <!-- card for the column, with purpose name -->
-        <%= card title: "#{purpose_group} (#{@grouped[purpose_group].size})" do %>
-          <% @grouped[purpose_group].each do |labware_data| %>
-            <% labware = labware_data[:record] %>
+    <div class="col-lg-3 col-md-4">
+      <h3 class="text-center">Purposes</h3>
 
-            <!-- plate / tube card -->
-            <%= card do %>
-              <%= link_to "#{labware.labware_barcode&.human}", url_for(labware) %><br/>
-              <%= labware.input_barcode %><br/>
-              <%= labware_data[:state] %><br/>
-              <%= "updated #{labware.updated_at.strftime("%d/%m/%y")}" %>
+    <!-- purpose cards, showing counts of labware for each state -->
+    <% @ordered_purpose_list.each do |purpose_name| %>
+      <%= card title: "#{purpose_name} (#{@grouped[purpose_name].size})", css_class: 'stackable-card rounded-0 text-center' do %>
+
+        <% @grouped_state_counts[purpose_name].each do |state, count| %>
+          <%= state_text_badge(state, "#{state.humanize} #{count}") %>
+        <% end %>
+
+        <span class="float-right">
+          <%= link_to ">", pipeline_work_in_progress_path(id: @pipeline_group_name, purpose: purpose_name, date: @from_date), class: "btn btn-sm btn-info" %>
+        </span>
+      <% end %>
+
+      <!-- add arrow between the cards -->
+      <% if purpose_name != @ordered_purpose_list.last %>
+        <span class="icon icon-arrow_down-secondary d-block mx-auto my-2"></span>
+      <% end %>
+
+    <% end %>
+    </div>
+
+    <!-- labware list -->
+    <div class="col-lg-9 col-md-8">
+      <h3><%= @purpose %></h3>
+
+      <table class="table table-striped table-sm border">
+        <thead>
+          <tr>
+            <!-- column headings -->
+            <th>Barcode</th>
+            <th>Created</th>
+            <th>State</th>
+            <th>Updated</th>
+            <th>Library</th>
+            <th>Last Touch</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- list of labware, with a link to each -->
+          <% if @grouped[@purpose].nil? %>
+            <tr>
+              <td colspan="6" class="text-center text-muted">No labware found</td>
+            </tr>
+          <% else %>
+            <% @grouped[@purpose].each do |labware_data| %>
+              <tr>
+                <td><%= link_to "#{labware_data[:record].labware_barcode&.human}", url_for(labware_data[:record]) %></td>
+                <td><%= labware_data[:record].created_at&.strftime("%Y-%m-%d") %></td>
+                <td><%= state_badge labware_data[:state] %></td>
+                <td><%= labware_data[:record].updated_at.strftime("%Y-%m-%d") %></td>
+                <td>~library~</td>
+                <td>~user~</td>
+              </tr>
             <% end %>
           <% end %>
-        <% end %>
-      </div>
-    <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
+
 <% end %>

@@ -5,6 +5,8 @@ class PipelineWorkInProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def show
     @pipeline_group_name = params[:id]
+    @from_date = from_date(params)
+    @purpose = params[:purpose]
 
     # Group related pipelines together
     pipelines_for_group = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
@@ -14,6 +16,7 @@ class PipelineWorkInProgressController < ApplicationController
     labware_records = arrange_labware_records(@ordered_purpose_list, from_date(params))
 
     @grouped = mould_data_for_view(@ordered_purpose_list, labware_records)
+    @grouped_state_counts = count_states(@grouped)
   end
 
   def from_date(params)
@@ -50,8 +53,8 @@ class PipelineWorkInProgressController < ApplicationController
     labware_query =
       Sequencescape::Api::V2::Labware
         .select(
-          { plates: %w[uuid purpose labware_barcode state_changes updated_at ancestors] },
-          { tubes: %w[uuid purpose labware_barcode state_changes updated_at ancestors] },
+          { plates: %w[uuid purpose labware_barcode state_changes created_at updated_at ancestors] },
+          { tubes: %w[uuid purpose labware_barcode state_changes created_at updated_at ancestors] },
           { purposes: 'name' }
         )
         .includes(:state_changes, :purpose, 'ancestors.purpose')
@@ -91,5 +94,23 @@ class PipelineWorkInProgressController < ApplicationController
 
   def decide_state(labware)
     labware.state_changes&.max_by(&:id)&.target_state || 'pending'
+  end
+
+  # Counts of number of labware in each state for each purpose
+  # Returns a hash with the following structure:
+  # {
+  #   "LTHR Cherrypick" => {
+  #     "pending" => 5,
+  #     "started" => 2
+  #   },
+  #   "LTHR-384 PCR 1" => {
+  #     "pending" => 5,
+  #     "started" => 2
+  #   }
+  # }
+  def count_states(grouped)
+    {}.tap do |output|
+      grouped.each { |purpose, records| output[purpose] = records.group_by { |r| r[:state] }.transform_values(&:count) }
+    end
   end
 end

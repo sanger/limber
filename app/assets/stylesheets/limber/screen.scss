@@ -526,6 +526,26 @@ form + .btn-block {
   }
 }
 
+// Stackable cards, designed to be positioned directly on
+// top of each other to show steps in a process
+.stackable-card {
+  @extend .py-1;
+
+  .card-header {
+    @extend .py-1;
+    @extend .px-2;
+    @extend .bg-transparent;
+    @extend .border-0;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .card-body {
+    @extend .py-1;
+    @extend .px-2;
+  }
+}
+
 footer.version-info {
   @extend .text-muted;
   @extend .small;
