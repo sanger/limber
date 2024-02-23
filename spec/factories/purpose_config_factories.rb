@@ -255,10 +255,7 @@ FactoryBot.define do
     factory :donor_pooling_plate_purpose_config do
       transient { number_of_source_plates { 2 } }
       creator_class do
-        {
-          name: 'LabwareCreators::DonorPoolingPlate',
-          args: { number_of_source_plates: number_of_source_plates }
-        }
+        { name: 'LabwareCreators::DonorPoolingPlate', args: { number_of_source_plates: number_of_source_plates } }
       end
     end
 
