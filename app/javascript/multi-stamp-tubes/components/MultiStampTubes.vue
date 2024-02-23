@@ -166,6 +166,7 @@ export default {
     }
   },
   computed: {
+    // Returns the header for the page
     header() {
       return `Sample Arraying: ${this.parentPurposeName} → ${this.purposeName}`
     },
@@ -185,9 +186,11 @@ export default {
         this.transfersCreatorObj.isValid
       )
     },
+    // Returns an array of tubes that are in a 'valid' state.
     validTubes() {
       return this.tubes.filter((tube) => tube.state === 'valid')
     },
+    // Returns an array of tubes that are not in a 'valid' or 'empty' state.
     unsuitableTubes() {
       return this.tubes.filter((tube) => !(tube.state === 'valid' || tube.state === 'empty'))
     },
@@ -254,6 +257,8 @@ export default {
     },
   },
   methods: {
+    // Given a 0-based well index, return the well name.
+    // e.g. 0 -> A1, 1 -> A2, etc.
     wellIndexToName(index) {
       return indexToName(index, this.targetRowsNumber)
     },
@@ -277,6 +282,31 @@ export default {
 
       return colour_index
     },
+    /**
+     * The entry point for updating tubes attached to the plate.
+     * Called when a tube is scanned into a well.
+     *
+     * @param {Number} index - The (1-based) index of the tube in the tubes array.
+     * @param {Object} data - The tube object returned from the scan, which includes:
+     *   - labware: Contains details about the labware, such as id, uuid, and barcode details.
+     *   - state: The "scanned" state of the tube, e.g., "valid".
+     *   @example {
+     *     labware: {
+     *       id: "47",
+     *       uuid: "1234-5678-91011",
+     *       labware_barcode: {
+     *         ean13_barcode: "3980000035714",
+     *         human_barcode: "NT35G",
+     *         machine_barcode: "3980000035714"
+     *       },
+     *       links: {...},
+     *       receptacle: {...},
+     *       type: "tubes",
+     *       state: "passed"
+     *     },
+     *     state: "valid"
+     *   }
+     */
     updateTube(index, data) {
       this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
     },
