@@ -153,7 +153,7 @@ module LabwareCreators
     # @param groups [Array<Array<Well>>] Array of well groups to be split.
     # @return [Array<Array<Well>>] Array of subgroups split by donor ID.
     def split_groups_by_donor_ids(groups)
-      groups.flat_map { |group| split_group_by_donor_ids(group) }
+      groups.flat_map { |group| split_single_group_by_donor_ids(group) }
     end
 
     # Splits a single group of wells by donor_ids. Used by the
