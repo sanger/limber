@@ -194,6 +194,13 @@ export default {
     transfers() {
       return transfersForTubes(this.validTubes)
     },
+    //  validTransfers returns an array with the following structure:
+    //
+    //  [
+    //    { tubeObj: { index: 0, tube: {...} }, targetWell: 'A1' },
+    //    { tubeObj: { index: 1, tube: {...} }, targetWell: 'A2' },
+    //    ...etc...
+    //  ]
     validTransfers() {
       return this.transfers.valid
     },
@@ -205,10 +212,16 @@ export default {
     transfersCreatorComponent() {
       return transfersCreatorsComponentsMap[this.transfersCreator]
     },
-    // map of well position to pool index (just a number that controls the colour)
+    // map of well positions tube metadata, eg:
     // {
-    //   "A1": 2,
-    //   "B4": 9,
+    //   "A1": {
+    //     colour_index: 1,
+    //     human_barcode: "DN123456"
+    //   },
+    //   "B4": {
+    //     colour_index: 2,
+    //     human_barcode: "DN123457"
+    //   },
     //   ...
     // }
     targetWells() {
@@ -245,8 +258,11 @@ export default {
     wellIndexToName(index) {
       return indexToName(index, this.targetRowsNumber)
     },
+    // Determines the colour of the tube based on its barcode,
+    // where tubes with the same barcode have the same colour.
+    // Returns an integer that is used elsewhere to build the colour class name (see colours.css).
+    // Returns -1 if the tube is not valid.
     colourIndex(tubeIndex) {
-      // determine the colour of the tube
       let colour_index = -1
 
       const tube = this.tubes[tubeIndex]
@@ -266,7 +282,7 @@ export default {
       this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
     },
     apiTransfers() {
-      // what we want to transfer when cteating the plate
+      // what we want to transfer when creating the plate
       return transferTubesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {
