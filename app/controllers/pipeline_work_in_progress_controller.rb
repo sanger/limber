@@ -15,6 +15,7 @@ class PipelineWorkInProgressController < ApplicationController
 
     labware_records = arrange_labware_records(@ordered_purpose_list, from_date(params))
 
+    # TODO: improve performance by only requesting full records when a @purpose is selected
     @grouped = mould_data_for_view(@ordered_purpose_list, labware_records)
     @grouped_state_counts = count_states(@grouped)
   end
