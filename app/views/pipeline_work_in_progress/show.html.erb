@@ -18,8 +18,24 @@
   <%= @pipeline_group_name -%></small></h1>
 
   <!-- filters - reload the page with a new param -->
-  <%= link_to 'All time', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Date.new(1970,1,1)), method: :get, class: "filter-button" %>
-  <%= link_to 'Last month', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Date.today.prev_month), method: :get, class: "filter-button" %>
+
+  <!-- Date selectors -->
+  <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Date selectors">
+    <%
+      @dates = {
+        'All time' => Date.new(1970,1,1),
+        'Last month' => Date.today.prev_month,
+        'Last week' => Date.today.prev_week,
+        'Yesterday' => Date.yesterday,
+        'Today' => Date.today,
+      }
+    %>
+    <%=
+      @dates.map do |label, date|
+        link_to label, pipeline_work_in_progress_path(id: @pipeline_group_name, date: date), method: :get, class: "btn btn-secondary #{'active' if date == @from_date}"
+      end.join.html_safe
+    %>
+  </div>
 
   <!-- two columns, left for the purposes, right for the labware list -->
   <div class="row">
