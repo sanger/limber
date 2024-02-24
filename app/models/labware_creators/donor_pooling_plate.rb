@@ -166,26 +166,18 @@ module LabwareCreators
       }.merge(additional_parameters)
     end
 
-    # Returns a hash representing the transfer from source wells to destination
-    # locations. The hash is build using the 'build_transfer_hash' method.
+    # Returns a mapping between each source well to a destination location.
     #
     # @return [Hash] A hash where each key is a source well and each value is a
     #   hash with a single key-value pair: { dest_locn: destination_location }.
     def transfer_hash
-      @transfer_hash ||= build_transfer_hash
-    end
-
-    # Builds a mapping between each source well to a destination location.
-    #
-    # @return [Hash] A hash where each key is a source well and each value is a
-    #   hash with a single key-value pair: { dest_locn: destination_location }.
-    def build_transfer_hash
-      pools
-        .each_with_index
-        .with_object({}) do |(pool, index), result|
-          dest_location = WellHelpers.well_at_column_index(index) # column order, 96 wells
-          pool.each { |source_well| result[source_well] = { dest_locn: dest_location } }
-        end
+      @transfer_hash ||=
+        pools
+          .each_with_index
+          .with_object({}) do |(pool, index), result|
+            dest_location = WellHelpers.well_at_column_index(index) # column order, 96 wells
+            pool.each { |source_well| result[source_well] = { dest_locn: dest_location } }
+          end
     end
 
     # Returns the tag depth for the given source well. The tag depth is the
