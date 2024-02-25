@@ -194,4 +194,30 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       expect(subject.group_by_study_and_project).to eq(groups)
     end
   end
+
+  describe '#unique_donor_ids' do
+    it 'returns the unique donor ids' do
+      well_p1_w1 = well = parent_1_plate.wells[0]
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      well_p1_w2 = well = parent_1_plate.wells[1]
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      well_p1_w3 = well = parent_1_plate.wells[2]
+      well.aliquots.first.sample.sample_metadata.donor_id = 2
+
+      well_p2_w1 = well = parent_1_plate.wells[0]
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      well_p2_w2 = well = parent_1_plate.wells[1]
+      well.aliquots.first.sample.sample_metadata.donor_id = 2
+
+      well_p2_w3 = well = parent_1_plate.wells[2]
+      well.aliquots.first.sample.sample_metadata.donor_id = 3
+
+      group = [well_p1_w1, well_p1_w2, well_p1_w3, well_p2_w1, well_p2_w2, well_p2_w3]
+      unique_donor_ids = [1, 2, 3]
+      expect(subject.unique_donor_ids(group)).to eq(unique_donor_ids)
+    end
+  end
 end
