@@ -15,8 +15,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:parent_2_plate_uuid) { 'parent-2-plate-uuid' }
   let(:parent_purpose_uuid) { 'parent-purpose-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
-  let(:submission_id) { 1 }
-  let(:requests) { create_list(:request, 96, submission_id: submission_id)}
+  let(:requests) { create_list(:request, 96, submission_id: 1) }
 
   let(:parent_1_plate) do
     plate = create(:v2_plate, uuid: parent_1_plate_uuid, aliquots_without_requests: 1)
@@ -68,7 +67,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       expect(well_filter.creator).to eq(subject)
     end
 
-    it 'returns always the same instance' do
+    it 'returns the same instance' do
       expect(subject.well_filter).to be(subject.well_filter)
     end
   end
@@ -93,6 +92,43 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       parent_1_plate.wells[0].state = 'passed'
       parent_2_plate.wells[0].state = 'passed'
       expect(subject.source_wells_for_pooling).to eq([parent_1_plate.wells[0], parent_2_plate.wells[0]])
+    end
+  end
+
+  describe '#number_of_pools' do
+    # TODO: Change this test once a new CSV file is provided.
+    context 'when number of samples is less than or equal to 96' do
+      it 'returns the number of pools from lookup table' do
+        {
+          1 => 1,
+          21 => 2,
+          27 => 3,
+          40 => 4,
+          53 => 5,
+          66 => 6,
+          77 => 7,
+          88 => 8,
+          96 => 8
+        }.each do |number_of_samples, number_of_pools|
+          parent_1_plate.wells[0..(number_of_samples - 1)].each { |well| well.state = 'passed' }
+          subject.well_filter.instance_variable_set(:@well_transfers, nil) # reset well_filter cache
+          expect(subject.number_of_pools).to eq(number_of_pools)
+        end
+      end
+    end
+
+    context 'when number of samples is greater than 96' do
+      it 'returns the number of pools from constant' do
+        parent_1_plate.wells[0..96].each { |well| well.state = 'passed' }
+        {
+          97 => described_class::DEFAULT_NUMBER_OF_POOLS,
+          160 => described_class::DEFAULT_NUMBER_OF_POOLS
+        }.each do |number_of_samples, number_of_pools|
+          parent_2_plate.wells[0..(number_of_samples - 97)].each { |well| well.state = 'passed' }
+          subject.well_filter.instance_variable_set(:@well_transfers, nil) # reset well_filter cache
+          expect(subject.number_of_pools).to eq(number_of_pools)
+        end
+      end
     end
   end
 end

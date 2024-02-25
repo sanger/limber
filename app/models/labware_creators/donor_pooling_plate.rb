@@ -46,6 +46,7 @@ module LabwareCreators
       wells.requests_as_source
     ].freeze
 
+    # TODO: Remove this default once a new CSV file is provided.
     # The default number of pools to be created if the count is not found in
     # the lookup table. For scRNA Donor Pooling, until a new CSV file is
     # provided, a copy of Cardinal pooling config is used, which goes up to 96
