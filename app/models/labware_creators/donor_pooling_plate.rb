@@ -20,9 +20,17 @@ module LabwareCreators
     # input page.
     self.page = 'donor_pooling_plate'
 
-    # Add the :barcodes attribute to the list of attributes for this class.
-    # The :barcodes attribute is initialized as an empty array.
+    # Add the barcodes attribute to the list of attributes for this class.
+    # It is used by the creation controller to permit the barcodes parameter.
     self.attributes += [{ barcodes: [] }]
+
+    # @!attribute [r] barcodes
+    #   @return [Array<String>] an array of barcode strings from the user
+    attr_reader :barcodes
+
+    # @!attribute [r] minimal_barcodes
+    #   @return [Array<String>] a version of `@barcodes` where any blank values have been removed and remaining values have been stripped of leading and trailing whitespace
+    attr_reader :minimal_barcodes
 
     # Define related objects to be included when retrieving source plates using
     # the Sequencescape::API::V2.Plate.find_all method. The 'includes' argument
