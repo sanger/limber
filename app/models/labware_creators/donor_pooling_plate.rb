@@ -116,7 +116,10 @@ module LabwareCreators
     #
     # @return [Integer] The number of pools.
     def number_of_pools
-      Rails.application.config.scrna_core_donor_pooling_config.fetch(source_wells_for_pooling.count, DEFAULT_NUMBER_OF_POOLS)
+      Rails.application.config.scrna_core_donor_pooling_config.fetch(
+        source_wells_for_pooling.count,
+        DEFAULT_NUMBER_OF_POOLS
+      )
     end
 
     # Creates transfer requests from source wells to the destination plate in
@@ -237,19 +240,24 @@ module LabwareCreators
       groups.flat_map { |group| split_single_group_by_donor_ids(group) }
     end
 
-    # Splits a single group of wells by donor_ids. Used by the
-    # 'split_groups_by_donor_ids' method.
+    # Splits a single group of wells by donor_ids. This method is used by the
+    # 'split_groups_by_donor_ids' method. It iteratively segregates wells with
+    # the first encountered instance of each unique donor_id into a separate
+    # subgroup. This process continues until there are no wells left in the
+    # original group. The result is a collection of subgroups, each containing
+    # wells from distinct donors.
     #
     # @param group [Array<Well>] The group of wells to split.
     # @return [Array<Array<Well>>] An array of subgroups, each containing wells
-    #   from a unique donor.
+    #   from different donors.
     def split_single_group_by_donor_ids(group)
+      group = group.dup # determinism
       output = []
       while group.any?
         subgroup = []
         unique_donor_ids(group).each do |donor_id|
-          index = group.index { |well| well.aliquots.sample.sample_metadata.donor_id == donor_id }
-          subgroup << group.delete_at(index)
+          index = group.index { |well| well.aliquots.first.sample.sample_metadata.donor_id == donor_id }
+          subgroup << group.delete_at(index) if index
         end
         output << subgroup
       end
@@ -272,6 +280,7 @@ module LabwareCreators
     # @param groups [Array<Array<Well>>] Array of well groups to be distributed.
     # @return [Array<Array<Well>>] Array of distributed groups.
     def distribute_samples_across_pools(groups)
+      groups = groups.dup # determinism
       groups.sort_by!(&:size)
       while groups.any? && groups.last.size > 1 && groups.size < number_of_pools
         splits = (largest = groups.pop).each_slice(largest.size / 2).to_a
