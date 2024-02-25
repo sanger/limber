@@ -195,6 +195,42 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
+  describe '#split_single_group_by_donor_ids' do
+    it 'returns the split groups' do
+      well_p1_w1 = well = parent_1_plate.wells[0]
+      well.state = 'passed'
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      well_p1_w2 = well = parent_1_plate.wells[1]
+      well.state = 'passed'
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      well_p1_w3 = well = parent_1_plate.wells[2]
+      well.state = 'passed'
+      well.aliquots.first.sample.sample_metadata.donor_id = 2
+
+      well_p2_w1 = well = parent_2_plate.wells[0]
+      well.state = 'passed'
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      well_p2_w2 = well = parent_2_plate.wells[1]
+      well.state = 'passed'
+      well.aliquots.first.sample.sample_metadata.donor_id = 2
+
+      well_p2_w3 = well = parent_2_plate.wells[2]
+      well.state = 'passed'
+      well.aliquots.first.sample.sample_metadata.donor_id = 3
+
+      group = [well_p1_w1, well_p1_w2, well_p1_w3, well_p2_w1, well_p2_w2, well_p2_w3]
+      split_groups = [
+        [well_p1_w1, well_p1_w3, well_p2_w3], # donor_id 1, 2, 3
+        [well_p1_w2, well_p2_w2], # donor_id 1, 2
+        [well_p2_w1] # donor_id 1
+      ]
+      expect(subject.split_single_group_by_donor_ids(group)).to match_array(split_groups)
+    end
+  end
+
   describe '#unique_donor_ids' do
     it 'returns the unique donor ids' do
       well_p1_w1 = well = parent_1_plate.wells[0]
@@ -206,13 +242,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       well_p1_w3 = well = parent_1_plate.wells[2]
       well.aliquots.first.sample.sample_metadata.donor_id = 2
 
-      well_p2_w1 = well = parent_1_plate.wells[0]
+      well_p2_w1 = well = parent_2_plate.wells[0]
       well.aliquots.first.sample.sample_metadata.donor_id = 1
 
-      well_p2_w2 = well = parent_1_plate.wells[1]
+      well_p2_w2 = well = parent_2_plate.wells[1]
       well.aliquots.first.sample.sample_metadata.donor_id = 2
 
-      well_p2_w3 = well = parent_1_plate.wells[2]
+      well_p2_w3 = well = parent_2_plate.wells[2]
       well.aliquots.first.sample.sample_metadata.donor_id = 3
 
       group = [well_p1_w1, well_p1_w2, well_p1_w3, well_p2_w1, well_p2_w2, well_p2_w3]
