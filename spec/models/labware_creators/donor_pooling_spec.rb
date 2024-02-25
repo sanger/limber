@@ -29,6 +29,14 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     plate
   end
 
+  let(:study_1) { create(:v2_study, name: 'study-1-name') }
+  let(:study_2) { create(:v2_study, name: 'study-2-name') }
+  let(:study_3) { create(:v2_study, name: 'study-3-name') }
+
+  let(:project_1) { create(:v2_project, name: 'project-1-name') }
+  let(:project_2) { create(:v2_project, name: 'project-2-name') }
+  let(:project_3) { create(:v2_project, name: 'project-3-name') }
+
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes } }
   let(:source_plates) { [parent_1_plate, parent_2_plate] }
   let(:barcodes) { source_plates.map { |plate| plate.barcode.human } }
@@ -95,6 +103,20 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
+  describe '#barcodes=' do
+    it 'sets the barcodes' do
+      expect(subject.barcodes).to eq(barcodes)
+      expect(subject.minimal_barcodes).to eq(barcodes)
+    end
+
+    it 'cleans the barcodes' do
+      new_barcodes = barcodes.map { |barcode| "\r\n\t\v\f #{barcode} \r\n\t\v\f" } + ['', " \r\n\t\v\f ", nil]
+      subject.barcodes = new_barcodes
+      expect(subject.barcodes).to eq(new_barcodes)
+      expect(subject.minimal_barcodes).to eq(barcodes)
+    end
+  end
+
   describe '#number_of_pools' do
     # TODO: Change this test once a new CSV file is provided.
     context 'when number of samples is less than or equal to 96' do
@@ -129,6 +151,47 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           expect(subject.number_of_pools).to eq(number_of_pools)
         end
       end
+    end
+  end
+
+  describe '#group_by_study_and_project' do
+    it 'returns the grouped wells' do
+      well_p1_w1 = well = parent_1_plate.wells[0]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+
+      well_p1_w2 = well = parent_1_plate.wells[1]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+
+      well_p1_w3 = well = parent_1_plate.wells[2]
+      well.state = 'passed'
+      well.aliquots.first.study = study_2
+      well.aliquots.first.project = project_1
+
+      well_p1_w4 = well = parent_1_plate.wells[3]
+      well.state = 'passed'
+      well.aliquots.first.study = study_2
+      well.aliquots.first.project = project_2
+
+      well_p2_w1 = well = parent_2_plate.wells[0]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+
+      well_p2_w2 = well = parent_2_plate.wells[1]
+      well.state = 'passed'
+      well.aliquots.first.study = study_2
+      well.aliquots.first.project = project_2
+
+      groups = [
+        [well_p1_w1, well_p1_w2, well_p2_w1], # study_1, project_1
+        [well_p1_w3], # study_2, project_1
+        [well_p1_w4, well_p2_w2] # study_2, project_2
+      ]
+      expect(subject.group_by_study_and_project).to eq(groups)
     end
   end
 end
