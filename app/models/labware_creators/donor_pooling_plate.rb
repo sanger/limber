@@ -115,7 +115,7 @@ module LabwareCreators
     #
     # @return [Integer] The number of pools.
     def number_of_pools
-      Rails.application.config.scrna_core_donor_pooling.fetch(source_wells_for_pooling.count, DEFAULT_NUMBER_OF_POOLS)
+      Rails.application.config.scrna_core_donor_pooling_config.fetch(source_wells_for_pooling.count, DEFAULT_NUMBER_OF_POOLS)
     end
 
     # Creates transfer requests from source wells to the destination plate in
