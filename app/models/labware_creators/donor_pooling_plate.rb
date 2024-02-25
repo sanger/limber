@@ -262,7 +262,7 @@ module LabwareCreators
     # @param group [Array<Well>] The group of wells from which to retrieve donor_ids.
     # @return [Array<String>] An array of unique donor_ids.
     def unique_donor_ids(group)
-      group.map { |well| well.aliquots.sample.sample_metadata.donor_id }.uniq
+      group.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq
     end
 
     # Distributes samples across pools based on group sizes. It sorts the groups
