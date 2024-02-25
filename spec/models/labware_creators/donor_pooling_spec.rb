@@ -195,7 +195,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
-  describe '#split_single_group_by_donor_ids' do
+  describe '#split_single_group_by_unique_donor_ids' do
     it 'returns the split groups' do
       well_p1_w1 = well = parent_1_plate.wells[0]
       well.state = 'passed'
@@ -227,7 +227,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         [well_p1_w2, well_p2_w2], # donor_id 1, 2
         [well_p2_w1] # donor_id 1
       ]
-      expect(subject.split_single_group_by_donor_ids(group)).to match_array(split_groups)
+      expect(subject.split_single_group_by_unique_donor_ids(group)).to match_array(split_groups)
     end
   end
 

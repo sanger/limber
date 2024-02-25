@@ -215,7 +215,7 @@ module LabwareCreators
     # @return [Array<Array<Well>>] An array of well groups distributed across pools.
     def build_pools
       groups = group_by_study_and_project
-      groups = split_groups_by_donor_ids(groups)
+      groups = split_groups_by_unique_donor_ids(groups)
       distribute_samples_across_pools(groups)
     end
 
@@ -236,12 +236,12 @@ module LabwareCreators
     #
     # @param groups [Array<Array<Well>>] Array of well groups to be split.
     # @return [Array<Array<Well>>] Array of subgroups split by donor ID.
-    def split_groups_by_donor_ids(groups)
-      groups.flat_map { |group| split_single_group_by_donor_ids(group) }
+    def split_groups_by_unique_donor_ids(groups)
+      groups.flat_map { |group| split_single_group_by_unique_donor_ids(group) }
     end
 
     # Splits a single group of wells by donor_ids. This method is used by the
-    # 'split_groups_by_donor_ids' method. It iteratively segregates wells with
+    # 'split_groups_by_unique_donor_ids' method. It iteratively segregates wells with
     # the first encountered instance of each unique donor_id into a separate
     # subgroup. This process continues until there are no wells left in the
     # original group. The result is a collection of subgroups, each containing
@@ -250,7 +250,7 @@ module LabwareCreators
     # @param group [Array<Well>] The group of wells to split.
     # @return [Array<Array<Well>>] An array of subgroups, each containing wells
     #   from different donors.
-    def split_single_group_by_donor_ids(group)
+    def split_single_group_by_unique_donor_ids(group)
       group = group.dup # determinism
       output = []
       while group.any?
@@ -265,7 +265,7 @@ module LabwareCreators
     end
 
     # Returns the unique donor_ids from a group of wells. Used by the
-    # 'split_single_group_by_donor_ids' method.
+    # 'split_single_group_by_unique_donor_ids' method.
     #
     # @param group [Array<Well>] The group of wells from which to retrieve donor_ids.
     # @return [Array<String>] An array of unique donor_ids.
