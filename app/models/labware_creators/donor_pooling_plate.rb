@@ -29,7 +29,9 @@ module LabwareCreators
     attr_reader :barcodes
 
     # @!attribute [r] minimal_barcodes
-    #   @return [Array<String>] a version of `@barcodes` where any blank values have been removed and remaining values have been stripped of leading and trailing whitespace
+    #   @return [Array<String>] a version of barcodes where any blank values
+    #     have been removed and remaining values have been stripped of leading
+    #     and trailing whitespace
     attr_reader :minimal_barcodes
 
     # Define related objects to be included when retrieving source plates using
