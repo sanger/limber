@@ -67,6 +67,4 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     # max_by naturally sorts in ascending order
     @stock_plate ||= ancestors.where(purpose_name: purpose_names).max_by(&:id)
   end
-
-
 end
