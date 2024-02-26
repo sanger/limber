@@ -317,4 +317,51 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
   end
+
+  describe '#build_pools' do
+    let(:studies) { create_list(:v2_study, 16) }
+    let(:projects) { create_list(:v2_project, 16) }
+    let(:donor_ids) { (1..160).to_a }
+    let(:wells) { parent_1_plate.wells + parent_2_plate.wells[0..63] }
+
+    before do
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = studies[index % 16]
+        well.aliquots.first.project = projects[index % 16]
+        well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+      end
+    end
+
+    it 'returns correct number of pools' do
+      pools = subject.build_pools
+      expect(pools.size).to eq(described_class::DEFAULT_NUMBER_OF_POOLS)
+      expect(pools.flatten).to match_array(wells)
+    end
+
+    it 'returns correct number of studies in each pool' do
+      pools = subject.build_pools
+      pools.each do |pool|
+        number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
+        expect(number_of_unique_study_ids).to eq(1)
+      end
+    end
+
+    it 'returns correct number of projects in each pool' do
+      pools = subject.build_pools
+      pools.each do |pool|
+        number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
+        expect(number_of_unique_project_ids).to eq(1)
+      end
+    end
+
+    it 'returns correct number of donors in each pool' do
+      # Even distribution of donors across pools.
+      pools = subject.build_pools
+      pools.each do |pool|
+        number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
+        expect(number_of_unique_donor_ids).to eq(wells.size / described_class::DEFAULT_NUMBER_OF_POOLS)
+      end
+    end
+  end
 end
