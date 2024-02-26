@@ -5,6 +5,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasRequests
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
+  include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
 
   DEFAULT_INCLUDES = [:purpose, 'aliquots.request.request_type'].freeze
 
@@ -67,16 +68,5 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     @stock_plate ||= ancestors.where(purpose_name: purpose_names).max_by(&:id)
   end
 
-  # Finds the labware whose barcode will be printed in the label at the top_right field.
-  # Uses alternative_workline_identifier from the purpose config if present, otherwise uses the stock plate.
-  def workline_reference
-    alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(self)
-    return stock_plate if alternative_workline_identifier_purpose.nil?
 
-    ancestors.where(purpose_name: alternative_workline_identifier_purpose).last
-  end
-
-  def workline_identifier
-    workline_reference&.barcode&.human
-  end
 end
