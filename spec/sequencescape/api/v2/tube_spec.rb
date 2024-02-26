@@ -30,4 +30,17 @@ RSpec.describe Sequencescape::Api::V2::Tube do
       expect(tube_with_ancestors.stock_plate).to eq(stock_plates.last)
     end
   end
+
+  describe '#workline_identifier' do
+    it 'displays the barcode of the workline_reference element' do
+      tube1 = create :v2_tube
+      allow(tube).to receive(:workline_reference).and_return(tube1)
+      expect(tube.workline_identifier).to eq(tube1.barcode.human)
+    end
+
+    it 'does not break if there is no workline reference' do
+      allow(tube).to receive(:workline_reference).and_return(nil)
+      expect(tube.workline_identifier).to eq(nil)
+    end
+  end
 end
