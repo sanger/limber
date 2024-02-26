@@ -218,7 +218,7 @@ module LabwareCreators
     def build_pools
       groups = split_single_group_by_study_and_project(source_wells_for_pooling)
       groups = split_groups_by_unique_donor_ids(groups)
-      distribute_samples_across_pools(groups, number_of_pools)
+      distribute_groups_across_pools(groups, number_of_pools)
     end
   end
 end
