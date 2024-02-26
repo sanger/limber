@@ -17,13 +17,16 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
   let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid) }
 
   # requests
-  let(:request_type_1) { create :request_type, key: 'parent_tube_library_request_type' }
+  let(:request_type_key) { 'parent_tube_library_request_type' }
+
+  let(:request_type_1) { create :request_type, key: request_type_key }
+  let(:request_type_2) { create :request_type, key: request_type_key }
 
   let(:request_1) { create :library_request, request_type: request_type_1, uuid: 'request-1', submission_id: '1' }
-  let(:request_2) { create :library_request, request_type: request_type_1, uuid: 'request-2', submission_id: '1' }
+  let(:request_2) { create :library_request, request_type: request_type_2, uuid: 'request-2', submission_id: '1' }
 
   # parent aliquots
-  # TODO: outer request is more accurately an already passed request for scRNA
+  # NB. in scRNA the outer request is more accurately an already passed request ie. from the earlier submission
   let(:parent_tube_1_aliquot) { create(:v2_aliquot, sample: sample1, outer_request: request_1) }
   let(:parent_tube_2_aliquot) { create(:v2_aliquot, sample: sample2, outer_request: request_2) }
 
@@ -46,7 +49,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
   # parent tubes
   let(:parent_tube_1_uuid) { 'tube-1-uuid' }
 
-  # TODO: this factory is not creating a request on which we can call request_type
   let(:parent_tube_1) do
     create(
       :v2_tube,
@@ -100,7 +102,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
   end
 
   # TODO: is this needed?
-  let(:child_plate_v1) { json :stock_plate_with_metadata, stock_plate: { barcode: '5', uuid: child_plate_uuid } }
+  # let(:child_plate_v1) { json :stock_plate_with_metadata, stock_plate: { barcode: '5', uuid: child_plate_uuid } }
 
   let(:user_uuid) { 'user-uuid' }
   let(:user) { json :v1_user, uuid: user_uuid }
@@ -112,7 +114,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
   end
 
   let(:tube_rack_file) do
-    fixture_file_upload('spec/fixtures/files/scrna_core_cryostor_tube_rack_scan_valid.csv', 'sequencescape/qc_file')
+    fixture_file_upload(
+      'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv',
+      'sequencescape/qc_file'
+    )
   end
 
   before do
@@ -129,8 +134,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
       )
       .and_return(parent_tube_2)
 
-    # TODO: whats the correct includes here?
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_includes: 'wells,wells.aliquots,wells.aliquots.study')
+    stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
   end
 
   context 'on new' do
@@ -198,6 +202,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     it 'creates a plate!' do
+      subject.save
       expect(ms_plate_creation_request).to have_been_made.once
       expect(transfer_creation_request).to have_been_made.once
     end
@@ -205,7 +210,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
   context 'when a file is not correctly parsed' do
     let(:tube_rack_file) do
-      fixture_file_upload('spec/fixtures/files/scrna_core_cryostor_tube_rack_scan_invalid.csv', 'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_invalid.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     let(:form_attributes) do
@@ -230,7 +238,93 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
     end
   end
 
-  # TODO: context 'when a tube is not in LIMS' do
-  # TODO: context 'when a tube is not of expected purpose type' do
-  # TODO: context 'when a tube does not have an active request of the expected type' do
+  context 'when a tube is not in LIMS' do
+    let(:tube_rack_file) do
+      fixture_file_upload(
+        'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_with_unknown_barcode.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    let(:form_attributes) do
+      {
+        user_uuid: user_uuid,
+        purpose_uuid: child_plate_purpose_uuid,
+        parent_uuid: parent_tube_1_uuid,
+        file: tube_rack_file
+      }
+    end
+
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
+    before do
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
+        .with(
+          barcode: 'FX10000003',
+          includes: [:purpose, 'receptacle.aliquots.request.request_type,receptacle.requests_as_source.request_type']
+        )
+        .and_return(nil)
+
+      subject.validate
+    end
+
+    it 'is not valid' do
+      expect(subject).not_to be_valid
+      expect(subject.errors.full_messages).to include(
+        'Tube barcode FX10000003 not found in the LIMS. ' \
+          'Please check the tube barcodes in the scan file are valid tubes.'
+      )
+    end
+  end
+
+  context 'when a tube is not of expected purpose type' do
+    let(:form_attributes) do
+      {
+        user_uuid: user_uuid,
+        purpose_uuid: child_plate_purpose_uuid,
+        parent_uuid: parent_tube_1_uuid,
+        file: tube_rack_file
+      }
+    end
+
+    let(:parent_tube_2_purpose_uuid) { 'parent-tube-purpose-type-unknown-uuid' }
+    let(:parent_tube_2_purpose_name) { 'Parent Tube Purpose Type Unknown' }
+
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
+    before { subject.validate }
+
+    it 'is not valid' do
+      expect(subject).not_to be_valid
+      expect(subject.errors.full_messages).to include(
+        'Tube barcode FX10000002 does not match to one of the expected tube purposes ' \
+          '(one of type(s): Parent Tube Purpose Type 1, Parent Tube Purpose Type 2)'
+      )
+    end
+  end
+
+  context 'when a tube does not have an active request of the expected type' do
+    let(:form_attributes) do
+      {
+        user_uuid: user_uuid,
+        purpose_uuid: child_plate_purpose_uuid,
+        parent_uuid: parent_tube_1_uuid,
+        file: tube_rack_file
+      }
+    end
+
+    let(:request_type_2) { create :request_type, key: 'unrelated_request_type_key' }
+
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
+    before { subject.validate }
+
+    it 'is not valid' do
+      expect(subject).not_to be_valid
+      expect(subject.errors.full_messages).to include(
+        'Tube barcode FX10000002 does not have an expected active request ' \
+          '(one of type(s): parent_tube_library_request_type)'
+      )
+    end
+  end
 end

@@ -109,7 +109,9 @@ module LabwareCreators
       parent_tubes.each do |foreign_barcode, tube_in_db|
         next if tube_in_db.present?
 
-        msg = "Tube barcode #{foreign_barcode} not found in the LIMS"
+        msg =
+          "Tube barcode #{foreign_barcode} not found in the LIMS. " \
+            'Please check the tube barcodes in the scan file are valid tubes.'
         errors.add(:base, msg)
       end
     end
