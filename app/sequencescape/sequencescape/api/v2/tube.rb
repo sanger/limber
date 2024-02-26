@@ -67,11 +67,8 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     @stock_plate ||= ancestors.where(purpose_name: purpose_names).max_by(&:id)
   end
 
-  # This is the labware that will act as a reference in my workflow that will be
-  # printed in the label at the top_right field. It is the first stock by default,
-  # but in some cases we may want to display a different labware. To change the default
-  # selection from stock plate to other plate purpose, we have to modify the purposes.yml
-  # config file and add a alternative_workline_identifier attribute with the purpose we want to select.
+  # Finds the labware whose barcode will be printed in the label at the top_right field.
+  # Uses alternative_workline_identifier from the purpose config if present, otherwise uses the stock plate.
   def workline_reference
     alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(self)
     return stock_plate if alternative_workline_identifier_purpose.nil?
