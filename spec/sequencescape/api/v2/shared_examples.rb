@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.shared_examples 'a labware with a workline identifier' do
   describe '#workline_identifier' do
     it 'displays the barcode of the workline_reference element' do
