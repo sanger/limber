@@ -13,6 +13,7 @@ FactoryBot.define do
 
     after(:build) do |receptacle, evaluator|
       receptacle._cached_relationship(:qc_results) { evaluator.qc_results || [] }
+      receptacle._cached_relationship(:requests_as_source) { evaluator.requests_as_source || [] }
     end
   end
 end
