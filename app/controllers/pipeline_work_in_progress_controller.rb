@@ -49,8 +49,24 @@ class PipelineWorkInProgressController < ApplicationController
 
   # Retrieves labware through the Sequencescape V2 API
   # Combines pages into one list
+  # Combines labware without and without children
   # Returns a list of Sequencescape::Api::V2::Labware
   def retrieve_labware(page_size, from_date, purposes)
+    labware = query_labware(page_size, from_date, purposes, nil)
+    labware_without_children = query_labware(page_size, from_date, purposes, false)
+
+    # filter out labware without children from labware, matching on UUID
+    labware_without_children_uuids = labware_without_children.to_set(&:uuid)
+    labware_with_children =
+      labware.reject { |labware_record| labware_without_children_uuids.include?(labware_record.uuid) }
+
+    labware_with_children.each { |labware_record| labware_record.has_children = true }
+    labware_without_children.each { |labware_record| labware_record.has_children = false }
+
+    labware_without_children + labware_with_children
+  end
+
+  def query_labware(page_size, from_date, purposes, with_children)
     labware_query =
       Sequencescape::Api::V2::Labware
         .select(
@@ -59,9 +75,9 @@ class PipelineWorkInProgressController < ApplicationController
           { purposes: 'name' }
         )
         .includes(:state_changes, :purpose, 'ancestors.purpose')
-        .where(without_children: true, purpose_name: purposes, updated_at_gt: from_date)
-        .order(:updated_at)
-        .per(page_size)
+        .where(purpose_name: purposes, updated_at_gt: from_date)
+    labware_query = labware_query.where(without_children: true) if with_children == false
+    labware_query.order(:updated_at).per(page_size)
 
     Sequencescape::Api::V2.merge_page_results(labware_query)
   end
@@ -88,12 +104,15 @@ class PipelineWorkInProgressController < ApplicationController
         state = decide_state(rec)
         next if state == 'cancelled'
 
-        output[rec.purpose.name] << { record: rec, state: state }
+        state_with_children = rec.has_children ? "#{state} (parent)" : state
+
+        output[rec.purpose.name] << { record: rec, state: state, state_with_children: state_with_children }
       end
     end
   end
 
   def decide_state(labware)
+    # TODO: the default of pending is a false assumption - see RVI cherrypick
     labware.state_changes&.max_by(&:id)&.target_state || 'pending'
   end
 
@@ -111,7 +130,9 @@ class PipelineWorkInProgressController < ApplicationController
   # }
   def count_states(grouped)
     {}.tap do |output|
-      grouped.each { |purpose, records| output[purpose] = records.group_by { |r| r[:state] }.transform_values(&:count) }
+      grouped.each do |purpose, records|
+        output[purpose] = records.group_by { |r| r[:state_with_children] }.transform_values(&:count)
+      end
     end
   end
 end
