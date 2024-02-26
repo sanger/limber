@@ -154,7 +154,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
-  describe '#group_by_study_and_project' do
+  describe '#split_single_group_by_study_and_project' do
     it 'returns the grouped wells' do
       well_p1_w1 = well = parent_1_plate.wells[0]
       well.state = 'passed'
@@ -191,7 +191,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         [well_p1_w3], # study_2, project_1
         [well_p1_w4, well_p2_w2] # study_2, project_2
       ]
-      expect(subject.group_by_study_and_project).to eq(groups)
+      expect(subject.split_single_group_by_study_and_project(groups.flatten)).to eq(groups)
     end
   end
 
