@@ -24,6 +24,7 @@ LRC Blood Aliquot:
   :presenter_class: Presenters::SimpleTubePresenter
   :creator_class: LabwareCreators::TubeFromTube
   :label_template: plate_a # uses a plate printer because it's a 'falcon tube'
+  :alternative_workline_identifier: LRC Blood Vac
 ###
 # scRNA Core Cell Extraction Blood Pipeline
 ###

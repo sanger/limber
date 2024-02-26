@@ -105,7 +105,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   # printed in the label at the top_right field. It is the first stock by default,
   # but in some cases we may want to display a different plate. To change the default
   # selection from stock plate to other plate purpose, we have to modify the purposes.yml
-  # config file and add a workline_reference_identifier attribute with the purpose we want to select.
+  # config file and add a alternative_workline_identifier attribute with the purpose we want to select.
   def workline_reference
     alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(self)
     return stock_plate if alternative_workline_identifier_purpose.nil?
