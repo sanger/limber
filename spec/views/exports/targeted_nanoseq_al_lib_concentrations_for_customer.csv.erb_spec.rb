@@ -35,26 +35,10 @@ RSpec.describe 'exports/targeted_nanoseq_al_lib_concentrations_for_customer.csv.
         'Input amount desired',
         'Sample volume',
         'Diluent volume',
-        'PCR cycles',
-        'Submit for sequencing (Y/N)?',
-        'Sub-Pool',
-        'Coverage'
+        'Hyb Panel'
       ],
-      [
-        'A1',
-        '1.5',
-        well_a1_sanger_sample_id,
-        well_a1_supplier_name,
-        (1.5 * 25).to_s,
-        nil,
-        nil,
-        nil,
-        nil,
-        nil,
-        nil,
-        nil
-      ],
-      ['B1', '1.5', well_b1_sanger_sample_id, well_b1_supplier_name, (1.5 * 25).to_s, nil, nil, nil, nil, nil, nil, nil]
+      ['A1', '1.5', well_a1_sanger_sample_id, well_a1_supplier_name, (1.5 * 25).to_s, nil, nil, nil, nil],
+      ['B1', '1.5', well_b1_sanger_sample_id, well_b1_supplier_name, (1.5 * 25).to_s, nil, nil, nil, nil]
     ]
   end
 

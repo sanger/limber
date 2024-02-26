@@ -14,27 +14,33 @@ class PurposeConfig
 
   self.default_state_changer = 'StateChangers::DefaultStateChanger'
 
-  def self.load(name, options, store, api, submission_templates, label_templates)
+  def self.load(name, options, store, api, submission_templates, label_template_config)
     case options.fetch(:asset_type)
     when 'plate'
-      PurposeConfig::Plate.new(name, options, store, api, submission_templates, label_templates)
+      PurposeConfig::Plate.new(name, options, store, api, submission_templates, label_template_config)
     when 'tube'
-      PurposeConfig::Tube.new(name, options, store, api, submission_templates, label_templates)
+      PurposeConfig::Tube.new(name, options, store, api, submission_templates, label_template_config)
     when 'tube_rack'
-      PurposeConfig::TubeRack.new(name, options, store, api, submission_templates, label_templates)
+      PurposeConfig::TubeRack.new(name, options, store, api, submission_templates, label_template_config)
     else
       raise "Unknown purpose type #{options.fetch(:asset_type)} for #{name}"
     end
   end
 
-  def initialize(name, options, store, api, submission_templates, label_templates)
+  #
+  # @param name [String] name of the purpose, from the keys from the purposes.yml file
+  # @param options [Hash] values under the name key from the purposes.yml file
+  # @param label_template_config [Hash] hash version of the label_template_config.yml file
+  #
+  def initialize(name, options, store, api, submission_templates, label_template_config)
     @name = name
     @options = options
     @submission = options.delete(:submission)
     @store = store
     @api = api
     @submission_templates = submission_templates
-    @label_templates = label_templates
+    @label_templates = label_template_config.fetch('templates')
+    @label_template_defaults = label_template_config.fetch('defaults_by_printer_type')
     @template_name = @options.delete(:label_template) || ''
   end
 
@@ -44,10 +50,10 @@ class PurposeConfig
       **default_options,
       state_changer_class: default_state_changer,
       submission: submission_options,
-      label_class: print_option(:label_class),
-      printer_type: print_option(:printer_type),
-      pmb_template: print_option(:pmb_template),
-      sprint_template: print_option(:sprint_template)
+      label_class: label_template[:label_class],
+      printer_type: label_template[:printer_type],
+      pmb_template: label_template[:pmb_template],
+      sprint_template: label_template[:sprint_template]
     }.merge(@options)
   end
 
@@ -127,32 +133,18 @@ class PurposeConfig
     }
   end
 
-  # NB. Make sure label_templates.yml contains settings for label definitions
-  # explicity, in order to avoid incorrect results. The options below are used
-  # for assigning values for missing settings.
-  def default_printer_options
+  def label_template
+    @label_templates.fetch(@template_name.to_s, default_label_template)
+  end
+
+  def default_label_template
+    printer_type_key = default_options[:default_printer_type]
     {
-      printer_type: default_printer_type,
-      pmb_template: default_pmb_template,
       label_class: default_options[:label_class],
-      sprint_template: default_sprint_template
+      printer_type: @label_template_defaults.fetch('printer_type_names').fetch(printer_type_key),
+      pmb_template: @label_template_defaults.fetch('pmb_templates').fetch(printer_type_key),
+      sprint_template: @label_template_defaults.fetch('sprint_templates').fetch(printer_type_key)
     }
-  end
-
-  def print_option(option)
-    @label_templates.fetch(@template_name.to_s, {}).fetch(option, default_printer_options[option])
-  end
-
-  def default_printer_type
-    @label_templates.fetch('default_printer_type_names').fetch(default_options[:default_printer_type])
-  end
-
-  def default_pmb_template
-    @label_templates.fetch('default_pmb_templates').fetch(default_options[:default_printer_type])
-  end
-
-  def default_sprint_template
-    @label_templates.fetch('default_sprint_templates').fetch(default_options[:default_printer_type])
   end
 end
 # rubocop:enable Metrics/ParameterLists

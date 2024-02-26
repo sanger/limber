@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFile, with: :uploader do
+RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with: :uploader do
   let(:purpose_config) { create :duplex_seq_customer_csv_file_upload_purpose_config }
   let(:csv_file_config) { purpose_config.fetch(:csv_file_upload) }
 

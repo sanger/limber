@@ -49,10 +49,6 @@ class Labels::Base # rubocop:todo Style/Documentation
   end
 
   def label_templates_by_service
-    # NB. Make sure label_templates.yml contains settings for label definitions
-    # explicity, in order to avoid incorrect results. The lines below do not
-    # work as intended because the config is filled with default values for
-    # missing settings by PurposeConfig class.
     pmb_template = config[:pmb_template] || default_label_template
     sprint_template = config[:sprint_template] || default_sprint_label_template
     { 'PMB' => pmb_template, 'SPrint' => sprint_template }
