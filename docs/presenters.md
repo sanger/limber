@@ -118,8 +118,8 @@ PF Lib Q-XP2
 
 {include:Presenters::StockPlatePresenter}
 
-Used directly in 18 purposes:
-GnT Stock, LB Cherrypick, LBB Cherrypick, LBC Stock, LBR Cherrypick, LBSN-96 Lysate, LCMB Cherrypick, LDS Cherrypick, LDS Stock, LHR RT, LHR-384 RT, LILYS-96 Stock, LTHR RT, LTHR-384 RT, LTN Cherrypick, LTN Stock, PF Cherrypicked, and scRNA Stock
+Used directly in 16 purposes:
+GnT Stock, LB Cherrypick, LBB Cherrypick, LBC Stock, LBR Cherrypick, LCMB Cherrypick, LDS Cherrypick, LDS Stock, LHR RT, LHR-384 RT, LTHR RT, LTHR-384 RT, LTN Cherrypick, LTN Stock, PF Cherrypicked, and scRNA Stock
 
 {Presenters::StockPlatePresenter View class documentation}
 
