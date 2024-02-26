@@ -37,7 +37,7 @@ module LabwareCreators::DonorPoolingHelper
   # @return [Array<Array<Well>>] An array of subgroups, each containing wells
   #   from different donors.
   def split_single_group_by_unique_donor_ids(group)
-    group = group.dup # determinism
+    group = group.dup
     output = []
     while group.any?
       subgroup = []
@@ -61,15 +61,16 @@ module LabwareCreators::DonorPoolingHelper
 
   # Distributes samples across pools based on group sizes. It sorts the groups
   # by size and splits the largest group into two until the number of groups
-  # equals the number of pools or until all groups have a size of 1.
+  # equals the number of pools or until all groups have a size of 1. The input
+  # groups are the result of applying conditions, hence they cannot be mixed.
   #
   # @param groups [Array<Array<Well>>] Array of well groups to be distributed.
   # @return [Array<Array<Well>>] Array of distributed groups.
-  def distribute_samples_across_pools(groups, number_of_pools)
-    groups = groups.dup # determinism
+  def distribute_groups_across_pools(groups, number_of_pools)
+    groups = groups.dup
     groups.sort_by!(&:size)
     while groups.any? && groups.last.size > 1 && groups.size < number_of_pools
-      splits = (largest = groups.pop).each_slice(largest.size / 2).to_a
+      splits = (largest = groups.pop).each_slice((largest.size / 2.0).ceil).to_a
       groups.concat(splits).sort_by!(&:size)
     end
     groups

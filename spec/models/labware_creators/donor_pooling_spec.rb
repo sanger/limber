@@ -256,4 +256,65 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       expect(subject.unique_donor_ids(group)).to eq(unique_donor_ids)
     end
   end
+
+  describe '#distribute_groups_across_pools' do
+    context 'with well groups' do
+      it 'divides large groups' do
+        groups = [
+          parent_1_plate.wells[1..9], # 9 wells
+          parent_1_plate.wells[10..15], # 6 wells
+          parent_2_plate.wells[16..20], # 5 wells
+          parent_2_plate.wells[21..21] # 1 well
+        ]
+
+        # Helper method (g) to write the expected result.
+        wells = groups.flatten
+        g = proc { |*numbers| numbers.map { |number| wells[number - 1] } }
+
+        distributed_groups = [
+          g[21],
+          g[10, 11, 12],
+          g[13, 14, 15],
+          g[6, 7, 8, 9],
+          g[16, 17, 18, 19, 20],
+          g[1, 2, 3, 4, 5]
+        ]
+        expect(subject.distribute_groups_across_pools(groups, 6)).to match_array(distributed_groups)
+      end
+    end
+
+    context 'when the number of groups is less than the number of pools' do
+      it 'divides large groups' do
+        # Using integers for easy reading.
+        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
+        distributed_groups = [[21], [10, 11, 12], [13, 14, 15], [6, 7, 8, 9], [16, 17, 18, 19, 20], [1, 2, 3, 4, 5]]
+        expect(subject.distribute_groups_across_pools(groups, 6)).to match_array(distributed_groups)
+      end
+    end
+
+    context 'when the number of groups is equal to the number of pools' do
+      it 'returns the groups intact' do
+        # Using integers for easy reading.
+        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
+        expect(subject.distribute_groups_across_pools(groups, 4)).to match_array(groups)
+      end
+    end
+
+    context 'when the number of groups is greater than the number of pools' do
+      it 'returns the groups intact' do
+        # Using integers for easy reading.
+        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
+        expect(subject.distribute_groups_across_pools(groups, 4)).to match_array(groups)
+      end
+    end
+
+    context 'when the number of pools is too large' do
+      it 'divides all groups' do
+        # Using integers for easy reading.
+        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
+        distributed_groups = (1..21).map { |n| [n] }
+        expect(subject.distribute_groups_across_pools(groups, 25)).to match_array(distributed_groups)
+      end
+    end
+  end
 end
