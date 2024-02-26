@@ -44,8 +44,6 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   delegate :requests_as_source, to: :receptacle
 
-  delegate :aliquots, to: :receptacle
-
   #
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same

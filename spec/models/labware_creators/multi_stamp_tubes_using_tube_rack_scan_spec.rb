@@ -76,6 +76,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
     )
   end
 
+  let(:tube_includes) { 'receptacle.aliquots.request.request_type,receptacle.requests_as_source.request_type' }
+
   # child aliquots
   let(:child_aliquot1) { create :v2_aliquot }
   let(:child_aliquot2) { create :v2_aliquot }
@@ -122,16 +124,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-      .with(
-        barcode: 'FX10000001',
-        includes: [:purpose, 'receptacle.aliquots.request.request_type,receptacle.requests_as_source.request_type']
-      )
+      .with(barcode: 'FX10000001', includes: [:purpose, tube_includes])
       .and_return(parent_tube_1)
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-      .with(
-        barcode: 'FX10000002',
-        includes: [:purpose, 'receptacle.aliquots.request.request_type,receptacle.requests_as_source.request_type']
-      )
+      .with(barcode: 'FX10000002', includes: [:purpose, tube_includes])
       .and_return(parent_tube_2)
 
     stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
@@ -259,10 +255,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
     before do
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-        .with(
-          barcode: 'FX10000003',
-          includes: [:purpose, 'receptacle.aliquots.request.request_type,receptacle.requests_as_source.request_type']
-        )
+        .with(barcode: 'FX10000003', includes: [:purpose, tube_includes])
         .and_return(nil)
 
       subject.validate
