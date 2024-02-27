@@ -25,10 +25,13 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
   let(:request_1) { create :library_request, request_type: request_type_1, uuid: 'request-1', submission_id: '1' }
   let(:request_2) { create :library_request, request_type: request_type_2, uuid: 'request-2', submission_id: '1' }
 
+  let(:ancestor_request_1) { create :request, uuid: 'ancestor-request-uuid' }
+  let(:ancestor_request_2) { create :request, uuid: 'ancestor-request-uuid' }
+
   # parent aliquots
-  # NB. in scRNA the outer request is more accurately an already passed request ie. from the earlier submission
-  let(:parent_tube_1_aliquot) { create(:v2_aliquot, sample: sample1, outer_request: request_1) }
-  let(:parent_tube_2_aliquot) { create(:v2_aliquot, sample: sample2, outer_request: request_2) }
+  # NB. in scRNA the outer request is an already passed request ie. from the earlier submission
+  let(:parent_tube_1_aliquot) { create(:v2_aliquot, sample: sample1, outer_request: ancestor_request_1) }
+  let(:parent_tube_2_aliquot) { create(:v2_aliquot, sample: sample2, outer_request: ancestor_request_2) }
 
   # receptacles
   let(:receptacle_1) { create(:v2_receptacle, qc_results: [], requests_as_source: [request_1]) }
