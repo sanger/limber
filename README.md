@@ -121,8 +121,8 @@ yarn prettier --write .
 If during development changes do not seem to be taking effect, try:
 
 - Restart the application:
-- Restart the Docker container `docker-compose down && GENERATE_CONFIG=false docker-compose up -d`
-- Rebuild the Docker image `GENERATE_CONFIG=false docker-compose up --build -d`
+- Destroy and recreate the Docker container `docker-compose down && GENERATE_CONFIG=false docker-compose up -d`
+- Rebuild the Docker image, particularly useful for changing dependencies
 - Clobber local resources `rails assets:clobber`
 
 ## Note about the remainder of this document
