@@ -24,16 +24,6 @@ manual transfer.
 {StateChangers::DefaultStateChanger View class documentation}
 
 
-## StateChangers::TubeStateChanger
-
-{include:StateChangers::TubeStateChanger}
-
-  Used directly in 47 purposes:
-  Cap Lib Pool Norm, CLCM DNA Pool, CLCM DNA Pool Norm, CLCM RNA Pool, CLCM RNA Pool Norm, GBS MiSeq Pool, GBS PCR Pool, GBS PCR Pool Selected, GBS PCR2 Pool Stock, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Custom Pool, LB Custom Pool Norm, LB Lib Pool, LB Lib Pool Norm, LBB Lib Pool Stock, LBC 3pV3 GLibPS, LBC 5p GLibPS, LBC 5p Pool Norm, LBC BCR LibPS, LBC BCR Pool Norm, LBC TCR LibPS, LBC TCR Pool Norm, LBSN-384 PCR 2 Pool, LBSN-9216 Lib PCR Pool, LBSN-9216 Lib PCR Pool XP, LCA Bank Stock, LCA Blood Vac, LCA Custom Pool, LCA Custom Pool Norm, LCMB Custom Pool, LCMB Custom Pool Norm, LDS Custom Pool, LDS Custom Pool Norm, LHR Lib Pool, LHR Lib Pool XP, LHR-384 Pool XP, LRC Blood Aliquot, LRC Blood Vac, LTHR Pool XP, LTHR-384 Pool XP, LTN Custom Pool, LTN Custom Pool Norm, pWGS-384 Lib Pool XP, scRNA Lib Pool, scRNA Lib Pool XP, and scRNA-384 Lib Pool XP
-
-{StateChangers::TubeStateChanger View class documentation}
-
-
 ## StateChangers::AutomaticTubeStateChanger
 
 {include:StateChangers::AutomaticTubeStateChanger}
@@ -61,4 +51,14 @@ manual transfer.
   **This state changer is unused**
 
 {StateChangers::AutomaticLabwareStateChanger View class documentation}
+
+
+## StateChangers::TubeStateChanger
+
+{include:StateChangers::TubeStateChanger}
+
+  Used directly in 47 purposes:
+  Cap Lib Pool Norm, CLCM DNA Pool, CLCM DNA Pool Norm, CLCM RNA Pool, CLCM RNA Pool Norm, GBS MiSeq Pool, GBS PCR Pool, GBS PCR Pool Selected, GBS PCR2 Pool Stock, GnT Pico Lib Pool, GnT Pico Lib Pool XP, LB Custom Pool, LB Custom Pool Norm, LB Lib Pool, LB Lib Pool Norm, LBB Lib Pool Stock, LBC 3pV3 GLibPS, LBC 5p GLibPS, LBC 5p Pool Norm, LBC BCR LibPS, LBC BCR Pool Norm, LBC TCR LibPS, LBC TCR Pool Norm, LBSN-384 PCR 2 Pool, LBSN-9216 Lib PCR Pool, LBSN-9216 Lib PCR Pool XP, LCA Bank Stock, LCA Blood Vac, LCA Custom Pool, LCA Custom Pool Norm, LCMB Custom Pool, LCMB Custom Pool Norm, LDS Custom Pool, LDS Custom Pool Norm, LHR Lib Pool, LHR Lib Pool XP, LHR-384 Pool XP, LRC Blood Aliquot, LRC Blood Vac, LTHR Pool XP, LTHR-384 Pool XP, LTN Custom Pool, LTN Custom Pool Norm, pWGS-384 Lib Pool XP, scRNA Lib Pool, scRNA Lib Pool XP, and scRNA-384 Lib Pool XP
+
+{StateChangers::TubeStateChanger View class documentation}
 
