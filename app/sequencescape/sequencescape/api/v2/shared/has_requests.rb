@@ -92,9 +92,9 @@ module Sequencescape::Api::V2::Shared
 
     def fetch_requests_based_on_class
       if instance_of?(Sequencescape::Api::V2::Well)
-        aliquots.flat_map(&:requests).compact
+        aliquots.flat_map(&:request).compact
       elsif instance_of?(Sequencescape::Api::V2::Tube)
-        receptacle.aliquots.flat_map(&:requests).compact
+        receptacle.aliquots.flat_map(&:request).compact
       else
         raise "Unsupported class when fetching in progress requests: #{self.class}"
       end
