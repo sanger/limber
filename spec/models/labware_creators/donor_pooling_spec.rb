@@ -325,7 +325,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#pools' do
-  let!(:wells) do # eager!
+    let!(:wells) do # eager!
       wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
       wells.each_with_index do |well, index|
         well.state = 'passed'
