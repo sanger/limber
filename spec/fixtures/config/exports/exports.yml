@@ -92,7 +92,7 @@ hamilton_ltn_al_lib_to_qc1:
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Cherry Pick
 hamilton_ltn_al_lib_to_ltn_al_lib_dil:
-  csv: hamilton_variable_volume_dilutions_with_well_diluents
+  csv: hamilton_variable_volume_dilutions_with_request_diluents
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
 lcmb_pcr_xp_concentrations_for_custom_pooling:

@@ -49,6 +49,12 @@ RSpec.describe ExportsController, type: :controller do
     it_behaves_like 'a csv view'
   end
 
+  RSpec.shared_examples 'a hamilton variable volume dilutions with request diluents view' do
+    let(:expected_template) { 'hamilton_variable_volume_dilutions_with_request_diluents' }
+
+    it_behaves_like 'a csv view'
+  end
+
   RSpec.shared_examples 'a hamilton cherrypick dilutions view' do
     let(:expected_template) { 'hamilton_cherrypick_dilutions' }
 
@@ -235,7 +241,7 @@ RSpec.describe ExportsController, type: :controller do
       context 'where csv id requested is hamilton_ltn_al_lib_to_ltn_al_lib_dil.csv' do
         let(:csv_id) { 'hamilton_ltn_al_lib_to_ltn_al_lib_dil' }
 
-        it_behaves_like 'a hamilton variable volume dilutions with well diluents view'
+        it_behaves_like 'a hamilton variable volume dilutions with request diluents view'
       end
     end
 
