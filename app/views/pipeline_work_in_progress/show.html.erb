@@ -22,10 +22,8 @@
     content_tag(:tr) do
       content_tag(:th, 'Barcode') +
       content_tag(:th, 'Created') +
-      content_tag(:th, 'State', class: 'text-center') +
-      content_tag(:th, 'Updated') +
-      content_tag(:th, 'Library') +
-      content_tag(:th, 'Last Touch')
+      content_tag(:th, 'State') +
+      content_tag(:th, 'Updated')
     end
   end
 
@@ -33,10 +31,8 @@
     content_tag(:tr) do
       content_tag(:td, link_to("#{labware_data[:record].labware_barcode&.human}", url_for(labware_data[:record]))) +
         content_tag(:td, labware_data[:record].created_at&.strftime('%Y-%m-%d')) +
-        content_tag(:td, state_with_children_badge(labware_data), class: 'text-center' ) +
-        content_tag(:td, labware_data[:record].updated_at.strftime('%Y-%m-%d')) +
-        content_tag(:td, '~library~') +
-        content_tag(:td, '~user~')
+        content_tag(:td, state_with_children_badge(labware_data) ) +
+        content_tag(:td, labware_data[:record].updated_at.strftime('%Y-%m-%d'))
     end
   end
 
