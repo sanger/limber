@@ -11,10 +11,12 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   has_a_working_api
 
   subject { described_class.new(api, form_attributes) }
+  let(:user_uuid) { 'user-uuid' }
   let(:parent_1_plate_uuid) { 'parent-1-plate-uuid' }
   let(:parent_2_plate_uuid) { 'parent-2-plate-uuid' }
   let(:parent_purpose_uuid) { 'parent-purpose-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
+  let(:child_plate_uuid) { 'child-plate-uuid' }
   let(:requests) { create_list(:request, 96, submission_id: 1) }
 
   let(:parent_1_plate) do
@@ -28,6 +30,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     plate.wells.each_with_index { |well, index| well.aliquots.first.request = requests[index] }
     plate
   end
+
+  let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
 
   let(:study_1) { create(:v2_study, name: 'study-1-name') }
   let(:study_2) { create(:v2_study, name: 'study-2-name') }
@@ -339,7 +343,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       expect(pools.flatten).to match_array(wells)
     end
 
-    it 'returns correct number of studies in each pool' do
+    it 'returns pools with correct number of studies' do
       pools = subject.build_pools
       pools.each do |pool|
         number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
@@ -347,7 +351,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    it 'returns correct number of projects in each pool' do
+    it 'returns pools with correct number of projects' do
       pools = subject.build_pools
       pools.each do |pool|
         number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
@@ -355,13 +359,120 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    it 'returns correct number of donors in each pool' do
+    it 'returns pools with correct number of donors' do
       # Even distribution of donors across pools.
       pools = subject.build_pools
       pools.each do |pool|
         number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
         expect(number_of_unique_donor_ids).to eq(wells.size / described_class::DEFAULT_NUMBER_OF_POOLS)
       end
+    end
+  end
+
+  describe '#transfer_request_attributes' do
+    let!(:wells) do # eager!
+      wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = study_1 # same study
+        well.aliquots.first.project = project_1 # same project
+        well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+      end
+    end
+
+    it 'returns the transfer request attributes into destination plate' do
+      attributes = subject.transfer_request_attributes(child_plate)
+      expect(attributes.size).to eq(2)
+
+      expect(attributes[0]['source_asset']).to eq(wells[0].uuid)
+      expect(attributes[0]['target_asset']).to eq(child_plate.wells[0].uuid)
+      expect(attributes[0][:aliquot_attributes]).to eq({ 'tag_depth' => '1' })
+      expect(attributes[0]['submission_id']).to eq('1') # request factory insists on string
+
+      expect(attributes[1]['source_asset']).to eq(wells[1].uuid)
+      expect(attributes[1]['target_asset']).to eq(child_plate.wells[0].uuid)
+      expect(attributes[1][:aliquot_attributes]).to eq({ 'tag_depth' => '2' })
+      expect(attributes[1]['submission_id']).to eq('1') # request factory insists on string
+    end
+  end
+
+  describe '#get_well_for_plate_location' do
+    it 'returns the well for a given plate and location' do
+      expect(subject.get_well_for_plate_location(child_plate, 'A1')).to eq child_plate.wells[0]
+    end
+  end
+
+  describe '#request_hash' do
+    let(:wells) do
+      wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = study_1 # same study
+        well.aliquots.first.project = project_1 # same project
+        well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+      end
+    end
+
+    it 'returns the request hash' do
+      hash = subject.request_hash(wells[0], child_plate, { 'submission_id' => '1' })
+      expect(hash['source_asset']).to eq(wells[0].uuid)
+      expect(hash['target_asset']).to eq(child_plate.wells[0].uuid)
+      expect(hash[:aliquot_attributes]).to eq({ 'tag_depth' => '1' })
+      expect(hash['submission_id']).to eq('1')
+
+      hash = subject.request_hash(wells[1], child_plate, { 'submission_id' => '1' })
+      expect(hash['source_asset']).to eq(wells[1].uuid)
+      expect(hash['target_asset']).to eq(child_plate.wells[0].uuid)
+      expect(hash[:aliquot_attributes]).to eq({ 'tag_depth' => '2' })
+      expect(hash['submission_id']).to eq('1')
+    end
+  end
+
+  describe '#transfer_hash' do
+    let(:wells) do
+      wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = study_1 # same study
+        well.aliquots.first.project = project_1 # same project
+        well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+      end
+    end
+
+    it 'returns the transfer hash' do
+      hash = wells[0..2].index_with { |_well| { dest_locn: 'A1' } }
+      expect(subject.transfer_hash).to eq(hash)
+    end
+
+    it 'caches the result' do
+      expect(subject.transfer_hash).to be(subject.transfer_hash) # same instance
+    end
+  end
+
+  describe '#tag_depth' do
+    it 'returns the position of a well in its pool' do
+      well_p1_w1 = well = parent_1_plate.wells[0]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      well_p1_w2 = well = parent_1_plate.wells[1]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+      well.aliquots.first.sample.sample_metadata.donor_id = 2
+
+      well_p2_w1 = well = parent_2_plate.wells[0]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+      well.aliquots.first.sample.sample_metadata.donor_id = 3
+
+      subject.build_pools
+      expect(subject.tag_depth(well_p1_w1)).to eq('1')
+      expect(subject.tag_depth(well_p1_w2)).to eq('2')
+      expect(subject.tag_depth(well_p2_w1)).to eq('3')
     end
   end
 end
