@@ -91,7 +91,7 @@ module Sequencescape::Api::V2::Shared
     end
 
     def fetch_requests_based_on_class
-      if instance_of?(Sequencescape::Api::V2::Well)
+      if instance_of?(Sequencescape::Api::V2::Plate) || instance_of?(Sequencescape::Api::V2::Well)
         aliquots.flat_map(&:request).compact
       elsif instance_of?(Sequencescape::Api::V2::Tube)
         receptacle.aliquots.flat_map(&:request).compact
