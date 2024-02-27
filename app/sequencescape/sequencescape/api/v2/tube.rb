@@ -8,7 +8,8 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   DEFAULT_INCLUDES = [
     :purpose,
-    'receptacle.aliquots.request.request_type,receptacle.requests_as_source.request_type'
+    'receptacle.aliquots.request.request_type',
+    'receptacle.requests_as_source.request_type'
   ].freeze
 
   self.tube = true

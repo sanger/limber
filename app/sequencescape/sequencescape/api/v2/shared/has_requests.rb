@@ -58,7 +58,7 @@ module Sequencescape::Api::V2::Shared
 
     # Finding 'in_progress' requests
     def requests_in_progress(request_type_to_complete: nil)
-      requests = aliquots.flat_map(&:request).compact
+      requests = fetch_requests_based_on_class
 
       if request_type_to_complete.present?
         requests.select { |r| r.request_type_key == request_type_to_complete }
@@ -68,7 +68,6 @@ module Sequencescape::Api::V2::Shared
     end
 
     # Based on in_progress requests
-
     def in_progress_submission_uuids(request_type_to_complete: nil)
       requests_in_progress(request_type_to_complete: request_type_to_complete).flat_map(&:submission_uuid).uniq
     end
@@ -89,6 +88,16 @@ module Sequencescape::Api::V2::Shared
 
     def partition_requests
       @complete_requests, @incomplete_requests = associated_requests.partition(&:completed?)
+    end
+
+    def fetch_requests_based_on_class
+      if instance_of?(Sequencescape::Api::V2::Well)
+        aliquots.flat_map(&:requests).compact
+      elsif instance_of?(Sequencescape::Api::V2::Tube)
+        receptacle.aliquots.flat_map(&:requests).compact
+      else
+        raise "Unsupported class when fetching in progress requests: #{self.class}"
+      end
     end
   end
 end
