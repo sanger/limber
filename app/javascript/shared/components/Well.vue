@@ -1,17 +1,28 @@
 <template>
-  <div :id="'well_' + position" :class="['well', position]">
-    <div v-if="pool_index" :id="'aliquot_' + position" :class="['aliquot', colourClass]">
+  <div :id="wellId" :class="['well', position]">
+    <div
+      v-if="colour_index"
+      :id="'aliquot_' + position"
+      v-b-tooltip.hover="tooltipText"
+      :class="['aliquot', colourClass]"
+    >
       <span :class="[linethroughClass, 'tag']" @click="onWellClicked">{{ tagMapIdDisplay() }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+
+Vue.use(BootstrapVue)
+
 export default {
   name: 'Well',
   props: {
-    position: { type: String, default: null },
-    pool_index: { type: Number, default: null },
+    position: { type: String, required: true },
+    colour_index: { type: Number, default: null },
+    tooltip_label: { type: String, default: null },
     tagMapIds: {
       type: Array,
       default: () => {
@@ -31,11 +42,21 @@ export default {
     }
   },
   computed: {
+    wellId() {
+      return `well_${this.position}`
+    },
     colourClass() {
-      return this.validity.valid ? `colour-${this.pool_index}` : 'failed'
+      return this.validity.valid ? `colour-${this.colour_index}` : 'failed'
     },
     linethroughClass() {
       return this.validity.valid ? '' : 'line-through'
+    },
+    tooltipText() {
+      if (this.tooltip_label) {
+        return `${this.position} - ${this.tooltip_label}`
+      } else {
+        return this.position
+      }
     },
   },
   created: function () {
