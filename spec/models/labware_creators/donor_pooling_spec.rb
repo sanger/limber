@@ -30,6 +30,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     plate.wells.each_with_index { |well, index| well.aliquots.first.request = requests[index] }
     plate
   end
+  let(:source_plates) { [parent_1_plate, parent_2_plate] }
 
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
 
@@ -41,8 +42,9 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:project_2) { create(:v2_project, name: 'project-2-name') }
   let(:project_3) { create(:v2_project, name: 'project-3-name') }
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes } }
-  let(:source_plates) { [parent_1_plate, parent_2_plate] }
+  let(:form_attributes) do
+    { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes, user_uuid: user_uuid }
+  end
   let(:barcodes) { source_plates.map { |plate| plate.barcode.human } }
 
   before do
@@ -322,6 +324,12 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
+  describe '#pools' do
+    it 'caches the result' do
+      expect(subject.pools).to be(subject.pools) # same instance
+    end
+  end
+
   describe '#build_pools' do
     let(:studies) { create_list(:v2_study, 16) }
     let(:projects) { create_list(:v2_project, 16) }
@@ -473,6 +481,36 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       expect(subject.tag_depth(well_p1_w1)).to eq('1')
       expect(subject.tag_depth(well_p1_w2)).to eq('2')
       expect(subject.tag_depth(well_p2_w1)).to eq('3')
+    end
+  end
+
+  describe '#transfer_material_from_parent!' do
+    let!(:wells) do # eager!
+      wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = study_1 # same study
+        well.aliquots.first.project = project_1 # same project
+        well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+      end
+    end
+
+    let!(:stub_transfer_material_request) do # eager!
+      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_plate.uuid).and_return(child_plate)
+      stub_api_post(
+        'transfer_request_collections',
+        payload: {
+          transfer_request_collection: {
+            user: user_uuid,
+            transfer_requests: subject.transfer_request_attributes(child_plate)
+          }
+        },
+        body: '{}'
+      )
+    end
+    it 'posts transfer requests to Sequencescape' do
+      subject.transfer_material_from_parent!(child_plate.uuid)
+      expect(stub_transfer_material_request).to have_been_made
     end
   end
 end
