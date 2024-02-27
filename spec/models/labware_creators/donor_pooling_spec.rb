@@ -325,6 +325,22 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#pools' do
+  let!(:wells) do # eager!
+      wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = study_1 # same study
+        well.aliquots.first.project = project_1 # same project
+        well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+      end
+    end
+
+    it 'builds the pools' do
+      pools = subject.pools
+      expect(pools.size).to eq(1)
+      expect(pools[0]).to match_array(wells)
+    end
+
     it 'caches the result' do
       expect(subject.pools).to be(subject.pools) # same instance
     end
