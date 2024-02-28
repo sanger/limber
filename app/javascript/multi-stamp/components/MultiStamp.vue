@@ -7,7 +7,7 @@
           v-for="plate in plates"
           :key="plate.index"
           :state="plate.state"
-          :pool_index="plate.index + 1"
+          :colour_index="plate.index + 1"
           :plate="plate.plate"
         />
         <lb-plate caption="New Plate" :rows="targetRowsNumber" :columns="targetColumnsNumber" :wells="targetWells" />
@@ -238,7 +238,7 @@ export default {
       const wells = {}
       for (let i = 0; i < this.validTransfers.length; i++) {
         wells[this.validTransfers[i].targetWell] = {
-          pool_index: this.validTransfers[i].plateObj.index + 1,
+          colour_index: this.validTransfers[i].plateObj.index + 1,
         }
       }
       return wells

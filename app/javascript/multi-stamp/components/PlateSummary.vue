@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     colourClass() {
-      return `colour-${this.pool_index}`
+      return `colour-${this.colour_index}`
     },
     isEmpty() {
       return this.plate === null

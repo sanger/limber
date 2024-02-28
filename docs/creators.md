@@ -26,8 +26,8 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::StampedPlate}
 
-  Used directly in 116 purposes:
-  CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM RNA End Prep, CLCM RNA Lib PCR XP, CLCM RT PreAmp, GBS Stock, GBS-96 Stock, GnT MDA Norm, GnT Pico End Prep, GnT Pico-XP, GnT scDNA, GnT Stock, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB cDNA, LB cDNA XP, LB Cherrypick, LB End Prep, LB Lib PCR-XP, LB Post Shear, LB Shear, LBB Cherrypick, LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, LBB Enriched TCR HT, LBB Lib-XP, LBB Ligation, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, LBC Stock, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LBR Cherrypick, LBR Frag, LBR Frag cDNA, LBR Globin, LBR Globin DNase, LBR mRNA Cap, LBR Ribo DNase, LBR RiboGlobin DNase, LCA 10X cDNA, LCA PBMC, LCA PBMC Bank, LCMB Cherrypick, LCMB End Prep, LCMB Lib PCR-XP, LDS AL Lib, LDS Cherrypick, LDS Lib PCR XP, LDS Stock, LDS Stock XP, LHR End Prep, LHR PCR 1, LHR PCR 2, LHR RT, LHR-384 AL Lib, LHR-384 End Prep, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 RT, LHR-384 XP, LRC HT 5p cDNA PCR, LRC HT 5p cDNA PCR XP, LRC HT 5p Chip, LRC HT 5p GEMs, LRC PBMC Cryostor, LRC PBMC Defrost PBS, LRC PBMC Pools, LRC PBMC Pools Input, LSW-96 Stock, LTHR PCR 1, LTHR PCR 2, LTHR RT-S, LTHR-384 PCR 1, LTHR-384 PCR 2, LTN AL Lib, LTN Cherrypick, LTN Lib PCR XP, LTN Post Shear, LTN Shear, LTN Stock, LTN Stock XP, PF Cherrypicked, PF End Prep, PF Lib XP, PF Lib XP2, PF Post Shear, PF Post Shear XP, PF Shear, PF-384 End Prep, PF-384 Lib XP2, pWGS-384 AL Lib, pWGS-384 End Prep, RVI Cap Lib, RVI Cap Lib PCR, RVI Cap Lib PCR XP, RVI cDNA XP, RVI Cherrypick, RVI Lib PCR XP, RVI Lig Bind, RVI RT, scRNA cDNA-XP, scRNA End Prep, scRNA Stock, scRNA-384 cDNA-XP, scRNA-384 End Prep, scRNA-384 Stock, and Tag Plate - 384
+  Used directly in 112 purposes:
+  CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM RNA End Prep, CLCM RNA Lib PCR XP, CLCM RT PreAmp, GBS Stock, GBS-96 Stock, GnT MDA Norm, GnT Pico End Prep, GnT Pico-XP, GnT scDNA, GnT Stock, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB cDNA, LB cDNA XP, LB Cherrypick, LB End Prep, LB Lib PCR-XP, LB Post Shear, LB Shear, LBB Cherrypick, LBB Lib-XP, LBB Ligation, LBC 3pV3 GEX Frag 2XP, LBC 3pV3 GEX PCR 2XP, LBC 5p GEX Frag 2XP, LBC 5p GEX PCR 2XP, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, LBC Stock, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LBR Cherrypick, LBR Frag, LBR Frag cDNA, LBR Globin, LBR Globin DNase, LBR mRNA Cap, LBR Ribo DNase, LBR RiboGlobin DNase, LCA 10X cDNA, LCA PBMC, LCA PBMC Bank, LCMB Cherrypick, LCMB End Prep, LCMB Lib PCR-XP, LDS AL Lib, LDS Cherrypick, LDS Lib PCR XP, LDS Stock, LDS Stock XP, LHR End Prep, LHR PCR 1, LHR PCR 2, LHR RT, LHR-384 AL Lib, LHR-384 End Prep, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 RT, LHR-384 XP, LRC HT 5p cDNA PCR, LRC HT 5p cDNA PCR XP, LRC HT 5p Chip, LRC HT 5p GEMs, LRC PBMC Cryostor, LRC PBMC Defrost PBS, LRC PBMC Pools, LRC PBMC Pools Input, LSW-96 Stock, LTHR PCR 1, LTHR PCR 2, LTHR RT-S, LTHR-384 PCR 1, LTHR-384 PCR 2, LTN AL Lib, LTN Cherrypick, LTN Lib PCR XP, LTN Post Shear, LTN Shear, LTN Stock, LTN Stock XP, PF Cherrypicked, PF End Prep, PF Lib XP, PF Lib XP2, PF Post Shear, PF Post Shear XP, PF Shear, PF-384 End Prep, PF-384 Lib XP2, pWGS-384 AL Lib, pWGS-384 End Prep, RVI Cap Lib, RVI Cap Lib PCR, RVI Cap Lib PCR XP, RVI cDNA XP, RVI Cherrypick, RVI Lib PCR XP, RVI Lig Bind, RVI RT, scRNA cDNA-XP, scRNA End Prep, scRNA Stock, scRNA-384 cDNA-XP, scRNA-384 End Prep, scRNA-384 Stock, and Tag Plate - 384
 
 {LabwareCreators::StampedPlate View class documentation}
 
@@ -233,19 +233,19 @@ Labware creators are responsible for creating new labware from a parent labware.
 
 {include:LabwareCreators::PartialStampedPlateWithoutDilution}
 
-  **This labware creator is unused**
+  Used directly in 4 purposes:
+  LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, and LBB Enriched TCR HT
 
 {LabwareCreators::PartialStampedPlateWithoutDilution View class documentation}
 
 
-## LabwareCreators::PcrCyclesBinnedPlate
+## LabwareCreators::PcrCyclesBinnedPlateBase
 
-{include:LabwareCreators::PcrCyclesBinnedPlate}
+{include:LabwareCreators::PcrCyclesBinnedPlateBase}
 
-  Used directly in 2 purposes:
-  LDS AL Lib Dil and LTN AL Lib Dil
+  **This labware creator is unused**
 
-{LabwareCreators::PcrCyclesBinnedPlate View class documentation}
+{LabwareCreators::PcrCyclesBinnedPlateBase View class documentation}
 
 
 ## LabwareCreators::PlateWithPrimerPanel
@@ -305,6 +305,26 @@ Labware creators are responsible for creating new labware from a parent labware.
   LBC 5p GEX Dil
 
 {LabwareCreators::NormalisedBinnedPlate View class documentation}
+
+
+## LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq
+
+{include:LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq}
+
+  Used directly in 1 purposes:
+  LDS AL Lib Dil
+
+{LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq View class documentation}
+
+
+## LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq
+
+{include:LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq}
+
+  Used directly in 1 purposes:
+  LTN AL Lib Dil
+
+{LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq View class documentation}
 
 
 ## LabwareCreators::CustomPooledTubes
