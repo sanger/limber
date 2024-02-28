@@ -61,9 +61,6 @@ module LabwareCreators::DonorPoolingValidator
   def number_of_pools_must_not_exceed_configured
     return if pools.size <= number_of_pools
 
-    errors.add(
-      :source_plates,
-      format(NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, pools.size, number_of_pools)
-    )
+    errors.add(:source_plates, format(NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, pools.size, number_of_pools))
   end
 end
