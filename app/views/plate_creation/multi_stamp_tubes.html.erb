@@ -2,6 +2,8 @@
      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
      data-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
+     data-purpose-name="<%= @labware_creator.purpose_name %>"
+     data-parent-purpose-name="<%= @labware_creator.parent.purpose.name %>"
      data-target-url="<%= limber_tube_children_path(@labware_creator.parent) %>"
      data-requests-filter="<%= @labware_creator.request_filter %>"
      data-transfers-layout="<%= @labware_creator.transfers_layout %>"

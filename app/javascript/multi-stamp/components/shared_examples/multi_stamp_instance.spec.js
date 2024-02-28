@@ -113,20 +113,20 @@ const sharedSpecs = (args) => {
       })
 
       expect(wrapper.vm.targetWells).toEqual({
-        A1: { pool_index: 1 },
-        C1: { pool_index: 1 },
-        E1: { pool_index: 1 },
-        G1: { pool_index: 1 },
-        B1: { pool_index: 2 },
-        D1: { pool_index: 2 },
-        A2: { pool_index: 3 },
-        C2: { pool_index: 3 },
-        E2: { pool_index: 3 },
-        B2: { pool_index: 4 },
-        D2: { pool_index: 4 },
-        F2: { pool_index: 4 },
-        H2: { pool_index: 4 },
-        J2: { pool_index: 4 },
+        A1: { colour_index: 1 },
+        C1: { colour_index: 1 },
+        E1: { colour_index: 1 },
+        G1: { colour_index: 1 },
+        B1: { colour_index: 2 },
+        D1: { colour_index: 2 },
+        A2: { colour_index: 3 },
+        C2: { colour_index: 3 },
+        E2: { colour_index: 3 },
+        B2: { colour_index: 4 },
+        D2: { colour_index: 4 },
+        F2: { colour_index: 4 },
+        H2: { colour_index: 4 },
+        J2: { colour_index: 4 },
       })
     })
 
