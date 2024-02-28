@@ -6,26 +6,23 @@ module LabwareCreators::DonorPoolingValidator
 
   include ActiveModel::Validations
 
-included do
-  validate :source_barcodes_must_be_entered
-  validate :source_barcodes_must_be_different
-  validate :source_plates_must_exist
-  validate :number_of_pools_must_not_exceed_configured
-end
+  included do
+    validate :source_barcodes_must_be_entered
+    validate :source_barcodes_must_be_different
+    validate :source_plates_must_exist
+    validate :number_of_pools_must_not_exceed_configured
+  end
 
-  SOURCE_BARCODES_MUST_BE_ENTERED =
-    'should be entered, Please scan in all the required source plate barcodes.'
+  SOURCE_BARCODES_MUST_BE_ENTERED = 'should be entered, Please scan in all the required source plate barcodes.'
 
-  SOURCE_BARCODES_MUST_BE_DIFFERENT =
-    'should not have the same barcode, please check you scanned all the plates.'
+  SOURCE_BARCODES_MUST_BE_DIFFERENT = 'should not have the same barcode, please check you scanned all the plates.'
 
-  SOURCE_PLATES_MUST_EXIST =
-    'not found, please check you scanned the correct source plates.'
+  SOURCE_PLATES_MUST_EXIST = 'not found, please check you scanned the correct source plates.'
 
   NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED =
-    "The number of pools calculated (%s) is higher than the number of pools " \
-    "(%s) configured. Please check you have scanned the correct set of " \
-    "source plates."
+    'The number of pools calculated (%s) is higher than the number of pools ' \
+      '(%s) configured. Please check you have scanned the correct set of ' \
+      'source plates.'
 
   def source_barcodes_must_be_entered
     return if minimal_barcodes.size >= 1
@@ -40,7 +37,6 @@ end
   end
 
   def source_plates_must_exist
-
     return if source_plates.size == minimal_barcodes.size
 
     errors.add(:source_plates, SOURCE_PLATES_MUST_EXIST)
@@ -49,7 +45,9 @@ end
   def number_of_pools_must_not_exceed_configured
     return if pools.size <= number_of_pools
 
-    errors.add(:source_plates, NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED % [
-      pools.size, number_of_pools, source_wells_for_pooling.size] )
+    errors.add(
+      :source_plates,
+      format(NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, pools.size, number_of_pools, source_wells_for_pooling.size)
+    )
   end
 end
