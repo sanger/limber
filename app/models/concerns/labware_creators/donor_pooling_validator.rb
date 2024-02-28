@@ -4,8 +4,6 @@
 module LabwareCreators::DonorPoolingValidator
   extend ActiveSupport::Concern
 
-  include ActiveModel::Validations
-
   included do
     validate :source_barcodes_must_be_entered
     validate :source_barcodes_must_be_different
