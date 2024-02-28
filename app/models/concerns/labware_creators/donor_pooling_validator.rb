@@ -47,7 +47,7 @@ module LabwareCreators::DonorPoolingValidator
 
     errors.add(
       :source_plates,
-      format(NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, pools.size, number_of_pools, source_wells_for_pooling.size)
+      format(NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, pools.size, number_of_pools)
     )
   end
 end
