@@ -49,18 +49,20 @@ RSpec.describe PipelineProgressOverviewController, type: :controller do
   describe '#mould_data_for_view' do
     let(:purposes) { create_list :v2_purpose, 2 }
     let(:purpose_names) { purposes.map(&:name) }
-    let(:labware_record_no_state) { create :labware, purpose: purposes[0] }
-    let(:labware_record_passed) { create :labware_with_state_changes, purpose: purposes[0], target_state: 'passed' }
+    let(:labware_record_no_state) { create :labware, purpose: purposes[0], has_children: false }
+    let(:labware_record_passed) do
+      create :labware_with_state_changes, purpose: purposes[0], target_state: 'passed', has_children: false
+    end
     let(:labware_record_cancelled) do
-      create :labware_with_state_changes, purpose: purposes[0], target_state: 'cancelled'
+      create :labware_with_state_changes, purpose: purposes[0], target_state: 'cancelled', has_children: false
     end
     let(:labware_records) { [labware_record_no_state, labware_record_passed, labware_record_cancelled] }
 
     it 'returns the correct format' do
       expected_output = {
         purposes[0].name => [
-          { record: labware_record_no_state, state: 'pending' },
-          { record: labware_record_passed, state: 'passed' }
+          { record: labware_record_no_state, state: 'pending', state_with_children: 'pending' },
+          { record: labware_record_passed, state: 'passed', state_with_children: 'passed' }
           # cancelled one not present
         ],
         purposes[1].name => []
@@ -106,7 +108,11 @@ RSpec.describe PipelineProgressOverviewController, type: :controller do
     let(:general_labware) { all_labware.select { |lw| lw.purpose == pipeline_purposes.last } }
 
     before do
-      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(specific_labware, general_labware)
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).and_return(
+        specific_labware,
+        specific_labware,
+        general_labware
+      )
     end
 
     it 'filters the final purpose for labware with ancestors from previous purposes' do

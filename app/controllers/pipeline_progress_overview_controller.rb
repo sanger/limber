@@ -49,16 +49,15 @@ class PipelineProgressOverviewController < ApplicationController
 
   # Retrieves labware through the Sequencescape V2 API
   # Combines pages into one list
-  # Combines labware without and without children
+  # Combines labware with and without children
   # Returns a list of Sequencescape::Api::V2::Labware
   def retrieve_labware(page_size, from_date, purposes)
     labware = query_labware(page_size, from_date, purposes, nil)
     labware_without_children = query_labware(page_size, from_date, purposes, false)
 
-    # filter out labware without children from labware, matching on UUID
-    labware_without_children_uuids = labware_without_children.to_set(&:uuid)
-    labware_with_children =
-      labware.reject { |labware_record| labware_without_children_uuids.include?(labware_record.uuid) }
+    # filter out labware without children from labware, matching on ID
+    labware_without_children_ids = labware_without_children.to_set(&:id)
+    labware_with_children = labware.reject { |labware_record| labware_without_children_ids.include?(labware_record.id) }
 
     labware_with_children.each { |labware_record| labware_record.has_children = true }
     labware_without_children.each { |labware_record| labware_record.has_children = false }
