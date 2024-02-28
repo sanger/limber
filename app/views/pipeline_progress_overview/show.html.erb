@@ -79,7 +79,7 @@
     %>
     <%=
       @dates.map do |label, date|
-        link_to label, pipeline_work_in_progress_path(id: @pipeline_group_name, date: date), method: :get, class: "btn btn-secondary #{'active' if date == @from_date}"
+        link_to label, pipeline_progress_overview_path(id: @pipeline_group_name, date: date), method: :get, class: "btn btn-secondary #{'active' if date == @from_date}"
       end.join.html_safe
     %>
   </div>
@@ -98,7 +98,7 @@
         <% end %>
 
         <span class="float-right">
-          <%= link_to ">", pipeline_work_in_progress_path(id: @pipeline_group_name, purpose: purpose_name, date: @from_date), class: "btn btn-sm btn-info" %>
+          <%= link_to ">", pipeline_progress_overview_path(id: @pipeline_group_name, purpose: purpose_name, date: @from_date), class: "btn btn-sm btn-info" %>
         </span>
       <% end %>
 

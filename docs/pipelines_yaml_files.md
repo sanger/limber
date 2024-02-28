@@ -101,7 +101,7 @@ For instance, 'Heron-384 Tailed A V2' and 'Heron-384 Tailed B V2' - the split he
 
 Another example is when there are separate Limber pipelines for sequential stages. For instance, 'pWGS-384' (the library prep part) and 'pWGS-384 MX' (the multiplexing part). In reality, these are both part of the same pipeline, so they both have the pipeline group 'pWGS-384'.
 
-The pipeline group is used in the 'Work in progress' pages and the 'Pipelines overview' page.
+The pipeline group is used in the 'Progress Overview' pages and the 'Pipelines Graph' page.
 
 #### filters
 

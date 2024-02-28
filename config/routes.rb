@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources 'pipeline_work_in_progress', only: :show
+  resources 'pipeline_progress_overview', only: :show
 
   get '/health', controller: :health, action: 'show', as: :health
 

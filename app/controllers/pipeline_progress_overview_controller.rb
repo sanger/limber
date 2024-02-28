@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Controller for swimlane style view of work in progress for a pipeline
-class PipelineWorkInProgressController < ApplicationController
+# Controller for table style view of work in progress for a pipeline
+class PipelineProgressOverviewController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def show
     @pipeline_group_name = params[:id]
