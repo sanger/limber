@@ -16,7 +16,7 @@ module LabwareCreators
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
-    include LabwareCreators::DonorPoolingHelper
+    include LabwareCreators::DonorPoolingCalculator
 
     # The name of the template that will be used for rendering the barcode
     # input page.
