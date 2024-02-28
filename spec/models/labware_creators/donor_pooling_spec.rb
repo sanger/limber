@@ -45,7 +45,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:form_attributes) do
     { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes, user_uuid: user_uuid }
   end
-  let(:barcodes) { source_plates.map { |plate| plate.barcode.human } }
+  let(:barcodes) { source_plates.map(&:human_barcode) }
 
   before do
     create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid)
@@ -527,6 +527,69 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     it 'posts transfer requests to Sequencescape' do
       subject.transfer_material_from_parent!(child_plate.uuid)
       expect(stub_transfer_material_request).to have_been_made
+    end
+  end
+
+  describe '#valid?' do
+    describe '#source_barcodes_must_be_entered' do
+      let(:barcodes) { [] }
+      it 'reports the error' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:source_barcodes]).to include(described_class::SOURCE_BARCODES_MUST_BE_ENTERED)
+      end
+    end
+
+    describe '#source_barcodes_must_be_different' do
+      before do
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
+          .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
+          .and_return([parent_1_plate])
+      end
+      let(:barcodes) { [parent_1_plate.human_barcode] * 2 }
+      it 'reports the error' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:source_barcodes]).to include(described_class::SOURCE_BARCODES_MUST_BE_DIFFERENT)
+      end
+
+      context 'with single barcode' do
+        let(:barcodes) { [parent_1_plate.human_barcode] }
+        it { is_expected.to be_valid }
+      end
+    end
+
+    describe '#source_plates_must_exist' do
+      let(:barcodes) { [parent_1_plate.human_barcode, 'NOT-A-PLATE-BARCODE'] }
+      before do
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
+          .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
+          .and_return([parent_1_plate])
+      end
+      it 'reports the error' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:source_plates]).to include(described_class::SOURCE_PLATES_MUST_EXIST)
+      end
+    end
+
+    describe '#number_of_pools_must_not_exceed_configured' do
+      let!(:wells) do
+        # Up to 20 wells, the number of pools is configured as 1. If multiple
+        # studies, projects or the same donors are present, the number of pools
+        # calculated will be more than 1.
+        wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
+        studies = [study_1, study_2, study_3]
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = studies[index] # different studies
+          well.aliquots.first.project = project_1 # same project
+          well.aliquots.first.sample.sample_metadata.donor_id = 1 # same donor
+        end
+      end
+      it 'reports the error' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:source_plates]).to include(
+          format(described_class::NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, 3, 1)
+        )
+      end
     end
   end
 end
