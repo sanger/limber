@@ -35,7 +35,7 @@
     height: calculate-graph-height();
     display: block;
     @extend .bg-dark;
-    @extend .text-white;
+    @extend .text-light;
   }
 
   #key {
@@ -43,7 +43,7 @@
     top: 10px;
     right: 10px;
     @extend .bg-dark;
-    @extend .text-white;
+    @extend .text-light;
     @extend .small;
 
     header {
@@ -62,7 +62,7 @@
       }
       #show-pipeline-groups:hover {
         @extend .icon-pipeline_single-light;
-        @extend .text-light:hover;
+        @extend .text-light, :hover;
       }
 
       #show-pipelines {
@@ -71,7 +71,7 @@
       }
       #show-pipelines:hover {
         @extend .icon-pipeline_stack-light;
-        @extend .text-light:hover;
+        @extend .text-light, :hover;
       }
 
       #pipelines-back {
@@ -83,7 +83,7 @@
         vertical-align: text-bottom;
       }
       #pipelines-back:hover {
-        @extend .text-light:hover;
+        @extend .text-light, :hover;
       }
     }
     ul {
@@ -97,7 +97,7 @@
         @extend .bg-dark;
       }
       li:hover {
-        @extend .text-light:hover;
+        @extend .text-light, :hover;
       }
     }
   }
