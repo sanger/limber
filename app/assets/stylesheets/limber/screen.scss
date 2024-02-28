@@ -520,9 +520,8 @@ form + .btn-block {
   }
 }
 
-// Stackable cards, designed to be positioned directly on
-// top of each other to show steps in a process
-.stackable-card {
+// Lightweight cards, designed to be incorporated as part of a larger diagram
+.lightweight-card {
   @extend .py-1;
 
   .card-header {
@@ -538,6 +537,70 @@ form + .btn-block {
     @extend .py-1;
     @extend .px-2;
   }
+}
+
+.stacker {
+  @extend .d-flex;
+}
+
+.stacker + .stacker {
+  margin-top: -1px;
+}
+
+$tableau-10: #4e79a7, #f28e2b, #e15759, #76b7b2, #59a14f, #edc948, #b07aa1, #ff9da7, #9c755f, #bab0ac;
+
+.stacker-graph {
+  @extend .d-flex;
+  @extend .mr-2;
+
+  .pipeline {
+    @extend .d-block;
+    @extend .text-center;
+    @extend .text-white;
+
+    position: relative;
+    width: 0.5rem;
+    height: 100%;
+    margin: 0 0.25rem;
+
+    font-size: .5rem;
+
+    @for $i from 1 through length($tableau-10) {
+      &:nth-child(#{$i}) {
+        background-color: nth($tableau-10, $i);
+      }
+    }
+
+    &.on-pipeline::before {
+      // draw a white circle with a black border, centred in the pipeline
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+
+      background-color: white;
+      border: 0.2rem solid black;
+      border-radius: 50%;
+    }
+  }
+
+  .pipeline-start {
+    // hide the top half of the background-colour
+    background-image: linear-gradient(to bottom, white 50%, transparent 50%);
+  }
+  .pipeline-end {
+    // hide the bottom half of the background-colour
+    background-image: linear-gradient(to top, white 50%, transparent 50%);
+  }
+}
+
+.stacker > .lightweight-card {
+  @extend .flex-grow-1;
 }
 
 footer.version-info {

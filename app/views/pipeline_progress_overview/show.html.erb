@@ -9,6 +9,13 @@
     'failed (parent)' => 'secondary'
   }
 
+def pipeline_classes(purpose_name, ordered_purpose_list)
+  classes = ['pipeline', 'on-pipeline']
+  classes << 'pipeline-start' if purpose_name == ordered_purpose_list.first
+  classes << 'pipeline-end' if purpose_name == ordered_purpose_list.last
+  classes.join(' ')
+end
+
   def state_text_badge(state, text)
     content_tag(:span, text, class: "badge badge-pill badge-#{@state_colours[state]}")
   end
@@ -91,21 +98,22 @@
 
     <!-- purpose cards, showing counts of labware for each state -->
     <% @ordered_purpose_list.each do |purpose_name| %>
-      <%= card title: "#{purpose_name} (#{@grouped[purpose_name].size})", css_class: 'stackable-card rounded-0 text-center' do %>
-
-        <% @grouped_state_counts[purpose_name].each do |state_with_children, count| %>
-          <%= state_text_badge(state_with_children, "#{state_with_children.humanize} #{count}") %>
+      <div class="stacker">
+        <%= content_tag :div, class: "stacker-graph" do %>
+          <%# NOTE: to add an additional pipeline (as part of a pipeline group), add an additional span tag here %>
+          <%= content_tag :span, '▼', class: pipeline_classes(purpose_name, @ordered_purpose_list) %>
         <% end %>
+        <%= card title: "#{purpose_name} (#{@grouped[purpose_name].size})", css_class: 'lightweight-card rounded-0 text-center' do %>
 
-        <span class="float-right">
-          <%= link_to ">", pipeline_progress_overview_path(id: @pipeline_group_name, purpose: purpose_name, date: @from_date), class: "btn btn-sm btn-info" %>
-        </span>
-      <% end %>
+          <% @grouped_state_counts[purpose_name].each do |state_with_children, count| %>
+            <%= state_text_badge(state_with_children, "#{state_with_children.humanize} #{count}") %>
+          <% end %>
 
-      <!-- add arrow between the cards -->
-      <% if purpose_name != @ordered_purpose_list.last %>
-        <span class="icon icon-arrow_down-secondary d-block mx-auto my-2"></span>
-      <% end %>
+          <span class="float-right">
+            <%= link_to ">", pipeline_progress_overview_path(id: @pipeline_group_name, purpose: purpose_name, date: @from_date), class: "btn btn-sm btn-info" %>
+          </span>
+        <% end %>
+      </div>
 
     <% end %>
     </div>
