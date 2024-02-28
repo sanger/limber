@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# This module contains utilities for building a plate for donor pooling.
-module LabwareCreators::DonorPoolingHelper
+# This module contains calculations for donor pooling.
+module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
 
   # Splits wells into groups by study and project. Wells are grouped
