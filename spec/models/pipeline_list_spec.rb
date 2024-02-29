@@ -2,7 +2,6 @@
 
 RSpec.describe PipelineList do
   let(:model) { described_class.new(pipeline_config) }
-
   describe '#combine_and_order_pipelines' do
     let(:filters) { { 'request_type_key' => ['example_req_type'], 'library_type' => ['example_lib_type'] } }
 
@@ -265,6 +264,81 @@ RSpec.describe PipelineList do
         expect { model.combine_and_order_pipelines(pipeline_names) }.to raise_error(
           "Pipeline config can't be flattened into a list of purposes"
         )
+      end
+    end
+  end
+
+  describe '#purpose_to_pipelines_map' do
+    let(:filters) { { 'request_type_key' => ['example_req_type'], 'library_type' => ['example_lib_type'] } }
+
+    context 'when the pipelines are simple' do
+      let(:pipeline_config) do
+        {
+          'Pipeline A' => {
+            filters: filters,
+            library_pass: 'Purpose 3',
+            relationships: {
+              'Purpose 1' => 'Purpose 2',
+              'Purpose 2' => 'Purpose 3'
+            },
+            name: 'Pipeline A'
+          },
+          'Pipeline B' => {
+            filters: filters,
+            library_pass: 'Purpose 4',
+            relationships: {
+              'Purpose 3' => 'Purpose 4'
+            },
+            name: 'Pipeline B'
+          },
+          'Pipeline C' => {
+            filters: filters,
+            library_pass: 'Purpose 5',
+            relationships: {
+              'Purpose 4' => 'Purpose 5'
+            },
+            name: 'Pipeline C'
+          }
+        }
+      end
+
+      let(:pipeline_names) { ['Pipeline A', 'Pipeline B', 'Pipeline C'] }
+      let(:purposes) { ['Purpose 1', 'Purpose 2', 'Purpose 3', 'Purpose 4', 'Purpose 5'] }
+      let(:expected_output) do
+        {
+          'Purpose 1' => {
+            'Pipeline A' => {
+              parent: nil,
+              child: 'Purpose 2'
+            }
+          },
+          'Purpose 2' => {
+            'Pipeline A' => {
+              parent: 'Purpose 1',
+              child: 'Purpose 3'
+            }
+          },
+          'Purpose 3' => {
+            'Pipeline A' => {
+              parent: 'Purpose 2',
+              child: nil
+            },
+            'Pipeline B' => {
+              parent: nil,
+              child: 'Purpose 4'
+            }
+          },
+          'Purpose 4' => {
+            'Pipeline B' => {
+              parent: 'Purpose 3',
+              child: nil
+            }
+          }
+        }
+      end
+
+      it 'returns the correct mapping' do
+        expect(model.purpose_to_pipelines_map(purposes.first(4), pipeline_names.first(2))).to eq expected_output
       end
     end
   end

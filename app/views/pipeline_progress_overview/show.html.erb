@@ -9,12 +9,84 @@
     'failed (parent)' => 'secondary'
   }
 
-def pipeline_classes(purpose_name, ordered_purpose_list)
-  classes = ['pipeline', 'on-pipeline']
-  classes << 'pipeline-start' if purpose_name == ordered_purpose_list.first
-  classes << 'pipeline-end' if purpose_name == ordered_purpose_list.last
-  classes.join(' ')
-end
+
+  # Checks if a given pipeline is present in the purpose pipeline map for a specific purpose.
+  #
+  # @param pipeline_name [String] The name of the pipeline to check.
+  # @param purpose_name [String] The name of the purpose to look for.
+  #
+  # @return [Boolean] Returns true if the pipeline is found in the keys of the purpose's pipeline map, false otherwise.
+  def purpose_is_in_pipeline(pipeline_name, purpose_name)
+    @purpose_pipeline_map[purpose_name].keys.include?(pipeline_name)
+  end
+
+  # Checks if the first purpose in a pipeline has occurred.
+  #
+  # @param pipeline_name [String] The name of the pipeline to check.
+  # @param purpose_name [String] The name of the purpose to look for.
+  #
+  # @return [Boolean] Returns true if the purpose is the first in the pipeline and has occurred, false otherwise.
+  def pipeline_first_purpose_has_occurred(pipeline_name, purpose_name)
+    first_purpose_in_pipeline = @ordered_purposes_for_pipelines[pipeline_name].first
+
+    # get list of purposes prior to the given purpose
+    purposes_prior_to_purpose = @ordered_purpose_list[0..@ordered_purpose_list.index(purpose_name)]
+
+    # has the first purpose in the pipeline occurred?
+    purposes_prior_to_purpose.include?(first_purpose_in_pipeline)
+  end
+
+  # Checks if the last purpose in a pipeline is still to occur.
+  #
+  # @param pipeline_name [String] The name of the pipeline to check.
+  # @param purpose_name [String] The name of the purpose to look for.
+  #
+  # @return [Boolean] Returns true if the purpose is the last in the pipeline and has not occurred, false otherwise.
+  def pipeline_last_purpose_is_still_to_occur(pipeline_name, purpose_name)
+    last_purpose_in_pipeline = @ordered_purposes_for_pipelines[pipeline_name].last
+
+    # get list of purposes after the given purpose
+    purposes_after_purpose = @ordered_purpose_list[@ordered_purpose_list.index(purpose_name)..-1]
+
+    # has the last purpose in the pipeline occurred?
+    purposes_after_purpose.include?(last_purpose_in_pipeline)
+  end
+
+  def show_pipeline_in_graph(pipeline_name, purpose_name)
+    purpose_is_in_pipeline(pipeline_name, purpose_name) ||
+      pipeline_first_purpose_has_occurred(pipeline_name, purpose_name) &&
+      pipeline_last_purpose_is_still_to_occur(pipeline_name, purpose_name)
+  end
+
+  def is_first_purpose_in_pipeline(pipeline_name, purpose_name)
+    @ordered_purposes_for_pipelines[pipeline_name].first == purpose_name
+  end
+
+  def is_last_purpose_in_pipeline(pipeline_name, purpose_name)
+    @ordered_purposes_for_pipelines[pipeline_name].last == purpose_name
+  end
+
+  def graph_classes(pipeline_name, purpose_name)
+    # purpose_pipeline_map is a hash of hashes, like:
+    #   "Purpose 2" => {
+    #     "Pipeline A" => {
+    #       "parent" => "Purpose 1",
+    #       "child" => "Purpose 3"
+    #     },
+    #     "Pipeline B" => {
+    #       "parents" => "Purpose 1",
+    #       "child" => nil
+    #     }
+    parent_purpose_name = @purpose_pipeline_map.dig(pipeline_name, purpose_name, 'parent')
+    child_purpose_name = @purpose_pipeline_map.dig(pipeline_name, purpose_name, 'child')
+
+    classes = ['pipeline']
+    classes << 'pipeline-shown' if show_pipeline_in_graph(pipeline_name, purpose_name)
+    classes << 'pipeline-purpose' if purpose_is_in_pipeline(pipeline_name, purpose_name)
+    classes << 'pipeline-start' if is_first_purpose_in_pipeline(pipeline_name, purpose_name)
+    classes << 'pipeline-end' if is_last_purpose_in_pipeline(pipeline_name, purpose_name)
+    classes.join(' ')
+  end
 
   def state_text_badge(state, text)
     content_tag(:span, text, class: "badge badge-pill badge-#{@state_colours[state]}")
@@ -37,9 +109,9 @@ end
   def render_row(labware_data)
     content_tag(:tr) do
       content_tag(:td, link_to("#{labware_data[:record].labware_barcode&.human}", url_for(labware_data[:record]))) +
-        content_tag(:td, labware_data[:record].created_at&.strftime('%Y-%m-%d')) +
-        content_tag(:td, state_with_children_badge(labware_data) ) +
-        content_tag(:td, labware_data[:record].updated_at.strftime('%Y-%m-%d'))
+      content_tag(:td, labware_data[:record].created_at&.strftime('%Y-%m-%d')) +
+      content_tag(:td, state_with_children_badge(labware_data) ) +
+      content_tag(:td, labware_data[:record].updated_at.strftime('%Y-%m-%d'))
     end
   end
 
@@ -100,8 +172,9 @@ end
     <% @ordered_purpose_list.each do |purpose_name| %>
       <div class="stacker">
         <%= content_tag :div, class: "stacker-graph" do %>
-          <%# NOTE: to add an additional pipeline (as part of a pipeline group), add an additional span tag here %>
-          <%= content_tag :span, '▼', class: pipeline_classes(purpose_name, @ordered_purpose_list) %>
+          <% @pipelines_for_group.each do |pipeline_name| %>
+            <%= content_tag :span, ('▼' if show_pipeline_in_graph(pipeline_name, purpose_name)), class: graph_classes(pipeline_name, purpose_name) %>
+          <% end %>
         <% end %>
         <%= card title: "#{purpose_name} (#{@grouped[purpose_name].size})", css_class: 'lightweight-card rounded-0 text-center' do %>
 

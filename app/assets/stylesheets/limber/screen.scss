@@ -555,38 +555,41 @@ $tableau-10: #4e79a7, #f28e2b, #e15759, #76b7b2, #59a14f, #edc948, #b07aa1, #ff9
 
   .pipeline {
     @extend .d-block;
-    @extend .text-center;
-    @extend .text-white;
 
     position: relative;
     width: 0.5rem;
     height: 100%;
     margin: 0 0.25rem;
 
-    font-size: .5rem;
+    font-size: 0.5rem;
+  }
+
+  .pipeline-shown {
+    @extend .text-center;
+    @extend .text-white;
 
     @for $i from 1 through length($tableau-10) {
       &:nth-child(#{$i}) {
         background-color: nth($tableau-10, $i);
       }
     }
+  }
 
-    &.on-pipeline::before {
-      // draw a white circle with a black border, centred in the pipeline
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+  .pipeline-purpose::before {
+    // draw a white circle with a black border, centred in the pipeline
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
 
-      background-color: white;
-      border: 0.2rem solid black;
-      border-radius: 50%;
-    }
+    background-color: white;
+    border: 0.2rem solid black;
+    border-radius: 0.5rem;
   }
 
   .pipeline-start {
@@ -596,6 +599,29 @@ $tableau-10: #4e79a7, #f28e2b, #e15759, #76b7b2, #59a14f, #edc948, #b07aa1, #ff9
   .pipeline-end {
     // hide the bottom half of the background-colour
     background-image: linear-gradient(to top, white 50%, transparent 50%);
+  }
+
+  // merge multiple pipeline purposes together like an interchange station
+  // add a square over the circles to make it look like they are merged
+  .pipeline-purpose + .pipeline-purpose {
+    &::after {
+      // draw a white square with a black border, centred between two pipelines
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -50%;
+      transform: translate(-50%, -50%);
+
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+
+      background-color: white;
+      border: 0.2rem solid black;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
   }
 }
 
