@@ -80,11 +80,16 @@
     parent_purpose_name = @purpose_pipeline_map.dig(pipeline_name, purpose_name, 'parent')
     child_purpose_name = @purpose_pipeline_map.dig(pipeline_name, purpose_name, 'child')
 
+    # provide spacing
     classes = ['pipeline']
+    # show the coloured line
     classes << 'pipeline-shown' if show_pipeline_in_graph(pipeline_name, purpose_name)
+    # indicate that the purpose is part of the pipeline
     classes << 'pipeline-purpose' if purpose_is_in_pipeline(pipeline_name, purpose_name)
+    # decoration for the first and last purposes in each pipeline
     classes << 'pipeline-start' if is_first_purpose_in_pipeline(pipeline_name, purpose_name)
     classes << 'pipeline-end' if is_last_purpose_in_pipeline(pipeline_name, purpose_name)
+
     classes.join(' ')
   end
 
@@ -175,7 +180,7 @@
       <div class="stacker">
         <%= content_tag :div, class: "stacker-graph" do %>
           <% @pipelines_for_group.each do |pipeline_name| %>
-            <%= content_tag :span, ('▼' if show_pipeline_in_graph(pipeline_name, purpose_name)), class: graph_classes(pipeline_name, purpose_name) %>
+            <%= content_tag :span, '▼', class: graph_classes(pipeline_name, purpose_name) %>
           <% end %>
         <% end %>
         <%= card title: "#{purpose_name} (#{@grouped[purpose_name].size})", css_class: 'lightweight-card rounded-0 text-center' do %>

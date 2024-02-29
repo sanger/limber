@@ -562,11 +562,12 @@ $tableau-10: #4e79a7, #f28e2b, #e15759, #76b7b2, #59a14f, #edc948, #b07aa1, #ff9
     margin: 0 0.25rem;
 
     font-size: 0.5rem;
+    color: transparent; // hide text (little arrows)
   }
 
   .pipeline-shown {
     @extend .text-center;
-    @extend .text-white;
+    @extend .text-white; // show text
 
     @for $i from 1 through length($tableau-10) {
       &:nth-child(#{$i}) {
