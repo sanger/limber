@@ -64,7 +64,8 @@ class PipelineList
   # @return [Array] Returns an array of purposes, ordered based on the relationships of the pipeline.
   def order_pipeline(pipeline_name)
     pipeline_config = @list.find { |pipeline| pipeline.name == pipeline_name }
-    flatten_relationships_into_purpose_list(pipeline_config.relationships)
+    relationship_config = pipeline_config.relationships
+    flatten_relationships_into_purpose_list(relationship_config)
   end
 
   # Given a list of purposes and pipelines of interest, show which purposes are
@@ -130,7 +131,9 @@ class PipelineList
     (pipeline.relationships.keys + pipeline.relationships.values).include?(purpose)
   end
 
-  def flatten_relationships_into_purpose_list(relationship_config)
+  def flatten_relationships_into_purpose_list(relationship_config_original)
+    # Make a copy of the config so we can delete nodes as we go
+    relationship_config = relationship_config_original.dup
     ordered_purpose_list = []
 
     # Any purposes with no 'child' purposes should go at the end of the list
