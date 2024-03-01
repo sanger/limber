@@ -72,13 +72,6 @@ module LabwareCreators
       true
     end
 
-    # Creates transfer requests for the given transfer request attributes and performs the transfers.
-    #
-    # @return [void]
-    def perform_transfers
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
-    end
-
     # Returns a CsvFile object for the tube rack scan CSV file, or nil if the file doesn't exist.
     def csv_file
       @csv_file ||= CsvFile.new(file) if file
@@ -174,12 +167,13 @@ module LabwareCreators
       parent_tubes.values.pluck(:uuid).uniq
     end
 
-    # Uploads the tube rack scan CSV file to the parent tube using api v1.
-    # NB. This is a bit limited as it is only linked to one tube.
+    def child_v1
+      @child_v1 ||= api.plate.find(@child.uuid)
+    end
+
+    # Uploads the tube rack scan CSV file to the child plate using api v1.
     def upload_tube_rack_file
-      # TODO: this is failing with URL error despite values for all elements
-      # parent.qc_files.create_from_file!(file, filename_for_tube_rack_scan)
-      true
+      child_v1.qc_files.create_from_file!(file, filename_for_tube_rack_scan)
     end
 
     # Returns an array of active requests of the expected type for the given tube.

@@ -124,6 +124,32 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
     )
   end
 
+  let(:tube_rack_file_content) do
+    content = tube_rack_file.read
+    tube_rack_file.rewind
+    content
+  end
+
+  let(:stub_upload_file_creation) do
+    stub_request(:post, api_url_for(child_plate_uuid, 'qc_files'))
+      .with(
+        body: tube_rack_file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="tube_rack_scan.csv"'
+        }
+      )
+      .to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'tube_rack_scan.csv'),
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
+  end
+
+  let(:child_plate_v1) { json :plate, uuid: child_plate_uuid, purpose_uuid: child_plate_purpose_uuid }
+
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
       .with(barcode: 'FX10000001', includes: tube_includes)
@@ -133,9 +159,13 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
       .and_return(parent_tube_2)
 
     stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
+
+    stub_api_get(child_plate_uuid, body: child_plate_v1)
+
+    stub_upload_file_creation
   end
 
-  context 'on new' do
+  context '#new' do
     let(:form_attributes) { { purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid } }
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
@@ -201,6 +231,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
     it 'creates a plate!' do
       subject.save
+
+      # TODO: expect file upload to child to have happened
       expect(ms_plate_creation_request).to have_been_made.once
       expect(transfer_creation_request).to have_been_made.once
     end
