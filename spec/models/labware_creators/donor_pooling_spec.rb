@@ -20,34 +20,48 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:requests) { create_list(:request, 96, submission_id: 1) }
 
   let(:parent_1_plate) do
+    # The aliquots_without_requests parameter is to prevent the default
+    # request creation so we can use the same submission_id on requests.
     plate = create(:v2_plate, uuid: parent_1_plate_uuid, aliquots_without_requests: 1)
-    plate.wells.each_with_index { |well, index| well.aliquots.first.request = requests[index] }
+    plate.wells.each_with_index do |well, index|
+      well.aliquots.first.request = requests[index]
+      well.aliquots.first.sample.sample_metadata.donor_id = nil
+    end
     plate
   end
 
   let(:parent_2_plate) do
-    plate = create(:v2_plate, uuid: parent_1_plate_uuid, aliquots_without_requests: 1)
-    plate.wells.each_with_index { |well, index| well.aliquots.first.request = requests[index] }
+    # The aliquots_without_requests parameter is to prevent the default
+    # request creation so we can use the same submission_id on requests.
+    plate = create(:v2_plate, uuid: parent_2_plate_uuid, aliquots_without_requests: 1)
+    plate.wells.each_with_index do |well, index|
+      well.aliquots.first.request = requests[index]
+      well.aliquots.first.sample.sample_metadata.donor_id = nil
+    end
     plate
   end
   let(:source_plates) { [parent_1_plate, parent_2_plate] }
 
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
 
+  # Usually we need three studies for testing.
   let(:study_1) { create(:v2_study, name: 'study-1-name') }
   let(:study_2) { create(:v2_study, name: 'study-2-name') }
   let(:study_3) { create(:v2_study, name: 'study-3-name') }
 
+  # Usually we need three projects for testing.
   let(:project_1) { create(:v2_project, name: 'project-1-name') }
   let(:project_2) { create(:v2_project, name: 'project-2-name') }
   let(:project_3) { create(:v2_project, name: 'project-3-name') }
 
+  # This is the form that includes plate barcodes, submitted by user.
   let(:form_attributes) do
     { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes, user_uuid: user_uuid }
   end
   let(:barcodes) { source_plates.map(&:human_barcode) }
 
   before do
+    # Allow the API call to return two plates by default.
     create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid)
     allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
       .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
@@ -205,7 +219,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     it 'returns the split groups' do
       well_p1_w1 = well = parent_1_plate.wells[0]
       well.state = 'passed'
-      well.aliquots.first.sample.sample_metadata.donor_id = 1
+      well.aliquots.first.sample.sample_metadata.donor_id = 1 # Using integer donor_ids for easy setup.
 
       well_p1_w2 = well = parent_1_plate.wells[1]
       well.state = 'passed'
@@ -240,7 +254,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   describe '#unique_donor_ids' do
     it 'returns the unique donor ids' do
       well_p1_w1 = well = parent_1_plate.wells[0]
-      well.aliquots.first.sample.sample_metadata.donor_id = 1
+      well.aliquots.first.sample.sample_metadata.donor_id = 1 # Using integer donor_ids for easy setup.
 
       well_p1_w2 = well = parent_1_plate.wells[1]
       well.aliquots.first.sample.sample_metadata.donor_id = 1
@@ -552,6 +566,18 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
 
       context 'with single barcode' do
+        let!(:wells) do
+          well = parent_1_plate.wells[0]
+          well.state = 'passed'
+          well.aliquots.first.study = study_1
+          well.aliquots.first.project = project_1
+          well.aliquots.first.sample.sample_metadata.donor_id = 1
+        end
+        before do
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
+            .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
+            .and_return([parent_1_plate])
+        end
         let(:barcodes) { [parent_1_plate.human_barcode] }
         it { is_expected.to be_valid }
       end
@@ -588,6 +614,35 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_plates]).to include(
           format(described_class::NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, 3, 1)
+        )
+      end
+    end
+
+    describe '#wells_with_aliquots_must_have_donor_id' do
+      let!(:wells) do
+        wells = Array(parent_1_plate.wells[0..3]) + Array(parent_2_plate.wells[0..1])
+        wells.each do |well|
+          well.state = 'passed'
+          well.aliquots.first.study = study_1
+          well.aliquots.first.project = project_1
+        end
+        wells[0].aliquots.first.sample.sample_metadata.donor_id = 1 # OK
+        wells[1].aliquots = nil # no aliquots: OK
+        wells[2].aliquots = [] # no aliquots: OK
+        wells[3].aliquots.first.sample.sample_metadata.donor_id = nil # ERROR
+        wells[4].aliquots.first.sample.sample_metadata.donor_id = '' # ERROR
+        wells[5].aliquots.first.sample.sample_metadata.donor_id = ' ' # ERROR
+        wells
+      end
+      it 'reports the error' do
+        expect(subject).not_to be_valid
+        invalid_wells_hash = {
+          parent_1_plate.human_barcode => [wells[3].location],
+          parent_2_plate.human_barcode => [wells[4].location, wells[5].location]
+        }
+        formatted_string = invalid_wells_hash.map { |barcode, wells| "#{barcode}: #{wells.join(', ')}" }.join(' ')
+        expect(subject.errors[:source_plates]).to include(
+          format(described_class::WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID, formatted_string)
         )
       end
     end
