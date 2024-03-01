@@ -1,0 +1,17 @@
+<%# This is a picking file for a Hamilton robot for LRC PBMC Defrost plate to LRC PBMC Pools plate transfers %>
+<%= CSV.generate_line [
+    'Workflow', 
+    @workflow
+  ], 
+  row_sep: '' 
+%>
+<%= CSV.generate_line [
+    'SourcePlate',
+    'SourceWell',
+    'DestinationPlate',
+    'DestinationWell',
+    'SampleVolume',
+    'ResuspensionVolume',
+  ],
+  row_sep: ''
+%>
