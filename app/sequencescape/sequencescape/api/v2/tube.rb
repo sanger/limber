@@ -22,13 +22,16 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
   has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
 
-  has_many :aliquots
   has_many :direct_submissions
   has_many :state_changes
   has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
 
   property :created_at, type: :time
   property :updated_at, type: :time
+
+  def aliquots
+    receptacle&.aliquots
+  end
 
   def self.find_by(params)
     options = params.dup

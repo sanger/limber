@@ -8,12 +8,14 @@ FactoryBot.define do
     uuid
 
     requests_as_source { [] }
+    aliquots { [] }
 
     transient { qc_results { [] } }
 
     after(:build) do |receptacle, evaluator|
       receptacle._cached_relationship(:qc_results) { evaluator.qc_results || [] }
       receptacle._cached_relationship(:requests_as_source) { evaluator.requests_as_source || [] }
+      receptacle._cached_relationship(:aliquots) { evaluator.aliquots || [] }
     end
   end
 end
