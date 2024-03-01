@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # # Up to 96 tubes are transferred onto a single 96-well plate.
-RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
+RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploader do
   it_behaves_like 'it only allows creation from tubes'
 
   has_a_working_api
@@ -117,23 +118,23 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
            uuid: child_plate_purpose_uuid
   end
 
-  let(:tube_rack_file) do
+  let(:file) do
     fixture_file_upload(
       'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv',
       'sequencescape/qc_file'
     )
   end
 
-  let(:tube_rack_file_content) do
-    content = tube_rack_file.read
-    tube_rack_file.rewind
+  let(:file_content) do
+    content = file.read
+    file.rewind
     content
   end
 
   let(:stub_upload_file_creation) do
     stub_request(:post, api_url_for(child_plate_uuid, 'qc_files'))
       .with(
-        body: tube_rack_file_content,
+        body: file_content,
         headers: {
           'Content-Type' => 'sequencescape/qc_file',
           'Content-Disposition' => 'form-data; filename="tube_rack_scan.csv"'
@@ -185,12 +186,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
   context '#save when everything is valid' do
     let(:form_attributes) do
-      {
-        user_uuid: user_uuid,
-        purpose_uuid: child_plate_purpose_uuid,
-        parent_uuid: parent_tube_1_uuid,
-        file: tube_rack_file
-      }
+      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
     let!(:ms_plate_creation_request) do
@@ -231,15 +227,13 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
     it 'creates a plate!' do
       subject.save
-
-      # TODO: expect file upload to child to have happened
       expect(ms_plate_creation_request).to have_been_made.once
       expect(transfer_creation_request).to have_been_made.once
     end
   end
 
   context 'when a file is not correctly parsed' do
-    let(:tube_rack_file) do
+    let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_invalid.csv',
         'sequencescape/qc_file'
@@ -247,12 +241,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
     end
 
     let(:form_attributes) do
-      {
-        user_uuid: user_uuid,
-        purpose_uuid: child_plate_purpose_uuid,
-        parent_uuid: parent_tube_1_uuid,
-        file: tube_rack_file
-      }
+      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
@@ -269,7 +258,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
   end
 
   context 'when a tube is not in LIMS' do
-    let(:tube_rack_file) do
+    let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_with_unknown_barcode.csv',
         'sequencescape/qc_file'
@@ -277,12 +266,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
     end
 
     let(:form_attributes) do
-      {
-        user_uuid: user_uuid,
-        purpose_uuid: child_plate_purpose_uuid,
-        parent_uuid: parent_tube_1_uuid,
-        file: tube_rack_file
-      }
+      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
@@ -306,12 +290,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
   context 'when a tube is not of expected purpose type' do
     let(:form_attributes) do
-      {
-        user_uuid: user_uuid,
-        purpose_uuid: child_plate_purpose_uuid,
-        parent_uuid: parent_tube_1_uuid,
-        file: tube_rack_file
-      }
+      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
     let(:parent_tube_2_purpose_uuid) { 'parent-tube-purpose-type-unknown-uuid' }
@@ -332,12 +311,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan do
 
   context 'when a tube does not have an active request of the expected type' do
     let(:form_attributes) do
-      {
-        user_uuid: user_uuid,
-        purpose_uuid: child_plate_purpose_uuid,
-        parent_uuid: parent_tube_1_uuid,
-        file: tube_rack_file
-      }
+      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
     let(:request_type_2) { create :request_type, key: 'unrelated_request_type_key' }
