@@ -181,3 +181,9 @@ rvi_pcr_xp_concentrations_for_custom_pooling:
   csv: rvi_pcr_xp_concentrations_for_custom_pooling
   plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
   ancestor_purpose: RVI Cherrypick
+hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools:
+  csv: hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools
+  workflow: scRNA Core Donor Pooling
+  plate_includes:
+    - wells.qc_results
+    - wells.transfer_requests_as_target.source_asset
