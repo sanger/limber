@@ -149,7 +149,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       )
   end
 
-  let(:child_plate_v1) { json :plate, uuid: child_plate_uuid, purpose_uuid: child_plate_purpose_uuid }
+  let(:child_plate_v1) do
+    # qc_files are created through the API V1. The actions attribute for qcfiles is required by the API V1.
+    json :plate, uuid: child_plate_uuid, purpose_uuid: child_plate_purpose_uuid, qc_files_actions: %w[read create]
+  end
 
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
