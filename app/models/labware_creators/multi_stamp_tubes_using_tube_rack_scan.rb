@@ -240,10 +240,10 @@ module LabwareCreators
     def source_tube_outer_request_uuid(tube)
       requests = active_requests_of_expected_type(tube)
 
-      return requests.first.uuid if requests.first.uuid.present?
-
       # The validation to check for suitable requests should have caught this
-      raise "No active request of expected type found for tube #{tube.human_barcode}"
+      raise "No active request of expected type found for tube #{tube.human_barcode}" if requests.empty?
+
+      requests.first.uuid
     end
   end
   # rubocop:enable Metrics/ClassLength

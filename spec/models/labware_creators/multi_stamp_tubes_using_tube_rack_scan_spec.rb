@@ -330,5 +330,12 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
           '(one of type(s): parent_tube_library_request_type)'
       )
     end
+
+    it 'raises an error if it reaches the code to fetch outer request' do
+      expect { subject.send(:source_tube_outer_request_uuid, parent_tube_2) }.to raise_error(
+        RuntimeError,
+        "No active request of expected type found for tube #{parent_tube_2.human_barcode}"
+      )
+    end
   end
 end
