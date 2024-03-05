@@ -45,4 +45,16 @@ module ExportsHelper
     end
     Rails.configuration.mbrave[tag_group_name][:num_plate]
   end
+
+  # Fetches the first plate that matches the given barcode from Sequencescape API V2.
+  # Includes additional related objects as specified.
+  #
+  # @param barcode [String] The barcode of the plate to fetch.
+  # @param includes [Array<String>] The related objects to include in the response.
+  #   Defaults to ['wells'].
+  # @return [Sequencescape::Api::V2::Plate, nil] The fetched plate, or nil if no
+  #   plate was found.
+  def plate_by_barcode(barcode, includes = ['wells'])
+    Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: includes).first
+  end
 end
