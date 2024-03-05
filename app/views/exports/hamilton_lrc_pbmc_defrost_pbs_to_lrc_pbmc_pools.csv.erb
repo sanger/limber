@@ -15,3 +15,46 @@
   ],
   row_sep: ''
 %>
+<%
+  # Prepare the fields determined from the transfer requests
+
+  required_number_of_cells = 5_000
+  maximum_sample_volume = 50.0  # microlitres
+  resuspension_volume_per_sample = 2.2  # microlitres
+  minimum_resuspension_volume = 10.0  # microlitres
+  MILLILITRES_TO_MICROLITRES = 1_000.0
+
+  transfer_request_data = []
+  ancestor_plates_wells = {}  # { src_barcode => { src_location => src_well } }
+  each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
+
+    # Fetch ancestor plate specified by src_barcode and index wells by src_location.
+    ancestor_plates_wells[src_barcode] ||= plate_by_barcode(src_barcode).wells.index_by(&:location)
+
+    src_well = ancestor_plates_wells[src_barcode][src_location]
+    cell_count = src_well.latest_live_cell_count  # cells / millilitres
+    next if cell_count.nil?
+    required_volume = (
+      MILLILITRES_TO_MICROLITRES * required_number_of_cells / cell_count.value.to_i,
+      maximum_sample_volume).min
+
+    transfer_request_data << [
+      src_barcode,
+      src_location,
+      @plate.labware_barcode.human,
+      dest_well.location,
+      '%0.2f' % required_volume,
+    ]
+  end
+
+  # Calculate the resuspension volumes from the pooled samples count
+
+  samples_by_dest_well = transfer_request_data.group_by { |tr| tr[3] }
+
+  rows_array = transfer_request_data.map do |data|
+    samples_in_pool = samples_by_dest_well[data[3]].count
+    resuspension_volume = [samples_in_pool * resuspension_volume_per_sample, minimum_resuspension_volume].max
+    data + ['%0.2f' % resuspension_volume]
+  end
+%>
+<%= rows_array.sort_by{ |a| [ a[0], WellHelpers.well_coordinate(a[1])] }.map(&:to_csv).join %>
