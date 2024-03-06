@@ -47,7 +47,7 @@ class ExportsController < ApplicationController
     # for the specified ancestor purpose.
     @ancestor_plate_list = @plate.ancestors.where(purpose_name: export.ancestor_purpose)
 
-    ancestor_result = ancestor_plate_list.first
+    ancestor_result = @ancestor_plate_list.first
     return nil if ancestor_result.blank?
 
     Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, id: ancestor_result.id)
