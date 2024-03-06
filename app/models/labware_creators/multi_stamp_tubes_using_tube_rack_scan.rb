@@ -12,7 +12,7 @@ module LabwareCreators
   # transfer the tubes into wells on the plate.
   #
   # Inputs:
-  # 1) A parent tube - the user has click the add plate button on a specific tube
+  # 1) A parent tube - the user has clicked the add plate button on a specific tube
   # 2) A tube rack scan CSV file - this is a scan of the rack of 2D tube barcodes (the rack is not being tracked)
   #
   # Outputs:
@@ -74,7 +74,7 @@ module LabwareCreators
 
     # Returns a CsvFile object for the tube rack scan CSV file, or nil if the file doesn't exist.
     def csv_file
-      @csv_file ||= CsvFile.new(file) if file
+      @csv_file ||= CommonFileHandling::CsvFileForTubeRack.new(file) if file
     end
 
     def file_valid?

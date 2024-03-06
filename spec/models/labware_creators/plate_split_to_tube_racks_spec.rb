@@ -409,7 +409,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_rack_barcodes_differ_between_files)
         expect(subject.errors.full_messages).to include(
-          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 2 [AAAA1]'
+          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 1 [AAAA1]'
         )
       end
     end
@@ -541,7 +541,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_barcodes_differ_between_files)
         expect(subject.errors.full_messages).to include(
-          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 2 [AAAA1]'
+          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 1 [AAAA1]'
         )
       end
     end
