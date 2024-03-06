@@ -142,8 +142,6 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
   end
 
   it 'renders the csv' do
-    p CSV.parse(render)
-
     expect(CSV.parse(render)).to eq(expected_content)
   end
 end
