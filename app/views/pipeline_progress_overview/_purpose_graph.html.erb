@@ -86,6 +86,6 @@
 %>
 <%= content_tag :div, class: "stacker-graph" do %>
   <% @pipelines_for_group.each do |pipeline_name| %>
-    <%= content_tag :span, '▼', class: graph_classes(pipeline_name, purpose_name) %>
-  <% end %>
+    <% pipeline_title = show_pipeline_in_graph(pipeline_name, purpose_name) ? "Limber Pipeline: #{pipeline_name}" : nil %>
+    <%= content_tag :span, '▼', class: graph_classes(pipeline_name, purpose_name), title: pipeline_title %>  <% end %>
 <% end %>
