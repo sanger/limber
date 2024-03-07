@@ -59,8 +59,8 @@ module LabwareCreators
     # Returns the number of source plates from the purpose configuration.
     #
     # @return [Integer] The number of source plates.
-    def number_of_source_plates
-      @number_of_source_plates ||= purpose_config.dig(:creator_class, :args, :number_of_source_plates)
+    def max_number_of_source_plates
+      @max_number_of_source_plates ||= purpose_config.dig(:creator_class, :args, :max_number_of_source_plates)
     end
 
     # Returns the WellFilter instance associated with this creator. The filter

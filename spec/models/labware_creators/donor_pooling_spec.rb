@@ -74,16 +74,16 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
-  describe '#number_of_source_plates' do
+  describe '#max_number_of_source_plates' do
     it 'returns the number of source plates' do
-      expect(subject.number_of_source_plates).to eq(2)
+      expect(subject.max_number_of_source_plates).to eq(2)
     end
 
     context 'with a different number of source plates' do
-      before { create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid, number_of_source_plates: 3) }
+      before { create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid, max_number_of_source_plates: 3) }
 
       it 'returns the number of source plates' do
-        expect(subject.number_of_source_plates).to eq(3)
+        expect(subject.max_number_of_source_plates).to eq(3)
       end
     end
   end

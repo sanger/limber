@@ -14,7 +14,7 @@
       <div id="validation_report"></div>
       <div id="add-plates-instructions-block" class="card-body" >
         <div class="instructions">
-          <p>Scan in up to <% @labware_creator.number_of_source_plates %> plates.</p>
+          <p>Scan in up to <% @labware_creator.max_number_of_source_plates %> plates.</p>
         </div>
       </div>
     <% end %>
@@ -27,7 +27,7 @@
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
-        <% @labware_creator.number_of_source_plates.times do |index| %>
+        <% @labware_creator.max_number_of_source_plates.times do |index| %>
           <div class="labware-container scan-labware form-group row">
             <label for="plate[barcodes][<%= index %>]"
                    class="plate-label col-md-2" >Source Plate <%= index + 1 %></label>
