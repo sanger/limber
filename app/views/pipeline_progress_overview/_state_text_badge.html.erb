@@ -1,0 +1,11 @@
+<%
+  @state_colours = {
+    'pending' => 'warning',
+    'passed' => 'success',
+    'failed' => 'danger',
+    'pending (parent)' => 'secondary',
+    'passed (parent)' => 'secondary',
+    'failed (parent)' => 'secondary'
+  }
+%>
+<%= content_tag(:span, text, class: "badge badge-pill badge-#{@state_colours[state]}") %>

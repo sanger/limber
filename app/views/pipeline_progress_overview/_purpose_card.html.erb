@@ -1,0 +1,17 @@
+<%
+  # For the labware with the given purpose, groups the labware by state, and return a hash of state_with_children => count.
+  def grouped_state_counts(purpose_name)
+    labware_for_purpose(@labware, purpose_name).group_by(&:state_with_children).transform_values(&:size)
+  end
+%>
+
+<%= card title: "#{purpose_name} (#{labware_for_purpose(@labware, purpose_name).size})", css_class: 'lightweight-card rounded-0 text-center' do %>
+
+  <% grouped_state_counts(purpose_name).each do |state_with_children, count| %>
+    <%= render partial: 'state_text_badge', locals: { state: state_with_children, text: "#{state_with_children.humanize} #{count}" } %>
+  <% end %>
+
+  <span class="float-right">
+    <%= link_to ">", pipeline_progress_overview_path(id: @pipeline_group_name, purpose: purpose_name, date: @from_date), class: "btn btn-sm btn-info" %>
+  </span>
+<% end %>

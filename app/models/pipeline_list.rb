@@ -57,7 +57,7 @@ class PipelineList
     flatten_relationships_into_purpose_list(combined_relationships)
   end
 
-  # Orders the pipeline based on its relationships.
+  # Orders the purposes within a pipeline based on the relationships.
   #
   # @param pipeline_name [String] The name of the pipeline to order.
   #

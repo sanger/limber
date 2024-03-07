@@ -4,69 +4,51 @@
 class PipelineProgressOverviewController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def show
+    page_size = 500
+
+    # URL query parameters
     @pipeline_group_name = params[:id]
     @from_date = from_date(params)
     @purpose = params[:purpose]
 
-    # Group related pipelines together
+    # Pipeline details
+
+    # hash of pipelines by group
     @pipelines_for_group = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
 
+    # list of group-purposes in order
     @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(@pipelines_for_group)
 
+    # purpose_pipeline_map is a hash of hashes, like:
+    #   "Purpose 2" => {
+    #     "Pipeline A" => {
+    #       "parent" => "Purpose 1",
+    #       "child" => "Purpose 3"
+    #     },
+    #     "Pipeline B" => {
+    #       "parents" => "Purpose 1",
+    #       "child" => nil
+    #     }
     @purpose_pipeline_map = Settings.pipelines.purpose_to_pipelines_map(@ordered_purpose_list, @pipelines_for_group)
     @ordered_purposes_for_pipelines =
       @pipelines_for_group.index_with { |pipeline| Settings.pipelines.order_pipeline(pipeline) }
 
-    labware_records = arrange_labware_records(@ordered_purpose_list, from_date(params))
-
-    # TODO: improve performance by only requesting full records when a @purpose is selected
-    @grouped = mould_data_for_view(@ordered_purpose_list, labware_records)
-    @grouped_state_counts = count_states(@grouped)
+    # Labware results
+    @labware = compile_labware_for_purpose(@ordered_purpose_list, page_size, @from_date, @ordered_purpose_list)
   end
 
   def from_date(params)
     params[:date]&.to_date || Time.zone.today.prev_month
   end
 
-  # Split out requests for the last purpose and the rest of the purposes so that
-  # the labware for the last purpose can be filtered by those that have
-  # ancestors including at least one purpose from the rest.
-  def arrange_labware_records(ordered_purposes, from_date)
-    page_size = 500
-
-    specific_purposes = ordered_purposes.first(ordered_purposes.count - 1)
-    specific_labware_records = retrieve_labware(page_size, from_date, specific_purposes)
-    general_labware_records = retrieve_labware(page_size, from_date, ordered_purposes.last)
-
-    specific_labware_records +
-      filter_labware_records_by_ancestor_purpose_names(general_labware_records, specific_purposes)
-  end
-
-  # Filter a list of labware records such that we only keep those that have at
-  # least one ancestor with a purpose from the given allow list.
-  def filter_labware_records_by_ancestor_purpose_names(labware_records, purpose_names_list)
+  # Filter out labware that is not related of the given list of purpose names.
+  # A labware is related to a purpose if it is that purpose or has an ancestor
+  # that is that purpose.
+  def filter_labware_by_related_purpose(labware_records, purpose_names)
     labware_records.select do |labware|
-      ancestor_purpose_names = labware.ancestors.map { |ancestor| ancestor.purpose.name }
-      ancestor_purpose_names.any? { |purpose_name| purpose_names_list.include?(purpose_name) }
+      purpose_names.include?(labware.purpose.name) ||
+        labware.ancestors.any? { |ancestor| purpose_names.include?(ancestor.purpose.name) }
     end
-  end
-
-  # Retrieves labware through the Sequencescape V2 API
-  # Combines pages into one list
-  # Combines labware with and without children
-  # Returns a list of Sequencescape::Api::V2::Labware
-  def retrieve_labware(page_size, from_date, purposes)
-    labware = query_labware(page_size, from_date, purposes, nil)
-    labware_without_children = query_labware(page_size, from_date, purposes, false)
-
-    # filter out labware without children from labware, matching on ID
-    labware_without_children_ids = labware_without_children.to_set(&:id)
-    labware_with_children = labware.reject { |labware_record| labware_without_children_ids.include?(labware_record.id) }
-
-    labware_with_children.each { |labware_record| labware_record.has_children = true }
-    labware_without_children.each { |labware_record| labware_record.has_children = false }
-
-    labware_without_children + labware_with_children
   end
 
   def query_labware(page_size, from_date, purposes, with_children)
@@ -85,57 +67,41 @@ class PipelineProgressOverviewController < ApplicationController
     Sequencescape::Api::V2.merge_page_results(labware_query)
   end
 
-  # Returns following structure (example):
-  #
-  # {
-  #   "LTHR Cherrypick" => [
-  #     {
-  #       :record => #<Sequencescape::Api::V2::Labware...>,
-  #       :state => "pending"
-  #     }
-  #   ],
-  #   "LTHR-384 PCR 1" => [{}]
-  # }
-  def mould_data_for_view(purposes, labware_records)
-    {}.tap do |output|
-      # Make sure there's an entry for each of the purposes, even if no records
-      purposes.each { |p| output[p] = [] }
-
-      labware_records.each do |rec|
-        next unless rec.purpose
-
-        state = decide_state(rec)
-        next if state == 'cancelled'
-
-        state_with_children = rec.has_children ? "#{state} (parent)" : state
-
-        output[rec.purpose.name] << { record: rec, state: state, state_with_children: state_with_children }
-      end
-    end
-  end
-
   def decide_state(labware)
     # TODO: the default of pending is a false assumption - see RVI cherrypick
     labware.state_changes&.max_by(&:id)&.target_state || 'pending'
   end
 
-  # Counts of number of labware in each state for each purpose
-  # Returns a hash with the following structure:
-  # {
-  #   "LTHR Cherrypick" => {
-  #     "pending" => 5,
-  #     "started" => 2
-  #   },
-  #   "LTHR-384 PCR 1" => {
-  #     "pending" => 5,
-  #     "started" => 2
-  #   }
-  # }
-  def count_states(grouped)
-    {}.tap do |output|
-      grouped.each do |purpose, records|
-        output[purpose] = records.group_by { |r| r[:state_with_children] }.transform_values(&:count)
-      end
+  def add_children_metadata(labware_records, has_children, state_suffix)
+    labware_records.each do |labware_record|
+      labware_record.has_children = has_children
+      labware_record.state = decide_state(labware_record)
+      labware_record.state_with_children = "#{labware_record.state}#{state_suffix}"
     end
+  end
+
+  def query_labware_with_children(page_size, from_date, purposes)
+    labware_all = query_labware(page_size, from_date, purposes, nil)
+    labware_without_children = query_labware(page_size, from_date, purposes, false)
+
+    # filter out labware without children from labware, matching on ID
+    labware_without_children_ids = labware_without_children.to_set(&:id)
+    labware_with_children =
+      labware_all.reject { |labware_record| labware_without_children_ids.include?(labware_record.id) }
+
+    labware_with_children = add_children_metadata(labware_with_children, true, ' (parent)')
+    labware_without_children = add_children_metadata(labware_without_children, false, '')
+
+    labware_without_children + labware_with_children
+  end
+
+  # Given a list of purposes, retrieve labware records for those purposes and
+  # their ancestors purposes, and filter out any from another pipeline or that have been cancelled.
+  def compile_labware_for_purpose(query_purposes, page_size, from_date, ordered_purposes)
+    related_purposes = ordered_purposes.first(ordered_purposes.count - 1)
+
+    labwares = query_labware_with_children(page_size, from_date, query_purposes)
+    labwares = labwares.reject { |labware| labware.state == 'canceled' }
+    filter_labware_by_related_purpose(labwares, related_purposes)
   end
 end

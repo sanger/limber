@@ -54,4 +54,8 @@ module LabwareHelper # rubocop:todo Style/Documentation
   def labware_by_state(labwares)
     labwares.group_by(&:state)
   end
+
+  def labware_for_purpose(labwares, purpose_name)
+    labwares.select { |labware| labware.purpose.name == purpose_name }
+  end
 end
