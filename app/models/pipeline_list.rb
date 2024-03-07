@@ -75,37 +75,47 @@ class PipelineList
   # {
   #   "Purpose 1" => {
   #     "Pipeline A" => {
-  #       "parent" => nil,
+  #       "parents" => [],
   #       "child" => "Purpose 2"
   #     }
   #   },
   #   "Purpose 2" => {
   #     "Pipeline A" => {
-  #       "parent" => "Purpose 1",
+  #       "parents" => ["Purpose 1"],
   #       "child" => "Purpose 3"
   #     },
   #     "Pipeline B" => {
-  #       "parents" => "Purpose 1",
+  #       "parents" => ["Purpose 1"],
   #       "child" => nil
   #     }
   #   },
   # }
   def purpose_to_pipelines_map(purposes, pipeline_names)
-    pipeline_configs = @list.select { |pipeline| pipeline_names.include? pipeline.name }
+    pipeline_configs = select_pipelines(pipeline_names)
     purposes.each_with_object({}) do |purpose, result|
-      pipelines_with_purpose = pipeline_configs.select { |pipeline| purpose_in_relationships?(pipeline, purpose) }
+      pipelines_with_purpose = select_pipelines_with_purpose(pipeline_configs, purpose)
       pipelines_with_purpose.each do |pipeline|
         result[purpose] ||= {}
         result[purpose][pipeline.name] = {
-          # should only ever be one parent or child per purpose in a Limber pipeline
-          parent: pipeline.relationships.select { |_k, v| v == purpose }.keys.first,
-          child: pipeline.relationships[purpose]
+          parents: pipeline.relationships.select { |_k, v| v == purpose }.keys,
+          child: pipeline.relationships[purpose] # should only ever be one child per purpose in a Limber pipeline
         }
       end
     end
   end
 
   private
+
+  # Given a list of pipeline names, return the pipelines with those names
+  def select_pipelines(pipeline_names)
+    @list.select { |pipeline| pipeline_names.include? pipeline.name }
+  end
+
+  # Given a list of pipeline configs and a purpose, return the pipelines that
+  # have that purpose in their relationships
+  def select_pipelines_with_purpose(pipeline_configs, purpose)
+    pipeline_configs.select { |pipeline| purpose_in_relationships?(pipeline, purpose) }
+  end
 
   # Given a list of pipeline configs, extract the relationships and combine them
   # into a single hash
@@ -122,12 +132,12 @@ class PipelineList
     end
   end
 
-  # Checks if a given purpose is present in the relationships of a pipeline.
+  # Checks if a given purpose is present in a pipeline.
   #
   # @param pipeline [Object] The pipeline to check.
   # @param purpose [String] The purpose to look for.
   #
-  # @return [Boolean] Returns true if the purpose is found in either the keys or values of the pipeline's relationships, false otherwise.
+  # @return [Boolean] Returns true if the purpose is present in the the pipeline, false otherwise.
   def purpose_in_relationships?(pipeline, purpose)
     (pipeline.relationships.keys + pipeline.relationships.values).include?(purpose)
   end

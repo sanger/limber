@@ -22,17 +22,17 @@ class PipelineProgressOverviewController < ApplicationController
     # {
     #   'LRC Blood Vac' => {
     #     'scRNA Core Cell Extraction Entry' => {
-    #       parent: nil,
+    #       parents: [],
     #       child: 'LRC Blood Aliquot'
     #     }
     #   },
     #   'LRC Blood Aliquot' => {
     #     'scRNA Core Cell Extraction Entry' => {
-    #       parent: 'LRC Blood Vac',
+    #       parents: ['LRC Blood Vac'],
     #       child: 'LRC Blood Bank'
     #     }
     #   },
-    #   ...
+    # ...
     # }
     @purpose_pipeline_details =
       Settings.pipelines.purpose_to_pipelines_map(@ordered_purpose_names, @pipelines_for_group)

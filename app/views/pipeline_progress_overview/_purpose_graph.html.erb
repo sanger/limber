@@ -7,7 +7,7 @@
   # @param purpose_name [String] The name of the purpose to look for.
   #
   # @return [Boolean] Returns true if the pipeline is found in the keys of the purpose's pipeline map, false otherwise.
-  def purpose_is_in_pipeline(pipeline_name, purpose_name)
+  def is_purpose_in_pipeline(pipeline_name, purpose_name)
     @purpose_pipeline_details[purpose_name].keys.include?(pipeline_name)
   end
 
@@ -44,7 +44,7 @@
   end
 
   def show_pipeline_in_graph(pipeline_name, purpose_name)
-    purpose_is_in_pipeline(pipeline_name, purpose_name) ||
+    is_purpose_in_pipeline(pipeline_name, purpose_name) ||
       pipeline_first_purpose_has_occurred(pipeline_name, purpose_name) &&
       pipeline_last_purpose_is_still_to_occur(pipeline_name, purpose_name)
   end
@@ -65,21 +65,24 @@
     #       "child" => "Purpose 3"
     #     },
     #     "Pipeline B" => {
-    #       "parents" => "Purpose 1",
+    #       "parent" => "Purpose 1",
     #       "child" => nil
     #     }
-    parent_purpose_name = @purpose_pipeline_details.dig(pipeline_name, purpose_name, 'parent')
-    child_purpose_name = @purpose_pipeline_details.dig(pipeline_name, purpose_name, 'child')
+    #   }
+
+    parent_purpose_names = @purpose_pipeline_details.dig(purpose_name, pipeline_name, :parents)
+    child_purpose_name = @purpose_pipeline_details.dig(purpose_name, pipeline_name, :child)
+    purpose_is_in_pipeline = is_purpose_in_pipeline(pipeline_name, purpose_name)
 
     # provide spacing
     classes = ['pipeline']
     # show the coloured line
     classes << 'pipeline-shown' if show_pipeline_in_graph(pipeline_name, purpose_name)
     # indicate that the purpose is part of the pipeline
-    classes << 'pipeline-purpose' if purpose_is_in_pipeline(pipeline_name, purpose_name)
+    classes << 'pipeline-purpose' if purpose_is_in_pipeline
     # decoration for the first and last purposes in each pipeline
-    classes << 'pipeline-start' if is_first_purpose_in_pipeline(pipeline_name, purpose_name)
-    classes << 'pipeline-end' if is_last_purpose_in_pipeline(pipeline_name, purpose_name)
+    classes << 'pipeline-start' if (parent_purpose_names.nil? || parent_purpose_names.empty?) && purpose_is_in_pipeline
+    classes << 'pipeline-end' if child_purpose_name.nil? && purpose_is_in_pipeline
 
     classes.join(' ')
   end
