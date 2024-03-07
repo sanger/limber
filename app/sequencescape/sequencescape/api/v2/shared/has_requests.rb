@@ -56,7 +56,7 @@ module Sequencescape::Api::V2::Shared
       submission_ids.first
     end
 
-    # Finding 'in_progress' requests
+    # Finding in progress requests (set directly on aliquots on transfer into a new labware)
     def requests_in_progress(request_type_to_complete: nil)
       requests = aliquots&.flat_map(&:request)&.compact
       return [] if requests.blank?
