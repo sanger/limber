@@ -48,10 +48,6 @@ module Sequencescape::Api::V2
     Plate.includes('wells').find(uuid: uuid).first
   end
 
-  def self.tube_for_presenter(uuid)
-    Tube.includes('receptacle.aliquots.request.request_type').find(uuid: uuid).first
-  end
-
   def self.tube_rack_for_presenter(query)
     TubeRack.includes('racked_tubes.tube.purpose,racked_tubes.tube.aliquots.request.request_type').find(query).first
   end
