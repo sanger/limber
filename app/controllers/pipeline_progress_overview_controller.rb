@@ -30,8 +30,7 @@ class PipelineProgressOverviewController < ApplicationController
     #       "child" => nil
     #     }
     @purpose_pipeline_map = Settings.pipelines.purpose_to_pipelines_map(@ordered_purpose_list, @pipelines_for_group)
-    @ordered_purposes_for_pipelines =
-      @pipelines_for_group.index_with { |pipeline| Settings.pipelines.order_pipeline(pipeline) }
+    @ordered_purposes_for_pipelines = order_purposes_for_pipelines(@pipelines_for_group)
 
     # Labware results
     @labware = compile_labware_for_purpose(@ordered_purpose_list, page_size, @from_date, @ordered_purpose_list)
@@ -39,6 +38,10 @@ class PipelineProgressOverviewController < ApplicationController
 
   def from_date(params)
     params[:date]&.to_date || Time.zone.today.prev_month
+  end
+
+  def order_purposes_for_pipelines(pipeline_names)
+    pipeline_names.index_with { |pipeline_name| Settings.pipelines.order_pipeline(pipeline_name) }
   end
 
   # Filter out labware that is not related of the given list of purpose names.
