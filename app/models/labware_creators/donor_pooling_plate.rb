@@ -73,7 +73,7 @@ module LabwareCreators
       @well_filter ||= WellFilter.new(creator: self)
     end
 
-    # Reurns all passed wells from the source plates in column order.
+    # Returns all passed wells from the source plates in column order.
     #
     # @return [Array<Well>] An array of passed wells.
     def labware_wells
