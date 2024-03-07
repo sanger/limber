@@ -8,7 +8,7 @@
   #
   # @return [Boolean] Returns true if the pipeline is found in the keys of the purpose's pipeline map, false otherwise.
   def purpose_is_in_pipeline(pipeline_name, purpose_name)
-    @purpose_pipeline_map[purpose_name].keys.include?(pipeline_name)
+    @purpose_pipeline_details[purpose_name].keys.include?(pipeline_name)
   end
 
   # Checks if the first purpose in a pipeline has occurred.
@@ -18,10 +18,10 @@
   #
   # @return [Boolean] Returns true if the purpose is the first in the pipeline and has occurred, false otherwise.
   def pipeline_first_purpose_has_occurred(pipeline_name, purpose_name)
-    first_purpose_in_pipeline = @ordered_purposes_for_pipelines[pipeline_name].first
+    first_purpose_in_pipeline = @ordered_purpose_names_for_pipelines[pipeline_name].first
 
     # get list of purposes prior to the given purpose
-    purposes_prior_to_purpose = @ordered_purpose_list[0..@ordered_purpose_list.index(purpose_name)]
+    purposes_prior_to_purpose = @ordered_purpose_names[0..@ordered_purpose_names.index(purpose_name)]
 
     # has the first purpose in the pipeline occurred?
     purposes_prior_to_purpose.include?(first_purpose_in_pipeline)
@@ -34,10 +34,10 @@
   #
   # @return [Boolean] Returns true if the purpose is the last in the pipeline and has not occurred, false otherwise.
   def pipeline_last_purpose_is_still_to_occur(pipeline_name, purpose_name)
-    last_purpose_in_pipeline = @ordered_purposes_for_pipelines[pipeline_name].last
+    last_purpose_in_pipeline = @ordered_purpose_names_for_pipelines[pipeline_name].last
 
     # get list of purposes after the given purpose
-    purposes_after_purpose = @ordered_purpose_list[@ordered_purpose_list.index(purpose_name)..-1]
+    purposes_after_purpose = @ordered_purpose_names[@ordered_purpose_names.index(purpose_name)..-1]
 
     # has the last purpose in the pipeline occurred?
     purposes_after_purpose.include?(last_purpose_in_pipeline)
@@ -50,11 +50,11 @@
   end
 
   def is_first_purpose_in_pipeline(pipeline_name, purpose_name)
-    @ordered_purposes_for_pipelines[pipeline_name].first == purpose_name
+    @ordered_purpose_names_for_pipelines[pipeline_name].first == purpose_name
   end
 
   def is_last_purpose_in_pipeline(pipeline_name, purpose_name)
-    @ordered_purposes_for_pipelines[pipeline_name].last == purpose_name
+    @ordered_purpose_names_for_pipelines[pipeline_name].last == purpose_name
   end
 
   def graph_classes(pipeline_name, purpose_name)
@@ -68,8 +68,8 @@
     #       "parents" => "Purpose 1",
     #       "child" => nil
     #     }
-    parent_purpose_name = @purpose_pipeline_map.dig(pipeline_name, purpose_name, 'parent')
-    child_purpose_name = @purpose_pipeline_map.dig(pipeline_name, purpose_name, 'child')
+    parent_purpose_name = @purpose_pipeline_details.dig(pipeline_name, purpose_name, 'parent')
+    child_purpose_name = @purpose_pipeline_details.dig(pipeline_name, purpose_name, 'child')
 
     # provide spacing
     classes = ['pipeline']

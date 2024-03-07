@@ -13,27 +13,39 @@ class PipelineProgressOverviewController < ApplicationController
 
     # Pipeline details
 
-    # hash of pipelines by group
+    # ["scRNA Core Cell Extraction Entry", "scRNA Core Cell Extraction Seq", "scRNA Core Cell Extraction Spare"]
     @pipelines_for_group = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
 
-    # list of group-purposes in order
-    @ordered_purpose_list = Settings.pipelines.combine_and_order_pipelines(@pipelines_for_group)
+    # ["LRC Blood Vac", "LRC Blood Aliquot", "LRC Blood Bank", "LRC PBMC Bank", "LRC Bank Seq", "LRC Bank Spare"]
+    @ordered_purpose_names = Settings.pipelines.combine_and_order_pipelines(@pipelines_for_group)
 
-    # purpose_pipeline_map is a hash of hashes, like:
-    #   "Purpose 2" => {
-    #     "Pipeline A" => {
-    #       "parent" => "Purpose 1",
-    #       "child" => "Purpose 3"
-    #     },
-    #     "Pipeline B" => {
-    #       "parents" => "Purpose 1",
-    #       "child" => nil
+    # {
+    #   'LRC Blood Vac' => {
+    #     'scRNA Core Cell Extraction Entry' => {
+    #       parent: nil,
+    #       child: 'LRC Blood Aliquot'
     #     }
-    @purpose_pipeline_map = Settings.pipelines.purpose_to_pipelines_map(@ordered_purpose_list, @pipelines_for_group)
-    @ordered_purposes_for_pipelines = order_purposes_for_pipelines(@pipelines_for_group)
+    #   },
+    #   'LRC Blood Aliquot' => {
+    #     'scRNA Core Cell Extraction Entry' => {
+    #       parent: 'LRC Blood Vac',
+    #       child: 'LRC Blood Bank'
+    #     }
+    #   },
+    #   ...
+    # }
+    @purpose_pipeline_details =
+      Settings.pipelines.purpose_to_pipelines_map(@ordered_purpose_names, @pipelines_for_group)
+
+    # {
+    #   'scRNA Core Cell Extraction Entry' => ['LRC Blood Vac', 'LRC Blood Aliquot', 'LRC Blood Bank'],
+    #   'scRNA Core Cell Extraction Seq' => ['LRC Blood Bank', 'LRC PBMC Bank', 'LRC Bank Seq'],
+    #   'scRNA Core Cell Extraction Spare' => ['LRC PBMC Bank', 'LRC Bank Spare']
+    # }
+    @ordered_purpose_names_for_pipelines = order_purposes_for_pipelines(@pipelines_for_group)
 
     # Labware results
-    @labware = compile_labware_for_purpose(@ordered_purpose_list, page_size, @from_date, @ordered_purpose_list)
+    @labware = compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names)
   end
 
   def from_date(params)

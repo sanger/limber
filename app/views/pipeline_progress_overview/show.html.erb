@@ -28,7 +28,7 @@
       <h3 class="text-center">Purposes</h3>
 
     <!-- purpose cards, showing counts of labware for each state -->
-    <% @ordered_purpose_list.each do |purpose_name| %>
+    <% @ordered_purpose_names.each do |purpose_name| %>
       <div class="stacker">
         <%= render partial: 'purpose_graph', locals: { purpose_name: purpose_name } %>
         <%= render partial: 'purpose_card', locals: { purpose_name: purpose_name } %>

@@ -24,8 +24,9 @@ class PipelineList
   end
 
   # For the given pipeline group
-  # return a object with key: group, and value: list of the pipeline names in that group
-  # e.g {"Bespoke Chromium 3pv2"=>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]}
+  # return a list of the pipeline names in that group
+  # e.g "Bespoke Chromium 3pv2"
+  #   =>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]
   def retrieve_pipeline_config_for_group(pipeline_group)
     @list.select { |pipeline| pipeline.pipeline_group == pipeline_group }.map(&:name)
   end
