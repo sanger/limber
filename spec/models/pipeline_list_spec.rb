@@ -279,7 +279,8 @@ RSpec.describe PipelineList do
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 1' => 'Purpose 2',
-              'Purpose 2' => 'Purpose 3'
+              'Purpose 2' => 'Purpose 3',
+              'Purpose 4' => 'Purpose 2'
             },
             name: 'Pipeline A'
           },
@@ -308,29 +309,33 @@ RSpec.describe PipelineList do
         {
           'Purpose 1' => {
             'Pipeline A' => {
-              parent: nil,
+              parents: [],
               child: 'Purpose 2'
             }
           },
           'Purpose 2' => {
             'Pipeline A' => {
-              parent: 'Purpose 1',
+              parents: ['Purpose 1', 'Purpose 4'],
               child: 'Purpose 3'
             }
           },
           'Purpose 3' => {
             'Pipeline A' => {
-              parent: 'Purpose 2',
+              parents: ['Purpose 2'],
               child: nil
             },
             'Pipeline B' => {
-              parent: nil,
+              parents: [],
               child: 'Purpose 4'
             }
           },
           'Purpose 4' => {
+            'Pipeline A' => {
+              parents: [],
+              child: 'Purpose 2'
+            },
             'Pipeline B' => {
-              parent: 'Purpose 3',
+              parents: ['Purpose 3'],
               child: nil
             }
           }
