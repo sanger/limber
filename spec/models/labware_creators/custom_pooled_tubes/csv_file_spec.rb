@@ -5,7 +5,9 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
     let(:expected_pools) { { '1' => %w[A1 B1 D1 E1 F1 G1 H1 A2 B2], '2' => %w[C1 C2 D2 E2 F2 G2] } }
 
     context 'Without byte order markers' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
+      let(:file) do
+        fixture_file_upload('spec/fixtures/files/custom_pooled_tubes/pooling_file.csv', 'sequencescape/qc_file')
+      end
 
       describe '#valid?' do
         subject { described_class.new(file) }
@@ -21,7 +23,12 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
     end
 
     context 'With byte order markers' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file_with_bom.csv', 'sequencescape/qc_file') }
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/custom_pooled_tubes/pooling_file_with_bom.csv',
+          'sequencescape/qc_file'
+        )
+      end
 
       describe '#valid?' do
         subject { described_class.new(file) }
@@ -38,7 +45,9 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
   end
 
   context 'something that can not parse' do
-    let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
+    let(:file) do
+      fixture_file_upload('spec/fixtures/files/custom_pooled_tubes/pooling_file.csv', 'sequencescape/qc_file')
+    end
 
     before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
 
@@ -57,7 +66,10 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
 
   context 'A valid file with missing volumes' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pooling_file_with_zero_and_blank.csv', 'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/custom_pooled_tubes/pooling_file_with_zero_and_blank.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do
@@ -105,7 +117,10 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
 
   context 'An unrecognised well' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/pooling_file_with_invalid_wells.csv', 'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/custom_pooled_tubes/pooling_file_with_invalid_wells.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do

@@ -7,7 +7,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
   # Class CsvRow provides a simple wrapper for handling and validating
   # individual CSV rows
   #
-  class CustomPooledTubes::CsvFile::Row
+  class CustomPooledTubes::CsvFile::Row < CommonFileHandling::CsvFile::RowBase
     include ActiveModel::Validations
 
     MISSING_SOURCE =
@@ -46,14 +46,17 @@ module LabwareCreators # rubocop:todo Style/Documentation
     delegate :source_column, :destination_column, :volume_column, to: :header
 
     def initialize(header, index, row_data)
+      super(index, row_data)
       @header = header
-      @index = index
-      @source = (row_data[source_column] || '').strip.upcase
-      @destination = (row_data[destination_column] || '').strip.downcase
+    end
+
+    def initialize_context_specific_fields
+      @source = (@row_data[source_column] || '').strip.upcase
+      @destination = (@row_data[destination_column] || '').strip.downcase
 
       # We use %.to_i to avoid converting nil to 0. This allows us to write less
       # confusing validation error messages.
-      @volume = row_data[volume_column]&.to_i
+      @volume = @row_data[volume_column]&.to_i
     end
 
     def to_s

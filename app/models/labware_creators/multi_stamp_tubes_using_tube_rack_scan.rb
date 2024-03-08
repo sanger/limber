@@ -83,11 +83,22 @@ module LabwareCreators
 
     # Fetches all tubes from the CSV file and stores them in a hash indexed by barcode.
     # This method uses memoization to avoid fetching the tubes more than once.
+    # def parent_tubes
+    #   @parent_tubes ||=
+    #     csv_file
+    #       .position_details
+    #       .each_with_object({}) do |(_tube_posn, foreign_barcode), tubes|
+    #         search_params = { barcode: foreign_barcode, includes: Sequencescape::Api::V2::Tube::DEFAULT_INCLUDES }
+
+    #         tubes[foreign_barcode] = Sequencescape::Api::V2::Tube.find_by(**search_params)
+    #       end
+    # end
     def parent_tubes
       @parent_tubes ||=
         csv_file
           .position_details
-          .each_with_object({}) do |(_tube_posn, foreign_barcode), tubes|
+          .each_with_object({}) do |(_tube_posn, details_hash), tubes|
+            foreign_barcode = details_hash['tube_barcode']
             search_params = { barcode: foreign_barcode, includes: Sequencescape::Api::V2::Tube::DEFAULT_INCLUDES }
 
             tubes[foreign_barcode] = Sequencescape::Api::V2::Tube.find_by(**search_params)

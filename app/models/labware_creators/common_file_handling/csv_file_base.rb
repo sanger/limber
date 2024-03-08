@@ -8,7 +8,7 @@ module LabwareCreators
   #
   # This is an abstract class for handling csv files.
   #
-  class CommonFileHandling::CsvFile
+  class CommonFileHandling::CsvFileBase
     include ActiveModel::Validations
     extend NestedValidation
 

@@ -7,7 +7,7 @@ module LabwareCreators
     # This is an abstract class for handling rows within csv files.
     # It provides a simple wrapper for handling and validating an individual row.
     #
-    class CsvFile::Row
+    class CsvFile::RowBase
       include ActiveModel::Validations
 
       def initialize(index, row_data)

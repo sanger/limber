@@ -327,7 +327,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
     end
 
     context 'binning' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+      let(:file) do
+        fixture_file_upload('spec/fixtures/files/duplex_seq/duplex_seq_dil_file.csv', 'sequencescape/qc_file')
+      end
 
       let!(:plate_creation_request) do
         stub_api_post(

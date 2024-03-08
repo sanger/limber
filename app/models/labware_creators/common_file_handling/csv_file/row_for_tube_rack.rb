@@ -12,7 +12,7 @@ module LabwareCreators
     # and a tube barcode
     # i.e. Tube Position, Tube Barcode
     #
-    class CsvFile::RowForTubeRack < CsvFile::Row
+    class CsvFile::RowForTubeRack < CsvFile::RowBase
       TUBE_LOCATION_NOT_RECOGNISED = 'contains an invalid coordinate, in %s'
       TUBE_BARCODE_MISSING = 'cannot be empty, in %s'
 
@@ -33,7 +33,8 @@ module LabwareCreators
 
       def to_s
         # NB. index is zero based and no header row here
-        @tube_position.present? ? "row #{index + 1} [#{@tube_position}]" : "row #{index + 1}"
+        row_number = @index + 1
+        @tube_position.present? ? "row #{row_number} [#{@tube_position}]" : "row #{row_number}"
       end
     end
   end

@@ -39,8 +39,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   let(:receptacle_2) { create(:v2_receptacle, qc_results: [], requests_as_source: [request_2]) }
 
   # parent tube foreign barcodes (need to match values of foreign barcodes in csv file)
-  let(:parent_tube_1_foreign_barcode) { 'FX10000001' }
-  let(:parent_tube_2_foreign_barcode) { 'FX10000002' }
+  let(:parent_tube_1_foreign_barcode) { 'AB10000001' }
+  let(:parent_tube_2_foreign_barcode) { 'AB10000002' }
 
   # purpose uuids
   let(:parent_tube_1_purpose_uuid) { 'parent-tube-purpose-type-1-uuid' }
@@ -156,10 +156,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-      .with(barcode: 'FX10000001', includes: tube_includes)
+      .with(barcode: 'AB10000001', includes: tube_includes)
       .and_return(parent_tube_1)
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-      .with(barcode: 'FX10000002', includes: tube_includes)
+      .with(barcode: 'AB10000002', includes: tube_includes)
       .and_return(parent_tube_2)
 
     stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
@@ -238,7 +238,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   context 'when a file is not correctly parsed' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_invalid.csv',
+        'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_with_invalid_positions.csv',
         'sequencescape/qc_file'
       )
     end
@@ -255,7 +255,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect(subject).not_to be_valid
       expect(subject).not_to receive(:tubes_must_exist_in_lims)
       expect(subject.errors.full_messages).to include(
-        'Csv file tube rack scan tube position contains an invalid coordinate, in row 1 [AAAA1]'
+        'Csv file tube rack scan tube position contains an invalid coordinate, in row 9 [I1]'
       )
     end
   end
@@ -276,7 +276,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
     before do
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-        .with(barcode: 'FX10000003', includes: tube_includes)
+        .with(barcode: 'AB10000003', includes: tube_includes)
         .and_return(nil)
 
       subject.validate
@@ -285,7 +285,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     it 'is not valid' do
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
-        'Tube barcode FX10000003 not found in the LIMS. ' \
+        'Tube barcode AB10000003 not found in the LIMS. ' \
           'Please check the tube barcodes in the scan file are valid tubes.'
       )
     end
@@ -306,7 +306,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     it 'is not valid' do
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
-        'Tube barcode FX10000002 does not match to one of the expected tube purposes ' \
+        'Tube barcode AB10000002 does not match to one of the expected tube purposes ' \
           '(one of type(s): Parent Tube Purpose Type 1, Parent Tube Purpose Type 2)'
       )
     end
@@ -326,7 +326,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     it 'is not valid' do
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
-        'Tube barcode FX10000002 does not have an expected active request ' \
+        'Tube barcode AB10000002 does not have an expected active request ' \
           '(one of type(s): parent_tube_library_request_type)'
       )
     end

@@ -6,9 +6,7 @@ module LabwareCreators
   # Provides a simple wrapper for handling and validating individual CSV rows.
   # Abstract class, extend for uses in specific pipelines.
   #
-  class PcrCyclesBinnedPlate::CsvFile::RowBase
-    include ActiveModel::Validations
-
+  class PcrCyclesBinnedPlate::CsvFile::RowBase < CommonFileHandling::CsvFile::RowBase
     IN_RANGE = 'is empty or contains a value that is out of range (%s to %s), in %s'
     WELL_NOT_RECOGNISED = 'contains an invalid well name: %s'
 
@@ -46,13 +44,17 @@ module LabwareCreators
              :pcr_cycles_column,
              to: :header
 
-    # rubocop:todo Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
     def initialize(row_config, header, index, row_data)
+      super(index, row_data)
       @row_config = row_config
       @header = header
-      @index = index
-      @row_data = row_data
 
+      # initialize pipeline specific columns
+      initialize_pipeline_specific_columns
+    end
+
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    def initialize_context_specific_fields
       # initialize supplied fields
       @well = (@row_data[well_column] || '').strip.upcase
       @concentration = @row_data[concentration_column]&.strip&.to_f
@@ -65,17 +67,16 @@ module LabwareCreators
       @sample_volume = @row_data[sample_volume_column]&.strip&.to_f
       @diluent_volume = @row_data[diluent_volume_column]&.strip&.to_f
       @pcr_cycles = @row_data[pcr_cycles_column]&.strip&.to_i
-
-      initialize_pipeline_specific_columns
     end
 
-    # rubocop:enable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def initialize_pipeline_specific_columns
       raise '#initialize_pipeline_specific_columns must be implemented on subclasses'
     end
 
     def to_s
+      # Have a header line so add 2 to index
       @well.present? ? "row #{index + 2} [#{@well}]" : "row #{index + 2}"
     end
 
