@@ -46,8 +46,8 @@ module LabwareCreators # rubocop:todo Style/Documentation
     delegate :source_column, :destination_column, :volume_column, to: :header
 
     def initialize(header, index, row_data)
-      super(index, row_data)
       @header = header
+      super(index, row_data)
     end
 
     def initialize_context_specific_fields

@@ -45,9 +45,9 @@ module LabwareCreators
              to: :header
 
     def initialize(row_config, header, index, row_data)
-      super(index, row_data)
       @row_config = row_config
       @header = header
+      super(index, row_data)
 
       # initialize pipeline specific columns
       initialize_pipeline_specific_columns

@@ -77,7 +77,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
     context 'Without byte order markers' do
       let(:file) do
         fixture_file_upload(
-          'spec/fixtures/files/common_file_handling/tube_rack_scan_valid.csv',
+          'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/tube_rack_scan_valid.csv',
           'sequencescape/qc_file'
         )
       end
@@ -98,7 +98,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
     context 'With byte order markers' do
       let(:file) do
         fixture_file_upload(
-          'spec/fixtures/files/common_file_handling/tube_rack_scan_with_bom.csv',
+          'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/tube_rack_scan_with_bom.csv',
           'sequencescape/qc_file'
         )
       end
@@ -119,7 +119,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
     context 'A file which has missing tubes' do
       let(:file) do
         fixture_file_upload(
-          'spec/fixtures/files/common_file_handling/tube_rack_scan_with_missing_tubes.csv',
+          'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/tube_rack_scan_with_missing_tubes.csv',
           'sequencescape/qc_file'
         )
       end
@@ -206,7 +206,10 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
 
   context 'something that can not parse' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/common_file_handling/tube_rack_scan_valid.csv', 'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/tube_rack_scan_valid.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
@@ -226,7 +229,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
   context 'A file which has missing values' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/common_file_handling/tube_rack_scan_with_missing_values.csv',
+        'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/tube_rack_scan_with_missing_values.csv',
         'sequencescape/qc_file'
       )
     end
@@ -280,7 +283,8 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
   context 'An unrecognised tube position' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/common_file_handling/tube_rack_scan_with_invalid_positions.csv',
+        'spec/fixtures/files/common_file_handling/' \
+          'tube_rack_with_rack_barcode/tube_rack_scan_with_invalid_positions.csv',
         'sequencescape/qc_file'
       )
     end
@@ -303,7 +307,8 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
   context 'A file with inconsistant rack barcodes' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/common_file_handling/tube_rack_scan_with_different_rack_barcodes.csv',
+        'spec/fixtures/files/common_file_handling/' \
+          'tube_rack_with_rack_barcode/tube_rack_scan_with_different_rack_barcodes.csv',
         'sequencescape/qc_file'
       )
     end
@@ -326,7 +331,8 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
   context 'A file with duplicated positions' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/common_file_handling/tube_rack_scan_with_duplicate_positions.csv',
+        'spec/fixtures/files/common_file_handling/' \
+          'tube_rack_with_rack_barcode/tube_rack_scan_with_duplicate_positions.csv',
         'sequencescape/qc_file'
       )
     end
@@ -347,7 +353,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
   context 'A file with duplicated tube barcodes' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/common_file_handling/tube_rack_scan_with_duplicate_tubes.csv',
+        'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/tube_rack_scan_with_duplicate_tubes.csv',
         'sequencescape/qc_file'
       )
     end
