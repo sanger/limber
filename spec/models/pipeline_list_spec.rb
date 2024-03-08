@@ -268,6 +268,32 @@ RSpec.describe PipelineList do
     end
   end
 
+  describe '#order_pipeline' do
+    let(:pipeline_config) do
+      {
+        'Pipeline A' => {
+          relationships: {
+            'Purpose 2' => 'Purpose 3',
+            'Purpose 1' => 'Purpose 2'
+          },
+          name: 'Pipeline A'
+        }
+      }
+    end
+
+    before do
+      allow(model).to receive(:flatten_relationships_into_purpose_list)
+        .with({ 'Purpose 1' => 'Purpose 2', 'Purpose 2' => 'Purpose 3' })
+        .and_return(['Purpose 1', 'Purpose 2', 'Purpose 3'])
+    end
+
+    it 'orders the purposes within a pipeline based on the relationships' do
+      result = model.order_pipeline('Pipeline A')
+
+      expect(result).to eq(['Purpose 1', 'Purpose 2', 'Purpose 3'])
+    end
+  end
+
   describe '#purpose_to_pipelines_map' do
     let(:filters) { { 'request_type_key' => ['example_req_type'], 'library_type' => ['example_lib_type'] } }
 
