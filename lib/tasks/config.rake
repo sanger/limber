@@ -2,6 +2,7 @@
 
 require_relative '../purpose_config'
 require_relative '../config_loader/purposes_loader'
+require_relative '../config_loader/poolings_loader'
 
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
@@ -84,6 +85,11 @@ namespace :config do
         end
 
         configuration[:submission_templates] = submission_templates
+
+        # Load pooling configurations from config/poolings directory.
+        # After running the config:generate task, they will be available in the
+        # code, for example Settings.poolings['scrna_core_donor_pooling']
+        configuration[:poolings] = ConfigLoader::PoolingsLoader.new.config
       end
 
     # Write out the current environment configuration file
