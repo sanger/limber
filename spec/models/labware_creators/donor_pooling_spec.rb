@@ -489,8 +489,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
-  describe '#tag_depth' do
-    it 'returns the position of a well in its pool' do
+  describe '#tag_depth_hash' do
+    it 'returns a hash mapping positions of wells in their pools' do
       well_p1_w1 = well = parent_1_plate.wells[0]
       well.state = 'passed'
       well.aliquots.first.study = study_1
@@ -509,10 +509,21 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       well.aliquots.first.project = project_1
       well.aliquots.first.sample.sample_metadata.donor_id = 3
 
+      well_p2_w2 = well = parent_2_plate.wells[1]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+      well.aliquots.first.sample.sample_metadata.donor_id = 1 # same donor as well_p1_w1
+
       subject.build_pools
-      expect(subject.tag_depth(well_p1_w1)).to eq('1')
-      expect(subject.tag_depth(well_p1_w2)).to eq('2')
-      expect(subject.tag_depth(well_p2_w1)).to eq('3')
+      expect(subject.tag_depth_hash[well_p1_w1]).to eq('1')
+      expect(subject.tag_depth_hash[well_p1_w2]).to eq('2')
+      expect(subject.tag_depth_hash[well_p2_w1]).to eq('3')
+      expect(subject.tag_depth_hash[well_p2_w2]).to eq('1')
+    end
+
+    it 'caches the result' do
+      expect(subject.transfer_hash).to be(subject.transfer_hash) # same instance
     end
   end
 

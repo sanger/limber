@@ -189,7 +189,7 @@ module LabwareCreators
     #
     # @return [Hash] A hash where keys are wells and values are tag depths.
     def tag_depth_hash
-      tag_depth_hash ||= pools.each_with_index.with_object({}) do |(pool, pool_index), hash|
+      tag_depth_hash ||= pools.each_with_index.with_object({}) do |(pool, _pool_index), hash|
         pool.each_with_index { |well, index| hash[well] = (index + 1).to_s }
       end
     end
