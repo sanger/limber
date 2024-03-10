@@ -442,12 +442,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
-  describe '#get_well_for_plate_location' do
-    it 'returns the well for a given plate and location' do
-      expect(subject.get_well_for_plate_location(child_plate, 'A1')).to eq child_plate.wells[0]
-    end
-  end
-
   describe '#request_hash' do
     let(:wells) do
       wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
