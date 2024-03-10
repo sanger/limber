@@ -153,7 +153,8 @@ module LabwareCreators::DonorPoolingCalculator
     groups = groups.dup
     groups.sort_by!(&:size)
     while groups.any? && groups.last.size > 1 && groups.size < number_of_pools
-      splits = (largest = groups.pop).each_slice((largest.size / 2.0).ceil).to_a
+      largest = groups.pop  # last
+      splits = largest.each_slice((largest.size / 2.0).ceil).to_a
       groups.concat(splits).sort_by!(&:size)
     end
     groups
