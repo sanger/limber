@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This module contains calculations for donor pooling.
+# This module contains algorithms to allocate source wells into a target number of pools.
 module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
 
