@@ -96,7 +96,7 @@ module LabwareCreators::DonorPoolingValidator
 
   private
 
-  # Checks each well in each source plate for missing donor_id. Returns a hash
+  # Checks each source well for pooling for missing donor_id. Returns a hash
   # with keys as the barcodes of source plates and values as arrays of well
   # locations with missing donor_id. If a plate has no wells with missing
   # donor_id, it is not included in the returned hash. This method is used by
@@ -104,7 +104,7 @@ module LabwareCreators::DonorPoolingValidator
   # message.
   #
   # @return [Hash] A hash mapping source plate barcodes to arrays of invalid
-  #   wells.
+  #   well locations.
   def locations_with_missing_donor_id
     # source_wells_for_pooling contains filtered wells from source plates
     invalid_wells = source_wells_for_pooling.select { |well| missing_donor_id?(well) }
