@@ -194,20 +194,6 @@ module LabwareCreators
       end
     end
 
-    # Returns the tag depth for the given source well. The tag depth is the
-    # position of the well in its pool. It is used used as an aliquot attribute
-    # in the transfer request. It is recorded in Sequencescape to avoid tag
-    # clashes.
-    #
-    # @param source_well [Well] The source well for which to retrieve the tag depth.
-    # @return [String] The tag depth as a string, or nil if the well is not in a pool.
-    def tag_depth(source_well)
-      pools.each do |pool|
-        return (pool.index(source_well) + 1).to_s if pool.index(source_well)
-        # index + 1 incase of 0th index
-      end
-    end
-
     # Builds the pools for the destination plate. The wells are first grouped
     # by study and project, then split by donor_ids, and finally distributed
     # across pools.
