@@ -39,9 +39,12 @@ module LabwareCreators::DonorPoolingCalculator
   def split_single_group_by_unique_donor_ids(group)
     group = group.dup
     output = []
-    while group.any?
+    wells_moved = 0
+    wells_total = group.size
+    while wells_moved < wells_total
       subgroup = []
       unique_donor_ids(group).each do |donor_id|
+        wells_moved += 1
         index = group.index { |well| well.aliquots.first.sample.sample_metadata.donor_id == donor_id }
         subgroup << group.delete_at(index)
       end
