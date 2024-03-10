@@ -268,9 +268,18 @@ FactoryBot.define do
     end
 
     factory :donor_pooling_plate_purpose_config do
+      transient { default_number_of_pools { 16 } }
       transient { max_number_of_source_plates { 2 } }
+      transient { pooling { 'donor_pooling' } }
       creator_class do
-        { name: 'LabwareCreators::DonorPoolingPlate', args: { max_number_of_source_plates: max_number_of_source_plates } }
+        {
+          name: 'LabwareCreators::DonorPoolingPlate',
+          args: {
+            default_number_of_pools: default_number_of_pools,
+            max_number_of_source_plates: max_number_of_source_plates,
+            pooling: pooling
+          }
+        }
       end
     end
 
