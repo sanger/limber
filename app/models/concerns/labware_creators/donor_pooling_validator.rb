@@ -100,26 +100,28 @@ module LabwareCreators::DonorPoolingValidator
   # with keys as the barcodes of source plates and values as arrays of well
   # locations with missing donor_id. If a plate has no wells with missing
   # donor_id, it is not included in the returned hash. This method is used by
-  # the wells_with_aliquots_must_have_donor_id method to generate an error message.
+  # the wells_with_aliquots_must_have_donor_id method to generate an error
+  # message.
   #
-  # @return [Hash] A hash mapping source plate barcodes to arrays of invalid wells.
+  # @return [Hash] A hash mapping source plate barcodes to arrays of invalid
+  #   wells.
   def locations_with_missing_donor_id
-    source_plates.each_with_object({}) do |source_plate, hash|
-      invalid_wells = source_plate.wells.select { |well| missing_donor_id?(well) }
-      hash[source_plate.human_barcode] = invalid_wells.map(&:location) if invalid_wells.any?
+    # source_wells_for_pooling contains filtered wells from source plates
+    invalid_wells = source_wells_for_pooling.select { |well| missing_donor_id?(well) }
+    invalid_wells.each_with_object({}) do |well, hash|
+      plate_barcode = source_wells_to_plates[well].human_barcode # find the plate barcode
+      hash[plate_barcode] ||= []
+      hash[plate_barcode] << well.location
     end
   end
 
-  # Checks if a well is missing a donor_id. Returns false if the well has not
-  # passed or if there is no aliquot. If there is an aliquot, it checks if the
-  # associated sample_metadata has a donor_id. If the donor_id is missing, it
-  # returns true. Otherwise, it returns false.
+  # Checks if a well is missing a donor_id. If there is an aliquot, it checks
+  # if the associated sample_metadata has a donor_id. If the donor_id is
+  # missing, it returns true. Otherwise, it returns false.
   #
   # @param well [Well] The well to check.
   # @return [Boolean] True if the well is missing a donor_id, false otherwise.
   def missing_donor_id?(well)
-    return false unless well.passed?
-
     aliquot = well.aliquots&.first
     return false unless aliquot
 
