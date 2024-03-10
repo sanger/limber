@@ -134,6 +134,21 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
   end
 
+  describe '#source_wells_to_plates' do
+    it 'returns a hash mapping source wells to their plates' do
+      hash = subject.source_wells_to_plates
+      expect(hash[parent_1_plate.wells.first]).to eq(parent_1_plate)
+      expect(hash[parent_1_plate.wells.last]).to eq(parent_1_plate)
+      expect(hash[parent_2_plate.wells.first]).to eq(parent_2_plate)
+      expect(hash[parent_2_plate.wells.last]).to eq(parent_2_plate)
+      expect(hash.size).to eq(parent_1_plate.wells.size + parent_2_plate.wells.size)
+    end
+
+    it 'caches the result' do
+      expect(subject.source_wells_to_plates).to be(subject.source_wells_to_plates) # same instance
+    end
+  end
+
   describe '#barcodes=' do
     it 'sets the barcodes' do
       expect(subject.barcodes).to eq(barcodes)
