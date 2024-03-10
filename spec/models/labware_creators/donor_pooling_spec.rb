@@ -60,9 +60,20 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
   let(:barcodes) { source_plates.map(&:human_barcode) }
 
+  let(:default_number_of_pools) { 16 }
+
   before do
+    # Create the pooling config and add to Settings.
+    create(:donor_pooling_config)
+
+    # Create the plate purpose config and add to Settings.
+    create(
+      :donor_pooling_plate_purpose_config,
+      uuid: child_purpose_uuid,
+      default_number_of_pools: default_number_of_pools
+    )
+
     # Allow the API call to return two plates by default.
-    create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid)
     allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
       .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
       .and_return(source_plates)
@@ -162,10 +173,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     context 'when number of samples is greater than 96' do
       it 'returns the number of pools from constant' do
         parent_1_plate.wells[0..96].each { |well| well.state = 'passed' }
-        {
-          97 => described_class::DEFAULT_NUMBER_OF_POOLS,
-          160 => described_class::DEFAULT_NUMBER_OF_POOLS
-        }.each do |number_of_samples, number_of_pools|
+        { 97 => default_number_of_pools, 160 => default_number_of_pools }.each do |number_of_samples, number_of_pools|
           parent_2_plate.wells[0..(number_of_samples - 97)].each { |well| well.state = 'passed' }
           subject.well_filter.instance_variable_set(:@well_transfers, nil) # reset well_filter cache
           expect(subject.number_of_pools).to eq(number_of_pools)
@@ -377,7 +385,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     it 'returns correct number of pools' do
       pools = subject.build_pools
-      expect(pools.size).to eq(described_class::DEFAULT_NUMBER_OF_POOLS)
+      expect(pools.size).to eq(default_number_of_pools)
       expect(pools.flatten).to match_array(wells)
     end
 
@@ -402,7 +410,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       pools = subject.build_pools
       pools.each do |pool|
         number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
-        expect(number_of_unique_donor_ids).to eq(wells.size / described_class::DEFAULT_NUMBER_OF_POOLS)
+        expect(number_of_unique_donor_ids).to eq(wells.size / default_number_of_pools)
       end
     end
   end
