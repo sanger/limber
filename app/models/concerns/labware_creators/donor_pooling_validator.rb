@@ -71,7 +71,7 @@ module LabwareCreators::DonorPoolingValidator
   # @return [void]
   def number_of_pools_must_not_exceed_configured
     # Don't add this error if there are already errors about missing donor_ids.
-    invalid_wells_hash = locations_with_missing_donor_id(source_plates)
+    invalid_wells_hash = locations_with_missing_donor_id
     return if invalid_wells_hash.any?
 
     return if pools.size <= number_of_pools
@@ -87,7 +87,7 @@ module LabwareCreators::DonorPoolingValidator
   #
   # @return [void]
   def wells_with_aliquots_must_have_donor_id
-    invalid_wells_hash = locations_with_missing_donor_id(source_plates)
+    invalid_wells_hash = locations_with_missing_donor_id
     return if invalid_wells_hash.empty?
 
     formatted_string = invalid_wells_hash.map { |barcode, locations| "#{barcode}: #{locations.join(', ')}" }.join(' ')
@@ -102,9 +102,8 @@ module LabwareCreators::DonorPoolingValidator
   # donor_id, it is not included in the returned hash. This method is used by
   # the wells_with_aliquots_must_have_donor_id method to generate an error message.
   #
-  # @param source_plates [Array] An array of source plates to check.
   # @return [Hash] A hash mapping source plate barcodes to arrays of invalid wells.
-  def locations_with_missing_donor_id(source_plates)
+  def locations_with_missing_donor_id
     source_plates.each_with_object({}) do |source_plate, hash|
       invalid_wells = source_plate.wells.select { |well| missing_donor_id?(well) }
       hash[source_plate.human_barcode] = invalid_wells.map(&:location) if invalid_wells.any?
