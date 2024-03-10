@@ -16,7 +16,7 @@ module LabwareCreators::DonorPoolingValidator
 
   SOURCE_BARCODES_MUST_BE_DIFFERENT = 'should not have the same barcode, please check you scanned all the plates.'
 
-  SOURCE_PLATES_MUST_EXIST = "not found, please check you scanned the correct source plates: %s"
+  SOURCE_PLATES_MUST_EXIST = 'not found, please check you scanned the correct source plates: %s'
 
   NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED =
     "calculated number of pools (%s) is higher than the number of pools ' \
