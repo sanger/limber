@@ -4,10 +4,10 @@
 module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
 
-  # Splits wells into groups by study and project. Wells are grouped
-  # based on the study and project of the first aliquot in each well. Returns
-  # an array of groups, where each group is an array of wells with the same
-  # study and project.
+  # Splits wells into groups by study and project. Wells are grouped based on the
+  # study and project of the first aliquot in each well (only one aliquot is
+  # expected per well). Returns an array of groups, where each group is an array
+  # of wells with the same study and project.
   #
   # @param group [Array<Well>] The group of wells to be split.
   # @return [Array<Array<Well>>] An array of well groups.
