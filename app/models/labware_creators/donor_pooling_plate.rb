@@ -49,12 +49,13 @@ module LabwareCreators
       wells.requests_as_source
     ].freeze
 
-    # TODO: Remove this default once a new CSV file is provided.
     # The default number of pools to be created if the count is not found in
-    # the lookup table. For scRNA Donor Pooling, until a new CSV file is
-    # provided, a copy of Cardinal pooling config is used, which goes up to 96
-    # samples. From 97 to 160 samples, the number of pools to create is 16.
-    DEFAULT_NUMBER_OF_POOLS = 16
+    # the lookup table.
+    #
+    # @return [Integer] The default number of pools.
+    def default_number_of_pools
+      purpose_config.dig(:creator_class, :args, :default_number_of_pools)
+    end
 
     # Returns the number of source plates from the purpose configuration.
     #
@@ -114,15 +115,12 @@ module LabwareCreators
     end
 
     # Returns the number of pools based on the sample count from the lookup
-    # table. If the count is not found in the table, the default number of
-    # pools is returned.
+    # table.
     #
     # @return [Integer] The number of pools.
     def number_of_pools
-      Rails.application.config.scrna_core_donor_pooling_config.fetch(
-        source_wells_for_pooling.count,
-        DEFAULT_NUMBER_OF_POOLS
-      )
+      id = purpose_config.dig(:creator_class, :args, :pooling)
+      Settings.poolings[id][:number_of_pools][source_wells_for_pooling.count] || default_number_of_pools
     end
 
     # Creates transfer requests from source wells to the destination plate in
