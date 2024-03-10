@@ -50,7 +50,19 @@ LRC PBMC Pools:
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:
+      # If the the lookup table in pooling configuration does not specify the
+      # number of pools for a given number of samples, this value will be used.
+      default_number_of_pools: 16
+      # The maximum number of source plates that can be used to create the pool.
+      # This is also used for bed verification of the source plates.
       max_number_of_source_plates: 2
+      # The name of the pooling configuration to use. This configuration
+      # contains the lookup table mapping the number of samples to the number
+      # of pools. The pooling configurations are stored in the config/poolings/
+      # directory. The top level key in the configuration file is the name of the
+      # pooling configuration. A copy of cardinal pooling is used until a new
+      # configuration is provided.
+      pooling: interim_scrna_core_donor_pooling
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_scrna_core_donor_pooling'
   :stock_plate: false
