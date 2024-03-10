@@ -164,7 +164,7 @@ module LabwareCreators
         'source_asset' => source_well.uuid,
         'target_asset' => dest_plate.well_at_location(dest_location)&.uuid,
         :aliquot_attributes => {
-          'tag_depth' => tag_depth(source_well)
+          'tag_depth' => tag_depth_hash[source_well]
         }
       }.merge(additional_parameters)
     end
@@ -190,7 +190,7 @@ module LabwareCreators
     # @return [Hash] A hash where keys are wells and values are tag depths.
     def tag_depth_hash
       tag_depth_hash ||= pools.each_with_index.with_object({}) do |(pool, pool_index), hash|
-        pool.each_with_index { |well, index| hash[well] = index + 1}
+        pool.each_with_index { |well, index| hash[well] = (index + 1).to_s }
       end
     end
 
