@@ -119,7 +119,14 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
   let(:expected_content) do
     [
       ['Workflow', workflow],
-      %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
+      [
+        'Source Plate',
+        'Source Well',
+        'Destination Plate',
+        'Destination Well',
+        'Sample Volume (µL)',
+        'Resuspension Volume (µL)'
+      ],
       %w[DN1S A1 DN3U A1 5.00 13.20],
       %w[DN1S B1 DN3U B1 2.50 13.20],
       %w[DN1S A2 DN3U A1 1.00 13.20],
