@@ -523,7 +523,14 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     it 'caches the result' do
-      expect(subject.transfer_hash).to be(subject.transfer_hash) # same instance
+      well = parent_1_plate.wells[0]
+      well.state = 'passed'
+      well.aliquots.first.study = study_1
+      well.aliquots.first.project = project_1
+      well.aliquots.first.sample.sample_metadata.donor_id = 1
+
+      subject.build_pools
+      expect(subject.tag_depth_hash).to be(subject.tag_depth_hash) # same instance
     end
   end
 
