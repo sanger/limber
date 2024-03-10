@@ -4,7 +4,13 @@
       <div>
         <h3>Instructions</h3>
         <p>This step allows multiple source plates for pooling together into a destination plate.</p>
-        <p>This process checks that the source plates are compatible and can be used together.</p>
+        <p>This process checks if pooling is possible under the following conditions:</p>
+        <ul>
+          <li>All source wells with aliquots must have donor IDs.</li>
+          <li>Combining samples from different studies or projects in the same pool is not allowed.</li>
+          <li>Including samples with the same donor ID in the same pool is not allowed.</li>
+          <li>The number of pools must not exceed the number configured for the samples.</li>
+        </ul>
         <p>Scan the source plate barcodes into the panel on the right of the screen (the order doesn't matter) and click <i>Create Plate</i>.</p>
       </div>
     <% end %>
