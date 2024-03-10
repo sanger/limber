@@ -97,6 +97,16 @@ module LabwareCreators
       well_filter.filtered.map(&:first) # The first element is the well.
     end
 
+    # Returns a hash mapping each source well to its source plate. The hash
+    # contains all source wells independent of the filtering.
+    #
+    # @return [Hash] A hash where the keys are wells and the values are the plates
+    #   that each well belongs to.
+    def source_wells_to_plates
+      @source_wells_to_plates ||=
+        source_plates.each_with_object({}) { |plate, hash| plate.wells.each { |well| hash[well] = plate } }
+    end
+
     # Returns the pools for the destination plate.
     #
     # @return [Array<Pool>] An array of pools.
