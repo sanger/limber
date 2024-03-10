@@ -183,6 +183,17 @@ module LabwareCreators
           end
     end
 
+    # Returns a hash mapping each source well to its index in its pool plus one.
+    # The tag depth is used as an aliquot attribute in the transfer request. It
+    # is recorded in Sequencescape to avoid tag clashes.
+    #
+    # @return [Hash] A hash where keys are wells and values are tag depths.
+    def tag_depth_hash
+      tag_depth_hash ||= pools.each_with_index.with_object({}) do |(pool, pool_index), hash|
+        pool.each_with_index { |well, index| hash[well] = index + 1}
+      end
+    end
+
     # Returns the tag depth for the given source well. The tag depth is the
     # position of the well in its pool. It is used used as an aliquot attribute
     # in the transfer request. It is recorded in Sequencescape to avoid tag
