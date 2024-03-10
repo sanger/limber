@@ -174,7 +174,7 @@ module LabwareCreators
       dest_location = transfer_hash[source_well][:dest_locn]
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => get_well_for_plate_location(dest_plate, dest_location)&.uuid,
+        'target_asset' => dest_plate.well_at_location(dest_location)&.uuid,
         :aliquot_attributes => {
           'tag_depth' => tag_depth(source_well)
         }
