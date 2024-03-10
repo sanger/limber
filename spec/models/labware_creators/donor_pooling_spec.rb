@@ -612,7 +612,9 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
       it 'reports the error' do
         expect(subject).not_to be_valid
-        expect(subject.errors[:source_plates]).to include(described_class::SOURCE_PLATES_MUST_EXIST)
+        expect(subject.errors[:source_plates]).to include(
+          format(described_class::SOURCE_PLATES_MUST_EXIST, 'NOT-A-PLATE-BARCODE')
+        )
       end
     end
 
