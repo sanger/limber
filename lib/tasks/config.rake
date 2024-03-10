@@ -89,6 +89,7 @@ namespace :config do
         # Load pooling configurations from config/poolings directory.
         # After running the config:generate task, they will be available in the
         # code, for example Settings.poolings['scrna_core_donor_pooling']
+        puts 'Preparing pooling configurations ...'
         configuration[:poolings] = ConfigLoader::PoolingsLoader.new.config
       end
 
