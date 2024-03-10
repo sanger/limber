@@ -43,7 +43,7 @@ module LabwareCreators::DonorPoolingCalculator
       subgroup = []
       unique_donor_ids(group).each do |donor_id|
         index = group.index { |well| well.aliquots.first.sample.sample_metadata.donor_id == donor_id }
-        subgroup << group.delete_at(index) unless index.nil?
+        subgroup << group.delete_at(index)
       end
       output << subgroup
     end
