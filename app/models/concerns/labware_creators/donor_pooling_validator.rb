@@ -12,18 +12,24 @@ module LabwareCreators::DonorPoolingValidator
     validate :number_of_pools_must_not_exceed_configured
   end
 
-  SOURCE_BARCODES_MUST_BE_ENTERED = 'should be entered, Please scan in all the required source plate barcodes.'
+  SOURCE_BARCODES_MUST_BE_ENTERED = 'At least one source plate must be scanned.'
 
-  SOURCE_BARCODES_MUST_BE_DIFFERENT = 'should not have the same barcode, please check you scanned all the plates.'
+  SOURCE_BARCODES_MUST_BE_DIFFERENT = 'You must not scan the same barcode more than once.'
 
-  SOURCE_PLATES_MUST_EXIST = 'not found, please check you scanned the correct source plates: %s'
+  SOURCE_PLATES_MUST_EXIST =
+    'Source plates not found: %s. ' \
+      'Please check you scanned the correct source plates. '
 
   NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED =
-    "calculated number of pools (%s) is higher than the number of pools ' \
-      '(%s) configured. Please check you have scanned the correct set of ' \
-      'source plates."
+    'The calculated number of pools (%s) is higher than the number of pools ' \
+      '(%s) configured. This is due to constraints such as: ' \
+      '* samples with different Studies or Projects cannot be combined ' \
+      '* multiple samples from the same donor cannot be combined. ' \
+      'Please check you have scanned the correct set of source plates.'
 
-  WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID = 'wells missing donor_id sample metadata: %s'
+  WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID =
+    'All samples must have the donor_id specified. ' \
+      'Wells missing donor_id (on sample metadata): %s'
 
   # Validates that at least one source barcode has been entered. If no barcodes
   # are entered, an error is added to the :source_barcodes attribute.
