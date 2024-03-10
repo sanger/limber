@@ -16,12 +16,12 @@ module LabwareCreators::DonorPoolingValidator
 
   SOURCE_BARCODES_MUST_BE_DIFFERENT = 'should not have the same barcode, please check you scanned all the plates.'
 
-  SOURCE_PLATES_MUST_EXIST = 'not found, please check you scanned the correct source plates.'
+  SOURCE_PLATES_MUST_EXIST = "not found, please check you scanned the correct source plates: %s"
 
   NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED =
-    'calculated number of pools (%s) is higher than the number of pools ' \
+    "calculated number of pools (%s) is higher than the number of pools ' \
       '(%s) configured. Please check you have scanned the correct set of ' \
-      'source plates.'
+      'source plates."
 
   WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID = 'wells missing donor_id sample metadata: %s'
 
@@ -53,7 +53,9 @@ module LabwareCreators::DonorPoolingValidator
   def source_plates_must_exist
     return if source_plates.size == minimal_barcodes.size
 
-    errors.add(:source_plates, SOURCE_PLATES_MUST_EXIST)
+    formatted_string = (minimal_barcodes - source_plates.map(&:human_barcode)).join(', ')
+
+    errors.add(:source_plates, format(SOURCE_PLATES_MUST_EXIST, formatted_string))
   end
 
   # Validates that the number of calculated pools does not exceed the configured
