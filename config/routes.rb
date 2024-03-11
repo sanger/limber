@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources 'pipeline_progress_overview', only: :show
-
   get '/health', controller: :health, action: 'show', as: :health
 
   scope 'search', controller: :search do
@@ -17,6 +15,11 @@ Rails.application.routes.draw do
     # Also map logout to destroy
     get 'logout', action: :destroy
   end
+
+  resources 'pipeline_progress_overview', only: :show
+
+  # add temporary redirect for old pipeline progress overview route
+  get '/pipeline_work_in_progress/:id', to: redirect('/pipeline_progress_overview/%{id}', status: 307)
 
   # Robots help us batch work up by function, rather than plate
   resources :robots, controller: :robots do
