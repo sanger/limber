@@ -5,6 +5,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasRequests
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
+  include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
 
   DEFAULT_INCLUDES = [
     :purpose,
@@ -67,9 +68,5 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     # this is an array not a collection so cant use order_by
     # max_by naturally sorts in ascending order
     @stock_plate ||= ancestors.where(purpose_name: purpose_names).max_by(&:id)
-  end
-
-  def workline_identifier
-    stock_plate&.barcode&.human
   end
 end

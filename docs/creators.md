@@ -61,6 +61,16 @@ Labware creators are responsible for creating new labware from a parent labware.
 {LabwareCreators::CustomTaggedPlate View class documentation}
 
 
+## LabwareCreators::DonorPoolingPlate
+
+{include:LabwareCreators::DonorPoolingPlate}
+
+  Used directly in 1 purposes:
+  LRC PBMC Pools
+
+{LabwareCreators::DonorPoolingPlate View class documentation}
+
+
 ## LabwareCreators::FinalTube
 
 {include:LabwareCreators::FinalTube}
