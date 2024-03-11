@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative 'shared_examples'
 
 class SomeStockPlates
   def initialize(stock_plates)
@@ -14,6 +15,7 @@ end
 
 RSpec.describe Sequencescape::Api::V2::Tube do
   subject(:tube) { create :v2_tube, barcode_number: 12_345 }
+  let(:the_labware) { tube }
 
   it { is_expected.to_not be_plate }
   it { is_expected.to be_tube }
@@ -30,4 +32,6 @@ RSpec.describe Sequencescape::Api::V2::Tube do
       expect(tube_with_ancestors.stock_plate).to eq(stock_plates.last)
     end
   end
+
+  it_behaves_like 'a labware with a workline identifier'
 end

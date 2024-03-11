@@ -43,7 +43,11 @@ class ExportsController < ApplicationController
   def locate_ancestor_plate
     return nil if export.ancestor_purpose.blank?
 
-    ancestor_result = @plate.ancestors.where(purpose_name: export.ancestor_purpose).first
+    # Store the result of the query in order to support multiple ancestor plates
+    # for the specified ancestor purpose.
+    @ancestor_plate_list = @plate.ancestors.where(purpose_name: export.ancestor_purpose)
+
+    ancestor_result = @ancestor_plate_list.first
     return nil if ancestor_result.blank?
 
     Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, id: ancestor_result.id)
