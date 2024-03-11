@@ -17,7 +17,7 @@ module LabwareCreators
   #
   #
   class CommonFileHandling::CsvFileForTubeRackWithRackBarcode < CommonFileHandling::CsvFileForTubeRack
-    validate :check_for_rack_barcodes_the_same, if: :correctly_parsed?
+    validate :check_for_rack_barcodes_the_same
 
     RACK_BARCODES_NOT_CONSISTENT_MSG = 'should not contain different rack barcodes (%s)'
 
@@ -34,6 +34,8 @@ module LabwareCreators
     end
 
     def check_for_rack_barcodes_the_same
+      return unless @parsed
+
       tube_rack_barcodes = tube_rack_scan.group_by(&:tube_rack_barcode).keys
 
       return unless tube_rack_barcodes.size > 1

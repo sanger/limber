@@ -12,7 +12,7 @@ module LabwareCreators
     include ActiveModel::Validations
     extend NestedValidation
 
-    validate :correctly_parsed?
+    validate :must_be_correctly_parsed
 
     def initialize(file)
       initialize_variables(file)
@@ -33,21 +33,19 @@ module LabwareCreators
 
     # Override in subclass if needed
     def reset_variables
-      @parent_barcode = nil
       @filename = nil
       @data = []
       @parsed = false
     end
 
-    # Override in subclass if needed
-    def correctly_parsed?
-      return true if @parsed
+    private
+
+    # Checks for file parsed correctly
+    def must_be_correctly_parsed
+      return if @parsed
 
       errors.add(:base, "Could not read csv: #{@parse_error}")
-      false
     end
-
-    private
 
     # Removes the byte order marker (BOM) from the first string in the @data array, if present.
     #

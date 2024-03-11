@@ -52,7 +52,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
 
     def initialize_context_specific_fields
       @source = (@row_data[source_column] || '').strip.upcase
-      @destination = (@row_data[destination_column] || '').strip.downcase
+      @destination = (@row_data[destination_column] || '').strip.upcase
 
       # We use %.to_i to avoid converting nil to 0. This allows us to write less
       # confusing validation error messages.

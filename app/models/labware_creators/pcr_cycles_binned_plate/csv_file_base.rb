@@ -90,7 +90,7 @@ module LabwareCreators
 
     # Gates looking for wells if the file is invalid
     def correctly_formatted?
-      correctly_parsed? && plate_barcode_header_row.valid? && well_details_header_row.valid?
+      @parsed && plate_barcode_header_row.valid? && well_details_header_row.valid?
     end
 
     # Create the hash of well details from the file upload values

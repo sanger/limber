@@ -40,7 +40,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
 
     # Gates looking for wells if the file is invalid
     def correctly_formatted?
-      correctly_parsed? && header_row.valid?
+      @parsed && header_row.valid?
     end
 
     def generate_pools_hash

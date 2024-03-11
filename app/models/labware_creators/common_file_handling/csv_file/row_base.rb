@@ -33,8 +33,10 @@ module LabwareCreators
       end
 
       # Check for whether the row is empty
+      # Here all? returns true for an empty array, and nil? returns true for nil elements.
+      # So if @row_data is either empty or all nil, empty? will return true.
       def empty?
-        @row_data.empty? || @row_data.compact.empty?
+        @row_data.all?(&:nil?)
       end
     end
   end

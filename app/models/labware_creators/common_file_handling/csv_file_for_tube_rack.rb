@@ -16,9 +16,9 @@ module LabwareCreators
   # etc.
   #
   class CommonFileHandling::CsvFileForTubeRack < CommonFileHandling::CsvFileBase
-    validates_nested :tube_rack_scan, if: :correctly_parsed?
-    validate :check_no_duplicate_rack_positions, if: :correctly_parsed?
-    validate :check_no_duplicate_tube_barcodes, if: :correctly_parsed?
+    validates_nested :tube_rack_scan
+    validate :check_no_duplicate_rack_positions
+    validate :check_no_duplicate_tube_barcodes
 
     NO_TUBE_TEXTS = ['NO READ', 'NOSCAN', ''].freeze
     NO_DUPLICATE_RACK_POSITIONS_MSG = 'contains duplicate rack positions (%s)'
@@ -58,9 +58,11 @@ module LabwareCreators
 
     # Checks for duplicate rack positions in the tube rack scan.
     # If any duplicates are found, an error message is added to the errors object.
-    # The error message includes the duplicated rack posotions.
+    # The error message includes the duplicated rack positions.
     # This method is used to ensure that each rack position in the tube rack scan is unique.
     def check_no_duplicate_rack_positions
+      return unless @parsed
+
       duplicated_rack_positions =
         tube_rack_scan.group_by(&:tube_position).select { |_position, tubes| tubes.size > 1 }.keys.join(',')
 
@@ -75,6 +77,8 @@ module LabwareCreators
     # 'NO READ' and 'NOSCAN' values are ignored and not considered as duplicates.
     # This method is used to ensure that each tube barcode in the tube rack scan is unique.
     def check_no_duplicate_tube_barcodes
+      return unless @parsed
+
       duplicates = tube_rack_scan.group_by(&:tube_barcode).select { |_tube_barcode, tubes| tubes.size > 1 }.keys
 
       # remove any NO READ or NOSCAN or empty string values from the duplicates
@@ -88,7 +92,7 @@ module LabwareCreators
     # Generates a hash of position details based on the tube rack scan data in the CSV file.
     #
     # @return [Hash] A hash of position details, where the keys are positions and the values
-    # are hashes containing the tube rack barcode and tube barcode for each position.
+    # are hashes containing the tube barcode for each position.
     def generate_position_details_hash
       return {} unless valid?
 
