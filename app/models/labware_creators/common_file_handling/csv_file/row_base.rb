@@ -14,7 +14,6 @@ module LabwareCreators
         @index = index
         @row_data = row_data
 
-        # initialize context specific fields
         initialize_context_specific_fields
       end
 
