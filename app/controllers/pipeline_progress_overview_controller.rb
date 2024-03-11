@@ -83,7 +83,7 @@ class PipelineProgressOverviewController < ApplicationController
   end
 
   def decide_state(labware)
-    # TODO: the default of pending is a false assumption - see RVI cherrypick
+    # TODO: #1619 Y24-023 the default of pending is a false assumption - see RVI cherrypick
     labware.state_changes&.max_by(&:id)&.target_state || 'pending'
   end
 
