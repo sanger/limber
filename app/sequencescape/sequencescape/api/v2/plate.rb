@@ -72,6 +72,15 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     @wells_in_columns ||= wells.sort_by(&:coordinate)
   end
 
+  # Returns the well at a specified location.
+  #
+  # @param well_location [String] The location to find the well at.
+  # @return [Well, nil] The well at the specified location, or `nil` if no
+  #   well is found at that location.
+  def well_at_location(well_location)
+    wells.detect { |well| well.location == well_location }
+  end
+
   def tagged?
     wells.any?(&:tagged?)
   end
