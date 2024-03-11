@@ -281,5 +281,10 @@ export default {
     border: 2px #343a40 solid;
     border-radius: 7px;
   }
+
+  .colour--1 {
+    // --1 is 'dash minus one': used to indicate an empty well
+    background-color: #e9ecef;
+  }
 }
 </style>

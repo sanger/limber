@@ -5,7 +5,7 @@ import Well from 'shared/components/Well.vue'
 
 describe('Well', () => {
   const wrapperWithoutAliquot = shallowMount(Well, {
-    propsData: { pool_index: null },
+    propsData: { position: 'A1', colour_index: null },
   })
 
   it('renders a well', () => {
@@ -19,7 +19,7 @@ describe('Well', () => {
   const wrapperWithAliquot = shallowMount(Well, {
     propsData: {
       position: 'A1',
-      pool_index: 2,
+      colour_index: 2,
       tagMapIds: [10],
       validity: { valid: true, message: '' },
     },
@@ -45,8 +45,19 @@ describe('Well', () => {
     expect(emitted.onwellclicked[0]).toEqual(['A1'])
   })
 
+  it('provides a tooltip with the well position', () => {
+    expect(wrapperWithAliquot.vm.tooltipText).toEqual('A1')
+  })
+
+  it('renders a tooltip with the specified label', () => {
+    const wrapperWithTooltipLabel = shallowMount(Well, {
+      propsData: { position: 'A1', tooltip_label: 'Test' },
+    })
+    expect(wrapperWithTooltipLabel.vm.tooltipText).toEqual('A1 - Test')
+  })
+
   const wrapperWithTagMapIds = shallowMount(Well, {
-    propsData: { pool_index: 1, tagMapIds: [5] },
+    propsData: { position: 'A1', colour_index: 1, tagMapIds: [5] },
   })
 
   it('renders a well with Tag Map Id displayed', () => {
@@ -63,7 +74,8 @@ describe('Well', () => {
 
   const wrapperWithTagClash = shallowMount(Well, {
     propsData: {
-      pool_index: 1,
+      position: 'A1',
+      colour_index: 1,
       tagMapIds: [5],
       validity: { valid: false, message: 'Tag clash detected' },
     },
@@ -79,7 +91,8 @@ describe('Well', () => {
 
   const wrapperWithInvalidTag = shallowMount(Well, {
     propsData: {
-      pool_index: 1,
+      position: 'A1',
+      colour_index: 1,
       tagMapIds: [-1],
       validity: { valid: false, message: 'No tag in this well' },
     },
@@ -92,7 +105,8 @@ describe('Well', () => {
   it('renders a well with multiple Tag Map Ids displayed according to the value of tagIndex', async () => {
     const wrapperWithMultipleAliquots = shallowMount(Well, {
       propsData: {
-        pool_index: 1,
+        position: 'A1',
+        colour_index: 1,
         tagMapIds: [1, 2, 3, 4],
         validity: { valid: true, message: '' },
       },

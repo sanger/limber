@@ -8,24 +8,28 @@
     <thead>
       <tr>
         <th class="first-col" />
+        <th id="header_tube_colour" class="headingcell">Tube Colour</th>
         <th id="header_human_barcode" class="headingcell">Human Barcode</th>
         <th id="header_machine_barcode" class="headingcell">Machine Barcode</th>
         <th id="header_replicates" class="headingcell">Replicates</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(value, machine_barcode, rowIndex) in tubesDict" :key="rowIndex">
+      <tr v-for="(summary, machine_barcode, rowIndex) in tubesDict" :key="rowIndex">
         <th class="first-col">
           {{ (rowIndex + 1).toString() + '.' }}
         </th>
+        <td :id="`row_tube_colour_index_${rowIndex}`" class="tube_colour_cell">
+          <div v-if="summary.well_colour" :class="['aliquot', `colour-${summary.well_colour}`]"></div>
+        </td>
         <td :id="`row_human_barcode_index_${rowIndex}`" class="summarycell">
-          {{ value.human_barcode }}
+          {{ summary.human_barcode }}
         </td>
         <td :id="`row_machine_barcode_index_${rowIndex}`" class="summarycell">
           {{ machine_barcode }}
         </td>
         <td :id="`row_replicates_index_${rowIndex}`" class="replicate_cell">
-          {{ value.replicates }}
+          {{ summary.replicates }}
         </td>
       </tr>
     </tbody>
@@ -33,6 +37,8 @@
 </template>
 
 <script>
+import { findUniqueIndex } from 'shared/wellHelpers'
+
 export default {
   name: 'TubeArraySummary',
   props: {
@@ -56,6 +62,13 @@ export default {
     // in the summary table
     tubesDict() {
       var summary_dict = {}
+      const machine_barcodes = this.tubes.reduce((acc, tube) => {
+        if (tube.labware && tube.labware.state == 'passed') {
+          acc.push(tube.labware.labware_barcode.machine_barcode)
+        }
+        return acc
+      }, [])
+
       this.tubes.forEach(function (tube) {
         var tube_machine_barcode = 'Empty'
         var tube_human_barcode = 'Empty'
@@ -66,6 +79,13 @@ export default {
           tube_human_barcode = tube.labware.labware_barcode.human_barcode
         }
 
+        // determine the colour of the tube
+        let colour_index = null
+        if (tube.labware != null) {
+          const barcode_index = findUniqueIndex(machine_barcodes, tube_machine_barcode)
+          if (barcode_index !== -1) colour_index = barcode_index + 1
+        }
+
         // build up the dictionary of summary table replicates by barcode (and empties)
         if (tube_machine_barcode in summary_dict) {
           summary_dict[tube_machine_barcode]['replicates'] += 1
@@ -73,6 +93,7 @@ export default {
           summary_dict[tube_machine_barcode] = {
             replicates: 1,
             human_barcode: tube_human_barcode,
+            well_colour: colour_index,
           }
         }
       })
@@ -94,6 +115,19 @@ export default {
   margin-top: 2px;
   text-align: left;
   padding: 4px;
+}
+.tube_colour_cell {
+  @extend .summarycell;
+  text-align: center;
+}
+.aliquot {
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  text-align: center;
+  display: inline-block;
+  border: 2px #343a40 solid;
+  border-radius: 7px;
 }
 .replicate_cell {
   margin-top: 2px;

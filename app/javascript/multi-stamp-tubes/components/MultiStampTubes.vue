@@ -2,15 +2,14 @@
   <lb-page>
     <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content>
-      <b-card bg-variant="dark" text-variant="white">
+      <b-card bg-variant="dark" text-variant="white" :header="header" header-tag="h3">
         <lb-plate
           caption="Layout of the new plate"
           :rows="targetRowsNumber"
           :columns="targetColumnsNumber"
           :wells="targetWells"
         />
-      </b-card>
-      <b-card bg-variant="dark" text-variant="white">
+        <hr />
         <lb-tube-array-summary :tubes="tubes" />
       </b-card>
     </lb-main-content>
@@ -28,7 +27,7 @@
             :includes="tubeIncludes"
             :fields="tubeFields"
             :validators="scanValidation"
-            :colour-index="i"
+            :colour-index="colourIndex(i - 1)"
             :labware-type="'tube'"
             :valid-message="''"
             @change="updateTube(i, $event)"
@@ -60,7 +59,7 @@ import resources from 'shared/resources'
 import { transferTubesCreator } from 'shared/transfersCreators'
 import { transfersForTubes } from 'shared/transfersLayouts'
 import { buildTubeObjs } from 'shared/tubeHelpers'
-import { indexToName } from 'shared/wellHelpers'
+import { findUniqueIndex, indexToName } from 'shared/wellHelpers'
 import MultiStampTubesTransfers from './MultiStampTubesTransfers'
 import TubeArraySummary from './TubeArraySummary'
 import filterProps from './filterProps'
@@ -98,6 +97,12 @@ export default {
 
     // Limber plate purpose UUID
     purposeUuid: { type: String, required: true },
+
+    // Limber plate purpose name
+    purposeName: { type: String, required: true },
+
+    // Limber parent purpose name
+    parentPurposeName: { type: String, required: true },
 
     // Limber target Asset URL for posting the transfers
     targetUrl: { type: String, required: true },
@@ -161,6 +166,10 @@ export default {
     }
   },
   computed: {
+    // Returns the header for the page
+    header() {
+      return `Sample Arraying: ${this.parentPurposeName} → ${this.purposeName}`
+    },
     sourceTubeNumber() {
       return Number.parseInt(this.sourceTubes)
     },
@@ -170,6 +179,8 @@ export default {
     targetColumnsNumber() {
       return Number.parseInt(this.targetColumns)
     },
+    // Returns a boolean indicating whether the provided tubes are valid.
+    // Used to enable and disable the 'Create' button.
     valid() {
       return (
         this.unsuitableTubes.length === 0 && // None of the tubes are invalid
@@ -177,15 +188,24 @@ export default {
         this.transfersCreatorObj.isValid
       )
     },
+    // Returns an array of tubes that are in a 'valid' state.
     validTubes() {
       return this.tubes.filter((tube) => tube.state === 'valid')
     },
+    // Returns an array of tubes that are not in a 'valid' or 'empty' state.
     unsuitableTubes() {
       return this.tubes.filter((tube) => !(tube.state === 'valid' || tube.state === 'empty'))
     },
     transfers() {
       return transfersForTubes(this.validTubes)
     },
+    //  validTransfers returns an array with the following structure:
+    //
+    //  [
+    //    { tubeObj: { index: 0, tube: {...} }, targetWell: 'A1' },
+    //    { tubeObj: { index: 1, tube: {...} }, targetWell: 'A2' },
+    //    ...etc...
+    //  ]
     validTransfers() {
       return this.transfers.valid
     },
@@ -197,20 +217,26 @@ export default {
     transfersCreatorComponent() {
       return transfersCreatorsComponentsMap[this.transfersCreator]
     },
-    // map of well position to pool index (just a number that controls the colour)
+    // map of well positions tube metadata, eg:
     // {
-    //   "A1": 2,
-    //   "B4": 9,
+    //   "A1": {
+    //     colour_index: 1,
+    //     human_barcode: "DN123456"
+    //   },
+    //   "B4": {
+    //     colour_index: 2,
+    //     human_barcode: "DN123457"
+    //   },
     //   ...
     // }
     targetWells() {
-      const wells = {}
-      for (let i = 0; i < this.validTransfers.length; i++) {
-        wells[this.validTransfers[i].targetWell] = {
-          pool_index: this.validTransfers[i].tubeObj.index + 1,
+      return this.validTransfers.reduce((acc, transfer) => {
+        acc[transfer.targetWell] = {
+          colour_index: this.colourIndex(transfer.tubeObj.index),
+          human_barcode: transfer.tubeObj.tube.labware_barcode.human_barcode,
         }
-      }
-      return wells
+        return acc
+      }, {})
     },
     tubeIncludes() {
       return filterProps.tubeIncludes
@@ -233,14 +259,61 @@ export default {
     },
   },
   methods: {
+    // Given a 0-based well index, return the well name.
+    // e.g. 0 -> A1, 1 -> A2, etc.
     wellIndexToName(index) {
       return indexToName(index, this.targetRowsNumber)
     },
+    // Determines the colour of the tube based on its barcode,
+    // where tubes with the same barcode have the same colour.
+    // Returns an integer that is used elsewhere to build the colour class name (see colours.css).
+    // Returns -1 if the tube is not valid.
+    colourIndex(tubeIndex) {
+      let colour_index = -1
+
+      const tube = this.tubes[tubeIndex]
+      if (tube.state !== 'valid') return colour_index
+
+      const tube_machine_barcode = tube.labware.labware_barcode.machine_barcode
+      const tube_machine_barcodes = this.tubes
+        .filter((tube) => tube.state === 'valid')
+        .map((tube) => tube.labware.labware_barcode.machine_barcode)
+
+      const barcode_index = findUniqueIndex(tube_machine_barcodes, tube_machine_barcode)
+      if (barcode_index !== -1) colour_index = barcode_index + 1
+
+      return colour_index
+    },
+    /**
+     * The entry point for updating tubes attached to the plate.
+     * Called when a tube is scanned into a well.
+     *
+     * @param {Number} index - The (1-based) index of the tube in the tubes array.
+     * @param {Object} data - The tube object returned from the scan, which includes:
+     *   - labware: Contains details about the labware, such as id, uuid, and barcode details.
+     *   - state: The "scanned" state of the tube, e.g., "valid".
+     *   @example {
+     *     labware: {
+     *       id: "47",
+     *       uuid: "1234-5678-91011",
+     *       labware_barcode: {
+     *         ean13_barcode: "3980000035714",
+     *         human_barcode: "NT35G",
+     *         machine_barcode: "3980000035714"
+     *       },
+     *       links: {...},
+     *       receptacle: {...},
+     *       type: "tubes",
+     *       state: "passed"
+     *     },
+     *     state: "valid"
+     *   }
+     */
     updateTube(index, data) {
       this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
     },
     apiTransfers() {
-      // what we want to transfer when cteating the plate
+      // what we want to transfer when creating the plate
       return transferTubesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {
