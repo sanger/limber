@@ -14,6 +14,7 @@ class ExportsController < ApplicationController
     @workflow = export.workflow
     @ancestor_plate = locate_ancestor_plate
     @ancestor_tubes = locate_ancestor_tubes
+    @ancestor_plate_list = locate_ancestor_plate_list
 
     set_filename if export.filename
 
@@ -47,6 +48,20 @@ class ExportsController < ApplicationController
     return nil if ancestor_result.blank?
 
     Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, id: ancestor_result.id)
+  end
+
+  # Returns an array of all ancestor plates of @plate that match a specific
+  # purpose (defined in the export configuration). If no such plates are found,
+  # an empty array is returned. The result array is made available to the view
+  # that generates the export as @ancestor_plate_list by the show method.
+  #
+  # @return [Array, Sequencescape::Api::V2::Plate] An array of Plate records if
+  #   any are found, otherwise an empty array.
+  def locate_ancestor_plate_list
+    # Collect plate ids from Asset resource results to fetch Plates later.
+    ids = @plate.ancestors.where(purpose_name: export.ancestor_purpose).map(&:id)
+    return [] if ids.empty?
+    Sequencescape::Api::V2::Plate.includes(include_parameters).find({ id: ids })
   end
 
   def include_parameters
