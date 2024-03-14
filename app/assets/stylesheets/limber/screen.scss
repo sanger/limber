@@ -162,21 +162,25 @@ header.limber-header {
   }
 }
 
-button#btnGroupInboxes,
-button#btnGroupRobots,
-button#btnGroupWip {
+.btn-big-primary{
   @extend .btn;
   @extend .btn-primary;
-  @extend .dropdown-toggle;
   @extend .btn-lg;
   @extend .btn-block;
 }
-
-#btnPipelinesOverview {
+.btn-big-primary-dropdown{
   @extend .btn;
   @extend .btn-primary;
   @extend .btn-lg;
   @extend .btn-block;
+  @extend .dropdown-toggle;
+}
+.btn-big-secondary-dropdown{
+  @extend .btn;
+  @extend .btn-secondary;
+  @extend .btn-lg;
+  @extend .btn-block;
+  @extend .dropdown-toggle;
 }
 
 .btn-upload {

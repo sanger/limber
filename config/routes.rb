@@ -16,10 +16,8 @@ Rails.application.routes.draw do
     get 'logout', action: :destroy
   end
 
+  resources 'pipeline_work_in_progress', only: :show
   resources 'pipeline_progress_overview', only: :show
-
-  # add temporary redirect for old pipeline progress overview route
-  get '/pipeline_work_in_progress/:id', to: redirect('/pipeline_progress_overview/%{id}', status: 307)
 
   # Robots help us batch work up by function, rather than plate
   resources :robots, controller: :robots do
