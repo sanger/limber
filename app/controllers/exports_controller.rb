@@ -60,7 +60,8 @@ class ExportsController < ApplicationController
   def locate_ancestor_plate_list
     return [] if export.ancestor_purpose.blank?
 
-    # Collect plate ids from Asset resource results to fetch Plates later.
+    # Collect plate ids from the polymorphic Sequencescape::Api::V2::Asset
+    # resource results to fetch Plates later.
     ids = @plate.ancestors.where(purpose_name: export.ancestor_purpose).map(&:id)
     return [] if ids.empty?
     Sequencescape::Api::V2::Plate.includes(include_parameters).find({ id: ids })
