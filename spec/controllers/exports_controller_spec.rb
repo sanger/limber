@@ -333,9 +333,8 @@ RSpec.describe ExportsController, type: :controller do
         .and_return(asset_ancestors)
 
       # Stub the plate_with_custom_includes query to return the first ancestor plate.
-      # NB. This stub is not used in this test directly, but it is required to make
-      # the other methods in the show controller action not to fail when they try to
-      # receive the first ancestor.
+      # NB. This stub is required to make the other methods in the show controller
+      # action not to fail when they try to receive the first ancestor plate.
       allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
         .with(export.plate_includes, id: asset_ancestors.first.id)
         .and_return(ancestor_plates.first)
@@ -376,14 +375,14 @@ RSpec.describe ExportsController, type: :controller do
       let(:csv_id) { 'multiple_ancestor_plates_not_configured' }
 
       it 'assigns @ancestor_plate_list to an empty array' do
-        # The export controller's show action should assing @ancestor_plate_list
+        # The export controller's show action should assign @ancestor_plate_list
         # to an empty array if the ancestor plate is not configured.
         get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
         expect(assigns(:ancestor_plate_list)).to eq([])
       end
 
       it 'renders the view with an empty @ancestor_plate_list' do
-        # The export controller's show action should render the view without
+        # The export controller's show action should render the view with an empty
         # @ancestor_plate_list if the ancestor plate is not configured.
 
         get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
