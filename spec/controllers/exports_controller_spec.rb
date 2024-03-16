@@ -375,14 +375,14 @@ RSpec.describe ExportsController, type: :controller do
     context 'when ancestor plate is not configured' do
       let(:csv_id) { 'multiple_ancestor_plates_not_configured' }
 
-      it 'does not assign @ancestor_plate_list' do
+      it 'assigns @ancestor_plate_list to an empty array' do
         # The export controller's show action should assing @ancestor_plate_list
         # to an empty array if the ancestor plate is not configured.
         get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
         expect(assigns(:ancestor_plate_list)).to eq([])
       end
 
-      it 'renders the view without @ancestor_plate_list' do
+      it 'renders the view with an empty @ancestor_plate_list' do
         # The export controller's show action should render the view without
         # @ancestor_plate_list if the ancestor plate is not configured.
 

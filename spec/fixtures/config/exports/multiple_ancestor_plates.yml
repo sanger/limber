@@ -1,5 +1,5 @@
 ---
-# Fixture for testing exporting multiple ancestor plates
+# Fixture for testing multiple ancestor plates support in exports
 multiple_ancestor_plates_configured:
   csv: multiple_ancestor_plates
   plate_includes: wells.qc_results
