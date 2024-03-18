@@ -35,3 +35,6 @@ app/javascript/coverage/
 
 # Special formatting here
 app/javascript/shared/resources.js
+
+# if using LSP for Ruby
+.ruby-lsp/
