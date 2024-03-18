@@ -285,4 +285,114 @@ RSpec.describe ExportsController, type: :controller do
       )
     end
   end
+
+  context 'with multiple ancestor plates' do
+    # Set up three ancestor plates for this test.
+    # example_ancestor_purpose is the purpose of the ancestor plates.
+    # The purpose name is used for ancestor_purpose in the exports configuration fixture.
+    #
+    # Fixtures:
+    # spec/fixtures/config/multiple_ancestor_plates.yml is the exports configuration file.
+    # spec/fixtures/app/views/exports/multiple_ancestor_plates.csv.erb is the view that generates the exports.
+    #
+    # multiple_ancestor_plates_configured is the id of an export in exports.yml
+    # multiple_ancestor_plates_not_configured is the id of an export in exports.yml
+    # multiple_ancestor_plates is the view name for both exports set in exports.yml
+
+    let(:ancestor_purpose_name) { 'example_ancestor_purpose' }
+    let(:ancestor_purpose) { create(:v2_purpose, name: ancestor_purpose_name) }
+    let(:ancestor_plates) { create_list(:v2_plate, 3, purpose: ancestor_purpose) }
+
+    let(:exports_path) { 'spec/fixtures/config/exports/multiple_ancestor_plates.yml' }
+    let(:config) { YAML.load_file(exports_path) }
+    let(:export) { Export.new(config.fetch(csv_id)) } # csv_id specified by the individual test
+
+    let(:view_path) { 'spec/fixtures/app/views/' } # for exports/multiple_ancestor_plates.csv.erb
+
+    before do
+      # Make the controller to receive the plate.
+      # NB. Uses plate_includes if specified in the export configuration.
+      allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
+        .with(export.plate_includes, barcode: plate_barcode)
+        .and_return(plate)
+
+      # Make the controller to use the export loaded from fixture config.
+      allow(subject).to receive(:export).and_return(export)
+
+      # Make the controller to find the fixture template for rendering.
+      subject.prepend_view_path('spec/fixtures/app/views')
+
+      # Stub the ancestors query to return ancestor plates.
+      # NB. The result is an array of Sequencescape::Api::V2::Asset objects
+      # with the ancestor plate ids.
+      asset_ancestors =
+        ancestor_plates.map { |ancestor_plate| double('Sequencescape::Api::V2::Asset', id: ancestor_plate.id) }
+
+      allow(plate).to receive_message_chain(:ancestors, :where)
+        .with(purpose_name: export.ancestor_purpose)
+        .and_return(asset_ancestors)
+
+      # Stub the plate_with_custom_includes query to return the first ancestor plate.
+      # NB. This stub is required to make the other methods in the show controller
+      # action not to fail when they try to receive the first ancestor plate.
+      allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
+        .with(export.plate_includes, id: asset_ancestors.first.id)
+        .and_return(ancestor_plates.first)
+
+      # Stub the plate query to return ancestor plates.
+      builder = double('JsonApiClient::Query::Builder')
+      allow(Sequencescape::Api::V2::Plate).to receive(:includes).with(export.plate_includes).and_return(builder)
+      allow(builder).to receive(:find).with({ id: asset_ancestors.map(&:id) }).and_return(ancestor_plates)
+    end
+
+    context 'when ancestor plate is configured' do
+      let(:csv_id) { 'multiple_ancestor_plates_configured' }
+
+      it 'assigns @ancestor_plate_list to the list of ancestor plates' do
+        # The export controller's show action should assign @ancestor_plate_list
+        # to an array of ancestor plates.
+        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        expect(assigns(:ancestor_plate_list)).to eq(ancestor_plates)
+      end
+
+      it 'renders the view with @ancestor_plate_list' do
+        # The export controller's show action should render the view with
+        # @ancestor_plate_list.
+        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+
+        expect(response).to render_template('exports/multiple_ancestor_plates')
+
+        output = [['Plate Barcode', plate.barcode.human], ['Ancestor Barcode', 'Ancestor Purpose']]
+        ancestor_plates.each { |ancestor_plate| output << [ancestor_plate.barcode.human, ancestor_purpose_name] }
+
+        output = "#{output.map { |line| line.join(',') }.join("\n")}\n"
+
+        expect(response.body).to eq(output)
+      end
+    end
+
+    context 'when ancestor plate is not configured' do
+      let(:csv_id) { 'multiple_ancestor_plates_not_configured' }
+
+      it 'assigns @ancestor_plate_list to an empty array' do
+        # The export controller's show action should assign @ancestor_plate_list
+        # to an empty array if the ancestor plate is not configured.
+        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        expect(assigns(:ancestor_plate_list)).to eq([])
+      end
+
+      it 'renders the view with an empty @ancestor_plate_list' do
+        # The export controller's show action should render the view with an empty
+        # @ancestor_plate_list if the ancestor plate is not configured.
+
+        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        expect(response).to render_template('exports/multiple_ancestor_plates')
+
+        output = [['Plate Barcode', plate.barcode.human], ['Ancestor Barcode', 'Ancestor Purpose']]
+        output = "#{output.map { |line| line.join(',') }.join("\n")}\n"
+
+        expect(response.body).to eq(output) # empty ancestor plate table
+      end
+    end
+  end
 end

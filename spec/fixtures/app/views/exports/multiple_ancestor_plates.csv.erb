@@ -1,0 +1,5 @@
+<%= CSV.generate_line ['Plate Barcode', @plate.labware_barcode.human], row_sep: "" %>
+<%= CSV.generate_line ['Ancestor Barcode', 'Ancestor Purpose'], row_sep: "" %>
+<% @ancestor_plate_list.each do |ancestor_plate| %>
+<%= CSV.generate_line [ancestor_plate.labware_barcode.human, ancestor_plate.purpose.name], row_sep: "" %>
+<% end %>
