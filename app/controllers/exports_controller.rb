@@ -58,9 +58,10 @@ class ExportsController < ApplicationController
   # @return [Array, Sequencescape::Api::V2::Plate] An array of Plate records if
   #   any are found, otherwise an empty array.
   def locate_ancestor_plate_list
-    return nil if export.ancestor_purpose.blank?
+    return [] if export.ancestor_purpose.blank?
 
-    # Collect plate ids from Asset resource results to fetch Plates later.
+    # Collect plate ids from the polymorphic Sequencescape::Api::V2::Asset
+    # polymorphic results to fetch the plates.
     ids = @plate.ancestors.where(purpose_name: export.ancestor_purpose).map(&:id)
     return [] if ids.empty?
     Sequencescape::Api::V2::Plate.includes(include_parameters).find({ id: ids })
