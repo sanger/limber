@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PipelineProgressOverviewController, type: :controller do
+RSpec.describe LabwareProgressController, type: :controller do
   has_a_working_api
 
   let(:controller) { described_class.new }

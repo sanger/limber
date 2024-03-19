@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Controller for table style view of work in progress for a pipeline
-class PipelineProgressOverviewController < ApplicationController
+class LabwareProgressController < ApplicationController
   # Retrieves data from Sequencescape and populates variables to be used in the UI
   def show
     page_size = 500

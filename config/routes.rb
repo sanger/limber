@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   end
 
   resources 'pipeline_work_in_progress', only: :show
-  resources 'pipeline_progress_overview', only: :show
+  resources 'labware_progress', only: :show
 
   # Robots help us batch work up by function, rather than plate
   resources :robots, controller: :robots do

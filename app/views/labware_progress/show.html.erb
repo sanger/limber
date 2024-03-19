@@ -1,6 +1,5 @@
 <%= content do %>
-  <h1>Limber Pipeline Progress Overview <small class="text-muted"><br/>
-  <%= @pipeline_group_name -%></small></h1>
+  <h1>Labware Progress <small class="text-muted"><%= @pipeline_group_name -%></small></h1>
 
   <!-- filters - reload the page with a new param -->
 
@@ -17,7 +16,7 @@
     %>
     <%=
       @dates.map do |label, date|
-        link_to label, pipeline_progress_overview_path(id: @pipeline_group_name, date: date, progress: @progress), method: :get, class: "btn btn-light #{'active' if date == @from_date}"
+        link_to label, labware_progress_path(id: @pipeline_group_name, date: date, progress: @progress), method: :get, class: "btn btn-light #{'active' if date == @from_date}"
       end.join.html_safe
     %>
   </div>
@@ -33,7 +32,7 @@
     %>
     <%=
       @progresses.map do |label, progress|
-        link_to label, pipeline_progress_overview_path(id: @pipeline_group_name, date: @from_date, progress: progress), method: :get, class: "btn btn-light #{'active' if progress == @progress}"
+        link_to label, labware_progress_path(id: @pipeline_group_name, date: @from_date, progress: progress), method: :get, class: "btn btn-light #{'active' if progress == @progress}"
       end.join.html_safe
     %>
   </div>
