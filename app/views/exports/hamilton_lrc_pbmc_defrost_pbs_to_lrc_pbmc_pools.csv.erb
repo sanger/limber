@@ -1,0 +1,58 @@
+<%# This is a picking file for a Hamilton robot for LRC PBMC Defrost plate to LRC PBMC Pools plate transfers %>
+<%= CSV.generate_line [
+    'Workflow', 
+    @workflow
+  ], 
+  row_sep: '' 
+%>
+<%= CSV.generate_line [
+    'Source Plate',
+    'Source Well',
+    'Destination Plate',
+    'Destination Well',
+    'Sample Volume (µL)',
+    'Resuspension Volume (µL)',
+  ],
+  row_sep: ''
+%>
+<%
+  # Prepare the fields determined from the transfer requests
+
+  required_number_of_cells = 5_000
+  maximum_sample_volume = 50.0  # microlitres
+  resuspension_volume_per_sample = 2.2  # microlitres
+  minimum_resuspension_volume = 10.0  # microlitres
+  millilitres_to_microlitres = 1_000.0
+
+  # Make a mapping { src_barcode => { src_location => src_well } }
+  ancestor_plates_wells = @ancestor_plate_list.each_with_object({}) do |ancestor_plate, hash|
+    hash[ancestor_plate.labware_barcode.human] = ancestor_plate.wells.index_by(&:location)
+  end
+
+  transfer_request_data = []
+  each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
+    src_well = ancestor_plates_wells[src_barcode][src_location]
+    cell_count = src_well.latest_live_cell_count  # cells / millilitres
+    next if cell_count.nil?
+    required_volume = [millilitres_to_microlitres * required_number_of_cells / cell_count.value.to_i, maximum_sample_volume].min
+
+    transfer_request_data << [
+      src_barcode,
+      src_location,
+      @plate.labware_barcode.human,
+      dest_well.location,
+      '%0.2f' % required_volume,
+    ]
+  end
+
+  # Calculate the resuspension volumes from the pooled samples count
+
+  samples_by_dest_well = transfer_request_data.group_by { |tr| tr[3] }  # index by dest_well.location
+
+  rows_array = transfer_request_data.map do |data|
+    samples_in_pool = samples_by_dest_well[data[3]].count
+    resuspension_volume = [samples_in_pool * resuspension_volume_per_sample, minimum_resuspension_volume].max
+    data + ['%0.2f' % resuspension_volume]
+  end
+%>
+<%= rows_array.sort_by{ |a| [ a[0], WellHelpers.well_coordinate(a[1])] }.map(&:to_csv).join %>
