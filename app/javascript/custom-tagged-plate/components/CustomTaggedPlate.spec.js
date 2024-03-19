@@ -207,10 +207,10 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.colour_index).toBe(1)
       })
 
       it('returns wells from parent with pool indexes using aliquot requests', async () => {
@@ -221,10 +221,10 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.colour_index).toBe(1)
       })
 
       it('returns wells from parent with pool indexes where multiple submissions set', async () => {
@@ -235,10 +235,10 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
-        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
-        expect(wrapper.vm.parentWells.A3.pool_index).toBe(2)
-        expect(wrapper.vm.parentWells.A4.pool_index).toBe(2)
+        expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.colour_index).toBe(2)
+        expect(wrapper.vm.parentWells.A4.colour_index).toBe(2)
       })
     })
 
