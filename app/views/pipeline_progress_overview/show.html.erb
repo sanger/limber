@@ -5,7 +5,7 @@
   <!-- filters - reload the page with a new param -->
 
   <!-- Date selectors -->
-  <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Date selectors">
+  <div class="btn-group btn-group-sm border rounded mb-2" role="group" aria-label="Date selectors">
     <%
       @dates = {
         'All time' => Date.new(1970, 1, 1),
@@ -17,7 +17,23 @@
     %>
     <%=
       @dates.map do |label, date|
-        link_to label, pipeline_progress_overview_path(id: @pipeline_group_name, date: date), method: :get, class: "btn btn-secondary #{'active' if date == @from_date}"
+        link_to label, pipeline_progress_overview_path(id: @pipeline_group_name, date: date, progress: @progress), method: :get, class: "btn btn-light #{'active' if date == @from_date}"
+      end.join.html_safe
+    %>
+  </div>
+
+  <!-- Progress selctors -->
+  <div class="btn-group btn-group-sm border rounded mb-2" role="group" aria-label="Progress selectors">
+    <%
+      @progresses = {
+        'All' => nil,
+        'Ongoing' => 'ongoing',
+        'Used' => 'used'
+      }
+    %>
+    <%=
+      @progresses.map do |label, progress|
+        link_to label, pipeline_progress_overview_path(id: @pipeline_group_name, date: @from_date, progress: progress), method: :get, class: "btn btn-light #{'active' if progress == @progress}"
       end.join.html_safe
     %>
   </div>
@@ -40,10 +56,7 @@
     <!-- labware lists -->
     <div class="col-lg-9 col-md-8">
       <h3><%= @purpose || 'Labware' %></h3>
-      <%= render partial: 'labware_table', locals: { labware: labware_for_purpose(@labware, @purpose).reject(&:has_children)} %>
-
-      <h5><%= @purpose || 'Labware' %> with Children</h5>
-      <%= render partial: 'labware_table', locals: { labware: labware_for_purpose(@labware, @purpose).select(&:has_children) } %>
+      <%= render partial: 'labware_table', locals: { labware: labware_for_purpose(@labware, @purpose)} %>
     </div>
   </div>
 

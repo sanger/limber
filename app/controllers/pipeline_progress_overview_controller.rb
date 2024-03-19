@@ -10,6 +10,7 @@ class PipelineProgressOverviewController < ApplicationController
     @pipeline_group_name = params[:id]
     @from_date = from_date(params)
     @purpose = params[:purpose]
+    @progress = params[:progress]
 
     # Pipeline details
 
@@ -45,7 +46,7 @@ class PipelineProgressOverviewController < ApplicationController
     @ordered_purpose_names_for_pipelines = order_purposes_for_pipelines(@pipelines_for_group)
 
     # Labware results
-    @labware = compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names)
+    @labware = compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names, @progress)
   end
 
   def from_date(params)
@@ -77,7 +78,7 @@ class PipelineProgressOverviewController < ApplicationController
         .includes(:state_changes, :purpose, 'ancestors.purpose')
         .where(purpose_name: purposes, updated_at_gt: from_date)
     labware_query = labware_query.where(without_children: true) if with_children == false
-    labware_query.order(:updated_at).per(page_size)
+    labware_query.per(page_size)
 
     Sequencescape::Api::V2.merge_page_results(labware_query)
   end
@@ -87,11 +88,16 @@ class PipelineProgressOverviewController < ApplicationController
     labware.state_changes&.max_by(&:id)&.target_state || 'pending'
   end
 
-  def add_children_metadata(labware_records, has_children, state_suffix)
+  def add_children_metadata(labware_records, has_children)
     labware_records.each do |labware_record|
       labware_record.has_children = has_children
+      labware_record.progress = has_children ? 'used' : 'ongoing'
+    end
+  end
+
+  def add_state_metadata(labware_records)
+    labware_records.each do |labware_record|
       labware_record.state = decide_state(labware_record)
-      labware_record.state_with_children = "#{labware_record.state}#{state_suffix}"
     end
   end
 
@@ -104,19 +110,34 @@ class PipelineProgressOverviewController < ApplicationController
     labware_with_children =
       labware_all.reject { |labware_record| labware_without_children_ids.include?(labware_record.id) }
 
-    labware_with_children = add_children_metadata(labware_with_children, true, ' (parent)')
-    labware_without_children = add_children_metadata(labware_without_children, false, '')
+    labware_with_children = add_children_metadata(labware_with_children, true)
+    labware_without_children = add_children_metadata(labware_without_children, false)
 
-    labware_without_children + labware_with_children
+    labware = labware_without_children + labware_with_children
+    add_state_metadata(labware)
+  end
+
+  # Filter labware records by progress. If progress is nil, return all labware
+  def filter_labware_by_progress(labware_records, progress)
+    return labware_records if progress.nil?
+
+    case progress
+    when 'used'
+      labware_records.select(&:has_children)
+    when 'ongoing'
+      labware_records.reject(&:has_children)
+    end
   end
 
   # Given a list of purposes, retrieve labware records for those purposes and
   # their ancestors purposes, and filter out any from another pipeline or that have been cancelled.
-  def compile_labware_for_purpose(query_purposes, page_size, from_date, ordered_purposes)
+  def compile_labware_for_purpose(query_purposes, page_size, from_date, ordered_purposes, progress)
     related_purposes = ordered_purposes.first(ordered_purposes.count - 1)
 
     labwares = query_labware_with_children(page_size, from_date, query_purposes)
     labwares = labwares.reject { |labware| labware.state == 'canceled' }
-    filter_labware_by_related_purpose(labwares, related_purposes)
+    labwares = filter_labware_by_related_purpose(labwares, related_purposes)
+    labwares = filter_labware_by_progress(labwares, progress)
+    labwares.sort_by { |labware| labware.updated_at }.reverse
   end
 end

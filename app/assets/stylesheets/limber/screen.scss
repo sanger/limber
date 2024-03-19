@@ -379,26 +379,41 @@ dl#samples-information {
 
 .state-badge {
   @extend.badge;
+
+  &.pending {
+    @extend.badge-warning;
+  }
+  &.started,
+  &.process_1,
+  &.process_2 {
+    @extend.badge-info;
+  }
+  &.passed {
+    @extend.badge-success;
+  }
+  &.qc_completed {
+    @extend.badge-success;
+  }
+  &.cancelled {
+    @extend .list-group-item-danger;
+  }
+  &.failed {
+    @extend .list-group-item-danger;
+  }
+  &.ongoing {
+    @extend .badge-dark;
+  }
+  &.used{
+    @extend .bg-white;
+    @extend .text-dark;
+    @extend .border;
+  }
 }
-.state-badge.pending {
-  @extend.badge-warning;
-}
-.state-badge.started,
-.state-badge.process_1,
-.state-badge.process_2 {
-  @extend.badge-info;
-}
-.state-badge.passed {
-  @extend.badge-success;
-}
-.state-badge.qc_completed {
-  @extend.badge-success;
-}
-.state-badge.cancelled {
-  @extend .list-group-item-danger;
-}
-.state-badge.failed {
-  @extend .list-group-item-danger;
+
+@for $i from 1 through 10 {
+  .min-width-#{$i} {
+    min-width: #{$i}rem;
+  }
 }
 
 .flash {
