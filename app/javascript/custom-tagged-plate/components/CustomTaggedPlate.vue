@@ -381,7 +381,7 @@ export default {
         if (well.aliquots && well.aliquots.length > 0) {
           wells[position]['aliquotCount'] = well.aliquots.length
           wells[position]['submId'] = this.parentWellSubmissionDetails[position]['subm_id']
-          wells[position]['pool_index'] = this.parentWellSubmissionDetails[position]['pool_index']
+          wells[position]['colour_index'] = this.parentWellSubmissionDetails[position]['pool_index']
           wells[position]['validity'] = {
             valid: false,
             message: 'Missing tag ids for this well',
