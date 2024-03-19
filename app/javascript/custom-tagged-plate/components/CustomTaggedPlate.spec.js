@@ -207,6 +207,10 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
+        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
         expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
         expect(wrapper.vm.parentWells.A3.colour_index).toBe(1)
@@ -221,6 +225,10 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
+        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
         expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
         expect(wrapper.vm.parentWells.A3.colour_index).toBe(1)
@@ -235,6 +243,10 @@ describe('CustomTaggedPlate', () => {
         })
 
         expect(Object.keys(wrapper.vm.parentWells).length).toBe(4)
+        expect(wrapper.vm.parentWells.A1.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.pool_index).toBe(2)
+        expect(wrapper.vm.parentWells.A4.pool_index).toBe(2)
         expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
         expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
         expect(wrapper.vm.parentWells.A3.colour_index).toBe(2)
@@ -273,6 +285,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [11],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -281,6 +294,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [12],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -289,6 +303,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [13],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -297,6 +312,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [14],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -322,6 +338,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [17],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -330,6 +347,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: {
               valid: false,
@@ -341,6 +359,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: {
               valid: false,
@@ -352,6 +371,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: {
               valid: false,
@@ -383,6 +403,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [1, 2, 3, 4],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -391,6 +412,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [5, 6, 7, 8],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -399,6 +421,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [9, 10, 11, 12],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -407,6 +430,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [13, 14, 15, 16],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: { valid: true, message: '' },
           },
@@ -436,6 +460,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [15, 16, 17, -1],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: {
               valid: false,
@@ -447,6 +472,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: {
               valid: false,
@@ -458,6 +484,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: {
               valid: false,
@@ -469,6 +496,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
+            pool_index: 1,
             colour_index: 1,
             validity: {
               valid: false,
