@@ -20,7 +20,7 @@
       <div id="validation_report"></div>
       <div id="add-plates-instructions-block" class="card-body" >
         <div class="instructions">
-          <p>Scan in up to <% @labware_creator.max_number_of_source_plates %> plates.</p>
+          <p>Scan in up to <%= @labware_creator.max_number_of_source_plates %> plates.</p>
         </div>
       </div>
     <% end %>
@@ -40,11 +40,11 @@
             <input type="text"
                    id="plate[barcodes][<%= index %>]"
                    name="plate[barcodes][]"
-                   class="form-control col-md-8"
-                   required="required"/>
+                   class="form-control col-md-8" />
           </div>
         <% end %>
         <%= form.submit 'Create Plate', class: 'btn btn-success btn-lg', id: 'create-labware' %>
+      <% end %>
     </div>
   <% end %>
 <% end %>
