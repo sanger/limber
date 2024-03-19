@@ -25,26 +25,25 @@
   </div>
 
   <div class="btn-group btn-block" role="group">
-   <button id="btn-group-robots" class="btn-big-primary-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     Robots
-   </button>
-   <nav class="robots-list dropdown-menu" aria-labelledby="btn-group-robots" id="robots-list">
-     <% each_robot do |robot_id,robot_name| %>
-       <%= link_to robot_name, robot_path(robot_id) %>
-     <% end %>
-   </nav>
- </div>
+    <button id="btn-group-progress" class="btn-big-primary-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Labware progress
+    </button>
+    <nav class="inbox-list dropdown-menu" aria-labelledby="btn-group-progress" id="labware-progress-list">
+      <% pipeline_groups.each do |pipeline_group_id| %>
+        <%= link_to pipeline_group_id, pipeline_progress_overview_path(pipeline_group_id) %>
+      <% end %>
+    </nav>
+  </div>
 
   <div class="btn-group btn-block" role="group">
-   <button id="btn-group-progress" class="btn-big-secondary-dropdown type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     Labware progress
-   </button>
-  <nav class="inbox-list dropdown-menu" aria-labelledby="btn-group-progress" id="labware-progress-list">
-    <% pipeline_groups.each do |pipeline_group_id| %>
-      <%= link_to pipeline_group_id, pipeline_progress_overview_path(pipeline_group_id) %>
-    <% end %>
-  </nav>
- </div>
-
+    <button id="btn-group-robots" class="btn-big-primary-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Robots
+    </button>
+    <nav class="robots-list dropdown-menu" aria-labelledby="btn-group-robots" id="robots-list">
+      <% each_robot do |robot_id,robot_name| %>
+        <%= link_to robot_name, robot_path(robot_id) %>
+      <% end %>
+    </nav>
+  </div>
   <%= link_to "Pipelines overview", pipelines_path, id: "btnPipelinesOverview", class: 'btn-big-primary' %>
 <% end %>
