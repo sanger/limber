@@ -273,7 +273,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [11],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A2: {
@@ -281,7 +281,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [12],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A3: {
@@ -289,7 +289,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [13],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A4: {
@@ -297,7 +297,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [14],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
         }
@@ -322,7 +322,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [17],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A2: {
@@ -330,7 +330,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -341,7 +341,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -352,7 +352,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -383,7 +383,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [1, 2, 3, 4],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A2: {
@@ -391,7 +391,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [5, 6, 7, 8],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A3: {
@@ -399,7 +399,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [9, 10, 11, 12],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A4: {
@@ -407,7 +407,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [13, 14, 15, 16],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
         }
@@ -436,7 +436,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [15, 16, 17, -1],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -447,7 +447,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -458,7 +458,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -469,7 +469,7 @@ describe('CustomTaggedPlate', () => {
             aliquotCount: 1,
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
-            pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
