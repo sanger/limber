@@ -38,12 +38,12 @@ RSpec.describe Robots, robots: true do
   describe '::each_robot' do
     it 'yields each robot name and id' do
       expect { |b| Robots.each_robot(&b) }.to yield_successive_args(
-        %w[robot_id robot_name],
-        %w[robot_id_2 robot_name],
-        %w[grandparent_robot robot_name],
-        ['bravo-lb-post-shear-to-lb-end-prep', 'bravo LB Post Shear => LB End Prep'],
         ['bravo-lb-end-prep', 'bravo LB End Prep'],
-        ['pooling_robot_id', 'Pooling Robot']
+        ['bravo-lb-post-shear-to-lb-end-prep', 'bravo LB Post Shear => LB End Prep'],
+        ['grandparent_robot', 'robot_name'],
+        ['pooling_robot_id', 'Pooling Robot'],
+        ['robot_id', 'robot_name'],
+        ['robot_id_2', 'robot_name'],
       )
     end
   end
