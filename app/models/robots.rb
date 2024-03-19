@@ -15,6 +15,7 @@ module Robots
   end
 
   def self.each_robot
-    Settings.robots.each { |key, config| yield key, config[:name] }
+    # return robots from settings sorted by key
+    Settings.robots.sort_by { |key, _| key }.each { |key, config| yield key, config[:name] }
   end
 end
