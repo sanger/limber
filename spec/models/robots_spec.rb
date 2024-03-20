@@ -40,10 +40,10 @@ RSpec.describe Robots, robots: true do
       expect { |b| Robots.each_robot(&b) }.to yield_successive_args(
         ['bravo-lb-end-prep', 'bravo LB End Prep'],
         ['bravo-lb-post-shear-to-lb-end-prep', 'bravo LB Post Shear => LB End Prep'],
-        ['grandparent_robot', 'robot_name'],
+        %w[grandparent_robot robot_name],
         ['pooling_robot_id', 'Pooling Robot'],
-        ['robot_id', 'robot_name'],
-        ['robot_id_2', 'robot_name'],
+        %w[robot_id robot_name],
+        %w[robot_id_2 robot_name]
       )
     end
   end
