@@ -16,6 +16,10 @@ class LabwareProgressController < ApplicationController
     setup_labware_results(page_size)
   end
 
+  def from_date_with_default(params)
+    params[:date]&.to_date || Time.zone.today.prev_month
+  end
+
   def order_purposes_for_pipelines(pipeline_names)
     pipeline_names.index_with { |pipeline_name| Settings.pipelines.order_pipeline(pipeline_name) }
   end
@@ -103,10 +107,6 @@ class LabwareProgressController < ApplicationController
   end
 
   private
-
-  def from_date_with_default(params)
-    params[:date]&.to_date || Time.zone.today.prev_month
-  end
 
   def setup_query_parameters
     @pipeline_group_name = params[:id]

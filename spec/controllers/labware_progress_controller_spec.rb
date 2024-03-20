@@ -21,15 +21,15 @@ RSpec.describe LabwareProgressController, type: :controller do
     end
   end
 
-  describe '#from_date' do
+  describe '#from_date_with_default' do
     let(:date) { Date.new(2019, 5, 13) }
 
     it 'parses the date from the URL parameters' do
-      expect(controller.from_date({ date: date })).to eq date
+      expect(controller.from_date_with_default({ date: date })).to eq date
     end
 
     it 'defaults to a month ago' do
-      expect(controller.from_date({})).to eq Time.zone.today.prev_month
+      expect(controller.from_date_with_default({})).to eq Time.zone.today.prev_month
     end
   end
 
