@@ -1,0 +1,7 @@
+<%
+  labware_path = labware.plate? ? limber_plate_path(labware.uuid) : limber_tube_path(labware.uuid)
+%>
+<li class="list-group-item">
+  <%= labware.purpose.name %> - <%= link_to labware_path, class: 'card-link stretched-link' do %><%= labware.barcode.human%><% end %>
+  <%= content_tag(:span, state_badge(labware.state), class: 'float-right' )%>
+</li>
