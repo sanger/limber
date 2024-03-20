@@ -221,6 +221,25 @@ RSpec.describe LabwareProgressController, type: :controller do
     end
   end
 
+  describe '#filter_labware_by_progress' do
+    let(:labware1) { double('Labware', has_children: true) }
+    let(:labware2) { double('Labware', has_children: false) }
+    let(:labware3) { double('Labware', has_children: true) }
+    let(:labware_records) { [labware1, labware2, labware3] }
+
+    it 'filters labware by progress when used' do
+      result = controller.filter_labware_by_progress(labware_records, 'used')
+
+      expect(result).to contain_exactly(labware1, labware3)
+    end
+
+    it 'filters labware by progress when ongoing' do
+      result = controller.filter_labware_by_progress(labware_records, 'ongoing')
+
+      expect(result).to contain_exactly(labware2)
+    end
+  end
+
   describe '#compile_labware_for_purpose' do
     let(:labware1) { double('Labware', state: 'completed', updated_at: DateTime.now + 3.minutes) }
     let(:labware2) { double('Labware', state: 'completed', updated_at: DateTime.now + 2.minutes) }
