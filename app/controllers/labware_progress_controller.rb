@@ -127,5 +127,4 @@ class LabwareProgressController < ApplicationController
     @labware =
       compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names, @progress)
   end
-
 end

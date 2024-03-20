@@ -207,9 +207,7 @@ RSpec.describe LabwareProgressController, type: :controller do
     let(:labwares) { [labware1, labware2, labware3] }
 
     before do
-      allow(controller).to receive(:query_labware)
-        .with(page_size, from_date, purposes, nil)
-        .and_return(labwares)
+      allow(controller).to receive(:query_labware).with(page_size, from_date, purposes, nil).and_return(labwares)
 
       allow(controller).to receive(:query_labware).with(page_size, from_date, purposes, false).and_return([labware1])
       allow(controller).to receive(:add_children_metadata).and_return([labware2, labware3], [labware1])
@@ -224,9 +222,9 @@ RSpec.describe LabwareProgressController, type: :controller do
   end
 
   describe '#compile_labware_for_purpose' do
-    let(:labware1) { double('Labware', state: 'completed', updated_at: DateTime.now + 3.minutes ) }
-    let(:labware2) { double('Labware', state: 'completed', updated_at: DateTime.now + 2.minutes ) }
-    let(:labware3) { double('Labware', state: 'canceled', updated_at: DateTime.now + 1.minutes ) }
+    let(:labware1) { double('Labware', state: 'completed', updated_at: DateTime.now + 3.minutes) }
+    let(:labware2) { double('Labware', state: 'completed', updated_at: DateTime.now + 2.minutes) }
+    let(:labware3) { double('Labware', state: 'canceled', updated_at: DateTime.now + 1.minute) }
     let(:query_purposes) { %w[purpose1 purpose2] }
     let(:page_size) { 10 }
     let(:from_date) { '2022-01-01' }
