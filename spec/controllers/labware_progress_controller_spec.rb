@@ -204,32 +204,34 @@ RSpec.describe LabwareProgressController, type: :controller do
     let(:labware1) { double('Labware', id: 1) }
     let(:labware2) { double('Labware', id: 2) }
     let(:labware3) { double('Labware', id: 3) }
+    let(:labwares) { [labware1, labware2, labware3] }
 
     before do
       allow(controller).to receive(:query_labware)
         .with(page_size, from_date, purposes, nil)
-        .and_return([labware1, labware2, labware3])
+        .and_return(labwares)
 
       allow(controller).to receive(:query_labware).with(page_size, from_date, purposes, false).and_return([labware1])
-
       allow(controller).to receive(:add_children_metadata).and_return([labware2, labware3], [labware1])
+      allow(controller).to receive(:add_state_metadata).with(labwares).and_return(labwares)
     end
 
     it 'queries labware with and without children' do
       result = controller.query_labware_with_children(page_size, from_date, purposes)
 
-      expect(result).to eq([labware1, labware2, labware3])
+      expect(result).to eq(labwares)
     end
   end
 
   describe '#compile_labware_for_purpose' do
-    let(:labware1) { double('Labware', state: 'completed') }
-    let(:labware2) { double('Labware', state: 'completed') }
-    let(:labware3) { double('Labware', state: 'canceled') }
+    let(:labware1) { double('Labware', state: 'completed', updated_at: DateTime.now + 3.minutes ) }
+    let(:labware2) { double('Labware', state: 'completed', updated_at: DateTime.now + 2.minutes ) }
+    let(:labware3) { double('Labware', state: 'canceled', updated_at: DateTime.now + 1.minutes ) }
     let(:query_purposes) { %w[purpose1 purpose2] }
     let(:page_size) { 10 }
     let(:from_date) { '2022-01-01' }
     let(:ordered_purposes) { %w[purpose1 purpose2 purpose3] }
+    let(:progress) { nil }
 
     before do
       allow(controller).to receive(:query_labware_with_children)
@@ -242,7 +244,7 @@ RSpec.describe LabwareProgressController, type: :controller do
     end
 
     it 'compiles labware for a specific purpose' do
-      result = controller.compile_labware_for_purpose(query_purposes, page_size, from_date, ordered_purposes)
+      result = controller.compile_labware_for_purpose(query_purposes, page_size, from_date, ordered_purposes, progress)
 
       expect(result).to eq([labware1, labware2])
     end
