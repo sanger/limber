@@ -46,7 +46,8 @@ class LabwareProgressController < ApplicationController
     @ordered_purpose_names_for_pipelines = order_purposes_for_pipelines(@pipelines_for_group)
 
     # Labware results
-    @labware = compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names, @progress)
+    @labware =
+      compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names, @progress)
   end
 
   def from_date(params)
@@ -96,9 +97,7 @@ class LabwareProgressController < ApplicationController
   end
 
   def add_state_metadata(labware_records)
-    labware_records.each do |labware_record|
-      labware_record.state = decide_state(labware_record)
-    end
+    labware_records.each { |labware_record| labware_record.state = decide_state(labware_record) }
   end
 
   def query_labware_with_children(page_size, from_date, purposes)
@@ -138,6 +137,6 @@ class LabwareProgressController < ApplicationController
     labwares = labwares.reject { |labware| labware.state == 'canceled' }
     labwares = filter_labware_by_related_purpose(labwares, related_purposes)
     labwares = filter_labware_by_progress(labwares, progress)
-    labwares.sort_by { |labware| labware.updated_at }.reverse
+    labwares.sort_by(&:updated_at).reverse
   end
 end
