@@ -4,6 +4,9 @@
       <a class="nav-link active" href="#summary_tab" data-toggle="tab" role="tab">Summary</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="#relatives_tab" data-toggle="tab" role="tab">Relatives</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" href="#pooling_tab" data-toggle="tab" role="tab" data-plate-view="pools-view">Pooling</a>
     </li>
     <%= yield(:additional_tabs) if content_for?(:additional_tabs) %>
@@ -29,6 +32,9 @@
                              data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
                              data-asset-id="<%= presenter.id %>">
     </div>
+  </div>
+  <div class="tab-pane" id='relatives_tab' role="tabpanel">
+    <%= render partial: 'relatives_list', locals: { presenter: presenter } %>
   </div>
   <%= yield(:additional_panels) if content_for?(:additional_panels) %>
 </div>
