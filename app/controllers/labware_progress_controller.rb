@@ -7,51 +7,13 @@ class LabwareProgressController < ApplicationController
     page_size = 500
 
     # URL query parameters
-    @pipeline_group_name = params[:id]
-    @from_date = from_date(params)
-    @purpose = params[:purpose]
-    @progress = params[:progress]
+    setup_query_parameters
 
     # Pipeline details
-
-    # ["scRNA Core Cell Extraction Entry", "scRNA Core Cell Extraction Seq", "scRNA Core Cell Extraction Spare"]
-    @pipelines_for_group = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
-
-    # ["LRC Blood Vac", "LRC Blood Aliquot", "LRC Blood Bank", "LRC PBMC Bank", "LRC Bank Seq", "LRC Bank Spare"]
-    @ordered_purpose_names = Settings.pipelines.combine_and_order_pipelines(@pipelines_for_group)
-
-    # {
-    #   'LRC Blood Vac' => {
-    #     'scRNA Core Cell Extraction Entry' => {
-    #       parents: [],
-    #       child: 'LRC Blood Aliquot'
-    #     }
-    #   },
-    #   'LRC Blood Aliquot' => {
-    #     'scRNA Core Cell Extraction Entry' => {
-    #       parents: ['LRC Blood Vac'],
-    #       child: 'LRC Blood Bank'
-    #     }
-    #   },
-    # ...
-    # }
-    @purpose_pipeline_details =
-      Settings.pipelines.purpose_to_pipelines_map(@ordered_purpose_names, @pipelines_for_group)
-
-    # {
-    #   'scRNA Core Cell Extraction Entry' => ['LRC Blood Vac', 'LRC Blood Aliquot', 'LRC Blood Bank'],
-    #   'scRNA Core Cell Extraction Seq' => ['LRC Blood Bank', 'LRC PBMC Bank', 'LRC Bank Seq'],
-    #   'scRNA Core Cell Extraction Spare' => ['LRC PBMC Bank', 'LRC Bank Spare']
-    # }
-    @ordered_purpose_names_for_pipelines = order_purposes_for_pipelines(@pipelines_for_group)
+    setup_pipeline_details
 
     # Labware results
-    @labware =
-      compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names, @progress)
-  end
-
-  def from_date(params)
-    params[:date]&.to_date || Time.zone.today.prev_month
+    setup_labware_results(page_size)
   end
 
   def order_purposes_for_pipelines(pipeline_names)
@@ -139,4 +101,31 @@ class LabwareProgressController < ApplicationController
     labwares = filter_labware_by_progress(labwares, progress)
     labwares.sort_by(&:updated_at).reverse
   end
+
+  private
+
+  def from_date_with_default(params)
+    params[:date]&.to_date || Time.zone.today.prev_month
+  end
+
+  def setup_query_parameters
+    @pipeline_group_name = params[:id]
+    @from_date = from_date_with_default(params)
+    @purpose = params[:purpose]
+    @progress = params[:progress]
+  end
+
+  def setup_pipeline_details
+    @pipelines_for_group = Settings.pipelines.retrieve_pipeline_config_for_group(@pipeline_group_name)
+    @ordered_purpose_names = Settings.pipelines.combine_and_order_pipelines(@pipelines_for_group)
+    @purpose_pipeline_details =
+      Settings.pipelines.purpose_to_pipelines_map(@ordered_purpose_names, @pipelines_for_group)
+    @ordered_purpose_names_for_pipelines = order_purposes_for_pipelines(@pipelines_for_group)
+  end
+
+  def setup_labware_results(page_size)
+    @labware =
+      compile_labware_for_purpose(@ordered_purpose_names, page_size, @from_date, @ordered_purpose_names, @progress)
+  end
+
 end

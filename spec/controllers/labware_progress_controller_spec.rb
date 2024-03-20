@@ -173,21 +173,26 @@ RSpec.describe LabwareProgressController, type: :controller do
     let(:labware1) { create :labware }
     let(:labware2) { create :labware }
     let(:labware_records) { [labware1, labware2] }
-    let(:has_children) { true }
-    let(:state_suffix) { '_with_children' }
 
-    before { allow(controller).to receive(:decide_state).and_return('pending', 'passed') }
-
-    it 'adds children metadata to labware records' do
-      controller.add_children_metadata(labware_records, has_children, state_suffix)
+    it 'sets the has_children attribute on labware records' do
+      controller.add_children_metadata(labware_records, true)
 
       expect(labware1.has_children).to eq(true)
-      expect(labware1.state).to eq('pending')
-      expect(labware1.state_with_children).to eq('pending_with_children')
-
       expect(labware2.has_children).to eq(true)
-      expect(labware2.state).to eq('passed')
-      expect(labware2.state_with_children).to eq('passed_with_children')
+    end
+
+    it 'sets the progress attribute on labware records when has_children is true' do
+      controller.add_children_metadata(labware_records, true)
+
+      expect(labware1.progress).to eq('used')
+      expect(labware2.progress).to eq('used')
+    end
+
+    it 'sets the progress attribute on labware records when has_children is false' do
+      controller.add_children_metadata(labware_records, false)
+
+      expect(labware1.progress).to eq('ongoing')
+      expect(labware2.progress).to eq('ongoing')
     end
   end
 
