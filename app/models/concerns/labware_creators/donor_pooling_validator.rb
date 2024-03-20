@@ -10,6 +10,7 @@ module LabwareCreators::DonorPoolingValidator
     validate :source_plates_must_exist
     validate :wells_with_aliquots_must_have_donor_id
     validate :number_of_pools_must_not_exceed_configured
+    validate :wells_with_aliquots_must_have_cell_count
   end
 
   SOURCE_BARCODES_MUST_BE_ENTERED = 'At least one source plate must be scanned.'
@@ -30,6 +31,10 @@ module LabwareCreators::DonorPoolingValidator
   WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID =
     'All samples must have the donor_id specified. ' \
       'Wells missing donor_id (on sample metadata): %s'
+
+  WELLS_WITH_ALIQUOTS_MUST_HAVE_CELL_COUNT = \
+    'All wells must have cell count data unless they are failed.' \
+    'Wells missing cell count data: %s'
 
   # Validates that at least one source barcode has been entered. If no barcodes
   # are entered, an error is added to the :source_barcodes attribute.
@@ -94,6 +99,14 @@ module LabwareCreators::DonorPoolingValidator
     errors.add(:source_plates, format(WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID, formatted_string))
   end
 
+  def wells_with_aliquots_must_have_cell_count
+    invalid_wells_hash = locations_with_missing_cell_count
+    return if invalid_wells_hash.empty?
+
+    formatted_string = invalid_wells_hash.map { |barcode, locations| "#{barcode}: #{locations.join(', ')}" }.join(' ')
+    errors.add(:source_plates, format(WELLS_WITH_ALIQUOTS_MUST_HAVE_CELL_COUNT, formatted_string))
+  end
+
   private
 
   # Checks each source well for pooling for missing donor_id. Returns a hash
@@ -127,4 +140,18 @@ module LabwareCreators::DonorPoolingValidator
 
     (aliquot.sample.sample_metadata.donor_id || '').to_s.strip.blank?
   end
+
+  def locations_with_missing_cell_count
+    invalid_wells = source_wells_for_pooling.select { |well| missing_cell_count?(well) }
+    invalid_wells.each_with_object({}) do |well, hash|
+      plate_barcode = source_wells_to_plates[well].human_barcode # find the plate barcode
+      hash[plate_barcode] ||= []
+      hash[plate_barcode] << well.location
+    end
+  end
+
+  def missing_cell_count?(well)
+    well.lastest_live_cell_count.blank?
+  end
+
 end
