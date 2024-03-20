@@ -1,5 +1,6 @@
 <%
   labware_path = labware.plate? ? limber_plate_path(labware.uuid) : limber_tube_path(labware.uuid)
+  labware_path += "#relatives"
 %>
 <li class="list-group-item">
   <%= labware.purpose.name %> - <%= link_to labware_path, class: 'card-link stretched-link' do %><%= labware.barcode.human%><% end %>
