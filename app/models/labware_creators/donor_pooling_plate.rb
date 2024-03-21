@@ -49,6 +49,7 @@ module LabwareCreators
       wells.aliquots.request
       wells.aliquots.sample.sample_metadata
       wells.requests_as_source
+      wells.qc_results
     ].freeze
 
     # The default number of pools to be created if the count is not found in
