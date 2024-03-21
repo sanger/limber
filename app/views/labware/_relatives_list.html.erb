@@ -3,7 +3,7 @@
 
     <% if presenter.labware.parents.any? %>
         <% presenter.labware.parents.each do |parent| %>
-            <%= render partial: 'labware/plates/relative_list_item', locals: { labware: parent } %>
+            <%= render partial: 'labware/relative_list_item', locals: { labware: parent } %>
         <% end %>
     <% else %>
         <li class="list-group-item text-muted">
@@ -15,7 +15,7 @@
 
     <% if presenter.labware.children.any? %>
         <% presenter.labware.children.each do |child| %>
-            <%= render partial: 'labware/plates/relative_list_item', locals: { labware: child } %>
+            <%= render partial: 'labware/relative_list_item', locals: { labware: child } %>
         <% end %>
     <% else %>
         <li class="list-group-item text-muted">
