@@ -56,9 +56,11 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
     partner_id.truncate(MAX_LENGTH_PARTNER_ID, omission: '')
   end
 
-  # Fetch the first sample from the first well that has a sample
+  # Fetch the first sample from the first well that has a sample (not a control)
   def sample_from_first_populated_well
-    labware.wells_in_columns.each { |well| return well.aliquots.first.sample if well.aliquots.present? }
+    labware.wells_in_columns.each do |well|
+      return well.aliquots.first.sample if well.aliquots.present? && well.aliquots.first.sample.control != true
+    end
 
     raise StandardError, 'No wells with aliquots found in this labware to fetch a sample'
   end

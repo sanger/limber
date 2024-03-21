@@ -51,6 +51,33 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
           expect(intermediate_attributes[:barcode]).to eq expected_partner_id
         end
       end
+
+      context 'when the first sample in the plate is a control' do
+        let(:control_sample_name) { 'CONTROL_A1' }
+        let(:control_sample_description) { 'control description' }
+
+        let!(:control_sample_metadata) do
+          create :v2_sample_metadata, supplier_name: control_sample_name, sample_description: control_sample_description
+        end
+
+        let(:control_sample) do
+          create :v2_sample,
+                 name: control_sample_name,
+                 control: true,
+                 control_type: 'positive',
+                 sample_metadata: control_sample_metadata
+        end
+
+        let(:control_aliquot) { create :v2_aliquot, sample: control_sample }
+        let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [control_aliquot]) }
+        let(:labware) { create :v2_plate, wells: [well_a1, well_c6] }
+
+        it 'ignores the control sample in A1' do
+          intermediate_attributes = label.intermediate_attributes[0]
+          expect(intermediate_attributes[:bottom_right]).to eq expected_partner_id
+          expect(intermediate_attributes[:barcode]).to eq expected_partner_id
+        end
+      end
     end
   end
 end
