@@ -607,6 +607,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.study = study_1
           well.aliquots.first.project = project_1
           well.aliquots.first.sample.sample_metadata.donor_id = 1
+          well.qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000)
           [well]
         end
         before do
@@ -616,8 +617,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         end
         let(:barcodes) { [parent_1_plate.human_barcode] }
         it 'allows plate creation' do
-          # TODO: Add tests for latest_live_cell_count.
-          # TODO: Use qc_results to fix existing tests.
+          expect(wells.first.latest_live_cell_count&.value).to eq(1_000_000) # sanity check
           expect(subject).to be_valid
         end
       end
