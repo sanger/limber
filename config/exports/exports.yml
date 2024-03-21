@@ -187,4 +187,4 @@ hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools:
   plate_includes:
     - wells.qc_results
     - wells.transfer_requests_as_target.source_asset
-  ancestor_purpose: LRC PBMC Defrost
+  ancestor_purpose: LRC PBMC Defrost PBS
