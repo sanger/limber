@@ -121,11 +121,7 @@ module LabwareCreators::DonorPoolingValidator
   def locations_with_missing_donor_id
     # source_wells_for_pooling contains filtered wells from source plates
     invalid_wells = source_wells_for_pooling.select { |well| missing_donor_id?(well) }
-    invalid_wells.each_with_object({}) do |well, hash|
-      plate_barcode = source_wells_to_plates[well].human_barcode # find the plate barcode
-      hash[plate_barcode] ||= []
-      hash[plate_barcode] << well.location
-    end
+    invalid_wells_hash(invalid_wells)
   end
 
   # Checks if a well is missing a donor_id. If there is an aliquot, it checks
@@ -143,15 +139,18 @@ module LabwareCreators::DonorPoolingValidator
 
   def locations_with_missing_cell_count
     invalid_wells = source_wells_for_pooling.select { |well| missing_cell_count?(well) }
-    invalid_wells.each_with_object({}) do |well, hash|
-      plate_barcode = source_wells_to_plates[well].human_barcode # find the plate barcode
-      hash[plate_barcode] ||= []
-      hash[plate_barcode] << well.location
-    end
+    invalid_wells_hash(invalid_wells)
   end
 
   def missing_cell_count?(well)
     well.lastest_live_cell_count.blank?
   end
 
+  def invalid_wells_hash(invalid_wells)
+    invalid_wells.each_with_object({}) do |well, hash|
+      plate_barcode = source_wells_to_plates[well].human_barcode # find the plate barcode
+      hash[plate_barcode] ||= []
+      hash[plate_barcode] << well.location
+    end
+  end
 end
