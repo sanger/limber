@@ -10,7 +10,7 @@
     <% label.extra_attributes.each do |k, v|%>
       <%= hidden_field_tag "#{f.object_name}[labels][][extra_label][#{k}]", v %>
     <%end%>
-    <!-- extra labels for intermediate plates in Duplex-Seq -->
+    <!-- extra labels (for the same or extra intermediate plates) -->
     <% label.intermediate_attributes.each do |interm|%>
       <% interm.each do |k, v|%>
         <%= hidden_field_tag "#{f.object_name}[labels][][main_label][#{k}]", v %>
@@ -29,7 +29,7 @@
     <% label.sprint_attributes.each_with_index do |(k, v), index|%>
       <%= hidden_field_tag "#{f.object_name}[labels_sprint][sprint][#{k}]", v %>
     <%end%>
-    <!-- extra labels for intermediate plates in Duplex-Seq -->
+    <!-- extra labels (for the same or extra intermediate plates) -->
     <% label.intermediate_attributes.each_with_index do |interm, index|%>
       <% interm.each do |k, v|%>
         <%= hidden_field_tag "#{f.object_name}[labels_sprint][interm_#{index}][#{k}]", v %>

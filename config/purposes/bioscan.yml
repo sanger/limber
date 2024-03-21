@@ -21,6 +21,7 @@ LBSN-96 Lysate:
   # LYSATE plate can be created from LILYS as well. The following must be false.
   :input_plate: false
   :type: PlatePurpose::AdditionalInput
+  :label_template: plate_lbsn_96_lysate
   :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::StampedPlateAddingRandomisedControls
   :state_changer_class: StateChangers::AutomaticPlateStateChanger

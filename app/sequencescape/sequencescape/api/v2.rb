@@ -32,10 +32,14 @@ module Sequencescape::Api::V2
       .first
   end
 
+  # sample_description added into includes here for use in bioscan plate label creation
   def self.plate_for_presenter(query)
     Plate
       .includes(*PLATE_PRESENTER_INCLUDES)
-      .select(submissions: 'lanes_of_sequencing', sample_metadata: %w[sample_common_name collected_by])
+      .select(
+        submissions: 'lanes_of_sequencing',
+        sample_metadata: %w[sample_common_name collected_by sample_description]
+      )
       .find(query)
       .first
   end
