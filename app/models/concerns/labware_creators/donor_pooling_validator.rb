@@ -95,7 +95,7 @@ module LabwareCreators::DonorPoolingValidator
     invalid_wells_hash = locations_with_missing_donor_id
     return if invalid_wells_hash.empty?
 
-    formatted_string = invalid_wells_hash.map { |barcode, locations| "#{barcode}: #{locations.join(', ')}" }.join(' ')
+    formatted_string = formatted_invalid_wells_hash(invalid_wells_hash)
     errors.add(:source_plates, format(WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID, formatted_string))
   end
 
@@ -103,7 +103,7 @@ module LabwareCreators::DonorPoolingValidator
     invalid_wells_hash = locations_with_missing_cell_count
     return if invalid_wells_hash.empty?
 
-    formatted_string = invalid_wells_hash.map { |barcode, locations| "#{barcode}: #{locations.join(', ')}" }.join(' ')
+    formatted_string = formatted_invalid_wells_hash(invalid_wells_hash)
     errors.add(:source_plates, format(WELLS_WITH_ALIQUOTS_MUST_HAVE_CELL_COUNT, formatted_string))
   end
 
@@ -152,5 +152,9 @@ module LabwareCreators::DonorPoolingValidator
       hash[plate_barcode] ||= []
       hash[plate_barcode] << well.location
     end
+  end
+
+  def formatted_invalid_wells_hash(invalid_wells_hash)
+    invalid_wells_hash.map { |barcode, locations| "#{barcode}: #{locations.join(', ')}" }.join(' ')
   end
 end
