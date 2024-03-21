@@ -5,7 +5,7 @@
 # Second label has the partner plate barcode, plus a reference to the first label.
 # Very specific to this particular pipeline and plate purpose.
 class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
-  MAX_LENGTH_PARTNER_ID = 16
+  MAX_LENGTH_PARTNER_ID = 10
   PARTNER_INFO_TEXT = 'PARTNER ID LABEL'
   PARTNER_ID_SUFFIX = 'SDC'
 
@@ -25,7 +25,7 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
         top_right: PARTNER_INFO_TEXT,
         # This is the human readable text version of the partner id
         bottom_right: partner_id,
-        # This is the barcode version of the partner id
+        # This is the barcode version of the partner id, with human readable text underneath
         barcode: partner_id
       }
     ]
@@ -40,8 +40,11 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
   def format_partner_id
     partner_id = fetch_partner_id_for_plate
 
-    # add suffix
-    [partner_id, PARTNER_ID_SUFFIX].compact.join('_')
+    # replace any underscores with hyphens (printer software can't handle underscores)
+    partner_id = partner_id.tr('_', '-')
+
+    # add the required suffix
+    [partner_id, PARTNER_ID_SUFFIX].compact.join('-')
   end
 
   # Fetch the partner id from the first well that has a sample.

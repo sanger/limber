@@ -6,8 +6,8 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   context 'when creating the labels for a plate' do
-    let(:partner_id) { 'ABCD-1234' }
-
+    # current partner ids have the format ABCD_123 i.e. 4 characters, an underscore, and 3 numbers
+    let(:partner_id) { 'ABCD_123' }
     let(:sample_metadata) { create :v2_sample_metadata, sample_description: partner_id }
     let(:sample) { create(:v2_sample, sample_metadata: sample_metadata) }
     let(:aliquot) { create :v2_aliquot, sample: sample }
@@ -28,8 +28,7 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
     end
 
     context '#intermediate_attributes' do
-      let(:truncated_partner_id) { partner_id.truncate(16, omission: '') }
-      let(:expected_partner_id) { [truncated_partner_id, 'SDC'].compact.join('_') }
+      let(:expected_partner_id) { 'ABCD-123-SDC' }
 
       context 'when the partner id is a normal length' do
         it 'has the correct intermediate attributes' do
@@ -43,7 +42,8 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
       end
 
       context 'when the partner id is long' do
-        let(:partner_id) { 'ABCD-1234-THIS-IS-TOO-LONG-TO-FIT' }
+        let(:partner_id) { 'ABCD_123_THIS_IS_TOO_LONG_TO_FIT' }
+        let(:expected_partner_id) { 'ABCD-123-T-SDC' }
 
         it 'truncates the partner id' do
           intermediate_attributes = label.intermediate_attributes[0]
