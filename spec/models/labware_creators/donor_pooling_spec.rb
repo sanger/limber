@@ -688,5 +688,36 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         )
       end
     end
+
+    describe '#wells_with_aliquots_must_have_cell_count' do
+      let!(:wells) do
+        wells = Array(parent_1_plate.wells[0..2]) + Array(parent_2_plate.wells[0..2]) # Multiple plates
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study_1
+          well.aliquots.first.project = project_1
+          well.aliquots.first.sample.sample_metadata.donor_id = index + 1
+        end
+        wells[0].qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000) # OK
+        wells[1].state = 'failed' # no cell count: OK because filtered out.
+        wells[3].qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 2_000_000) # OK
+        wells
+      end
+      it 'reports the error' do
+        # We should see an error report on index = 2 of plate 1 and
+        # index = 1 and 2 of plate 2. They correspond to wells[2], wells[4] and
+        # wells[5] in the wells array returned by the let! block.
+
+        expect(subject).not_to be_valid
+        invalid_wells_hash = {
+          parent_1_plate.human_barcode => [wells[2].location],
+          parent_2_plate.human_barcode => [wells[4].location, wells[5].location]
+        }
+        formatted_string = invalid_wells_hash.map { |barcode, wells| "#{barcode}: #{wells.join(', ')}" }.join(' ')
+        expect(subject.errors[:source_plates]).to include(
+          format(described_class::WELLS_WITH_ALIQUOTS_MUST_HAVE_CELL_COUNT, formatted_string)
+        )
+      end
+    end
   end
 end
