@@ -75,8 +75,8 @@ module LabwareCreators::DonorPoolingValidator
   #
   # @return [void]
   def number_of_pools_must_not_exceed_configured
-    # Don't add this error if there are already errors about missing donor_ids.
-    invalid_wells_hash = locations_with_missing_donor_id
+    # Don't add this error if there are already errors about invalid wells
+    invalid_wells_hash = locations_with_missing_donor_id || locations_with_missing_cell_count
     return if invalid_wells_hash.any?
 
     return if pools.size <= number_of_pools
