@@ -607,6 +607,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.study = study_1
           well.aliquots.first.project = project_1
           well.aliquots.first.sample.sample_metadata.donor_id = 1
+          well.qc_results << create(:qc_result, key: 'live_cell_count', value: '1_000_000', units: 'cells/ml')
           [well]
         end
         before do
