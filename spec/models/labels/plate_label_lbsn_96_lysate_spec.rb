@@ -43,9 +43,9 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
 
       context 'when the partner id is long' do
         let(:partner_id) { 'ABCD_123_THIS_IS_TOO_LONG_TO_FIT' }
-        let(:expected_partner_id) { 'ABCD-123-T-SDC' }
+        let(:expected_partner_id) { 'ABCD-123-SDC' }
 
-        it 'truncates the partner id' do
+        it 'truncates the partner id to the max length allowed' do
           intermediate_attributes = label.intermediate_attributes[0]
           expect(intermediate_attributes[:bottom_right]).to eq expected_partner_id
           expect(intermediate_attributes[:barcode]).to eq expected_partner_id
