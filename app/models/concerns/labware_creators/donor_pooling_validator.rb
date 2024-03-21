@@ -33,7 +33,7 @@ module LabwareCreators::DonorPoolingValidator
       'Wells missing donor_id (on sample metadata): %s'
 
   WELLS_WITH_ALIQUOTS_MUST_HAVE_CELL_COUNT =
-    'All wells must have cell count data unless they are failed.' \
+    'All wells must have cell count data unless they are failed. ' \
       'Wells missing cell count data: %s'
 
   # Validates that at least one source barcode has been entered. If no barcodes
