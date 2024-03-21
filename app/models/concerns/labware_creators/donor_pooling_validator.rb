@@ -99,7 +99,7 @@ module LabwareCreators::DonorPoolingValidator
     errors.add(:source_plates, format(WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID, formatted_string))
   end
 
-  # Validates that wells with aliquots have a lastest_live_cell_count. It uses
+  # Validates that wells with aliquots have a latest_live_cell_count. It uses
   # the locations_with_missing_cell_count method to find any wells that are
   # missing a cell count. If any such wells are found, it adds an error message
   # to the source_plates attribute, formatted with the barcodes of the plates
@@ -166,7 +166,7 @@ module LabwareCreators::DonorPoolingValidator
   # @param well [Well] The well to check.
   # @return [Boolean] True if the well is missing a cell count, false otherwise.
   def missing_cell_count?(well)
-    well.lastest_live_cell_count.blank?
+    well.latest_live_cell_count.blank?
   end
 
   # Generates a hash mapping plate barcodes to invalid well locations. For each
