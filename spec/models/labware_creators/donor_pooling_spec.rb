@@ -607,6 +607,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.study = study_1
           well.aliquots.first.project = project_1
           well.aliquots.first.sample.sample_metadata.donor_id = 1
+          [well]
         end
         before do
           allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
