@@ -1,7 +1,7 @@
 <ul id="relatives-information" class="list-group list-group-flush">
     <li class="list-group-item"><strong>Parents</strong></li>
 
-    <% if presenter.labware.parents.any? %>
+    <% if presenter.labware.parents&.any? %>
         <% presenter.labware.parents.each do |parent| %>
             <%= render partial: 'labware/relative_list_item', locals: { labware: parent } %>
         <% end %>
@@ -13,7 +13,7 @@
 
     <li class="list-group-item"><strong>Children</strong></li>
 
-    <% if presenter.labware.children.any? %>
+    <% if presenter.labware.children&.any? %>
         <% presenter.labware.children.each do |child| %>
             <%= render partial: 'labware/relative_list_item', locals: { labware: child } %>
         <% end %>
