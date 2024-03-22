@@ -22,14 +22,14 @@
 </template>
 
 <script>
-import Alert from 'shared/components/Alert'
+import LbAlert from 'shared/components/Alert'
 import eventBus from 'shared/eventBus'
 import uniqueSlug from 'unique-slug'
 
 export default {
-  name: 'Page',
+  name: 'LbPage',
   components: {
-    'lb-alert': Alert,
+    'lb-alert': LbAlert,
   },
   data() {
     return {

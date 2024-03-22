@@ -1,12 +1,12 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 
-import Plate from 'shared/components/Plate.vue'
+import LbPlate from 'shared/components/Plate.vue'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
-describe('Plate', () => {
+describe('LbPlate', () => {
   const myCaption = 'Caption'
-  const wrapper = shallowMount(Plate, {
+  const wrapper = shallowMount(LbPlate, {
     propsData: { columns: 12, rows: 8, caption: myCaption, wells: { B3: {} } },
   })
 
