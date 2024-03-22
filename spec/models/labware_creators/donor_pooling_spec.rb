@@ -640,9 +640,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     describe '#number_of_pools_must_not_exceed_configured' do
       let!(:wells) do
+        # The number of pools validation is applied when all other conditions
+        # for building the pools are met, i.e. study, project, donor_id and cell_count.
+        #
         # Up to 20 wells, the number of pools is configured as 1. If multiple
         # studies, projects or the same donors are present, the number of pools
-        # calculated will be more than 1.
+        # calculated will be more than 1 to generate a validation error in this test.
+
         wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
         studies = [study_1, study_2, study_3]
         wells.each_with_index do |well, index|
@@ -650,6 +654,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.study = studies[index] # different studies
           well.aliquots.first.project = project_1 # same project
           well.aliquots.first.sample.sample_metadata.donor_id = 1 # same donor
+          well.qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000) # QC
         end
       end
       it 'reports the error' do
