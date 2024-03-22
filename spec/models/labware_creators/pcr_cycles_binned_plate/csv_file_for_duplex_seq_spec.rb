@@ -125,7 +125,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
     end
 
     context 'Without byte order markers' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+      let(:file) do
+        fixture_file_upload('spec/fixtures/files/duplex_seq/duplex_seq_dil_file.csv', 'sequencescape/qc_file')
+      end
 
       describe '#valid?' do
         it 'should be valid' do
@@ -142,7 +144,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
 
     context 'With byte order markers' do
       let(:file) do
-        fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file_with_bom.csv', 'sequencescape/qc_file')
+        fixture_file_upload('spec/fixtures/files/duplex_seq/duplex_seq_dil_file_with_bom.csv', 'sequencescape/qc_file')
       end
 
       describe '#valid?' do
@@ -160,7 +162,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
   end
 
   context 'something that can not parse' do
-    let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+    let(:file) do
+      fixture_file_upload('spec/fixtures/files/duplex_seq/duplex_seq_dil_file.csv', 'sequencescape/qc_file')
+    end
 
     before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
 
@@ -178,7 +182,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
 
   context 'A file which has missing well values' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file_with_missing_values.csv', 'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/duplex_seq/duplex_seq_dil_file_with_missing_values.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do
@@ -258,7 +265,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
 
   context 'An unrecognised well' do
     let(:file) do
-      fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file_with_invalid_wells.csv', 'sequencescape/qc_file')
+      fixture_file_upload(
+        'spec/fixtures/files/duplex_seq/duplex_seq_dil_file_with_invalid_wells.csv',
+        'sequencescape/qc_file'
+      )
     end
 
     describe '#valid?' do
@@ -276,7 +286,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
   context 'A parent plate barcode that does not match' do
     subject { described_class.new(file, csv_file_config, 'DN1S') }
 
-    let(:file) { fixture_file_upload('spec/fixtures/files/duplex_seq_dil_file.csv', 'sequencescape/qc_file') }
+    let(:file) do
+      fixture_file_upload('spec/fixtures/files/duplex_seq/duplex_seq_dil_file.csv', 'sequencescape/qc_file')
+    end
 
     describe '#valid?' do
       it 'should be invalid' do

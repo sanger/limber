@@ -4,6 +4,7 @@
 class Sequencescape::Api::V2::Receptacle < Sequencescape::Api::V2::Base
   has_many :requests_as_source, class_name: 'Sequencescape::Api::V2::Request'
   has_many :qc_results, class_name: 'Sequencescape::Api::V2::QcResult'
+  has_many :aliquots, class_name: 'Sequencescape::Api::V2::Aliquot'
 
   def latest_molarity
     latest_qc(key: 'molarity', units: 'nM')

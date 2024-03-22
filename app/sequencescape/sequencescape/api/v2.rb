@@ -49,11 +49,24 @@ module Sequencescape::Api::V2
   end
 
   def self.tube_rack_for_presenter(query)
-    TubeRack.includes('racked_tubes.tube.purpose,racked_tubes.tube.aliquots.request.request_type').find(query).first
+    TubeRack
+      .includes(
+        'racked_tubes.tube.purpose,' \
+          'racked_tubes.tube.receptacle.aliquots.request.request_type'
+      )
+      .find(query)
+      .first
   end
 
   def self.plate_for_completion(uuid)
     Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type').find(uuid: uuid).first
+  end
+
+  def self.tube_for_completion(uuid)
+    Tube
+      .includes('receptacle.aliquots.request.submission,receptacle.aliquots.request.request_type')
+      .find(uuid: uuid)
+      .first
   end
 
   def self.plate_with_custom_includes(include_params, search_params)

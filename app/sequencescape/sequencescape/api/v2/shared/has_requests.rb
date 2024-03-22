@@ -56,19 +56,21 @@ module Sequencescape::Api::V2::Shared
       submission_ids.first
     end
 
-    # Finding 'in_progress' requests
+    # Finding in progress requests (set directly on aliquots on transfer into a new labware)
+    def requests_in_progress(request_type_to_complete: nil)
+      requests = aliquots&.flat_map(&:request)&.compact
+      return [] if requests.blank?
 
-    def requests_in_progress(request_type_key: nil)
-      aliquots
-        .flat_map(&:request)
-        .compact
-        .select { |r| request_type_key.nil? || r.request_type_key == request_type_key }
+      if request_type_to_complete.present?
+        requests.select { |r| r.request_type_key == request_type_to_complete }
+      else
+        requests
+      end
     end
 
     # Based on in_progress requests
-
-    def in_progress_submission_uuids(request_type_key: nil)
-      requests_in_progress(request_type_key: request_type_key).flat_map(&:submission_uuid).uniq
+    def in_progress_submission_uuids(request_type_to_complete: nil)
+      requests_in_progress(request_type_to_complete: request_type_to_complete).flat_map(&:submission_uuid).uniq
     end
 
     def all_requests

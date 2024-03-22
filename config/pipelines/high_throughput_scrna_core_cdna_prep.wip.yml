@@ -1,3 +1,4 @@
+---
 # Thawing PBMCs and pooling samples from different donors together
 scRNA Core Donor Pooling:
   pipeline_group: scRNA Core cDNA Prep
@@ -8,7 +9,6 @@ scRNA Core Donor Pooling:
     LRC Bank Spare: LRC PBMC Cryostor
     LRC PBMC Cryostor: LRC PBMC Defrost PBS
     LRC PBMC Defrost PBS: LRC PBMC Pools
-
 # GEM generation and cDNA Prep
 scRNA Core cDNA Prep:
   pipeline_group: scRNA Core cDNA Prep
