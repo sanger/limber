@@ -7,9 +7,7 @@
 
   <div class="max-vh-40 overflow-auto list-group list-group-flush border-bottom">
     <% if presenter.labware.parents&.any? %>
-      <% presenter.labware.parents.each do |parent| %>
-        <%= render partial: 'labware/relative_list_item', locals: { labware: parent } %>
-      <% end %>
+      <%= render partial: 'labware/relative_list_item', collection: presenter.labware.parents, as: :labware %>
     <% else %>
       <div class="list-group-item text-muted">No parents found</div>
     <% end %>
@@ -22,9 +20,7 @@
 
   <div class="max-vh-40 overflow-auto list-group list-group-flush rounded-bottom">
     <% if presenter.labware.children&.any? %>
-      <% presenter.labware.children.each do |child| %>
-        <%= render partial: 'labware/relative_list_item', locals: { labware: child } %>
-      <% end %>
+      <%= render partial: 'labware/relative_list_item', collection: presenter.labware.children, as: :labware %>
     <% else %>
       <div class="list-group-item text-muted">No children found</div>
     <% end %>
