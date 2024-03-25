@@ -295,6 +295,12 @@ nav.robots-list {
   @extend .btn-info;
 }
 
+.filter-button {
+  @extend .btn;
+  @extend .mb-2;
+  @extend .btn-primary;
+}
+
 #state-changer .reason {
   label {
     @extend .col-3;
