@@ -73,8 +73,6 @@ LRC PBMC Pools:
       # pooling configuration. A copy of cardinal pooling is used until a new
       # configuration is provided.
       pooling: interim_scrna_core_donor_pooling
-  :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_donor_pooling'
   :stock_plate: false
   :input_plate: false
   :file_links:
