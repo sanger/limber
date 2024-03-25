@@ -10,7 +10,8 @@ class Labels::PlateLabelLtnAlLib < Labels::PlateLabelBase
   end
 
   # rubocop:disable Metrics/AbcSize
-  def intermediate_attributes
+  # Define the 3 labels for the immediate child plates (NB. reverse order so printed in correct sequence)
+  def additional_label_definitions
     [
       {
         top_left: date_today,
@@ -36,7 +37,8 @@ class Labels::PlateLabelLtnAlLib < Labels::PlateLabelBase
     ]
   end
 
-  def qc_attributes
+  # NB. reverse order so printed in correct sequence
+  def qc_label_definitions
     [
       {
         top_left: date_today,

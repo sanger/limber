@@ -111,7 +111,7 @@ RSpec.describe Presenters::PlatePresenter do
           right_text: "DN2T WGS #{purpose_name}",
           left_text: Time.zone.today.strftime('%e-%^b-%Y')
         },
-        qc_attributes: [
+        qc_label_definitions: [
           { right_text: 'DN2T', left_text: 'DN1S QC', barcode: 'DN1S-QC' },
           { right_text: "DN2T WGS #{purpose_name} QC", left_text: Time.zone.today.strftime('%e-%^b-%Y') }
         ]
@@ -119,7 +119,7 @@ RSpec.describe Presenters::PlatePresenter do
       actual_label = {
         attributes: presenter.label.attributes,
         extra_attributes: presenter.label.extra_attributes,
-        qc_attributes: presenter.label.qc_attributes
+        qc_label_definitions: presenter.label.qc_label_definitions
       }
       expect(actual_label).to eq(expected_label)
     end
@@ -137,7 +137,7 @@ RSpec.describe Presenters::PlatePresenter do
         barcode: 'DN1S'
       }
       expect(presenter.label.attributes).to eq(expected_label)
-      expected_qc_attributes = [
+      expected_qc_label_definitions = [
         {
           top_left: Time.zone.today.strftime('%e-%^b-%Y'),
           bottom_left: 'DN1S QC',
@@ -145,7 +145,7 @@ RSpec.describe Presenters::PlatePresenter do
           barcode: 'DN1S-QC'
         }
       ]
-      expect(presenter.label.qc_attributes).to eq(expected_qc_attributes)
+      expect(presenter.label.qc_label_definitions).to eq(expected_qc_label_definitions)
     end
   end
 
@@ -161,7 +161,7 @@ RSpec.describe Presenters::PlatePresenter do
         barcode: 'DN1S'
       }
       expect(presenter.label.attributes).to eq(expected_label)
-      expected_intermediate_attributes = [
+      expected_additional_label_definitions = [
         {
           top_left: Time.zone.today.strftime('%e-%^b-%Y'),
           bottom_left: 'DN1S',
@@ -184,7 +184,7 @@ RSpec.describe Presenters::PlatePresenter do
           barcode: 'DN1S-FRG'
         }
       ]
-      expected_qc_attributes = [
+      expected_qc_label_definitions = [
         {
           top_left: Time.zone.today.strftime('%e-%^b-%Y'),
           bottom_left: 'DN1S QC3',
@@ -204,8 +204,8 @@ RSpec.describe Presenters::PlatePresenter do
           barcode: 'DN1S-QC1'
         }
       ]
-      expect(presenter.label.qc_attributes).to eq(expected_qc_attributes)
-      expect(presenter.label.intermediate_attributes).to eq(expected_intermediate_attributes)
+      expect(presenter.label.qc_label_definitions).to eq(expected_qc_label_definitions)
+      expect(presenter.label.additional_label_definitions).to eq(expected_additional_label_definitions)
     end
   end
 

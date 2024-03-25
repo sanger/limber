@@ -15,7 +15,7 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
   end
 
   # Define the second label for the lysate plate
-  def intermediate_attributes
+  def additional_label_definitions
     [
       {
         top_left: date_today,
@@ -48,7 +48,7 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
   end
 
   # Fetch the partner id from the first well that has a sample.
-  # Assumption: The partner id is stored in the sample description, and all wells woth
+  # Assumption: The partner id is stored in the sample description, and all wells with
   # samples on the plate have the same partner id.
   def fetch_partner_id_for_plate
     partner_id = sample_from_first_populated_well&.sample_metadata&.sample_description

@@ -27,17 +27,17 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
       end
     end
 
-    context '#intermediate_attributes' do
+    context '#additional_label_definitions' do
       let(:expected_partner_id) { 'ABCD-123-SDC' }
 
       context 'when the partner id is a normal length' do
         it 'has the correct intermediate attributes' do
-          intermediate_attributes = label.intermediate_attributes[0]
-          expect(intermediate_attributes[:top_left]).to eq Time.zone.today.strftime('%e-%^b-%Y')
-          expect(intermediate_attributes[:bottom_left]).to eq labware.barcode.human
-          expect(intermediate_attributes[:top_right]).to eq 'PARTNER ID LABEL'
-          expect(intermediate_attributes[:bottom_right]).to eq expected_partner_id
-          expect(intermediate_attributes[:barcode]).to eq expected_partner_id
+          additional_label_definitions = label.additional_label_definitions[0]
+          expect(additional_label_definitions[:top_left]).to eq Time.zone.today.strftime('%e-%^b-%Y')
+          expect(additional_label_definitions[:bottom_left]).to eq labware.barcode.human
+          expect(additional_label_definitions[:top_right]).to eq 'PARTNER ID LABEL'
+          expect(additional_label_definitions[:bottom_right]).to eq expected_partner_id
+          expect(additional_label_definitions[:barcode]).to eq expected_partner_id
         end
       end
 
@@ -46,9 +46,9 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
         let(:expected_partner_id) { 'ABCD-123-SDC' }
 
         it 'truncates the partner id to the max length allowed' do
-          intermediate_attributes = label.intermediate_attributes[0]
-          expect(intermediate_attributes[:bottom_right]).to eq expected_partner_id
-          expect(intermediate_attributes[:barcode]).to eq expected_partner_id
+          additional_label_definitions = label.additional_label_definitions[0]
+          expect(additional_label_definitions[:bottom_right]).to eq expected_partner_id
+          expect(additional_label_definitions[:barcode]).to eq expected_partner_id
         end
       end
 
@@ -73,9 +73,9 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
         let(:labware) { create :v2_plate, wells: [well_a1, well_c6] }
 
         it 'ignores the control sample in A1' do
-          intermediate_attributes = label.intermediate_attributes[0]
-          expect(intermediate_attributes[:bottom_right]).to eq expected_partner_id
-          expect(intermediate_attributes[:barcode]).to eq expected_partner_id
+          additional_label_definitions = label.additional_label_definitions[0]
+          expect(additional_label_definitions[:bottom_right]).to eq expected_partner_id
+          expect(additional_label_definitions[:barcode]).to eq expected_partner_id
         end
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
       let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: []) }
 
       it 'raises an error' do
-        expect { label.intermediate_attributes }.to raise_error(
+        expect { label.additional_label_definitions }.to raise_error(
           StandardError,
           'No wells with aliquots found in this labware to fetch a sample'
         )
