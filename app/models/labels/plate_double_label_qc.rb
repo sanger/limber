@@ -7,7 +7,7 @@ class Labels::PlateDoubleLabelQc < Labels::PlateDoubleLabel
   end
 
   # Prints an additional QC plate label
-  def qc_attributes
+  def qc_label_definitions
     [
       {
         right_text: workline_identifier,

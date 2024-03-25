@@ -10,7 +10,8 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
     super.merge(barcode: labware.barcode.human)
   end
 
-  def qc_attributes
+  # NB. reverse order so printed in correct sequence
+  def qc_label_definitions
     max_qc_plates
       .times
       .filter_map do |index|
