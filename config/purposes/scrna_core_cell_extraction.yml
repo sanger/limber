@@ -109,6 +109,8 @@ LRC Bank Seq:
       child_spare_tube_name_prefix: SPR
   :ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'limber_scrna_core_cell_extraction'
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Spare:
   :asset_type: tube
@@ -119,3 +121,5 @@ LRC Bank Spare:
     args: *fluidx_tube_creation_config
   :ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::SimpleTubePresenter
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'limber_scrna_core_cell_extraction'

@@ -134,7 +134,9 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
     end
 
     context 'with a valid file' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
+      let(:file) do
+        fixture_file_upload('spec/fixtures/files/custom_pooled_tubes/pooling_file.csv', 'sequencescape/qc_file')
+      end
 
       it 'pools according to the file' do
         expect(subject.save).to be_truthy
@@ -153,7 +155,9 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
     end
 
     context 'with empty wells includes' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/pooling_file.csv', 'sequencescape/qc_file') }
+      let(:file) do
+        fixture_file_upload('spec/fixtures/files/custom_pooled_tubes/pooling_file.csv', 'sequencescape/qc_file')
+      end
       let(:wells_json) { json :well_collection, size: 8 }
 
       it 'is false' do

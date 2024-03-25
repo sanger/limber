@@ -211,6 +211,10 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.colour_index).toBe(1)
       })
 
       it('returns wells from parent with pool indexes using aliquot requests', async () => {
@@ -225,6 +229,10 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A3.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A4.pool_index).toBe(1)
+        expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A4.colour_index).toBe(1)
       })
 
       it('returns wells from parent with pool indexes where multiple submissions set', async () => {
@@ -239,6 +247,10 @@ describe('CustomTaggedPlate', () => {
         expect(wrapper.vm.parentWells.A2.pool_index).toBe(1)
         expect(wrapper.vm.parentWells.A3.pool_index).toBe(2)
         expect(wrapper.vm.parentWells.A4.pool_index).toBe(2)
+        expect(wrapper.vm.parentWells.A1.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A2.colour_index).toBe(1)
+        expect(wrapper.vm.parentWells.A3.colour_index).toBe(2)
+        expect(wrapper.vm.parentWells.A4.colour_index).toBe(2)
       })
     })
 
@@ -274,6 +286,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [11],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A2: {
@@ -282,6 +295,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [12],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A3: {
@@ -290,6 +304,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [13],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A4: {
@@ -298,6 +313,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [14],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
         }
@@ -323,6 +339,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [17],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A2: {
@@ -331,6 +348,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [-1],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -342,6 +360,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [-1],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -353,6 +372,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [-1],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -384,6 +404,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [1, 2, 3, 4],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A2: {
@@ -392,6 +413,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [5, 6, 7, 8],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A3: {
@@ -400,6 +422,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [9, 10, 11, 12],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
           A4: {
@@ -408,6 +431,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [13, 14, 15, 16],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: { valid: true, message: '' },
           },
         }
@@ -437,6 +461,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [15, 16, 17, -1],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -448,6 +473,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -459,6 +485,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',
@@ -470,6 +497,7 @@ describe('CustomTaggedPlate', () => {
             tagMapIds: [-1, -1, -1, -1],
             submId: '1',
             pool_index: 1,
+            colour_index: 1,
             validity: {
               valid: false,
               message: 'Missing tag ids for this well',

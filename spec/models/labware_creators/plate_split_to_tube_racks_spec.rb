@@ -187,11 +187,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   let(:sequencing_file) do
-    fixture_file_upload('spec/fixtures/files/scrna_core_sequencing_tube_rack_scan.csv', 'sequencescape/qc_file')
+    fixture_file_upload(
+      'spec/fixtures/files/scrna_core/scrna_core_sequencing_tube_rack_scan.csv',
+      'sequencescape/qc_file'
+    )
   end
 
   let(:contingency_file) do
-    fixture_file_upload('spec/fixtures/files/scrna_core_contingency_tube_rack_scan.csv', 'sequencescape/qc_file')
+    fixture_file_upload(
+      'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan.csv',
+      'sequencescape/qc_file'
+    )
   end
 
   before do
@@ -398,7 +404,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       let(:sequencing_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core_sequencing_tube_rack_scan_invalid.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_sequencing_tube_rack_scan_invalid.csv',
           'sequencescape/qc_file'
         )
       end
@@ -409,7 +415,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_rack_barcodes_differ_between_files)
         expect(subject.errors.full_messages).to include(
-          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 2 [AAAA1]'
+          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 1 [AAAA1]'
         )
       end
     end
@@ -427,7 +433,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       let(:contingency_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
           'sequencescape/qc_file'
         )
       end
@@ -459,14 +465,14 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       let(:sequencing_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core_sequencing_tube_rack_scan_duplicate_rack.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_sequencing_tube_rack_scan_duplicate_rack.csv',
           'sequencescape/qc_file'
         )
       end
 
       let(:contingency_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
           'sequencescape/qc_file'
         )
       end
@@ -523,14 +529,14 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       let(:sequencing_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core_sequencing_tube_rack_scan_invalid.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_sequencing_tube_rack_scan_invalid.csv',
           'sequencescape/qc_file'
         )
       end
 
       let(:contingency_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
           'sequencescape/qc_file'
         )
       end
@@ -541,7 +547,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_barcodes_differ_between_files)
         expect(subject.errors.full_messages).to include(
-          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 2 [AAAA1]'
+          'Sequencing csv file tube rack scan tube position contains an invalid coordinate, in row 1 [AAAA1]'
         )
       end
     end
@@ -877,7 +883,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       let(:contingency_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
           'sequencescape/qc_file'
         )
       end
@@ -1013,7 +1019,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
         let(:contingency_file) do
           fixture_file_upload(
-            'spec/fixtures/files/scrna_core_contingency_tube_rack_scan_2_tubes.csv',
+            'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_2_tubes.csv',
             'sequencescape/qc_file'
           )
         end
@@ -1052,7 +1058,10 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       let(:sequencing_file) { nil }
 
       let(:contingency_file) do
-        fixture_file_upload('spec/fixtures/files/scrna_core_contingency_tube_rack_scan.csv', 'sequencescape/qc_file')
+        fixture_file_upload(
+          'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan.csv',
+          'sequencescape/qc_file'
+        )
       end
 
       let(:form_attributes) do
