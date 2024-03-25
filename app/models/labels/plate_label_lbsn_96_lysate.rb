@@ -67,16 +67,4 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
 
     raise StandardError, 'No wells with aliquots found in this labware to fetch a sample'
   end
-
-  def default_printer_type
-    default_printer_type_for(:plate_a)
-  end
-
-  def default_label_template
-    default_label_template_for(:plate_a)
-  end
-
-  def default_sprint_label_template
-    default_sprint_label_template_for(:plate_a)
-  end
 end
