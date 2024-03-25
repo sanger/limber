@@ -16,7 +16,7 @@ LRC PBMC Cryostor:
     name: LabwareCreators::MultiStampTubesUsingTubeRackScan
     args:
       expected_request_type_keys:
-        - 'limber_scrna_core_donor_pooling'
+        - 'limber_scrna_core_cdna_prep_v2'
       expected_tube_purpose_names:
         - 'LRC Bank Seq'
         - 'LRC Bank Spare'
