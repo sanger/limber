@@ -79,5 +79,16 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
         end
       end
     end
+
+    context 'when there are no wells with aliquots in the labware' do
+      let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: []) }
+
+      it 'raises an error' do
+        expect { label.intermediate_attributes }.to raise_error(
+          StandardError,
+          'No wells with aliquots found in this labware to fetch a sample'
+        )
+      end
+    end
   end
 end
