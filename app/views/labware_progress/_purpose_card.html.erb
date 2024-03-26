@@ -1,0 +1,40 @@
+<%
+  # For the labware with the given purpose,
+  # groups the labware by state
+  # and return a hash of state to ongoing and used counts
+  def grouped_state_counts(purpose_name)
+    labware_for_purpose(@labware, purpose_name).group_by(&:state).transform_values do |labware|
+      ongoing = labware.count { |lw| lw.progress == 'ongoing' }
+      used = labware.count { |lw| lw.progress == 'used' }
+      [ongoing, used]
+    end
+  end
+%>
+
+<%= card title: "#{purpose_name}", css_class: 'lightweight-card rounded-0' do %>
+
+  <span class="float-right">
+    <%= link_to ">",
+        labware_progress_path(id: @pipeline_group_name, date: @from_date, purpose: purpose_name, progress: @progress),
+        class: "btn btn-sm btn-outline-secondary"
+    %>
+  </span>
+
+  <% grouped_state_counts(purpose_name).each do |state, data| %>
+    <%
+      count_ongoing, count_used = data
+      # replace 0 with center dot for readability
+      number_ongoing = count_ongoing.zero? ? '·' : count_ongoing
+      number_used = count_used.zero? ? '·' : count_used
+    %>
+    <%= render 'state_badge',
+          text: "#{state.capitalize} #{number_ongoing} → #{number_used}",
+          state: state,
+          extra_attributes: {
+              'class' => 'min-width-6',
+              'title' => "#{state.capitalize}: #{count_ongoing} ongoing, #{count_used} used",
+              'data-toggle' => 'tooltip',
+          }
+    %>
+  <% end %>
+<% end %>

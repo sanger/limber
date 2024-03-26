@@ -1,0 +1,7 @@
+<%
+  text ||= state.capitalize
+  extra_attributes ||= {}
+  extra_classes = extra_attributes.delete('class')
+  # add the remaining extra attributes to the span tag
+%>
+<%= content_tag(:span, text, class: "badge-pill state-badge #{state} #{extra_classes}", **extra_attributes) %>
