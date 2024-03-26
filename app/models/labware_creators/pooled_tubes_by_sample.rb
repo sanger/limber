@@ -118,7 +118,7 @@ module LabwareCreators
         pool_details[:destination_tube_posn] = tube_posn
 
         name_for_details = { source_tube_barcode: pool_details[:source_tube_barcode], destination_tube_posn: tube_posn }
-        { name: name_for(name_for_details), foreign_barcode: csv_file.position_details[tube_posn]['barcode'] }
+        { name: name_for(name_for_details), foreign_barcode: csv_file.position_details[tube_posn]['tube_barcode'] }
       end
     end
 
@@ -140,11 +140,9 @@ module LabwareCreators
 
     #
     # Create class that will parse and validate the uploaded file
-    # TODO: is there any point passing in the parent barcode if we can't validate the tube rack barcode?
-    # If they could get the rack barcode into either the csv filename or
-    # embedded as a field in the file we could validate it.
+    #
     def csv_file
-      @csv_file ||= CsvFile.new(file, parent.human_barcode)
+      @csv_file ||= CommonFileHandling::CsvFileForTubeRack.new(file) if file
     end
 
     #

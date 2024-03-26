@@ -14,11 +14,7 @@ module LabwareCreators
   # in the child dilution plate.
   # This is the abstract version of this labware creator, extend from this class
   #
-  class PcrCyclesBinnedPlate::CsvFileBase
-    include ActiveModel::Validations
-    extend NestedValidation
-
-    validate :correctly_parsed?
+  class PcrCyclesBinnedPlate::CsvFileBase < CommonFileHandling::CsvFileBase
     validates :plate_barcode_header_row, presence: true
     validates_nested :plate_barcode_header_row
     validates :well_details_header_row, presence: true
@@ -43,25 +39,15 @@ module LabwareCreators
     # Passing in the file to be parsed, the configuration that holds validation range thresholds, and
     # the parent plate barcode for validation that we are processing the correct file.
     def initialize(file, config, parent_barcode)
-      initialize_variables(file, config, parent_barcode)
-    rescue StandardError => e
-      reset_variables
-      @parse_error = e.message
-    ensure
-      file.rewind
-    end
-
-    def initialize_variables(file, config, parent_barcode)
+      super(file)
       @config = get_config_details_from_purpose(config)
       @parent_barcode = parent_barcode
-      @data = CSV.parse(file.read)
-      remove_bom
-      @parsed = true
     end
 
     def reset_variables
       @config = nil
       @parent_barcode = nil
+      @filename = nil
       @data = []
       @parsed = false
     end
@@ -74,13 +60,6 @@ module LabwareCreators
     #
     def well_details
       @well_details ||= generate_well_details_hash
-    end
-
-    def correctly_parsed?
-      return true if @parsed
-
-      errors.add(:base, "Could not read csv: #{@parse_error}")
-      false
     end
 
     def plate_barcode_header_row
@@ -100,20 +79,6 @@ module LabwareCreators
       raise '#get_config_details_from_purpose must be implemented on subclasses'
     end
 
-    # remove byte order marker if present
-    def remove_bom
-      return unless @data.present? && @data[0][0].present?
-
-      # byte order marker will appear at beginning of in first string in @data array
-      s = @data[0][0]
-
-      # NB. had to make byte order marker string mutable here otherwise get frozen string error
-      bom = +"\xEF\xBB\xBF"
-      s_mod = s.gsub!(bom.force_encoding(Encoding::BINARY), '')
-
-      @data[0][0] = s_mod unless s_mod.nil?
-    end
-
     def transfers
       # sample row data starts on third row of file, 1st row is plate barcode header row, second blank
       @transfers ||= @data[3..].each_with_index.map { |row_data, index| create_row(index, row_data) }
@@ -125,7 +90,7 @@ module LabwareCreators
 
     # Gates looking for wells if the file is invalid
     def correctly_formatted?
-      correctly_parsed? && plate_barcode_header_row.valid? && well_details_header_row.valid?
+      @parsed && plate_barcode_header_row.valid? && well_details_header_row.valid?
     end
 
     # Create the hash of well details from the file upload values

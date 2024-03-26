@@ -9,6 +9,8 @@ module LabwareCreators
   # The creator imposes restrictions:
   # - It doesn't allow combining samples from different studies or projects.
   # - It doesn't allow samples with the same donor_id in the same pool.
+  # - All wells must have cell count data unless they are failed.
+  # - The number of pools must not exceed the number configured for the samples.
   #
   # The number of pools is determined by a lookup table based on sample count.
   # Tag depth index is added to aliquot attributes to avoid tag clashes.
@@ -47,6 +49,7 @@ module LabwareCreators
       wells.aliquots.request
       wells.aliquots.sample.sample_metadata
       wells.requests_as_source
+      wells.qc_results
     ].freeze
 
     # The default number of pools to be created if the count is not found in

@@ -7,7 +7,7 @@ class Labels::PlateSplit < Labels::PlateLabelXpBase # rubocop:todo Style/Documen
     super.merge(top_right: stock_plate_barcode)
   end
 
-  def qc_attributes
+  def qc_label_definitions
     [super[0].merge(top_right: stock_plate_barcode)]
   end
 

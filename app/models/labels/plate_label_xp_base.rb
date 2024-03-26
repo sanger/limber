@@ -5,8 +5,7 @@ class Labels::PlateLabelXpBase < Labels::PlateLabelBase # rubocop:todo Style/Doc
     super.merge(barcode: labware.barcode.human)
   end
 
-  # This method contains the information that will be printed in the label
-  def qc_attributes
+  def qc_label_definitions
     [
       {
         top_left: date_today,

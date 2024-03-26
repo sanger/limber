@@ -11,15 +11,19 @@ class Labels::Base # rubocop:todo Style/Documentation
     @options = options
   end
 
+  # Extra attributes for a second label for longer but shorter 6mm format labels (384-well plate labels)
   def extra_attributes
     {}
   end
 
-  def intermediate_attributes
+  # Override this method in subclasses to define the attributes for any additional labels
+  # (labels that will be printed in addition to the main label)
+  def additional_label_definitions
     []
   end
 
-  def qc_attributes
+  # Override this method in subclasses to define the attributes for any QC labels
+  def qc_label_definitions
     []
   end
 

@@ -15,7 +15,6 @@ RSpec.describe ConfigLoader::PoolingsLoader, type: :model, loader: true do
       expect(loader.config).to be_a(Hash)
       expect(loader.config.keys).to include('donor_pooling', 'second_pooling_config')
       expect(loader.config.dig('donor_pooling', 'number_of_pools')&.size).to eq(96)
-      p loader.config.dig('second_pooling_config', 'number_of_pools')&.size
       expect(loader.config.dig('second_pooling_config', 'number_of_pools')&.size).to eq(4)
     end
   end
