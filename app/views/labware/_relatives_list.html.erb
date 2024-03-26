@@ -18,7 +18,7 @@
     <%= content_tag :span, presenter.labware.children.size, class: "badge badge-pill badge-secondary" if presenter.labware.children&.any? %>
   </div>
 
-  <div class="max-vh-40 overflow-auto list-group list-group-flush rounded-bottom">
+  <div class="max-vh-40 overflow-auto list-group list-group-flush rounded-bottom int-suite-children-list">
     <% if presenter.labware.children&.any? %>
       <%= render partial: 'labware/relative_list_item', collection: presenter.labware.children, as: :labware %>
     <% else %>
