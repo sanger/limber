@@ -84,7 +84,14 @@ LRC PBMC Pools Input:
   :asset_type: plate
   # stock_plate has to be true so that it appears in the 'Purpose' list when generating a sample manifest in Sequencescape
   :stock_plate: true
-  :input_plate: false
+  # input_plate has to be true so that the statechanger shows the plate as passed in the initial presenter
+  :input_plate: true
+  :cherrypickable_target: true
+  # display as a stock plate in the UI
+  :presenter_class: Presenters::StockPlatePresenter
+  # will not be creatable in Limber
+  :creator_class: LabwareCreators::Uncreatable
+  :size: 96
 # 10X Chromium 16-well chip
 LRC HT 5p Chip:
   :asset_type: plate
