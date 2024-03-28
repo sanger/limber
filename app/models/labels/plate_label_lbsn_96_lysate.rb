@@ -8,6 +8,7 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
   MAX_LENGTH_PARTNER_ID = 8
   PARTNER_INFO_TEXT = 'PARTNER ID LABEL'
   PARTNER_ID_SUFFIX = 'SDC'
+  PARTNER_ID_MISSING = 'NO PARTNER ID FOUND'
 
   # Define the standard first label for the lysate plate
   def attributes
@@ -24,9 +25,9 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
         # At top right we display text to make it clear this is the partner id label
         top_right: PARTNER_INFO_TEXT,
         # This is the human readable text version of the partner id
-        bottom_right: partner_id,
+        bottom_right: partner_id_text,
         # This is the barcode version of the partner id, with human readable text underneath
-        barcode: partner_id
+        barcode: partner_id_barcode
       }
     ]
   end
@@ -34,17 +35,23 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
   private
 
   def partner_id
-    @partner_id ||= format_partner_id
+    @partner_id = fetch_partner_id_for_plate
+  end
+
+  def partner_id_text
+    partner_id.present? ? format_partner_id : PARTNER_ID_MISSING
+  end
+
+  def partner_id_barcode
+    partner_id.present? ? format_partner_id : nil
   end
 
   def format_partner_id
-    partner_id = fetch_partner_id_for_plate
-
     # replace any underscores with hyphens (printer software can't handle underscores)
-    partner_id = partner_id.tr('_', '-')
+    formatted_partner_id = partner_id.tr('_', '-')
 
     # add the required suffix
-    [partner_id, PARTNER_ID_SUFFIX].compact.join('-')
+    [formatted_partner_id, PARTNER_ID_SUFFIX].compact.join('-')
   end
 
   # Fetch the partner id from the first well that has a sample.
@@ -53,7 +60,7 @@ class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
   def fetch_partner_id_for_plate
     partner_id = sample_from_first_populated_well&.sample_metadata&.sample_description
 
-    raise StandardError, 'Unable to fetch partner id' if partner_id.blank?
+    return nil if partner_id.blank?
 
     # trim to max length if needed
     partner_id.truncate(MAX_LENGTH_PARTNER_ID, omission: '')
