@@ -15,6 +15,7 @@ module LabwareCreators
     class CsvFile::RowForTubeRack < CsvFile::RowBase
       TUBE_LOCATION_NOT_RECOGNISED = 'contains an invalid coordinate, in %s'
       TUBE_BARCODE_MISSING = 'cannot be empty, in %s'
+      EXPECTED_NUMBER_OF_COLUMNS = 2
 
       attr_reader :tube_position, :tube_barcode, :index
 
@@ -35,6 +36,10 @@ module LabwareCreators
         # NB. index is zero based and no header row here
         row_number = @index + 1
         @tube_position.present? ? "row #{row_number} [#{@tube_position}]" : "row #{row_number}"
+      end
+
+      def expected_number_of_columns
+        EXPECTED_NUMBER_OF_COLUMNS
       end
     end
   end

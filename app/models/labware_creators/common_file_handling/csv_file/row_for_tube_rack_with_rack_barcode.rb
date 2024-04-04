@@ -16,6 +16,7 @@ module LabwareCreators
       attr_reader :tube_rack_barcode
 
       TUBE_RACK_BARCODE_MISSING = 'cannot be empty, in %s'
+      EXPECTED_NUMBER_OF_COLUMNS = 3
 
       validates :tube_rack_barcode, presence: { message: ->(object, _data) { TUBE_RACK_BARCODE_MISSING % object } }
 
@@ -23,6 +24,10 @@ module LabwareCreators
         @tube_rack_barcode = (@row_data[0] || '').strip.upcase
         @tube_position = (@row_data[1] || '').strip.upcase
         @tube_barcode = (@row_data[2] || '').strip.upcase
+      end
+
+      def expected_number_of_columns
+        EXPECTED_NUMBER_OF_COLUMNS
       end
     end
   end
