@@ -10,7 +10,6 @@ module LabwareCreators # rubocop:todo Style/Documentation
   class CustomPooledTubes::CsvFile::Row < CommonFileHandling::CsvFile::RowBase
     include ActiveModel::Validations
 
-    EXPECTED_NUMBER_OF_COLUMNS = 3
     MISSING_SOURCE =
       'is blank in %s but a destination has been specified. ' \
         'Either supply a source, or remove the destination.'
@@ -69,7 +68,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
     end
 
     def expected_number_of_columns
-      EXPECTED_NUMBER_OF_COLUMNS
+      3
     end
   end
 end
