@@ -238,7 +238,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   context 'when a file is not correctly parsed' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_with_invalid_positions.csv',
+        'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/' \
+          'tube_rack_scan_with_invalid_positions.csv',
         'sequencescape/qc_file'
       )
     end
