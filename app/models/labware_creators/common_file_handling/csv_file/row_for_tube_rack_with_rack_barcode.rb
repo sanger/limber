@@ -24,6 +24,10 @@ module LabwareCreators
         @tube_position = (@row_data[1] || '').strip.upcase
         @tube_barcode = (@row_data[2] || '').strip.upcase
       end
+
+      def expected_number_of_columns
+        3
+      end
     end
   end
 end

@@ -36,6 +36,10 @@ module LabwareCreators
         row_number = @index + 1
         @tube_position.present? ? "row #{row_number} [#{@tube_position}]" : "row #{row_number}"
       end
+
+      def expected_number_of_columns
+        2
+      end
     end
   end
 end

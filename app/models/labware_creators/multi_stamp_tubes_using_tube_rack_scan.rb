@@ -74,7 +74,7 @@ module LabwareCreators
 
     # Returns a CsvFile object for the tube rack scan CSV file, or nil if the file doesn't exist.
     def csv_file
-      @csv_file ||= CommonFileHandling::CsvFileForTubeRack.new(file) if file
+      @csv_file ||= CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(file) if file
     end
 
     def file_valid?
