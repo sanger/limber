@@ -1,73 +1,57 @@
 # frozen_string_literal: true
 
-RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader do
+RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :uploader do
   subject { described_class.new(file) }
 
   context 'Valid files' do
     let(:expected_position_details) do
       {
         'A1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000001'
         },
         'B1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000002'
         },
         'C1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000003'
         },
         'D1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000004'
         },
         'E1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000005'
         },
         'F1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000006'
         },
         'G1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000007'
         },
         'H1' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000008'
         },
         'A2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000009'
         },
         'B2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000010'
         },
         'C2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000011'
         },
         'D2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000012'
         },
         'E2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000013'
         },
         'F2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000014'
         },
         'G2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000015'
         },
         'H2' => {
-          'tube_rack_barcode' => 'FX12345678',
           'tube_barcode' => 'AB10000016'
         }
       }
@@ -76,7 +60,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
     context 'Without byte order markers' do
       let(:file) do
         fixture_file_upload(
-          'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_valid.csv',
+          'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_valid.csv',
           'sequencescape/qc_file'
         )
       end
@@ -97,7 +81,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
     context 'With byte order markers' do
       let(:file) do
         fixture_file_upload(
-          'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_bom.csv',
+          'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_with_bom.csv',
           'sequencescape/qc_file'
         )
       end
@@ -118,7 +102,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
     context 'A file which has missing tubes' do
       let(:file) do
         fixture_file_upload(
-          'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_missing_tubes.csv',
+          'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_with_missing_tubes.csv',
           'sequencescape/qc_file'
         )
       end
@@ -127,63 +111,48 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       let(:expected_position_details) do
         {
           'A1' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000001'
           },
           'B1' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000002'
           },
           'D1' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000004'
           },
           'E1' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000005'
           },
           'F1' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000006'
           },
           'G1' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000007'
           },
           'H1' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000008'
           },
           'A2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000009'
           },
           'B2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000010'
           },
           'C2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000011'
           },
           'D2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000012'
           },
           'E2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000013'
           },
           'F2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000014'
           },
           'G2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000015'
           },
           'H2' => {
-            'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000016'
           }
         }
@@ -206,7 +175,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
   context 'something that can not parse' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_valid.csv',
+        'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_valid.csv',
         'sequencescape/qc_file'
       )
     end
@@ -228,7 +197,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
   context 'A file which has missing values' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_missing_values.csv',
+        'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_with_missing_values.csv',
         'sequencescape/qc_file'
       )
     end
@@ -238,19 +207,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
         expect(subject.valid?).to be false
       end
 
-      let(:row4_error) { 'Tube rack scan tube barcode cannot be empty, in row 4 [C1]' }
+      let(:row3_error) { 'Tube rack scan tube barcode cannot be empty, in row 3 [C1]' }
 
       it 'reports the errors' do
         subject.valid?
-        expect(subject.errors.full_messages).to include(row4_error)
+        expect(subject.errors.full_messages).to include(row3_error)
       end
     end
   end
 
   context 'An invalid file' do
-    let(:file) do
-      fixture_file_upload('spec/fixtures/files/plate_split_to_tube_racks/test_file.txt', 'sequencescape/qc_file')
-    end
+    let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
 
     describe '#valid?' do
       it 'should be invalid' do
@@ -259,21 +226,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
 
       it 'reports the errors' do
         subject.valid?
-
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube position contains an invalid coordinate, in row 2 [AN EXAMPLE FILE]'
+          'Tube rack scan tube position contains an invalid coordinate, in row 1 [THIS IS AN EXAMPLE FILE]'
         )
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube barcode cannot be empty, in row 2 [AN EXAMPLE FILE]'
+          'Tube rack scan tube barcode cannot be empty, in row 1 [THIS IS AN EXAMPLE FILE]'
         )
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube rack barcode cannot be empty, in row 3 [IT IS USED TO TEST QC FILE UPLOAD]'
+          'Tube rack scan tube position contains an invalid coordinate, in row 2 [IT IS USED TO TEST QC FILE UPLOAD]'
         )
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube position contains an invalid coordinate, in row 3 [IT IS USED TO TEST QC FILE UPLOAD]'
-        )
-        expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube barcode cannot be empty, in row 3 [IT IS USED TO TEST QC FILE UPLOAD]'
+          'Tube rack scan tube barcode cannot be empty, in row 2 [IT IS USED TO TEST QC FILE UPLOAD]'
         )
       end
     end
@@ -282,7 +245,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
   context 'An unrecognised tube position' do
     let(:file) do
       fixture_file_upload(
-        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_invalid_positions.csv',
+        'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_with_invalid_positions.csv',
         'sequencescape/qc_file'
       )
     end
@@ -295,73 +258,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks::CsvFile, with: :uploader 
       it 'reports the errors' do
         subject.valid?
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube position contains an invalid coordinate, in row 10 [I1]'
+          'Tube rack scan tube position contains an invalid coordinate, in row 9 [I1]'
         )
-      end
-    end
-  end
-
-  # there should be only one rack barcode in the file and it should be the same for all rows
-  context 'A file with inconsistant rack barcodes' do
-    let(:file) do
-      fixture_file_upload(
-        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_different_rack_barcodes.csv',
-        'sequencescape/qc_file'
-      )
-    end
-
-    describe '#valid?' do
-      it 'should be invalid' do
-        expect(subject.valid?).to be false
-      end
-
-      it 'reports the errors' do
-        subject.valid?
-        expect(subject.errors.full_messages).to include(
-          'should not contain different rack barcodes (FX12345678,FX23838838)'
-        )
-      end
-    end
-  end
-
-  # the same well position should not appear more than once in the file
-  context 'A file with duplicated well positions' do
-    let(:file) do
-      fixture_file_upload(
-        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_duplicate_well_positions.csv',
-        'sequencescape/qc_file'
-      )
-    end
-
-    describe '#valid?' do
-      it 'should be invalid' do
-        expect(subject.valid?).to be false
-      end
-
-      it 'reports the errors' do
-        subject.valid?
-        expect(subject.errors.full_messages).to include('contains duplicate well coordinates (A2,E2)')
-      end
-    end
-  end
-
-  # the same tube barcode should not appear more than once in the file
-  context 'A file with duplicated tube barcodes' do
-    let(:file) do
-      fixture_file_upload(
-        'spec/fixtures/files/plate_split_to_tube_racks/tube_rack_scan_with_duplicate_tubes.csv',
-        'sequencescape/qc_file'
-      )
-    end
-
-    describe '#valid?' do
-      it 'should not be valid' do
-        expect(subject.valid?).to be false
-      end
-
-      it 'reports the errors' do
-        subject.valid?
-        expect(subject.errors.full_messages).to include('contains duplicate tube barcodes (AB10000009,AB10000011)')
       end
     end
   end

@@ -32,10 +32,14 @@ module Sequencescape::Api::V2
       .first
   end
 
+  # sample_description added into includes here for use in bioscan plate label creation
   def self.plate_for_presenter(query)
     Plate
       .includes(*PLATE_PRESENTER_INCLUDES)
-      .select(submissions: 'lanes_of_sequencing', sample_metadata: %w[sample_common_name collected_by])
+      .select(
+        submissions: 'lanes_of_sequencing',
+        sample_metadata: %w[sample_common_name collected_by sample_description]
+      )
       .find(query)
       .first
   end
@@ -49,11 +53,24 @@ module Sequencescape::Api::V2
   end
 
   def self.tube_rack_for_presenter(query)
-    TubeRack.includes('racked_tubes.tube.purpose,racked_tubes.tube.aliquots.request.request_type').find(query).first
+    TubeRack
+      .includes(
+        'racked_tubes.tube.purpose,' \
+          'racked_tubes.tube.receptacle.aliquots.request.request_type'
+      )
+      .find(query)
+      .first
   end
 
   def self.plate_for_completion(uuid)
     Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type').find(uuid: uuid).first
+  end
+
+  def self.tube_for_completion(uuid)
+    Tube
+      .includes('receptacle.aliquots.request.submission,receptacle.aliquots.request.request_type')
+      .find(uuid: uuid)
+      .first
   end
 
   def self.plate_with_custom_includes(include_params, search_params)

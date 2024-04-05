@@ -46,7 +46,7 @@ group :test do
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
-  gem 'rspec-rails', '6.1.1'
+  gem 'rspec-rails', '6.1.2'
   gem 'selenium-webdriver', '~> 4.1', require: false
   gem 'simplecov', require: false
   gem 'simplecov-lcov', require: false
@@ -66,9 +66,6 @@ group :development, :test do
   gem 'jquery-rails'
   gem 'sass-rails'
   gem 'select2-rails'
-
-  # We use the sortable component of jquery ui
-  gem 'jquery-ui-rails'
 end
 
 group :development do

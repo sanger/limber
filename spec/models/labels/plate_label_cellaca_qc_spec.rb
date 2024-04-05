@@ -6,14 +6,14 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   describe '#attributes' do
-    subject(:qc_attributes) { label.qc_attributes }
+    subject(:qc_label_definitions) { label.qc_label_definitions }
     let(:label) { described_class.new(labware) }
 
     context 'when creating the label of a full plate' do
       let(:labware) { create :v2_plate, pool_sizes: [96] }
 
       it 'contains four items' do
-        expect(qc_attributes.length).to eq(4)
+        expect(qc_label_definitions.length).to eq(4)
       end
     end
 
@@ -21,7 +21,7 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
       let(:labware) { create :v2_plate, pool_sizes: [5] }
 
       it 'contains four items' do
-        expect(qc_attributes.length).to eq(1)
+        expect(qc_label_definitions.length).to eq(1)
       end
     end
   end

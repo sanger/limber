@@ -5,7 +5,7 @@
       Create <%= resource_type %>
     </button>
     <div class="dropdown-menu" aria-labelledby="<%= button_id %>">
-      <%= render partial: 'dropdown_item', collection: resources, as: :item %>
+      <%= render partial: 'dropdown_item', collection: resources.sort_by(&:name), as: :item %>
     </div>
   </div>
 <% end %>

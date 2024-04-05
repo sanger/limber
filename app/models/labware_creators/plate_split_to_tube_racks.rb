@@ -145,7 +145,8 @@ module LabwareCreators
     # @return [CsvFile, nil] A CsvFile object for the sequencing tube rack scan CSV file, or nil if the file
     # doesn't exist.
     def sequencing_csv_file
-      @sequencing_csv_file ||= CsvFile.new(sequencing_file) if sequencing_file
+      @sequencing_csv_file ||=
+        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(sequencing_file) if sequencing_file
     end
 
     # Returns a CsvFile object for the contingency tube rack scan CSV file, or nil if the file doesn't exist.
@@ -153,7 +154,8 @@ module LabwareCreators
     # @return [CsvFile, nil] A CsvFile object for the contingency tube rack scan CSV file, or nil if the file
     # doesn't exist.
     def contingency_csv_file
-      @contingency_csv_file ||= CsvFile.new(contingency_file) if contingency_file
+      @contingency_csv_file ||=
+        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(contingency_file) if contingency_file
     end
 
     # Returns the number of unique sample UUIDs for the parent wells after applying the current well filter.
