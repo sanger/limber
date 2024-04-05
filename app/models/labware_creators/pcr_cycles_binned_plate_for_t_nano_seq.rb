@@ -45,21 +45,40 @@ module LabwareCreators
 
     # rubocop:enable Metrics/AbcSize
 
-    # Cycles through a hash of key value pairs and creates a new metadatum for each on the request object.
-    # NB. makes assumption that metadata with same name does not already exist i.e. we create not update
+    # Cycles through a hash of key value pairs and creates a new metadatum or updates the existing one for
+    # each metadata field to be stored against the request object.
+    # NB. makes assumption that metadata from previous iterations can be safely overwritten
     def create_request_metadata(request, request_metadata, child_well_location)
       request_metadata.each do |metadata_key, metadata_value|
-        pm_v2 = Sequencescape::Api::V2::PolyMetadatum.new(key: metadata_key, value: metadata_value)
+        # first select the polymetadatum by request id and key, if it exists, then update it
+        existing_metadata_v2 =
+          Sequencescape::Api::V2::PolyMetadatum.find(key: metadata_key, metadatable_id: request.id).first
 
-        # NB. this is the only way to set the relationship between the polymetadatum and the request, after
-        # the polymetadatum object has been created
-        pm_v2.relationships.metadatable = request
+        if existing_metadata_v2.present?
+          next if existing_metadata_v2.value == metadata_value # no need to update if the value is the same
 
-        next if pm_v2.save
+          # update the existing metadata
+          existing_metadata_v2.value = metadata_value
 
-        raise StandardError,
-              "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
-                "did not save for request at child well location #{child_well_location}"
+          next if existing_metadata_v2.save
+
+          raise StandardError,
+                "Existing metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
+                  "could not be updated for request at child well location #{child_well_location}"
+        else
+          # create new metadata
+          pm_v2 = Sequencescape::Api::V2::PolyMetadatum.new(key: metadata_key, value: metadata_value)
+
+          # NB. this is the only way to set the relationship between the polymetadatum and the request, after
+          # the polymetadatum object has been created
+          pm_v2.relationships.metadatable = request
+
+          next if pm_v2.save
+
+          raise StandardError,
+                "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
+                  "did not save for request at child well location #{child_well_location}"
+        end
       end
     end
 
