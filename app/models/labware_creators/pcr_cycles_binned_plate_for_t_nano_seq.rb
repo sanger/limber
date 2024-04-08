@@ -31,15 +31,15 @@ module LabwareCreators
         request_metadata = {
           'original_plate_barcode' => parent.human_barcode,
           'original_well_id' => parent_location,
-          'concentration_nm' => details['concentration'],
-          'input_amount_available' => details['input_amount_available'],
-          'input_amount_desired' => details['input_amount_desired'],
-          'sample_volume' => details['sample_volume'],
-          'diluent_volume' => details['diluent_volume'],
-          'pcr_cycles' => details['pcr_cycles'],
+          'concentration_nm' => details['concentration'].to_s,
+          'input_amount_available' => details['input_amount_available'].to_s,
+          'input_amount_desired' => details['input_amount_desired'].to_s,
+          'sample_volume' => details['sample_volume'].to_s,
+          'diluent_volume' => details['diluent_volume'].to_s,
+          'pcr_cycles' => details['pcr_cycles'].to_s,
           'hyb_panel' => details['hyb_panel']
         }
-        create_request_metadata(request, request_metadata, child_well_location)
+        create_or_update_request_metadata(request, request_metadata, child_well_location)
       end
     end
 
@@ -48,7 +48,7 @@ module LabwareCreators
     # Cycles through a hash of key value pairs and creates a new metadatum or updates the existing one for
     # each metadata field to be stored against the request object.
     # NB. makes assumption that metadata from previous iterations can be safely overwritten
-    def create_request_metadata(request, request_metadata, child_well_location)
+    def create_or_update_request_metadata(request, request_metadata, child_well_location)
       request_metadata.each do |metadata_key, metadata_value|
         # first select the polymetadatum by request id and key, if it exists, then update it
         existing_metadata_v2 =
@@ -58,9 +58,7 @@ module LabwareCreators
           next if existing_metadata_v2.value == metadata_value # no need to update if the value is the same
 
           # update the existing metadata
-          existing_metadata_v2.value = metadata_value
-
-          next if existing_metadata_v2.save
+          next if existing_metadata_v2.update(value: metadata_value)
 
           raise StandardError,
                 "Existing metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
