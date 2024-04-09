@@ -155,10 +155,6 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
             'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000008'
           },
-          'A2' => {
-            'tube_rack_barcode' => 'FX12345678',
-            'tube_barcode' => 'AB10000009'
-          },
           'B2' => {
             'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000010'
@@ -178,10 +174,6 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
           'F2' => {
             'tube_rack_barcode' => 'FX12345678',
             'tube_barcode' => 'AB10000014'
-          },
-          'G2' => {
-            'tube_rack_barcode' => 'FX12345678',
-            'tube_barcode' => 'AB10000015'
           },
           'H2' => {
             'tube_rack_barcode' => 'FX12345678',
