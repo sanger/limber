@@ -325,9 +325,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
       )
 
-      # TODO: needed?
       stub_v2_plate(child_plate, stub_search: false)
-
       stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
 
       stub_upload_file_creation
@@ -609,42 +607,56 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
     end
 
-    # Generated using copilot to test create or update request metadata method includuing raise error cases
+    # tests for create_or_update_request_metadata method
     describe '#create_or_update_request_metadata' do
-      let(:request) { double('Request', id: 1) }
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file.csv',
+          'sequencescape/qc_file'
+        )
+      end
+      let(:request) do
+        create :library_request, state: 'pending', uuid: 'request-1', library_type: library_type_name, id: 1
+      end
       let(:request_metadata) { { 'key1' => 'value1', 'key2' => 'value2' } }
       let(:child_well_location) { 'A1' }
-      let(:existing_metadata) { double('Metadata') }
-      let(:new_metadata) { double('Metadata') }
+      let!(:existing_metadata_1) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
+      let!(:existing_metadata_2) { build :poly_metadatum, metadatable: request, key: 'key2', value: 'value2' }
+      let(:new_metadata_1) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
+      let(:new_metadata_2) { build :poly_metadatum, metadatable: request, key: 'key2', value: 'value2' }
 
       before do
         allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([])
-        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata)
-        allow(new_metadata).to receive(:save).and_return(true)
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_1)
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_2)
+        allow(new_metadata_1).to receive(:save).and_return(true)
+        allow(new_metadata_2).to receive(:save).and_return(true)
       end
 
       it 'creates new metadata when none exists' do
-        expect(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).twice.and_return(new_metadata)
-        expect(new_metadata).to receive(:save).twice.and_return(true)
+        expect(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_1)
+        expect(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_2)
+        expect(new_metadata_1).to receive(:save).once.and_return(true)
+        expect(new_metadata_2).to receive(:save).once.and_return(true)
         subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
       end
 
       it 'updates existing metadata when it exists' do
-        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata])
-        expect(existing_metadata).to receive(:update).twice.and_return(true)
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata_1])
+        expect(existing_metadata_1).to receive(:update).once.and_return(true)
         subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
       end
 
       it 'raises an error when new metadata fails to save' do
-        allow(new_metadata).to receive(:save).and_return(false)
+        allow(new_metadata_1).to receive(:save).and_return(false)
         expect do
           subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
         end.to raise_error(StandardError, /did not save for request/)
       end
 
       it 'raises an error when existing metadata fails to update' do
-        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata])
-        allow(existing_metadata).to receive(:update).and_return(false)
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata_1])
+        allow(existing_metadata_1).to receive(:update).and_return(false)
         expect do
           subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
         end.to raise_error(StandardError, /could not be updated for request/)
