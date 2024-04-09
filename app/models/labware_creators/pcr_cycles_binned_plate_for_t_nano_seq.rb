@@ -50,37 +50,42 @@ module LabwareCreators
     # NB. makes assumption that metadata from previous iterations can be safely overwritten
     def create_or_update_request_metadata(request, request_metadata, child_well_location)
       request_metadata.each do |metadata_key, metadata_value|
-        # first select the polymetadatum by request id and key, if it exists, then update it
-        existing_metadata_v2 =
-          Sequencescape::Api::V2::PolyMetadatum.find(key: metadata_key, metadatable_id: request.id).first
+        existing_metadata_v2 = find_existing_metadata(metadata_key, request.id)
 
         if existing_metadata_v2.present?
-          next if existing_metadata_v2.value == metadata_value # no need to update if the value is the same
-
-          # update the existing metadata
-          next if existing_metadata_v2.update(value: metadata_value)
-
-          raise StandardError,
-                "Existing metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
-                  "could not be updated for request at child well location #{child_well_location}"
+          update_existing_metadata(existing_metadata_v2, metadata_value, metadata_key, child_well_location)
         else
-          # create new metadata
-          pm_v2 = Sequencescape::Api::V2::PolyMetadatum.new(key: metadata_key, value: metadata_value)
-
-          # NB. this is the only way to set the relationship between the polymetadatum and the request, after
-          # the polymetadatum object has been created
-          pm_v2.relationships.metadatable = request
-
-          next if pm_v2.save
-
-          raise StandardError,
-                "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
-                  "did not save for request at child well location #{child_well_location}"
+          create_new_metadata(metadata_key, metadata_value, request, child_well_location)
         end
       end
     end
 
     private
+
+    def find_existing_metadata(metadata_key, request_id)
+      Sequencescape::Api::V2::PolyMetadatum.find(key: metadata_key, metadatable_id: request_id).first
+    end
+
+    def update_existing_metadata(existing_metadata_v2, metadata_value, metadata_key, child_well_location)
+      return if existing_metadata_v2.value == metadata_value
+
+      return if existing_metadata_v2.update(value: metadata_value)
+
+      raise StandardError,
+            "Existing metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
+              "could not be updated for request at child well location #{child_well_location}"
+    end
+
+    def create_new_metadata(metadata_key, metadata_value, request, child_well_location)
+      pm_v2 = Sequencescape::Api::V2::PolyMetadatum.new(key: metadata_key, value: metadata_value)
+      pm_v2.relationships.metadatable = request
+
+      return if pm_v2.save
+
+      raise StandardError,
+            "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
+              "did not save for request at child well location #{child_well_location}"
+    end
 
     # filename for the customer file upload
     def customer_filename

@@ -608,5 +608,47 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         expect(transfer_creation_request).to have_been_made
       end
     end
+
+    # Generated using copilot to test create or update request metadata method includuing raise error cases
+    describe '#create_or_update_request_metadata' do
+      let(:request) { double('Request', id: 1) }
+      let(:request_metadata) { { 'key1' => 'value1', 'key2' => 'value2' } }
+      let(:child_well_location) { 'A1' }
+      let(:existing_metadata) { double('Metadata') }
+      let(:new_metadata) { double('Metadata') }
+
+      before do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([])
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata)
+        allow(new_metadata).to receive(:save).and_return(true)
+      end
+
+      it 'creates new metadata when none exists' do
+        expect(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).twice.and_return(new_metadata)
+        expect(new_metadata).to receive(:save).twice.and_return(true)
+        subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+      end
+
+      it 'updates existing metadata when it exists' do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata])
+        expect(existing_metadata).to receive(:update).twice.and_return(true)
+        subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+      end
+
+      it 'raises an error when new metadata fails to save' do
+        allow(new_metadata).to receive(:save).and_return(false)
+        expect do
+          subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+        end.to raise_error(StandardError, /did not save for request/)
+      end
+
+      it 'raises an error when existing metadata fails to update' do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata])
+        allow(existing_metadata).to receive(:update).and_return(false)
+        expect do
+          subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+        end.to raise_error(StandardError, /could not be updated for request/)
+      end
+    end
   end
 end
