@@ -103,7 +103,7 @@ module LabwareCreators
         # filter out locations with no tube scanned
         next if NO_TUBE_TEXTS.include? row.tube_barcode.strip.upcase
 
-        position = row.tube_position
+        position = row.tube_position.upcase
 
         # we will use this hash later to create the tubes and store the
         # rack barcode in the tube metadata

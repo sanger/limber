@@ -13,6 +13,7 @@ module LabwareCreators
       UNEXPECTED_NUMBER_OF_COLUMNS = 'contains an unexpected number of columns (%s expecting %s) at %s'
 
       validate :check_has_expected_number_of_columns
+      validate :check_for_invalid_characters
 
       def initialize(index, row_data)
         @index = index
@@ -61,6 +62,30 @@ module LabwareCreators
         return if @row_data.size == expected_number_of_columns
 
         errors.add(:base, format(UNEXPECTED_NUMBER_OF_COLUMNS, @row_data.size, expected_number_of_columns, to_s))
+      end
+
+      # Checking for use of only basic UTF-8 characters (within Rails valid UTF-8 encoding)
+      # See https://secure.wikimedia.org/wikipedia/en/wiki/Utf8
+      # This check was added to prevent the error 'malformed UTF-8' when writing metadata to the database in
+      # labware creator classes
+      # e.g. we saw an unusual hyphen which looked like "Twist exome \xE2\x80\x93 humgen" instead of
+      # "Twist exome - humgen"
+      # This was valid UTF-8 according to rails, but not valid UTF-8 according to the mysql2 gem that was
+      # writing to the database (which has a more restricted understanding of what is valid)
+      def check_for_invalid_characters
+        return if empty?
+
+        @row_data.each_with_index do |cell, i|
+          next if cell.blank?
+
+          next if cell.bytes.all? { |byte| byte < 128 } && cell.dup.force_encoding('UTF-8').valid_encoding?
+
+          errors.add(
+            :base,
+            "contains invalid character(s) at column #{i + 1} in #{self}, " \
+              'please use only standard characters and UTF-8 encoding for your csv file'
+          )
+        end
       end
     end
   end
