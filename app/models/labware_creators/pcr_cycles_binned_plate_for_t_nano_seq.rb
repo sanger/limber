@@ -13,7 +13,8 @@ module LabwareCreators
       # retrieve child plate through v2 api, using uuid got through v1 api
       child_v2_plate = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
-      # update fields on each well with various metadata
+      # cycle through the child wells and for each get the related request and write some metadata
+      # to it based on the details in the customer file
       child_wells_by_location = child_v2_plate.wells.index_by(&:location)
 
       well_details.each do |parent_location, details|
