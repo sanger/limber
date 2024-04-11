@@ -27,8 +27,10 @@ module LabwareCreators
       validates :tube_barcode, presence: { message: ->(object, _data) { TUBE_BARCODE_MISSING % object } }
 
       def initialize_context_specific_fields
-        @tube_position = (@row_data[0] || '').strip.upcase
-        @tube_barcode = (@row_data[1] || '').strip.upcase
+        # NB. cannot use upcase here as unusual characters will cause an exception and this happens before the
+        # check_for_invalid_characters validation
+        @tube_position = (@row_data[0] || '').strip
+        @tube_barcode = (@row_data[1] || '').strip
       end
 
       def to_s

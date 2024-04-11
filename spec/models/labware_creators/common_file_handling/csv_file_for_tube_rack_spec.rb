@@ -221,16 +221,23 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
       it 'reports the errors' do
         subject.valid?
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube position contains an invalid coordinate, in row 1 [THIS IS AN EXAMPLE FILE]'
+          'Tube rack scan contains an unexpected number of columns (1 expecting 2) at row 1 [This is an example file]'
         )
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube barcode cannot be empty, in row 1 [THIS IS AN EXAMPLE FILE]'
+          'Tube rack scan tube position contains an invalid coordinate, in row 1 [This is an example file]'
         )
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube position contains an invalid coordinate, in row 2 [IT IS USED TO TEST QC FILE UPLOAD]'
+          'Tube rack scan tube barcode cannot be empty, in row 1 [This is an example file]'
         )
         expect(subject.errors.full_messages).to include(
-          'Tube rack scan tube barcode cannot be empty, in row 2 [IT IS USED TO TEST QC FILE UPLOAD]'
+          'Tube rack scan contains an unexpected number of columns (1 expecting 2) ' \
+            'at row 2 [It is used to test qc file upload]'
+        )
+        expect(subject.errors.full_messages).to include(
+          'Tube rack scan tube position contains an invalid coordinate, in row 2 [It is used to test qc file upload]'
+        )
+        expect(subject.errors.full_messages).to include(
+          'Tube rack scan tube barcode cannot be empty, in row 2 [It is used to test qc file upload]'
         )
       end
     end
@@ -254,6 +261,49 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
         expect(subject.errors.full_messages).to include(
           'Tube rack scan tube position contains an invalid coordinate, in row 9 [I1]'
         )
+      end
+    end
+  end
+
+  # the same position should not appear more than once in the file
+  context 'A file with duplicated positions' do
+    let(:file) do
+      fixture_file_upload(
+        'spec/fixtures/files/common_file_handling/' \
+          'tube_rack/tube_rack_scan_with_duplicate_positions.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    describe '#valid?' do
+      it 'should be invalid' do
+        expect(subject.valid?).to be false
+      end
+
+      it 'reports the errors' do
+        subject.valid?
+        expect(subject.errors.full_messages).to include('contains duplicate rack positions (A2,E2)')
+      end
+    end
+  end
+
+  # the same tube barcode should not appear more than once in the file
+  context 'A file with duplicated tube barcodes' do
+    let(:file) do
+      fixture_file_upload(
+        'spec/fixtures/files/common_file_handling/tube_rack/tube_rack_scan_with_duplicate_tubes.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    describe '#valid?' do
+      it 'should not be valid' do
+        expect(subject.valid?).to be false
+      end
+
+      it 'reports the errors' do
+        subject.valid?
+        expect(subject.errors.full_messages).to include('contains duplicate tube barcodes (AB10000009,AB10000011)')
       end
     end
   end
