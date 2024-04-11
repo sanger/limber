@@ -76,16 +76,31 @@ module LabwareCreators
         return if empty?
 
         @row_data.each_with_index do |cell, i|
-          next if cell.blank?
+          next if cell_is_blank?(cell)
+          next if cell_is_valid_utf8?(cell)
 
-          next if cell.bytes.all? { |byte| byte < 128 } && cell.dup.force_encoding('UTF-8').valid_encoding?
-
-          errors.add(
-            :base,
-            "contains invalid character(s) at column #{i + 1} in #{self}, " \
-              'please use only standard characters and UTF-8 encoding for your csv file'
-          )
+          add_invalid_character_error(i)
         end
+      end
+
+      private
+
+      def cell_is_blank?(cell)
+        # NB. cannot use cell.blank? as triggers an exception if cell contains the unusual characters
+        # are trying to spot
+        cell.nil? || cell.strip.empty?
+      end
+
+      def cell_is_valid_utf8?(cell)
+        cell.bytes.all? { |byte| byte < 128 } && cell.dup.force_encoding('UTF-8').valid_encoding?
+      end
+
+      def add_invalid_character_error(column)
+        errors.add(
+          :base,
+          "contains invalid character(s) at column #{column + 1} in #{self}, " \
+            'please use only standard characters and UTF-8 encoding for your csv file'
+        )
       end
     end
   end
