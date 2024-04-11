@@ -121,6 +121,11 @@ module ApiUrlHelper
       arguments = [{ name: study.name }]
       allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
     end
+
+    def stub_v2_polymetadata(polymetadata, metadatable_id)
+      arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
+      allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
+    end
   end
   extend ClassMethods
 end
