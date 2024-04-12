@@ -3421,4 +3421,23 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    custom_robot(
+      'hamilton-lrc-ht-5p-gems-to-lrc-ht-5p-cdna-pcr',
+      name: 'Hamilton LRC HT 5p GEMs => LRC HT 5p cDNA PCR',
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC HT 5p GEMs',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(5).barcode => {
+          purpose: 'LRC HT 5p cDNA PCR',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
