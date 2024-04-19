@@ -188,3 +188,7 @@ hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools:
     - wells.qc_results
     - wells.transfer_requests_as_target.source_asset
   ancestor_purpose: LRC PBMC Defrost PBS
+hamilton_lrc_ht_5p_cherrypick_to_lrc_ht_5p_cdna_dil:
+  csv: hamilton_fixed_volume_dilutions
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: Sample Dilution

@@ -26,3 +26,7 @@ scRNA Core cDNA Prep Input:
     LRC HT 5p Chip: LRC HT 5p GEMs
     LRC HT 5p GEMs: LRC HT 5p cDNA PCR
     LRC HT 5p cDNA PCR: LRC HT 5p cDNA PCR XP
+    # TODO: the XP to Cherrypick relationship is temporary and added to allow testing
+    # of the step to create the cDNA Dil plates
+    LRC HT 5p cDNA PCR XP: LRC HT 5p Cherrypick
+    LRC HT 5p Cherrypick: LRC HT 5p cDNA Dil

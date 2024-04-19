@@ -15,7 +15,9 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
   end
 
   def filter_requests(requests, well)
-    return nil if well.requests_as_source.empty?
+    # Line changed, previously was checking for well.requests_as_source.empty? but not sure why
+    # there was that limitation. Here requests contains all active requests for the well.
+    return nil if requests.empty?
 
     filtered_requests_by_rt = filter_by_request_type(requests)
     filtered_requests_by_lt = filter_by_library_type(filtered_requests_by_rt)
@@ -43,7 +45,8 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
       wells.each_with_object([]) do |well, transfers|
         next if well.empty? || !well.passed?
 
-        filtered_requests = filter_requests(well.active_requests, well)
+        # uniq is used to remove duplicate requests
+        filtered_requests = filter_requests(well.active_requests&.uniq, well)
 
         # don't add wells to the transfers list if they have no filtered requests,
         # i.e. only those submitted for library prep
