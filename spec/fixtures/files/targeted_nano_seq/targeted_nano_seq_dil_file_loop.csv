@@ -1,0 +1,4 @@
+Plate Barcode,DN2T
+
+Well,Concentration (nM),Sanger Sample Id,Supplier Sample Name,Input amount available (fmol),Input amount desired,Sample volume,Diluent volume,PCR cycles,Hyb Panel
+A1,0.686,1STDY1,test_1,17.150,34.8,5.0,25.0,12,My Panel

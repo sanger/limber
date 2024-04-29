@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Provides a series of helper methos to assist with generating and processing well names
+# Provides a series of helper methods to assist with generating and processing well names
 module WellHelpers
-  # Provide model level wrappers for these methods. Requires the the including class
+  # Provide model level wrappers for these methods. Requires the including class
   # responds to #number_of_columns and #number of wells
   module Extensions
     def locations_in_rows

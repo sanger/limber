@@ -213,20 +213,20 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
   # Create child wells in order of the requests they originated from.
   # Which is to do with how the binning algorithm lays them out based on the value of PCR cycles.
-  let(:child_well_A2) { create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: requests[0]) }
-  let(:child_well_B2) { create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: requests[1]) }
-  let(:child_well_A1) { create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: requests[2]) }
-  let(:child_well_A3) { create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: requests[3]) }
-  let(:child_well_B3) { create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: requests[4]) }
-  let(:child_well_C3) { create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: requests[5]) }
-  let(:child_well_D3) { create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: requests[6]) }
-  let(:child_well_E3) { create(:v2_well, location: 'E3', position: { 'name' => 'E3' }, outer_request: requests[7]) }
-  let(:child_well_F3) { create(:v2_well, location: 'F3', position: { 'name' => 'F3' }, outer_request: requests[8]) }
-  let(:child_well_G3) { create(:v2_well, location: 'G3', position: { 'name' => 'G3' }, outer_request: requests[9]) }
-  let(:child_well_C2) { create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: requests[10]) }
-  let(:child_well_B1) { create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: requests[11]) }
-  let(:child_well_D2) { create(:v2_well, location: 'D2', position: { 'name' => 'D2' }, outer_request: requests[12]) }
-  let(:child_well_C1) { create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: requests[13]) }
+  let(:child_well_a2) { create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: requests[0]) }
+  let(:child_well_b2) { create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: requests[1]) }
+  let(:child_well_a1) { create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: requests[2]) }
+  let(:child_well_a3) { create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: requests[3]) }
+  let(:child_well_b3) { create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: requests[4]) }
+  let(:child_well_c3) { create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: requests[5]) }
+  let(:child_well_d3) { create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: requests[6]) }
+  let(:child_well_e3) { create(:v2_well, location: 'E3', position: { 'name' => 'E3' }, outer_request: requests[7]) }
+  let(:child_well_f3) { create(:v2_well, location: 'F3', position: { 'name' => 'F3' }, outer_request: requests[8]) }
+  let(:child_well_g3) { create(:v2_well, location: 'G3', position: { 'name' => 'G3' }, outer_request: requests[9]) }
+  let(:child_well_c2) { create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: requests[10]) }
+  let(:child_well_b1) { create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: requests[11]) }
+  let(:child_well_d2) { create(:v2_well, location: 'D2', position: { 'name' => 'D2' }, outer_request: requests[12]) }
+  let(:child_well_c1) { create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: requests[13]) }
 
   let(:child_plate) do
     # Wells listed in the order here to match the order of the list of original library requests,
@@ -237,20 +237,20 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
            barcode_number: '3',
            size: plate_size,
            wells: [
-             child_well_A2,
-             child_well_B2,
-             child_well_A1,
-             child_well_A3,
-             child_well_B3,
-             child_well_C3,
-             child_well_D3,
-             child_well_E3,
-             child_well_F3,
-             child_well_G3,
-             child_well_C2,
-             child_well_B1,
-             child_well_D2,
-             child_well_C1
+             child_well_a2,
+             child_well_b2,
+             child_well_a1,
+             child_well_a3,
+             child_well_b3,
+             child_well_c3,
+             child_well_d3,
+             child_well_e3,
+             child_well_f3,
+             child_well_g3,
+             child_well_c2,
+             child_well_b1,
+             child_well_d2,
+             child_well_c1
            ]
   end
 
@@ -326,7 +326,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       )
 
       stub_v2_plate(child_plate, stub_search: false)
-
       stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
 
       stub_upload_file_creation
@@ -340,7 +339,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
     end
 
-    context 'binning' do
+    context 'when performing standard first time binning' do
       let(:file) do
         fixture_file_upload(
           'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file.csv',
@@ -371,85 +370,85 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           {
             'volume' => '5.0',
             'source_asset' => parent_well_a1.uuid,
-            'target_asset' => child_well_A2.uuid,
+            'target_asset' => child_well_a2.uuid,
             'outer_request' => requests[0].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_b1.uuid,
-            'target_asset' => child_well_B2.uuid,
+            'target_asset' => child_well_b2.uuid,
             'outer_request' => requests[1].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_d1.uuid,
-            'target_asset' => child_well_A1.uuid,
+            'target_asset' => child_well_a1.uuid,
             'outer_request' => requests[2].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_e1.uuid,
-            'target_asset' => child_well_A3.uuid,
+            'target_asset' => child_well_a3.uuid,
             'outer_request' => requests[3].uuid
           },
           {
             'volume' => '4.0',
             'source_asset' => parent_well_f1.uuid,
-            'target_asset' => child_well_B3.uuid,
+            'target_asset' => child_well_b3.uuid,
             'outer_request' => requests[4].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_h1.uuid,
-            'target_asset' => child_well_C3.uuid,
+            'target_asset' => child_well_c3.uuid,
             'outer_request' => requests[5].uuid
           },
           {
             'volume' => '3.2',
             'source_asset' => parent_well_a2.uuid,
-            'target_asset' => child_well_D3.uuid,
+            'target_asset' => child_well_d3.uuid,
             'outer_request' => requests[6].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_b2.uuid,
-            'target_asset' => child_well_E3.uuid,
+            'target_asset' => child_well_e3.uuid,
             'outer_request' => requests[7].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_c2.uuid,
-            'target_asset' => child_well_F3.uuid,
+            'target_asset' => child_well_f3.uuid,
             'outer_request' => requests[8].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_d2.uuid,
-            'target_asset' => child_well_G3.uuid,
+            'target_asset' => child_well_g3.uuid,
             'outer_request' => requests[9].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_e2.uuid,
-            'target_asset' => child_well_C2.uuid,
+            'target_asset' => child_well_c2.uuid,
             'outer_request' => requests[10].uuid
           },
           {
             'volume' => '30.0',
             'source_asset' => parent_well_f2.uuid,
-            'target_asset' => child_well_B1.uuid,
+            'target_asset' => child_well_b1.uuid,
             'outer_request' => requests[11].uuid
           },
           {
             'volume' => '5.0',
             'source_asset' => parent_well_g2.uuid,
-            'target_asset' => child_well_D2.uuid,
+            'target_asset' => child_well_d2.uuid,
             'outer_request' => requests[12].uuid
           },
           {
             'volume' => '3.621',
             'source_asset' => parent_well_h2.uuid,
-            'target_asset' => child_well_C1.uuid,
+            'target_asset' => child_well_c1.uuid,
             'outer_request' => requests[13].uuid
           }
         ]
@@ -473,10 +472,194 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         # check the metadata values on the requests, only that the method was triggered.
         # Our child plate has 14 wells with 14 requests, so we expect the method to create metadata
         # on the requests to be called 14 times.
-        expect(subject).to receive(:create_request_metadata).exactly(14).times
+        expect(subject).to receive(:create_or_update_request_metadata).exactly(14).times
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made
+      end
+    end
+
+    context 'when looping back and need to override metadata' do
+      let(:loop_request) do
+        create :library_request, state: 'passed', uuid: 'request-1', library_type: library_type_name
+      end
+
+      let(:parent_well_a1) do
+        create(
+          :v2_well,
+          location: 'A1',
+          position: {
+            'name' => 'A1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [loop_request],
+          outer_request: nil
+        )
+      end
+
+      let(:parent_plate) do
+        create :v2_plate,
+               uuid: parent_uuid,
+               barcode_number: '2',
+               size: plate_size,
+               wells: [parent_well_a1],
+               outer_requests: [loop_request]
+      end
+
+      let!(:pm_original_plate_barcode) do
+        build :poly_metadatum, metadatable: loop_request, key: 'original_plate_barcode', value: 'DN2T'
+      end
+      let!(:pm_original_well_id) do
+        build :poly_metadatum, metadatable: loop_request, key: 'original_well_id', value: 'A1'
+      end
+      let!(:pm_concentration_nm) do
+        build :poly_metadatum, metadatable: loop_request, key: 'concentration_nm', value: '0.686'
+      end
+      let!(:pm_input_amount_available) do
+        build :poly_metadatum, metadatable: loop_request, key: 'input_amount_available', value: '17.15'
+      end
+      let!(:pm_input_amount_desired) do
+        build :poly_metadatum, metadatable: loop_request, key: 'input_amount_desired', value: '34.8'
+      end
+      let!(:pm_sample_volume) { build :poly_metadatum, metadatable: loop_request, key: 'sample_volume', value: '5.0' }
+      let!(:pm_diluent_volume) do
+        build :poly_metadatum, metadatable: loop_request, key: 'diluent_volume', value: '25.0'
+      end
+      let!(:pm_pcr_cycles) { build :poly_metadatum, metadatable: loop_request, key: 'pcr_cycles', value: '10' }
+      let!(:pm_hyb_panel) { build :poly_metadatum, metadatable: loop_request, key: 'hyb_panel', value: 'My Panel' }
+
+      let(:child_well_a1) do
+        create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: loop_request)
+      end
+
+      let(:child_plate) do
+        # Wells listed in the order here to match the order of the list of original library requests,
+        # i.e. the rearranged order after binning. Wells will be laid out by location so this has no
+        # effect on the actual layout of the plate.
+        create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, wells: [child_well_a1]
+      end
+
+      let(:transfer_requests) do
+        [
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_a1.uuid,
+            'target_asset' => child_well_a1.uuid,
+            'outer_request' => loop_request.uuid
+          }
+        ]
+      end
+
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file_loop.csv',
+          'sequencescape/qc_file'
+        )
+      end
+
+      let!(:plate_creation_request) do
+        stub_api_post(
+          'plate_creations',
+          payload: {
+            plate_creation: {
+              parent: parent_uuid,
+              child_purpose: child_purpose_uuid,
+              user: user_uuid
+            }
+          },
+          body: json(:plate_creation)
+        )
+      end
+
+      let!(:transfer_creation_request) do
+        stub_api_post(
+          'transfer_request_collections',
+          payload: {
+            transfer_request_collection: {
+              user: user_uuid,
+              transfer_requests: transfer_requests
+            }
+          },
+          body: '{}'
+        )
+      end
+
+      let!(:api_v2_post) { allow(pm_pcr_cycles).to receive(:update).and_return(true) }
+
+      before do
+        stub_v2_polymetadata(pm_original_plate_barcode, loop_request.id)
+        stub_v2_polymetadata(pm_original_well_id, loop_request.id)
+        stub_v2_polymetadata(pm_concentration_nm, loop_request.id)
+        stub_v2_polymetadata(pm_input_amount_available, loop_request.id)
+        stub_v2_polymetadata(pm_input_amount_desired, loop_request.id)
+        stub_v2_polymetadata(pm_sample_volume, loop_request.id)
+        stub_v2_polymetadata(pm_diluent_volume, loop_request.id)
+        stub_v2_polymetadata(pm_pcr_cycles, loop_request.id)
+        stub_v2_polymetadata(pm_hyb_panel, loop_request.id)
+      end
+
+      it 'makes the expected method calls when creating the child plate' do
+        # NB. because we're mocking the API call for the save of the request metadata we cannot
+        # check the metadata values on the requests, only that the correct method was triggered.
+        expect(subject.save!).to eq true
+        expect(plate_creation_request).to have_been_made
+        expect(transfer_creation_request).to have_been_made
+      end
+    end
+
+    # tests for create_or_update_request_metadata method
+    describe '#create_or_update_request_metadata' do
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file.csv',
+          'sequencescape/qc_file'
+        )
+      end
+      let(:request) do
+        create :library_request, state: 'pending', uuid: 'request-1', library_type: library_type_name, id: 1
+      end
+      let(:request_metadata) { { 'key1' => 'value1', 'key2' => 'value2' } }
+      let(:child_well_location) { 'A1' }
+      let!(:existing_metadata_1) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
+      let!(:existing_metadata_2) { build :poly_metadatum, metadatable: request, key: 'key2', value: 'value2' }
+      let(:new_metadata_1) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
+      let(:new_metadata_2) { build :poly_metadatum, metadatable: request, key: 'key2', value: 'value2' }
+
+      before do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([])
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_1)
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_2)
+        allow(new_metadata_1).to receive(:save).and_return(true)
+        allow(new_metadata_2).to receive(:save).and_return(true)
+      end
+
+      it 'creates new metadata when none exists' do
+        expect(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_1)
+        expect(Sequencescape::Api::V2::PolyMetadatum).to receive(:new).and_return(new_metadata_2)
+        expect(new_metadata_1).to receive(:save).once.and_return(true)
+        expect(new_metadata_2).to receive(:save).once.and_return(true)
+        subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+      end
+
+      it 'updates existing metadata when it exists' do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata_1])
+        expect(existing_metadata_1).to receive(:update).once.and_return(true)
+        subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+      end
+
+      it 'raises an error when new metadata fails to save' do
+        allow(new_metadata_1).to receive(:save).and_return(false)
+        expect do
+          subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+        end.to raise_error(StandardError, /did not save for request/)
+      end
+
+      it 'raises an error when existing metadata fails to update' do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata_1])
+        allow(existing_metadata_1).to receive(:update).and_return(false)
+        expect do
+          subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+        end.to raise_error(StandardError, /could not be updated for request/)
       end
     end
   end

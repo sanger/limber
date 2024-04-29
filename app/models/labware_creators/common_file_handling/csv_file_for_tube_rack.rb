@@ -20,7 +20,7 @@ module LabwareCreators
     validate :check_no_duplicate_rack_positions
     validate :check_no_duplicate_tube_barcodes
 
-    NO_TUBE_TEXTS = ['NO READ', 'NOSCAN', ''].freeze
+    NO_TUBE_TEXTS = ['NO READ', 'NOSCAN', 'EMPTY', ''].freeze
     NO_DUPLICATE_RACK_POSITIONS_MSG = 'contains duplicate rack positions (%s)'
     NO_DUPLICATE_TUBE_BARCODES_MSG = 'contains duplicate tube barcodes (%s)'
 
@@ -74,14 +74,14 @@ module LabwareCreators
     # Checks for duplicate tube barcodes in the tube rack scan.
     # If any duplicates are found, they are added to the errors object.
     # The error message includes the duplicated tube barcodes.
-    # 'NO READ' and 'NOSCAN' values are ignored and not considered as duplicates.
+    # Missing tube string values are ignored and not considered as duplicates.
     # This method is used to ensure that each tube barcode in the tube rack scan is unique.
     def check_no_duplicate_tube_barcodes
       return unless @parsed
 
       duplicates = tube_rack_scan.group_by(&:tube_barcode).select { |_tube_barcode, tubes| tubes.size > 1 }.keys
 
-      # remove any NO READ or NOSCAN or empty string values from the duplicates
+      # remove any missing tube string values from the duplicates
       duplicates = duplicates.reject { |barcode| NO_TUBE_TEXTS.include?(barcode) }
 
       return if duplicates.empty?
@@ -103,7 +103,7 @@ module LabwareCreators
         # filter out locations with no tube scanned
         next if NO_TUBE_TEXTS.include? row.tube_barcode.strip.upcase
 
-        position = row.tube_position
+        position = row.tube_position.upcase
 
         # we will use this hash later to create the tubes and store the
         # rack barcode in the tube metadata
