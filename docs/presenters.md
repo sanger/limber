@@ -29,7 +29,7 @@ Presenters are responsible for showing information about a piece of labware.
 {include:Presenters::ConcentrationBinnedPlatePresenter}
 
 Used directly in 2 purposes:
-LBC 3pV3 GEX Dil and LRC HT 5p cDNA Dil
+LBC 3pV3 GEX Dil and LRC HT 5p GEX Dil
 
 {Presenters::ConcentrationBinnedPlatePresenter View class documentation}
 
@@ -67,8 +67,8 @@ LBC 5p GEX Dil
 
 {include:Presenters::StandardPresenter}
 
-Used directly in 107 purposes:
-CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM Lysate DNA, CLCM Lysate RNA, CLCM RNA End Prep, CLCM RNA Lib PCR XP, CLCM RT PreAmp, CLCM Stock, GnT Pico End Prep, GnT Pico-XP, GnT scDNA, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, LB End Prep, LB Hyb, LB Lib PCR-XP, LB Lib PrePool, LB Post Shear, LB Shear, LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, LBB Enriched TCR HT, LBB Lib-XP, LBB Ligation, LBC 3pV3 GEX Frag 2XP, LBC 5p GEX Frag 2XP, LBC Aggregate, LBC BCR Dil 1, LBC BCR Dil 2, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, LBC Cherrypick, LBC TCR Dil 1, LBC TCR Dil 2, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LBR Frag cDNA, LBR Globin, LCA 10X cDNA, LCA Blood Array, LCA Blood Bank, LCA PBMC, LCA PBMC Bank, LCA PBMC Pools, LCMB End Prep, LCMB Lib PCR-XP, LDS AL Lib, LDS Lib PCR XP, LDS Stock XP, LHR End Prep, LHR PCR 1, LHR PCR 2, LHR XP, LHR-384 AL Lib, LHR-384 cDNA, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LRC Blood Bank, LRC HT 5p cDNA PCR, LRC HT 5p cDNA PCR XP, LRC HT 5p Cherrypick, LRC HT 5p Chip, LRC HT 5p GEMs, LRC PBMC Bank, LRC PBMC Cryostor, LRC PBMC Defrost PBS, LRC PBMC Pools, LSW-96 Stock, LTHR Lib PCR pool, LTHR PCR 1, LTHR PCR 2, LTHR RT-S, LTHR-384 Lib PCR pool, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 RT-Q, LTN AL Lib, LTN Lib PCR XP, LTN Post Shear, LTN Shear, LTN Stock XP, PF End Prep, PF Lib XP, PF Lib XP2, PF Post Shear, PF Post Shear XP, PF Shear, PF-384 End Prep, PF-384 Lib XP2, PF-384 Post Shear XP, pWGS-384 AL Lib, pWGS-384 Post Shear XP, RVI Cap Lib, RVI Cap Lib PCR, RVI Cap Lib PCR XP, RVI Cap Lib Pool, RVI Hyb, RVI Lib PCR XP, RVI Lib PrePool, scRNA cDNA-XP, and scRNA End Prep
+Used directly in 108 purposes:
+CLCM DNA End Prep, CLCM DNA Lib PCR XP, CLCM Lysate DNA, CLCM Lysate RNA, CLCM RNA End Prep, CLCM RNA Lib PCR XP, CLCM RT PreAmp, CLCM Stock, GnT Pico End Prep, GnT Pico-XP, GnT scDNA, LB Cap Lib, LB Cap Lib PCR, LB Cap Lib PCR-XP, LB Cap Lib Pool, LB End Prep, LB Hyb, LB Lib PCR-XP, LB Lib PrePool, LB Post Shear, LB Shear, LBB Enriched BCR, LBB Enriched BCR HT, LBB Enriched TCR, LBB Enriched TCR HT, LBB Lib-XP, LBB Ligation, LBC 3pV3 GEX Frag 2XP, LBC 5p GEX Frag 2XP, LBC Aggregate, LBC BCR Dil 1, LBC BCR Dil 2, LBC BCR Enrich1 2XSPRI, LBC BCR Enrich2 2XSPRI, LBC BCR Post PCR, LBC Cherrypick, LBC TCR Dil 1, LBC TCR Dil 2, LBC TCR Enrich1 2XSPRI, LBC TCR Enrich2 2XSPRI, LBC TCR Post PCR, LBR Frag cDNA, LBR Globin, LCA 10X cDNA, LCA Blood Array, LCA Blood Bank, LCA PBMC, LCA PBMC Bank, LCA PBMC Pools, LCMB End Prep, LCMB Lib PCR-XP, LDS AL Lib, LDS Lib PCR XP, LDS Stock XP, LHR End Prep, LHR PCR 1, LHR PCR 2, LHR XP, LHR-384 AL Lib, LHR-384 cDNA, LHR-384 PCR 1, LHR-384 PCR 2, LHR-384 XP, LRC Blood Bank, LRC HT 5p Aggregate, LRC HT 5p cDNA PCR, LRC HT 5p cDNA PCR XP, LRC HT 5p Cherrypick, LRC HT 5p Chip, LRC HT 5p GEMs, LRC PBMC Bank, LRC PBMC Cryostor, LRC PBMC Defrost PBS, LRC PBMC Pools, LSW-96 Stock, LTHR Lib PCR pool, LTHR PCR 1, LTHR PCR 2, LTHR RT-S, LTHR-384 Lib PCR pool, LTHR-384 PCR 1, LTHR-384 PCR 2, LTHR-384 RT-Q, LTN AL Lib, LTN Lib PCR XP, LTN Post Shear, LTN Shear, LTN Stock XP, PF End Prep, PF Lib XP, PF Lib XP2, PF Post Shear, PF Post Shear XP, PF Shear, PF-384 End Prep, PF-384 Lib XP2, PF-384 Post Shear XP, pWGS-384 AL Lib, pWGS-384 Post Shear XP, RVI Cap Lib, RVI Cap Lib PCR, RVI Cap Lib PCR XP, RVI Cap Lib Pool, RVI Hyb, RVI Lib PCR XP, RVI Lib PrePool, scRNA cDNA-XP, and scRNA End Prep
 
 {Presenters::StandardPresenter View class documentation}
 
@@ -117,8 +117,8 @@ PF Lib Q-XP2
 
 {include:Presenters::StockPlatePresenter}
 
-Used directly in 19 purposes:
-GnT Stock, LB Cherrypick, LBB Cherrypick, LBC Stock, LBR Cherrypick, LBSN-96 Lysate, LCMB Cherrypick, LDS Cherrypick, LDS Stock, LHR RT, LHR-384 RT, LILYS-96 Stock, LRC PBMC Pools Input, LTHR RT, LTHR-384 RT, LTN Cherrypick, LTN Stock, PF Cherrypicked, and scRNA Stock
+Used directly in 20 purposes:
+GnT Stock, LB Cherrypick, LBB Cherrypick, LBC Stock, LBR Cherrypick, LBSN-96 Lysate, LCMB Cherrypick, LDS Cherrypick, LDS Stock, LHR RT, LHR-384 RT, LILYS-96 Stock, LRC HT 5p cDNA Input, LRC PBMC Pools Input, LTHR RT, LTHR-384 RT, LTN Cherrypick, LTN Stock, PF Cherrypicked, and scRNA Stock
 
 {Presenters::StockPlatePresenter View class documentation}
 
