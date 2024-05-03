@@ -148,7 +148,7 @@ LRC HT 5p Cherrypick:
   :cherrypickable_target: true
   :creator_class: LabwareCreators::TenStamp
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_chromium_ht_aggregation'
+  :work_completion_request_type: 'limber_scrna_core_chromium_ht_5p_aggregation'
   :file_links:
     - name: 'Download Hamilton Aggregate Cherrypick CSV'
       id: 'hamilton_aggregate_cherrypick'
