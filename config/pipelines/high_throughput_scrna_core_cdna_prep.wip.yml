@@ -26,3 +26,24 @@ scRNA Core cDNA Prep Input:
     LRC HT 5p Chip: LRC HT 5p GEMs
     LRC HT 5p GEMs: LRC HT 5p cDNA PCR
     LRC HT 5p cDNA PCR: LRC HT 5p cDNA PCR XP
+scRNA Core Chromium HT 5p Aggregation:
+  pipeline_group: scRNA Core Aggregation
+  filters:
+    request_type_key: limber_scrna_core_chromium_ht_5p_aggregation
+  relationships:
+    # NB. alternate faculty input plate route included here
+    # TODO: do we need to allow skipping or bypassing the Aggregate plate? Config allows for a 2-step
+    # aggregation process, but this is not always necessary depending on the number of samples
+    # selected from the source plates. i.e. if 10 or fewer source plates are needed you could make the
+    # cherrypick plate directly from the source plates.
+    LRC HT 5p cDNA Input: LRC HT 5p Aggregate
+    LRC HT 5p cDNA PCR XP: LRC HT 5p Aggregate
+    LRC HT 5p Aggregate: LRC HT 5p Cherrypick
+scRNA Core Chromium HT 5p:
+  pipeline_group: scRNA Core Library Prep
+  filters:
+    request_type_key: limber_scrna_core_chromium_ht
+    library_type: Chromium single cell 5 prime HT v2
+  relationships:
+    LRC HT 5p Cherrypick: LRC HT 5p GEX Dil
+    # TODO: further steps after this to be added
