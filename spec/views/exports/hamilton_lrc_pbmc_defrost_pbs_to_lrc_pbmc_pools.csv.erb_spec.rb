@@ -177,22 +177,21 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
           'Sample Volume (µL)',
           'Resuspension Volume (µL)'
         ],
-        %w[DN1S,A1,DN3U,A1,9.00,13.20],
-        %w[DN1S,B1,DN3U,B1,4.50,13.20],
-        %w[DN1S,A2,DN3U,A1,1.80,13.20],
-        %w[DN1S,B2,DN3U,B1,1.50,13.20],
-        %w[DN1S,A3,DN3U,A1,1.00,13.20],
-        %w[DN1S,B3,DN3U,B1,0.90,13.20],
-        %w[DN2T,C1,DN3U,A1,3.00,13.20],
-        %w[DN2T,D1,DN3U,B1,2.25,13.20],
-        %w[DN2T,C2,DN3U,A1,1.29,13.20],
-        %w[DN2T,D2,DN3U,B1,1.12,13.20],
-        %w[DN2T,C3,DN3U,A1,0.82,13.20],
-        %w[DN2T,D3,DN3U,B1,0.75,13.20]
+        %w[DN1S A1 DN3U A1 9.00 13.20],
+        %w[DN1S B1 DN3U B1 4.50 13.20],
+        %w[DN1S A2 DN3U A1 1.80 13.20],
+        %w[DN1S B2 DN3U B1 1.50 13.20],
+        %w[DN1S A3 DN3U A1 1.00 13.20],
+        %w[DN1S B3 DN3U B1 0.90 13.20],
+        %w[DN2T C1 DN3U A1 3.00 13.20],
+        %w[DN2T D1 DN3U B1 2.25 13.20],
+        %w[DN2T C2 DN3U A1 1.29 13.20],
+        %w[DN2T D2 DN3U B1 1.12 13.20],
+        %w[DN2T C3 DN3U A1 0.82 13.20],
+        %w[DN2T D3 DN3U B1 0.75 13.20]
       ]
     end
     it 'renders the csv' do
-      puts render
       expect(CSV.parse(render)).to eq(expected_content)
     end
   end
