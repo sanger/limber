@@ -18,7 +18,7 @@
 <%
   # Prepare the fields determined from the transfer requests
 
-  required_number_of_cells = 5_000
+  default_required_number_of_cells = 5_000
   maximum_sample_volume = 50.0  # microlitres
   resuspension_volume_per_sample = 2.2  # microlitres
   minimum_resuspension_volume = 10.0  # microlitres
@@ -34,6 +34,11 @@
     src_well = ancestor_plates_wells[src_barcode][src_location]
     cell_count = src_well.latest_live_cell_count  # cells / millilitres
     next if cell_count.nil?
+
+    key = 'scrna_core_pbmc_donor_pooling_required_number_of_cells'
+    study_required_number_of_cells = src_well.aliquots.first.study.poly_metadata.find { |md| md.key == key }&.value.to_i.nonzero?
+    required_number_of_cells = study_required_number_of_cells || default_required_number_of_cells
+
     required_volume = [millilitres_to_microlitres * required_number_of_cells / cell_count.value.to_i, maximum_sample_volume].min
 
     transfer_request_data << [
