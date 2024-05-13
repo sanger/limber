@@ -148,7 +148,9 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
     assign(:plate, dest_plate)
   end
 
-  it 'renders the csv' do
-    expect(CSV.parse(render)).to eq(expected_content)
+  context 'without study-specific cell count option' do
+    it 'renders the csv' do
+      expect(CSV.parse(render)).to eq(expected_content)
+    end
   end
 end
