@@ -71,6 +71,8 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
     [source_well_c1, source_well_d1, source_well_c2, source_well_d2, source_well_c3, source_well_d3]
   end
 
+  let(:all_source_wells) { source_plate1_wells + source_plate2_wells }
+
   let(:source_plate1) { create(:v2_plate, wells: source_plate1_wells, barcode_number: 1) }
   let(:source_plate2) { create(:v2_plate, wells: source_plate2_wells, barcode_number: 2) }
 
@@ -142,14 +144,55 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
     ]
   end
 
+  let!(:study) { create(:study_with_poly_metadata, poly_metadata: []) } # empty poly_metadata
+
   before do
     assign(:ancestor_plate_list, [source_plate1, source_plate2])
     assign(:workflow, workflow)
     assign(:plate, dest_plate)
+    all_source_wells.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study) }
   end
 
   context 'without study-specific cell count option' do
     it 'renders the csv' do
+      expect(CSV.parse(render)).to eq(expected_content)
+    end
+  end
+
+  context 'with study-specific cell count option' do
+    let!(:study) do
+      cell_count_key = 'scrna_core_pbmc_donor_pooling_required_number_of_cells'
+      poly_metadatum = create(:poly_metadatum, key: cell_count_key, value: '9000')
+      create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
+    end
+
+    let(:expected_content) do
+      [
+        ['Workflow', workflow],
+        [
+          'Source Plate',
+          'Source Well',
+          'Destination Plate',
+          'Destination Well',
+          'Sample Volume (µL)',
+          'Resuspension Volume (µL)'
+        ],
+        %w[DN1S,A1,DN3U,A1,9.00,13.20],
+        %w[DN1S,B1,DN3U,B1,4.50,13.20],
+        %w[DN1S,A2,DN3U,A1,1.80,13.20],
+        %w[DN1S,B2,DN3U,B1,1.50,13.20],
+        %w[DN1S,A3,DN3U,A1,1.00,13.20],
+        %w[DN1S,B3,DN3U,B1,0.90,13.20],
+        %w[DN2T,C1,DN3U,A1,3.00,13.20],
+        %w[DN2T,D1,DN3U,B1,2.25,13.20],
+        %w[DN2T,C2,DN3U,A1,1.29,13.20],
+        %w[DN2T,D2,DN3U,B1,1.12,13.20],
+        %w[DN2T,C3,DN3U,A1,0.82,13.20],
+        %w[DN2T,D3,DN3U,B1,0.75,13.20]
+      ]
+    end
+    it 'renders the csv' do
+      puts render
       expect(CSV.parse(render)).to eq(expected_content)
     end
   end
