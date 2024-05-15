@@ -2,6 +2,7 @@
 
 # Interface for the json API based Sequencescape V2 api
 # Contains query plans
+# :reek:UncommunicativeModuleName
 module Sequencescape::Api::V2
   # transfer_request_as_target.source_asset is added to the includes to make
   # the source receptacles available in presenters.
