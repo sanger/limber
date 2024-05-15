@@ -3,6 +3,8 @@
 # Interface for the json API based Sequencescape V2 api
 # Contains query plans
 module Sequencescape::Api::V2
+  # transfer_request_as_target.source_asset is added to the includes to make
+  # the source receptacles available in presenters.
   PLATE_PRESENTER_INCLUDES = [
     :purpose,
     { child_plates: :purpose },
@@ -12,7 +14,8 @@ module Sequencescape::Api::V2
           downstream_tubes: 'purpose',
           requests_as_source: %w[request_type primer_panel pre_capture_pool submission],
           aliquots: ['sample.sample_metadata', { request: %w[request_type primer_panel pre_capture_pool submission] }],
-          qc_results: []
+          qc_results: [],
+          transfer_requests_as_target: %w[source_asset]
         }
       ]
     }
