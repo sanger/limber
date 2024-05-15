@@ -31,10 +31,9 @@ module Validators
     # @param presenter [Object] the presenter object
     # @return [void]
     def validate(presenter)
-      # Only validate in the pending state which is where pooling is relevant.
       return unless presenter.labware.state == 'pending'
 
-      studies = source_studies_without_required_number_of_cells(presenter)
+      studies = source_studies_without_config(presenter)
       return if studies.empty?
 
       formatted_string = format(STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS, studies.join(', '))
@@ -43,21 +42,21 @@ module Validators
 
     private
 
-    def source_studies(presenter)
+    # Returns the names of the studies without the required number of cells
+    # configuration.
+    #
+    # @param presenter [Object] the presenter object associated with the plate
+    # @return [Array<String>] the names of the studies without the configuration
+    # :reek:UtilityFunction { public_methods_only: true }
+    def source_studies_without_config(presenter)
+      key = 'scrna_core_pbmc_donor_pooling_required_number_of_cells'
       presenter
         .labware
-        .wells
-        .flat_map do |dest_well|
-          dest_well.transfer_requests_as_target.flat_map do |transfer_req|
-            transfer_req.source_asset.aliquots.flat_map(&:study)
-          end
-        end
-        .uniq
-    end
-
-    def source_studies_without_required_number_of_cells(presenter)
-      source_studies(presenter)
-        .select { |study| study.poly_metadatum_by_key('scrna_core_pbmc_donor_pooling_required_number_of_cells').blank? }
+        .wells_in_columns
+        .flat_map(&:transfer_requests_as_target)
+        .flat_map { |transfer_req| transfer_req.source_asset.aliquots }
+        .flat_map(&:study)
+        .select { |study| study.poly_metadatum_by_key(key).blank? }
         .map(&:name)
         .uniq
     end
