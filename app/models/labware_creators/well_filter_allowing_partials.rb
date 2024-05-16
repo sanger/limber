@@ -43,7 +43,8 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
       wells.each_with_object([]) do |well, transfers|
         next if well.empty? || !well.passed?
 
-        filtered_requests = filter_requests(well.active_requests, well)
+        # uniq is used to remove duplicate requests
+        filtered_requests = filter_requests(well.active_requests&.uniq, well)
 
         # don't add wells to the transfers list if they have no filtered requests,
         # i.e. only those submitted for library prep
