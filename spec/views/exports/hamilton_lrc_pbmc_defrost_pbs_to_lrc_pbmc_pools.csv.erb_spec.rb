@@ -155,11 +155,11 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
     assign(:plate, dest_plate)
     all_source_wells.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study) }
     Settings.purposes = {
-      labware.purpose.uuid => {
+      dest_plate.purpose.uuid => {
         presenter_class: {
           args: {
-            default_required_number_of_cells: cell_count_key,
-            study_required_number_of_cells_key: option_key
+            default_required_number_of_cells: default_cell_count,
+            study_required_number_of_cells_key: cell_count_key
           }
         }
       }
