@@ -17,7 +17,7 @@ module Validators
     STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS =
       'The required number of cells is not configured for all studies ' \
         'going into pooling on this plate. If not provided, the default ' \
-        'value 5000 will be used for the samples of the following studies: ' \
+        'value %s will be used for the samples of the following studies: ' \
         '%s. This value can be configured by study in Sequencescape. If you ' \
         'edit the study with an appropriate value, please download the ' \
         'driver file again to get the updated volumes.'
@@ -33,10 +33,15 @@ module Validators
     def validate(presenter)
       return unless presenter.labware.state == 'pending'
 
-      studies = source_studies_without_config(presenter)
+      studies = source_studies_without_config(presenter, study_required_number_of_cells_key(presenter))
       return if studies.empty?
 
-      formatted_string = format(STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS, studies.join(', '))
+      formatted_string =
+        format(
+          STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS,
+          default_required_number_of_cells(presenter),
+          studies.join(', ')
+        )
       presenter.errors.add(:required_number_of_cells, formatted_string)
     end
 
@@ -46,10 +51,10 @@ module Validators
     # configuration.
     #
     # @param presenter [Object] the presenter object associated with the plate
+    # @param key [String] the poly_metadatum key for study-specific cell count
     # @return [Array<String>] the names of the studies without the configuration
     # :reek:UtilityFunction { public_methods_only: true }
-    def source_studies_without_config(presenter)
-      key = 'scrna_core_pbmc_donor_pooling_required_number_of_cells'
+    def source_studies_without_config(presenter, key)
       presenter
         .labware
         .wells_in_columns
@@ -59,6 +64,22 @@ module Validators
         .select { |study| study.poly_metadatum_by_key(key).blank? }
         .map(&:name)
         .uniq
+    end
+
+    # Retrieves the default required number of cells from the purpose config.
+    #
+    # @return [Integer] the default required number of cells
+    # :reek:UtilityFunction { public_methods_only: true }
+    def default_required_number_of_cells(presenter)
+      Settings.purposes[presenter.labware.purpose.uuid][:presenter_class][:args][:default_required_number_of_cells]
+    end
+
+    # Retrieves the poly_metadatum key for the study-specific required number of cells.
+    #
+    # @return [String] the poly_metadatum key
+    # :reek:UtilityFunction { public_methods_only: true }
+    def study_required_number_of_cells_key(presenter)
+      Settings.purposes[presenter.labware.purpose.uuid][:presenter_class][:args][:study_required_number_of_cells_key]
     end
   end
 end
