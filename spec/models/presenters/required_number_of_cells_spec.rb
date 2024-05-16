@@ -83,7 +83,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
       labware.purpose.uuid => {
         presenter_class: {
           args: {
-            default_required_number_of_cells: 5000,
+            default_required_number_of_cells: default_cell_count,
             study_required_number_of_cells_key: option_key
           }
         }
