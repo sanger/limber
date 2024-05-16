@@ -74,10 +74,21 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:warning_template) { Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS }
 
   let(:option_key) { 'scrna_core_pbmc_donor_pooling_required_number_of_cells' }
+  let(:default_cell_count) { 5000 }
 
   subject { Presenters::DonorPoolingPlatePresenter.new(api: api, labware: labware) }
 
   before do
+    Settings.purposes = {
+      labware.purpose.uuid => {
+        presenter_class: {
+          args: {
+            default_required_number_of_cells: 5000,
+            study_required_number_of_cells_key: option_key
+          }
+        }
+      }
+    }
     source_wells_to_a1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_a1) }
     source_wells_to_b1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_b1) }
   end
@@ -87,7 +98,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
       it 'warns the user about all studies' do
         expect(subject).not_to be_valid # There are warnings in the errors collection.
         study_names = [study_to_a1, study_to_b1].map(&:name).join(', ')
-        formatted_string = format(warning_template, study_names)
+        formatted_string = format(warning_template, default_cell_count, study_names)
         expect(subject.errors[:required_number_of_cells]).to include(formatted_string)
       end
     end
@@ -102,7 +113,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
       it 'warns the user about one study' do
         expect(subject).not_to be_valid # There are warnings in the errors collection.
         study_names = [study_to_a1].map(&:name).join(', ')
-        formatted_string = format(warning_template, study_names)
+        formatted_string = format(warning_template, default_cell_count, study_names)
         expect(subject.errors[:required_number_of_cells]).to include(formatted_string)
       end
     end
