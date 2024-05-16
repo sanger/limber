@@ -146,11 +146,24 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   let!(:study) { create(:study_with_poly_metadata, poly_metadata: []) } # empty poly_metadata
 
+  let(:cell_count_key) { 'scrna_core_pbmc_donor_pooling_required_number_of_cells' }
+  let(:default_cell_count) { 5000 }
+
   before do
     assign(:ancestor_plate_list, [source_plate1, source_plate2])
     assign(:workflow, workflow)
     assign(:plate, dest_plate)
     all_source_wells.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study) }
+    Settings.purposes = {
+      labware.purpose.uuid => {
+        presenter_class: {
+          args: {
+            default_required_number_of_cells: cell_count_key,
+            study_required_number_of_cells_key: option_key
+          }
+        }
+      }
+    }
   end
 
   context 'without study-specific cell count option' do
@@ -161,7 +174,6 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   context 'with study-specific cell count option' do
     let!(:study) do
-      cell_count_key = 'scrna_core_pbmc_donor_pooling_required_number_of_cells'
       poly_metadatum = create(:poly_metadatum, key: cell_count_key, value: '9000')
       create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
     end
