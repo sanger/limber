@@ -8,7 +8,10 @@ namespace :docs do
     used_state_changer = Hash.new { |h, i| h[i] = [] }
 
     Settings.purposes.each_value do |purpose|
-      used_presenter[purpose['presenter_class']] << purpose['name']
+      # If presenter_class is a hash, then we get the name from the hash instead.
+      cls = purpose['presenter_class']
+      key = cls.is_a?(Hash) ? cls['name'] : cls
+      used_presenter[key] << purpose['name']
 
       # If creator_class is a hash, then we get the name from the hash instead.
       cls = purpose['creator_class']
