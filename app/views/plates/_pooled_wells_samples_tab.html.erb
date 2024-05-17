@@ -3,9 +3,9 @@
     <% next if well.aliquots.empty? %>
     <dt class="col-sm-1"><%= well.location %> <%= state_badge(well.state) %></dt>
     <dd class="col-sm-11"><ul class="list-inline">
-    <% well.transfer_requests_as_target.each do |transfer| -%>
-      <li class="list-inline-item"><%= transfer.source_asset.aliquots.first.sample.sanger_sample_id %> (source:
-      <%= transfer.source_asset.name %>)</li>
+    <% well.upstream_wells.each do |parent_well| -%>
+      <li class="list-inline-item"><%= parent_well.aliquots.first.sample.sanger_sample_id %> (source:
+      <%= parent_well.name %>)</li>
     <% end -%></ul></dd>
   <% end -%>
 </dl>
