@@ -9,7 +9,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     include Form
     include BarcodeLabelsHelper
 
-    class_attribute :summary_items, :sidebar_partial, :summary_partial
+    class_attribute :summary_items, :sidebar_partial, :summary_partial, :pooling_tab
 
     attr_accessor :api, :labware
 
@@ -17,6 +17,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     self.sidebar_partial = 'default'
     self.summary_items = []
     self.summary_partial = ''
+    self.pooling_tab = ''
 
     def csv
       purpose_config[:csv_template]
