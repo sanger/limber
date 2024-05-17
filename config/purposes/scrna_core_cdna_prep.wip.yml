@@ -57,6 +57,7 @@ LRC PBMC Defrost PBS:
 # This plate has come from the LRC PBMC Defrost PBS plate, in SeqOps.
 LRC PBMC Pools:
   :asset_type: plate
+  :presenter_class: Presenters::PooledWellsPlatePresenter
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:
