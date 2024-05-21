@@ -100,7 +100,8 @@ RSpec.describe Sequencescape::Api::V2::Plate do
                 'wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,' \
                 'wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,' \
                 'wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,' \
-                'wells.aliquots.request.submission'
+                'wells.aliquots.request.submission,' \
+                'wells.transfer_requests_as_target.source_asset'
           },
           headers: {
             'Accept' => 'application/vnd.api+json',
