@@ -5,6 +5,7 @@ require_dependency 'presenters/presenter'
 module Presenters
   # Basic core presenter class for plates
   # Handles the display of plates in the view, not used directly
+  # rubocop:disable Metrics/ClassLength
   class PlatePresenter
     include Presenters::Presenter
     include PlateWalking
@@ -12,10 +13,12 @@ module Presenters
     include Presenters::ExtendedCsv
     include Presenters::CreationBehaviour
 
-    class_attribute :aliquot_partial, :allow_well_failure_in_states, :style_class
+    class_attribute :aliquot_partial, :allow_well_failure_in_states, :style_class, :samples_partial
 
     self.summary_partial = 'labware/plates/standard_summary'
     self.aliquot_partial = 'standard_aliquot'
+    self.pooling_tab = 'plates/pooling_tab'
+    self.samples_partial = 'plates/samples_tab'
 
     # summary_items is a hash of a label label, and a symbol representing the
     # method to call to get the value
@@ -169,4 +172,5 @@ module Presenters
       wells.flat_map { |well| well.requests_in_progress.select(&:passable?).map(&:request_type_key) }
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
