@@ -5,7 +5,7 @@ Targeted NanoSeq Library Prep:
     request_type_key: limber_targeted_nanoseq
     library_type:
       - Targeted Nanoseq
-  library_pass: LTN Lib PCR XP
+  library_pass: LTN AL Lib
   relationships:
     # Allow bypassing of sheating to get to LTN Stock XP
     LTN Stock: LTN Stock XP
@@ -19,23 +19,9 @@ Targeted NanoSeq Library Prep:
 Targeted NanoSeq ISC Prep:
   pipeline_group: Targeted NanoSeq ISC Prep
   # TODO: check if we need library type here as Customer request
-  filters: *targeted_nanoseq_filters
+  filters:
+    request_type_key: limber_targeted_nanoseq_isc_prep
   relationships:
     LTN AL Lib: LTN AL Lib Dil
     LTN AL Lib Dil: LTN Lib PCR
     LTN Lib PCR: LTN Lib PCR XP
-# TODO: do we want to define this separate to the other re-ISC pipeline configs?
-Targeted NanoSeq ISC:
-  pipeline_group: Targeted NanoSeq ISC
-  filters:
-    request_type_key:
-      - limber_reisc
-    library_type:
-      # TODO: confirming which library types are needed here
-      - Targeted NanoSeq Pulldown Twist
-      - Targeted NanoSeq Pulldown Agilent
-  library_pass:
-    - LB Cap Lib PCR-XP
-  relationships:
-    LTN Lib PCR XP: LB Lib PrePool
-    # TODO: do we need rest here to LB Cap Lib PCR-XP?
