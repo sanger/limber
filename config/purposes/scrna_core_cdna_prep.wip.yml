@@ -164,7 +164,7 @@ LRC HT 5p Cherrypick:
 # NB. For the following binning step the min and max amounts for the bins are the total amount of cDNA
 # in the well i.e. QC concentration * (source_volume + diluent_volume)
 # Here we are using a fixed source volume and there is no dilution (diluent_volume = 0)
-# TODO: R&D to confirm the ranges for each PRC cycle
+# TODO: R&D to confirm the number of PCR cycles for each range
 LRC HT 5p GEX Dil:
   :asset_type: plate
   :stock_plate: false
@@ -172,52 +172,28 @@ LRC HT 5p GEX Dil:
   :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
   :creator_class: LabwareCreators::ConcentrationBinnedPlate
   :dilutions:
-    :source_volume: 20
+    :source_volume: 10
     :diluent_volume: 0
     :bins:
-      - max: 5.0
-        pcr_cycles: 16
-        colour: 1
-      - min: 5.0
-        max: 15.0
+      - max: 25.0
         pcr_cycles: 15
-        colour: 2
-      - min: 15.0
-        max: 25.0
-        pcr_cycles: 14
-        colour: 3
+        colour: 1
       - min: 25.0
-        max: 75.0
+        max: 150.0
         pcr_cycles: 13
-        colour: 4
-      - min: 75.0
-        max: 150
-        pcr_cycles: 12
-        colour: 5
+        colour: 2
       - min: 150.0
-        max: 300.0
-        pcr_cycles: 11
-        colour: 6
-      - min: 300.0
         max: 500.0
-        pcr_cycles: 10
-        colour: 7
+        pcr_cycles: 11
+        colour: 3
       - min: 500.0
-        max: 750.0
-        pcr_cycles: 9
-        colour: 8
-      - min: 750.0
         max: 1000.0
-        pcr_cycles: 8
-        colour: 9
+        pcr_cycles: 9
+        colour: 4
       - min: 1000.0
-        max: 1250.0
-        pcr_cycles: 7
-        colour: 10
-      - min: 1250.0
         max: 1500.0
-        pcr_cycles: 6
-        colour: 11
+        pcr_cycles: 7
+        colour: 5
       - min: 1500.0
         pcr_cycles: 5
         colour: 12
