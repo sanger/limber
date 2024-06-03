@@ -152,6 +152,7 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a Targeted NanoSeq dilution plate
     factory :targeted_nano_seq_customer_csv_file_upload_purpose_config do
       csv_file_upload do
         {
