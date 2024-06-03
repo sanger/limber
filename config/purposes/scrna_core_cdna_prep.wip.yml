@@ -100,7 +100,7 @@ LRC PBMC Pools Input:
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
 # 10X Chromium 16-well chip
-LRC HT 5p Chip:
+LRC GEM-X 5p Chip:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
