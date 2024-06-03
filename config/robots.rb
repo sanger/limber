@@ -3424,7 +3424,7 @@ ROBOT_CONFIG =
 
     custom_robot(
       'hamilton-lrc-ht-5p-gems-to-lrc-ht-5p-cdna-pcr',
-      name: 'Hamilton LRC GEM-X 5p GEMs => LRC HT 5p cDNA PCR',
+      name: 'Hamilton LRC GEM-X 5p GEMs => LRC GEM-X 5p cDNA PCR',
       beds: {
         bed(15).barcode => {
           purpose: 'LRC GEM-X 5p GEMs',
@@ -3432,7 +3432,7 @@ ROBOT_CONFIG =
           label: 'Bed 15'
         },
         bed(5).barcode => {
-          purpose: 'LRC HT 5p cDNA PCR',
+          purpose: 'LRC GEM-X 5p cDNA PCR',
           states: ['pending'],
           label: 'Bed 5',
           parent: bed(15).barcode,

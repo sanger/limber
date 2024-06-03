@@ -14,8 +14,8 @@ scRNA Core cDNA Prep:
     LRC PBMC Defrost PBS: LRC PBMC Pools
     LRC PBMC Pools: LRC GEM-X 5p Chip
     LRC GEM-X 5p Chip:  LRC GEM-X 5p GEMs
-    LRC GEM-X 5p GEMs: LRC HT 5p cDNA PCR
-    LRC HT 5p cDNA PCR: LRC HT 5p cDNA PCR XP
+    LRC GEM-X 5p GEMs: LRC GEM-X 5p cDNA PCR
+    LRC GEM-X 5p cDNA PCR: LRC GEM-X 5p cDNA PCR XP
 scRNA Core cDNA Prep Input:
   pipeline_group: scRNA Core cDNA Prep
   filters:
@@ -24,8 +24,8 @@ scRNA Core cDNA Prep Input:
   relationships:
     LRC PBMC Pools Input: LRC GEM-X 5p Chip
     LRC GEM-X 5p Chip: RC GEM-X 5p GEMs
-    LRC GEM-X 5p GEMs: LRC HT 5p cDNA PCR
-    LRC HT 5p cDNA PCR: LRC HT 5p cDNA PCR XP
+    LRC GEM-X 5p GEMs: LRC GEM-X 5p cDNA PCR
+    LRC GEM-X 5p cDNA PCR: LRC GEM-X 5p cDNA PCR XP
 scRNA Core Chromium HT 5p Aggregation:
   pipeline_group: scRNA Core Aggregation
   filters:
@@ -37,7 +37,7 @@ scRNA Core Chromium HT 5p Aggregation:
     # selected from the source plates. i.e. if 10 or fewer source plates are needed you could make the
     # cherrypick plate directly from the source plates.
     LRC HT 5p cDNA Input: LRC HT 5p Aggregate
-    LRC HT 5p cDNA PCR XP: LRC HT 5p Aggregate
+    LRC GEM-X 5p cDNA PCR XP: LRC HT 5p Aggregate
     LRC HT 5p Aggregate: LRC HT 5p Cherrypick
 scRNA Core Chromium HT 5p:
   pipeline_group: scRNA Core Library Prep
