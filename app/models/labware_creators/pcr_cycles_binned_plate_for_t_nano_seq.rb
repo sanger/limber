@@ -7,6 +7,10 @@ module LabwareCreators
 
     CUSTOMER_FILENAME = 'targeted_nano_seq_customer_file.csv'
 
+    # NB. well filter already catches if there are multiple open requests on the same parent well
+    validate :parent_contains_active_requests_of_expected_type
+    validate :customer_file_contains_values_for_all_active_requests
+
     # rubocop:disable Metrics/AbcSize
     def after_transfer!
       # called as part of the 'super' call in the 'save' method
@@ -22,6 +26,9 @@ module LabwareCreators
         child_well = child_wells_by_location[child_well_location]
 
         # NB. this seems to return an array of requests via the api but a single request in tests
+        # Because this is the child plate, the active request should be in the aliquot.
+        # i.e. if parent is LTN AL Lib and has submission for ISC Prep on it, then the parent well will have the active
+        # request in the well.requests_as_source, whereas the child will have it in the aliquot.request
         request = Array(child_well.aliquots.first.request).first
 
         if request.blank?
@@ -62,6 +69,53 @@ module LabwareCreators
     end
 
     private
+
+    # to fetch the expected binning request type from the purpose config
+    def expected_binning_request_type
+      @expected_binning_request_type ||= purpose_config.fetch('expected_binning_request_type')
+    end
+
+    # check the parent plate only contains requests of the expected type and no others
+    def parent_contains_active_requests_of_expected_type
+      # disabled as request_type.key does not work
+      # rubocop:disable Performance/MapMethodChain
+      request_type_keys = filtered_wells.flat_map { |well| well.active_requests.map(&:request_type).map(&:key) }.uniq
+
+      # rubocop:enable Performance/MapMethodChain
+
+      return if request_type_keys.one? && request_type_keys.include?(expected_binning_request_type)
+
+      request_types_present = request_type_keys.join(', ')
+
+      errors.add(
+        :base,
+        "Parent plate should only contain active requests of type (#{expected_binning_request_type}), " \
+          "found unexpected types (#{request_types_present})"
+      )
+    end
+
+    def customer_file_contains_values_for_all_active_requests
+      # parent wells with requests
+      parent_wells_with_requests = filtered_wells.map(&:location).sort
+
+      # wells with details in the customer file
+      wells_with_details = well_details.keys.sort
+
+      # check the two arrays match (same elements in same order)
+      return if parent_wells_with_requests == wells_with_details
+
+      errors.add(
+        :base,
+        "The uploaded customer file does not contain the same number of rows (#{wells_with_details.count}) " \
+          "as there are wells with active requests on the parent plate (#{parent_wells_with_requests.count})"
+      )
+    end
+
+    # The well filter will be used to identify the parent wells to be taken forward.
+    # Filters on request type, library type and state.
+    def well_filter
+      @well_filter ||= WellFilterAllowingPartials.new(creator: self, request_state: 'pending')
+    end
 
     def find_existing_metadata(metadata_key, request_id)
       Sequencescape::Api::V2::PolyMetadatum.find(key: metadata_key, metadatable_id: request_id).first

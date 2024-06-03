@@ -40,6 +40,7 @@ LTN AL Lib Dil:
     :diluent_volume_max: 50.0
     :pcr_cycles_min: 1
     :pcr_cycles_max: 20
+  :expected_binning_request_type: 'limber_targeted_nanoseq_isc_prep'
   :file_links:
     - name: 'Download Hamilton AL Lib to Dilution CSV'
       id: 'hamilton_ltn_al_lib_to_ltn_al_lib_dil'

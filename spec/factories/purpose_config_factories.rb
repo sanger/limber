@@ -166,6 +166,7 @@ FactoryBot.define do
           pcr_cycles_max: 20
         }
       end
+      expected_binning_request_type { 'limber_targeted_nanoseq_isc_prep' }
     end
 
     # Configuration for an aggregation plate

@@ -625,6 +625,40 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made
       end
+
+      # Check that we cannot create the child plate whilst there are active requests on the parent plate
+      # from previous loops
+      context 'when the request from the previous run is still active' do
+        let(:loop_1_request) { create :isc_prep_request, state: 'pending', uuid: 'request-1' }
+
+        it 'does not create the child plate' do
+          # WellFilter catches that there are 2 active submissions on the well and throws an exception
+          expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+          expect(subject.errors.messages[:well_filter].count).to eq(1)
+          expect(subject.errors.messages[:well_filter][0]).to eq(
+            'found 2 eligible requests for A1, possible overlapping submissions'
+          )
+
+          expect(plate_creation_request).to_not have_been_made
+          expect(transfer_creation_request).to_not have_been_made
+        end
+      end
+
+      context 'when the request is not the expected type' do
+        let(:loop_2_request) { create :library_request, state: 'pending', uuid: 'request-2' }
+
+        it 'does not create the child plate' do
+          expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
+          expect(subject.errors.messages[:base].count).to eq(1)
+          expect(subject.errors.messages[:base][0]).to eq(
+            'Parent plate should only contain active requests of type (limber_targeted_nanoseq_isc_prep), ' \
+              'found unexpected types (limber_wgs)'
+          )
+
+          expect(plate_creation_request).to_not have_been_made
+          expect(transfer_creation_request).to_not have_been_made
+        end
+      end
     end
 
     # tests for create_or_update_request_metadata method
