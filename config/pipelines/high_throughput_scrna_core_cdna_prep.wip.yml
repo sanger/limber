@@ -12,8 +12,8 @@ scRNA Core cDNA Prep:
     LRC Bank Spare: LRC PBMC Cryostor
     LRC PBMC Cryostor: LRC PBMC Defrost PBS
     LRC PBMC Defrost PBS: LRC PBMC Pools
-    LRC PBMC Pools: LRC HT 5p Chip
-    LRC HT 5p Chip: LRC HT 5p GEMs
+    LRC PBMC Pools: LRC GEM-X 5p Chip
+    LRC GEM-X 5p Chip: LRC HT 5p GEMs
     LRC HT 5p GEMs: LRC HT 5p cDNA PCR
     LRC HT 5p cDNA PCR: LRC HT 5p cDNA PCR XP
 scRNA Core cDNA Prep Input:
@@ -22,8 +22,8 @@ scRNA Core cDNA Prep Input:
     request_type_key: limber_scrna_core_cdna_prep_input
     library_type: Chromium single cell 5 prime HT v2
   relationships:
-    LRC PBMC Pools Input: LRC HT 5p Chip
-    LRC HT 5p Chip: LRC HT 5p GEMs
+    LRC PBMC Pools Input: LRC GEM-X 5p Chip
+    LRC GEM-X 5p Chip: LRC HT 5p GEMs
     LRC HT 5p GEMs: LRC HT 5p cDNA PCR
     LRC HT 5p cDNA PCR: LRC HT 5p cDNA PCR XP
 scRNA Core Chromium HT 5p Aggregation:
