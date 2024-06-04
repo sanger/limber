@@ -36,7 +36,7 @@ scRNA Core Chromium HT 5p Aggregation:
     # aggregation process, but this is not always necessary depending on the number of samples
     # selected from the source plates. i.e. if 10 or fewer source plates are needed you could make the
     # cherrypick plate directly from the source plates.
-    LRC HT 5p cDNA Input: LRC HT 5p Aggregate
+    LRC GEM-X 5p cDNA Input: LRC HT 5p Aggregate
     LRC GEM-X 5p cDNA PCR XP: LRC HT 5p Aggregate
     LRC HT 5p Aggregate: LRC HT 5p Cherrypick
 scRNA Core Chromium HT 5p:
