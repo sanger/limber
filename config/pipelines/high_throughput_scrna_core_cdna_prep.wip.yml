@@ -13,7 +13,7 @@ scRNA Core cDNA Prep:
     LRC PBMC Cryostor: LRC PBMC Defrost PBS
     LRC PBMC Defrost PBS: LRC PBMC Pools
     LRC PBMC Pools: LRC GEM-X 5p Chip
-    LRC GEM-X 5p Chip:  LRC GEM-X 5p GEMs
+    LRC GEM-X 5p Chip: LRC GEM-X 5p GEMs
     LRC GEM-X 5p GEMs: LRC GEM-X 5p cDNA PCR
     LRC GEM-X 5p cDNA PCR: LRC GEM-X 5p cDNA PCR XP
 scRNA Core cDNA Prep Input:
