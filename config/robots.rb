@@ -3423,7 +3423,7 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'hamilton-lrc-ht-5p-gems-to-lrc-ht-5p-cdna-pcr',
+      'hamilton-lrc-gem-x-5p-gems-to-lrc-gem-x-5p-cdna-pcr',
       name: 'Hamilton LRC GEM-X 5p GEMs => LRC GEM-X 5p cDNA PCR',
       beds: {
         bed(15).barcode => {
