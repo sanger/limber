@@ -105,7 +105,7 @@ LRC GEM-X 5p Chip:
   :stock_plate: false
   :input_plate: false
 # GEMs plate, containing wells from the above in duplicate.
-LRC HT 5p GEMs:
+LRC GEM-X 5p GEMs:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -138,7 +138,7 @@ LRC GEM-X 5p cDNA Input:
 # could be aggregated into a single cherrypick plate.
 # e.g. if single samples are selected from each plate then up to 10 aggregate plates could be made which are
 # then combined into a single cherrypick plate.
-LRC HT 5p Aggregate:
+LRC GEM-X 5p Aggregate:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -155,7 +155,7 @@ LRC GEM-X 5p Cherrypick:
   :cherrypickable_target: true
   :creator_class: LabwareCreators::TenStamp
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_chromium_ht_5p_aggregation'
+  :work_completion_request_type: 'limber_scrna_core_chromium_gem_x_5p_aggregation'
   :file_links:
     - name: 'Download Hamilton Aggregate Cherrypick CSV'
       id: 'hamilton_aggregate_cherrypick'
@@ -165,7 +165,7 @@ LRC GEM-X 5p Cherrypick:
 # in the well i.e. QC concentration * (source_volume + diluent_volume)
 # Here we are using a fixed source volume and there is no dilution (diluent_volume = 0)
 # TODO: R&D to confirm the number of PCR cycles for each range
-LRC HT 5p GEX Dil:
+LRC GEM-X 5p GEX Dil:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -198,8 +198,8 @@ LRC HT 5p GEX Dil:
         pcr_cycles: 5
         colour: 12
   :file_links:
-    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC HT 5p GEX Dil CSV'
-      id: hamilton_lrc_ht_5p_cherrypick_to_lrc_ht_5p_gex_dil
+    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p GEX Dil CSV'
+      id: hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
 # TODO: there will be further library prep steps after this plate
