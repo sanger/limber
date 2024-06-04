@@ -134,7 +134,7 @@ LRC GEM-X 5p cDNA Input:
   # will not be creatable in Limber (created by manifest in Sequencescape)
   :creator_class: LabwareCreators::Uncreatable
 # There will be a manual submission on a sub-selection of samples in the LRC GEM-X 5p cDNA PCR XP and
-# LRC GEM-X 5p cDNA Input plates for aggregation into a single LRC HT 5p Cherrypick plate. Multiple plates
+# LRC GEM-X 5p cDNA Input plates for aggregation into a single LRC GEM-X 5p Cherrypick plate. Multiple plates
 # could be aggregated into a single cherrypick plate.
 # e.g. if single samples are selected from each plate then up to 10 aggregate plates could be made which are
 # then combined into a single cherrypick plate.
@@ -148,7 +148,7 @@ LRC HT 5p Aggregate:
 # calculations in the GEX Dil plate step to work.
 # TODO: there will be a submission on this plate for library prep
 # TODO: not clear what the stock and input flags should be for this to work
-LRC HT 5p Cherrypick:
+LRC GEM-X 5p Cherrypick:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -198,7 +198,7 @@ LRC HT 5p GEX Dil:
         pcr_cycles: 5
         colour: 12
   :file_links:
-    - name: 'Download Hamilton LRC HT 5p Cherrypick to LRC HT 5p GEX Dil CSV'
+    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC HT 5p GEX Dil CSV'
       id: hamilton_lrc_ht_5p_cherrypick_to_lrc_ht_5p_gex_dil
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul

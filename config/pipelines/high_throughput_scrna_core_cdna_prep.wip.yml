@@ -38,12 +38,12 @@ scRNA Core Chromium HT 5p Aggregation:
     # cherrypick plate directly from the source plates.
     LRC GEM-X 5p cDNA Input: LRC HT 5p Aggregate
     LRC GEM-X 5p cDNA PCR XP: LRC HT 5p Aggregate
-    LRC HT 5p Aggregate: LRC HT 5p Cherrypick
+    LRC HT 5p Aggregate: LRC GEM-X 5p Cherrypick
 scRNA Core Chromium HT 5p:
   pipeline_group: scRNA Core Library Prep
   filters:
     request_type_key: limber_scrna_core_chromium_ht
     library_type: Chromium single cell 5 prime HT v2
   relationships:
-    LRC HT 5p Cherrypick: LRC HT 5p GEX Dil
+    LRC GEM-X 5p Cherrypick: LRC HT 5p GEX Dil
     # TODO: further steps after this to be added
