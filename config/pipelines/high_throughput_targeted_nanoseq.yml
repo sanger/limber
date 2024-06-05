@@ -15,13 +15,13 @@ Targeted NanoSeq Library Prep:
     LTN Post Shear: LTN Stock XP
     # Both routes end with creation of the LTN AL Lib plate
     LTN Stock XP: LTN AL Lib
-    # End of library prep at LTN AL Lib plate
+    # End of library prep at LTN AL Lib plate - can submit LTN AL Lib plates for ISC Prep
 Targeted NanoSeq ISC Prep:
   pipeline_group: Targeted NanoSeq ISC Prep
-  # TODO: check if we need library type here as Customer request
   filters:
     request_type_key: limber_targeted_nanoseq_isc_prep
   relationships:
     LTN AL Lib: LTN AL Lib Dil
     LTN AL Lib Dil: LTN Lib PCR
     LTN Lib PCR: LTN Lib PCR XP
+    # End of ISC prep at LTN Lib PCR XP plate - can submit LTN Lib PCR XP plates for reISC
