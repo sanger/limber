@@ -99,7 +99,8 @@ LRC PBMC Pools Input:
   # will not be creatable in Limber
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
-# 10X Chromium 16-well chip
+# 10X Chromium 8-well chip
+# TODO: Update asset_type and size to get a single row presentation with 8 wells
 LRC GEM-X 5p Chip:
   :asset_type: plate
   :stock_plate: false
