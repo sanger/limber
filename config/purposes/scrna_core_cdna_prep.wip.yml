@@ -102,7 +102,7 @@ LRC PBMC Pools Input:
 # 10X Chromium 8-well chip
 LRC GEM-X 5p Chip:
   :asset_type: plate
-  # NB. The ChromiumChipX shape configured here differs from the ChromiumChip shape. 
+  # NB. The ChromiumChipX shape configured here differs from the ChromiumChip shape.
   # Specifically, their horizontal to vertical ratios are 8:1 and 4:1, respectively.
   :asset_shape: ChromiumChipX
   :size: 8

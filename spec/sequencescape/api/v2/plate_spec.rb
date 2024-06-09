@@ -117,11 +117,8 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
   describe '#wells_in_rows' do
     it 'returns wells sorted by rows first and then columns' do
-      locations_in_rows = ('A'..'H').flat_map do |letter|
-        (1..12).map do |number|
-          "#{letter}#{number}"
-        end
-      end
+      locations_in_rows = ('A'..'H').flat_map { |letter| (1..12).map { |number| "#{letter}#{number}" } }
+
       # A1, A2, A3, ..., A12, B1, B2, ..., H10, H11, H12
       expect(plate.wells_in_rows.map(&:location)).to eq(locations_in_rows)
     end
