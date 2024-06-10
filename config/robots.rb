@@ -3448,50 +3448,7 @@ ROBOT_CONFIG =
       }
     )
 
-    custom_robot(
-      'hamilton-lrc-gem-x-5p-gems-to-lrc-gem-x-5p-cdna-pcr',
-      name: 'Hamilton LRC GEM-X 5p GEMs => LRC GEM-X 5p cDNA PCR',
-      beds: {
-        bed(15).barcode => {
-          purpose: 'LRC GEM-X 5p GEMs',
-          states: ['passed'],
-          label: 'Bed 15'
-        },
-        bed(5).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR',
-          states: ['pending'],
-          label: 'Bed 5',
-          parent: bed(15).barcode,
-          target_state: 'passed'
-        }
-      }
-    )
-
     # scRNA pipeline
-    # LRC Hamilton Star bed verification
-    # LRC HT 5p Chip to LRC HT 5p GEMs
-    # Transfers 1:1
-    custom_robot(
-      'hamilton-lrc-ht-5p-chip-to-lrc-ht-5p-gems',
-      name: 'Hamilton LRC HT 5p Chip => LRC HT 5p GEMs',
-      require_robot: true,
-      beds: {
-        bed(15).barcode => {
-          purpose: 'LRC HT 5p Chip',
-          states: ['passed'],
-          label: 'Bed 15'
-        },
-        bed(5).barcode => {
-          purpose: 'LRC HT 5p GEMs',
-          states: ['pending'],
-          label: 'Bed 5',
-          parent: bed(15).barcode,
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # scRNA cDNA prep pipeline
     # Hamilton STAR bed verification
     # LRC PBMC Defrost PBS to LRC PBMC Pools
     # Transfers 1:1
@@ -3515,7 +3472,7 @@ ROBOT_CONFIG =
       }
     )
 
-    # scRNA cDNA prep pipeline
+    # scRNA pipeline
     # Hamilton STARlet bed verification
     # LRC PBMC Defrost PBS to LRC PBMC Pools
     # Transfers 1:1
@@ -3539,7 +3496,7 @@ ROBOT_CONFIG =
       }
     )
 
-    # scRNA cDNA prep pipeline
+    # scRNA pipeline
     # Hamilton STARlet bed verification
     # Transfers 1:1
     # LRC PBMC Pools to LRC GEM-X 5p Chip
@@ -3563,7 +3520,7 @@ ROBOT_CONFIG =
       }
     )
 
-    # scRNA cDNA prep pipeline
+    # scRNA pipeline
     # Hamilton STARlet bed verification
     # Transfers 1:1
     # LRC PBMC Pools Input to LRC GEM-X 5p Chip
@@ -3582,6 +3539,53 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 15',
           parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # LRC Hamilton STARlet bed verification
+    # LRC GEM-X 5p Chip to LRC GEM-X 5p GEMs
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-chip-to-lrc-gem-x-5p-gems',
+      name: 'Hamilton LRC GEM-X 5p Chip => LRC GEM-X 5p GEMs',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC GEM-X 5p Chip',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(5).barcode => {
+          purpose: 'LRC GEM-X 5p GEMs',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton bed verification
+    # LRC GEM-X 5p GEMs to LRC GEM-X 5p cDNA PCR
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-gems-to-lrc-gem-x-5p-cdna-pcr',
+      name: 'Hamilton LRC GEM-X 5p GEMs => LRC GEM-X 5p cDNA PCR',
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC GEM-X 5p GEMs',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(5).barcode => {
+          purpose: 'LRC GEM-X 5p cDNA PCR',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(15).barcode,
           target_state: 'passed'
         }
       }
