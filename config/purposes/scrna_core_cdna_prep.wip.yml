@@ -109,6 +109,7 @@ LRC HT 5p GEMs:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
+  :creator_class: LabwareCreators::StampedPlateCompressed
 # Plate containing cDNA (converted from RNA), straight stamp from above.
 LRC HT 5p cDNA PCR:
   :asset_type: plate
