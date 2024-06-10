@@ -109,6 +109,7 @@ LRC GEM-X 5p Chip:
   :stock_plate: false
   :input_plate: false
   :creator_class: LabwareCreators::StampedPlateReorderingColumnsToRows
+  :presenter_class: Presenters::ChromiumChipXPresenter
 # GEMs plate, containing wells from the above in duplicate.
 LRC GEM-X 5p GEMs:
   :asset_type: plate
