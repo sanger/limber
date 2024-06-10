@@ -2940,7 +2940,10 @@ ROBOT_CONFIG =
       }
     )
 
-    # hamilton robot for stamping deep well stock plates to shallow well stock plates
+    # RVI Deep well to shallow well stamping bed verification
+    # Hamilton Robot
+    # LDW-96 Stock to LSW-96 Stock
+    # Transfers 1:1
     custom_robot(
       'hamilton-ldw-96-stock-to-lsw-96-stock',
       name: 'Hamilton LDW-96 Stock => LSW-96 Stock',
@@ -2955,6 +2958,29 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 2',
           parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # RVI Deep well to shallow well stamping bed verification
+    # Bravo Robot
+    # LDW-96 Stock to LSW-96 Stock
+    # Transfers 1:1
+    custom_robot(
+      'bravo-ldw-96-stock-to-lsw-96-stock',
+      name: 'Bravo LDW-96 Stock => LSW-96 Stock',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LDW-96 Stock',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(6).barcode => {
+          purpose: 'LSW-96 Stock',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(4).barcode,
           target_state: 'passed'
         }
       }
@@ -3435,6 +3461,54 @@ ROBOT_CONFIG =
           purpose: 'LRC GEM-X 5p cDNA PCR',
           states: ['pending'],
           label: 'Bed 5',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA cDNA prep pipeline
+    # Hamilton STAR bed verification
+    # LRC PBMC Defrost PBS to LRC PBMC Pools
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-star-lrc-pbmc-defrost-pbs-to-lrc-pbmc-pools',
+      name: 'Hamilton STAR LRC PBMC Defrost PBS => LRC PBMC Pools',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC PBMC Defrost PBS',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(14).barcode => {
+          purpose: 'LRC PBMC Pools',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA cDNA prep pipeline
+    # Hamilton STARlet bed verification
+    # LRC PBMC Defrost PBS to LRC PBMC Pools
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-starlet-lrc-pbmc-defrost-pbs-to-lrc-pbmc-pools',
+      name: 'Hamilton STARlet LRC PBMC Defrost PBS => LRC PBMC Pools',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC PBMC Defrost PBS',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(14).barcode => {
+          purpose: 'LRC PBMC Pools',
+          states: ['pending'],
+          label: 'Bed 14',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
