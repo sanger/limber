@@ -3449,16 +3449,16 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'hamilton-lrc-ht-5p-gems-to-lrc-ht-5p-cdna-pcr',
-      name: 'Hamilton LRC HT 5p GEMs => LRC HT 5p cDNA PCR',
+      'hamilton-lrc-gem-x-5p-gems-to-lrc-gem-x-5p-cdna-pcr',
+      name: 'Hamilton LRC GEM-X 5p GEMs => LRC GEM-X 5p cDNA PCR',
       beds: {
         bed(15).barcode => {
-          purpose: 'LRC HT 5p GEMs',
+          purpose: 'LRC GEM-X 5p GEMs',
           states: ['passed'],
           label: 'Bed 15'
         },
         bed(5).barcode => {
-          purpose: 'LRC HT 5p cDNA PCR',
+          purpose: 'LRC GEM-X 5p cDNA PCR',
           states: ['pending'],
           label: 'Bed 5',
           parent: bed(15).barcode,
@@ -3534,6 +3534,54 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 14',
           parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA cDNA prep pipeline
+    # Hamilton STARlet bed verification
+    # Transfers 1:1
+    # LRC PBMC Pools to LRC GEM-X 5p Chip
+    custom_robot(
+      'hamilton-starlet-lrc-pbmc-pools-to-lrc-gem-x-5p-chip',
+      name: 'Hamilton STARlet LRC PBMC Pools => LRC GEM-X 5p Chip',
+      require_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LRC PBMC Pools',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(15).barcode => {
+          purpose: 'LRC GEM-X 5p Chip',
+          states: ['pending'],
+          label: 'Bed 15',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA cDNA prep pipeline
+    # Hamilton STARlet bed verification
+    # Transfers 1:1
+    # LRC PBMC Pools Input to LRC GEM-X 5p Chip
+    custom_robot(
+      'hamilton-starlet-lrc-pbmc-pools-input-to-lrc-gem-x-5p-chip',
+      name: 'Hamilton STARlet LRC PBMC Pools Input => LRC GEM-X 5p Chip',
+      require_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LRC PBMC Pools Input',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(15).barcode => {
+          purpose: 'LRC GEM-X 5p Chip',
+          states: ['pending'],
+          label: 'Bed 15',
+          parent: bed(8).barcode,
           target_state: 'passed'
         }
       }
