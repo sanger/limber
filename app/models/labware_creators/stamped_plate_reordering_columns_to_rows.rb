@@ -6,6 +6,8 @@ module LabwareCreators
   # plate; there will not be any gaps corresponding to the source wells that
   # were filtered out.
   class StampedPlateReorderingColumnsToRows < StampedPlate
+    include LabwareCreators::StampedPlateReorderingValidator
+
     # This method is called by the well filter to receive the input wells for
     # filtering. It is overridden here to ensure that the wells are specified
     # in columns order. The well filter preserves the order of the wells when
