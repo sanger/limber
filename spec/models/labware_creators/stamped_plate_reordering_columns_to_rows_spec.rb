@@ -68,13 +68,14 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     end
   end
 
-  describe '#save' do
+  describe '#save!' do
     # Expected transferred source wells
     let(:transferred_wells) { parent_wells }
 
     # Expected transfer requests from source wells to child wells
     let(:transfer_requests) do
       transferred_wells.map.with_index do |source_well, index|
+        # p "#{source_well.location} -> #{child_plate.wells_in_rows[index].location}"
         submission_id = source_well.aliquots.first.request.submission_id
         {
           'source_asset' => source_well.uuid,
