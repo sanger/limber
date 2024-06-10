@@ -3538,4 +3538,28 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # scRNA cDNA prep pipeline
+    # Hamilton STARlet bed verification
+    # Transfers 1:1
+    # LRC PBMC Pools Input to LRC GEM-X 5p Chip
+    custom_robot(
+      'hamilton-starlet-lrc-pbmc-pools-input-to-lrc-gem-x-5p-chip',
+      name: 'Hamilton STARlet LRC PBMC Pools Input => LRC GEM-X 5p Chip',
+      require_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LRC PBMC Pools Input',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(15).barcode => {
+          purpose: 'LRC GEM-X 5p Chip',
+          states: ['pending'],
+          label: 'Bed 15',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
