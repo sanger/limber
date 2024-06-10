@@ -3467,8 +3467,6 @@ ROBOT_CONFIG =
       }
     )
 
-    # TODO: check type of robot here
-    # TODO: change purposes to GEM-X versions
     # scRNA pipeline
     # LRC Hamilton Star bed verification
     # LRC HT 5p Chip to LRC HT 5p GEMs
@@ -3487,6 +3485,54 @@ ROBOT_CONFIG =
           purpose: 'LRC HT 5p GEMs',
           states: ['pending'],
           label: 'Bed 5',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA cDNA prep pipeline
+    # Hamilton STAR bed verification
+    # LRC PBMC Defrost PBS to LRC PBMC Pools
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-star-lrc-pbmc-defrost-pbs-to-lrc-pbmc-pools',
+      name: 'Hamilton STAR LRC PBMC Defrost PBS => LRC PBMC Pools',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC PBMC Defrost PBS',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(14).barcode => {
+          purpose: 'LRC PBMC Pools',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA cDNA prep pipeline
+    # Hamilton STARlet bed verification
+    # LRC PBMC Defrost PBS to LRC PBMC Pools
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-starlet-lrc-pbmc-defrost-pbs-to-lrc-pbmc-pools',
+      name: 'Hamilton STARlet LRC PBMC Defrost PBS => LRC PBMC Pools',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC PBMC Defrost PBS',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(14).barcode => {
+          purpose: 'LRC PBMC Pools',
+          states: ['pending'],
+          label: 'Bed 14',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
