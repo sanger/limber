@@ -10,7 +10,7 @@
 
 <%= content_for :additional_panels do %>
   <div class="tab-pane" id='samples_tab' role="tabpanel">
-    <%= render partial: 'plates/samples_tab', locals: { plate_presenter: presenter } %>
+    <%= render partial: @presenter.samples_partial, locals: { plate_presenter: presenter } %>
   </div>
 <% end %>
 
