@@ -3466,4 +3466,30 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # TODO: check type of robot here
+    # TODO: change purposes to GEM-X versions
+    # scRNA pipeline
+    # LRC Hamilton Star bed verification
+    # LRC HT 5p Chip to LRC HT 5p GEMs
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-ht-5p-chip-to-lrc-ht-5p-gems',
+      name: 'Hamilton LRC HT 5p Chip => LRC HT 5p GEMs',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC HT 5p Chip',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(5).barcode => {
+          purpose: 'LRC HT 5p GEMs',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
