@@ -7,7 +7,7 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let(:paren_purpose_uuid) { 'parent-purpose' }
+  let(:parent_purpose_uuid) { 'parent-purpose' }
   let(:parent_purpose_name) { 'Parent Purpose' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -38,6 +38,9 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
   subject { described_class.new(api, form_attributes) }
 
   before do
+    # Create the purpose config to be able to test the validation for number of source wells.
+    create(:purpose_config, uuid: child_purpose_uuid, name: child_purpose_name, size: 8)
+
     allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(parent)
 
     allow(api).to receive_message_chain(:plate_creation, :create!)
@@ -111,6 +114,28 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
       it 'compresses the wells in the child plate' do
         # B1 -> A1, C1 -> A2, D1 -> A3, F1 -> A4, G1 -> A5
         expect_transfer_requests
+      end
+    end
+  end
+
+  describe '#valid?' do
+    describe '#source_wells_must_fit_child_plate' do
+      it 'is valid when all source wells fit the child plate' do
+        expect(subject).to be_valid
+      end
+
+      context 'when there are more source wells than the child plate size' do
+        let(:parent_wells) do
+          locations = WellHelpers.column_order(96, rows: 8, columns: 12)
+          locations.take(9).map { |location| create(:v2_well, location: location, aliquot_count: 2, state: 'passed') }
+        end
+
+        it 'reports the error' do
+          expect(subject).not_to be_valid
+          formatted_string =
+            format(described_class::SOURCE_WELLS_MUST_FIT_CHILD_PLATE, parent_wells.size, child_plate.size)
+          expect(subject.errors[:source_plate]).to include(formatted_string)
+        end
       end
     end
   end

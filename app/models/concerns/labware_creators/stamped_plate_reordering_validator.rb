@@ -14,8 +14,12 @@ module LabwareCreators::StampedPlateReorderingValidator
   #
   # @return [void]
   def source_wells_must_fit_child_plate
-    return if labware_wells.size <= child_plate.size
+    # Read the child plate size from the purpose configuration. purpose_uuid is
+    # the uuid of the child plate purpose.
 
-    errors.add(:source_plate, format(SOURCE_WELLS_MUST_FIT_CHILD_PLATE, labware_wells.size, child_plate.size))
+    child_plate_size = Settings.purposes[purpose_uuid][:size] || 96
+    return if labware_wells.size <= child_plate_size
+
+    errors.add(:source_plate, format(SOURCE_WELLS_MUST_FIT_CHILD_PLATE, labware_wells.size, child_plate_size))
   end
 end
