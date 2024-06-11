@@ -72,6 +72,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     @wells_in_columns ||= wells.sort_by(&:coordinate)
   end
 
+  # Returns wells sorted by rows first and then columns.
+  #
+  # @return [Array<Well>] The wells sorted in row-major order.
+  def wells_in_rows
+    @wells_in_rows ||= wells.sort_by { |well| [well.coordinate[1], well.coordinate[0]] }
+  end
+
   # Returns the well at a specified location.
   #
   # @param well_location [String] The location to find the well at.
