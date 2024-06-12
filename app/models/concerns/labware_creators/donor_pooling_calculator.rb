@@ -130,33 +130,77 @@ module LabwareCreators::DonorPoolingCalculator
     group.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq
   end
 
-  # Distributes samples across pools based on group sizes. It sorts the groups
-  # by size and splits the largest group into two until the number of groups
-  # equals the number of pools or until all groups have a size of 1. The input
-  # groups are the result of applying conditions, hence they cannot be mixed.
+  # Distributes samples across pools based on group sizes and the number of
+  # pools. It allocates a proportion of the number of pools to each group based
+  # on their size first and then splits each group evenly across the allocated
+  # number of pools.
   #
-  # If the request number of pools is 6 and the input groups are
+  # If the number of pools is 6 and the input groups are
   # [[1, 2, 3], [4, 5], [6, 7, 8, 9]] where the numbers denote wells,
   #
   # the result will be:
-  # [[3], [1], [2], [4, 5], [6, 7], [8, 9]]
-  #
-  # for which the steps are:
-  # [[1, 2, 3], [4, 5], [6, 7, 8, 9]] -> 3 pools (input)
-  # [[4, 5], [6, 7], [8, 9], [1, 2, 3]] -> 4 pools
-  # [[3], [4, 5], [6, 7], [8, 9], [1, 2]] -> 5 pools
-  # [[3], [1], [2], [4, 5], [6, 7], [8, 9]] -> 6 pools (output)
+  # [[6, 7], [8], [9], [1, 2], [3], [4, 5]]
   #
   # @param groups [Array<Array<Well>>] Array of well groups to be distributed.
+  #
   # @return [Array<Array<Well>>] Array of distributed groups.
   def distribute_groups_across_pools(groups, number_of_pools)
-    groups = groups.dup
-    groups.sort_by!(&:size)
-    while groups.any? && groups.last.size > 1 && groups.size < number_of_pools
-      largest = groups.pop # last
-      splits = largest.each_slice((largest.size / 2.0).ceil).to_a
-      groups.concat(splits).sort_by!(&:size)
-    end
-    groups
+    allocate_number_of_pools(groups, number_of_pools)
+      .flat_map { |group, number_of_slices| even_slicing(group, number_of_slices) }
   end
+
+  # Allocates a proportion of the number of pools to each group.
+  #
+  # @param groups [Array<Array<Well>>] Array of well groups to be distributed.
+  #
+  # @return [Hash<Array<Well>, Integer>] Hash of groups and the number of pools allocated to each group.
+  def allocate_number_of_pools(groups, number_of_pools)
+    total_size = groups.sum(&:size)
+    allocations = {}
+    allocated_pools = 0
+
+    # Calculate initial allocations based on proportion of total size
+    groups.each do |group|
+      proportion = group.size.to_f / total_size
+      allocation = (number_of_pools * proportion).floor
+      allocations[group] = allocation
+      allocated_pools += allocation
+    end
+
+    # Distribute any remaining pools starting from the largest group
+    remainder = number_of_pools - allocated_pools
+    groups.sort_by! { |group| -group.size }
+    groups.each do |group|
+      break if remainder <= 0
+      allocations[group] += 1
+      remainder -= 1
+    end
+
+    allocations
+  end
+
+  # Splits a group of wells into a specified number of slices.
+  #
+  # @params group [Array<Well>] The group of wells to be split.
+  # @params number_of_slices [Integer] The number of slices to split the group into.
+  #
+  # @return [Array<Array<Well>>] An array of slicesx
+  def even_slicing(group, number_of_slices)
+    total_elements = group.length
+    base_size = total_elements / number_of_slices
+    remainder = total_elements % number_of_slices
+    slices = []
+    start_index = 0
+
+    number_of_slices.times do |i|
+      size = base_size + (i < remainder ? 1 : 0)
+      slices << group[start_index, size]
+      start_index += size
+    end
+
+    slices
+  end
+
+
+
 end
