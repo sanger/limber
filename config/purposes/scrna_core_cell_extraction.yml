@@ -70,22 +70,6 @@ LRC PBMC Bank:
       id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
     - name: 'Download PBMC Bank Tubes Content Report'
       id: pbmc_bank_tubes_content_report
-    - name: 'Download Cellaca Input QC1'
-      id: cellaca_input_file
-      params:
-        page: 0
-    - name: 'Download Cellaca Input QC2'
-      id: cellaca_input_file
-      params:
-        page: 1
-    - name: 'Download Cellaca Input QC3'
-      id: cellaca_input_file
-      params:
-        page: 2
-    - name: 'Download Cellaca Input QC4'
-      id: cellaca_input_file
-      params:
-        page: 3
   :qc_thresholds:
     viability:
       units: '%'
