@@ -23,16 +23,6 @@ module LabwareCreators
       well_filter.filtered.map(&:first)
     end
 
-    # Returns the well object at a specified well location on a given plate.
-    #
-    # @param plate [Plate] the plate object
-    # @param well_location [String] the well location on the plate
-    # @return [Well] the well object at the well location on the plate
-    #
-    def get_well_for_plate_location(plate, well_location)
-      plate.wells.detect { |well| well.location == well_location }
-    end
-
     # Returns the destination location for a given source well. The index of
     # the source well in the array of parent wells to transfer (after filtering)
     # is used to calculate the destination. This is because wells are compressed
@@ -56,10 +46,10 @@ module LabwareCreators
     # @return [Hash] the attributes for the transfer request for the source well
     #
     def request_hash(source_well, child_plate, additional_parameters)
-      dest_location = get_destination_location(source_well)
+      destination_location = get_destination_location(source_well)
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => get_well_for_plate_location(child_plate, dest_location)&.uuid
+        'target_asset' => child_plate.well_at_location(destination_location)&.uuid
       }.merge(additional_parameters)
     end
   end
