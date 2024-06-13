@@ -35,7 +35,7 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
   end
 
   def max_qc_plates
-    labware.number_of_columns / COLS_PER_PAGE
+    4 # Always generate 4 QC labels - quick fix for later replacement by Y24-037 (and related)
   end
 
   def occupied_columns
@@ -43,8 +43,6 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
       labware
         .wells
         .filter_map do |well|
-          next if well.empty?
-
           well.coordinate.first # column
         end
         .uniq
