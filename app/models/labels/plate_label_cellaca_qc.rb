@@ -4,23 +4,13 @@
 # This label template can generate up to 4 qc labels depending on well
 # occupancy.
 class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
-  COLS_PER_PAGE = 3
-
   def attributes
     super.merge(barcode: labware.barcode.human)
   end
 
   # NB. reverse order so printed in correct sequence
   def qc_label_definitions
-    max_qc_plates
-      .times
-      .filter_map do |index|
-        # Dividing a column by three maps it to its page
-        next if occupied_columns.none? { |col| col / COLS_PER_PAGE == index }
-
-        qc_label(index)
-      end
-      .reverse
+    Array.new(max_qc_plates) { |index| qc_label(index) }.reverse
   end
 
   private
@@ -36,15 +26,5 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
 
   def max_qc_plates
     4 # Always generate 4 QC labels - quick fix for later replacement by Y24-037 (and related)
-  end
-
-  def occupied_columns
-    @occupied_columns ||=
-      labware
-        .wells
-        .filter_map do |well|
-          well.coordinate.first # column
-        end
-        .uniq
   end
 end
