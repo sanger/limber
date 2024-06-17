@@ -1,14 +1,2 @@
-<%=
-  CSV.generate_line [
-    'Plate Barcode',
-    'Well Position',
-    'Vac Tube Barcode',
-    'Well Name',
-    'Sample Name'
-],
-row_sep: ''
-%>
-
-<% 
-
-%>
+<%= render(partial: 'hamilton_lrc_pbmc_bank_to_cellaca_header', locals: { workflow: @workflow }) %>
+<%= render(partial: 'hamilton_lrc_pbmc_bank_to_cellaca_rows', locals: { count: nil }) %>
