@@ -16,8 +16,8 @@ module Utility
     end
 
     # Selects at most the specified number of wells from the plate. If the
-    # number of ancestor tubes is less than the count, or it the count is
-    # not specified it selects one well per ancestor tube.
+    # number of ancestor tubes is less than the count, or if the count is
+    # not specified, it selects one well per ancestor tube.
     #
     # @param count [Integer] the number of wells to select
     # @return [Array<Well>] an array of selected Well objects
@@ -31,16 +31,17 @@ module Utility
 
     # Selects wells until the specified count is reached or all bins of wells
     # are exhausted. The method ensures the selected wells that are distributed
-    # across the plate.
+    # across the plate. The result is sorted by well coordinates, column-major.
     #
     # @param count [Integer] number of wells to select
     # @return [Array<Well>] an array of selected Well objects
+    #
     # :reek:FeatureEnvy
     def select_wells_until(count)
       bins = prepare_bins(count)
       selected = {}
-      process_bins(count, bins, selected) while selected.size < count || bins.any?(&:any?)
-      selected.values
+      process_bins(count, bins, selected) while selected.size < count && bins.any?(&:any?)
+      selected.values.sort_by(&:coordinate)
     end
 
     # Processes bins to select wells until the specified count is reached. It
@@ -52,6 +53,7 @@ module Utility
     # @param bins [Array<Array<Well>>] the bins of wells to select from
     # @param selected [Hash{String => Well}] tracks wells already selected
     # @return [void]
+    #
     # :reek:FeatureEnvy
     # :reek:TooManyStatements
     # :reek:UtilityFunction { public_methods_only: true }
@@ -65,34 +67,53 @@ module Utility
       end
     end
 
-    # Prepares bins of wells by based on the specified count which is the
-    # number of wells to select. Empty wells are rejected. It is used for
-    # picking wells that are distributed across the plate. It adds the last
-    # well to its own bin for maximum spread.
+    # Prepares bins of wells based on the specified count, which is the number
+    # of wells to select. Empty wells are rejected. It is used for picking
+    # wells that are distributed across the plate. It adds the last well to its
+    # own bin for maximum spread. It is added to the first bin to make sure it
+    # is searched first.
     #
     # @param count [Integer] the number of wells to select
     # @return [Array<Array<Well>>] bins of wells to cycle selection
+    #
     # :reek:FeatureEnvy
+    # :reek:TooManyStatements
     def prepare_bins(count)
       wells = plate.wells_in_columns.reject(&:empty?)
-      size = wells.size
+      return [] if wells.empty? || count.zero?
+      return [[wells.first]] if wells.one? || count == 1
 
-      return [] if size.zero? || count.zero? # no wells to select
-
-      return [[wells.first]] if size == 1 || count == 1 # one well to select
-
-      # Add the last well to its own bin for maximum spread.
-      wells[0...-1].each_slice(bin_size_excluding_last(size, count)).to_a << [wells.last]
+      bins = distribute_wells_evenly(wells[0...-1], count - 1)
+      bins.unshift([wells.last]) # Add the last well to its own bin at the beginning
+      bins
     end
 
-    # Calculates the bin size excluding the last well from the count.
+    # Distributes wells evenly across the specified number of bins. This method
+    # is called by prepare_bins and it handles the distribution of wells except
+    # the last one, which will be added to its own bin by the caller.
     #
-    # @param count [Integer] the number wells to select
-    # @param size [Integer] the number of wells in the plate
-    # @return [Integer] the bin size
+    # @param wells [Array<Well>] the wells to distribute
+    # @param bin_count [Integer] the number of bins to distribute the wells
+    # @return [Array<Array<Well>>] bins of wells to cycle selection
+    #
+    # :reek:TooManyStatements
     # :reek:UtilityFunction { public_methods_only: true }
-    def bin_size_excluding_last(size, count)
-      (size / (count - 1).to_f).ceil
+    def distribute_wells_evenly(wells, bin_count)
+      adjusted_size = wells.size
+      base_bin_size = adjusted_size / bin_count
+      remainder = adjusted_size % bin_count
+
+      bins = []
+      start_index = 0
+
+      bin_count.times do |index|
+        # Add an extra well to the bin if there is a remainder that can be used
+        end_index = start_index + base_bin_size + (index < remainder ? 1 : 0)
+        bins << wells[start_index...end_index]
+        start_index = end_index
+      end
+
+      bins
     end
   end
 end
