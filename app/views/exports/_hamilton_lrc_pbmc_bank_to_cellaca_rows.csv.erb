@@ -1,0 +1,19 @@
+<%
+  rows_array = []
+  Utility::CellCountSpotChecking.new(@plate, @ancestor_tubes)
+    .select_wells(count)  # number of wells to select
+    .each do |well|
+      sample = well.aliquots.first.sample
+      row = [
+        @plate.labware_barcode.human,
+        well.location,
+        @ancestor_tubes[sample.uuid].labware_barcode.human,
+        well.name,
+        sample.name
+      ]
+      rows_array << row
+    end
+%>
+<% rows_array.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>
