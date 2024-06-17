@@ -1,0 +1,27 @@
+<%=
+  CSV.generate_line [
+    'Plate Barcode',
+    'Well Position',
+    'Vac Tube Barcode',
+    'Well Name',
+    'Sample Name'
+],
+row_sep: ''
+%>
+binding.pry
+CellCountSpotChecking.new(@plate, @ancestor_tubes)
+    .select_wells(@number_of_wells)
+    .each do |well|
+      sample = well.aliquots.first.sample
+      puts CSV.generate_line [
+        @plate.labware_barcode.human,
+        well.position,
+        @ancestor_tubes[sample.uuid].labware_barcode.human,
+        well.name,
+        sample.name
+      ],
+      row_sep: ''
+    end
+<% 
+
+%>
