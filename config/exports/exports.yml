@@ -193,3 +193,22 @@ hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil:
   csv: hamilton_fixed_volume_dilutions
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
+hamilton_lrc_pbmc_bank_to_celleca_routine_selection:
+  csv: hamilton_lrc_pbmc_bank_to_celleca_routine_selection
+  workflow: scRNA Core PBMC Bank
+  plate_includes:
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+    - wells.transfer_requests_as_target.source_asset
+  ancestor_tube_purpose: LRC Blood Vac
+
+hamilton_lrc_pbmc_bank_to_celleca_occasional_selection:
+  csv: hamilton_lrc_pbmc_bank_to_celleca_occasional_selection
+  workflow: scRNA Core PBMC Bank
+  plate_includes:
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+    - wells.transfer_requests_as_target.source_asset
+  ancestor_tube_purpose: LRC Blood Vac
