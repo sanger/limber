@@ -1,7 +1,7 @@
 <%= render(partial: 'hamilton_lrc_pbmc_bank_to_cellaca_header', locals: { workflow: @workflow }) %>
 <%
-  purpose = Settings.purposes.values.detect{ |p| p.name == @plate.purpose.name }
-  file_link = purpose[:file_links].detect{ |f| f.id == @export.csv }
+  purpose = Settings.purposes[@plate.purpose.uuid]
+  file_link = purpose[:file_links].detect{ |file| file.id == @export.id }
   count = file_link[:number_of_wells_to_select]
 %>
 <%= render(partial: 'hamilton_lrc_pbmc_bank_to_cellaca_rows', locals: { count: count }) %>
