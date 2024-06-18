@@ -74,7 +74,7 @@ LRC PBMC Bank:
       id: hamilton_lrc_pbmc_bank_to_celleca_routine_selection
       number_of_wells_to_select: 4
     - name: 'Download Hamilton LRC PBMC Bank plate to Celleca Occasional Selection'
-      id: hamilton_lrc_pbmc_bank_to_celleca_occasional_selection
+      id: hamilton_lrc_pbmc_bank_to_cellaca_all_count
   :qc_thresholds:
     viability:
       units: '%'
