@@ -1,3 +1,9 @@
+<%= CSV.generate_line [
+        'Workflow',
+        @workflow
+      ],
+      row_sep: ''
+%>
 <%=
   CSV.generate_line [
     'Plate Barcode',
