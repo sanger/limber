@@ -43,7 +43,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_routine_selection.csv.
     assign(:export, export)
 
     # Set the count option in purpose config.
-    Settings.purposes[plate.purpose.uuid] = { file_links: [{ id: export.id, number_of_wells_to_select: 6 }] }
+    Settings.purposes[plate.purpose.uuid] = { file_links: [{ id: export.id, count: 6 }] }
   end
 
   let(:expected_content) do
