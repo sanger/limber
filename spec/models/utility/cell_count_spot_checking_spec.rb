@@ -42,9 +42,9 @@ RSpec.describe Utility::CellCountSpotChecking do
   describe '#select_wells' do
     context 'when the number of ancestor tubes is 4' do
       it 'selects wells up to count if specified' do
-        # ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "A2", "B2", "C2", "D2"]
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
-        # ["A1", "E1", "A2", "D2"]
+        # ['A1', 'E1', 'A2', 'D2']
         count = 4
         result = subject.select_wells(count)
         expect(result.size).to eq(count)
@@ -55,9 +55,9 @@ RSpec.describe Utility::CellCountSpotChecking do
       end
 
       it 'selects wells up to the number of ancestor tubes if count is not specified' do
-        # ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "A2", "B2", "C2", "D2"]
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
-        # ["A1", "E1", "A2", "D2"]
+        # ['A1', 'E1', 'A2', 'D2']
         result = subject.select_wells
         expect(result.size).to eq(ancestor_tubes.size)
         expect(result[0].location).to eq('A1')
@@ -74,11 +74,11 @@ RSpec.describe Utility::CellCountSpotChecking do
         count = 4 # lower than the number of ancestor tubes
         result = subject.select_wells(count)
 
-        # ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
-        #  "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
-        #  "A3", "B3"]
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+        #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+        #  'A3', 'B3']
         #  ->
-        # ["A1", "G1", "E2", "B3"]
+        # ['A1', 'G1', 'E2', 'B3']
 
         expect(result.size).to eq(count)
         expect(result[0].location).to eq('A1')
@@ -90,11 +90,11 @@ RSpec.describe Utility::CellCountSpotChecking do
       it 'selects wells up to the number of ancestor tubes if count is not specified' do
         result = subject.select_wells
 
-        # ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
-        #  "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
-        #  "A3", "B3"]
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+        #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+        #  'A3', 'B3']
         #  ->
-        # ["A1", "E1", "A2", "D2", "G2", "B3"]
+        # ['A1', 'E1', 'A2', 'D2', 'G2', 'B3']
 
         expect(result.size).to eq(ancestor_tubes.size)
         expect(result[0].location).to eq('A1')
@@ -113,13 +113,13 @@ RSpec.describe Utility::CellCountSpotChecking do
         count = 6 # lower than the number of ancestor tubes
         result = subject.select_wells(count)
 
-        # ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
-        #  "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
-        #  "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3",
-        #  "A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4",
-        #  "A5", "B5", "C5", "D5"]
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+        #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+        #  'A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'H3',
+        #  'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4',
+        #  'A5', 'B5', 'C5', 'D5']
         # ->
-        # ["A1", "H1", "G2", "F3", "E4", "D5"]
+        # ['A1', 'H1', 'G2', 'F3', 'E4', 'D5']
 
         expect(result.size).to eq(count)
         expect(result[0].location).to eq('A1')
@@ -134,13 +134,13 @@ RSpec.describe Utility::CellCountSpotChecking do
         result = subject.select_wells
         expect(result.size).to eq(ancestor_tubes.size)
 
-        # ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
-        #  "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
-        #  "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3",
-        #  "A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4",
-        #  "A5", "B5", "C5", "D5"]
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+        #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+        #  'A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'H3',
+        #  'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4',
+        #  'A5', 'B5', 'C5', 'D5']
         # ->
-        # ["A1", "E1", "A2", "D2", "G2", "B3", "E3", "H3", "C4", "F4", "A5", "D5"]
+        # ['A1', 'E1', 'A2', 'D2', 'G2', 'B3', 'E3', 'H3', 'C4', 'F4', 'A5', 'D5']
 
         expect(result[0].location).to eq('A1') # 0
         expect(result[1].location).to eq('E1') # +4 (fair sharing remainder)
