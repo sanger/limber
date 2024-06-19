@@ -1,6 +1,1 @@
-<%= render(partial: 'hamilton_lrc_pbmc_bank_to_cellaca_header', locals: { workflow: @workflow }) %>
-<%
-  # Convert the count to an integer if given; set it to nil otherwise, which means all.
-  count = @params[:count]&.to_i
-%>
-<%= render(partial: 'hamilton_lrc_pbmc_bank_to_cellaca_rows', locals: { count: count }) %>
+<%= render(partial: 'exports/hamilton_lrc_pbmc_bank_to_cellaca_common', locals: { count: 4 }) %>
