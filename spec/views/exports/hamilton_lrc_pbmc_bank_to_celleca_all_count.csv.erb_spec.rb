@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_occasional_selection.csv.erb' do
+RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_all_count.csv.erb' do
   has_a_working_api
 
   let(:number_of_tubes) { 6 }
@@ -29,7 +29,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_occasional_selection.c
     create(:v2_plate, wells: wells)
   end
 
-  let(:export_id) { 'hamilton_lrc_pbmc_bank_to_celleca_occasional_selection' }
+  let(:export_id) { 'hamilton_lrc_pbmc_bank_to_celleca_all_count' }
 
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
 
