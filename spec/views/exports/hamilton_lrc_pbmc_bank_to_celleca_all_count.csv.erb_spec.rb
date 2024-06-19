@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_all_count.csv.erb' do
+RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_cellaca_all_count.csv.erb' do
   has_a_working_api
 
   let(:number_of_tubes) { 6 }
@@ -42,6 +42,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_all_count.csv.erb' do
   let(:expected_content) do
     header = [
       ['Workflow', workflow],
+      [],
       ['Plate Barcode', 'Well Position', 'Vac Tube Barcode', 'Sample Name', 'Well Name']
     ]
     rows =
@@ -61,12 +62,15 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_all_count.csv.erb' do
 
   it 'renders the expected content' do
     content = CSV.parse(render)
+    p content
 
-    expect(content.size).to eq(8) # workflow + column headers + 6 rows
+    expect(content.size).to eq(9) # workflow + empty_line + column headers + 6 rows
+
     expect(content[0]).to eq(expected_content[0]) # workflow header
-    expect(content[1]).to eq(expected_content[1]) # column headers
+    expect(content[1]).to eq(expected_content[1]) # empty line
+    expect(content[2]).to eq(expected_content[2]) # column headers
 
-    (2..6).each do |index|
+    (3..8).each do |index|
       expect(content[index]).to eq(expected_content[index]) # row
     end
   end

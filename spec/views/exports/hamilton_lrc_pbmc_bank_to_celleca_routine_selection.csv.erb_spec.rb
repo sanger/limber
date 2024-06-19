@@ -33,22 +33,19 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_routine_selection.csv.
 
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
 
+  let(:params) { {count: 6} }
+
   before do
     assign(:ancestor_tubes, ancestor_tubes)
     assign(:plate, plate)
     assign(:workflow, workflow)
-
-    # The view needs the export id to find the count option from the purpose config.
-    export = double('Export', id: export_id)
-    assign(:export, export)
-
-    # Set the count option in purpose config.
-    Settings.purposes[plate.purpose.uuid] = { file_links: [{ id: export.id, count: 6 }] }
+    assign(:params, params)
   end
 
   let(:expected_content) do
     header = [
       ['Workflow', workflow],
+      [],
       ['Plate Barcode', 'Well Position', 'Vac Tube Barcode', 'Sample Name', 'Well Name']
     ]
     rows =
@@ -69,11 +66,13 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_routine_selection.csv.
   it 'renders the expected content' do
     content = CSV.parse(render)
 
-    expect(content.size).to eq(8) # workflow + column headers + 6 rows
-    expect(content[0]).to eq(expected_content[0]) # workflow header
-    expect(content[1]).to eq(expected_content[1]) # column headers
+    expect(content.size).to eq(9) # workflow + empty_line + column headers + 6 rows
 
-    (2..6).each do |index|
+    expect(content[0]).to eq(expected_content[0]) # workflow header
+    expect(content[1]).to eq(expected_content[1]) # empty line
+    expect(content[2]).to eq(expected_content[2]) # column headers
+
+    (3..8).each do |index|
       expect(content[index]).to eq(expected_content[index]) # row
     end
   end
