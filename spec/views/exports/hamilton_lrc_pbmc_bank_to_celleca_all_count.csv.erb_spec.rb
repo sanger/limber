@@ -29,7 +29,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_cellaca_all_count.csv.erb' do
     create(:v2_plate, wells: wells)
   end
 
-  let(:export_id) { 'hamilton_lrc_pbmc_bank_to_celleca_all_count' }
+  let(:export_id) { 'hamilton_lrc_pbmc_bank_to_cellaca_all_count' }
 
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
 
