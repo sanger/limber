@@ -59,8 +59,8 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_routine_selection.csv.
           plate.labware_barcode.human,
           well.location,
           ancestor_tubes[sample.uuid].labware_barcode.human,
-          well.name,
-          sample.name
+          sample.name,
+          well.name
         ]
       end
     header + rows
