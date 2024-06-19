@@ -199,8 +199,6 @@ hamilton_lrc_pbmc_bank_to_celleca_routine_selection:
   plate_includes:
     - wells.aliquots
     - wells.aliquots.sample
-    - wells.aliquots.sample.sample_metadata
-    - wells.transfer_requests_as_target.source_asset
   ancestor_tube_purpose: LRC Blood Vac
 hamilton_lrc_pbmc_bank_to_cellaca_all_count:
   csv: hamilton_lrc_pbmc_bank_to_cellaca_all_count
@@ -208,6 +206,4 @@ hamilton_lrc_pbmc_bank_to_cellaca_all_count:
   plate_includes:
     - wells.aliquots
     - wells.aliquots.sample
-    - wells.aliquots.sample.sample_metadata
-    - wells.transfer_requests_as_target.source_asset
   ancestor_tube_purpose: LRC Blood Vac
