@@ -33,7 +33,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_cellaca_routine_selection.csv.
 
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
 
-  let(:params) { {count: 6} }
+  let(:params) { { count: 6 } }
 
   before do
     assign(:ancestor_tubes, ancestor_tubes)

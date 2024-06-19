@@ -62,7 +62,6 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_cellaca_all_count.csv.erb' do
 
   it 'renders the expected content' do
     content = CSV.parse(render)
-    p content
 
     expect(content.size).to eq(9) # workflow + empty_line + column headers + 6 rows
 
