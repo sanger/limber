@@ -4,6 +4,7 @@
       ],
       row_sep: ''
 %>
+<%= CSV.generate_line [], row_sep: "" %>
 <%=
   CSV.generate_line [
     'Plate Barcode',
