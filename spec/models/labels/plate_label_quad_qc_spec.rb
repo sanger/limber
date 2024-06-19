@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
+RSpec.describe Labels::PlateLabelQuadQc, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   describe '#attributes' do
@@ -50,8 +50,15 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
       let(:labware) { create :v2_plate, pool_sizes: [5] }
 
       it 'contains four items' do
-        expect(qc_label_definitions.length).to eq(1)
-        expect(qc_label_definitions.pluck(:barcode)).to eq(["#{labware.barcode.human}-QC1"])
+        expect(qc_label_definitions.length).to eq(4)
+        expect(qc_label_definitions.pluck(:barcode)).to eq(
+          [
+            "#{labware.barcode.human}-QC4",
+            "#{labware.barcode.human}-QC3",
+            "#{labware.barcode.human}-QC2",
+            "#{labware.barcode.human}-QC1"
+          ]
+        )
       end
     end
   end
