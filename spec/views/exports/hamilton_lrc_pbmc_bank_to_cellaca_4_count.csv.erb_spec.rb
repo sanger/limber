@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_cellaca_4_count.csv.erb' do
-  has_a_working_api
-
+RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
   let(:number_of_tubes) { 12 }
 
   let(:ancestor_tubes) do
@@ -29,27 +27,66 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_cellaca_4_count.csv.erb' do
     create(:v2_plate, wells: wells)
   end
 
-  let(:export_id) { 'hamilton_lrc_pbmc_bank_to_cellaca_4_count' }
-
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
 
-  let(:params) { { count: 6 } }
+  let(:template) { "exports/hamilton_lrc_pbmc_bank_to_cellaca_#{count}_count" }
 
   before do
     assign(:ancestor_tubes, ancestor_tubes)
     assign(:plate, plate)
     assign(:workflow, workflow)
-    assign(:params, params)
   end
 
-  let(:expected_content) do
+  context 'with hamilton_lrc_pbmc_bank_to_cellaca_4_count' do
+    let(:count) { 4 }
+    it 'renders the expected content' do
+      render(template: template)
+      content = CSV.parse(rendered)
+      expect(content).to eq(expected_content(count))
+    end
+  end
+
+  context 'with hamilton_lrc_pbmc_bank_to_cellaca_6_count' do
+    let(:count) { 6 }
+    it 'renders the expected content' do
+      render(template: template)
+      content = CSV.parse(rendered)
+      expect(content).to eq(expected_content(count))
+    end
+  end
+
+  context 'with hamilton_lrc_pbmc_bank_to_cellaca_12_count' do
+    let(:count) { 6 }
+    it 'renders the expected content' do
+      render(template: template)
+      content = CSV.parse(rendered)
+      expect(content).to eq(expected_content(count))
+    end
+  end
+
+  context 'with hamilton_lrc_pbmc_bank_to_cellaca_all_count' do
+    let(:count) { nil }
+    let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_all_count' }
+    it 'renders the expected content' do
+      render(template: template)
+      content = CSV.parse(rendered)
+      expect(content).to eq(expected_content(count))
+    end
+  end
+
+  # Generates the expected content based on the number of wells to select.
+  #
+  # @param count [Integer] The number of wells to select.
+  # @return [Array<Array<String>>] The expected CSV content.
+  def expected_content(count)
+    locations = Utility::CellCountSpotChecking.new(plate, ancestor_tubes).select_wells(count).map(&:location)
     header = [
       ['Workflow', workflow],
       [],
       ['Plate Barcode', 'Well Position', 'Vac Tube Barcode', 'Sample Name', 'Well Name']
     ]
     rows =
-      %w[A1 H1 G2 F3 E4 D5].map do |location|
+      locations.map do |location|
         well = plate.well_at_location(location)
         sample = well.aliquots.first.sample
         [
@@ -61,19 +98,5 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_cellaca_4_count.csv.erb' do
         ]
       end
     header + rows
-  end
-
-  it 'renders the expected content' do
-    content = CSV.parse(render)
-
-    expect(content.size).to eq(9) # workflow + empty_line + column headers + 6 rows
-
-    expect(content[0]).to eq(expected_content[0]) # workflow header
-    expect(content[1]).to eq(expected_content[1]) # empty line
-    expect(content[2]).to eq(expected_content[2]) # column headers
-
-    (3..8).each do |index|
-      expect(content[index]).to eq(expected_content[index]) # row
-    end
   end
 end
