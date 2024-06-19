@@ -42,7 +42,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_celleca_all_count.csv.erb' do
   let(:expected_content) do
     header = [
       ['Workflow', workflow],
-      ['Plate Barcode', 'Well Position', 'Vac Tube Barcode', 'Well Name', 'Sample Name']
+      ['Plate Barcode', 'Well Position', 'Vac Tube Barcode', 'Sample Name', 'Well Name']
     ]
     rows =
       %w[A1 E1 A2 D2 G2 B3].map do |location|
