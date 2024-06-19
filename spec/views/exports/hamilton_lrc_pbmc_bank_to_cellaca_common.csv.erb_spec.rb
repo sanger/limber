@@ -78,6 +78,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
   #
   # @param count [Integer] The number of wells to select.
   # @return [Array<Array<String>>] The expected CSV content.
+  # rubocop:disable Metrics/AbcSize
   def expected_content(count)
     locations = Utility::CellCountSpotChecking.new(plate, ancestor_tubes).select_wells(count).map(&:location)
     header = [
@@ -99,4 +100,5 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
       end
     header + rows
   end
+  # rubocop:enable Metrics/AbcSize
 end
