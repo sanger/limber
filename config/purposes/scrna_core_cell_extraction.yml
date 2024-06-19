@@ -72,7 +72,8 @@ LRC PBMC Bank:
       id: pbmc_bank_tubes_content_report
     - name: 'Download Hamilton LRC PBMC Bank plate to Celleca Routine Selection'
       id: hamilton_lrc_pbmc_bank_to_celleca_routine_selection
-      count: 4
+      params:
+        count: 4
     - name: 'Download Cellaca LRC PBMC Bank Hamilton ALL Count CSV'
       id: hamilton_lrc_pbmc_bank_to_cellaca_all_count
   :qc_thresholds:
