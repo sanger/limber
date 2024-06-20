@@ -67,8 +67,7 @@ RSpec.describe Presenters::Statemachine::FeatureInStates do
     end
 
     context 'when the instance does not respond to state' do
-
-      let(:presenter) { TestPresenterWithNoState.new}
+      let(:presenter) { TestPresenterWithNoState.new }
 
       it 'returns the default value' do
         expect(presenter.respond_to?(:state)).to be false
