@@ -15,7 +15,7 @@ RSpec.describe Presenters::BankingPlatePresenter do
 
   describe '#csv_file_links' do
     let(:download_in_passed_state_name) { 'Download PBMC Bank Tubes Content Report' }
-    let(:download_in_any_state) { 'Download Cellaca LRC PBMC Bank Hamilton 4 Count CSV' }
+    let(:download_in_any_state) { 'Download Cellaca 4 Count CSV' }
 
     context 'when the plate is pending' do
       before { presenter.state = 'pending' }

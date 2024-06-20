@@ -310,7 +310,7 @@ FactoryBot.define do
             }
           },
           {
-            name: 'Download Cellaca LRC PBMC Bank Hamilton 4 Count CSV',
+            name: 'Download Cellaca 4 Count CSV',
             id: 'hamilton_lrc_pbmc_bank_to_cellaca_4_count'
           }
         ]
