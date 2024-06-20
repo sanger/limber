@@ -72,11 +72,11 @@ LRC PBMC Bank:
       # states can be specified as string, symbol, or array values to set the
       # includes or hash with includes/excludes keys and string, symbol, or
       # array values. In this particular case, we want to enable the download
-      # link only when the plate is in the passed state.
-      states: passed
+      # link only when the plate is in the passed and qc_complete states.
+      states: [passed, qc_complete]
     - name: 'Download PBMC Bank Tubes Content Report'
       id: pbmc_bank_tubes_content_report
-      states: passed
+      states: [passed, qc_complete]
     - name: 'Download Cellaca LRC PBMC Bank Hamilton 4 Count CSV'
       id: hamilton_lrc_pbmc_bank_to_cellaca_4_count
     - name: 'Download Cellaca LRC PBMC Bank Hamilton ALL Count CSV'
