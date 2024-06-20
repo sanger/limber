@@ -104,4 +104,4 @@ templates:
     :label_class: Labels::PlateLabel
     :printer_type: 96 Well Plate
     :pmb_template: sqsc_96plate_label_template_code39
-    :sprint_template: plate_96_2d.yml.erbÍ
+    :sprint_template: plate_96_2d.yml.erb
