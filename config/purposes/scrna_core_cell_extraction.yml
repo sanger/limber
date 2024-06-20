@@ -69,10 +69,6 @@ LRC PBMC Bank:
       id: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
     - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
       id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
-      # states can be specified as string, symbol, or array values to set the
-      # includes or hash with includes/excludes keys and string, symbol, or
-      # array values. In this particular case, we want to enable the download
-      # link only when the plate is in the passed and qc_complete states.
       states: [passed, qc_complete]
     - name: 'Download PBMC Bank Tubes Content Report'
       id: pbmc_bank_tubes_content_report

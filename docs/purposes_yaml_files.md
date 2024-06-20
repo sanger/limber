@@ -303,14 +303,25 @@ existing templates)
 params: Optional query parameters to be passed through the the link to the
 exports controller.
 
+states: It can be optionally specified for configuring for which labware states
+the download button is available. It can be specified as string, symbol, or
+array values to set the includes or hash with includes/excludes keys and
+string, symbol, or array values.
+
 ```yaml
 :file_links:
   - name: 'Download Hamilton Cherrypick to Sample Dilution CSV'
     id: 'hamilton_cherrypick_to_sample_dilution'
+    states: passed
   - name: Download Concentration (ng/ul) CSV
     id: concentrations_ngul
     params:
       page: 0
+    states:
+      includes:
+        - passed
+        - qc_complete
+      excludes: [:pending]
 ```
 
 @note Not all CSV generation has been migrated under the exports controller. See :csv_template
