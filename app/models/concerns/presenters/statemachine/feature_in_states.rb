@@ -24,9 +24,10 @@ module Presenters::Statemachine
         return default unless respond_to?(:state) # No state method.
         return default if states.blank? # No states to check.
 
-        includes, excludes = parse_states(states)
-
         current_state = state.to_s
+        return default if current_state.blank? # No current state.
+
+        includes, excludes = parse_states(states)
 
         # Exludes take precedence over includes.
         return false if excludes.present? && excludes.include?(current_state)
