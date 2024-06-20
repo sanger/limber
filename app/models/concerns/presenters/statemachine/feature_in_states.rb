@@ -3,6 +3,11 @@
 module Presenters::Statemachine
   # This module provides a method to determine if a feature can be enabled
   # based on the current state of the instance.
+  #
+  # State names:
+  # Presenters::StandardPresenter.state_machines[:state].states.map(&:value)
+  # pending, passed, started, cancelled, failed, processed_1, processed_2,
+  # processed_3, processed_4, qc_complete, unknown
   module FeatureInStates
     extend ActiveSupport::Concern
 
