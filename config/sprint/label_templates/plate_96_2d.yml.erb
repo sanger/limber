@@ -4,7 +4,7 @@
       {
         "x": 3,
         "y": 1,
-        "cellWidth": 0.35,
+        "cellWidth": 0.4,
         "barcodeType": "datamatrix",
         "value": "<%= merge_fields[:barcode] %>"
       }
@@ -13,28 +13,28 @@
       {
         "x": 18,
         "y": 3,
-        "value": "<%= merge_fields[:first_line] %>",
+        "value": "<%= merge_fields[:top_left] %>",
         "font": "proportional",
         "fontSize": 2.5,
       },
       {
         "x": 18,
         "y": 7,
-        "value": "<%= merge_fields[:second_line] %>",
+        "value": "<%= merge_fields[:bottom_left] %>",
         "font": "proportional",
         "fontSize": 2.5,
       },
       {
         "x": 60,
         "y": 3,
-        "value": "<%= merge_fields[:third_line] %>",
+        "value": "<%= merge_fields[:top_right] %>",
         "font": "proportional",
         "fontSize": 2.5,
       },
       {
         "x": 60,
         "y": 7,
-        "value": "<%= merge_fields[:fourth_line] %>",
+        "value": "<%= merge_fields[:bottom_right] %>",
         "font": "proportional",
         "fontSize": 2.5,
       }
