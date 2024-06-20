@@ -296,6 +296,27 @@ FactoryBot.define do
       end
     end
 
+    factory :banking_plate_purpose_config do
+      name { 'banking-plate-purpose' }
+      presenter_class { 'Presenters::BankingPlatePresenter' }
+      file_links do
+        [
+          {
+            name: 'Download PBMC Bank Tubes Content Report',
+            id: 'pbmc_bank_tubes_content_report',
+            states: {
+              includes: 'passed',
+              excludes: ['failed', :cancelled]
+            }
+          },
+          {
+            name: 'Download Cellaca LRC PBMC Bank Hamilton 4 Count CSV',
+            id: 'hamilton_lrc_pbmc_bank_to_cellaca_4_count'
+          }
+        ]
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
