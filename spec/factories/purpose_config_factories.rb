@@ -309,10 +309,7 @@ FactoryBot.define do
               excludes: ['failed', :cancelled]
             }
           },
-          {
-            name: 'Download Cellaca 4 Count CSV',
-            id: 'hamilton_lrc_pbmc_bank_to_cellaca_4_count'
-          }
+          { name: 'Download Cellaca 4 Count CSV', id: 'hamilton_lrc_pbmc_bank_to_cellaca_4_count' }
         ]
       end
     end
