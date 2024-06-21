@@ -24,7 +24,7 @@ LRC PBMC Cryostor:
 # Plate containing defrosted PBMCs in PBS buffer.
 LRC PBMC Defrost PBS:
   :asset_type: plate
-  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
+  :label_template: plate_quad_qc # creates QC4 barcodes
   :file_links:
     - name: 'Download Cellaca Input QC1'
       id: cellaca_input_file
