@@ -12,6 +12,7 @@ module Presenters
     include Presenters::RobotControlled
     include Presenters::ExtendedCsv
     include Presenters::CreationBehaviour
+    include Presenters::Statemachine::FeatureInStates
 
     class_attribute :aliquot_partial, :allow_well_failure_in_states, :style_class, :samples_partial
 
