@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'presenters/banking_plate_presenter'
 
-RSpec.describe Presenters::BankingPlatePresenter do
+RSpec.describe Presenters::StandardPresenter do
   has_a_working_api
 
   before { create :banking_plate_purpose_config }
