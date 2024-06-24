@@ -106,6 +106,7 @@ module Presenters
       links =
         purpose_config
           .fetch(:file_links, [])
+          .select { |link| can_be_enabled?(link&.states) }
           .map do |link|
             [
               link.name,
