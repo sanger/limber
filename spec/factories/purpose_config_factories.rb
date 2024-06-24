@@ -298,7 +298,7 @@ FactoryBot.define do
 
     factory :banking_plate_purpose_config do
       name { 'banking-plate-purpose' }
-      presenter_class { 'Presenters::StandardPlatePresenter' }
+      presenter_class { 'Presenters::StandardPresenter' }
       file_links do
         [
           {
