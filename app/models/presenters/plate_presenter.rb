@@ -12,7 +12,6 @@ module Presenters
     include Presenters::RobotControlled
     include Presenters::ExtendedCsv
     include Presenters::CreationBehaviour
-    include Presenters::Statemachine::FeatureInStates
 
     class_attribute :aliquot_partial, :allow_well_failure_in_states, :style_class, :samples_partial
 
@@ -107,7 +106,6 @@ module Presenters
       links =
         purpose_config
           .fetch(:file_links, [])
-          .select { |link| can_be_enabled?(link&.states) }
           .map do |link|
             [
               link.name,
