@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'presenters/banking_plate_presenter'
 
 RSpec.describe Presenters::StandardPresenter do
   has_a_working_api
