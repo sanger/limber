@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 class Labels::PlateLabelHumanBarcode < Labels::Base # rubocop:todo Style/Documentation
