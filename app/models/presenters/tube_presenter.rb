@@ -7,6 +7,7 @@ module Presenters
     include Statemachine::Shared
     include Presenters::CreationBehaviour
     include RobotControlled
+    include Presenters::Statemachine::FeatureInStates
 
     self.summary_items = {
       'Barcode' => :barcode,
@@ -82,6 +83,7 @@ module Presenters
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
+        .select { |link| can_be_enabled?(link&.states) }
         .map do |link|
           format_extension = link.format || 'csv'
           [
