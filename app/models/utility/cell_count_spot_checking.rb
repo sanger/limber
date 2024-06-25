@@ -2,17 +2,27 @@
 
 module Utility
   # This class is used to select wells from a plate for spot checking.
+  # NB. It assumes that the ancestor tubes are stored in the sample metadata
+  # supplier_name field.
   class CellCountSpotChecking
     attr_reader :plate, :ancestor_tubes
 
-    # Initializes the object with a plate and its ancestor tubes. It is used
-    # to pick wells from the plate for spot checking.
+    # Initializes the object with a plate. It is use to pick wells from the
+    # plate for spot checking.
     #
     # @param plate [Plate] the plate associated with this instance
-    # @param ancestor_tubes [Array<Tube>] the ancestor tubes of the plate
-    def initialize(plate, ancestor_tubes)
+    def initialize(plate)
       @plate = plate
-      @ancestor_tubes = ancestor_tubes
+    end
+
+    # Returns the number of ancestor tubes associated with the plate. It finds
+    # the number of unique supplier names in the sample metadata of the first
+    # sample in each well.
+    #
+    # @return [Integer] the number of ancestor tubes
+    def ancestor_tubes_size
+      @ancestor_tubes_size ||=
+        plate.wells.map { |well| well.aliquots.first.sample.sample_metadata.supplier_name }.uniq.size
     end
 
     # Selects at most the specified number of wells from the plate. If the
@@ -22,9 +32,8 @@ module Utility
     # @param count [Integer] the number of wells to select
     # @return [Array<Well>] an array of selected Well objects
     def select_wells(count = nil)
-      size = ancestor_tubes.size
-      count ||= size
-      select_wells_until([count, size].min)
+      count ||= ancestor_tubes_size
+      select_wells_until([count, ancestor_tubes_size].min)
     end
 
     private
@@ -45,9 +54,9 @@ module Utility
     end
 
     # Processes bins to select wells until the specified count is reached. It
-    # iterates over each bin, pops the first well, and puts the UUID of its
-    # first sample into the selected hash if it is not already there. it stops
-    # if the selected size reaches the count.
+    # iterates over each bin, pops the first well, and puts the barcode of the
+    # vac tube of the first sample in the selected hash if it is not already
+    # there. it stops if the selected size reaches the count.
     #
     # @param count [Integer] the number of wells to select
     # @param bins [Array<Array<Well>>] the bins of wells to select from
@@ -61,8 +70,10 @@ module Utility
       bins.each do |bin|
         next if bin.empty?
         well = bin.shift
-        uuid = well.aliquots.first.sample.uuid
-        selected[uuid] = well unless selected.key?(uuid)
+
+        # LRC Blood Vac tube barcode is stored in sample_metadata supplier_name
+        barcode = well.aliquots.first.sample.sample_metadata.supplier_name
+        selected[barcode] = well unless selected.key?(barcode)
         break if selected.size >= count
       end
     end
