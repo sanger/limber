@@ -20,14 +20,14 @@
 %>
 <%
   rows_array = []
-  Utility::CellCountSpotChecking.new(@plate, @ancestor_tubes)
+  Utility::CellCountSpotChecking.new(@plate)
     .select_wells(count)  # number of wells to select
     .each do |well|
       sample = well.aliquots.first.sample
       row = [
         @plate.labware_barcode.human,
         well.location,
-        @ancestor_tubes[sample.uuid].labware_barcode.human,
+        sample.sample_metadata.supplier_name,
         sample.name,
         well.name
       ]
