@@ -32,48 +32,63 @@ module Presenters::Statemachine
         current_state = state.to_s
         return default if current_state.blank? # No current state.
 
-        includes, excludes = parse_states(states)
+        includes, excludes = collect_includes_and_excludes(states)
 
         # Exludes take precedence over includes.
         return false if excludes.present? && excludes.include?(current_state)
 
         # If includes is present, the current state must be in the list.
-        includes.present? ? includes.include?(current_state) : default
+        return includes.include?(current_state) if includes.present?
+
+        default # No specific condition met.
       end
 
       private
 
-      # Parses the states parameter into includes and excludes arrays.
+      # Returns two arrays from the states parameter: includes and excludes.
       #
       # @param states [String, Symbol, Array, Hash] The states to check against.
-      # @return [Array] Returns an array with two elements: includes and excludes.
+      # @return [Array<Array<String>] An array with two elements: includes and excludes.
       #
       # :reek:TooManyStatements
-      def parse_states(states)
+      def collect_includes_and_excludes(states)
         case states
         when Hash
+          # states:
+          #  includes: ...
+          #  excludes: ...
           states = states.stringify_keys
-          includes = parse_tokens(states['includes'])
-          excludes = parse_tokens(states['excludes'])
+          includes = collect_state_names(states['includes'])
+          excludes = collect_state_names(states['excludes'])
         else
-          includes = parse_tokens(states)
+          # states: ...
+          includes = collect_state_names(states)
           excludes = []
         end
         [includes, excludes]
       end
 
-      # Parses the state name tokens into an array of strings.
-      #
-      # @param tokens [String, Symbol, Array] The tokens to parse.
-      # @return [Array] Returns an array of strings.
+      # Returns state names as an array of strings. This method accepts a
+      # symbol, a string, or an array value and returns state names. It
+      # returns names for the following cases:
+      # * states: ...
+      #   Only the included states are specified.
+      # * includes: ...
+      #   Included states are specified under states separately.
+      # * excludes: ...
+      #   Excluded states are specified under states separately.
+      # * No states
+      #   An empty array is returned.
+      # @param value [String, Symbol, Array] A state name or an array of state names.
+      # @return [Array] State names as an array of strings.
       #
       # :reek:UtilityFunction { public_methods_only: true}
-      def parse_tokens(tokens)
-        case tokens
+      def collect_state_names(value)
+        case value
         when String, Symbol
-          [tokens.to_s] # single
+          [value.to_s] # single state
         when Array
-          tokens.map(&:to_s) # multiple
+          value.map(&:to_s) # multiple states
         else
           [] # none
         end
