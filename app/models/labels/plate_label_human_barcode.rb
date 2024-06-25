@@ -10,16 +10,4 @@ class Labels::PlateLabelHumanBarcode < Labels::PlateLabelBase # rubocop:todo Sty
       barcode: labware.barcode.human
     }
   end
-
-  def default_printer_type
-    default_printer_type_for(:plate_96_2d)
-  end
-
-  def default_label_template
-    default_label_template_for(:plate_96_2d)
-  end
-
-  def default_sprint_label_template
-    default_sprint_label_template_for(:plate_96_2d)
-  end
 end
