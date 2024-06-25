@@ -24,7 +24,7 @@ LRC PBMC Cryostor:
 # Plate containing defrosted PBMCs in PBS buffer.
 LRC PBMC Defrost PBS:
   :asset_type: plate
-  :label_template: plate_cellaca_qc # creates QC1 up to QC4 barcodes
+  :label_template: plate_quad_qc # creates QC4 barcodes
   :file_links:
     - name: 'Download Cellaca Input QC1'
       id: cellaca_input_file
@@ -99,33 +99,42 @@ LRC PBMC Pools Input:
   # will not be creatable in Limber
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
-# 10X Chromium 16-well chip
-LRC HT 5p Chip:
+# 10X Chromium 8-well chip
+LRC GEM-X 5p Chip:
   :asset_type: plate
+  # NB. The Shape8x1 shape (for 8-well Chromium Chip) configured here differs
+  # from the Shape4x1 shape (for 16-well Chromium Chip). Specifically, their
+  # horizontal to vertical ratios are 8:1 and 4:1, respectively.
+  :asset_shape: Shape8x1
+  :size: 8
   :stock_plate: false
   :input_plate: false
+  :creator_class: LabwareCreators::StampedPlateReorderingColumnsToRows
+  # ChromiumChipPresenter has been added to disable the incompatible pooling tab.
+  :presenter_class: Presenters::ChromiumChipPresenter
 # GEMs plate, containing wells from the above in duplicate.
-LRC HT 5p GEMs:
+LRC GEM-X 5p GEMs:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
+  :creator_class: LabwareCreators::StampedPlateCompressed
 # Plate containing cDNA (converted from RNA), straight stamp from above.
-LRC HT 5p cDNA PCR:
+LRC GEM-X 5p cDNA PCR:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
 # Plate containing cleaned up cDNA, duplicate wells consolidated back together.
 # TODO: check whether the stock and or input plate flags are correct to allow an aggregation
 # submission to be created on this plate
-LRC HT 5p cDNA PCR XP:
+LRC GEM-X 5p cDNA PCR XP:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
   # close off the submission when the plate is created
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_scrna_core_cdna_prep_input'
-# faculty input plate (alternate to LRC HT 5p cDNA PCR XP intermediate plate)
-LRC HT 5p cDNA Input:
+# faculty input plate (alternate to LRC GEM-X 5p cDNA PCR XP intermediate plate)
+LRC GEM-X 5p cDNA Input:
   :asset_type: plate
   :stock_plate: true
   :input_plate: true
@@ -133,12 +142,12 @@ LRC HT 5p cDNA Input:
   :presenter_class: Presenters::StockPlatePresenter
   # will not be creatable in Limber (created by manifest in Sequencescape)
   :creator_class: LabwareCreators::Uncreatable
-# There will be a manual submission on a sub-selection of samples in the LRC HT 5p cDNA PCR XP and
-# LRC HT 5p cDNA Input plates for aggregation into a single LRC HT 5p Cherrypick plate. Multiple plates
+# There will be a manual submission on a sub-selection of samples in the LRC GEM-X 5p cDNA PCR XP and
+# LRC GEM-X 5p cDNA Input plates for aggregation into a single LRC GEM-X 5p Cherrypick plate. Multiple plates
 # could be aggregated into a single cherrypick plate.
 # e.g. if single samples are selected from each plate then up to 10 aggregate plates could be made which are
 # then combined into a single cherrypick plate.
-LRC HT 5p Aggregate:
+LRC GEM-X 5p Aggregate:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -148,14 +157,14 @@ LRC HT 5p Aggregate:
 # calculations in the GEX Dil plate step to work.
 # TODO: there will be a submission on this plate for library prep
 # TODO: not clear what the stock and input flags should be for this to work
-LRC HT 5p Cherrypick:
+LRC GEM-X 5p Cherrypick:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
   :cherrypickable_target: true
   :creator_class: LabwareCreators::TenStamp
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_chromium_ht_5p_aggregation'
+  :work_completion_request_type: 'limber_scrna_core_chromium_gem_x_5p_aggregation'
   :file_links:
     - name: 'Download Hamilton Aggregate Cherrypick CSV'
       id: 'hamilton_aggregate_cherrypick'
@@ -165,7 +174,7 @@ LRC HT 5p Cherrypick:
 # in the well i.e. QC concentration * (source_volume + diluent_volume)
 # Here we are using a fixed source volume and there is no dilution (diluent_volume = 0)
 # TODO: R&D to confirm the number of PCR cycles for each range
-LRC HT 5p GEX Dil:
+LRC GEM-X 5p GEX Dil:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -198,8 +207,8 @@ LRC HT 5p GEX Dil:
         pcr_cycles: 5
         colour: 12
   :file_links:
-    - name: 'Download Hamilton LRC HT 5p Cherrypick to LRC HT 5p GEX Dil CSV'
-      id: hamilton_lrc_ht_5p_cherrypick_to_lrc_ht_5p_gex_dil
+    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p GEX Dil CSV'
+      id: hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
 # TODO: there will be further library prep steps after this plate
