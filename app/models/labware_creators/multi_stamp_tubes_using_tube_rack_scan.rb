@@ -154,7 +154,8 @@ module LabwareCreators
     def tubes_must_contain_source_tube
       return unless file_valid?
 
-      parent_tube_barcode = labware.barcode.machine # LRC Bank Seq or LRC Bank Spare
+      # parent tube should be LRC Bank Seq or LRC Bank Spare
+      parent_tube_barcode = labware.barcode.machine
       contains_source_tube =
         parent_tubes.any? do |foreign_barcode, tube_in_db|
           tube_in_db.present? && parent_tube_barcode == foreign_barcode
