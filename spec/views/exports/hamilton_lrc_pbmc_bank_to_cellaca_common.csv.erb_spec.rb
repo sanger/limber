@@ -19,7 +19,9 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
       (1..number_of_wells).each_with_object([]) do |index, array|
         suffix = ((index - 1) / 3) + 1
         uuid = "sample-uuid-#{suffix}" # Match the samples of tubes
-        sample = create(:v2_sample, uuid: uuid)
+        supplier_name = ancestor_tubes[uuid].barcode.human
+        sample_metadata = create(:v2_sample_metadata, supplier_name: supplier_name)
+        sample = create(:v2_sample, uuid: uuid, sample_metadata: sample_metadata)
         aliquots = [create(:v2_aliquot, sample: sample)]
         location = WellHelpers.well_at_column_index(index - 1)
         array << create(:v2_well, aliquots: aliquots, location: location)
@@ -32,7 +34,6 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
   let(:template) { "exports/hamilton_lrc_pbmc_bank_to_cellaca_#{count}_count" }
 
   before do
-    assign(:ancestor_tubes, ancestor_tubes)
     assign(:plate, plate)
     assign(:workflow, workflow)
   end
@@ -80,7 +81,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
   # @return [Array<Array<String>>] The expected CSV content.
   # rubocop:disable Metrics/AbcSize
   def expected_content(count)
-    locations = Utility::CellCountSpotChecking.new(plate, ancestor_tubes).select_wells(count).map(&:location)
+    locations = Utility::CellCountSpotChecking.new(plate).select_wells(count).map(&:location)
     header = [
       ['Workflow', workflow],
       [],
