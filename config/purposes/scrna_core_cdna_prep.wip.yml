@@ -28,22 +28,6 @@ LRC PBMC Defrost PBS:
   :file_links:
     - name: 'Download Cellaca CSV'
       id: hamilton_lrc_pbmc_defrost_pbs_to_cellaca
-    - name: 'Download Cellaca Input QC1'
-      id: cellaca_input_file
-      params:
-        page: 0
-    - name: 'Download Cellaca Input QC2'
-      id: cellaca_input_file
-      params:
-        page: 1
-    - name: 'Download Cellaca Input QC3'
-      id: cellaca_input_file
-      params:
-        page: 2
-    - name: 'Download Cellaca Input QC4'
-      id: cellaca_input_file
-      params:
-        page: 3
   :qc_thresholds:
     viability:
       units: '%'
