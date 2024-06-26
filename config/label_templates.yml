@@ -69,6 +69,12 @@ templates:
     :pmb_template: sqsc_96plate_label_template_code39
     :sprint_template: plate_96.yml.erb
 
+  plate_quad_qc:
+    :label_class: Labels::PlateLabelQuadQc
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96.yml.erb
+
   # Only Squix printers are used through SPrint for tube_traction_compatible.
   # pmb_template setting is for completeness; it is not used.
   tube_traction_compatible:
@@ -93,3 +99,9 @@ templates:
     :printer_type: 96 Well Plate
     :pmb_template: sqsc_96plate_label_template_code39
     :sprint_template: plate_96.yml.erb
+
+  plate_96_2d:
+    :label_class: Labels::PlateLabelHumanBarcode
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96_2d.yml.erb

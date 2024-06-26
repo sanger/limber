@@ -25,7 +25,7 @@ module Presenters
 
     def label
       # fetch label class from purpose if present
-      label_class = purpose_config.fetch(:label_class) || 'Labels::TubeLabel'
+      label_class = purpose_config[:label_class] || 'Labels::TubeLabel'
       label_class.constantize.new(labware)
     end
 

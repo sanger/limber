@@ -21,6 +21,6 @@ module LabwareCreators::StampedPlateReorderingValidator
     wells_with_aliquots = labware_wells.reject(&:empty?)
     return if wells_with_aliquots.size <= child_plate_size
 
-    errors.add(:source_plate, format(SOURCE_WELLS_MUST_FIT_CHILD_PLATE, labware_wells.size, child_plate_size))
+    errors.add(:source_plate, format(SOURCE_WELLS_MUST_FIT_CHILD_PLATE, wells_with_aliquots.size, child_plate_size))
   end
 end
