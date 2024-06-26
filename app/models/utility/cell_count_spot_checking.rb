@@ -21,8 +21,7 @@ module Utility
     #
     # @return [Integer] the number of ancestor tubes
     def ancestor_tubes_size
-      @ancestor_tubes_size ||=
-        filtered_wells.map { |well| well.aliquots.first.sample.sample_metadata.supplier_name }.uniq.size
+      @ancestor_tubes_size ||= filtered_wells.map { |well| ancestor_barcode(well) }.uniq.size
     end
 
     # Selects at most the specified number of wells from the plate. If the
@@ -65,14 +64,11 @@ module Utility
     #
     # :reek:FeatureEnvy
     # :reek:TooManyStatements
-    # :reek:UtilityFunction { public_methods_only: true }
     def process_bins(count, bins, selected)
       bins.each do |bin|
         next if bin.empty?
         well = bin.shift
-
-        # LRC Blood Vac tube barcode is stored in sample_metadata supplier_name
-        barcode = well.aliquots.first.sample.sample_metadata.supplier_name
+        barcode = ancestor_barcode(well)
         selected[barcode] = well unless selected.key?(barcode)
         break if selected.size >= count
       end
@@ -132,6 +128,17 @@ module Utility
     # @return [Array<Well>] the wells in the plate that are not empty
     def filtered_wells
       @filtered_wells ||= plate.wells_in_columns.reject(&:empty?)
+    end
+
+    # Returns the barcode of the ancestor tube associated with the well from
+    # the sample metadata supplier_name field.
+    #
+    # @param well [Well] the well to get the ancestor tube barcode
+    # @return [String] the barcode of the ancestor tube
+    #
+    # :reek:UtilityFunction { public_methods_only: true }
+    def ancestor_barcode(well)
+      well.aliquots.first.sample.sample_metadata.supplier_name
     end
   end
 end
