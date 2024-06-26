@@ -22,7 +22,7 @@ module Utility
     # @return [Integer] the number of ancestor tubes
     def ancestor_tubes_size
       @ancestor_tubes_size ||=
-        plate.wells.map { |well| well.aliquots.first.sample.sample_metadata.supplier_name }.uniq.size
+        filtered_wells.map { |well| well.aliquots.first.sample.sample_metadata.supplier_name }.uniq.size
     end
 
     # Selects at most the specified number of wells from the plate. If the
@@ -48,7 +48,7 @@ module Utility
     # :reek:FeatureEnvy
     def select_wells_until(count)
       bins = prepare_bins(count)
-      selected = {}
+      selected = {} # vac_tube_barcode => well
       process_bins(count, bins, selected) while selected.size < count && bins.any?(&:any?)
       selected.values.sort_by(&:coordinate)
     end
@@ -90,7 +90,7 @@ module Utility
     # :reek:FeatureEnvy
     # :reek:TooManyStatements
     def prepare_bins(count)
-      wells = plate.wells_in_columns.reject(&:empty?)
+      wells = filtered_wells
       return [] if wells.empty? || count.zero?
       return [[wells.first]] if wells.one? || count == 1
 
@@ -125,6 +125,13 @@ module Utility
       end
 
       bins
+    end
+
+    # Returns the wells in the plate that are not empty in column-major order.
+    #
+    # @return [Array<Well>] the wells in the plate that are not empty
+    def filtered_wells
+      @filtered_wells ||= plate.wells_in_columns.reject(&:empty?)
     end
   end
 end
