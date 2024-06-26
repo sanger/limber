@@ -34,7 +34,7 @@ module Presenters::Statemachine
 
         includes, excludes = collect_includes_and_excludes(states)
 
-        # Exludes take precedence over includes.
+        # Excludes take precedence over includes.
         return false if excludes.present? && excludes.include?(current_state)
 
         # If includes is present, the current state must be in the list.
