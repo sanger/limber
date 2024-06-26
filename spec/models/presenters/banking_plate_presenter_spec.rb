@@ -2,6 +2,9 @@
 
 require 'rails_helper'
 
+# Test that LRC PBMC Bank plate can enable/disable buttons based on labware
+# state. We use StandardPresenter to test this because it is the default
+# presenter for plates and it includes a state machine to handle the state.
 RSpec.describe Presenters::StandardPresenter do
   has_a_working_api
 
