@@ -1,4 +1,4 @@
-FROM ruby:3.0.6-slim
+FROM ruby:3.3.3-slim
 
 ARG bundlerWithout="development test lint"
 ARG yarnFlags="--production"
