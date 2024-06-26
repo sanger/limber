@@ -12,7 +12,7 @@ scRNA Core Chromium GEM-X 5p Aggregation:
 scRNA Core Chromium GEM-X 5p:
   pipeline_group: scRNA Core Library Prep
   filters:
-    request_type_key: limber_scrna_core_chromium_gem_x_5p
+    request_type_key: limber_scrna_core_library_prep
     library_type: Chromium single cell 5 prime GEM-X v3
   library_pass: LBC 5p GEX PCR 2XP
   relationships:
