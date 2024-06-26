@@ -102,10 +102,14 @@ module Presenters
 
     alias child_assets child_plates
 
+    # Returns the CSV file links for the plate based on the configured states.
+    #
+    # @return [Array<Array<String, Array>>] the CSV file links
     def csv_file_links
       links =
         purpose_config
           .fetch(:file_links, [])
+          .select { |link| can_be_enabled?(link&.states) }
           .map do |link|
             [
               link.name,
