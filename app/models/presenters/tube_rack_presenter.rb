@@ -7,7 +7,6 @@ module Presenters
   class TubeRackPresenter
     include Presenters::Presenter
     include TubeRackWalking
-    include Presenters::Statemachine::FeatureInStates
 
     self.summary_partial = 'tube_racks/summaries/default'
     self.aliquot_partial = 'tube_aliquot'
