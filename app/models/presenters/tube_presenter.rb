@@ -7,7 +7,6 @@ module Presenters
     include Statemachine::Shared
     include Presenters::CreationBehaviour
     include RobotControlled
-    include Presenters::Statemachine::FeatureInStates
 
     self.summary_items = {
       'Barcode' => :barcode,
