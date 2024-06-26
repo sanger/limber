@@ -2,8 +2,8 @@
 
 module Utility
   # This class is used to select wells from a plate for spot checking.
-  # NB. It assumes that the ancestor tubes are stored in the sample metadata
-  # supplier_name field.
+  # NB. It assumes that the barcodes of the ancestor tubes are stored in the
+  # sample metadata supplier_name field.
   class CellCountSpotChecking
     attr_reader :plate, :ancestor_tubes
 
