@@ -8,7 +8,6 @@ module Presenters
   #
   class StandardPresenter < PlatePresenter
     include Presenters::Statemachine::Standard
-    include Presenters::Statemachine::FeatureInStates
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator
