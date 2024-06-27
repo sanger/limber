@@ -14,8 +14,6 @@ LRC GEM-X 5p Aggregate:
   :file_links: []
 # NB. QC concentrations need to be uploaded via QuantHub for the Cherrypick plate in order for the binning
 # calculations in the Dil plate step to work.
-# TODO: there will be a submission on this plate for library prep
-# TODO: not clear what the stock and input flags should be for this to work
 LRC GEM-X 5p Cherrypick:
   :asset_type: plate
   :stock_plate: false
