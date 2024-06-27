@@ -231,6 +231,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     it 'creates a plate!' do
+      # barcode from multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv
+      subject.labware.barcode.prefix = 'AB'
+      subject.labware.barcode.number = '10000001'
+
       subject.save
       expect(subject.errors.full_messages).to be_empty
 
@@ -345,7 +349,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a tube rack does not contain the source tube' do
-    let(:source_tube_barcode) { 'FX12345678' }
+    # source tube
+    let(:source_tube) { subject.labware }
+    let(:source_tube_barcode) { "#{source_tube.barcode.prefix}#{source_tube.barcode.number}" }
+
     let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv',
@@ -365,7 +372,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
         'Uploaded tube rack scan file does not contain the source tube ' \
-          "for this tube rack (#{parent_tube_1.human_barcode})"
+          "for this tube rack (#{source_tube_barcode})"
       )
     end
   end
