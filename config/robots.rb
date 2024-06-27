@@ -1536,7 +1536,7 @@ ROBOT_CONFIG =
     # equivalent of hamilton-lbc-cherrypick-to-lbc-5p-gex-dil in Bespoke 5p pipeline
     custom_robot(
       'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-gex-dil',
-      name: 'hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p GEX Dil',
+      name: 'hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p Dil',
       beds: {
         bed(13).barcode => {
           purpose: 'LRC GEM-X 5p Cherrypick',
@@ -1544,7 +1544,7 @@ ROBOT_CONFIG =
           label: 'Bed 13'
         },
         bed(3).barcode => {
-          purpose: 'LRC GEM-X 5p GEX Dil',
+          purpose: 'LRC GEM-X 5p Dil',
           states: ['pending'],
           label: 'Bed 3',
           target_state: 'passed',
@@ -1577,10 +1577,10 @@ ROBOT_CONFIG =
     # equivalent of hamilton LBC 5p GEX Dil => LBC 5p GEX Frag 2XP in Bespoke 5p pipeline
     custom_robot(
       'hamilton-lrc-gem-x-5p-dil-to-lrc-gem-x-5p-frag-2xp',
-      name: 'hamilton LRC GEM-X 5p GEX Dil => LRC GEM-X 5p Frag 2XP',
+      name: 'hamilton LRC GEM-X 5p Dil => LRC GEM-X 5p Frag 2XP',
       beds: {
         bed(13).barcode => {
-          purpose: 'LRC GEM-X 5p GEX Dil',
+          purpose: 'LRC GEM-X 5p Dil',
           states: ['passed'],
           label: 'Bed 13'
         },

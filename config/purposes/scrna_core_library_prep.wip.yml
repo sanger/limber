@@ -13,7 +13,7 @@ LRC GEM-X 5p Aggregate:
   :creator_class: LabwareCreators::TenStamp
   :file_links: []
 # NB. QC concentrations need to be uploaded via QuantHub for the Cherrypick plate in order for the binning
-# calculations in the GEX Dil plate step to work.
+# calculations in the Dil plate step to work.
 # TODO: there will be a submission on this plate for library prep
 # TODO: not clear what the stock and input flags should be for this to work
 LRC GEM-X 5p Cherrypick:
@@ -33,7 +33,7 @@ LRC GEM-X 5p Cherrypick:
 # in the well i.e. QC concentration * (source_volume + diluent_volume)
 # Here we are using a fixed source volume and there is no dilution (diluent_volume = 0)
 # TODO: R&D to confirm the number of PCR cycles for each range
-LRC GEM-X 5p GEX Dil:
+LRC GEM-X 5p Dil:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -66,7 +66,7 @@ LRC GEM-X 5p GEX Dil:
         pcr_cycles: 5
         colour: 12
   :file_links:
-    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p GEX Dil CSV'
+    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p Dil CSV'
       id: hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul

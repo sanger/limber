@@ -13,11 +13,11 @@ scRNA Core Chromium GEM-X 5p:
   pipeline_group: scRNA Core Library Prep
   filters:
     request_type_key: limber_scrna_core_library_prep
-    library_type: Chromium single cell 5 prime GEM-X v3
-  library_pass: LBC 5p GEX PCR 2XP
+    library_type: Chromium single cell 5 prime GEM-X GE v3
+  library_pass: LRC GEM-X 5p PCR 2XP
   relationships:
-    LRC GEM-X 5p Cherrypick: LRC GEM-X 5p GEX Dil
-    LRC GEM-X 5p GEX Dil: LRC GEM-X 5p Frag 2XP
+    LRC GEM-X 5p Cherrypick: LRC GEM-X 5p Dil
+    LRC GEM-X 5p Dil: LRC GEM-X 5p Frag 2XP
     LRC GEM-X 5p Frag 2XP: LRC GEM-X 5p LigXP
     LRC GEM-X 5p LigXP: LRC GEM-X 5p PCR 2XP
 scRNA Core Chromium GEM-X 5p MX:
