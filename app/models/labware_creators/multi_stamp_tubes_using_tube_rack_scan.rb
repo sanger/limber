@@ -149,7 +149,7 @@ module LabwareCreators
       end
     end
 
-    # Validates that the tubes in the parent_tubes hash contains at the source tube.
+    # Validates that the tubes in the parent_tubes hash contain the source tube.
     # If the provided file does not contain the source tube, an error message is added to the errors object.
     def tubes_must_contain_source_tube
       return unless file_valid?
