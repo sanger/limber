@@ -32,7 +32,6 @@ LRC GEM-X 5p Cherrypick:
 # NB. For the following binning step the min and max amounts for the bins are the total amount of cDNA
 # in the well i.e. QC concentration * (source_volume + diluent_volume)
 # Here we are using a fixed source volume and there is no dilution (diluent_volume = 0)
-# TODO: R&D to confirm the number of PCR cycles for each range
 LRC GEM-X 5p Dil:
   :asset_type: plate
   :stock_plate: false
