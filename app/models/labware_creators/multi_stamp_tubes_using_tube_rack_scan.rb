@@ -164,7 +164,7 @@ module LabwareCreators
       return if contains_source_tube
       errors.add(
         :base,
-        "Uploaded tube rack scan file does not contain the source tube for this tube rack (#{parent_tube_barcode})"
+        "Uploaded tube rack scan file does not contain the tube scanned on the previous page (#{parent_tube_barcode})"
       )
     end
 
