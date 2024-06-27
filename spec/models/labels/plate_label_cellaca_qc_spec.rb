@@ -6,6 +6,16 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   describe '#attributes' do
+    subject(:attributes) { label.attributes }
+    let(:labware) { create :v2_plate, barcode_number: 2 }
+    let(:label) { described_class.new(labware) }
+
+    it 'has the additional attributes' do
+      expect(attributes[:barcode]).to eq labware.barcode.human
+    end
+  end
+
+  describe '#qc_label_definitions' do
     subject(:qc_label_definitions) { label.qc_label_definitions }
     let(:label) { described_class.new(labware) }
 
@@ -14,6 +24,25 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
 
       it 'contains four items' do
         expect(qc_label_definitions.length).to eq(4)
+
+        expect(qc_label_definitions.pluck(:top_left)).to all(eq(Time.zone.today.strftime('%d-%b-%Y').upcase))
+        expect(qc_label_definitions.pluck(:top_right)).to all(eq('DN2T'))
+        expect(qc_label_definitions.pluck(:bottom_left)).to eq(
+          [
+            "#{labware.barcode.human} QC4",
+            "#{labware.barcode.human} QC3",
+            "#{labware.barcode.human} QC2",
+            "#{labware.barcode.human} QC1"
+          ]
+        )
+        expect(qc_label_definitions.pluck(:barcode)).to eq(
+          [
+            "#{labware.barcode.human}-QC4",
+            "#{labware.barcode.human}-QC3",
+            "#{labware.barcode.human}-QC2",
+            "#{labware.barcode.human}-QC1"
+          ]
+        )
       end
     end
 
@@ -22,6 +51,7 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
 
       it 'contains four items' do
         expect(qc_label_definitions.length).to eq(1)
+        expect(qc_label_definitions.pluck(:barcode)).to eq(["#{labware.barcode.human}-QC1"])
       end
     end
   end

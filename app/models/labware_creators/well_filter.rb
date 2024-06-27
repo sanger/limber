@@ -22,6 +22,13 @@ class LabwareCreators::WellFilter
     well_transfers
   end
 
+  # Returns only the filtered wells from the filtered method.
+  #
+  # @return [Array<Well>] the filtered wells
+  def filtered_wells
+    @filtered_wells ||= filtered.map(&:first)
+  end
+
   private
 
   def filter_requests(requests, well)

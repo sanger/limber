@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Provides a series of helper methos to assist with generating and processing well names
+# Provides a series of helper methods to assist with generating and processing well names
 module WellHelpers
-  # Provide model level wrappers for these methods. Requires the the including class
+  # Provide model level wrappers for these methods. Requires the including class
   # responds to #number_of_columns and #number of wells
   module Extensions
     def locations_in_rows
@@ -51,7 +51,7 @@ module WellHelpers
   # Returns an array of all well names in row order
   #
   # @param [96,192] number of wells on the plate. Only valid for 3:2 ratio plate sizes
-  # @return [Array] well names in column order ie. A1, A2, A3 ...
+  # @return [Array] well names in row order ie. A1, A2, A3 ...
   def self.row_order(size = 96, rows: nil, columns: nil)
     rows_range(size, rows: rows)
       .each_with_object([]) { |r, wells| columns_range(size, columns: columns).each { |c| wells << "#{r}#{c}" } }

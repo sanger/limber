@@ -52,6 +52,18 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
         end
       end
 
+      context 'when the partner id is empty' do
+        let(:sample_metadata) { create :v2_sample_metadata, sample_description: nil }
+
+        let(:expected_message) { 'NO PARTNER ID FOUND' }
+
+        it 'creates a label without the partner id shown' do
+          additional_label_definitions = label.additional_label_definitions[0]
+          expect(additional_label_definitions[:bottom_right]).to eq expected_message
+          expect(additional_label_definitions[:barcode]).to eq nil
+        end
+      end
+
       context 'when the first sample in the plate is a control' do
         let(:control_sample_name) { 'CONTROL_A1' }
         let(:control_sample_description) { 'control description' }

@@ -66,5 +66,9 @@ module LabwareCreators # rubocop:todo Style/Documentation
     def empty?
       destination.blank?
     end
+
+    def expected_number_of_columns
+      3
+    end
   end
 end

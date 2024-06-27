@@ -119,5 +119,11 @@ module LabwareCreators
     def empty?
       @row_data.empty? || @row_data.compact.empty? || sanger_sample_id.blank?
     end
+
+    # skip the validation for checking the number of columns matches expected for this subclass of row
+    # as we want to be flexible because the number of columns may vary if the customer has added extras
+    def expected_number_of_columns
+      -1
+    end
   end
 end

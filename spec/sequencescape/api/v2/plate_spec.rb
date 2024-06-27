@@ -100,7 +100,8 @@ RSpec.describe Sequencescape::Api::V2::Plate do
                 'wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,' \
                 'wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,' \
                 'wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,' \
-                'wells.aliquots.request.submission'
+                'wells.aliquots.request.submission,' \
+                'wells.transfer_requests_as_target.source_asset'
           },
           headers: {
             'Accept' => 'application/vnd.api+json',
@@ -111,6 +112,15 @@ RSpec.describe Sequencescape::Api::V2::Plate do
       expect(
         Sequencescape::Api::V2::Plate.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')
       ).to be_a Sequencescape::Api::V2::Plate
+    end
+  end
+
+  describe '#wells_in_rows' do
+    it 'returns wells sorted by rows first and then columns' do
+      locations_in_rows = ('A'..'H').flat_map { |letter| (1..12).map { |number| "#{letter}#{number}" } }
+
+      # A1, A2, A3, ..., A12, B1, B2, ..., H10, H11, H12
+      expect(plate.wells_in_rows.map(&:location)).to eq(locations_in_rows)
     end
   end
 end
