@@ -64,7 +64,7 @@ LRC GEM-X 5p Dil:
         colour: 12
   :file_links:
     - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p Dil CSV'
-      id: hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil
+      id: hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_dil
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
 LRC GEM-X 5p Frag 2XP:
