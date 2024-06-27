@@ -1532,10 +1532,10 @@ ROBOT_CONFIG =
       }
     )
 
-    # For scRNA Core pipeline cherrypick to 5p GEX Dil plate
+    # For scRNA Core pipeline cherrypick to 5p Dil plate
     # equivalent of hamilton-lbc-cherrypick-to-lbc-5p-gex-dil in Bespoke 5p pipeline
     custom_robot(
-      'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-gex-dil',
+      'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-dil',
       name: 'hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p Dil',
       beds: {
         bed(13).barcode => {
