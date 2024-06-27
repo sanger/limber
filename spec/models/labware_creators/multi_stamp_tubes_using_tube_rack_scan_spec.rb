@@ -371,8 +371,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     it 'is not valid' do
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
-        'Uploaded tube rack scan file does not contain the source tube ' \
-          "for this tube rack (#{source_tube_barcode})"
+        'Uploaded tube rack scan file does not contain the tube scanned ' \
+          "on the previous page (#{source_tube_barcode})"
       )
     end
   end
