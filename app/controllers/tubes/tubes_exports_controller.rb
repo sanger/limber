@@ -55,10 +55,28 @@ class Tubes::TubesExportsController < ApplicationController
   end
 
   def set_filename
-    filename = export.csv
+    # The filename falls back to the csv template attribute if no filename is provided.
+    filename = export.filename['name'] || export.csv
+    filename = build_filename(filename)
     file_extension = export.file_extension || 'csv'
-    filename += "_#{@labware.human_barcode}" if export.filename['include_barcode']
-    filename += "_#{@page + 1}" if export.filename['include_page']
     response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.#{file_extension}\""
+  end
+
+  def build_filename(filename)
+    # Append or prepend the give barcodes to the filename if specified in the export configuration.
+    filename = handle_filename_barcode(filename, @labware, export.filename['labware_barcode'])
+    filename = handle_filename_barcode(filename, @labware.parents.first, export.filename['parent_labware_barcode'])
+    # Append the page number to the filename if specified in the export configuration.
+    filename += "_#{@page + 1}" if export.filename['include_page']
+    filename
+  end
+
+  def handle_filename_barcode(filename, labware, options)
+    return filename if options.blank? || labware.blank?
+
+    barcode = labware.human_barcode
+    filename = "#{barcode}_#{filename}" if options['prepend']
+    filename = "#{filename}_#{barcode}"if options['append']
+    filename
   end
 end
