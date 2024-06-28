@@ -83,6 +83,7 @@ class ExportsController < ApplicationController
     # Append or prepend the give barcodes to the filename if specified in the export configuration.
     filename = handle_filename_barcode(filename, @labware, export.filename['labware_barcode'])
     filename = handle_filename_barcode(filename, @labware.parents.first, export.filename['parent_labware_barcode'])
+
     # Append the page number to the filename if specified in the export configuration.
     filename += "_#{@page + 1}" if export.filename['include_page']
     filename
@@ -93,10 +94,9 @@ class ExportsController < ApplicationController
 
     barcode = labware.human_barcode
     filename = "#{barcode}_#{filename}" if options['prepend']
-    filename = "#{filename}_#{barcode}"if options['append']
+    filename = "#{filename}_#{barcode}" if options['append']
     filename
   end
-
 
   def ancestor_tube_details(ancestor_results)
     ancestor_results.each_with_object({}) do |ancestor_result, tube_list|
