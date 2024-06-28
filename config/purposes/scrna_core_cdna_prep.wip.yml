@@ -26,7 +26,7 @@ LRC PBMC Defrost PBS:
   :asset_type: plate
   :label_template: plate_quad_qc # creates QC4 barcodes
   :file_links:
-    - name: 'Download Cellaca CSV'
+    - name: 'Download Cellaca Count CSV'
       id: hamilton_lrc_pbmc_defrost_pbs_to_cellaca
   :qc_thresholds:
     viability:
