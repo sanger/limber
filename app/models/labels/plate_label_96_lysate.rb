@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-# Plate label class to print off the 2 labels for the Bioscan LBSN-96 Lysate plate.
+# Plate label class to print off the 2 labels for Lysate plates.
+# Used for the Bioscan and ANOSPP pipelines.
 # First label has the standard 96-well plate label information.
 # Second label has the partner plate barcode, plus a reference to the first label.
 # Very specific to this particular pipeline and plate purpose.
-class Labels::PlateLabelLbsn96Lysate < Labels::PlateLabelBase
+class Labels::PlateLabe96Lysate < Labels::PlateLabelBase
   MAX_LENGTH_PARTNER_ID = 8
   PARTNER_INFO_TEXT = 'PARTNER ID LABEL'
   PARTNER_ID_SUFFIX = 'SDC'
