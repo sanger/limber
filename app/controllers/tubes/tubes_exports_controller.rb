@@ -65,7 +65,7 @@ class Tubes::TubesExportsController < ApplicationController
   def build_filename(filename)
     # Append or prepend the give barcodes to the filename if specified in the export configuration.
     filename = handle_filename_barcode(filename, @labware, export.filename['labware_barcode'])
-    filename = handle_filename_barcode(filename, @labware.parents.first, export.filename['parent_labware_barcode'])
+    filename = handle_filename_barcode(filename, @labware.parents&.first, export.filename['parent_labware_barcode'])
 
     # Append the page number to the filename if specified in the export configuration.
     filename += "_#{@page + 1}" if export.filename['include_page']
@@ -75,7 +75,7 @@ class Tubes::TubesExportsController < ApplicationController
   def handle_filename_barcode(filename, labware, options)
     return filename if options.blank? || labware.blank?
 
-    barcode = labware.human_barcode
+    barcode = labware.barcode.human
     filename = "#{barcode}_#{filename}" if options['prepend']
     filename = "#{filename}_#{barcode}" if options['append']
     filename
