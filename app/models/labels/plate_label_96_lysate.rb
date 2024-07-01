@@ -5,7 +5,7 @@
 # First label has the standard 96-well plate label information.
 # Second label has the partner plate barcode, plus a reference to the first label.
 # Very specific to this particular pipeline and plate purpose.
-class Labels::PlateLabe96Lysate < Labels::PlateLabelBase
+class Labels::PlateLabel96Lysate < Labels::PlateLabelBase
   MAX_LENGTH_PARTNER_ID = 8
   PARTNER_INFO_TEXT = 'PARTNER ID LABEL'
   PARTNER_ID_SUFFIX = 'SDC'
