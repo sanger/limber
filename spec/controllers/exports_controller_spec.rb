@@ -245,8 +245,8 @@ RSpec.describe ExportsController, type: :controller do
         it_behaves_like 'a hamilton variable volume dilutions with request diluents view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil.csv' do
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil' }
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_dil.csv' do
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_dil' }
 
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
