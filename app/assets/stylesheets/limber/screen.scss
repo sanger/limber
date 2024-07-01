@@ -720,3 +720,11 @@ dl.descriptive-list-inline {
 .pool-data {
   float: left;
 }
+
+// Additional Utilities
+// max-vh-{value} for values 10, 20, 30, ..., 100
+@for $i from 1 through 10 {
+  .max-vh-#{$i}0 {
+    max-height: #{$i * 10}vh;
+  }
+}

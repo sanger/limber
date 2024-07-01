@@ -1,0 +1,29 @@
+<div id="relatives-information" class="list-group list-group-flush">
+
+  <div class="list-group-item">
+    <strong>Parents</strong>
+    <%= content_tag :span, presenter.labware.parents.size, class: "badge badge-pill badge-secondary" if presenter.labware.parents&.any? %>
+  </div>
+
+  <div class="max-vh-40 overflow-auto list-group list-group-flush border-bottom">
+    <% if presenter.labware.parents&.any? %>
+      <%= render partial: 'labware/relative_list_item', collection: presenter.labware.parents, as: :labware %>
+    <% else %>
+      <div class="list-group-item text-muted">No parents found</div>
+    <% end %>
+  </div>
+
+  <div class="list-group-item">
+    <strong>Children</strong>
+    <%= content_tag :span, presenter.labware.children.size, class: "badge badge-pill badge-secondary" if presenter.labware.children&.any? %>
+  </div>
+
+  <div class="max-vh-40 overflow-auto list-group list-group-flush rounded-bottom">
+    <% if presenter.labware.children&.any? %>
+      <%= render partial: 'labware/relative_list_item', collection: presenter.labware.children, as: :labware %>
+    <% else %>
+      <div class="list-group-item text-muted">No children found</div>
+    <% end %>
+  </div>
+
+</div>
