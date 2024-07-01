@@ -157,6 +157,7 @@ hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
     - wells.aliquots.sample.sample_metadata
   ancestor_tube_purpose: LRC Blood Vac
   filename:
+    name: hamilton_pbmc_bank
     labware_barcode:
       prepend: true
 hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
@@ -170,6 +171,7 @@ hamilton_lrc_blood_bank_to_lrc_pbmc_bank:
   ancestor_tube_purpose: LRC Blood Vac
   ancestor_purpose: LRC Blood Bank
   filename:
+    name: hamilton_pbmc_isolation
     labware_barcode:
       prepend: true
 pbmc_bank_tubes_content_report:
