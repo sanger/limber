@@ -25,7 +25,7 @@ module Presenters
 
     def label
       # fetch label class from purpose if present
-      label_class = purpose_config.fetch(:label_class) || 'Labels::TubeLabel'
+      label_class = purpose_config[:label_class] || 'Labels::TubeLabel'
       label_class.constantize.new(labware)
     end
 
@@ -82,6 +82,7 @@ module Presenters
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
+        .select { |link| can_be_enabled?(link&.states) }
         .map do |link|
           format_extension = link.format || 'csv'
           [
