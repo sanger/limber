@@ -24,8 +24,9 @@ class PipelineList
   end
 
   # For the given pipeline group
-  # return a object with key: group, and value: list of the pipeline names in that group
-  # e.g {"Bespoke Chromium 3pv2"=>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]}
+  # return a list of the pipeline names in that group
+  # e.g "Bespoke Chromium 3pv2"
+  #   =>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]
   def retrieve_pipeline_config_for_group(pipeline_group)
     @list.select { |pipeline| pipeline.pipeline_group == pipeline_group }.map(&:name)
   end
@@ -57,8 +58,69 @@ class PipelineList
     flatten_relationships_into_purpose_list(combined_relationships)
   end
 
+  # Orders the purposes within a pipeline based on the relationships.
+  #
+  # @param pipeline_name [String] The name of the pipeline to order.
+  #
+  # @return [Array] Returns an array of purposes, ordered based on the relationships of the pipeline.
+  def order_pipeline(pipeline_name)
+    pipeline_config = @list.find { |pipeline| pipeline.name == pipeline_name }
+    relationship_config = pipeline_config.relationships
+    flatten_relationships_into_purpose_list(relationship_config)
+  end
+
+  # Given a list of purposes and pipelines of interest, show which purposes are
+  # parts of which pipelines and their parents and children
+  # e.g:
+  # {
+  #   "Purpose 1" => {
+  #     "Pipeline A" => {
+  #       "parents" => [],
+  #       "child" => "Purpose 2"
+  #     }
+  #   },
+  #   "Purpose 2" => {
+  #     "Pipeline A" => {
+  #       "parents" => ["Purpose 1"],
+  #       "child" => "Purpose 3"
+  #     },
+  #     "Pipeline B" => {
+  #       "parents" => ["Purpose 1"],
+  #       "child" => nil
+  #     }
+  #   },
+  # }
+  def purpose_to_pipelines_map(purposes, pipeline_names)
+    pipeline_configs = select_pipelines(pipeline_names)
+    purposes.each_with_object({}) do |purpose, result|
+      pipelines_with_purpose = select_pipelines_with_purpose(pipeline_configs, purpose)
+      pipelines_with_purpose.each do |pipeline|
+        result[purpose] ||= {}
+        result[purpose][pipeline.name] = {
+          parents: pipeline.relationships.select { |_k, v| v == purpose }.keys,
+          child: pipeline.relationships[purpose] # should only ever be one child per purpose in a Limber pipeline
+        }
+      end
+    end
+  end
+
   private
 
+  # Given a list of pipeline names, return the pipelines with those names
+  def select_pipelines(pipeline_names)
+    @list.select { |pipeline| pipeline_names.include? pipeline.name }
+  end
+
+  # Given a list of pipeline configs and a purpose, return the pipelines that
+  # have that purpose in their relationships
+  def select_pipelines_with_purpose(pipeline_configs, purpose)
+    pipeline_configs.select { |pipeline| purpose_in_relationships?(pipeline, purpose) }
+  end
+
+  # Given a list of pipeline configs, extract the relationships and combine them
+  # into a single hash
+  # eg:
+  # [#<Pipeline:A>, #<Pipeline:B>] => { 'Purpose 1' => ['Purpose 2', 'Purpose 3'] }
   def extract_combined_relationships(pipeline_configs)
     {}.tap do |combined_relationships|
       pipeline_configs.each do |pc|
@@ -70,7 +132,19 @@ class PipelineList
     end
   end
 
-  def flatten_relationships_into_purpose_list(relationship_config)
+  # Checks if a given purpose is present in a pipeline.
+  #
+  # @param pipeline [Object] The pipeline to check.
+  # @param purpose [String] The purpose to look for.
+  #
+  # @return [Boolean] Returns true if the purpose is present in the the pipeline, false otherwise.
+  def purpose_in_relationships?(pipeline, purpose)
+    (pipeline.relationships.keys + pipeline.relationships.values).include?(purpose)
+  end
+
+  def flatten_relationships_into_purpose_list(relationship_config_original)
+    # Make a copy of the config so we can delete nodes as we go
+    relationship_config = relationship_config_original.dup
     ordered_purpose_list = []
 
     # Any purposes with no 'child' purposes should go at the end of the list
