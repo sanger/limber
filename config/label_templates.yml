@@ -94,8 +94,8 @@ templates:
     :pmb_template: sqsc_384plate_label_template_code39
     :sprint_template: plate_384_single.yml.erb
 
-  plate_lbsn_96_lysate:
-    :label_class: Labels::PlateLabelLbsn96Lysate
+  plate_96_lysate:
+    :label_class: Labels::PlateLabel96Lysate
     :printer_type: 96 Well Plate
     :pmb_template: sqsc_96plate_label_template_code39
     :sprint_template: plate_96.yml.erb
