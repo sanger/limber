@@ -232,8 +232,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
     it 'creates a plate!' do
       # barcode from multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv
-      subject.labware.barcode.prefix = 'AB'
-      subject.labware.barcode.number = '10000001'
+      subject.labware.barcode.machine = 'AB10000001'
 
       subject.save
       expect(subject.errors.full_messages).to be_empty
@@ -351,7 +350,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   context 'when a tube rack does not contain the source tube' do
     # source tube
     let(:source_tube) { subject.labware }
-    let(:source_tube_barcode) { "#{source_tube.barcode.prefix}#{source_tube.barcode.number}" }
+    let(:source_tube_barcode) { source_tube.barcode.machine }
 
     let(:file) do
       fixture_file_upload(
