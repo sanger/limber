@@ -72,8 +72,8 @@ LRC PBMC Bank:
     - name: 'Download PBMC Bank Tubes Content Report'
       id: pbmc_bank_tubes_content_report
       states: [passed, qc_complete]
-    - name: 'Download Cellaca 4 Count CSV'
-      id: hamilton_lrc_pbmc_bank_to_cellaca_4_count
+    - name: 'Download Cellaca Max 4 Count CSV'
+      id: hamilton_lrc_pbmc_bank_to_cellaca_max_4_count
     - name: 'Download Cellaca ALL Count CSV'
       id: hamilton_lrc_pbmc_bank_to_cellaca_all_count
   :qc_thresholds:
