@@ -103,7 +103,6 @@ Only one terminal for Limber is needed (unless running the integration suite)
    bundle exec rails s
    ```
 
-
 ## Linting and formatting
 
 Linting and formatting are provided by rubocop, prettier and Eslint. I strongly
