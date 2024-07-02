@@ -132,15 +132,17 @@ filename:
   name: 'example-name'
   # Includes the page number at the end of the filename
   include_page: true
-  # Includes the labware's human barcode in the file
+  # Includes the labware's human barcode in the file, there is no default, either append or prepend is needed to show the barcode
   labware_barcode:
-    # Includes the name of the labware in the file
+    # (Optional) Includes the name of the labware in the file
     append: true
-    # Add the name to the end of the file
+    # (Optional) Add the name to the end of the file
     prepend: false
-  # Includes the parent labware's human barcode
+  # Includes the parent labware's human barcode, either append or prepend is needed to show the barcode
   parent_labware_barcode:
+    # (Optional) Includes the name of the labware in the file
     append: true
+    # (Optional) Add the name to the end of the file
     prepend: true
 ```
 

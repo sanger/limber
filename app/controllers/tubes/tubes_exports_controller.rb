@@ -63,7 +63,7 @@ class Tubes::TubesExportsController < ApplicationController
   end
 
   def build_filename(filename)
-    # Append or prepend the give barcodes to the filename if specified in the export configuration.
+    # Append or prepend the given barcodes to the filename if specified in the export configuration.
     filename = handle_filename_barcode(filename, @labware, export.filename['labware_barcode'])
     filename = handle_filename_barcode(filename, @labware.parents&.first, export.filename['parent_labware_barcode'])
 
