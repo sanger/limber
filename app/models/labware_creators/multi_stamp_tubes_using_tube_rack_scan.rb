@@ -48,6 +48,7 @@ module LabwareCreators
     validate :tubes_must_exist_in_lims, if: :file
     validate :tubes_must_be_of_expected_purpose_type, if: :file
     validate :tubes_must_have_active_requests_of_expected_type, if: :file
+    validate :tubes_must_contain_source_tube, if: :file
 
     EXPECTED_REQUEST_STATES = %w[pending started].freeze
 
@@ -146,6 +147,25 @@ module LabwareCreators
           })"
         errors.add(:base, msg)
       end
+    end
+
+    # Validates that the tubes in the parent_tubes hash contain the source tube.
+    # If the provided file does not contain the source tube, an error message is added to the errors object.
+    def tubes_must_contain_source_tube
+      return unless file_valid?
+
+      # parent tube should be LRC Bank Seq or LRC Bank Spare barcoded SQ01125101 or similar
+      parent_tube_barcode = labware.barcode.machine # see PR #1746 for the rationale behind this
+      contains_source_tube =
+        parent_tubes.any? do |foreign_barcode, tube_in_db|
+          tube_in_db.present? && parent_tube_barcode == foreign_barcode
+        end
+
+      return if contains_source_tube
+      errors.add(
+        :base,
+        "Uploaded tube rack scan file does not contain the tube scanned on the previous page (#{parent_tube_barcode})"
+      )
     end
 
     def expected_request_type_keys
