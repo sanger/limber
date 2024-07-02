@@ -39,8 +39,35 @@ Limber should be accessible via [http://localhost:3001](http://localhost:3001).
 
 ## Initial Setup (using native installation)
 
-Steps must be followed in either the Sequencescape repository or this Limber
-repository, as indicated:
+Because Limber relies on SequenceScape as a backend, SequenceScape and it's jobs can be started first. SequenceScape **will** work standalone without Limber.
+
+1. In a Sequencescape terminal, perform the post deploy actions:
+
+   ```shell
+   bundle exec rake application:post_deploy
+   ```
+
+1. In the same terminal, start the local server (will start on port 3000):
+
+   ```shell
+   bundle exec rails s
+   ```
+
+1. Open a **second** SequenceScape terminal, and configure all data required for Limber:
+
+   ```shell
+   bundle exec rake limber:setup
+   ```
+
+1. In the second Sequencescape terminal, start the delayed job processor:
+
+   ```shell
+   bundle exec rake jobs:work
+   ```
+
+All the setup for SequenceScape will have been completed. This should be done first as Limber will rely on some of the data generated previosly.
+
+Only one terminal for Limber is needed (unless running the integration suite)
 
 1. In Limber, ensure the appropriate version of Ruby is installed. The command
    here is for `rbenv` but you may want to use a different Ruby version manager:
@@ -58,37 +85,14 @@ repository, as indicated:
 1. In Limber, install the yarn dependencies:
 
    ```shell
+   nvm use  # If you manage node environments with nvm
    yarn install
    ```
 
-1. In Sequencescape, perform the post deploy actions:
-
-   ```shell
-   bundle exec rake application:post_deploy
-   ```
-
-1. In Sequencescape, start the local server (will start on port 3000):
-
-   ```shell
-   bundle exec rails s
-   ```
-
-1. In Limber, connect to Sequencescape to configure required data:
+1. In Limber, connect to Sequencescape to configure required data. This requires SequenceScape to be running, which will have been done in the previous steps:
 
    ```shell
    bundle exec rake config:generate
-   ```
-
-1. In Sequencescape, configure all Limber required data:
-
-   ```shell
-   bundle exec rake limber:setup
-   ```
-
-1. In Sequencescape, start the delayed job processor
-
-   ```shell
-   bundle exec rake jobs:work
    ```
 
 1. In Limber, start the local server (will start on port 3001):
@@ -96,6 +100,7 @@ repository, as indicated:
    ```shell
    bundle exec rails s
    ```
+
 
 ## Linting and formatting
 
