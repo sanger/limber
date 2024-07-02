@@ -5,6 +5,7 @@ require 'csv'
 # The exports controller handles the generation of exported files,
 # such as CSV files used to drive robots.
 class ExportsController < ApplicationController
+  include ExportsFilenameBehaviour
   helper ExportsHelper
   before_action :locate_labware, only: :show
   rescue_from Export::NotFound, with: :not_found
@@ -16,7 +17,7 @@ class ExportsController < ApplicationController
     @ancestor_tubes = locate_ancestor_tubes
     @ancestor_plate_list = locate_ancestor_plate_list
 
-    set_filename if export.filename
+    set_filename(@labware, @page) if export.filename
 
     render export.csv, locals: { test: 'this' }
   end
@@ -69,33 +70,6 @@ class ExportsController < ApplicationController
 
   def include_parameters
     export.plate_includes || 'wells'
-  end
-
-  def set_filename
-    # The filename falls back to the csv template attribute if no filename is provided.
-    filename = export.filename['name'] || export.csv
-    filename = build_filename(filename)
-    file_extension = export.file_extension || 'csv'
-    response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.#{file_extension}\""
-  end
-
-  def build_filename(filename)
-    # Append or prepend the given barcodes to the filename if specified in the export configuration.
-    filename = handle_filename_barcode(filename, @labware, export.filename['labware_barcode'])
-    filename = handle_filename_barcode(filename, @labware.parents&.first, export.filename['parent_labware_barcode'])
-
-    # Append the page number to the filename if specified in the export configuration.
-    filename += "_#{@page + 1}" if export.filename['include_page']
-    filename
-  end
-
-  def handle_filename_barcode(filename, labware, options)
-    return filename if options.blank? || labware.blank?
-
-    barcode = labware.barcode.human
-    filename = "#{barcode}_#{filename}" if options['prepend']
-    filename = "#{filename}_#{barcode}" if options['append']
-    filename
   end
 
   def ancestor_tube_details(ancestor_results)
