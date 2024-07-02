@@ -41,7 +41,9 @@ Limber should be accessible via [http://localhost:3001](http://localhost:3001).
 
 Because Limber relies on SequenceScape as a backend, SequenceScape and it's jobs can be started first. SequenceScape **will** work standalone without Limber.
 
-1. In a Sequencescape terminal, perform the post deploy actions:
+> Note that this will require SequenceScape to have already been [setup](https://github.com/sanger/sequencescape/blob/develop/README.md) before
+
+1. The post deploy task will generate required records for Record Loader if they haven't been already. In a Sequencescape terminal, perform the post deploy actions:
 
    ```shell
    bundle exec rake application:post_deploy
@@ -59,7 +61,7 @@ Because Limber relies on SequenceScape as a backend, SequenceScape and it's jobs
    bundle exec rake limber:setup
    ```
 
-1. In the second Sequencescape terminal, start the delayed job processor:
+1. In the second Sequencescape terminal, start the delayed job processor. This ensures that background processes are being handled:
 
    ```shell
    bundle exec rake jobs:work
