@@ -360,6 +360,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
     end
 
+    # Standard expected path
     context 'when performing standard first time binning' do
       let(:file) do
         fixture_file_upload(
@@ -497,6 +498,966 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
         expect(transfer_creation_request).to have_been_made
+      end
+    end
+
+    # This context will use a file where parent wells not included in the submission are not present in the file.
+    # Parent plate has 14 wells, 10 are submitted and 10 in the file. (E1, A2, C2, and G2 are omitted))
+    # This should be allowed, and the child plate should be correctly created.
+    context 'when the users only included submitted wells in the file' do
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file_with_only_submitted_rows.csv',
+          'sequencescape/qc_file'
+        )
+      end
+
+      # 10 sample wells in the submission, 4 sample wells to be omitted (E1, A2, C2, G2).
+      let(:isc_prep_requests) { Array.new(10) { |i| create :isc_prep_request, state: 'pending', uuid: "request-#{i}" } }
+
+      # NB. Not setting a value for requests_as_source for wells not going forward (these wells do not have
+      # rows in the file)
+      let(:parent_well_a1) do
+        create(
+          :v2_well,
+          location: 'A1',
+          position: {
+            'name' => 'A1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[0]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_b1) do
+        create(
+          :v2_well,
+          location: 'B1',
+          position: {
+            'name' => 'B1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[1]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_d1) do
+        create(
+          :v2_well,
+          location: 'D1',
+          position: {
+            'name' => 'D1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[2]],
+          outer_request: nil
+        )
+      end
+
+      # E1 not included in Submission
+      let(:parent_well_e1) do
+        create(
+          :v2_well,
+          location: 'E1',
+          position: {
+            'name' => 'E1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_f1) do
+        create(
+          :v2_well,
+          location: 'F1',
+          position: {
+            'name' => 'F1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[3]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_h1) do
+        create(
+          :v2_well,
+          location: 'H1',
+          position: {
+            'name' => 'H1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[4]],
+          outer_request: nil
+        )
+      end
+
+      # A2 not included in Submission
+      let(:parent_well_a2) do
+        create(
+          :v2_well,
+          location: 'A2',
+          position: {
+            'name' => 'A2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_b2) do
+        create(
+          :v2_well,
+          location: 'B2',
+          position: {
+            'name' => 'B2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[5]],
+          outer_request: nil
+        )
+      end
+
+      # C2 not included in Submission
+      let(:parent_well_c2) do
+        create(
+          :v2_well,
+          location: 'C2',
+          position: {
+            'name' => 'C2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_d2) do
+        create(
+          :v2_well,
+          location: 'D2',
+          position: {
+            'name' => 'D2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[6]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_e2) do
+        create(
+          :v2_well,
+          location: 'E2',
+          position: {
+            'name' => 'E2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[7]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_f2) do
+        create(
+          :v2_well,
+          location: 'F2',
+          position: {
+            'name' => 'F2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[8]],
+          outer_request: nil
+        )
+      end
+
+      # G2 not included in Submission
+      let(:parent_well_g2) do
+        create(
+          :v2_well,
+          location: 'G2',
+          position: {
+            'name' => 'G2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_h2) do
+        create(
+          :v2_well,
+          location: 'H2',
+          position: {
+            'name' => 'H2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[9]],
+          outer_request: nil
+        )
+      end
+
+      let!(:plate_creation_request) do
+        stub_api_post(
+          'plate_creations',
+          payload: {
+            plate_creation: {
+              parent: parent_uuid,
+              child_purpose: child_purpose_uuid,
+              user: user_uuid
+            }
+          },
+          body: json(:plate_creation)
+        )
+      end
+
+      # Create child wells in order of the requests they originated from.
+      # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
+      # Just done like this to make it easier to match up the requests to the wells.
+      let(:child_well_a2) do
+        create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
+      end
+      let(:child_well_b2) do
+        create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
+      end
+      let(:child_well_a1) do
+        create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
+      end
+      let(:child_well_a3) do
+        create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
+      end
+      let(:child_well_b3) do
+        create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
+      end
+      let(:child_well_c3) do
+        create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
+      end
+      let(:child_well_d3) do
+        create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
+      end
+      let(:child_well_c2) do
+        create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[7])
+      end
+      let(:child_well_b1) do
+        create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[8])
+      end
+      let(:child_well_c1) do
+        create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[9])
+      end
+
+      let(:child_plate) do
+        # Wells have been listed in the order here to match the order of the list of original requests.
+        # Wells will be laid out by well location so this has no effect on the actual layout of the wells in the plate.
+        create :v2_plate,
+               uuid: 'child-uuid',
+               barcode_number: '3',
+               size: plate_size,
+               wells: [
+                 child_well_a2,
+                 child_well_b2,
+                 child_well_a1,
+                 child_well_a3,
+                 child_well_b3,
+                 child_well_c3,
+                 child_well_d3,
+                 child_well_c2,
+                 child_well_b1,
+                 child_well_c1
+               ]
+      end
+
+      let!(:api_v2_post) { stub_api_v2_post('Well') }
+
+      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
+
+      # Not expecting transfer requests for ignored wells E1, A2, C2, G2
+      let(:transfer_requests) do
+        [
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_a1.uuid,
+            'target_asset' => child_well_a2.uuid,
+            'outer_request' => isc_prep_requests[0].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_b1.uuid,
+            'target_asset' => child_well_b2.uuid,
+            'outer_request' => isc_prep_requests[1].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_d1.uuid,
+            'target_asset' => child_well_a1.uuid,
+            'outer_request' => isc_prep_requests[2].uuid
+          },
+          {
+            'volume' => '4.0',
+            'source_asset' => parent_well_f1.uuid,
+            'target_asset' => child_well_a3.uuid,
+            'outer_request' => isc_prep_requests[3].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_h1.uuid,
+            'target_asset' => child_well_b3.uuid,
+            'outer_request' => isc_prep_requests[4].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_b2.uuid,
+            'target_asset' => child_well_c3.uuid,
+            'outer_request' => isc_prep_requests[5].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_d2.uuid,
+            'target_asset' => child_well_d3.uuid,
+            'outer_request' => isc_prep_requests[6].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_e2.uuid,
+            'target_asset' => child_well_c2.uuid,
+            'outer_request' => isc_prep_requests[7].uuid
+          },
+          {
+            'volume' => '30.0',
+            'source_asset' => parent_well_f2.uuid,
+            'target_asset' => child_well_b1.uuid,
+            'outer_request' => isc_prep_requests[8].uuid
+          },
+          {
+            'volume' => '3.621',
+            'source_asset' => parent_well_h2.uuid,
+            'target_asset' => child_well_c1.uuid,
+            'outer_request' => isc_prep_requests[9].uuid
+          }
+        ]
+      end
+
+      let!(:transfer_creation_request) do
+        stub_api_post(
+          'transfer_request_collections',
+          payload: {
+            transfer_request_collection: {
+              user: user_uuid,
+              transfer_requests: transfer_requests
+            }
+          },
+          body: '{}'
+        )
+      end
+
+      it 'makes the expected method calls when creating the child plate' do
+        # NB. because we're mocking the API call for the save of the request metadata we cannot
+        # check the metadata values on the requests, only that the method was triggered.
+        # Our child plate has 10 wells with 10 requests, so we expect the method to create metadata
+        # on the requests to be called 10 times.
+        expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
+        expect(subject.save!).to eq true
+        expect(plate_creation_request).to have_been_made
+        expect(transfer_creation_request).to have_been_made
+      end
+    end
+
+    # This context will use a file where some rows are set with pcr_cycles = 1.
+    # These wells are not to be transferred to the child plate and should be filtered out.
+    context 'when the users want to ignore a subset of the wells by setting pcr_cycles to 1' do
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file_with_rows_to_ignore.csv',
+          'sequencescape/qc_file'
+        )
+      end
+
+      # 10 sample wells in the submission, 4 sample wells to be ignored (E1, A2, C2, G2).
+      let(:isc_prep_requests) { Array.new(10) { |i| create :isc_prep_request, state: 'pending', uuid: "request-#{i}" } }
+
+      # NB. Not setting a value for requests_as_source for wells not going forward (these have pcr_cycles set to 1
+      # in the customer file)
+      let(:parent_well_a1) do
+        create(
+          :v2_well,
+          location: 'A1',
+          position: {
+            'name' => 'A1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[0]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_b1) do
+        create(
+          :v2_well,
+          location: 'B1',
+          position: {
+            'name' => 'B1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[1]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_d1) do
+        create(
+          :v2_well,
+          location: 'D1',
+          position: {
+            'name' => 'D1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[2]],
+          outer_request: nil
+        )
+      end
+
+      # E1 not included in Submission
+      let(:parent_well_e1) do
+        create(
+          :v2_well,
+          location: 'E1',
+          position: {
+            'name' => 'E1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_f1) do
+        create(
+          :v2_well,
+          location: 'F1',
+          position: {
+            'name' => 'F1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[3]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_h1) do
+        create(
+          :v2_well,
+          location: 'H1',
+          position: {
+            'name' => 'H1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[4]],
+          outer_request: nil
+        )
+      end
+
+      # A2 not included in Submission
+      let(:parent_well_a2) do
+        create(
+          :v2_well,
+          location: 'A2',
+          position: {
+            'name' => 'A2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_b2) do
+        create(
+          :v2_well,
+          location: 'B2',
+          position: {
+            'name' => 'B2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[5]],
+          outer_request: nil
+        )
+      end
+
+      # C2 not included in Submission
+      let(:parent_well_c2) do
+        create(
+          :v2_well,
+          location: 'C2',
+          position: {
+            'name' => 'C2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_d2) do
+        create(
+          :v2_well,
+          location: 'D2',
+          position: {
+            'name' => 'D2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[6]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_e2) do
+        create(
+          :v2_well,
+          location: 'E2',
+          position: {
+            'name' => 'E2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[7]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_f2) do
+        create(
+          :v2_well,
+          location: 'F2',
+          position: {
+            'name' => 'F2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[8]],
+          outer_request: nil
+        )
+      end
+
+      # G2 not included in Submission
+      let(:parent_well_g2) do
+        create(
+          :v2_well,
+          location: 'G2',
+          position: {
+            'name' => 'G2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_h2) do
+        create(
+          :v2_well,
+          location: 'H2',
+          position: {
+            'name' => 'H2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[9]],
+          outer_request: nil
+        )
+      end
+
+      let!(:plate_creation_request) do
+        stub_api_post(
+          'plate_creations',
+          payload: {
+            plate_creation: {
+              parent: parent_uuid,
+              child_purpose: child_purpose_uuid,
+              user: user_uuid
+            }
+          },
+          body: json(:plate_creation)
+        )
+      end
+
+      # Create child wells in order of the requests they originated from.
+      # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
+      # Just done like this to make it easier to match up the requests to the wells.
+      let(:child_well_a2) do
+        create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
+      end
+      let(:child_well_b2) do
+        create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
+      end
+      let(:child_well_a1) do
+        create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
+      end
+      let(:child_well_a3) do
+        create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
+      end
+      let(:child_well_b3) do
+        create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
+      end
+      let(:child_well_c3) do
+        create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
+      end
+      let(:child_well_d3) do
+        create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
+      end
+      let(:child_well_c2) do
+        create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[7])
+      end
+      let(:child_well_b1) do
+        create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[8])
+      end
+      let(:child_well_c1) do
+        create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[9])
+      end
+
+      let(:child_plate) do
+        # Wells have been listed in the order here to match the order of the list of original requests.
+        # Wells will be laid out by well location so this has no effect on the actual layout of the wells in the plate.
+        create :v2_plate,
+               uuid: 'child-uuid',
+               barcode_number: '3',
+               size: plate_size,
+               wells: [
+                 child_well_a2,
+                 child_well_b2,
+                 child_well_a1,
+                 child_well_a3,
+                 child_well_b3,
+                 child_well_c3,
+                 child_well_d3,
+                 child_well_c2,
+                 child_well_b1,
+                 child_well_c1
+               ]
+      end
+
+      let!(:api_v2_post) { stub_api_v2_post('Well') }
+
+      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
+
+      # Not expecting transfer requests for ignored wells E1, A2, C2, G2
+      let(:transfer_requests) do
+        [
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_a1.uuid,
+            'target_asset' => child_well_a2.uuid,
+            'outer_request' => isc_prep_requests[0].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_b1.uuid,
+            'target_asset' => child_well_b2.uuid,
+            'outer_request' => isc_prep_requests[1].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_d1.uuid,
+            'target_asset' => child_well_a1.uuid,
+            'outer_request' => isc_prep_requests[2].uuid
+          },
+          {
+            'volume' => '4.0',
+            'source_asset' => parent_well_f1.uuid,
+            'target_asset' => child_well_a3.uuid,
+            'outer_request' => isc_prep_requests[3].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_h1.uuid,
+            'target_asset' => child_well_b3.uuid,
+            'outer_request' => isc_prep_requests[4].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_b2.uuid,
+            'target_asset' => child_well_c3.uuid,
+            'outer_request' => isc_prep_requests[5].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_d2.uuid,
+            'target_asset' => child_well_d3.uuid,
+            'outer_request' => isc_prep_requests[6].uuid
+          },
+          {
+            'volume' => '5.0',
+            'source_asset' => parent_well_e2.uuid,
+            'target_asset' => child_well_c2.uuid,
+            'outer_request' => isc_prep_requests[7].uuid
+          },
+          {
+            'volume' => '30.0',
+            'source_asset' => parent_well_f2.uuid,
+            'target_asset' => child_well_b1.uuid,
+            'outer_request' => isc_prep_requests[8].uuid
+          },
+          {
+            'volume' => '3.621',
+            'source_asset' => parent_well_h2.uuid,
+            'target_asset' => child_well_c1.uuid,
+            'outer_request' => isc_prep_requests[9].uuid
+          }
+        ]
+      end
+
+      let!(:transfer_creation_request) do
+        stub_api_post(
+          'transfer_request_collections',
+          payload: {
+            transfer_request_collection: {
+              user: user_uuid,
+              transfer_requests: transfer_requests
+            }
+          },
+          body: '{}'
+        )
+      end
+
+      it 'makes the expected method calls when creating the child plate' do
+        # NB. because we're mocking the API call for the save of the request metadata we cannot
+        # check the metadata values on the requests, only that the method was triggered.
+        # Our child plate has 14 wells with 14 requests, so we expect the method to create metadata
+        # on the requests to be called 14 times.
+        expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
+        expect(subject.save!).to eq true
+        expect(plate_creation_request).to have_been_made
+        expect(transfer_creation_request).to have_been_made
+      end
+    end
+
+    # This context will check the situation where the submission is missing one or more sample wells
+    # that are present in the file and intended to go forward (with valid values and pcr_cycles > 1).
+    # An error should be reported to the user.
+    context 'when sample wells were intended to go forward in the file but missed from the submission' do
+      # File contains rows for 14 wells, 4 of which are not in the submission.
+      # File contains valid values for 12 rows (pcr_cycles > 1), 2 of which are missing from the submission
+      # (E1 and C2), and the other 2 rows are to be ignored (have pcr_cycles = 1, A2 and G2)
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file_with_rows_missed_from_submission.csv',
+          'sequencescape/qc_file'
+        )
+      end
+
+      # 10 sample wells in the submission, 4 sample wells not included (E1, A2, C2, G2).
+      let(:isc_prep_requests) { Array.new(10) { |i| create :isc_prep_request, state: 'pending', uuid: "request-#{i}" } }
+
+      # 14 parent wells of which 10 are linked to requests_as_source (4 rows in file are missing requests: E1, A2, C2,
+      # and G2)
+      # i.e We are not setting a value for requests_as_source for wells not going forward (A2 and G2 have pcr_cycles
+      # set to 1 in file).
+      # And we are not setting a value for requests_as_source for wells E1 and C2, to simulate they have been missed
+      # from the submission.
+      let(:parent_well_a1) do
+        create(
+          :v2_well,
+          location: 'A1',
+          position: {
+            'name' => 'A1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[0]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_b1) do
+        create(
+          :v2_well,
+          location: 'B1',
+          position: {
+            'name' => 'B1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[1]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_d1) do
+        create(
+          :v2_well,
+          location: 'D1',
+          position: {
+            'name' => 'D1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[2]],
+          outer_request: nil
+        )
+      end
+
+      # E1 not included in Submission
+      let(:parent_well_e1) do
+        create(
+          :v2_well,
+          location: 'E1',
+          position: {
+            'name' => 'E1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_f1) do
+        create(
+          :v2_well,
+          location: 'F1',
+          position: {
+            'name' => 'F1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[3]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_h1) do
+        create(
+          :v2_well,
+          location: 'H1',
+          position: {
+            'name' => 'H1'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[4]],
+          outer_request: nil
+        )
+      end
+
+      # A2 not included in Submission
+      let(:parent_well_a2) do
+        create(
+          :v2_well,
+          location: 'A2',
+          position: {
+            'name' => 'A2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_b2) do
+        create(
+          :v2_well,
+          location: 'B2',
+          position: {
+            'name' => 'B2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[5]],
+          outer_request: nil
+        )
+      end
+
+      # C2 not included in Submission
+      let(:parent_well_c2) do
+        create(
+          :v2_well,
+          location: 'C2',
+          position: {
+            'name' => 'C2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_d2) do
+        create(
+          :v2_well,
+          location: 'D2',
+          position: {
+            'name' => 'D2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[6]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_e2) do
+        create(
+          :v2_well,
+          location: 'E2',
+          position: {
+            'name' => 'E2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[7]],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_f2) do
+        create(
+          :v2_well,
+          location: 'F2',
+          position: {
+            'name' => 'F2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[8]],
+          outer_request: nil
+        )
+      end
+
+      # G2 not included in Submission
+      let(:parent_well_g2) do
+        create(
+          :v2_well,
+          location: 'G2',
+          position: {
+            'name' => 'G2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [],
+          outer_request: nil
+        )
+      end
+      let(:parent_well_h2) do
+        create(
+          :v2_well,
+          location: 'H2',
+          position: {
+            'name' => 'H2'
+          },
+          qc_results: create_list(:qc_result_concentration, 1, value: 1.0),
+          requests_as_source: [isc_prep_requests[9]],
+          outer_request: nil
+        )
+      end
+
+      let(:expected_error_message) do
+        'The uploaded Customer file does not contain the same number of valid rows (12) as there are wells ' \
+          'submitted for work on the parent plate (10). ' \
+          'Please check the Customer file vs the Submission for missing or extra rows. ' \
+          'Well E1 - File: present, Submission: missing, Well C2 - File: present, Submission: missing'
+      end
+
+      it 'reports an error' do
+        expect(subject.save).to be false
+
+        # list of missing wells should be included in the error message (E1 and C2)
+        expect(subject.errors.full_messages).to include(expected_error_message)
+      end
+    end
+
+    # This context will check the situation where the submission contains a sample well that is not in the file.
+    # i.e. a parent well that was not intended to go forward is left out of the file on purpose but is accidently
+    # included in the submission.
+    context 'when a sample well appears in the submission but not in the file' do
+      # File contains rows for 13 wells, but 14 are in the submission (missing row for A2)
+      let(:file) do
+        fixture_file_upload(
+          'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file_missing_submitted_well.csv',
+          'sequencescape/qc_file'
+        )
+      end
+
+      # this message is generated by the validation that checks for filtered wells in the file
+      let(:expected_error_message_missing_row) do
+        'Csv file is missing a row for well A2, all wells with content must have a row in the uploaded file.'
+      end
+
+      # this message is generated by the validation that checks the file matches the submission
+      let(:expected_error_message_customer_file) do
+        'The uploaded Customer file does not contain the same number of valid rows (13) as there are wells ' \
+          'submitted for work on the parent plate (14). ' \
+          'Please check the Customer file vs the Submission for missing or extra rows. ' \
+          'Well A2 - File: missing, Submission: present'
+      end
+
+      it 'reports an error' do
+        expect(subject.save).to be false
+        expect(subject.errors.full_messages).to include(expected_error_message_missing_row)
+        expect(subject.errors.full_messages).to include(expected_error_message_customer_file)
       end
     end
 
