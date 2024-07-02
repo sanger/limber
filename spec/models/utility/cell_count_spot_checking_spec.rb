@@ -93,6 +93,25 @@ RSpec.describe Utility::CellCountSpotChecking do
       end
     end
 
+    context 'when the number of ancestor tubes is 8' do
+      let(:number_of_tubes) { 8 }
+
+      it 'selects wells up to count if specified' do
+        count = 4 # lower than the number of ancestor tubes
+        result = subject.select_wells(count)
+        p result.map(&:location)
+
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+        #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+        #  'A3', 'B3']
+        #  ->
+        # ["A1", "B2", "H2", "F3"]
+
+        expect(result.size).to eq(count)
+        expect(result.map(&:location)).to eq(%w[A1 B2 H2 F3])
+      end
+    end
+
     context 'when the number of ancestor tubes is 12' do
       let(:number_of_tubes) { 12 }
 
