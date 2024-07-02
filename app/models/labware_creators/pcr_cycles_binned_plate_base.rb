@@ -46,7 +46,7 @@ module LabwareCreators
 
     validates :file, presence: true
     validates_nested :csv_file, if: :file
-    validate :wells_have_required_information?
+    validate :wells_have_required_information
 
     PARENT_PLATE_INCLUDES =
       'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
@@ -79,7 +79,7 @@ module LabwareCreators
       raise '#after_transfer! must be implemented on subclasses'
     end
 
-    def wells_have_required_information?
+    def wells_have_required_information
       filtered_wells.each do |well|
         next if well.aliquots.empty?
 

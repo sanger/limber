@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Plate label class to print off the QC and intermediate plates from the LTN Al Lib plate.
+# Plate label class to print off the QC and intermediate plates from the LTN AL Lib plate.
 # Very specific to this particular pipeline and plate purpose. Maybe if we get more like this
 # consider refactoring into something more flexible that can use configuration from the plate
 # purpose to determine what to print.
