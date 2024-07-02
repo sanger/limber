@@ -76,6 +76,7 @@ The other keys are detailed below.
 
 Determines the template in `app/views/exports` that will be used to render the
 export. If possible, try and use the same value for the template and the id.
+It is also used as the fallback option for the filename if the filename is not set.
 
 ```yaml
 csv: unique_export
@@ -119,6 +120,38 @@ Example in `app/views/exports/duplex_seq_pcr_xp_concentrations_for_custom_poolin
 
 ```yaml
 ancestor_purpose: LDS AL Lib Dil
+```
+
+#### filename
+
+A method of specifiying what data is included in the filename of the export.
+
+```yaml
+filename:
+  # The name of the export file
+  name: 'example-name'
+  # Includes the page number at the end of the filename
+  include_page: true
+  # Includes the labware's human barcode in the file, there is no default, either append or prepend is needed to show the barcode
+  labware_barcode:
+    # (Optional) Includes the name of the labware in the file
+    append: true
+    # (Optional) Add the name to the end of the file
+    prepend: false
+  # Includes the parent labware's human barcode, either append or prepend is needed to show the barcode
+  parent_labware_barcode:
+    # (Optional) Includes the name of the labware in the file
+    append: true
+    # (Optional) Add the name to the end of the file
+    prepend: true
+```
+
+#### file_extension
+
+The file extension of the export file. Defaults to `csv`.
+
+```yaml
+file_extension: 'tsv'
 ```
 
 ### Testing
