@@ -8,6 +8,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   included do
     include Form
     include BarcodeLabelsHelper
+    include Presenters::Statemachine::FeatureInStates # provides the can_be_enabled?(states) method
 
     class_attribute :summary_items, :sidebar_partial, :summary_partial, :pooling_tab
 
