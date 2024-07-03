@@ -26,22 +26,8 @@ LRC PBMC Defrost PBS:
   :asset_type: plate
   :label_template: plate_quad_qc # creates QC4 barcodes
   :file_links:
-    - name: 'Download Cellaca Input QC1'
-      id: cellaca_input_file
-      params:
-        page: 0
-    - name: 'Download Cellaca Input QC2'
-      id: cellaca_input_file
-      params:
-        page: 1
-    - name: 'Download Cellaca Input QC3'
-      id: cellaca_input_file
-      params:
-        page: 2
-    - name: 'Download Cellaca Input QC4'
-      id: cellaca_input_file
-      params:
-        page: 3
+    - name: 'Download Cellaca Count CSV'
+      id: hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count
   :qc_thresholds:
     viability:
       units: '%'
