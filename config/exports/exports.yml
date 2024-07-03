@@ -206,15 +206,15 @@ hamilton_lrc_pbmc_bank_to_cellaca_common: &hamilton_lrc_pbmc_bank_to_cellaca_com
     - wells.aliquots
     - wells.aliquots.sample
     - wells.aliquots.sample.sample_metadata
-hamilton_lrc_pbmc_bank_to_cellaca_4_count:
+hamilton_lrc_pbmc_bank_to_cellaca_max_4_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
-  csv: hamilton_lrc_pbmc_bank_to_cellaca_4_count
-hamilton_lrc_pbmc_bank_to_cellaca_6_count:
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_max_4_count
+hamilton_lrc_pbmc_bank_to_cellaca_max_6_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
-  csv: hamilton_lrc_pbmc_bank_to_cellaca_6_count
-hamilton_lrc_pbmc_bank_to_cellaca_12_count:
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_max_6_count
+hamilton_lrc_pbmc_bank_to_cellaca_max_12_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
-  csv: hamilton_lrc_pbmc_bank_to_cellaca_12_count
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_max_12_count
 hamilton_lrc_pbmc_bank_to_cellaca_all_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
   csv: hamilton_lrc_pbmc_bank_to_cellaca_all_count
