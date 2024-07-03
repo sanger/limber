@@ -57,6 +57,7 @@ module Presenters
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
+        .select { |link| can_be_enabled?(link&.states) }
         .map do |link|
           [link.name, [:limber_tube_rack, :export, { id: link.id, limber_tube_rack_id: human_barcode, format: :csv }]]
         end
