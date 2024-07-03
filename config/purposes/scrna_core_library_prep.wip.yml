@@ -30,7 +30,7 @@ LRC GEM-X 5p Cherrypick:
 # NB. For the following binning step the min and max amounts for the bins are the total amount of cDNA
 # in the well i.e. QC concentration * (source_volume + diluent_volume)
 # Here we are using a fixed source volume and there is no dilution (diluent_volume = 0)
-LRC GEM-X 5p Dil:
+LRC GEM-X 5p GE Dil:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
@@ -63,16 +63,16 @@ LRC GEM-X 5p Dil:
         pcr_cycles: 5
         colour: 12
   :file_links:
-    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p Dil CSV'
+    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p GE Dil CSV'
       id: hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_dil
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
-LRC GEM-X 5p Frag 2XP:
+LRC GEM-X 5p GE Frag 2XP:
   :asset_type: plate
   :file_links:
     - name: 'Download Hamilton Dilution to Frag 2XP CSV'
       id: 'hamilton_gex_dil_to_gex_frag_2xp'
-LRC GEM-X 5p LigXP:
+LRC GEM-X 5p GE LigXP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
@@ -80,7 +80,7 @@ LRC GEM-X 5p LigXP:
   :file_links:
     - name: 'Download Hamilton Frag 2XP to LigXP CSV'
       id: 'hamilton_gex_frag_2xp_to_gex_ligxp'
-LRC GEM-X 5p PCR 2XP:
+LRC GEM-X 5p GE PCR 2XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :default_printer_type: :plate_b
@@ -88,14 +88,14 @@ LRC GEM-X 5p PCR 2XP:
   :file_links:
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
-LRC GEM-X 5p GLibPS:
+LRC GEM-X 5p GE GLibPS:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-LRC GEM-X 5p Pool Norm:
+LRC GEM-X 5p GE Pool Norm:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
