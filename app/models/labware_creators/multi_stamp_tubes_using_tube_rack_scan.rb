@@ -29,6 +29,9 @@ module LabwareCreators
   # type(s).
   # 5) The request on the tube must be active, and must match to one of the expected ones from a list in the plate
   # purpose config. This is to check that the tubes are at the appropriate stage of their pipeline to transfer.
+  # 6) The source tube must not have an ean13 barcode, as the previous-tube validation step does not support this.
+  # 7) The scan file must contain the tube that was scanned on the previous page. This is to check that the correct
+  # file has been uploaded.
   #
   # rubocop:disable Metrics/ClassLength
   class MultiStampTubesUsingTubeRackScan < Base
@@ -48,6 +51,7 @@ module LabwareCreators
     validate :tubes_must_exist_in_lims, if: :file
     validate :tubes_must_be_of_expected_purpose_type, if: :file
     validate :tubes_must_have_active_requests_of_expected_type, if: :file
+    validate :tubes_must_not_have_ean13_barcodes, if: :file
     validate :tubes_must_contain_source_tube, if: :file
 
     EXPECTED_REQUEST_STATES = %w[pending started].freeze
@@ -130,6 +134,21 @@ module LabwareCreators
       end
     end
 
+    # Validates that the source tube does not have an ean13 barcode.
+    # If a the tube has an ean13 barcode, an error message is added to the errors object.
+    # This is required for tubes_must_contain_source_tube.
+    def tubes_must_not_have_ean13_barcodes
+      return unless file_valid?
+
+      # parent tube should be LRC Bank Seq or LRC Bank Spare barcoded SQ01125101 or similar
+      return if labware.barcode.ean13.nil?
+      errors.add(
+        :base,
+        'Uploaded tube rack scan file does not work with ean13-barcoded ' \
+          "tube scanned on the previous page (#{labware.barcode.ean13})"
+      )
+    end
+
     # Validates that all tubes in the parent_tubes hash have at least one active request of the expected type.
     # If a tube does not have an active request of the expected type, an error message is added to the errors object.
     # Tubes that are not found in the database or already have an expected active request are skipped.
@@ -154,7 +173,6 @@ module LabwareCreators
     def tubes_must_contain_source_tube
       return unless file_valid?
 
-      # parent tube should be LRC Bank Seq or LRC Bank Spare barcoded SQ01125101 or similar
       parent_tube_barcode = labware.barcode.machine # see PR #1746 for the rationale behind this
       contains_source_tube =
         parent_tubes.any? do |foreign_barcode, tube_in_db|
