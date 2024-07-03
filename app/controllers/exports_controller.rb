@@ -17,6 +17,7 @@ class ExportsController < ApplicationController
     @ancestor_tubes = locate_ancestor_tubes
     @ancestor_plate_list = locate_ancestor_plate_list
 
+    # Set the filename for the export via the ExportsFilenameBehaviour concern
     set_filename(@labware, @page) if export.filename
 
     render export.csv, locals: { test: 'this' }

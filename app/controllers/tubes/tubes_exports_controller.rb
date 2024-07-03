@@ -14,6 +14,7 @@ class Tubes::TubesExportsController < ApplicationController
     @page = params.fetch(:page, 0).to_i
     @workflow = export.workflow
 
+    # Set the filename for the export via the ExportsFilenameBehaviour concern
     set_filename(@labware, @page) if export.filename
 
     render export.csv
