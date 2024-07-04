@@ -152,30 +152,33 @@ ROBOT_CONFIG =
       }
     )
 
+    # Used for ISC and re-ISC pipelines
+    # Handles both LB Lib PCR-XP and LTN Lib PCR XP (for targeted nanoseq) source plates
+    # 4:1 pooling into the destination LB Lib PrePool plate
     custom_robot(
       'nx-8-lib-pcr-xp-to-isch-lib-pool',
       name: 'nx-8 Lib PCR-XP => LB Lib PrePool',
       beds: {
         bed(2).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 2'
         },
         bed(5).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 5'
         },
         bed(3).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 3'
         },
         bed(6).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 6'
@@ -183,66 +186,7 @@ ROBOT_CONFIG =
         bed(4).barcode => {
           purpose: 'LB Lib PrePool',
           states: %w[pending started],
-          parents: [
-            bed(2).barcode,
-            bed(5).barcode,
-            bed(3).barcode,
-            bed(6).barcode,
-            bed(2).barcode,
-            bed(5).barcode,
-            bed(3).barcode,
-            bed(6).barcode
-          ],
-          target_state: 'passed',
-          label: 'Bed 4'
-        }
-      },
-      destination_bed: bed(4).barcode,
-      class: 'Robots::PoolingRobot'
-    )
-
-    # This version of the NX bed verification is for Targeted NanoSeq at the point it transfers into re-ISC
-    custom_robot(
-      'nx-8-ltn-lib-pcr-xp-to-isc-lb-lib-pool',
-      name: 'nx-8 LTN Lib PCR XP => LB Lib PrePool',
-      beds: {
-        bed(2).barcode => {
-          purpose: 'LTN Lib PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(4).barcode,
-          label: 'Bed 2'
-        },
-        bed(5).barcode => {
-          purpose: 'LTN Lib PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(4).barcode,
-          label: 'Bed 5'
-        },
-        bed(3).barcode => {
-          purpose: 'LTN Lib PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(4).barcode,
-          label: 'Bed 3'
-        },
-        bed(6).barcode => {
-          purpose: 'LTN Lib PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(4).barcode,
-          label: 'Bed 6'
-        },
-        bed(4).barcode => {
-          purpose: 'LB Lib PrePool',
-          states: %w[pending started],
-          parents: [
-            bed(2).barcode,
-            bed(5).barcode,
-            bed(3).barcode,
-            bed(6).barcode,
-            bed(2).barcode,
-            bed(5).barcode,
-            bed(3).barcode,
-            bed(6).barcode
-          ],
+          parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode],
           target_state: 'passed',
           label: 'Bed 4'
         }
