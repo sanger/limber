@@ -86,7 +86,7 @@ module Utility
     # :reek:FeatureEnvy
     # :reek:TooManyStatements
     def prepare_bins(count)
-      wells = filtered_wells
+      wells = first_replicates
       return [] if wells.empty? || count.zero?
       return [[wells.first]] if wells.one? || count == 1
 
@@ -121,6 +121,20 @@ module Utility
       end
 
       bins
+    end
+
+    # Returns the first replicate wells in the plate. It groups the filtered
+    # wells by the ancestor tube barcode and returns the first well in each
+    # group.
+    #
+    # @return [Array<Well>] the first replicate wells in the plate
+    def first_replicates
+      filtered_wells
+        .each_with_object({}) do |well, hash|
+          barcode = ancestor_barcode(well)
+          hash[barcode] ||= well
+        end
+        .values
     end
 
     # Returns the wells in the plate that are not empty in column-major order.

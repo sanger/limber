@@ -45,26 +45,20 @@ RSpec.describe Utility::CellCountSpotChecking do
       it 'selects wells up to count if specified' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
-        # ['A1', 'E1', 'A2', 'D2']
+        # ["A1", "D1", "G1", "B2"]
         count = 4
         result = subject.select_wells(count)
         expect(result.size).to eq(count)
-        expect(result[0].location).to eq('A1')
-        expect(result[1].location).to eq('E1')
-        expect(result[2].location).to eq('A2')
-        expect(result[3].location).to eq('D2')
+        expect(result.map(&:location)).to eq(%w[A1 D1 G1 B2])
       end
 
       it 'selects wells up to the number of ancestor tubes if count is not specified' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
-        # ['A1', 'E1', 'A2', 'D2']
+        # ["A1", "D1", "G1", "B2"]
         result = subject.select_wells
         expect(result.size).to eq(ancestor_tubes.size)
-        expect(result[0].location).to eq('A1')
-        expect(result[1].location).to eq('E1')
-        expect(result[2].location).to eq('A2')
-        expect(result[3].location).to eq('D2')
+        expect(result.map(&:location)).to eq(%w[A1 D1 G1 B2])
       end
     end
 
@@ -79,13 +73,10 @@ RSpec.describe Utility::CellCountSpotChecking do
         #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
         #  'A3', 'B3']
         #  ->
-        # ['A1', 'G1', 'E2', 'B3']
+        # ["A1", "G1", "E2", "H2"]
 
         expect(result.size).to eq(count)
-        expect(result[0].location).to eq('A1')
-        expect(result[1].location).to eq('G1')
-        expect(result[2].location).to eq('E2')
-        expect(result[3].location).to eq('B3')
+        expect(result.map(&:location)).to eq(%w[A1 G1 E2 H2])
       end
 
       it 'selects wells up to the number of ancestor tubes if count is not specified' do
@@ -95,15 +86,41 @@ RSpec.describe Utility::CellCountSpotChecking do
         #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
         #  'A3', 'B3']
         #  ->
-        # ['A1', 'E1', 'A2', 'D2', 'G2', 'B3']
+        # ["A1", "D1", "G1", "B2", "E2", "H2"]
 
         expect(result.size).to eq(ancestor_tubes.size)
-        expect(result[0].location).to eq('A1')
-        expect(result[1].location).to eq('E1')
-        expect(result[2].location).to eq('A2')
-        expect(result[3].location).to eq('D2')
-        expect(result[4].location).to eq('G2')
-        expect(result[5].location).to eq('B3')
+        expect(result.map(&:location)).to eq(%w[A1 D1 G1 B2 E2 H2])
+      end
+    end
+
+    context 'when the number of ancestor tubes is 8' do
+      let(:number_of_tubes) { 8 }
+
+      it 'selects wells up to count if specified' do
+        count = 4 # lower than the number of ancestor tubes
+        result = subject.select_wells(count)
+
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+        #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+        #  'A3', 'B3']
+        #  ->
+        # ["A1", "B2", "H2", "F3"]
+
+        expect(result.size).to eq(count)
+        expect(result.map(&:location)).to eq(%w[A1 B2 H2 F3])
+      end
+
+      it 'selects wells up to the number of ancestor tubes if count is not specified' do
+        result = subject.select_wells
+
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+        #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+        #  'A3', 'B3']
+        #  ->
+        # ["A1", "D1", "G1", "B2", "E2", "H2", "C3", "F3"]
+
+        expect(result.size).to eq(ancestor_tubes.size)
+        expect(result.map(&:location)).to eq(%w[A1 D1 G1 B2 E2 H2 C3 F3])
       end
     end
 
@@ -120,20 +137,14 @@ RSpec.describe Utility::CellCountSpotChecking do
         #  'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4',
         #  'A5', 'B5', 'C5', 'D5']
         # ->
-        # ['A1', 'H1', 'G2', 'F3', 'E4', 'D5']
+        # ["A1", "B2", "H2", "F3", "D4", "B5"]
 
         expect(result.size).to eq(count)
-        expect(result[0].location).to eq('A1')
-        expect(result[1].location).to eq('H1')
-        expect(result[2].location).to eq('G2')
-        expect(result[3].location).to eq('F3')
-        expect(result[4].location).to eq('E4')
-        expect(result[5].location).to eq('D5')
+        expect(result.map(&:location)).to eq(%w[A1 B2 H2 F3 D4 B5])
       end
 
       it 'selects wells up to the number of ancestor tubes if count is not specified' do
         result = subject.select_wells
-        expect(result.size).to eq(ancestor_tubes.size)
 
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
         #  'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
@@ -141,20 +152,10 @@ RSpec.describe Utility::CellCountSpotChecking do
         #  'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4',
         #  'A5', 'B5', 'C5', 'D5']
         # ->
-        # ['A1', 'E1', 'A2', 'D2', 'G2', 'B3', 'E3', 'H3', 'C4', 'F4', 'A5', 'D5']
+        # ["A1", "D1", "G1", "B2", "E2", "H2", "C3", "F3", "A4", "D4", "G4", "B5"]
 
-        expect(result[0].location).to eq('A1') # 0
-        expect(result[1].location).to eq('E1') # +4 (fair sharing remainder)
-        expect(result[2].location).to eq('A2') # +4 (fair sharing remainder)
-        expect(result[3].location).to eq('D2') # +3
-        expect(result[4].location).to eq('G2') # +3
-        expect(result[5].location).to eq('B3') # +3
-        expect(result[6].location).to eq('E3') # +3
-        expect(result[7].location).to eq('H3') # +3
-        expect(result[8].location).to eq('C4') # +3
-        expect(result[9].location).to eq('F4') # +3
-        expect(result[10].location).to eq('A5') # +3
-        expect(result[11].location).to eq('D5') # +3
+        expect(result.size).to eq(ancestor_tubes.size)
+        expect(result.map(&:location)).to eq(%w[A1 D1 G1 B2 E2 H2 C3 F3 A4 D4 G4 B5])
       end
     end
   end
