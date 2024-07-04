@@ -1532,6 +1532,26 @@ ROBOT_CONFIG =
       }
     )
 
+    # For scRNA Core pipeline cherrypick to 5p Dil plate
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-ge-dil',
+      name: 'Hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p GE Dil',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p Cherrypick',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p GE Dil',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
     # For Chromium 10x pipeline 5p dilution to frag 2xp
     custom_robot(
       'hamilton-lbc-5p-gex-dil-to-lbc-5p-gex-frag-2xp',
@@ -1552,6 +1572,26 @@ ROBOT_CONFIG =
       }
     )
 
+    # For scRNA Core pipeline 5p dilution to frag 2xp
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-ge-dil-to-lrc-gem-x-5p-ge-frag-2xp',
+      name: 'Hamilton LRC GEM-X 5p GE Dil => LRC GEM-X 5p GE Frag 2XP',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p GE Dil',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p GE Frag 2XP',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
     # For Chromium 10x pipeline 5p frag 2xp to ligxp
     custom_robot(
       'hamilton-lbc-5p-gex-frag-2xp-to-lbc-5p-gex-ligxp',
@@ -1564,6 +1604,26 @@ ROBOT_CONFIG =
         },
         bed(3).barcode => {
           purpose: 'LBC 5p GEX LigXP',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    # For scRNA Core pipeline 5p frag 2xp to ligxp
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-ge-frag-2xp-to-lrc-gem-x-5p-ge-ligxp',
+      name: 'Hamilton LRC GEM-X 5p GE Frag 2XP => LRC GEM-X 5p GE LigXP',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p GE Frag 2XP',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p GE LigXP',
           states: ['pending'],
           label: 'Bed 3',
           target_state: 'passed',
