@@ -31,14 +31,14 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
 
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
 
-  let(:template) { "exports/hamilton_lrc_pbmc_bank_to_cellaca_#{count}_count" }
+  let(:template) { "exports/hamilton_lrc_pbmc_bank_to_cellaca_max_#{count}_count" }
 
   before do
     assign(:plate, plate)
     assign(:workflow, workflow)
   end
 
-  context 'with hamilton_lrc_pbmc_bank_to_cellaca_4_count' do
+  context 'with hamilton_lrc_pbmc_bank_to_cellaca_max_4_count' do
     let(:count) { 4 }
     it 'renders the expected content' do
       render(template: template)
@@ -47,7 +47,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
     end
   end
 
-  context 'with hamilton_lrc_pbmc_bank_to_cellaca_6_count' do
+  context 'with hamilton_lrc_pbmc_bank_to_cellaca_max_6_count' do
     let(:count) { 6 }
     it 'renders the expected content' do
       render(template: template)
@@ -56,7 +56,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
     end
   end
 
-  context 'with hamilton_lrc_pbmc_bank_to_cellaca_12_count' do
+  context 'with hamilton_lrc_pbmc_bank_to_cellaca_max_12_count' do
     let(:count) { 6 }
     it 'renders the expected content' do
       render(template: template)
