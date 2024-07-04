@@ -167,6 +167,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     stub_api_get(child_plate_uuid, body: child_plate_v1)
 
     stub_upload_file_creation
+
+    stub_api_get(parent_tube_1_uuid, body: json(:tube))
   end
 
   context '#new' do
@@ -229,7 +231,13 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     it 'creates a plate!' do
+      # barcode from multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv
+      subject.labware.barcode.machine = 'AB10000001'
+      subject.labware.barcode.ean13 = nil
+
       subject.save
+      expect(subject.errors.full_messages).to be_empty
+
       expect(ms_plate_creation_request).to have_been_made.once
       expect(transfer_creation_request).to have_been_made.once
     end
@@ -336,6 +344,64 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect { subject.send(:source_tube_outer_request_uuid, parent_tube_2) }.to raise_error(
         RuntimeError,
         "No active request of expected type found for tube #{parent_tube_2.human_barcode}"
+      )
+    end
+  end
+
+  context 'when a tube rack has a source tube with a ean13 barcode' do
+    # source tube
+    let(:source_tube) { subject.labware }
+    let(:source_tube_barcode) { source_tube.barcode.machine }
+
+    let(:file) do
+      fixture_file_upload(
+        'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    let(:form_attributes) do
+      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+    end
+
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
+    before { subject.validate }
+
+    it 'is not valid' do
+      expect(subject).not_to be_valid
+      expect(subject.errors.full_messages).to include(
+        'Uploaded tube rack scan file does not work with ean13-barcoded tube ' \
+          "scanned on the previous page (#{source_tube_barcode})"
+      )
+    end
+  end
+
+  context 'when a tube rack does not contain the source tube' do
+    # source tube
+    let(:source_tube) { subject.labware }
+    let(:source_tube_barcode) { source_tube.barcode.machine }
+
+    let(:file) do
+      fixture_file_upload(
+        'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv',
+        'sequencescape/qc_file'
+      )
+    end
+
+    let(:form_attributes) do
+      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+    end
+
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
+    before { subject.validate }
+
+    it 'is not valid' do
+      expect(subject).not_to be_valid
+      expect(subject.errors.full_messages).to include(
+        'Uploaded tube rack scan file does not contain the tube scanned ' \
+          "on the previous page (#{source_tube_barcode})"
       )
     end
   end

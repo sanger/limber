@@ -25,7 +25,7 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
       it 'contains four items' do
         expect(qc_label_definitions.length).to eq(4)
 
-        expect(qc_label_definitions.pluck(:top_left)).to all(eq(Time.zone.today.strftime('%d-%b-%Y').upcase))
+        expect(qc_label_definitions.pluck(:top_left)).to all(eq(Time.zone.today.strftime('%e-%^b-%Y')))
         expect(qc_label_definitions.pluck(:top_right)).to all(eq('DN2T'))
         expect(qc_label_definitions.pluck(:bottom_left)).to eq(
           [

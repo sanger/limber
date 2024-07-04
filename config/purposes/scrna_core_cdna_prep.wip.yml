@@ -26,22 +26,8 @@ LRC PBMC Defrost PBS:
   :asset_type: plate
   :label_template: plate_quad_qc # creates QC4 barcodes
   :file_links:
-    - name: 'Download Cellaca Input QC1'
-      id: cellaca_input_file
-      params:
-        page: 0
-    - name: 'Download Cellaca Input QC2'
-      id: cellaca_input_file
-      params:
-        page: 1
-    - name: 'Download Cellaca Input QC3'
-      id: cellaca_input_file
-      params:
-        page: 2
-    - name: 'Download Cellaca Input QC4'
-      id: cellaca_input_file
-      params:
-        page: 3
+    - name: 'Download Cellaca Count CSV'
+      id: hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count
   :qc_thresholds:
     viability:
       units: '%'
@@ -142,73 +128,3 @@ LRC GEM-X 5p cDNA Input:
   :presenter_class: Presenters::StockPlatePresenter
   # will not be creatable in Limber (created by manifest in Sequencescape)
   :creator_class: LabwareCreators::Uncreatable
-# There will be a manual submission on a sub-selection of samples in the LRC GEM-X 5p cDNA PCR XP and
-# LRC GEM-X 5p cDNA Input plates for aggregation into a single LRC GEM-X 5p Cherrypick plate. Multiple plates
-# could be aggregated into a single cherrypick plate.
-# e.g. if single samples are selected from each plate then up to 10 aggregate plates could be made which are
-# then combined into a single cherrypick plate.
-LRC GEM-X 5p Aggregate:
-  :asset_type: plate
-  :stock_plate: false
-  :input_plate: false
-  :creator_class: LabwareCreators::TenStamp
-  :file_links: []
-# NB. QC concentrations need to be uploaded via QuantHub for the Cherrypick plate in order for the binning
-# calculations in the GEX Dil plate step to work.
-# TODO: there will be a submission on this plate for library prep
-# TODO: not clear what the stock and input flags should be for this to work
-LRC GEM-X 5p Cherrypick:
-  :asset_type: plate
-  :stock_plate: false
-  :input_plate: false
-  :cherrypickable_target: true
-  :creator_class: LabwareCreators::TenStamp
-  :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_chromium_gem_x_5p_aggregation'
-  :file_links:
-    - name: 'Download Hamilton Aggregate Cherrypick CSV'
-      id: 'hamilton_aggregate_cherrypick'
-    - name: Download Concentration (ng/ul) CSV
-      id: concentrations_ngul
-# NB. For the following binning step the min and max amounts for the bins are the total amount of cDNA
-# in the well i.e. QC concentration * (source_volume + diluent_volume)
-# Here we are using a fixed source volume and there is no dilution (diluent_volume = 0)
-# TODO: R&D to confirm the number of PCR cycles for each range
-LRC GEM-X 5p GEX Dil:
-  :asset_type: plate
-  :stock_plate: false
-  :input_plate: false
-  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
-  :creator_class: LabwareCreators::ConcentrationBinnedPlate
-  :dilutions:
-    :source_volume: 10
-    :diluent_volume: 0
-    :bins:
-      - max: 25.0
-        pcr_cycles: 15
-        colour: 1
-      - min: 25.0
-        max: 150.0
-        pcr_cycles: 13
-        colour: 2
-      - min: 150.0
-        max: 500.0
-        pcr_cycles: 11
-        colour: 3
-      - min: 500.0
-        max: 1000.0
-        pcr_cycles: 9
-        colour: 4
-      - min: 1000.0
-        max: 1500.0
-        pcr_cycles: 7
-        colour: 5
-      - min: 1500.0
-        pcr_cycles: 5
-        colour: 12
-  :file_links:
-    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p GEX Dil CSV'
-      id: hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil
-    - name: Download Concentration (ng/ul) CSV
-      id: concentrations_ngul
-# TODO: there will be further library prep steps after this plate

@@ -189,7 +189,32 @@ hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools:
     - wells.transfer_requests_as_target.source_asset
     - wells.aliquots.study.poly_metadata
   ancestor_purpose: LRC PBMC Defrost PBS
-hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_gex_dil:
+hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_ge_dil:
   csv: hamilton_fixed_volume_dilutions
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
+hamilton_lrc_pbmc_defrost_pbs_to_cellaca:
+  csv: hamilton_lrc_pbmc_defrost_pbs_to_cellaca
+  workflow: scRNA Core LRC PBMC Defrost PBS Cell Count
+  plate_includes:
+    - wells.qc_results
+    - wells.transfer_requests_as_target.source_asset
+    - wells.aliquots.study.poly_metadata
+hamilton_lrc_pbmc_bank_to_cellaca_common: &hamilton_lrc_pbmc_bank_to_cellaca_common
+  workflow: scRNA Core LRC PBMC Bank Cell Count
+  plate_includes:
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+hamilton_lrc_pbmc_bank_to_cellaca_max_4_count:
+  <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_max_4_count
+hamilton_lrc_pbmc_bank_to_cellaca_max_6_count:
+  <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_max_6_count
+hamilton_lrc_pbmc_bank_to_cellaca_max_12_count:
+  <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_max_12_count
+hamilton_lrc_pbmc_bank_to_cellaca_all_count:
+  <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_all_count
