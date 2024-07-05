@@ -206,6 +206,8 @@ hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count:
     - wells.qc_results
     - wells.transfer_requests_as_target.source_asset
     - wells.aliquots.study.poly_metadata
+  filename:
+    labware_barcode: prepend
 hamilton_lrc_pbmc_bank_to_cellaca_common: &hamilton_lrc_pbmc_bank_to_cellaca_common
   workflow: scRNA Core LRC PBMC Bank Cell Count
   plate_includes:
