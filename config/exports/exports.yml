@@ -223,4 +223,4 @@ hamilton_lrc_pbmc_bank_to_cellaca_max_12_count:
   csv: hamilton_lrc_pbmc_bank_to_cellaca_max_12_count
 hamilton_lrc_pbmc_bank_to_cellaca_all_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
-  csv: hamilton_lrc_pbmc_bank_to_cellaca_all_count
+  csv: hamilton_lrc_pbmc_bank_to_cellaca_first_count
