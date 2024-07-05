@@ -1185,18 +1185,22 @@ ROBOT_CONFIG =
       }
     )
 
+    # GBS pipeline bed verification
+    # Allows use of either GBS or ANOSPP 96-well source plates
+    # GBS-96 Stock or LANS-96 Lysate to GBS PCR1
+    # Transfers 4:1 (1-4 source 96-well plates of either type to 1 destination 384-well plate)
     custom_robot(
       'mosquito-gbs-96-stock-to-gbs-pcr1',
-      name: 'Mosquito GBS-96 Stock => GBS PCR1',
+      name: 'Mosquito GBS-96 Stock or LANS-96 Lysate => GBS PCR1',
       beds: {
         bed(1).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 1'
         },
         bed(2).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 2'
@@ -1209,13 +1213,13 @@ ROBOT_CONFIG =
           label: 'Bed 3'
         },
         bed(4).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 4'
         },
         bed(5).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 5'
@@ -3623,6 +3627,46 @@ ROBOT_CONFIG =
           label: 'Bed 5',
           parent: bed(15).barcode,
           target_state: 'passed'
+        }
+      }
+    )
+
+    # ANOSPP Beckman bed verification
+    # LANS-96 Stock ethanol removal step
+    custom_robot(
+      'beckman-lilys-96-stock-preparation',
+      name: 'Beckman LANS-96 Stock Preparation',
+      require_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LANS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # ANOSPP Beckman bed verification
+    # LANS-96 Stock to LANS-96 Lysate
+    # one to one stamp with added randomised controls
+    custom_robot(
+      'beckman-lilys-96-stock-to-lbsn-96-lysate',
+      name: 'Beckman LANS-96 Stock => LANS-96 Lysate',
+      require_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LANS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LANS-96 Lysate',
+          states: ['pending'],
+          label: 'Bed 14',
+          target_state: 'passed',
+          parent: bed(9).barcode
         }
       }
     )
