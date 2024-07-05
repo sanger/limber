@@ -206,14 +206,14 @@ hamilton_lrc_pbmc_defrost_pbs_to_cellaca:
     - wells.qc_results
     - wells.transfer_requests_as_target.source_asset
     - wells.aliquots.study.poly_metadata
-hamilton_cellaca_count_common: &hamilton_cellaca_count_common
+hamilton_lrc_pbmc_bank_to_cellaca_common: &hamilton_lrc_pbmc_bank_to_cellaca_common
   workflow: scRNA Core LRC PBMC Bank Cell Count
   plate_includes:
     - wells.aliquots
     - wells.aliquots.sample
     - wells.aliquots.sample.sample_metadata
 hamilton_lrc_pbmc_bank_to_cellaca_first_count:
-  <<: *hamilton_cellaca_count_common
+  <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
   csv: hamilton_lrc_pbmc_bank_to_cellaca_first_count
   filename:
     labware_barcode: prepend
