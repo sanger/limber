@@ -72,7 +72,7 @@ LRC PBMC Bank:
     - name: 'Download PBMC Bank Tubes Content Report'
       id: pbmc_bank_tubes_content_report
       states: [passed, qc_complete]
-    - name: 'Download Cellaca ALL Count CSV'
+    - name: 'Download Cellaca FIRST Count CSV'
       id: hamilton_lrc_pbmc_bank_to_cellaca_all_count
   :qc_thresholds:
     viability:
