@@ -21,6 +21,7 @@ ISC:
     LB End Prep: LB Lib PCR
     LB Lib PCR: LB Lib PCR-XP
     LB Lib PCR-XP: LB Lib PrePool
+    LTN Lib PCR XP: LB Lib PrePool # for Targeted NanoSeq ReISC
     LB Lib PrePool: LB Hyb
     LB Hyb: LB Cap Lib
     LB Cap Lib: LB Cap Lib PCR
