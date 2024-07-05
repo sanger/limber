@@ -218,9 +218,6 @@ hamilton_lrc_pbmc_bank_to_cellaca_max_4_count:
 hamilton_lrc_pbmc_bank_to_cellaca_max_6_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
   csv: hamilton_lrc_pbmc_bank_to_cellaca_max_6_count
-hamilton_lrc_pbmc_bank_to_cellaca_max_12_count:
-  <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
-  csv: hamilton_lrc_pbmc_bank_to_cellaca_max_12_count
 hamilton_lrc_pbmc_bank_to_cellaca_first_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
   csv: hamilton_lrc_pbmc_bank_to_cellaca_first_count
