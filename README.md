@@ -55,13 +55,7 @@ Because Limber is only a frontend that relies on SequenceScape as a backend, Seq
    bundle exec rails s
    ```
 
-1. Open a **second** SequenceScape terminal, and configure all data required for Limber:
-
-   ```shell
-   bundle exec rake limber:setup
-   ```
-
-1. In the second Sequencescape terminal, start the delayed job processor. This ensures that background processes are being handled:
+1. Open a **second** SequenceScape terminal, start the delayed job processor. This ensures that background processes are being handled:
 
    ```shell
    bundle exec rake jobs:work
