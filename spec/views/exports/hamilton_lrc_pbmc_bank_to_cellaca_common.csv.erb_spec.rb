@@ -31,65 +31,44 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
 
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
 
-  let(:template) { "exports/hamilton_lrc_pbmc_bank_to_cellaca_max_#{count}_count" }
-
   before do
     assign(:plate, plate)
     assign(:workflow, workflow)
   end
 
-  context 'with hamilton_lrc_pbmc_bank_to_cellaca_max_4_count' do
-    let(:count) { 4 }
+  context 'with first replicates' do
+    let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_first_count' }
     it 'renders the expected content' do
       render(template: template)
       content = CSV.parse(rendered)
-      expect(content).to eq(expected_content(count))
+      selected_wells = Utility::CellCountSpotChecking.new(plate).first_replicates
+      expect(content).to eq(expected_content(selected_wells))
     end
   end
 
-  context 'with hamilton_lrc_pbmc_bank_to_cellaca_max_6_count' do
-    let(:count) { 6 }
+  context 'with second replicates' do
+    let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_second_count' }
     it 'renders the expected content' do
       render(template: template)
       content = CSV.parse(rendered)
-      expect(content).to eq(expected_content(count))
-    end
-  end
-
-  context 'with hamilton_lrc_pbmc_bank_to_cellaca_max_12_count' do
-    let(:count) { 6 }
-    it 'renders the expected content' do
-      render(template: template)
-      content = CSV.parse(rendered)
-      expect(content).to eq(expected_content(count))
-    end
-  end
-
-  context 'with hamilton_lrc_pbmc_bank_to_cellaca_all_count' do
-    let(:count) { nil }
-    let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_all_count' }
-    it 'renders the expected content' do
-      render(template: template)
-      content = CSV.parse(rendered)
-      expect(content).to eq(expected_content(count))
+      selected_wells = Utility::CellCountSpotChecking.new(plate).second_replicates
+      expect(content).to eq(expected_content(selected_wells))
     end
   end
 
   # Generates the expected content based on the number of wells to select.
   #
-  # @param count [Integer] The number of wells to select.
+  # @param selected_wells [Array<Well>] first or second replicate wells
   # @return [Array<Array<String>>] The expected CSV content.
   # rubocop:disable Metrics/AbcSize
-  def expected_content(count)
-    locations = Utility::CellCountSpotChecking.new(plate).select_wells(count).map(&:location)
+  def expected_content(selected_wells)
     header = [
       ['Workflow', workflow],
       [],
       ['Plate Barcode', 'Well Position', 'Vac Tube Barcode', 'Sample Name', 'Well Name']
     ]
     rows =
-      locations.map do |location|
-        well = plate.well_at_location(location)
+      selected_wells.map do |well|
         sample = well.aliquots.first.sample
         [
           plate.labware_barcode.human,
