@@ -41,7 +41,7 @@ RSpec.describe Utility::CellCountSpotChecking do
   end
 
   describe '#first_replicates' do
-    it 'returns the first wells for each of all ancestor tubes' do
+    it 'returns the first well for each of ancestor tube' do
       # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
       # ->
       # ["A1", "D1", "G1", "B2"]
@@ -53,7 +53,7 @@ RSpec.describe Utility::CellCountSpotChecking do
   end
 
   describe '#second_replicates' do
-    it 'returns the second wells for each of all ancestor tubes' do
+    it 'returns the second well for each ancestor tube' do
       # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
       # ->
       # ["B1", "E1", "H1", "C2"]
