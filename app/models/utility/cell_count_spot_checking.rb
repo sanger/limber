@@ -37,10 +37,10 @@ module Utility
       filtered_wells
         .each_with_object({}) do |well, hash|
           barcode = ancestor_barcode(well)
-          barcode_counts[barcode] += 1
+          count = barcode_counts[barcode] += 1
 
           # Update the hash with the well when the barcode is encountered the second time
-          hash[barcode] = well if barcode_counts[barcode] == 2
+          hash[barcode] = well if count == 2
         end
         .values
     end
