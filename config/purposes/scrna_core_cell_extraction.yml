@@ -74,6 +74,8 @@ LRC PBMC Bank:
       states: [passed, qc_complete]
     - name: 'Download Cellaca FIRST Count CSV'
       id: hamilton_lrc_pbmc_bank_to_cellaca_first_count
+    - name: 'Download Cellaca SECOND Count CSV'
+      id: hamilton_lrc_pbmc_bank_to_cellaca_second_count
   :qc_thresholds:
     viability:
       units: '%'
