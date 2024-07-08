@@ -39,7 +39,7 @@ Limber should be accessible via [http://localhost:3001](http://localhost:3001).
 
 ## Initial Setup (using native installation)
 
-Because Limber relies on SequenceScape as a backend, SequenceScape and it's jobs can be started first. SequenceScape **will** work standalone without Limber.
+Because Limber is only a frontend that relies on SequenceScape as a backend, SequenceScape and it's jobs **must** be started first. SequenceScape **will** work standalone without Limber, Limber **won't** run without SequenceScape.
 
 > Note that this will require SequenceScape to have already been [setup](https://github.com/sanger/sequencescape/blob/develop/README.md) before
 
