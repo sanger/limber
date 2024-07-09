@@ -1,0 +1,4 @@
+<%
+  selected_wells = Utility::CellCountSpotChecking.new(@plate).first_replicates
+%>
+<%= render(partial: 'exports/hamilton_lrc_pbmc_bank_to_cellaca_common', locals: { selected_wells: selected_wells }) %>
