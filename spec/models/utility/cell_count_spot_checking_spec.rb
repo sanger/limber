@@ -53,14 +53,52 @@ RSpec.describe Utility::CellCountSpotChecking do
   end
 
   describe '#second_replicates' do
-    it 'returns the second well for each ancestor tube' do
-      # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
-      # ->
-      # ["B1", "E1", "H1", "C2"]
-      result = subject.second_replicates
-      expect(result.size).to eq(ancestor_tubes.size)
-      selected_wells = plate.wells_in_columns.reject(&:empty?).map(&:location).each_slice(3).map(&:second)
-      expect(result.map(&:location)).to eq(selected_wells)
+    context 'when there are second replicates for all' do
+      it 'returns the second well for each ancestor tube' do
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
+        # ->
+        # ["B1", "E1", "H1", "C2"]
+        result = subject.second_replicates
+        expect(result.size).to eq(ancestor_tubes.size)
+        selected_wells = plate.wells_in_columns.reject(&:empty?).each_slice(3).map(&:second)
+        expect(result).to eq(selected_wells)
+      end
+    end
+
+    context 'when there are no second replicate wells' do
+      before do
+        # Remove all replicate wells except the first ones
+        plate.wells.replace(plate.wells.each_slice(3).pluck(0))
+      end
+
+      it 'returns an empty array' do
+        result = subject.second_replicates
+        expect(result.size).to eq(0)
+      end
+    end
+
+    context 'when an ancestor tube has no second replicates' do
+      before do
+        # Remove all second replicates of the first ancestor tube
+        second_replicates_to_remove =
+          plate
+            .wells
+            .select do |well|
+              sample = well.aliquots.first.sample
+              sample.sample_metadata.supplier_name == ancestor_tubes.values.first.barcode.human
+            end
+            .drop(1)
+        plate.wells.reject! { |well| second_replicates_to_remove.include?(well) }
+      end
+
+      it 'does not include any wells for the ancestor tube with no second replicates' do
+        result = subject.second_replicates
+        expect(result.size).to eq(ancestor_tubes.size - 1)
+
+        # The first vac tube barcode is not in the result
+        barcodes = result.map { |well| well.aliquots.first.sample.sample_metadata.supplier_name }
+        expect(barcodes).not_to include(ancestor_tubes.values.first.barcode.human)
+      end
     end
   end
 end

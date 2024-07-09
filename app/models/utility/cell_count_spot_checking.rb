@@ -31,7 +31,8 @@ module Utility
 
     # Returns the second replicate wells in the plate. It groups the filtered
     # wells by the ancestor tube barcode and returns the second well in each
-    # group.
+    # group. If there is only one well for a barcode, no well is returned for
+    # that barcode.
     def second_replicates
       barcode_counts = Hash.new(0) # Initializes a new hash to count barcode occurrences
       filtered_wells
@@ -51,7 +52,7 @@ module Utility
     #
     # @return [Array<Well>] the wells in the plate that are not empty
     def filtered_wells
-      @filtered_wells ||= plate.wells_in_columns.reject(&:empty?)
+      @filtered_wells ||= plate.wells.reject(&:empty?).sort_by(&:coordinate)
     end
 
     # Returns the barcode of the ancestor tube associated with the well from
