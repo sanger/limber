@@ -10,9 +10,7 @@
                         'Source Plate ID',
                         'Source Plate Well',
                         'Destination Plate ID',
-                        'Destination Plate Well',
-                        'Sample Vac Tube ID',
-                        'Sample Name'
+                        'Destination Plate Well'
                       ],
                       row_sep: ""
 %>
@@ -25,9 +23,7 @@
         src_barcode,
         src_location,
         @plate.labware_barcode.human,
-        dest_well.location,
-        aliquot.sample.sample_metadata.supplier_name,
-        aliquot.sample.name
+        dest_well.location
       ]
     end
   end
