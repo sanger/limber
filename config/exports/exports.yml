@@ -229,7 +229,7 @@ hamilton_lrc_pbmc_bank_to_cellaca_second_count:
       prepend: true
 hamilton_lrc_pbmc_pools_or_input_to_lrc_gem_x_5p_chip:
   csv: hamilton_gem_x_5p_chip_loading
-  workflow: scRNA Core LRC PBMC Pooling
+  workflow: scRNA Core GEM-X 5p Chip Loading
   plate_includes:
     - wells.aliquots
     - wells.aliquots.sample
