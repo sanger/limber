@@ -100,7 +100,7 @@ LRC GEM-X 5p Chip:
   :presenter_class: Presenters::ChromiumChipPresenter
   :file_links:
     - name: 'Download Hamilton LRC PBMC Pools (or Input) to LRC GEM-X 5p Chip CSV'
-      id: hamilton_lrc_pbmc_pools_or_input_to_lrc_gem_x_5p_chip
+      id: hamilton_gem_x_5p_chip_loading
 # GEMs plate, containing wells from the above in duplicate.
 LRC GEM-X 5p GEMs:
   :asset_type: plate
