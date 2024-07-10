@@ -17,15 +17,12 @@
 <%
   rows_array = []
   each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
-    src_well =  @ancestor_plate.well_at_location(src_location)
-    src_well.aliquots.each do |aliquot|
-      rows_array << [
-        src_barcode,
-        src_location,
-        @plate.labware_barcode.human,
-        dest_well.location
-      ]
-    end
+    rows_array << [
+      src_barcode,
+      src_location,
+      @plate.labware_barcode.human,
+      dest_well.location
+    ]
   end
 %>
 <% rows_array.each do |row| %>
