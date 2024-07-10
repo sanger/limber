@@ -228,7 +228,7 @@ hamilton_lrc_pbmc_bank_to_cellaca_second_count:
     labware_barcode:
       prepend: true
 hamilton_lrc_pbmc_pools_or_input_to_lrc_gem_x_5p_chip:
-  csv: hamilton_lrc_pbmc_pools_or_input_to_lrc_gem_x_5p_chip
+  csv: hamilton_gem_x_5p_chip_loading
   workflow: scRNA Core LRC PBMC Pooling
   plate_includes:
     - wells.aliquots
