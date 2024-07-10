@@ -227,7 +227,7 @@ hamilton_lrc_pbmc_bank_to_cellaca_second_count:
   filename:
     labware_barcode:
       prepend: true
-hamilton_lrc_pbmc_pools_or_input_to_lrc_gem_x_5p_chip:
+hamilton_gem_x_5p_chip_loading:
   csv: hamilton_gem_x_5p_chip_loading
   workflow: scRNA Core GEM-X 5p Chip Loading
   plate_includes:
