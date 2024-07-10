@@ -1,0 +1,37 @@
+<%# Driver file for Hamilton robot to transfer from LRC PBMC Pools (or Input) to LRC GEM x 5P chip %>
+<%= CSV.generate_line [
+    'Workflow', 
+    @workflow
+  ], 
+  row_sep: '' 
+%>
+<%= CSV.generate_line [], row_sep: "" %>
+<%= CSV.generate_line [
+                        'Source Plate ID',
+                        'Source Plate Well',
+                        'Destination Plate ID',
+                        'Destination Plate Well',
+                        'Sample Vac Tube ID',
+                        'Sample Name'
+                      ],
+                      row_sep: ""
+%>
+<%
+  rows_array = []
+  each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
+    src_well =  @ancestor_plate.well_at_location(src_location)
+    src_well.aliquots.each do |aliquot|
+      rows_array << [
+        src_barcode,
+        src_location,
+        @plate.labware_barcode.human,
+        dest_well.location,
+        aliquot.sample.sample_metadata.supplier_name,
+        aliquot.sample.name
+      ]
+    end
+  end
+%>
+<% rows_array.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>
