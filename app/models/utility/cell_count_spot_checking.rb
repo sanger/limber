@@ -48,11 +48,14 @@ module Utility
 
     private
 
-    # Returns the wells in the plate that are not empty in column-major order.
+    # Returns the wells in the plate in column-major order. Empty and failed
+    # wells are filtered out. The filtering will make sure that in case a well
+    # is failed, the well following that will be used for that in the download
+    # for spot checking.
     #
     # @return [Array<Well>] the wells in the plate that are not empty
     def filtered_wells
-      @filtered_wells ||= plate.wells.reject(&:empty?).sort_by(&:coordinate)
+      @filtered_wells ||= plate.wells.reject { |well| well.empty? || well.failed? }.sort_by(&:coordinate)
     end
 
     # Returns the barcode of the ancestor tube associated with the well from
