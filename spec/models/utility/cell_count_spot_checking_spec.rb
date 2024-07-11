@@ -31,6 +31,16 @@ RSpec.describe Utility::CellCountSpotChecking do
     create(:v2_plate, wells: wells)
   end
 
+  let(:plate_wells_grouped_by_barcode) do
+    # Generate an array where each element is an array of wells with the same
+    # ancestor tube barcode on the plate.
+    plate
+      .wells_in_columns
+      .reject { |well| well.empty? || well.failed? }
+      .group_by { |well| well.aliquots.first.sample.sample_metadata.supplier_name }
+      .values
+  end
+
   subject { described_class.new(plate) }
 
   describe '#initialize' do
@@ -41,14 +51,32 @@ RSpec.describe Utility::CellCountSpotChecking do
   end
 
   describe '#first_replicates' do
-    it 'returns the first well for each of ancestor tube' do
-      # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
-      # ->
-      # ["A1", "D1", "G1", "B2"]
-      result = subject.first_replicates
-      expect(result.size).to eq(ancestor_tubes.size)
-      selected_wells = plate.wells_in_columns.reject(&:empty?).map(&:location).each_slice(3).map(&:first)
-      expect(result.map(&:location)).to eq(selected_wells)
+    context 'when there are first replicates for all' do
+      it 'returns the first well for each of ancestor tube' do
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
+        # ->
+        # ["A1", "D1", "G1", "B2"]
+        result = subject.first_replicates
+        expect(result.size).to eq(ancestor_tubes.size)
+        selected_wells = plate_wells_grouped_by_barcode.map(&:first)
+        expect(result).to eq(selected_wells)
+      end
+    end
+    context 'when a first replicate is failed' do
+      before do
+        # Well state is set for testing purposes. In the actual code, the state
+        # is a computed property; there is no way to set it directly.
+        plate.wells_in_columns.first.state = 'failed' # Fail A1
+      end
+      it 'returns the second replicate as the first replicate' do
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
+        # ->
+        # ["B1", "D1", "G1", "B2"]
+        result = subject.first_replicates
+        expect(result.size).to eq(ancestor_tubes.size)
+        selected_wells = plate_wells_grouped_by_barcode.map(&:first)
+        expect(result).to eq(selected_wells)
+      end
     end
   end
 
@@ -60,7 +88,24 @@ RSpec.describe Utility::CellCountSpotChecking do
         # ["B1", "E1", "H1", "C2"]
         result = subject.second_replicates
         expect(result.size).to eq(ancestor_tubes.size)
-        selected_wells = plate.wells_in_columns.reject(&:empty?).each_slice(3).map(&:second)
+        selected_wells = plate_wells_grouped_by_barcode.map(&:second)
+        expect(result).to eq(selected_wells)
+      end
+    end
+
+    context 'when a second replicate is failed' do
+      before do
+        # Well state is set for testing purposes. In the actual code, the state
+        # is a computed property; there is no way to set it directly.
+        plate.wells_in_columns.second.state = 'failed' # Fail B1
+      end
+      it 'returns the following replicate as the second replicate' do
+        # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
+        # ->
+        # ["C1", "E1", "H1", "C2"]
+        result = subject.second_replicates
+        expect(result.size).to eq(ancestor_tubes.size)
+        selected_wells = plate_wells_grouped_by_barcode.map(&:second)
         expect(result).to eq(selected_wells)
       end
     end
