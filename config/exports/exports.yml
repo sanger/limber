@@ -207,7 +207,8 @@ hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count:
     - wells.aliquots.sample
     - wells.aliquots.sample.sample_metadata
   filename:
-    labware_barcode: prepend
+    labware_barcode:
+      prepend: true
 hamilton_lrc_pbmc_bank_to_cellaca_common: &hamilton_lrc_pbmc_bank_to_cellaca_common
   workflow: scRNA Core LRC PBMC Bank Cell Count
   plate_includes:
@@ -218,9 +219,25 @@ hamilton_lrc_pbmc_bank_to_cellaca_first_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
   csv: hamilton_lrc_pbmc_bank_to_cellaca_first_count
   filename:
-    labware_barcode: prepend
+    labware_barcode:
+      prepend: true
 hamilton_lrc_pbmc_bank_to_cellaca_second_count:
   <<: *hamilton_lrc_pbmc_bank_to_cellaca_common
   csv: hamilton_lrc_pbmc_bank_to_cellaca_second_count
   filename:
-    labware_barcode: prepend
+    labware_barcode:
+      prepend: true
+hamilton_gem_x_5p_chip_loading:
+  csv: hamilton_gem_x_5p_chip_loading
+  workflow: scRNA Core GEM-X 5p Chip Loading
+  plate_includes:
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+    - wells.transfer_requests_as_target.source_asset
+  filename:
+    parent_labware_barcode:
+      prepend: true
+  ancestor_purpose:
+    - LRC PBMC Pools
+    - LRC PBMC Pools Input
