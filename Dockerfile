@@ -27,6 +27,11 @@ RUN set -uex \
     && apt-get update \
     && apt-get install nodejs -y;
 
+# Install Python for deasync [node-gyp]
+# Issue: https://github.com/abbr/deasync/issues/106
+# Resolution: https://github.com/nodejs/node-gyp?tab=readme-ov-file#installation
+RUN apt-get install -y python3
+
 # Change the working directory for all proceeding operations
 #   https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#workdir
 WORKDIR /code
