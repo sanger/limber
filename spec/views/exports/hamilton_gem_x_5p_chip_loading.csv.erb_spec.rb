@@ -7,7 +7,7 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
   let(:workflow) { 'scRNA Core GEM-X 5p Chip Loading' }
 
   # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
-  let(:mapping) { ("A1".."A8").zip((17..24).map(&:to_s)).to_h }
+  let(:mapping) { ('A1'..'A8').zip((17..24).map(&:to_s)).to_h }
 
   # Source wells
   let(:source_well_a1) { create(:v2_well, location: 'A1') }
