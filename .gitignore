@@ -44,5 +44,7 @@ log/*.log*
 *.swn
 
 # Release
-release.tar.gz
+BRANCH
 REVISION
+TAG
+release.tar.gz
