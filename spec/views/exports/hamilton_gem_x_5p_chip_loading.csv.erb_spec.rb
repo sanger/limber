@@ -6,6 +6,9 @@ require 'spec_helper'
 RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
   let(:workflow) { 'scRNA Core GEM-X 5p Chip Loading' }
 
+  # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
+  let(:mapping) { ('A1'..'A8').zip((17..24).map(&:to_s)).to_h }
+
   # Source wells
   let(:source_well_a1) { create(:v2_well, location: 'A1') }
   let(:source_well_b1) { create(:v2_well, location: 'B1') }
@@ -31,10 +34,10 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
   let(:empty_row) { [] }
   let(:header_row) { ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well'] }
   let(:row_source_a1) do
-    [source_plate.barcode.human, source_well_a1.location, dest_plate.barcode.human, dest_well_a1.location]
+    [source_plate.barcode.human, source_well_a1.location, dest_plate.barcode.human, mapping[dest_well_a1.location]]
   end
   let(:row_source_b1) do
-    [source_plate.barcode.human, source_well_b1.location, dest_plate.barcode.human, dest_well_a2.location]
+    [source_plate.barcode.human, source_well_b1.location, dest_plate.barcode.human, mapping[dest_well_a2.location]]
   end
 
   before do
