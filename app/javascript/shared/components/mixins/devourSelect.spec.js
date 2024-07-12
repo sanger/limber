@@ -27,7 +27,7 @@ describe('DevourSelect mixin', () => {
       fields: testFields,
       validation: testValidation,
     }
-    cmp = Vue.extend({ mixins: [DevourSelect] })
+    cmp = Vue.extend({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
     devourSelectInstance = new cmp({
       propsData: data,
     })
@@ -61,7 +61,7 @@ describe('DevourSelect mixin', () => {
 
   describe('checking api behaviour', () => {
     const wrapperFactory = function (api = mockApi()) {
-      const MyComponent = Vue.extend({ mixins: [DevourSelect] })
+      const MyComponent = Vue.extend({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
       return mount(MyComponent, {
         propsData: {
           api: api.devour,

@@ -339,7 +339,7 @@ export default {
           // page, and update the history. Instead we don't redirect
           // application/json requests, and redirect the user ourselves.
           this.progressMessage = response.data.message
-          this.locationObj.href = response.data.redirect
+          this.locationObj.href = response.data.redirect // eslint-disable-line vue/no-mutating-props
         })
         .catch((error) => {
           handleFailedRequest(error)
