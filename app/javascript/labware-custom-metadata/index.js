@@ -5,7 +5,7 @@ import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import LabwareCustomMetadataAddForm from './components/LabwareCustomMetadataAddForm.vue'
-import cookieJar from 'shared/cookieJar'
+import cookieJar from '@/shared/cookieJar'
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)

@@ -5,18 +5,18 @@ import {
   checkMolarityResult,
   checkState,
   checkTransferParameters,
-} from 'shared/components/tubeScanValidators'
+} from '@/shared/components/tubeScanValidators'
 
-import { purposeConfigForTube } from 'shared/tubeHelpers'
+import { purposeConfigForTube } from '@/shared/tubeHelpers'
 import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,
   purposeMinimumPickParameter,
   tubeMostRecentMolarity,
-} from 'shared/tubeTransferVolumes'
+} from '@/shared/tubeTransferVolumes'
 
-jest.mock('shared/tubeHelpers')
-jest.mock('shared/tubeTransferVolumes')
+jest.mock('@/shared/tubeHelpers')
+jest.mock('@/shared/tubeTransferVolumes')
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {

@@ -7,9 +7,9 @@ import {
   checkMinCountRequests,
   checkPlateWithSameReadyLibrarySubmissions,
   checkSize,
-} from 'shared/components/plateScanValidators'
-import { handleFailedRequest } from 'shared/requestHelpers'
-import { baseTransferCreator } from 'shared/transfersCreators'
+} from '@/shared/components/plateScanValidators'
+import { handleFailedRequest } from '@/shared/requestHelpers'
+import { baseTransferCreator } from '@/shared/transfersCreators'
 import Vue from 'vue'
 import MultiStamp from './MultiStamp'
 

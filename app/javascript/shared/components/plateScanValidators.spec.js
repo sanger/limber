@@ -12,7 +12,7 @@ import {
   checkExcess,
   checkState,
   checkQCableWalkingBy,
-} from 'shared/components/plateScanValidators'
+} from '@/shared/components/plateScanValidators'
 
 describe('checkSize', () => {
   it('is valid if the plate is the correct size', () => {

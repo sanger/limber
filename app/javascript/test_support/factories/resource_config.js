@@ -1,4 +1,4 @@
-import resources from 'shared/resources'
+import resources from '@/shared/resources'
 
 // Reads in the shared resources file and provides some friendly interfaces
 export default class ResourceConfig {

@@ -1,7 +1,7 @@
 // // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import { aggregate } from 'shared/components/scanValidators'
+import { aggregate } from '@/shared/components/scanValidators'
 import localVue from 'test_support/base_vue.js'
 import { tubeFactory } from 'test_support/factories'
 import MultiStampTubes from './MultiStampTubes.vue'

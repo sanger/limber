@@ -1,4 +1,4 @@
-import { aggregate, validScanMessage } from 'shared/components/scanValidators'
+import { aggregate, validScanMessage } from '@/shared/components/scanValidators'
 
 describe('aggregate', () => {
   const validFunction = (_) => {

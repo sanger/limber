@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import DevourSelect from 'shared/components/mixins/devourSelect'
+import DevourSelect from '@/shared/components/mixins/devourSelect'
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import mockApi from 'test_support/mock_api'

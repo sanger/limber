@@ -1,4 +1,4 @@
-import eventBus from 'shared/eventBus'
+import eventBus from '@/shared/eventBus'
 import { requestsForWell } from './wellHelpers'
 
 const requestIsActive = function (request) {

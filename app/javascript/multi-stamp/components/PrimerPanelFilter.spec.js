@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import PrimerPanelFilter from './PrimerPanelFilter.vue'
 import localVue from 'test_support/base_vue.js'
 import { plateFactory, wellFactory, requestFactory } from 'test_support/factories.js'
-import { requestsFromPlates } from 'shared/requestHelpers'
+import { requestsFromPlates } from '@/shared/requestHelpers'
 
 describe('PrimerPanelFilter', () => {
   const wrapperFactory = function (requests) {

@@ -46,13 +46,18 @@
 </template>
 
 <script>
-import devourApi from 'shared/devourApi'
+import devourApi from '@/shared/devourApi'
 import filterProps from './filterProps'
-import LabwareScan from 'shared/components/LabwareScan'
-import LoadingModal from 'shared/components/LoadingModal'
-import resources from 'shared/resources'
+import LabwareScan from '@/shared/components/LabwareScan'
+import LoadingModal from '@/shared/components/LoadingModal'
+import resources from '@/shared/resources'
 import TransferVolumes from './TransferVolumes'
-import { checkId, checkMolarityResult, checkState, checkTransferParameters } from 'shared/components/tubeScanValidators'
+import {
+  checkId,
+  checkMolarityResult,
+  checkState,
+  checkTransferParameters,
+} from '@/shared/components/tubeScanValidators'
 
 export default {
   name: 'ValidatePairedTubes',

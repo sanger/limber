@@ -1,8 +1,8 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import Page from 'shared/components/Page.vue'
-import Alert from 'shared/components/Alert.vue'
-import eventBus from 'shared/eventBus'
+import Page from '@/shared/components/Page.vue'
+import Alert from '@/shared/components/Alert.vue'
+import eventBus from '@/shared/eventBus'
 
 describe('Page', () => {
   const wrapperFactory = () => {

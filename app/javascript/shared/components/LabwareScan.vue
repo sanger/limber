@@ -42,7 +42,7 @@
 <script>
 import { checkSize } from './plateScanValidators'
 import { aggregate } from './scanValidators'
-import { validateError } from 'shared/devourApiValidators'
+import { validateError } from '@/shared/devourApiValidators'
 
 // Incrementing counter to ensure all instances of LabwareScan
 // have a unique id. Ensures labels correctly match up with

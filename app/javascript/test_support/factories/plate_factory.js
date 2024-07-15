@@ -1,5 +1,5 @@
-import buildArray from 'shared/buildArray'
-import { indexToName } from 'shared/wellHelpers'
+import buildArray from '@/shared/buildArray'
+import { indexToName } from '@/shared/wellHelpers'
 import wellFactory from 'test_support/factories/well_factory'
 
 const plateFactory = function (options = {}) {

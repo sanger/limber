@@ -40,13 +40,13 @@
 // function in scanValidators.js
 
 import { validScanMessage } from './scanValidators'
-import { purposeConfigForTube } from 'shared/tubeHelpers'
+import { purposeConfigForTube } from '@/shared/tubeHelpers'
 import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,
   purposeMinimumPickParameter,
   tubeMostRecentMolarity,
-} from 'shared/tubeTransferVolumes'
+} from '@/shared/tubeTransferVolumes'
 
 // Returns a validator that ensures that the scanned item does not appear
 // multiple times in the list (based on UUID).

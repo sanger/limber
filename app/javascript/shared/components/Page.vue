@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import LbAlert from 'shared/components/Alert'
-import eventBus from 'shared/eventBus'
+import LbAlert from '@/shared/components/Alert'
+import eventBus from '@/shared/eventBus'
 import uniqueSlug from 'unique-slug'
 
 export default {

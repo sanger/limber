@@ -1,4 +1,4 @@
-import buildArray from 'shared/buildArray'
+import buildArray from '@/shared/buildArray'
 import requestFactory from 'test_support/factories/request_factory'
 
 // Probably move outside

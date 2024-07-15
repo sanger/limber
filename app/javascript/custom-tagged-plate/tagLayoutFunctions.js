@@ -1,5 +1,5 @@
-import { wellNameToCoordinate } from 'shared/wellHelpers'
-import counter from 'shared/counter'
+import { wellNameToCoordinate } from '@/shared/wellHelpers'
+import counter from '@/shared/counter'
 
 function byPool(well, tags, _relIndex, _absIndex, offset, counters) {
   if (!counters[well.pool_index]) {

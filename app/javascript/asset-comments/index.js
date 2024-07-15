@@ -9,9 +9,9 @@ import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from './components/AssetCommentsAddForm.vue'
 import commentStoreFactory from './comment-store'
 import axios from 'axios'
-import cookieJar from 'shared/cookieJar'
-import devourApi from 'shared/devourApi'
-import resources from 'shared/resources'
+import cookieJar from '@/shared/cookieJar'
+import devourApi from '@/shared/devourApi'
+import resources from '@/shared/resources'
 
 Vue.use(BootstrapVue)
 

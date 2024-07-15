@@ -1,5 +1,5 @@
-import TagGroupsLookup from 'shared/components/TagGroupsLookup.vue'
-import TagOffset from 'custom-tagged-plate/components/TagOffset.vue'
+import TagGroupsLookup from '@/shared/components/TagGroupsLookup.vue'
+import TagOffset from '@/custom-tagged-plate/components/TagOffset.vue'
 
 export default {
   name: 'TagLayout',

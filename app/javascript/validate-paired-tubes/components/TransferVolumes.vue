@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import { purposeConfigForTube } from 'shared/tubeHelpers'
+import { purposeConfigForTube } from '@/shared/tubeHelpers'
 import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,
   purposeMinimumPickParameter,
   tubeMostRecentMolarity,
   calculateTransferVolumes,
-} from 'shared/tubeTransferVolumes'
+} from '@/shared/tubeTransferVolumes'
 
 export default {
   name: 'TransferVolumes',

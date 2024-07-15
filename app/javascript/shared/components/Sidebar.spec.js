@@ -1,7 +1,7 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 
-import Sidebar from 'shared/components/Sidebar.vue'
+import Sidebar from '@/shared/components/Sidebar.vue'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('Sidebar', () => {

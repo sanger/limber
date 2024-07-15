@@ -6,9 +6,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import MultiStamp from './components/MultiStamp.vue'
 import MultiStampLibrarySplitter from './components/MultiStampLibrarySplitter.js'
-import MainContent from 'shared/components/MainContent.vue'
-import Page from 'shared/components/Page.vue'
-import Sidebar from 'shared/components/Sidebar.vue'
+import MainContent from '@/shared/components/MainContent.vue'
+import Page from '@/shared/components/Page.vue'
+import Sidebar from '@/shared/components/Sidebar.vue'
 import axios from 'axios'
 
 Vue.use(BootstrapVue)

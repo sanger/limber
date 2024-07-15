@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import LbWell from 'shared/components/Well'
-import { rowNumToLetter } from 'shared/wellHelpers'
+import LbWell from '@/shared/components/Well'
+import { rowNumToLetter } from '@/shared/wellHelpers'
 
 export default {
   name: 'LbPlate',

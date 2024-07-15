@@ -1,7 +1,7 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 
-import Well from 'shared/components/Well.vue'
+import Well from '@/shared/components/Well.vue'
 
 describe('Well', () => {
   const wrapperWithoutAliquot = shallowMount(Well, {

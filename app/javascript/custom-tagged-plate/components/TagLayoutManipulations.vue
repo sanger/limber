@@ -104,9 +104,9 @@
 </template>
 
 <script>
-import LabwareScan from 'shared/components/LabwareScan'
-import { checkState, checkQCableWalkingBy } from 'shared/components/plateScanValidators'
-import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
+import LabwareScan from '@/shared/components/LabwareScan'
+import { checkState, checkQCableWalkingBy } from '@/shared/components/plateScanValidators'
+import TagLayout from '@/custom-tagged-plate/components/mixins/TagLayout'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.

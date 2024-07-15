@@ -4,7 +4,7 @@ import {
   purposeMinimumPickParameter,
   tubeMostRecentMolarity,
   calculateTransferVolumes,
-} from 'shared/tubeTransferVolumes'
+} from '@/shared/tubeTransferVolumes'
 
 const validPurposeConfig = {
   transfer_parameters: {

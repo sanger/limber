@@ -1,5 +1,5 @@
-import { handleFailedRequest } from 'shared/requestHelpers'
-import eventBus from 'shared/eventBus'
+import { handleFailedRequest } from '@/shared/requestHelpers'
+import eventBus from '@/shared/eventBus'
 
 describe('handleFailedRequest', () => {
   it('emits a danger alert with the provided payload', () => {
