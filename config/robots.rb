@@ -3634,7 +3634,7 @@ ROBOT_CONFIG =
     # ANOSPP Beckman bed verification
     # LANS-96 Stock ethanol removal step
     custom_robot(
-      'beckman-lilys-96-stock-preparation',
+      'beckman-lans-96-stock-preparation',
       name: 'Beckman LANS-96 Stock Preparation',
       require_robot: true,
       beds: {
@@ -3651,7 +3651,7 @@ ROBOT_CONFIG =
     # LANS-96 Stock to LANS-96 Lysate
     # one to one stamp with added randomised controls
     custom_robot(
-      'beckman-lilys-96-stock-to-lbsn-96-lysate',
+      'beckman-lans-96-stock-to-lans-96-lysate',
       name: 'Beckman LANS-96 Stock => LANS-96 Lysate',
       require_robot: true,
       beds: {
