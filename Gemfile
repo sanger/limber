@@ -12,7 +12,10 @@ group :default do
   gem 'exception_notification'
   gem 'rake'
   gem 'state_machines'
-  gem 'webpacker'
+
+  # Build dependencies
+  gem 'vite_ruby'
+  gem 'vite_rails'
 
   # Adds easy conversions between units
   gem 'ruby-units'
