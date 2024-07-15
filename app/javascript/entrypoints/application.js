@@ -26,3 +26,22 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 
 // Example: Import a stylesheet in app/frontend/index.css
 // import '~/index.css'
+
+// Currently setting up each component as its own mini vue app.
+import '@/asset-comments/index.js'
+import '@/custom-tagged-plate/index.js'
+import '@/file-list/index.js'
+import '@/labware-custom-metadata/index.js'
+import '@/multi-stamp-tubes/index.js'
+import '@/multi-stamp/index.js'
+import '@/pipeline-graph/index.js'
+import '@/qc-information/index.js'
+import '@/tubes-to-rack/index.js'
+import '@/validate-paired-tubes/index.js'
+
+// Load simple javascript files
+import '@/plain-javascript/page-reloader.js'
+import '@/plain-javascript/print-scaling'
+import '@/plain-javascript/quadrant-well-failing'
+import '@/plain-javascript/tag-animations' // rotates the displayed tag Id in wells with multiple tags
+import '@/plain-javascript/threshold-well-failing'
