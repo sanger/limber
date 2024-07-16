@@ -3,8 +3,5 @@ import RubyPlugin from 'vite-plugin-ruby'
 import vue from '@vitejs/plugin-vue2'
 
 export default defineConfig({
-  plugins: [
-    RubyPlugin(),
-    vue(),
-  ],
+  plugins: [RubyPlugin(), vue()],
 })
