@@ -1,5 +1,6 @@
 .tube-view {
-  @include labware-view height: 32px;
+  @include labware-view;
+  height: 32px;
   width: 32px;
   padding: 3px;
   text-align: center;
