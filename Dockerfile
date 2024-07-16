@@ -16,7 +16,7 @@ RUN apt-get install -y git
 # Set Node to install version 16+, a more recent version such as 20 is recommended
 #   https://github.com/nodesource/distributions
 RUN set -uex \
-    && NODE_MAJOR=16 \
+    && NODE_MAJOR=18 \
     && apt-get update \
     && apt-get install -y ca-certificates curl gnupg \
     && mkdir -p /etc/apt/keyrings \
