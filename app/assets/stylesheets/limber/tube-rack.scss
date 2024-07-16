@@ -1,3 +1,5 @@
+@import 'labware-mixins';
+
 .tube-rack-view {
   @include labware-view;
   @include labware-grid-view;

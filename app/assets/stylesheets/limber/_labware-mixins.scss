@@ -1,3 +1,5 @@
+@import 'bootstrap';
+
 @mixin labware-view {
   .unknown {
     background-color: $secondary;
@@ -28,9 +30,11 @@
 }
 
 @mixin labware-grid-view {
-  padding: 10px;
-  border-collapse: separate;
-  border-radius: 0px 15px 15px 15px;
+  & {
+    padding: 10px;
+    border-collapse: separate;
+    border-radius: 0px 15px 15px 15px;
+  }
 
   th {
     padding: 0;
@@ -76,14 +80,16 @@
     .aliquot:hover {
       color: #ffd600;
       cursor: pointer;
-      @extend .selected-aliquot;
+      // @extend .selected-aliquot; // TODO: Remove circular reference
     }
   }
 }
 
 @mixin labware-grid-view-384 {
-  padding: 5px;
-  border-collapse: separate;
+  & {
+    padding: 5px;
+    border-collapse: separate;
+  }
   td,
   th {
     font-size: 50%;
