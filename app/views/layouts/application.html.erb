@@ -7,15 +7,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <%= csrf_meta_tag %>
 
-    <%= stylesheet_link_tag 'application' %>
-    <%= stylesheet_link_tag 'print', media: 'print' %>
+    <%= vite_stylesheet_tag 'application.scss' %>
+    <%= vite_stylesheet_tag 'print.scss', media: 'print' %>
 
-    <%= javascript_include_tag 'application'  %>
     <%= vite_javascript_tag 'application' %>
-    <%= vite_stylesheet_tag 'application' %>
 
     <% if Rails.application.config.disable_animations %>
-      <%= stylesheet_link_tag  'disable_animations' %>
+      <%= vite_stylesheet_tag  'disable_animations' %>
 
       <!-- Turn off animations in jQuery -->
       <script>$.fx.off = true;</script>
