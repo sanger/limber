@@ -1,7 +1,5 @@
-<%# This partial generates Hamilton LRC PBMC Bank to Cellaca CSV downloads for 
-    4, 6, 12, and all counts depending on the count parameter, which determines
-    the number of wells to select (one well per Vac tube) 
-%>
+<%# This partial generates Hamilton LRC PBMC Bank to Cellaca CSV downloads for
+    the first and second counts depending on the selected_wells passed in. %>
 <%= CSV.generate_line [
         'Workflow',
         @workflow
@@ -20,9 +18,7 @@
 %>
 <%
   rows_array = []
-  Utility::CellCountSpotChecking.new(@plate)
-    .select_wells(count)  # number of wells to select
-    .each do |well|
+  selected_wells.each do |well|
       sample = well.aliquots.first.sample
       row = [
         @plate.labware_barcode.human,

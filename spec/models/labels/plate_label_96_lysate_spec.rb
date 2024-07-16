@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
+RSpec.describe Labels::PlateLabel96Lysate, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   context 'when creating the labels for a plate' do
@@ -14,7 +14,7 @@ RSpec.describe Labels::PlateLabelLbsn96Lysate, type: :model do
     let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: [aliquot]) }
     let(:labware) { create :v2_plate, wells: [well_c6] }
 
-    let(:label) { Labels::PlateLabelLbsn96Lysate.new(labware) }
+    let(:label) { Labels::PlateLabel96Lysate.new(labware) }
 
     context '#attributes' do
       it 'has the correct attributes' do

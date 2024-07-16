@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca.csv.erb' do
+RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count.csv.erb' do
   has_a_working_api
 
   let(:wells) do
