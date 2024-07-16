@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import LabwareScan from '@/shared/components/LabwareScan'
-import LoadingModal from '@/shared/components/LoadingModal'
-import Plate from '@/shared/components/Plate'
+import LabwareScan from '@/shared/components/LabwareScan.vue'
+import LoadingModal from '@/shared/components/LoadingModal.vue'
+import Plate from '@/shared/components/Plate.vue'
 import { checkDuplicates, checkSize } from '@/shared/components/plateScanValidators'
 import devourApi from '@/shared/devourApi'
 import buildPlateObjs from '@/shared/plateHelpers'
@@ -58,11 +58,11 @@ import { handleFailedRequest, requestIsActive, requestsFromPlates } from '@/shar
 import resources from '@/shared/resources'
 import { baseTransferCreator } from '@/shared/transfersCreators'
 import { transfersFromRequests } from '@/shared/transfersLayouts'
-import MultiStampTransfers from './MultiStampTransfers'
-import NullFilter from './NullFilter'
-import PlateSummary from './PlateSummary'
-import PrimerPanelFilter from './PrimerPanelFilter'
-import VolumeTransfers from './VolumeTransfers'
+import MultiStampTransfers from './MultiStampTransfers.vue'
+import NullFilter from './NullFilter.vue'
+import PlateSummary from './PlateSummary.vue'
+import PrimerPanelFilter from './PrimerPanelFilter.vue'
+import VolumeTransfers from './VolumeTransfers.vue'
 import filterProps from './filterProps'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 

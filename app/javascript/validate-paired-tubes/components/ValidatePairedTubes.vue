@@ -48,10 +48,10 @@
 <script>
 import devourApi from '@/shared/devourApi'
 import filterProps from './filterProps'
-import LabwareScan from '@/shared/components/LabwareScan'
-import LoadingModal from '@/shared/components/LoadingModal'
+import LabwareScan from '@/shared/components/LabwareScan.vue'
+import LoadingModal from '@/shared/components/LoadingModal.vue'
 import resources from '@/shared/resources'
-import TransferVolumes from './TransferVolumes'
+import TransferVolumes from './TransferVolumes.vue'
 import {
   checkId,
   checkMolarityResult,

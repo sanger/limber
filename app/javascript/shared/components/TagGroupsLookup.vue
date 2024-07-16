@@ -1,5 +1,5 @@
 <script>
-import DevourSelect from '@/shared/components/mixins/devourSelect'
+import DevourSelect from '@/shared/components/mixins/devourSelect.js'
 import { hasExpectedProperties } from '@/shared/devourApiValidators'
 
 export default {

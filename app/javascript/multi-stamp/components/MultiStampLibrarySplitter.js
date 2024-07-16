@@ -11,7 +11,7 @@ import {
 import { handleFailedRequest } from '@/shared/requestHelpers'
 import { baseTransferCreator } from '@/shared/transfersCreators'
 import Vue from 'vue'
-import MultiStamp from './MultiStamp'
+import MultiStamp from './MultiStamp.vue'
 
 export default Vue.extend({
   mixins: [MultiStamp],

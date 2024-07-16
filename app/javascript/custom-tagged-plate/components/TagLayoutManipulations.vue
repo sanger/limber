@@ -104,9 +104,9 @@
 </template>
 
 <script>
-import LabwareScan from '@/shared/components/LabwareScan'
+import LabwareScan from '@/shared/components/LabwareScan.vue'
 import { checkState, checkQCableWalkingBy } from '@/shared/components/plateScanValidators'
-import TagLayout from '@/custom-tagged-plate/components/mixins/TagLayout'
+import TagLayout from '@/custom-tagged-plate/components/mixins/TagLayout.js'
 
 /**
  * Allows the user to select tags and arrange their layout on the plate.

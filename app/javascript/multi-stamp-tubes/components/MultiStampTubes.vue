@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import LabwareScan from '@/shared/components/LabwareScan'
-import LoadingModal from '@/shared/components/LoadingModal'
-import Plate from '@/shared/components/Plate'
+import LabwareScan from '@/shared/components/LabwareScan.vue'
+import LoadingModal from '@/shared/components/LoadingModal.vue'
+import Plate from '@/shared/components/Plate.vue'
 import { checkDuplicates, checkState } from '@/shared/components/tubeScanValidators'
 import devourApi from '@/shared/devourApi'
 import { handleFailedRequest } from '@/shared/requestHelpers'
@@ -60,8 +60,8 @@ import { transferTubesCreator } from '@/shared/transfersCreators'
 import { transfersForTubes } from '@/shared/transfersLayouts'
 import { buildTubeObjs } from '@/shared/tubeHelpers'
 import { findUniqueIndex, indexToName } from '@/shared/wellHelpers'
-import MultiStampTubesTransfers from './MultiStampTubesTransfers'
-import TubeArraySummary from './TubeArraySummary'
+import MultiStampTubesTransfers from './MultiStampTubesTransfers.vue'
+import TubeArraySummary from './TubeArraySummary.vue'
 import filterProps from './filterProps'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap'
 

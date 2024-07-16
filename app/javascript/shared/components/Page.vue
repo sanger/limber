@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import LbAlert from '@/shared/components/Alert'
+import LbAlert from '@/shared/components/Alert.vue'
 import eventBus from '@/shared/eventBus'
 import uniqueSlug from 'unique-slug'
 

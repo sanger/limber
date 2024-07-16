@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import LabwareScan from '@/shared/components/LabwareScan'
-import LoadingModal from '@/shared/components/LoadingModal'
+import LabwareScan from '@/shared/components/LabwareScan.vue'
+import LoadingModal from '@/shared/components/LoadingModal.vue'
 import { checkDuplicates, checkMatchingPurposes } from '@/shared/components/tubeScanValidators'
 import devourApi from '@/shared/devourApi'
 import { handleFailedRequest } from '@/shared/requestHelpers'
