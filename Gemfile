@@ -68,7 +68,6 @@ group :development, :test do
   # Use jquery as the JavaScript library
   gem 'jquery-rails'
   gem 'sass-rails'
-  gem 'select2-rails'
 end
 
 group :development do
