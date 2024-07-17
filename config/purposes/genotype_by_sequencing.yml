@@ -4,21 +4,18 @@ GBS Stock:
   :stock_plate: true
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalStockPlatePresenter
-  :input_plate: true
   :size: 384
 GBS-96 Stock:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalStockPlatePresenter
-  :input_plate: true
   :size: 96
 GBS PCR1:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :presenter_class: Presenters::MinimalPcrPlatePresenter
-  :input_plate: false
   :creator_class: LabwareCreators::QuadrantStampPrimerPanel
   :size: 384
   :pcr_stage: 'pcr 1'
@@ -34,7 +31,6 @@ GBS PCR2:
     - GbS Tag Set C
     - GbS Tag Set D
   :presenter_class: Presenters::MinimalPcrPlatePresenter
-  :input_plate: false
   :size: 384
   :pcr_stage: 'pcr 2'
   :label_template: plate_6mm_double

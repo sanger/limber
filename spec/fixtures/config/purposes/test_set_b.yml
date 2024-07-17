@@ -4,7 +4,6 @@ LB Lib PrePool:
   :stock_plate: false
   :creator_class: LabwareCreators::MultiPlatePool
   :cherrypickable_target: false
-  :input_plate: false
   :default_printer_type: :plate_b
   :csv_template: 'show_extended'
 LB Hyb:

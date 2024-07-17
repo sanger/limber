@@ -8,7 +8,6 @@
 LRC Blood Vac:
   :asset_type: tube
   :stock_plate: false
-  :input_plate: false
   :target: SampleTube
   :type: Tube::Purpose
   :presenter_class: Presenters::VacTubePresenter
@@ -18,7 +17,6 @@ LRC Blood Vac:
 LRC Blood Aliquot:
   :asset_type: tube
   :stock_plate: false
-  :input_plate: false
   :target: SampleTube
   :type: Tube::Purpose
   :presenter_class: Presenters::SimpleTubePresenter
@@ -33,7 +31,6 @@ LRC Blood Aliquot:
 LRC Blood Bank:
   :asset_type: plate
   :stock_plate: false
-  :input_plate: false
   :creator_class:
     name: LabwareCreators::MultiStampTubes
     params:

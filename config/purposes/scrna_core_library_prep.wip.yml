@@ -9,7 +9,6 @@
 LRC GEM-X 5p Aggregate:
   :asset_type: plate
   :stock_plate: false
-  :input_plate: false
   :creator_class: LabwareCreators::TenStamp
   :file_links: []
 # NB. QC concentrations need to be uploaded via QuantHub for the Cherrypick plate in order for the binning
@@ -17,7 +16,6 @@ LRC GEM-X 5p Aggregate:
 LRC GEM-X 5p Cherrypick:
   :asset_type: plate
   :stock_plate: false
-  :input_plate: false
   :cherrypickable_target: true
   :creator_class: LabwareCreators::TenStamp
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
@@ -33,7 +31,6 @@ LRC GEM-X 5p Cherrypick:
 LRC GEM-X 5p GE Dil:
   :asset_type: plate
   :stock_plate: false
-  :input_plate: false
   :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
   :creator_class: LabwareCreators::ConcentrationBinnedPlate
   :dilutions:

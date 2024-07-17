@@ -5,7 +5,6 @@ LANS-96 Stock:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
@@ -16,7 +15,6 @@ LANS-96 Lysate:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
-  :input_plate: false
   :label_template: plate_96_lysate
   :presenter_class: Presenters::StockPlatePresenter
   :state_changer_class: StateChangers::AutomaticPlateStateChanger

@@ -5,13 +5,11 @@ LTN Stock:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
 LTN Cherrypick:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: true
-  :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
 LTN Shear:
   :asset_type: plate

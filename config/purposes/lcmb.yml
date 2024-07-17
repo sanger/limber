@@ -3,7 +3,6 @@ LCMB Cherrypick:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: true
-  :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
 LCMB End Prep:
   :asset_type: plate

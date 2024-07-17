@@ -6,7 +6,6 @@ LDW-96 Stock:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :input_plate: true
   :creator_class: LabwareCreators::Uncreatable
   :presenter_class: Presenters::SubmissionPlatePresenter
   :submission_options:
@@ -22,7 +21,6 @@ LSW-96 Stock:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
-  :input_plate: false
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: deep_well_plate_stamping
   :creator_class: LabwareCreators::StampedPlate

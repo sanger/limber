@@ -41,7 +41,6 @@ LB Cherrypick:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: true
-  :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
 LB Shear:
   :asset_type: plate
@@ -111,7 +110,6 @@ Example plate:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
-  :input_plate: false
   :size: 96
   :presenter_class: Presenters::StandardPresenter
   :state_changer_class: StateChangers::DefaultStateChanger
@@ -139,20 +137,6 @@ in Sequencescape. Usually only true for the first plate in the pipeline.
 
 ```yaml
 :stock_plate: false
-```
-
-Default: `false`
-
-#### :input_plate
-
-**(plate only)**
-Boolean, indicates that the plate has the input_plate flag set
-in Sequencescape. Usually only true for the first plate in the pipeline. Also
-used to determine if the plate shows in the 'New Input Plates' inbox, and to
-determine which barcode gets shown on downstream ancestors
-
-```yaml
-:input_plate: false
 ```
 
 Default: `false`

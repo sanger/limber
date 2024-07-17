@@ -2,7 +2,6 @@
 CLCM Stock:
   :asset_type: plate
   :stock_plate: true
-  :input_plate: true
   :creator_class: LabwareCreators::Uncreatable
 CLCM Lysate DNA:
   :asset_type: plate

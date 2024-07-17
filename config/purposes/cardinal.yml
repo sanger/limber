@@ -7,7 +7,6 @@
 LCA Blood Vac:
   :asset_type: tube
   :stock_plate: false
-  :input_plate: false
   :target: SampleTube
   :type: Tube::Purpose
   :presenter_class: Presenters::VacTubePresenter
@@ -21,7 +20,6 @@ LCA Blood Array:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: false
-  :input_plate: false
   :creator_class: LabwareCreators::MultiStampTubes
   :submission_options:
     Cardinal library prep:
@@ -116,7 +114,6 @@ LCA Custom Pool Norm:
 LCA Blood Bank:
   :asset_type: plate
   :stock_plate: false
-  :input_plate: false
   :creator_class:
     name: LabwareCreators::MultiStampTubes
     params:
