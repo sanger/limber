@@ -113,3 +113,10 @@ LRC Bank Spare:
   :presenter_class: Presenters::SimpleTubePresenter
   :state_changer_class: StateChangers::AutomaticTubeStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
+# FluidX tube frozen input from faculty tube, created by manifest
+LRC Bank Input:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::Uncreatable
+  :presenter_class: Presenters::SimpleTubePresenter
