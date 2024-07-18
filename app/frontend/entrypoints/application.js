@@ -29,6 +29,10 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 
 // ^^^ Template from Vite. Below is custom code for Limber ^^^
 
+// Import Libraries
+import 'bootstrap'
+import 'popper.js'
+
 // Currently setting up each component as its own mini vue app.
 import '@/javascript/asset-comments/index.js'
 import '@/javascript/custom-tagged-plate/index.js'
