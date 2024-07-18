@@ -53,7 +53,7 @@
   },
   "name": "limber",
   "scripts": {
-    "lint": "eslint --ext .js --ext .vue app/javascript",
+    "lint": "eslint --ext .js --ext .vue app/frontend/javascript",
     "test": "jest",
     "lintOnly": "eslint --ext .js --ext .vue"
   }
