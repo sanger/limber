@@ -2,7 +2,6 @@
 
 # This is used as part of a rake task, and will be run within a console.
 # rubocop:disable Rails/Output
-# rubocop:disable Metrics/ParameterLists
 
 # Purpose config is used to translate the configuration options in the purposes/*.yml
 # files into the serialized versions in the config/settings/*.yml
@@ -147,5 +146,4 @@ class PurposeConfig
     }
   end
 end
-# rubocop:enable Metrics/ParameterLists
 # rubocop:enable Rails/Output
