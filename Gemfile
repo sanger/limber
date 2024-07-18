@@ -63,11 +63,6 @@ group :development, :test do
   # Pinning to v4 as bootstrap 5 drops compatibility with the latest versions of chrome and FF on XP
   # Some lab machines are locked to XP due to vendor compatibility
   gem 'bootstrap', '~>4'
-
-  # gem 'coffee-rails', require: false
-  # Use jquery as the JavaScript library
-  gem 'jquery-rails'
-  gem 'sass-rails'
 end
 
 group :development do
