@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
+    "@babel/eslint-parser": "^7.24.8",
     "@babel/plugin-transform-class-properties": "^7.24.4",
     "@babel/plugin-transform-object-rest-spread": "^7.24.4",
     "@babel/plugin-transform-private-methods": "^7.24.4",
@@ -30,12 +31,12 @@
     "autoprefixer": "^10.4.19",
     "axios-mock-adapter": "^1.22.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
     "babel-jest": "^27.5.1",
+    "babel-plugin-macros": "^3.0.0",
     "core-js": "^3.36.1",
-    "eslint": "^7.0.0",
+    "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.10.0",
-    "eslint-plugin-jest": "^24.7.0",
+    "eslint-plugin-jest": "^28.0.0",
     "eslint-plugin-vue": "^9.0.0",
     "jest": "^27.5.1",
     "postcss": "^8.4.39",
@@ -53,7 +54,7 @@
   },
   "name": "limber",
   "scripts": {
-    "lint": "eslint --ext .js --ext .vue app/frontend/javascript",
+    "lint": "eslint --ext .js --ext .vue app/frontend",
     "test": "jest",
     "lintOnly": "eslint --ext .js --ext .vue"
   }

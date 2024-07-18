@@ -1,14 +1,18 @@
 module.exports = {
   env: {
     browser: true,
+    commonjs: true,
     es6: true,
-    amd: true,
+    jasmine: true,
+    jquery: true,
+    node: true,
   },
   plugins: ['vue'],
   extends: ['eslint:recommended', 'plugin:vue/recommended', 'prettier'],
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
     sourceType: 'module',
+    requireConfigFile: false,
   },
   rules: {
     'linebreak-style': ['error', 'unix'],
