@@ -197,9 +197,6 @@ GEM
     hashie (5.0.0)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
-    inline_svg (1.9.0)
-      activesupport (>= 3.0)
-      nokogiri (>= 1.6)
     io-console (0.7.2)
     irb (1.13.2)
       rdoc (>= 4.0.0)
@@ -454,7 +451,6 @@ DEPENDENCIES
   factory_bot
   guard-rspec
   hashie
-  inline_svg
   json_api_client!
   launchy
   oj

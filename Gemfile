@@ -6,9 +6,6 @@ group :default do
   gem 'bootsnap'
   gem 'rails'
 
-  # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
-  gem 'inline_svg'
-
   gem 'exception_notification'
   gem 'rake'
   gem 'state_machines'
