@@ -36,7 +36,7 @@ namespace :config do
 
     purpose_config =
       ConfigLoader::PurposesLoader.new.config.map do |name, options|
-        PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_template_config)
+        PurposeConfig.load(name, options, all_purposes, submission_templates, label_template_config)
       end
 
     puts 'Preparing purposes...'

@@ -8,20 +8,20 @@
 # files into the serialized versions in the config/settings/*.yml
 # It also handles the registration of new purposes within Sequencescape.
 class PurposeConfig
-  attr_reader :name, :options, :store, :api
+  attr_reader :name, :options, :store
 
   class_attribute :default_state_changer, :default_options
 
   self.default_state_changer = 'StateChangers::DefaultStateChanger'
 
-  def self.load(name, options, store, api, submission_templates, label_template_config)
+  def self.load(name, options, store, submission_templates, label_template_config)
     case options.fetch(:asset_type)
     when 'plate'
-      PurposeConfig::Plate.new(name, options, store, api, submission_templates, label_template_config)
+      PurposeConfig::Plate.new(name, options, store, submission_templates, label_template_config)
     when 'tube'
-      PurposeConfig::Tube.new(name, options, store, api, submission_templates, label_template_config)
+      PurposeConfig::Tube.new(name, options, store, submission_templates, label_template_config)
     when 'tube_rack'
-      PurposeConfig::TubeRack.new(name, options, store, api, submission_templates, label_template_config)
+      PurposeConfig::TubeRack.new(name, options, store, submission_templates, label_template_config)
     else
       raise "Unknown purpose type #{options.fetch(:asset_type)} for #{name}"
     end
@@ -32,12 +32,11 @@ class PurposeConfig
   # @param options [Hash] values under the name key from the purposes.yml file
   # @param label_template_config [Hash] hash version of the label_template_config.yml file
   #
-  def initialize(name, options, store, api, submission_templates, label_template_config)
+  def initialize(name, options, store, submission_templates, label_template_config)
     @name = name
     @options = options
     @submission = options.delete(:submission)
     @store = store
-    @api = api
     @submission_templates = submission_templates
     @label_templates = label_template_config.fetch('templates')
     @label_template_defaults = label_template_config.fetch('defaults_by_printer_type')
@@ -84,7 +83,8 @@ class PurposeConfig
 
     def register!
       puts "Creating #{name}"
-      api.tube_purpose.create!(name: name, target_type: options.fetch(:target), type: options.fetch(:type))
+      options = { name: name, target_type: options.fetch(:target), purpose_type: options.fetch(:type) }
+      Sequencescape::Api::V2::TubePurpose.create!(options)
     end
   end
 
