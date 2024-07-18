@@ -27,7 +27,8 @@ namespace :config do
     label_template_config = YAML.load_file(Rails.root.join('config/label_templates.yml'))
 
     puts 'Fetching submission_templates...'
-    submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
+    query = Sequencescape::Api::V2::SubmissionTemplate.select(:uuid, :name).paginate(per_page: 100)
+    submission_templates = Sequencescape::Api::V2.merge_page_results(query).to_h { |st| [st.name, st.uuid] }
 
     puts 'Fetching purposes...'
     query = Sequencescape::Api::V2::Purpose.select(:uuid, :name).paginate(per_page: 100)
