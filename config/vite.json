@@ -1,7 +1,6 @@
 {
   "all": {
-    "sourceCodeDir": "app/javascript",
-    "additionalEntrypoints": ["app/{assets,fonts,icons,images}/**/*"]
+    "sourceCodeDir": "app/frontend"
   },
   "development": {
     "autoBuild": true,

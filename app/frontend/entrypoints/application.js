@@ -27,21 +27,23 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 // Example: Import a stylesheet in app/frontend/index.css
 // import '~/index.css'
 
+// ^^^ Template from Vite. Below is custom code for Limber ^^^
+
 // Currently setting up each component as its own mini vue app.
-import '@/asset-comments/index.js'
-import '@/custom-tagged-plate/index.js'
-import '@/file-list/index.js'
-import '@/labware-custom-metadata/index.js'
-import '@/multi-stamp-tubes/index.js'
-import '@/multi-stamp/index.js'
-import '@/pipeline-graph/index.js'
-import '@/qc-information/index.js'
-import '@/tubes-to-rack/index.js'
-import '@/validate-paired-tubes/index.js'
+import '@/javascript/asset-comments/index.js'
+import '@/javascript/custom-tagged-plate/index.js'
+import '@/javascript/file-list/index.js'
+import '@/javascript/labware-custom-metadata/index.js'
+import '@/javascript/multi-stamp-tubes/index.js'
+import '@/javascript/multi-stamp/index.js'
+import '@/javascript/pipeline-graph/index.js'
+import '@/javascript/qc-information/index.js'
+import '@/javascript/tubes-to-rack/index.js'
+import '@/javascript/validate-paired-tubes/index.js'
 
 // Load simple javascript files
-import '@/plain-javascript/page-reloader.js'
-import '@/plain-javascript/print-scaling'
-import '@/plain-javascript/quadrant-well-failing'
-import '@/plain-javascript/tag-animations' // rotates the displayed tag Id in wells with multiple tags
-import '@/plain-javascript/threshold-well-failing'
+import '@/javascript/plain-javascript/page-reloader.js'
+import '@/javascript/plain-javascript/print-scaling'
+import '@/javascript/plain-javascript/quadrant-well-failing'
+import '@/javascript/plain-javascript/tag-animations' // rotates the displayed tag Id in wells with multiple tags
+import '@/javascript/plain-javascript/threshold-well-failing'

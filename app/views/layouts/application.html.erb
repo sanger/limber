@@ -7,9 +7,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <%= csrf_meta_tag %>
 
-    <%= vite_stylesheet_tag 'application.scss' %>
-    <%= vite_stylesheet_tag 'print.scss', media: 'print' %>
+    <%= vite_stylesheet_tag 'application' %>
+    <%= vite_stylesheet_tag 'print', media: 'print' %>
 
+    <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
 
     <% if Rails.application.config.disable_animations %>
@@ -23,8 +24,6 @@
     <link rel="icon" sizes="32x32" href="/icon32.png" />
     <link rel="icon" sizes="16x16" href="/icon16.png" />
     <link rel="shortcut icon" href="/<%= favicon %>" type="image/x-icon" />
-    <%= vite_client_tag %>
-    <%= vite_javascript_tag 'application' %>
   </head>
   <body class='<%= environment %> <%= logged_in_class %>'>
     <div id='app'>
