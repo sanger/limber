@@ -35,7 +35,7 @@ describe('checkDuplicates', () => {
     })
   })
 
-  xit('fails if there are duplicate tubes even when the parent has not been updated', () => {
+  it.skip('fails if there are duplicate tubes even when the parent has not been updated', () => {
     // We emit the tube and state as a single event, and want to avoid the situation
     // where tubes flick from valid to invalid
     const empty = null

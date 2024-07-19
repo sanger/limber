@@ -46,7 +46,7 @@ describe('TagLayout mixin', () => {
     })
   })
 
-  describe('checking computed values: ', () => {
+  describe('checking computed values:', () => {
     describe('tag1Group:', () => {
       it('returns a null tag group by default', () => {
         expect(tagLayout.tag1Group).toEqual(nullTagGroup)

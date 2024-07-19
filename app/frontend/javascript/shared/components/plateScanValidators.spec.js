@@ -44,7 +44,7 @@ describe('checkDuplicates', () => {
     })
   })
 
-  xit('fails if there are duplicate plates even when the parent has not been updated', () => {
+  it.skip('fails if there are duplicate plates even when the parent has not been updated', () => {
     // We emit the plate and state as a single event, and want to avoid the situation
     // where plates flick from valid to invalid
     const empty = null

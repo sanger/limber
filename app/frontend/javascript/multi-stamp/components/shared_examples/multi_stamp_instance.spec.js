@@ -208,4 +208,6 @@ const sharedSpecs = (args) => {
   })
 }
 
+/* eslint-disable jest/no-export */
 export default sharedSpecs
+/* eslint-enable jest/no-export */

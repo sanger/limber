@@ -18,7 +18,7 @@ describe('calculateTagLayout', () => {
   const tagMapIdsStandard = Array.from(new Array(96), (x, i) => i + 1) // [1,2,..96]
   const plateDims = { number_of_rows: 3, number_of_columns: 4 }
 
-  describe('validations: ', () => {
+  describe('validations:', () => {
     it('returns empty object if no tag groups are supplied', () => {
       const data = {
         wells: inputWells,
@@ -95,7 +95,7 @@ describe('calculateTagLayout', () => {
     })
   })
 
-  describe('sequential plate layouts: ', () => {
+  describe('sequential plate layouts:', () => {
     it('sequential by column', () => {
       const data = {
         wells: inputWells,
@@ -321,7 +321,7 @@ describe('calculateTagLayout', () => {
     })
   })
 
-  describe('fixed plate layouts: ', () => {
+  describe('fixed plate layouts:', () => {
     it('fixed by column', () => {
       const data = {
         wells: inputWells,
@@ -547,7 +547,7 @@ describe('calculateTagLayout', () => {
     })
   })
 
-  describe('pooled plate layouts: ', () => {
+  describe('pooled plate layouts:', () => {
     it('pooled by column', () => {
       const data = {
         wells: inputWells,
@@ -773,7 +773,7 @@ describe('calculateTagLayout', () => {
     })
   })
 
-  describe('as multiple tags per well sequential (e.g. chromium): ', () => {
+  describe('as multiple tags per well sequential (e.g. chromium):', () => {
     it('by column', () => {
       const data = {
         wells: inputWells,
@@ -972,7 +972,7 @@ describe('calculateTagLayout', () => {
     })
   })
 
-  describe('as multiple tags per well fixed (e.g. chromium): ', () => {
+  describe('as multiple tags per well fixed (e.g. chromium):', () => {
     it('by column fixed', () => {
       const data = {
         wells: inputWells,
