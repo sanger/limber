@@ -2,8 +2,6 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from './lib/keycodes'
 ;(function ($, exports, undefined) {
   'use strict'
 
-  // Declared as var  rather than const due to issues with const in strict mode
-  // in the older versions of Chrome (34) used in the labs.
   var PlateViewModel = function (plateElement) {
     this['pools-view'] = {
       activate: function () {
@@ -29,8 +27,6 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from './lib/keycodes'
     }
   }
 
-  // Declared as var  rather than const due to issues with const in strict mode
-  // in the older versions of Chrome (34) used in the labs.
   var limberPlateView = function (defaultTab) {
     var plateElement = $(this)
 

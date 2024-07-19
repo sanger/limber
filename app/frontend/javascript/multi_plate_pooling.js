@@ -7,8 +7,6 @@
 
   var SCAPE = exports.SCAPE
 
-  // Declared as var  rather than const due to issues with const in strict mode
-  // in the older versions of Chrome (34) used in the labs.
   var WELLS_IN_COLUMN_MAJOR_ORDER = [
     'A1',
     'B1',
@@ -108,8 +106,6 @@
     'H12',
   ]
 
-  // Declared as var  rather than const due to issues with const in strict mode
-  // in the older versions of Chrome (34) used in the labs.
   var SOURCE_STATES = ['passed', 'qc_complete']
 
   $(function (_event) {

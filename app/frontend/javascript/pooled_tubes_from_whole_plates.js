@@ -1,8 +1,6 @@
 ;(function ($, exports, undefined) {
   'use strict'
 
-  // Declared as var  rather than const due to issues with const in strict mode
-  // in the older versions of Chrome (34) used in the labs.
   var SOURCE_STATES = ['passed', 'qc_complete']
 
   $(function (event) {
