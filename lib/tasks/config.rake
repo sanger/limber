@@ -60,15 +60,14 @@ namespace :config do
               transfer_templates[transfer_template.name] = transfer_template.uuid
             end
 
-        configuration[:printers] =
-          {}.tap do |printers|
-            printers[:plate_a] = 'g316bc'
-            printers[:plate_b] = 'g311bc2'
-            printers[:tube_rack] = 'heron-bc2'
-            printers[:tube] = 'g311bc1'
-            printers['limit'] = 5
-            printers['default_count'] = 2
-          end
+        configuration[:printers] = {
+          plate_a: 'g316bc',
+          plate_b: 'g311bc2',
+          tube_rack: 'heron-bc2',
+          tube: 'g311bc1',
+          limit: 5,
+          default_count: 2
+        }
 
         configuration[:purposes] =
           {}.tap do |labware_purposes|
