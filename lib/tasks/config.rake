@@ -44,7 +44,7 @@ namespace :config do
 
     # Build the configuration file based on the server we are connected to.
     CONFIG = # rubocop:todo Lint/ConstantDefinitionInBlock
-      {}.tap do |configuration|  # rubocop:todo Metrics/BlockLength
+      {}.tap do |configuration|
         # TODO: Y24-190 - Remove this once we have moved everything else over to V2;
         #                 also the config entries for :searches
         puts 'Preparing searches ...'
