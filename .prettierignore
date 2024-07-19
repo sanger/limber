@@ -31,10 +31,10 @@ yarn-error.log
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
-app/javascript/coverage/
+app/frontend/coverage/
 
 # Special formatting here
-app/javascript/shared/resources.js
+app/frontend/javascript/shared/resources.js
 
 # if using LSP for Ruby
 .ruby-lsp/
