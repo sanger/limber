@@ -10,6 +10,7 @@ module.exports = {
   },
   globals: {
     global: true,
+    SCAPE: true,
   },
   plugins: ['jest', 'vue'],
   extends: ['eslint:recommended', 'plugin:vue/recommended', 'plugin:jest/recommended', 'prettier'],
