@@ -52,13 +52,9 @@ namespace :config do
           api.search.all.each_with_object({}) { |search, searches| searches[search.name] = search.uuid }
 
         puts 'Preparing transfer templates ...'
-        configuration[:transfer_templates] =
-          api
-            .transfer_template
-            .all
-            .each_with_object({}) do |transfer_template, transfer_templates|
-              transfer_templates[transfer_template.name] = transfer_template.uuid
-            end
+        query = Sequencescape::Api::V2::TransferTemplate.select(:uuid, :name).paginate(per_page: 100)
+        transfer_templates = Sequencescape::Api::V2.merge_page_results(query).to_h { |tt| [tt.name, tt.uuid] }
+        configuration[:transfer_templates] = transfer_templates
 
         configuration[:printers] = {
           plate_a: 'g316bc',
