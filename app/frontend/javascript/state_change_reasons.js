@@ -1,4 +1,4 @@
-;(function ($, window, undefined) {
+;(function ($, _exports, undefined) {
   'use strict'
 
   var updateDisplay = function (new_state, speed) {

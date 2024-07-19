@@ -1,9 +1,9 @@
-;(function ($, exports, undefined) {
+;(function ($, _exports, undefined) {
   'use strict'
 
   var SOURCE_STATES = ['passed', 'qc_complete']
 
-  $(function (event) {
+  $(function (_event) {
     if ($('#pooled-tubes-from-whole-plates').length === 0) {
       return
     }

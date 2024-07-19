@@ -1,10 +1,10 @@
 import { ENTER_KEYCODE, TAB_KEYCODE } from './keycodes'
-;(function ($, exports, undefined) {
+;(function ($, _exports, undefined) {
   'use strict'
 
   //= require lib/status_collector
 
-  $(function (event) {
+  $(function (_event) {
     if ($('#multi-tube-pooling-page').length === 0) {
       return
     }

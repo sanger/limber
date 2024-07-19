@@ -1,5 +1,5 @@
 import { disableEnterKeySubmit } from './lib/disable_enter_key_submit.js'
-;(function ($, exports, undefined) {
+;(function ($, _exports, undefined) {
   'use strict'
 
   $(function (_event) {

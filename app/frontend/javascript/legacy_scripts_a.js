@@ -1,5 +1,5 @@
 import { ENTER_KEYCODE, TAB_KEYCODE } from './lib/keycodes'
-;(function ($, exports, undefined) {
+;(function ($, _exports, undefined) {
   'use strict'
 
   var PlateViewModel = function (plateElement) {

@@ -50,7 +50,7 @@
         this.infoPanel.find('dd').text('')
         this.infoPanel.find('input').val(null)
       },
-      requestPlate: function (barcode) {
+      requestPlate: function (_barcode) {
         if (this.inputBox.val() === '' && !this.required) {
           return this.monitor.pass()
         }
@@ -197,7 +197,7 @@
       update_layout: function () {
         var tags = this.fetch_tags()
 
-        tags.each(function (index) {
+        tags.each(function (_index) {
           $('#tagging-plate #aliquot_' + this[0])
             .hide('fast')
             .text(this[1][1])

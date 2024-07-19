@@ -3,7 +3,7 @@
 
   ////////////////////////////////////////////////////////////////////
   // Bed Robot Page
-  $(function (event) {
+  $(function (_event) {
     if ($('#robot-verification-bed').length === 0) {
       return
     }
@@ -161,10 +161,10 @@
           bed_labwares: SCAPE.robot_beds,
           robot_barcode: SCAPE.robot_barcode,
         },
-        success: function (data, status) {
+        success: function (data, _status) {
           checkResponse(data)
         },
-      }).fail(function (data, status) {
+      }).fail(function (_data, _status) {
         SCAPE.message(
           'The beds could not be validated. There may be network issues, or problems with Sequencescape.',
           'danger'
