@@ -16,7 +16,7 @@
     $('.user_name_placeholder').text(user_name)
   }
 
-  logIn = function (user_name) {
+  logIn = function () {
     var user_name = userName()
     if (wasLoggedIn) {
       if (user_name !== wasLoggedIn) {
@@ -33,7 +33,7 @@
     wasLoggedIn = user_name
   }
 
-  logOut = function (user_name) {
+  logOut = function () {
     var user_name = 'Guest'
     if (wasLoggedIn) {
       updateUserName(user_name)
