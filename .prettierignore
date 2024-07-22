@@ -31,7 +31,7 @@ yarn-error.log
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
-app/frontend/coverage/
+app/coverage/
 
 # Special formatting here
 app/frontend/javascript/shared/resources.js

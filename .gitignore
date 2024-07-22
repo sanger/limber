@@ -22,7 +22,7 @@ public/stylesheets/*.css
 doc/
 
 # Testing
-/app/frontend/javascript/coverage/
+/app/frontend/coverage/
 /coverage
 /spec/examples.txt
 lcov.info
