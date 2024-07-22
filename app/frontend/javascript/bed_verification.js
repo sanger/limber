@@ -153,7 +153,7 @@
 
     $('#validate_layout').on('click', function () {
       wait()
-      var ajax = $.ajax({
+      $.ajax({
         dataType: 'json',
         url: window.location.pathname + '/verify',
         type: 'POST',
