@@ -41,15 +41,15 @@ const requestsForWell = function (well) {
     ...well.requests_as_source,
     // If the well in on a plate downstream of the one the submission was done on,
     // the relevant request ids are stored on the aliquots.
-    ...well.aliquots.map((aliquot) => aliquot.request)
+    ...well.aliquots.map((aliquot) => aliquot.request),
   ].filter((request) => request)
 
   // Turn the array into a Map and back again, to remove duplicate requests.
   // Duplicates could arise if:
   // a) there are multiple aliquots in a well that reference the same request, or
   // b) the same request is present in both requests_as_source and aliquots
-  const mp = new Map(arr.map((request) => [request.id, request]));
-  return Array.from(mp.values());
+  const mp = new Map(arr.map((request) => [request.id, request]))
+  return Array.from(mp.values())
 }
 
 const rowNumToLetter = function (value) {

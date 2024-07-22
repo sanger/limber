@@ -17,27 +17,27 @@ describe('wellHelpers', () => {
   })
 
   describe('requestsForWell', () => {
-    const request1 = { id: "1" }
-    const request2 = { id: "2" }
+    const request1 = { id: '1' }
+    const request2 = { id: '2' }
 
     const well = {
-      id: "1",
-      position: { name: "A1" },
+      id: '1',
+      position: { name: 'A1' },
       aliquots: [
         {
-          id: "1",
-          request: request1
+          id: '1',
+          request: request1,
         },
         {
-          id: "2",
-          request: null
-        }
+          id: '2',
+          request: null,
+        },
       ],
-      requests_as_source: [ request1, request2 ]
+      requests_as_source: [request1, request2],
     }
 
-    it('combines requests from both data sources and de-duplicate', () => {
-      expect(requestsForWell(well)).toEqual([ request1, request2 ])
+    it('combines requests from both data sources and de-duplicates', () => {
+      expect(requestsForWell(well)).toEqual([request1, request2])
     })
   })
 })
