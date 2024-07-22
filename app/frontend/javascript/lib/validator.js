@@ -16,3 +16,5 @@ validator.prototype = {
     }
   },
 }
+
+export default validator

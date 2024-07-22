@@ -1,8 +1,8 @@
+import validator from './lib/validator'
 ;(function ($, exports, undefined) {
   'use strict'
 
   //= require lib/tag_collector
-  //= require lib/validator
 
   // TAG CREATION
   $(function () {
