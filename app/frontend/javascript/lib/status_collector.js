@@ -42,3 +42,5 @@ statusCollector.prototype = {
     return this.onSuccess()
   },
 }
+
+export default statusCollector

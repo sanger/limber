@@ -1,8 +1,7 @@
+import { statusCollector } from './status_collector'
 import { ENTER_KEYCODE, TAB_KEYCODE } from './keycodes'
 ;(function ($, _exports, undefined) {
   'use strict'
-
-  //= require lib/status_collector
 
   $(function (_event) {
     if ($('#multi-tube-pooling-page').length === 0) {
