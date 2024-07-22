@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import TagGroupsLookup from '@/javascript/shared/components/TagGroupsLookup.vue'
-import { jsonCollectionFactory } from 'test_support/factories'
-import mockApi from 'test_support/mock_api'
-import localVue from 'test_support/base_vue'
+import { jsonCollectionFactory } from '@/javascript/test_support/factories'
+import mockApi from '@/javascript/test_support/mock_api'
+import localVue from '@/javascript/test_support/base_vue'
 
 describe('TagGroupsLookup', () => {
   const goodTagGroupsFromDB = [

@@ -1,7 +1,7 @@
 // Import the component being tested
 import { mount, shallowMount } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
-import localVue from 'test_support/base_vue.js'
+import localVue from '@/javascript/test_support/base_vue.js'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
 import {

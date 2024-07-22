@@ -1,6 +1,9 @@
 import Vue from 'vue'
-import TagLayout from 'custom-tagged-plate/components/mixins/TagLayout'
-import { nullTagGroup, exampleTagGroupsList } from 'custom-tagged-plate/testData/customTaggedPlateTestData.js'
+import TagLayout from '@/javascript/custom-tagged-plate/components/mixins/TagLayout'
+import {
+  nullTagGroup,
+  exampleTagGroupsList,
+} from '@/javascript/custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
 describe('TagLayout mixin', () => {
   let cmp, tagLayout, data

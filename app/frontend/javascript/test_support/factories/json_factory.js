@@ -3,7 +3,7 @@
 import counter from '@/javascript/shared/counter'
 import { v4 as uuidv4 } from 'uuid'
 import pluralize from 'pluralize'
-import defaults from 'test_support/factories/defaults'
+import defaults from '@/javascript/test_support/factories/defaults'
 import ResourceConfig from './resource_config.vue'
 
 // Thrown if we request an unrecognized factory.

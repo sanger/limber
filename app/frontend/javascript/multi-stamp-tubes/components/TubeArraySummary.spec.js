@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import TubeArraySummary from './TubeArraySummary.vue'
 
 // create an extended `Vue` constructor
-import localVue from 'test_support/base_vue'
+import localVue from '@/javascript/test_support/base_vue'
 
 describe('TubeArraySummary', () => {
   var emptyTubes = []

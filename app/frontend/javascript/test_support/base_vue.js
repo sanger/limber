@@ -7,7 +7,7 @@ import BootstrapVue from 'bootstrap-vue'
 import MainContent from '@/javascript/shared/components/MainContent.vue'
 import Page from '@/javascript/shared/components/Page.vue'
 import Sidebar from '@/javascript/shared/components/Sidebar.vue'
-import mockApi from 'test_support/mock_api'
+import mockApi from '@/javascript/test_support/mock_api'
 
 Vue.use(BootstrapVue)
 

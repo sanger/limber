@@ -1,4 +1,4 @@
-import localVue from 'test_support/base_vue.js'
+import localVue from '@/javascript/test_support/base_vue.js'
 import ValidatePairedTubes from './ValidatePairedTubes.vue'
 import { shallowMount } from '@vue/test-utils'
 
@@ -8,7 +8,7 @@ import {
   checkState,
   checkTransferParameters,
 } from '@/javascript/shared/components/tubeScanValidators'
-jest.mock('@/shared/components/tubeScanValidators')
+jest.mock('@/javascript/shared/components/tubeScanValidators')
 
 describe('TransferVolumes', () => {
   const wrapperFactory = function (options = {}) {

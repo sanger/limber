@@ -1,10 +1,10 @@
 // Convenience class for importing multiple factories
 
-import plateFactory from 'test_support/factories/plate_factory.js'
-import tubeFactory from 'test_support/factories/tube_factory.js'
-import wellFactory from 'test_support/factories/well_factory.js'
-import requestFactory from 'test_support/factories/request_factory.js'
-import { jsonFactory, jsonCollectionFactory, attributesFactory } from 'test_support/factories/json_factory'
+import plateFactory from '@/javascript/test_support/factories/plate_factory.js'
+import tubeFactory from '@/javascript/test_support/factories/tube_factory.js'
+import wellFactory from '@/javascript/test_support/factories/well_factory.js'
+import requestFactory from '@/javascript/test_support/factories/request_factory.js'
+import { jsonFactory, jsonCollectionFactory, attributesFactory } from '@/javascript/test_support/factories/json_factory'
 
 const devourFactory = (devour) => {
   return (factoryName, userAttributes = {}) => {

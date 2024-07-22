@@ -5,11 +5,11 @@ import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import { checkState } from '@/javascript/shared/components/tubeScanValidators'
-import { jsonCollectionFactory } from 'test_support/factories'
-import mockApi from 'test_support/mock_api'
+import { jsonCollectionFactory } from '@/javascript/test_support/factories'
+import mockApi from '@/javascript/test_support/mock_api'
 
 // create an extended `Vue` constructor
-import localVue from 'test_support/base_vue'
+import localVue from '@/javascript/test_support/base_vue'
 
 describe('LabwareScan', () => {
   const wrapperFactoryPlate = function (api = mockApi()) {

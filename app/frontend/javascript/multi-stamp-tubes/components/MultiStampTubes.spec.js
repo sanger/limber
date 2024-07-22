@@ -2,8 +2,8 @@
 import { shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { aggregate } from '@/javascript/shared/components/scanValidators'
-import localVue from 'test_support/base_vue.js'
-import { tubeFactory } from 'test_support/factories'
+import localVue from '@/javascript/test_support/base_vue.js'
+import { tubeFactory } from '@/javascript/test_support/factories'
 import MultiStampTubes from './MultiStampTubes.vue'
 
 import MockAdapter from 'axios-mock-adapter'

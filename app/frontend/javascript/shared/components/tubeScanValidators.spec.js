@@ -15,8 +15,8 @@ import {
   tubeMostRecentMolarity,
 } from '@/javascript/shared/tubeTransferVolumes'
 
-jest.mock('@/shared/tubeHelpers')
-jest.mock('@/shared/tubeTransferVolumes')
+jest.mock('@/javascript/shared/tubeHelpers')
+jest.mock('@/javascript/shared/tubeTransferVolumes')
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {

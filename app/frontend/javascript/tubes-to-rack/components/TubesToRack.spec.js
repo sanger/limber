@@ -1,10 +1,10 @@
-import localVue from 'test_support/base_vue.js'
+import localVue from '@/javascript/test_support/base_vue.js'
 import TubesToRack from './TubesToRack.vue'
 import { checkDuplicates, checkMatchingPurposes } from '@/javascript/shared/components/tubeScanValidators'
 import { shallowMount } from '@vue/test-utils'
-import { tubeFactory } from 'test_support/factories'
+import { tubeFactory } from '@/javascript/test_support/factories'
 
-jest.mock('@/shared/components/tubeScanValidators')
+jest.mock('@/javascript/shared/components/tubeScanValidators')
 
 describe('MultiStampTubes', () => {
   const wrapperFactory = function (options = {}) {
