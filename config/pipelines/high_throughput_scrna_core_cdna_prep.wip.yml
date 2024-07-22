@@ -11,6 +11,7 @@ scRNA Core cDNA Prep:
   relationships:
     LRC Bank Seq: LRC PBMC Cryostor
     LRC Bank Spare: LRC PBMC Cryostor
+    LRC Bank Input: LRC PBMC Cryostor
     LRC PBMC Cryostor: LRC PBMC Defrost PBS
     LRC PBMC Defrost PBS: LRC PBMC Pools
     LRC PBMC Pools: LRC GEM-X 5p Chip
