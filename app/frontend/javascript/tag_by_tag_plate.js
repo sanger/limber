@@ -22,8 +22,7 @@ import validator from './lib/validator'
         return false
       }
 
-      var qc_lookup = this,
-        status
+      var qc_lookup = this
       this.inputBox = barcodeBox
 
       // the `data` attribute is set when declaring the element in tagged_plate.html.erb
