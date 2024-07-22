@@ -8,12 +8,6 @@ describe('jsonFactory', () => {
     expect(json.data.id).toMatch(/^[0-9]+$/)
   })
 
-  it('generates a default uuid', () => {
-    const json = jsonFactory('user')
-
-    expect(json.data.attributes.uuid).toMatch(/^[a-f\d]{8}-([a-f\d]{4}-){3}[a-f\d]{12}$/)
-  })
-
   it('generates a default created_at', () => {
     const json = jsonFactory('comment')
 

@@ -1,10 +1,9 @@
 // Convenience class for importing multiple factories
 
 import counter from '@/javascript/shared/counter'
-import { v4 as uuidv4 } from 'uuid'
 import pluralize from 'pluralize'
 import defaults from '@/javascript/test_support/factories/defaults'
-import ResourceConfig from './resource_config.vue'
+import ResourceConfig from './resource_config.js'
 
 // Thrown if we request an unrecognized factory.
 class InvalidFactory extends Error {
@@ -27,9 +26,6 @@ const nextIndex = counter(1)
 // attributes in the corresponding resource
 const globalDefaults = (_id) => {
   return {
-    uuid() {
-      return uuidv4()
-    },
     created_at() {
       return new Date().toJSON()
     },
