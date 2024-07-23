@@ -62,4 +62,4 @@ tagStatusCollector.prototype = {
   },
 }
 
-export default tagStatusCollector;
+export default tagStatusCollector
