@@ -1,5 +1,5 @@
-import { statusCollector } from './status_collector'
-import { ENTER_KEYCODE, TAB_KEYCODE } from './keycodes'
+import statusCollector from '@/javascript/lib/status_collector'
+import { ENTER_KEYCODE, TAB_KEYCODE } from './lib/keycodes'
 ;(function ($, _exports, undefined) {
   'use strict'
 
