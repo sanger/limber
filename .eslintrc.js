@@ -4,7 +4,6 @@ module.exports = {
     commonjs: true,
     es6: true,
     jasmine: true,
-    jquery: true,
     node: true,
   },
   plugins: ['vue'],

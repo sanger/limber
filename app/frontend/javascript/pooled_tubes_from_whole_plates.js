@@ -1,3 +1,4 @@
+import jQuery from 'jquery'
 ;(function ($, _exports, undefined) {
   'use strict'
 

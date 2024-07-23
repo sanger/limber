@@ -1,3 +1,4 @@
+import jQuery from 'jquery'
 import { ENTER_KEYCODE, TAB_KEYCODE } from './lib/keycodes'
 ;(function ($, _exports, undefined) {
   'use strict'

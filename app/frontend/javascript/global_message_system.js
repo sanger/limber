@@ -1,3 +1,4 @@
+import jQuery from 'jquery'
 // Global SCAPE.message method
 ;(function ($, exports, undefined) {
   'use strict'

@@ -1,3 +1,4 @@
+import jQuery from 'jquery'
 import tagStatusCollector from '@/javascript/lib/tag_collector'
 import validator from './lib/validator'
 ;(function ($, exports, undefined) {
