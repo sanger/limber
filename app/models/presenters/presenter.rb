@@ -40,11 +40,11 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   end
 
   def default_label_count
-    @default_label_count ||= Settings.printers['default_count']
+    @default_label_count ||= Settings.printers[:default_count]
   end
 
   def printer_limit
-    @printer_limit ||= Settings.printers['limit']
+    @printer_limit ||= Settings.printers[:limit]
   end
 
   def summary

@@ -46,3 +46,6 @@ log/*.log*
 # Release
 release.tar.gz
 REVISION
+
+# Bye-bug history
+.byebug_history
