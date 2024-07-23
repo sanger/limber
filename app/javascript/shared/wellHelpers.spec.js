@@ -17,19 +17,19 @@ describe('wellHelpers', () => {
   })
 
   describe('requestsForWell', () => {
-    const request1 = { id: '1' }
-    const request2 = { id: '2' }
+    const request1 = { uuid: '1' }
+    const request2 = { uuid: '2' }
 
     const well = {
-      id: '1',
+      uuid: '3',
       position: { name: 'A1' },
       aliquots: [
         {
-          id: '1',
+          uuid: '4',
           request: request1,
         },
         {
-          id: '2',
+          uuid: '5',
           request: null,
         },
       ],
