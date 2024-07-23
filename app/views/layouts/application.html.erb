@@ -14,10 +14,8 @@
     <%= vite_javascript_tag 'application' %>
 
     <% if Rails.application.config.disable_animations %>
-      <%= vite_stylesheet_tag  'disable_animations' %>
-
-      <!-- Turn off animations in jQuery -->
-      <script>$.fx.off = true;</script>
+      <%= vite_stylesheet_tag 'disable-animations' %>
+      <%= vite_javascript_tag 'disable-animations' %>
     <% end %>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/<%= apple_touch_icon %>" />
