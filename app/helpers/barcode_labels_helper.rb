@@ -24,7 +24,7 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
   end
 
   def printers_of_type(printer_types)
-    @printers.select { |printer| printer_types.include?(printer.type_name) } # rubocop:todo Rails/HelperInstanceVariable
+    @printers.select { |printer| printer_types.include?(printer.barcode_type) } # rubocop:todo Rails/HelperInstanceVariable
   end
 
   def useful_barcode(barcode)

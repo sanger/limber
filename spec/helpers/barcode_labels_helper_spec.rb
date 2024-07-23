@@ -38,7 +38,7 @@ RSpec.describe BarcodeLabelsHelper do
       )
 
       printer_types = labels.map(&:printer_type)
-      printers = @printers.select { |printer| printer_types.include?(printer.type_name) }
+      printers = @printers.select { |printer| printer_types.include?(printer.barcode_type) }
 
       expect(rendered).to include(printers[0].name)
       expect(rendered).to include(printers[1].name)

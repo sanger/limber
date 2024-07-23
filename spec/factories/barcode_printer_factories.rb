@@ -9,14 +9,14 @@ FactoryBot.define do
     sequence(:id, &:to_s)
     sequence(:name) { |n| "Barcode Printer #{n}" }
     print_service { 'PMB' }
-    type_name { nil }
+    barcode_type { nil }
 
     factory :v2_plate_barcode_printer do
-      type_name { '96 Well Plate' }
+      barcode_type { '96 Well Plate' }
     end
 
     factory :v2_tube_barcode_printer do
-      type_name { '1D Tube' }
+      barcode_type { '1D Tube' }
     end
   end
 end
