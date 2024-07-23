@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
+# Given the name of an SVG file, the named function uses Vite to resolve it
+# and return the contents of the file. This satisfies inline_svg’s custom file
+# loader contract.
+# https://mattbrictson.com/blog/inline-svg-with-vite-rails#is-the-inline_svg-gem-always-necessary
 module ViteInlineSvgFileLoader
-  # Given the name of an SVG file, the named function uses Vite to resolve it
-  # and return the contents of the file. This satisfies inline_svg’s custom file
-  # loader contract.
-  # https://mattbrictson.com/blog/inline-svg-with-vite-rails#is-the-inline_svg-gem-always-necessary
   class << self
     def named(filename)
       vite = ViteRuby.instance

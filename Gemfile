@@ -11,8 +11,8 @@ group :default do
   gem 'state_machines'
 
   # Build dependencies
-  gem 'vite_ruby'
   gem 'vite_rails'
+  gem 'vite_ruby'
 
   # Adds easy conversions between units
   gem 'ruby-units'
@@ -54,8 +54,8 @@ group :test do
 end
 
 group :development, :test do
-  gem 'uglifier'
   gem 'bootstrap', '~>4'
+  gem 'uglifier'
 end
 
 group :development do
