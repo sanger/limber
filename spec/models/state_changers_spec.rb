@@ -125,6 +125,24 @@ RSpec.describe StateChangers::DefaultStateChanger do
           expect(work_completion_creation).to_not have_been_made
         end
       end
+
+      # The ability to have multiple request types in the config was added for scRNA Core pipeline.
+      # The expectation was that any one plate would only have one of the request types on it,
+      # so I haven't tested a plate with a mix of request types.
+      context 'when one of the multiple config request types matches the in progress submissions' do
+        before do
+          create :aggregation_purpose_config,
+                 uuid: plate.purpose.uuid,
+                 name: plate_purpose_name,
+                 work_completion_request_type: ['limber_bespoke_aggregation', 'another_request_type']
+        end
+
+        it 'changes plate state and triggers a work completion' do
+          subject.move_to!(target_state, reason, customer_accepts_responsibility)
+
+          expect(work_completion_creation).to have_been_made.once
+        end
+      end
     end
 
     after { expect(state_change_request).to have_been_made.once }
