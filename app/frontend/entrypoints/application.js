@@ -52,7 +52,6 @@ import '@/javascript/tooltips.js'
 import '@/javascript/lib/ajax_support.js'
 import '@/javascript/lib/array_fill_polyfill.js'
 import '@/javascript/lib/disable_enter_key_submit.js'
-import '@/javascript/lib/underscore.js'
 
 // Currently setting up each component as its own mini vue app.
 import '@/javascript/asset-comments/index.js'
