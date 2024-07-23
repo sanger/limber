@@ -48,7 +48,7 @@ const requestsForWell = function (well) {
   // Duplicates could arise if:
   // a) there are multiple aliquots in a well that reference the same request, or
   // b) the same request is present in both requests_as_source and aliquots
-  const mp = new Map(arr.map((request) => [request.id, request]))
+  const mp = new Map(arr.map((request) => [request.uuid, request]))
   return Array.from(mp.values())
 }
 
