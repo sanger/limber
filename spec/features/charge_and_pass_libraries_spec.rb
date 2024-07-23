@@ -21,7 +21,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
   background do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
   end
 

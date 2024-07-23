@@ -12,12 +12,12 @@ RSpec.describe BarcodeLabelsHelper do
     let(:labels) { [Labels::PlateLabel.new(plate, {})] }
     let(:redirection_url) { 'example_plate_url' }
     let(:default_printer_name) { 'example_printer_name' }
-    let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
+    let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
     let(:presenter) { Presenters::StockPlatePresenter.new }
 
     before do
       barcode_printers_request
-      @printers = api.barcode_printer.all
+      @printers = Sequencescape::Api::V2::BarcodePrinter.all
       @presenter = presenter
     end
 
@@ -38,7 +38,7 @@ RSpec.describe BarcodeLabelsHelper do
       )
 
       printer_types = labels.map(&:printer_type)
-      printers = @printers.select { |printer| printer_types.include?(printer.type.name) }
+      printers = @printers.select { |printer| printer_types.include?(printer.type_name) }
 
       expect(rendered).to include(printers[0].name)
       expect(rendered).to include(printers[1].name)

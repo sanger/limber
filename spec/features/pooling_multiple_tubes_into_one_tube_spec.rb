@@ -205,7 +205,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     # Used in the redirect. This is call is probably unnecessary
     stub_api_get(child_uuid, body: child_tube)
     stub_v2_tube(child_tube_v2)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
 
     allow(SearchHelper).to receive(:stock_plate_names).and_return([stock_plate_purpose_name])
     stub_get_labware_metadata(parent_1.barcode.machine, parent_1_v1)

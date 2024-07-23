@@ -61,7 +61,7 @@ RSpec.feature 'Failing wells', js: true do
       'wells',
       body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' })
     )
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'failing wells' do

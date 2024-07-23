@@ -68,8 +68,8 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
 
     # Creator uses the old tube
     stub_api_get(tube_uuid, body: example_tube)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('transfer-template-uuid', body: json(:transfer_template, uuid: 'transfer-template-uuid'))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_v2_tube(create(:v2_tube, uuid: multiplexed_library_tube_uuid))
     transfer_request
     transfer_request_b

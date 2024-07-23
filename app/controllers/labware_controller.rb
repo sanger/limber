@@ -81,7 +81,7 @@ class LabwareController < ApplicationController
   end
 
   def find_printers
-    @printers = api.barcode_printer.all
+    @printers = Sequencescape::Api::V2::BarcodePrinter.all
   end
 
   def state_changer_for(purpose_uuid, labware_uuid)
