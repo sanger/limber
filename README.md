@@ -97,6 +97,12 @@ Only one terminal for Limber is needed (unless running the integration suite)
    bundle exec rails s
    ```
 
+1. In a second Limber terminal, start the Vite development server for faster development of frontend resources (will start on port 3036):
+
+   ```shell
+   yarn dev
+   ```
+
 ## Linting and formatting
 
 Linting and formatting are provided by rubocop, prettier and Eslint. I strongly

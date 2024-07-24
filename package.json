@@ -55,6 +55,7 @@
   },
   "name": "limber",
   "scripts": {
+    "dev": "vite dev",
     "lint": "eslint --ext .js --ext .vue app/frontend",
     "test": "jest",
     "lintOnly": "eslint --ext .js --ext .vue"
