@@ -1,2 +1,5 @@
 ignore:
   - '**/*.vue' # ignore all .vue files - TODO: remove this after Vue SFC is supported (see https://github.com/sanger/limber/pull/1585)
+codecov:
+  notify:
+    after_n_builds: 2 # do not notify until at least 2 builds have been uploaded from the CI pipeline
