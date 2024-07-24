@@ -134,7 +134,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
           create :aggregation_purpose_config,
                  uuid: plate.purpose.uuid,
                  name: plate_purpose_name,
-                 work_completion_request_type: ['limber_bespoke_aggregation', 'another_request_type']
+                 work_completion_request_type: %w[limber_bespoke_aggregation another_request_type]
         end
 
         it 'changes plate state and triggers a work completion' do
