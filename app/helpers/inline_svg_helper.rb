@@ -9,7 +9,7 @@ module InlineSvgHelper
   # Generates an inline SVG tag for a given filename. Optionally adds a title element within the SVG for accessibility.
   # Note that the output is marked as safe, so make sure the provided SVG file is trusted.
   # @param filename [String] the name of the SVG file to be inlined.
-  # @param title [String, nil] the title to be added inside the SVG. If provided, it enhances accessibility by describing the SVG.
+  # @param title [String, nil] the title to be added inside the SVG.
   # @return [String] HTML safe string containing the inline SVG with or without a title.
   def inline_svg_tag(filename, title: nil)
     svg = ViteInlineSvgFileLoader.named(filename)
