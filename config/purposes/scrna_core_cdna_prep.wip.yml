@@ -20,6 +20,7 @@ LRC PBMC Cryostor:
       expected_tube_purpose_names:
         - 'LRC Bank Seq'
         - 'LRC Bank Spare'
+        - 'LRC Bank Input'
       filename_for_tube_rack_scan: 'scrna_cryostor_tube_rack_scan.csv'
 # Plate containing defrosted PBMCs in PBS buffer.
 LRC PBMC Defrost PBS:
