@@ -46,18 +46,14 @@ RSpec.describe ViteInlineSvgFileLoader do
     let(:svg_content) { '<svg>From dev server</svg>' }
     let(:response) { instance_double(Net::HTTPSuccess, body: svg_content) }
 
-    before do
-      stub_request(:get, "http://localhost:3037#{path}").to_return(status: 200, body: svg_content)
-    end
+    before { stub_request(:get, "http://localhost:3037#{path}").to_return(status: 200, body: svg_content) }
 
     it 'fetches SVG content from the dev server' do
       expect(described_class.send(:fetch_from_dev_server, path)).to eq(svg_content)
     end
 
     context 'when response is not successful' do
-      before do
-        stub_request(:get, "http://localhost:3037#{path}").to_return(status: 404)
-      end
+      before { stub_request(:get, "http://localhost:3037#{path}").to_return(status: 404) }
 
       it 'raises an error' do
         expect { described_class.send(:fetch_from_dev_server, path) }.to raise_error(RuntimeError)
