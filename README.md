@@ -197,6 +197,18 @@ Request stubs are provided by webmock. Two helper methods will assist with the m
 
 **Note**: Due to the way the api functions, the factories don't yet support nested associations.
 
+#### Feature debugging
+
+To help with debugging feature specs, temporarily comment out the line `options.add_argument('--headless')` in `spec/spec_helper.rb`. This will allow you to see the browser as the tests run. To pause the execution at certain point, possibly before an expected failure, insert `binding.pry` at the appropriate place in the spec.
+
+To save a screenshot of the browser, insert the line below into the spec.
+
+```rb
+save_screenshot("#{Time.now.iso8601}.png")
+```
+
+Screenshots will be saved to `tmp/capybara/`.
+
 ### Lefthook
 
 [Lefthook](https://github.com/Arkweid/lefthook) is a git-hook manager that will
