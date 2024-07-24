@@ -48,3 +48,6 @@ BRANCH
 REVISION
 TAG
 release.tar.gz
+
+# Bye-bug history
+.byebug_history
