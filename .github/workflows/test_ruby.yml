@@ -34,6 +34,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
       - name: Upload coverage reports to Codecov
+        # Warning: changing run conditions could prevent coverage report in PR, see codecov.yml for `after_n_builds`
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
