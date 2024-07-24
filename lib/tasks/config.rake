@@ -27,7 +27,8 @@ namespace :config do
     label_template_config = YAML.load_file(Rails.root.join('config/label_templates.yml'))
 
     puts 'Fetching submission_templates...'
-    submission_templates = api.order_template.all.each_with_object({}) { |st, store| store[st.name] = st.uuid }
+    query = Sequencescape::Api::V2::SubmissionTemplate.select(:uuid, :name).paginate(per_page: 100)
+    submission_templates = Sequencescape::Api::V2.merge_page_results(query).to_h { |st| [st.name, st.uuid] }
 
     puts 'Fetching purposes...'
     query = Sequencescape::Api::V2::Purpose.select(:uuid, :name).paginate(per_page: 100)
@@ -35,7 +36,7 @@ namespace :config do
 
     purpose_config =
       ConfigLoader::PurposesLoader.new.config.map do |name, options|
-        PurposeConfig.load(name, options, all_purposes, api, submission_templates, label_template_config)
+        PurposeConfig.load(name, options, all_purposes, submission_templates, label_template_config)
       end
 
     puts 'Preparing purposes...'
@@ -43,29 +44,26 @@ namespace :config do
 
     # Build the configuration file based on the server we are connected to.
     CONFIG = # rubocop:todo Lint/ConstantDefinitionInBlock
-      {}.tap do |configuration|  # rubocop:todo Metrics/BlockLength
+      {}.tap do |configuration|
+        # TODO: Y24-190 - Remove this once we have moved everything else over to V2;
+        #                 also the config entries for :searches
         puts 'Preparing searches ...'
         configuration[:searches] =
           api.search.all.each_with_object({}) { |search, searches| searches[search.name] = search.uuid }
 
         puts 'Preparing transfer templates ...'
-        configuration[:transfer_templates] =
-          api
-            .transfer_template
-            .all
-            .each_with_object({}) do |transfer_template, transfer_templates|
-              transfer_templates[transfer_template.name] = transfer_template.uuid
-            end
+        query = Sequencescape::Api::V2::TransferTemplate.select(:uuid, :name).paginate(per_page: 100)
+        transfer_templates = Sequencescape::Api::V2.merge_page_results(query).to_h { |tt| [tt.name, tt.uuid] }
+        configuration[:transfer_templates] = transfer_templates
 
-        configuration[:printers] =
-          {}.tap do |printers|
-            printers[:plate_a] = 'g316bc'
-            printers[:plate_b] = 'g311bc2'
-            printers[:tube_rack] = 'heron-bc2'
-            printers[:tube] = 'g311bc1'
-            printers['limit'] = 5
-            printers['default_count'] = 2
-          end
+        configuration[:printers] = {
+          plate_a: 'g316bc',
+          plate_b: 'g311bc2',
+          tube_rack: 'heron-bc2',
+          tube: 'g311bc1',
+          limit: 5,
+          default_count: 2
+        }
 
         configuration[:purposes] =
           {}.tap do |labware_purposes|
