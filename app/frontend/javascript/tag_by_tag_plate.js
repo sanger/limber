@@ -1,3 +1,4 @@
+// TODO: relocate and refactor the content of this file into tagged-plate.js or a Vue component
 import jQuery from 'jquery'
 import tagStatusCollector from '@/javascript/lib/tag_collector'
 import validator from './lib/validator'
