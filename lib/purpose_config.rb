@@ -82,8 +82,8 @@ class PurposeConfig
 
     def register!
       puts "Creating #{name}"
-      options = { name: name, target_type: options.fetch(:target), purpose_type: options.fetch(:type) }
-      Sequencescape::Api::V2::TubePurpose.create!(options)
+      options_for_creation = { name: name, target_type: options.fetch(:target), purpose_type: options.fetch(:type) }
+      Sequencescape::Api::V2::TubePurpose.create!(options_for_creation)
     end
   end
 
