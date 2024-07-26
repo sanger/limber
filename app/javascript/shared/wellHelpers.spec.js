@@ -17,27 +17,69 @@ describe('wellHelpers', () => {
   })
 
   describe('requestsForWell', () => {
-    const request1 = { uuid: '1' }
-    const request2 = { uuid: '2' }
+    const request1 = { uuid: 'req-1' }
+    const request2 = { uuid: 'req-2' }
 
-    const well = {
-      uuid: '3',
-      position: { name: 'A1' },
-      aliquots: [
-        {
-          uuid: '4',
-          request: request1,
-        },
-        {
-          uuid: '5',
-          request: null,
-        },
-      ],
-      requests_as_source: [request1, request2],
-    }
+    // This function is used in MultiStamp, which is used in two scenarios:
+    // 1: where the well is on a plate that had a submission on it, so has requests_as_source
+    // 2: where the well is on a plate downstream of the submission plate, so has requests on its aliquots
+    // So this function pulls both types of request out.
+    it('combines requests from both data sources', () => {
+      const well = {
+        uuid: 'well-1',
+        position: { name: 'A1' },
+        aliquots: [
+          {
+            uuid: 'ali-1',
+            request: request1,
+          }
+        ],
+        requests_as_source: [request2],
+      }
 
-    it('combines requests from both data sources and de-duplicates', () => {
-      expect(requestsForWell(well)).toEqual([request1, request2])
+      expect(requestsForWell(well).sort()).toEqual([request2, request1])
+    })
+
+    // Different aliquots in the same well can reference the same request:
+    // this happens on the LRC GEM-X 5p Aggregate plate in the scRNA Core pipeline.
+    // The same request could theoretically be present in both requests_as_source and aliquots,
+    // or twice in requests_as_source,
+    // although I don't know of a realistic scenario where this would happen.
+    it('de-duplicates across both data sources', () => {
+      const well = {
+        uuid: 'well-1',
+        position: { name: 'A1' },
+        aliquots: [
+          {
+            uuid: 'ali-1',
+            request: request1,
+          },
+          {
+            uuid: 'ali-2',
+            request: request1,
+          }
+        ],
+        requests_as_source: [request1, request1],
+      }
+
+      expect(requestsForWell(well)).toEqual([request1])
+    })
+
+    // If an aliquot has no request, it is not included in the output.
+    it('removes falsy values', () => {
+      const well = {
+        uuid: 'well-1',
+        position: { name: 'A1' },
+        aliquots: [
+          {
+            uuid: 'ali-1',
+            request: null,
+          }
+        ],
+        requests_as_source: [request1],
+      }
+
+      expect(requestsForWell(well)).toEqual([request1])
     })
   })
 })
