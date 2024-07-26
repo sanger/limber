@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { findUniqueIndex } from '@/javascript/shared/wellHelpers'
+import { findUniqueIndex } from '@/javascript/shared/wellHelpers.js'
 
 export default {
   name: 'TubeArraySummary',

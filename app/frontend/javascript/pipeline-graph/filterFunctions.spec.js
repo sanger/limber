@@ -1,4 +1,4 @@
-import filterFuncs from './filterFunctions'
+import filterFuncs from './filterFunctions.js'
 import cytoscape from 'cytoscape'
 
 describe('findResults', () => {

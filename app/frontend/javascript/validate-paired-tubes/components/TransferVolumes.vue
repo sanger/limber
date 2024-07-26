@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers'
+import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers.js'
 import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,

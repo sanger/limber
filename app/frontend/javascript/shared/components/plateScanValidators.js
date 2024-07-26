@@ -39,8 +39,8 @@
 // test and reuse. Multiple validators can be combined together using the aggregate
 // function in scanValidators.js
 
-import { validScanMessage } from './scanValidators'
-import { requestIsLibraryCreation, requestIsActive } from '../requestHelpers'
+import { validScanMessage } from './scanValidators.js'
+import { requestIsLibraryCreation, requestIsActive } from '../requestHelpers.js'
 
 import _ from 'lodash'
 

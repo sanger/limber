@@ -66,7 +66,7 @@ import '@/javascript/validate-paired-tubes/index.js'
 
 // Load simple javascript files
 import '@/javascript/plain-javascript/page-reloader.js'
-import '@/javascript/plain-javascript/print-scaling'
-import '@/javascript/plain-javascript/quadrant-well-failing'
-import '@/javascript/plain-javascript/tag-animations' // rotates the displayed tag Id in wells with multiple tags
-import '@/javascript/plain-javascript/threshold-well-failing'
+import '@/javascript/plain-javascript/print-scaling.js'
+import '@/javascript/plain-javascript/quadrant-well-failing.js'
+import '@/javascript/plain-javascript/tag-animations.js' // rotates the displayed tag Id in wells with multiple tags
+import '@/javascript/plain-javascript/threshold-well-failing.js'

@@ -1,5 +1,5 @@
 // // Import the component being tested
-import valueConverter from './valueConverter'
+import valueConverter from './valueConverter.js'
 
 describe('valueConverter', () => {
   it('converts values in an object using the provided function', () => {

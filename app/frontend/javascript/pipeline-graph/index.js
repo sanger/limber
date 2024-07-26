@@ -1,7 +1,7 @@
 // Entrypoint for pipeline graph page, primarily handles data loading and UI components
-import colourMapping from './colourMapping'
-import filters from './filterFunctions'
-import graph from './graphFunctions'
+import colourMapping from './colourMapping.js'
+import filters from './filterFunctions.js'
+import graph from './graphFunctions.js'
 
 // UI components
 const filterField = document.getElementById('filter')

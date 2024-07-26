@@ -1,6 +1,6 @@
 <script>
 import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
-import { hasExpectedProperties } from '@/javascript/shared/devourApiValidators'
+import { hasExpectedProperties } from '@/javascript/shared/devourApiValidators.js'
 
 export default {
   name: 'AssetLookupByUuid',

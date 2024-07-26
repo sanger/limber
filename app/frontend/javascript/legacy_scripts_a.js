@@ -1,5 +1,5 @@
 import jQuery from 'jquery'
-import { ENTER_KEYCODE, TAB_KEYCODE } from './lib/keycodes'
+import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
 ;(function ($, _exports, undefined) {
   'use strict'
 

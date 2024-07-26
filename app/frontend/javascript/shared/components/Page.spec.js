@@ -2,7 +2,7 @@
 import { shallowMount } from '@vue/test-utils'
 import Page from '@/javascript/shared/components/Page.vue'
 import Alert from '@/javascript/shared/components/Alert.vue'
-import eventBus from '@/javascript/shared/eventBus'
+import eventBus from '@/javascript/shared/eventBus.js'
 
 describe('Page', () => {
   const wrapperFactory = () => {

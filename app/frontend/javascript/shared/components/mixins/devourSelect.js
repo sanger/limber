@@ -1,4 +1,4 @@
-import { validateError } from '@/javascript/shared/devourApiValidators'
+import { validateError } from '@/javascript/shared/devourApiValidators.js'
 
 const boolToString = { true: 'valid', false: 'invalid' }
 

@@ -1,5 +1,5 @@
-import { wellNameToCoordinate } from '@/javascript/shared/wellHelpers'
-import counter from '@/javascript/shared/counter'
+import { wellNameToCoordinate } from '@/javascript/shared/wellHelpers.js'
+import counter from '@/javascript/shared/counter.js'
 
 function byPool(well, tags, _relIndex, _absIndex, offset, counters) {
   if (!counters[well.pool_index]) {

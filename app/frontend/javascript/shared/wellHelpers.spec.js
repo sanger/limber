@@ -1,4 +1,4 @@
-import { findUniqueIndex } from './wellHelpers'
+import { findUniqueIndex } from './wellHelpers.js'
 
 describe('wellHelpers', () => {
   describe('findUniqueIndex', () => {

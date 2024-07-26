@@ -1,5 +1,5 @@
-import buildArray from '@/javascript/shared/buildArray'
-import requestFactory from '@/javascript/test_support/factories/request_factory'
+import buildArray from '@/javascript/shared/buildArray.js'
+import requestFactory from '@/javascript/test_support/factories/request_factory.js'
 
 // Probably move outside
 const wellFactory = function (options = {}) {

@@ -5,8 +5,8 @@ mock middleware intercepts requests and returns a mocked response. The mocked
 response is defined by calling mockGet() or mockFail() on the mock middleware.
 */
 
-import devourApi from '@/javascript/shared/devourApi'
-import sequencescapeResources from '@/javascript/shared/resources'
+import devourApi from '@/javascript/shared/devourApi.js'
+import sequencescapeResources from '@/javascript/shared/resources.js'
 // Provides object equality comparisons. eg.
 // isEqual({a:'1'},{a:'1'}) > true
 import isEqual from 'fast-deep-equal'

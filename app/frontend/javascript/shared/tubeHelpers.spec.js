@@ -1,4 +1,4 @@
-import { buildTubeObjs, purposeConfigForTube } from '@/javascript/shared/tubeHelpers'
+import { buildTubeObjs, purposeConfigForTube } from '@/javascript/shared/tubeHelpers.js'
 
 describe('tubeHelpers', () => {
   describe('buildTubeObjs', () => {

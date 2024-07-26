@@ -1,5 +1,5 @@
 // // Import the component being tested
-import cookieJar from './cookieJar'
+import cookieJar from './cookieJar.js'
 
 describe('cookieJar', () => {
   it('converts a cookie string to an object', () => {

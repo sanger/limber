@@ -2,8 +2,8 @@ import Vue from 'vue'
 import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import mockApi from '@/javascript/test_support/mock_api'
-import localVue from '@/javascript/test_support/base_vue'
+import mockApi from '@/javascript/test_support/mock_api.js'
+import localVue from '@/javascript/test_support/base_vue.js'
 
 describe('DevourSelect mixin', () => {
   const testResourceName = 'test'

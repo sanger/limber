@@ -1,6 +1,6 @@
 import jQuery from 'jquery'
-import statusCollector from '@/javascript/lib/status_collector'
-import { ENTER_KEYCODE, TAB_KEYCODE } from './lib/keycodes'
+import statusCollector from '@/javascript/lib/status_collector.js'
+import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
 ;(function ($, _exports, undefined) {
   'use strict'
 

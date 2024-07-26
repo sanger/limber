@@ -45,13 +45,13 @@
 <script>
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import LoadingModal from '@/javascript/shared/components/LoadingModal.vue'
-import { checkDuplicates, checkMatchingPurposes } from '@/javascript/shared/components/tubeScanValidators'
-import devourApi from '@/javascript/shared/devourApi'
-import { handleFailedRequest } from '@/javascript/shared/requestHelpers'
-import resources from '@/javascript/shared/resources'
-import { buildTubeObjs } from '@/javascript/shared/tubeHelpers'
+import { checkDuplicates, checkMatchingPurposes } from '@/javascript/shared/components/tubeScanValidators.js'
+import devourApi from '@/javascript/shared/devourApi.js'
+import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
+import resources from '@/javascript/shared/resources.js'
+import { buildTubeObjs } from '@/javascript/shared/tubeHelpers.js'
 import { indexToName } from '@/javascript/shared/wellHelpers.js'
-import filterProps from './filterProps'
+import filterProps from './filterProps.js'
 
 export default {
   name: 'TubesToRack',

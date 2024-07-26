@@ -33,7 +33,7 @@
 
 <script>
 import LbWell from '@/javascript/shared/components/Well.vue'
-import { rowNumToLetter } from '@/javascript/shared/wellHelpers'
+import { rowNumToLetter } from '@/javascript/shared/wellHelpers.js'
 
 export default {
   name: 'LbPlate',

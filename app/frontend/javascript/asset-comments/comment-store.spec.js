@@ -3,8 +3,8 @@ import commentStoreFactory from './comment-store.js'
 import flushPromises from 'flush-promises'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import mockApi from '@/javascript/test_support/mock_api'
-import { jsonCollectionFactory } from '@/javascript/test_support/factories'
+import mockApi from '@/javascript/test_support/mock_api.js'
+import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 
 describe('commentStore', () => {
   const noComments = { data: [] }

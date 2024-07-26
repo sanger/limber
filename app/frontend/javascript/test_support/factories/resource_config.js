@@ -1,4 +1,4 @@
-import resources from '@/javascript/shared/resources'
+import resources from '@/javascript/shared/resources.js'
 
 // Reads in the shared resources file and provides some friendly interfaces
 export default class ResourceConfig {

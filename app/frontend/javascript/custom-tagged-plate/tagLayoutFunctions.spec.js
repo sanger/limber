@@ -1,4 +1,4 @@
-import { calculateTagLayout } from './tagLayoutFunctions'
+import { calculateTagLayout } from './tagLayoutFunctions.js'
 
 describe('calculateTagLayout', () => {
   const inputWells = [

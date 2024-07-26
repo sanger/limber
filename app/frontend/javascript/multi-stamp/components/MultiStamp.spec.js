@@ -4,7 +4,7 @@ import MultiStamp from './MultiStamp.vue'
 import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.spec'
 import flushPromises from 'flush-promises'
 import localVue from '@/javascript/test_support/base_vue.js'
-import { plateFactory } from '@/javascript/test_support/factories'
+import { plateFactory } from '@/javascript/test_support/factories.js'
 
 import MockAdapter from 'axios-mock-adapter'
 

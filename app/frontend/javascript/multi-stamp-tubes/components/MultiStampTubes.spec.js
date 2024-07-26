@@ -1,9 +1,9 @@
 // // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import { aggregate } from '@/javascript/shared/components/scanValidators'
+import { aggregate } from '@/javascript/shared/components/scanValidators.js'
 import localVue from '@/javascript/test_support/base_vue.js'
-import { tubeFactory } from '@/javascript/test_support/factories'
+import { tubeFactory } from '@/javascript/test_support/factories.js'
 import MultiStampTubes from './MultiStampTubes.vue'
 
 import MockAdapter from 'axios-mock-adapter'

@@ -1,5 +1,5 @@
 // // Import the component being tested
-import { jsonFactory, jsonCollectionFactory } from './json_factory'
+import { jsonFactory, jsonCollectionFactory } from './json_factory.js'
 
 describe('jsonFactory', () => {
   it('generates a default id', () => {

@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import { checkSize } from './plateScanValidators'
-import { aggregate } from './scanValidators'
-import { validateError } from '@/javascript/shared/devourApiValidators'
+import { checkSize } from './plateScanValidators.js'
+import { aggregate } from './scanValidators.js'
+import { validateError } from '@/javascript/shared/devourApiValidators.js'
 
 // Incrementing counter to ensure all instances of LabwareScan
 // have a unique id. Ensures labels correctly match up with

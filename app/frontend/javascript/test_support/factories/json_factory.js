@@ -1,9 +1,9 @@
 // Convenience class for importing multiple factories
 
-import counter from '@/javascript/shared/counter'
+import counter from '@/javascript/shared/counter.js'
 import pluralize from 'pluralize'
-import defaults from '@/javascript/test_support/factories/defaults'
-import ResourceConfig from './resource_config.js'
+import defaults from '@/javascript/test_support/factories/defaults.js'
+import ResourceConfig from '@/javascript/test_support/factories/resource_config.js'
 
 // Thrown if we request an unrecognized factory.
 class InvalidFactory extends Error {

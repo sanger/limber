@@ -7,11 +7,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import AssetComments from './components/AssetComments.vue'
 import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from './components/AssetCommentsAddForm.vue'
-import commentStoreFactory from './comment-store'
+import commentStoreFactory from './comment-store.js'
 import axios from 'axios'
-import cookieJar from '@/javascript/shared/cookieJar'
-import devourApi from '@/javascript/shared/devourApi'
-import resources from '@/javascript/shared/resources'
+import cookieJar from '@/javascript/shared/cookieJar.js'
+import devourApi from '@/javascript/shared/devourApi.js'
+import resources from '@/javascript/shared/resources.js'
 
 Vue.use(BootstrapVue)
 

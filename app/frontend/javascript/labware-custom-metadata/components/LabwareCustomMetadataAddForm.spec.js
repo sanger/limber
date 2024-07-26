@@ -1,5 +1,5 @@
 import flushPromises from 'flush-promises'
-import localVue from '@/javascript/test_support/base_vue'
+import localVue from '@/javascript/test_support/base_vue.js'
 import { mount } from '@vue/test-utils'
 import LabwareCustomMetadataAddForm from './LabwareCustomMetadataAddForm.vue'
 

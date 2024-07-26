@@ -1,4 +1,4 @@
-import mockApi from './mock_api'
+import mockApi from './mock_api.js'
 
 describe('mockApi', () => {
   let api = mockApi()

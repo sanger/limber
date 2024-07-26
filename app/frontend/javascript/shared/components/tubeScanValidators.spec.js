@@ -7,7 +7,7 @@ import {
   checkTransferParameters,
 } from '@/javascript/shared/components/tubeScanValidators'
 
-import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers'
+import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers.js'
 import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,

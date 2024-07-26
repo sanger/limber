@@ -1,5 +1,5 @@
-import eventBus from '@/javascript/shared/eventBus'
-import { requestsForWell } from './wellHelpers'
+import eventBus from '@/javascript/shared/eventBus.js'
+import { requestsForWell } from './wellHelpers.js'
 
 const requestIsActive = function (request) {
   return request.state !== 'passed' && request.state !== 'cancelled' && request.state !== 'failed'

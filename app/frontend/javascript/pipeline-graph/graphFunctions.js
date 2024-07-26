@@ -1,5 +1,5 @@
 // This file contains functions for rendering the pipeline graph
-import colourMapping from './colourMapping'
+import colourMapping from './colourMapping.js'
 
 import cytoscape from 'cytoscape'
 import elk from 'cytoscape-elk'

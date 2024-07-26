@@ -1,5 +1,5 @@
 // Import the component being tested
-import localVue from '@/javascript/test_support/base_vue'
+import localVue from '@/javascript/test_support/base_vue.js'
 import { mount } from '@vue/test-utils'
 import AssetCommentsAddForm from './AssetCommentsAddForm.vue'
 

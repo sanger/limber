@@ -1,8 +1,8 @@
 import localVue from '@/javascript/test_support/base_vue.js'
 import TubesToRack from './TubesToRack.vue'
-import { checkDuplicates, checkMatchingPurposes } from '@/javascript/shared/components/tubeScanValidators'
+import { checkDuplicates, checkMatchingPurposes } from '@/javascript/shared/components/tubeScanValidators.js'
 import { shallowMount } from '@vue/test-utils'
-import { tubeFactory } from '@/javascript/test_support/factories'
+import { tubeFactory } from '@/javascript/test_support/factories.js'
 
 jest.mock('@/javascript/shared/components/tubeScanValidators')
 

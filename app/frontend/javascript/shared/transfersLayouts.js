@@ -11,9 +11,9 @@
 //   targetWell: <position string>
 // }
 
-import { requestIsLibraryCreation, requestIsActive } from './requestHelpers'
-import { indexToName, nameToIndex, quadrantTargetFor } from './wellHelpers'
-import buildArray from './buildArray'
+import { requestIsLibraryCreation, requestIsActive } from './requestHelpers.js'
+import { indexToName, nameToIndex, quadrantTargetFor } from './wellHelpers.js'
+import buildArray from './buildArray.js'
 
 const quadrantOffsets = {
   rowOffset: [0, 1, 0, 1],

@@ -1,4 +1,4 @@
-import buildArray from './buildArray'
+import buildArray from './buildArray.js'
 
 const buildTubeObjs = function (number) {
   return buildArray(number, (iteration) => {

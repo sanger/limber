@@ -4,8 +4,8 @@ import {
   buildLibrarySplitPlatesMatrix,
   buildSequentialLibrarySplitTransfersArray,
 } from './transfersLayouts'
-import { requestsFromPlates } from './requestHelpers'
-import { plateFactory, wellFactory, requestFactory } from '@/javascript/test_support/factories'
+import { requestsFromPlates } from './requestHelpers.js'
+import { plateFactory, wellFactory, requestFactory } from '@/javascript/test_support/factories.js'
 
 describe('transfersLayouts.js', () => {
   const requests1 = [

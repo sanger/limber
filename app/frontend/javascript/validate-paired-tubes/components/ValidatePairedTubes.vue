@@ -46,11 +46,11 @@
 </template>
 
 <script>
-import devourApi from '@/javascript/shared/devourApi'
-import filterProps from './filterProps'
+import devourApi from '@/javascript/shared/devourApi.js'
+import filterProps from './filterProps.js'
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import LoadingModal from '@/javascript/shared/components/LoadingModal.vue'
-import resources from '@/javascript/shared/resources'
+import resources from '@/javascript/shared/resources.js'
 import TransferVolumes from './TransferVolumes.vue'
 import {
   checkId,

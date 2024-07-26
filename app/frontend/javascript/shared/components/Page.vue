@@ -23,7 +23,7 @@
 
 <script>
 import LbAlert from '@/javascript/shared/components/Alert.vue'
-import eventBus from '@/javascript/shared/eventBus'
+import eventBus from '@/javascript/shared/eventBus.js'
 import uniqueSlug from 'unique-slug'
 
 export default {

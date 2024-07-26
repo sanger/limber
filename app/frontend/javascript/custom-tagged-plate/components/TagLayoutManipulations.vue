@@ -105,7 +105,7 @@
 
 <script>
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
-import { checkState, checkQCableWalkingBy } from '@/javascript/shared/components/plateScanValidators'
+import { checkState, checkQCableWalkingBy } from '@/javascript/shared/components/plateScanValidators.js'
 import TagLayout from '@/javascript/custom-tagged-plate/components/mixins/TagLayout.js'
 
 /**

@@ -1,5 +1,5 @@
 import jQuery from 'jquery'
-import { disableEnterKeySubmit } from './lib/disable_enter_key_submit.js'
+import { disableEnterKeySubmit } from '@/javascript/lib/disable_enter_key_submit.js'
 ;(function ($, _exports, undefined) {
   'use strict'
 

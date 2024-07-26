@@ -39,8 +39,8 @@
 // and reuse. Multiple validators can be combined together using the aggregate
 // function in scanValidators.js
 
-import { validScanMessage } from './scanValidators'
-import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers'
+import { validScanMessage } from './scanValidators.js'
+import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers.js'
 import {
   purposeTargetMolarityParameter,
   purposeTargetVolumeParameter,

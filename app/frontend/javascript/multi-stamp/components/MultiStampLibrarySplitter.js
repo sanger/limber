@@ -8,8 +8,8 @@ import {
   checkPlateWithSameReadyLibrarySubmissions,
   checkSize,
 } from '@/javascript/shared/components/plateScanValidators'
-import { handleFailedRequest } from '@/javascript/shared/requestHelpers'
-import { baseTransferCreator } from '@/javascript/shared/transfersCreators'
+import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
+import { baseTransferCreator } from '@/javascript/shared/transfersCreators.js'
 import Vue from 'vue'
 import MultiStamp from './MultiStamp.vue'
 
