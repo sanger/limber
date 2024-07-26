@@ -32,7 +32,7 @@ describe('wellHelpers', () => {
           {
             uuid: 'ali-1',
             request: request1,
-          }
+          },
         ],
         requests_as_source: [request2],
       }
@@ -57,7 +57,7 @@ describe('wellHelpers', () => {
           {
             uuid: 'ali-2',
             request: request1,
-          }
+          },
         ],
         requests_as_source: [request1, request1],
       }
@@ -74,7 +74,7 @@ describe('wellHelpers', () => {
           {
             uuid: 'ali-1',
             request: null,
-          }
+          },
         ],
         requests_as_source: [request1],
       }
