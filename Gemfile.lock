@@ -380,13 +380,6 @@ GEM
     simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
     sprint_client (0.1.0)
-    sprockets (4.2.1)
-      concurrent-ruby (~> 1.0)
-      rack (>= 2.2.4, < 4)
-    sprockets-rails (3.4.2)
-      actionpack (>= 5.2)
-      activesupport (>= 5.2)
-      sprockets (>= 3.0.0)
     state_machines (0.6.0)
     stringio (3.1.1)
     strscan (3.1.0)
@@ -457,7 +450,6 @@ DEPENDENCIES
   simplecov
   simplecov-lcov
   sprint_client
-  sprockets-rails
   state_machines
   uglifier
   vite_rails

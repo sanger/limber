@@ -13,7 +13,6 @@ require 'rails'
   'active_job/railtie',
   'action_cable/engine',
   'rails/test_unit/railtie',
-  'sprockets/railtie'
 ].each do |railtie|
   require railtie.to_s
 rescue LoadError
