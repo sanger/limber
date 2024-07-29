@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class LabwareMetadata # rubocop:todo Style/Documentation
-  attr_accessor :user, :labware, :barcode
+  attr_accessor :user_uuid, :labware, :barcode
 
   def initialize(params = {})
-    @user = params.fetch(:user, nil)
+    @user_uuid = params.fetch(:user, nil)
+    @user = Sequencescape::Api::V2::User.find(uuid: @user_uuid).first unless @user_uuid.nil?
     @barcode = params.fetch(:barcode, nil)
     if barcode.present?
-      @labware = Sequencescape::Api::V2::Labware.where(barcode: barcode).first
+      @labware = Sequencescape::Api::V2::Labware.find(barcode: barcode).first
     else
       @labware = params.fetch(:labware, nil)
       raise ArgumentError, 'Parameters labware or barcode missing' if labware.nil?
@@ -15,12 +16,12 @@ class LabwareMetadata # rubocop:todo Style/Documentation
   end
 
   def update!(metadata) # rubocop:todo Metrics/AbcSize
-    if @labware.custom_metadatum_collection.uuid.present?
-      current_metadata = @labware.custom_metadatum_collection.metadata.symbolize_keys
+    if @labware.custom_metadatum_collection&.uuid.present?
+      current_metadata = self.metadata.symbolize_keys
       labware.custom_metadatum_collection.update!(metadata: current_metadata.merge(metadata.symbolize_keys))
     else
       Sequencescape::Api::V2::CustomMetadatumCollection.create!(
-        user_id: @user.id,
+        user_id: @user&.id,
         asset_id: @labware.id,
         metadata: metadata.symbolize_keys
       )

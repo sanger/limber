@@ -36,7 +36,7 @@ module LabwareCreators
 
     def create_labware!
       super do |child|
-        LabwareMetadata.new(user: user_uuid, labware: child).update!(stock_barcodes_by_quadrant)
+        LabwareMetadata.new(user_uuid: user_uuid, labware: child).update!(stock_barcodes_by_quadrant)
         yield(child) if block_given?
       end
     end
