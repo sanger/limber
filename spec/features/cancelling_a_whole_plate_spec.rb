@@ -160,7 +160,7 @@ RSpec.feature 'Cancelling a whole plate', js: true do
     )
 
     # We get the printers
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'from the interface' do

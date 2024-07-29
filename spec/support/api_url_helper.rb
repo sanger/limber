@@ -90,6 +90,11 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2).to receive(:minimal_labware_by_barcode).with(barcode).and_return(labware_result)
     end
 
+    # Stubs a request for all barcode printers
+    def stub_v2_barcode_printers(printers)
+      allow(Sequencescape::Api::V2::BarcodePrinter).to receive(:all).and_return(printers)
+    end
+
     # Builds the basic v2 plate finding query.
     def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize
       stub_barcode_search(plate.barcode.machine, plate) if stub_search
@@ -105,11 +110,9 @@ module ApiUrlHelper
       end
     end
 
-    # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
-      stub_barcode_search(tube.barcode.machine, tube) if stub_search
-      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+    def stub_v2_polymetadata(polymetadata, metadatable_id)
+      arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
+      allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
     end
 
     def stub_v2_project(project)
@@ -122,9 +125,11 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
     end
 
-    def stub_v2_polymetadata(polymetadata, metadatable_id)
-      arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
-      allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
+    # Builds the basic v2 tube finding query.
+    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
+      stub_barcode_search(tube.barcode.machine, tube) if stub_search
+      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
     end
   end
   extend ClassMethods

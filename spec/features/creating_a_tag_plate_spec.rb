@@ -65,7 +65,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     stub_api_get(plate_uuid, body: old_api_example_plate)
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
 
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_api_get('tag_layout_templates', body: templates)
     stub_api_get(plate_uuid, 'submission_pools', body: submission_pools)
 

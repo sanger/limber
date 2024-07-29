@@ -143,7 +143,7 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
 
     stub_v2_tube(child_tube)
 
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'creates multiple plates' do
