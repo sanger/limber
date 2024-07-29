@@ -26,13 +26,13 @@ module.exports = {
         vars: 'all',
         args: 'after-used',
         ignoreRestSiblings: false,
-        argsIgnorePattern: '^_|undefined', // `undefined` is grandfathered in and should be removed
+        argsIgnorePattern: '^_|undefined', // `undefined` is legacy and should be removed
       },
     ],
     // We need a proper logging solution (see https://github.com/sanger/limber/issues/836),
     // but until then:
     'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
-    // Grandfathered in from the old days. We should remove these:
+    // Legacy in from the old days. We should remove these:
     'vue/prop-name-casing': ['warn'],
     'no-shadow-restricted-names': ['warn'], // specifically for `undefined`
   },
