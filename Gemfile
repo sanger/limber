@@ -54,7 +54,6 @@ group :test do
 end
 
 group :development, :test do
-  gem 'bootstrap', '~>4'
   gem 'uglifier'
 end
 
