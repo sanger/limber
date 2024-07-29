@@ -15,7 +15,7 @@ class LabwareMetadata # rubocop:todo Style/Documentation
     end
   end
 
-  def update!(metadata) # rubocop:todo Metrics/AbcSize
+  def update!(metadata)
     if @labware.custom_metadatum_collection&.uuid.present?
       current_metadata = self.metadata.symbolize_keys
       labware.custom_metadatum_collection.update!(metadata: current_metadata.merge(metadata.symbolize_keys))
