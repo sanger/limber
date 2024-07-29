@@ -361,10 +361,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:api_v2_post) { stub_api_v2_post('Well') }
-
-      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
-
       let(:transfer_requests) do
         [
           {
@@ -465,6 +461,11 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           },
           body: '{}'
         )
+      end
+
+      before do
+        stub_api_v2_patch('Well')
+        stub_api_v2_save('PolyMetadatum')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -584,9 +585,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:api_v2_post) { allow(pm_pcr_cycles).to receive(:update).and_return(true) }
-
       before do
+        allow(pm_pcr_cycles).to receive(:update).and_return(true)
+
         stub_v2_polymetadata(pm_original_plate_barcode, loop_request.id)
         stub_v2_polymetadata(pm_original_well_id, loop_request.id)
         stub_v2_polymetadata(pm_concentration_nm, loop_request.id)

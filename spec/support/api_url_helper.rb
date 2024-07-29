@@ -71,18 +71,28 @@ module ApiUrlHelper
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
 
-    def stub_api_v2_post(klass)
-      # intercepts the 'update' method for any class beginning with
+    def stub_api_v2_patch(klass)
+      # intercepts the 'update' and 'update!' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
+      allow_any_instance_of(receiving_class).to receive(:update!).and_return(true)
     end
 
     def stub_api_v2_save(klass)
-      # intercepts the 'save' method for any class beginning with
+      # intercepts the 'save' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
+    end
+
+    def expect_api_v2_posts(klass, args_list)
+      # Expects the 'create!' method for any class beginning with
+      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns true
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      expect(receiving_class).to receive(:create!).exactly(args_list.count).times do |args|
+        expect(args).to eq(args_list.shift)
+      end.and_return(true)
     end
 
     def stub_barcode_search(barcode, labware)
@@ -93,6 +103,11 @@ module ApiUrlHelper
     # Stubs a request for all barcode printers
     def stub_v2_barcode_printers(printers)
       allow(Sequencescape::Api::V2::BarcodePrinter).to receive(:all).and_return(printers)
+    end
+
+    def stub_v2_labware(labware)
+      arguments = [{ barcode: labware.barcode.machine }]
+      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(*arguments).and_return([labware])
     end
 
     # Builds the basic v2 plate finding query.
@@ -130,6 +145,11 @@ module ApiUrlHelper
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
       arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+    end
+
+    def stub_v2_user(user)
+      arguments = [{ uuid: user.uuid }]
+      allow(Sequencescape::Api::V2::User).to receive(:find).with(*arguments).and_return([user])
     end
   end
   extend ClassMethods
