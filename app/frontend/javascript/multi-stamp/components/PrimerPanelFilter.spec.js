@@ -16,15 +16,15 @@ describe('PrimerPanelFilter', () => {
 
   it('provides a list of filter options', () => {
     const requestsAsSource1 = [
-      requestFactory({ primer_panel: { name: 'Common Panel' } }),
-      requestFactory({ primer_panel: { name: 'Distinct Panel' } }),
+      requestFactory({ uuid: 'req1-uuid', primer_panel: { name: 'Common Panel' } }),
+      requestFactory({ uuid: 'req2-uuid', primer_panel: { name: 'Distinct Panel' } }),
     ]
     const requestsOnAliquot1 = requestFactory({
       primer_panel: { name: 'Shared Panel' },
     })
     const requestsAsSource2 = [
-      requestFactory({ primer_panel: { name: 'Common Panel' } }),
-      requestFactory({ primer_panel: { name: 'Shared Panel' } }),
+      requestFactory({ uuid: 'req3-uuid', primer_panel: { name: 'Common Panel' } }),
+      requestFactory({ uuid: 'req4-uuid', primer_panel: { name: 'Shared Panel' } }),
     ]
     const well1 = wellFactory({
       requests_as_source: requestsAsSource1,
