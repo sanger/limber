@@ -124,6 +124,29 @@ yarn prettier --write .
 
 ## Troubleshooting
 
+### ViteRuby::MissingEntrypointError in Search#new
+
+If you see an error like this:
+
+```
+Showing /code/app/views/layouts/application.html.erb where line #10 raised:
+
+Vite Ruby can't find entrypoints/application.css in the manifests.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  /code/node_modules/rollup/dist/native.js:59
+  		throw new Error(
+```
+
+Then you may need to run `bin/vite build --clear --mode=development` as suggested, and reload the page.
+
+Alternatively, run `./compile_build.sh` to compile the build files or run `yarn dev` to start the Vite development server.
+
+### Changes not updating
+
 If during development changes do not seem to be taking effect, try:
 
 - Restart the application:
