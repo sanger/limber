@@ -652,7 +652,7 @@ module LabwareCreators
     # @return [void]
     def add_tube_metadata(child_tube, tube_posn, tube_details)
       LabwareMetadata
-        .new(user: user_uuid, barcode: child_tube.barcode.machine)
+        .new(user_uuid: user_uuid, barcode: child_tube.barcode.machine)
         .update!(tube_rack_barcode: tube_details['tube_rack_barcode'], tube_rack_position: tube_posn)
     end
 

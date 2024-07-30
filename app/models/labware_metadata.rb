@@ -4,7 +4,7 @@ class LabwareMetadata # rubocop:todo Style/Documentation
   attr_accessor :user_uuid, :labware, :barcode
 
   def initialize(params = {})
-    @user_uuid = params.fetch(:user, nil)
+    @user_uuid = params.fetch(:user_uuid, nil)
     @user = Sequencescape::Api::V2::User.find(uuid: @user_uuid).first unless @user_uuid.nil?
     @barcode = params.fetch(:barcode, nil)
     if barcode.present?
