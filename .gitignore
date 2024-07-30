@@ -5,10 +5,6 @@ db/*.sqlite3
 # Javascript
 .yarn-integrity
 /node_modules
-/public/app/assets
-/public/assets
-/public/packs
-/public/packs-test
 /vendor
 yarn-debug.log*
 yarn-error.log*
@@ -51,7 +47,6 @@ release.tar.gz
 
 # Vite Ruby
 /public/vite*
-node_modules
 # Vite uses dotenv and suggests to ignore local-only env files. See
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
