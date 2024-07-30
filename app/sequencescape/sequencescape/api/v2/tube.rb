@@ -22,7 +22,6 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_many :child_plates, class_name: 'Sequencescape::Api::V2::Plate'
   has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
   has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
-  has_one :custom_metadatum_collection
 
   has_many :direct_submissions
   has_many :state_changes
