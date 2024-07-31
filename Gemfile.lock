@@ -141,7 +141,6 @@ GEM
     exception_notification (4.5.0)
       actionmailer (>= 5.2, < 8)
       activesupport (>= 5.2, < 8)
-    execjs (2.9.1)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
     faraday (1.10.3)
@@ -387,8 +386,6 @@ GEM
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unicode-display_width (2.5.0)
     vite_rails (3.0.17)
       railties (>= 5.1, < 8)
@@ -451,7 +448,6 @@ DEPENDENCIES
   simplecov-lcov
   sprint_client
   state_machines
-  uglifier
   vite_rails
   vite_ruby
   web-console
