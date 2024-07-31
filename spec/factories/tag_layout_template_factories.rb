@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  factory :v2_tag_layout_template, class: Sequencescape::Api::V2::TagLayoutTemplate do
+    skip_create
+
+    uuid
+    name { 'Test tag layout' }
+    direction { 'column' }
+    walking_by { 'wells of plate' }
+    tag_group { create :v2_tag_group_with_tags }
+  end
+
   # API V1 tag layout template. The inheriting factories set up the patterns
   # commonly seen by Limber
   factory :tag_layout_template, class: Limber::TagLayoutTemplate, traits: [:api_object] do

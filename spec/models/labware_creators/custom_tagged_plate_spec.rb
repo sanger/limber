@@ -44,8 +44,11 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
     let(:maximum_tag_offset) { largest_tag_group - occupied_wells }
     let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
+    let(:tag_group) { create :v2_tag_group_with_tags }
+    let(:tlts) { create_list :v2_tag_layout_template, 2 }
 
     it 'can be created' do
+      binding.pry
       expect(subject).to be_a LabwareCreators::CustomTaggedPlate
     end
 
@@ -58,7 +61,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     end
 
     context 'fetching layout templates' do
-      before { stub_api_get('tag_layout_templates', body: json(:tag_layout_template_collection, size: 2)) }
+      before { stub_v2_tag_layout_templates(create_list :v2_tag_layout_template, 2) }
 
       let(:layout_hash) do
         WellHelpers.column_order.each_with_index.map do |w, i|
