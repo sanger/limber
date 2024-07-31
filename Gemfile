@@ -52,10 +52,6 @@ group :test do
   gem 'webmock'
 end
 
-group :development, :test do
-  gem 'uglifier'
-end
-
 group :development do
   gem 'guard-rspec', require: false
   gem 'pry'
