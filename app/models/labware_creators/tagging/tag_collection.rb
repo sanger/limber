@@ -5,12 +5,10 @@ module LabwareCreators::Tagging
     #
     # Create a tag collection
     #
-    # @param [Sequencescape::Client::Api] api an api object used to retrieve tag templates
     # @param [Limber::Plate] plate The plate from which the tag layout will be generated
     # @param [String] purpose_uuid The uuid of the purpose which is about to be created
     #
-    def initialize(api, plate, purpose_uuid)
-      @api = api
+    def initialize(plate, purpose_uuid)
       @plate = plate
       @purpose_uuid = purpose_uuid
     end
@@ -105,7 +103,7 @@ module LabwareCreators::Tagging
     end
 
     def tag_layout_templates
-      @api.tag_layout_template.all.map(&:coerce)
+      Sequencescape::Api::V2::TagLayoutTemplate.all.map(&:coerce)
     end
   end
 end
