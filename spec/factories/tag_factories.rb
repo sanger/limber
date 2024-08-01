@@ -27,7 +27,7 @@ FactoryBot.define do
     factory :v2_tag_group_with_tags do
       transient do
         size { 96 }
-        v2_tags { (1..size).map { |i| create(:v2_tag, map_id: i) } }
+        v2_tags { (1..size).map { |i| create(:v2_tag, map_id: i, tag_group: instance) } }
       end
     end
   end
