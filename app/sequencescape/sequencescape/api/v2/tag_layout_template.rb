@@ -5,6 +5,10 @@ class Sequencescape::Api::V2::TagLayoutTemplate < Sequencescape::Api::V2::Base
   has_one :tag_group
   has_one :tag2_group
 
+  def dual_index?
+    tag2_group.present?
+  end
+
   # Performs the coercion of this instance so that it behaves appropriately given the direction
   # and walking algorithm information.
   def coerce

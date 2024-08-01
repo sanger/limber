@@ -58,8 +58,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     end
 
     context 'fetching layout templates' do
-      before { stub_v2_tag_layout_templates(create_list :v2_tag_layout_template, 2) }
-
       let(:layout_hash) do
         WellHelpers.column_order.each_with_index.map do |w, i|
           pool = i < 8 ? 1 : 2
@@ -67,19 +65,22 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         end
       end
 
-      # rubocop:todo Layout/LineLength
-      # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
-      # rubocop:enable Layout/LineLength
+      let(:tag_layout_templates) { create_list :v2_tag_layout_template, 2 }
+
+      before { stub_v2_tag_layout_templates(tag_layout_templates) }
+
+      # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging.
+      # Which is now unused.
       it 'lists tag groups' do
         expect(subject.tag_plates_list).to eq(
-          'tag-layout-template-0' => {
+          tag_layout_templates[0].uuid => {
             tags: layout_hash,
             used: false,
             dual_index: false,
             approved: true,
             matches_templates_in_pool: true
           },
-          'tag-layout-template-1' => {
+          tag_layout_templates[1].uuid => {
             tags: layout_hash,
             used: false,
             dual_index: false,

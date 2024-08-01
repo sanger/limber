@@ -8,11 +8,15 @@ FactoryBot.define do
     sequence(:name) { |index| "TagLayoutTemplate#{index}" }
     direction { 'column' }
     walking_by { 'wells of plate' }
-    transient { tag_group { create :v2_tag_group_with_tags } }
+    transient do
+      tag_group { create :v2_tag_group_with_tags }
+      tag2_group { nil }
+    end
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |tag_layout_template, evaluator|
       tag_layout_template._cached_relationship(:tag_group) { evaluator.tag_group } if evaluator.tag_group
+      tag_layout_template._cached_relationship(:tag2_group) { evaluator.tag2_group } if evaluator.tag2_group
     end
   end
 
