@@ -5,10 +5,15 @@ FactoryBot.define do
     skip_create
 
     uuid
-    name { 'Test tag layout' }
+    sequence(:name) { |index| "TagLayoutTemplate#{index}" }
     direction { 'column' }
     walking_by { 'wells of plate' }
-    tag_group { create :v2_tag_group_with_tags }
+    transient { tag_group { create :v2_tag_group_with_tags } }
+
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
+    after(:build) do |tag_layout_template, evaluator|
+      tag_layout_template._cached_relationship(:tag_group) { evaluator.tag_group } if evaluator.tag_group
+    end
   end
 
   # API V1 tag layout template. The inheriting factories set up the patterns
