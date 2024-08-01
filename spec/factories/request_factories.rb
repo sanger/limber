@@ -70,6 +70,7 @@ FactoryBot.define do
     factory :library_request do
       request_type { create :library_request_type }
 
+      # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
       after(:build) { |request, evaluator| request._cached_relationship(:request_type) { evaluator.request_type } }
 
       # Library request with primer panel information

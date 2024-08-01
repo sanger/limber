@@ -34,6 +34,7 @@ FactoryBot.define do
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |tube_rack, evaluator|
       Sequencescape::Api::V2::TubeRack.associations.each do |association|
         tube_rack._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
