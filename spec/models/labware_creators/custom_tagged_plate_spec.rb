@@ -44,11 +44,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
     let(:maximum_tag_offset) { largest_tag_group - occupied_wells }
     let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
-    let(:tag_group) { create :v2_tag_group_with_tags }
-    let(:tlts) { create_list :v2_tag_layout_template, 2 }
 
     it 'can be created' do
-      binding.pry
       expect(subject).to be_a LabwareCreators::CustomTaggedPlate
     end
 
