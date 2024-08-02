@@ -119,4 +119,4 @@ LRC Bank Input:
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::Uncreatable
-  :presenter_class: Presenters::VacTubePresenter
+  :presenter_class: Presenters::StockTubePresenter
