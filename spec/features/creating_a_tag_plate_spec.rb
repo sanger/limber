@@ -74,7 +74,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     stub_api_get('tag-lot-type-uuid', body: json(:tag_lot_type))
   end
 
-  shared_examples 'supports the plate' do
+  shared_examples 'it supports the plate' do
     let(:help_text) { "Click 'Create plate'" }
 
     before { stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid')) }
@@ -132,7 +132,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:submission_pools) { json(:submission_pool_collection) }
         let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
         let(:enforce_uniqueness) { false }
-        it_behaves_like 'supports the plate'
+        it_behaves_like 'it supports the plate'
       end
 
       context 'when the pool has been tagged by plates' do
@@ -154,7 +154,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       context 'when nothing has been done' do
         let(:submission_pools) { json(:dual_submission_pool_collection) }
         let(:help_text) { 'This plate is part of a larger pool and must be indexed with UDI plates.' }
-        it_behaves_like 'supports the plate'
+        it_behaves_like 'it supports the plate'
       end
 
       context 'when the pool has been tagged by plates' do
@@ -165,7 +165,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
           )
         end
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
-        it_behaves_like 'supports the plate'
+        it_behaves_like 'it supports the plate'
       end
 
       context 'when the template has been used' do
@@ -197,7 +197,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
         context 'when the template has been used' do
           let(:used_template_uuid) { 'tag-layout-template-0' }
-          it_behaves_like 'supports the plate'
+          it_behaves_like 'it supports the plate'
         end
 
         context 'when the pool has been tagged by plates' do
