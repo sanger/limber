@@ -18,6 +18,10 @@ FactoryBot.define do
       tag_layout_template._cached_relationship(:tag_group) { evaluator.tag_group } if evaluator.tag_group
       tag_layout_template._cached_relationship(:tag2_group) { evaluator.tag2_group } if evaluator.tag2_group
     end
+
+    factory :v2_dual_index_tag_layout_template do
+      transient { tag2_group { create :v2_tag_group_with_tags } }
+    end
   end
 
   # API V1 tag layout template. The inheriting factories set up the patterns
