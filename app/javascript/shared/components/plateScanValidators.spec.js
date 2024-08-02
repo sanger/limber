@@ -12,6 +12,7 @@ import {
   checkExcess,
   checkState,
   checkQCableWalkingBy,
+  checkForUnacceptablePlatePurpose,
 } from 'shared/components/plateScanValidators'
 
 describe('checkSize', () => {
@@ -682,6 +683,39 @@ describe('checkPlateWithSameReadyLibrarySubmissions', () => {
         valid: false,
         message:
           'The submission from this plate are different from the submissions from previous scanned plates in this screen.',
+      })
+    })
+  })
+})
+
+describe('checkForUnacceptablePlatePurpose', () => {
+  const plate1 = {
+    purpose: { name: 'PurposeA' },
+  }
+
+  const plate2 = {
+    purpose: { name: 'PurposeB' },
+  }
+
+  describe('when there is not a list of acceptable purposes', () => {
+    const validator = checkForUnacceptablePlatePurpose([])
+
+    it('validates when there is no list of acceptable purposes', () => {
+      expect(validator(plate1)).toEqual({ valid: true })
+    })
+  })
+
+  describe('when there is a list of acceptable purposes', () => {
+    const validator = checkForUnacceptablePlatePurpose(['PurposeA', 'PurposeC'])
+
+    it('validates when the plate has an acceptable purpose', () => {
+      expect(validator(plate1)).toEqual({ valid: true })
+    })
+
+    it('fails when the plate has an unacceptable purpose', () => {
+      expect(validator(plate2)).toEqual({
+        valid: false,
+        message: 'The scanned plate has an unacceptable plate purpose type (should be PurposeA or PurposeC)',
       })
     })
   })

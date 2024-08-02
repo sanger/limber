@@ -33,6 +33,16 @@ module LabwareCreators
     self.target_columns = 12
     self.source_plates = 10
 
+    def acceptable_purposes
+      # catch for older uses of tenstamp in purpose_config where creator_class is a string
+      if Array(purpose_config[:creator_class]).is_a?(Hash) &&
+           Array(purpose_config.dig(:creator_class, :args, :acceptable_purposes))
+        Array(purpose_config.dig(:creator_class, :args, :acceptable_purposes))
+      else
+        []
+      end
+    end
+
     private
 
     def request_hash(transfer, *args)

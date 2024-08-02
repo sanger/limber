@@ -51,7 +51,7 @@
 import LabwareScan from 'shared/components/LabwareScan'
 import LoadingModal from 'shared/components/LoadingModal'
 import Plate from 'shared/components/Plate'
-import { checkDuplicates, checkSize } from 'shared/components/plateScanValidators'
+import { checkDuplicates, checkSize, checkForUnacceptablePlatePurpose } from 'shared/components/plateScanValidators'
 import devourApi from 'shared/devourApi'
 import buildPlateObjs from 'shared/plateHelpers'
 import { handleFailedRequest, requestIsActive, requestsFromPlates } from 'shared/requestHelpers'
@@ -127,6 +127,10 @@ export default {
 
     // Default volume to define in the UI for the volume control
     defaultVolume: { type: String, required: false, default: null },
+
+    // Acceptable plate purpose names that can be used as source plates e.g. "['PurposeA', 'PurposeB']"
+    // See computed method for conversion to array
+    acceptablePurposes: { type: String, required: false, default: '[]' },
   },
   data() {
     return {
@@ -174,6 +178,9 @@ export default {
     },
     targetColumnsNumber() {
       return Number.parseInt(this.targetColumns)
+    },
+    acceptablePurposesArray() {
+      return JSON.parse(this.acceptablePurposes)
     },
     valid() {
       return (
@@ -257,7 +264,7 @@ export default {
       return [
         checkSize(12, 8),
         checkDuplicates(currPlates),
-        // checkExcess(this.excessTransfers)
+        checkForUnacceptablePlatePurpose(this.acceptablePurposesArray),
       ]
     },
   },

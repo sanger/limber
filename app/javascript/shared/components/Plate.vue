@@ -21,7 +21,7 @@
         <td v-for="column in columns" :key="column">
           <lb-well
             v-bind="wellAt(row, column)"
-            :tooltip_label="tooltip_label(row, column)"
+            :tooltip_labL="tooltipLabel(row, column)"
             :position="position(row, column)"
             @onwellclicked="onWellClicked"
           />
@@ -60,7 +60,7 @@ export default {
     },
   },
   methods: {
-    tooltip_label: function (row, column) {
+    tooltipLabel: function (row, column) {
       return this.wellAt(row, column).human_barcode
     },
     position: function (row, column) {

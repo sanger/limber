@@ -375,6 +375,28 @@ const checkPlateWithSameReadyLibrarySubmissions = (cached_submission_ids) => {
   }
 }
 
+// Returns a validator that ensures that the scanned plate does not have an unacceptable plate purpose.
+// plate: The current plate being scanned
+const checkForUnacceptablePlatePurpose = (acceptable_purposes) => {
+  return (plate) => {
+    if (!acceptable_purposes || acceptable_purposes.length == 0) {
+      // return valid if no acceptable purposes are provided
+      return validScanMessage()
+    } else if (acceptable_purposes.includes(plate.purpose.name)) {
+      // if we find a matching purpose, return valid
+      return validScanMessage()
+    } else {
+      return {
+        valid: false,
+        message:
+          'The scanned plate has an unacceptable plate purpose type (should be ' +
+          acceptable_purposes.join(' or ') +
+          ')',
+      }
+    }
+  }
+}
+
 export {
   checkSize,
   checkDuplicates,
@@ -389,4 +411,5 @@ export {
   checkMaxCountRequests,
   checkMinCountRequests,
   checkAllSamplesInColumnsList,
+  checkForUnacceptablePlatePurpose,
 }

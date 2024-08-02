@@ -134,7 +134,7 @@ export default {
     uid += 1
     return {
       labwareBarcode: '', // The scanned barcode
-      labware: null, // The tube object
+      labware: null, // The labware object
       uid: `labware-scan-${uid}`, // Unique id to ensure label identifies the correct field
       apiActivity: { state: null, message: '' }, // API status
     }

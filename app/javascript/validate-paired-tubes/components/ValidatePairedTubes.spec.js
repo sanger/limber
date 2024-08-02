@@ -100,7 +100,6 @@ describe('TransferVolumes', () => {
       wrapper.vm.destinationTubeValidators // Refresh the evaluation to cause more calls to checkId
 
       // After setting a source tube
-      console.log(checkId.mock.calls)
       expect(checkId.mock.calls[1][0]).toEqual(['test1', 'test2'])
       expect(checkId.mock.calls[1][1]).toEqual('Does not match the source tube')
     })
