@@ -35,8 +35,7 @@ module LabwareCreators
 
     def acceptable_purposes
       # catch for older uses of tenstamp in purpose_config where creator_class is a string
-      if Array(purpose_config[:creator_class]).is_a?(Hash) &&
-           Array(purpose_config.dig(:creator_class, :args, :acceptable_purposes))
+      if purpose_config[:creator_class].is_a?(Hash) && purpose_config.dig(:creator_class, :args, :acceptable_purposes)
         Array(purpose_config.dig(:creator_class, :args, :acceptable_purposes))
       else
         []
