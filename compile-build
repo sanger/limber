@@ -2,7 +2,7 @@
 
 set -e
 export NODE_ENV=production
-export RAILS_ENV=development
+export RAILS_ENV=production
 echo 'Updating yarn'
 bundle exec yarn
 echo 'Cleaning up'
