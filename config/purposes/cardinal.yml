@@ -10,7 +10,7 @@ LCA Blood Vac:
   :input_plate: false
   :target: SampleTube
   :type: Tube::Purpose
-  :presenter_class: Presenters::VacTubePresenter
+  :presenter_class: Presenters::StockTubePresenter
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
 ###
