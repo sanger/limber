@@ -3,7 +3,7 @@
 # tag layout template resource
 class Sequencescape::Api::V2::TagLayoutTemplate < Sequencescape::Api::V2::Base
   has_one :tag_group
-  has_one :tag2_group
+  has_one :tag2_group, class_name: 'TagGroup'
 
   def dual_index?
     tag2_group.present?
