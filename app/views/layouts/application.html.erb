@@ -7,18 +7,15 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <%= csrf_meta_tag %>
 
-    <%= stylesheet_link_tag 'application' %>
-    <%= stylesheet_link_tag 'print', media: 'print' %>
+    <%= vite_stylesheet_tag 'application' %>
+    <%= vite_stylesheet_tag 'print', media: 'print' %>
 
-    <%= javascript_include_tag 'application'  %>
-    <%= javascript_pack_tag 'application' %>
-    <%= stylesheet_pack_tag 'application' %>
+    <%= vite_client_tag %>
+    <%= vite_javascript_tag 'application' %>
 
     <% if Rails.application.config.disable_animations %>
-      <%= stylesheet_link_tag  'disable_animations' %>
-
-      <!-- Turn off animations in jQuery -->
-      <script>$.fx.off = true;</script>
+      <%= vite_stylesheet_tag 'disable-animations' %>
+      <%= vite_javascript_tag 'disable-animations' %>
     <% end %>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/<%= apple_touch_icon %>" />

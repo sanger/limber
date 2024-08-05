@@ -7,7 +7,7 @@
         # Priorities are defined in Sequencescape:app/models/sample.rb
         priorities = {0=>:no_priority, 1=>:backlog, 2=>:surveillance, 3=>:priority}
       %>
-      <%= image_tag("icon_#{presenter.priority}_flag.png",
+      <%= vite_image_tag("images/icon_#{presenter.priority}_flag.png",
             size: "32x32",
             title: "Labware Priority: #{priorities[presenter.priority].to_s.titleize}",
             data: { toggle: 'tooltip' }

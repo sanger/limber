@@ -65,6 +65,10 @@ module.exports = {
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
 
+  moduleNameMapper: {
+    '@/(.*)$': '<rootDir>/$1',
+  },
+
   // An array of directory names to be searched recursively up from the requiring module's location
   moduleDirectories: ['node_modules', '<rootDir>'],
 
@@ -105,7 +109,7 @@ module.exports = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  rootDir: 'app/javascript',
+  rootDir: 'app/frontend',
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
