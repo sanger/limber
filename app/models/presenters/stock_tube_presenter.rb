@@ -5,7 +5,7 @@ module Presenters
   # It shows a preview of the tube, but prevents well failure and state changes.
   # In addition it also detects common scenarios which may indicate problems
   # with the submission.
-  class VacTubePresenter < TubePresenter
+  class StockTubePresenter < TubePresenter
     include Presenters::Statemachine::StateAllowsChildCreation
     include Presenters::Statemachine::DoesNotAllowLibraryPassing
     include Presenters::StateChangeless
