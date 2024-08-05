@@ -118,8 +118,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   end
 
   shared_examples 'a recognised template' do
-    context 'a single indexed tag plate' do
       let(:template_factory) { :tag_layout_template }
+    context 'with a single indexed tag plate' do
 
       context 'when nothing has been done on a cross plate pool' do
         let(:submission_pools) { json(:dual_submission_pool_collection) }
@@ -148,8 +148,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       end
     end
 
-    context 'a dual indexed tag plate' do
       let(:template_factory) { :dual_index_tag_layout_template }
+    context 'with a dual indexed tag plate' do
 
       context 'when nothing has been done' do
         let(:submission_pools) { json(:dual_submission_pool_collection) }
