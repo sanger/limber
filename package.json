@@ -4,7 +4,7 @@
     "@babel/preset-env": "^7.24.4",
     "@babel/runtime": "^7.24.8",
     "@rails/webpacker": "5.4.2",
-    "axios": "^0.28.0",
+    "axios": "^0.28.1",
     "babel-loader": "^8.2.5",
     "bootstrap-vue": "^2.23.1",
     "cytoscape": "^3.30.0",
