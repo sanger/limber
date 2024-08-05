@@ -4,4 +4,8 @@ import vue from '@vitejs/plugin-vue2' // TODO: replace with @vitejs/plugin-vue f
 
 export default defineConfig({
   plugins: [RubyPlugin(), vue()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
 })

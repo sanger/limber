@@ -1,6 +1,6 @@
 module.exports = {
   env: {
-    'jest/globals': true,
+    'vitest/env': true,
     browser: true,
     commonjs: true,
     es6: true,
@@ -10,8 +10,8 @@ module.exports = {
     global: true,
     SCAPE: true,
   },
-  plugins: ['jest', 'vue'],
-  extends: ['eslint:recommended', 'plugin:vue/recommended', 'plugin:jest/recommended', 'prettier'],
+  plugins: ['vitest', 'vue'],
+  extends: ['eslint:recommended', 'plugin:vue/recommended', 'prettier'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
@@ -37,7 +37,7 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.spec.js'],
-      plugins: ['jest', 'vue'],
+      plugins: ['vue'],
     },
   ],
 }

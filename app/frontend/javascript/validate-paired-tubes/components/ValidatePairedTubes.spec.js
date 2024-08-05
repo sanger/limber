@@ -8,7 +8,7 @@ import {
   checkState,
   checkTransferParameters,
 } from '@/javascript/shared/components/tubeScanValidators'
-jest.mock('@/javascript/shared/components/tubeScanValidators')
+vi.mock('@/javascript/shared/components/tubeScanValidators')
 
 describe('TransferVolumes', () => {
   const wrapperFactory = function (options = {}) {
@@ -48,6 +48,11 @@ describe('TransferVolumes', () => {
     const mockCheckId = (_) => validMessage
 
     beforeEach(() => {
+      checkState.mockClear()
+      checkTransferParameters.mockClear()
+      checkMolarityResult.mockClear()
+      checkId.mockClear()
+
       checkState.mockReturnValue(mockCheckState)
       checkTransferParameters.mockReturnValue(mockCheckTransferParameters)
       checkMolarityResult.mockReturnValue(mockCheckMolarityResult)

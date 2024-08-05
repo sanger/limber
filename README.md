@@ -195,7 +195,7 @@ Ruby unit and feature tests:
 bundle exec rspec
 ```
 
-### Jest
+### Vitest
 
 JavaScript unit tests:
 

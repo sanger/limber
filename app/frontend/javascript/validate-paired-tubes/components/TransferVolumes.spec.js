@@ -3,7 +3,7 @@ import TransferVolumes from './TransferVolumes.vue'
 import { shallowMount } from '@vue/test-utils'
 
 import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers.js'
-jest.mock('@/javascript/shared/tubeHelpers')
+vi.mock('@/javascript/shared/tubeHelpers.js')
 
 import {
   purposeTargetMolarityParameter,
@@ -11,8 +11,8 @@ import {
   purposeMinimumPickParameter,
   tubeMostRecentMolarity,
   calculateTransferVolumes,
-} from '@/javascript/shared/tubeTransferVolumes'
-jest.mock('@/javascript/shared/tubeTransferVolumes')
+} from '@/javascript/shared/tubeTransferVolumes.js'
+vi.mock('@/javascript/shared/tubeTransferVolumes.js')
 
 describe('TransferVolumes', () => {
   const mockTube = {}
@@ -34,6 +34,8 @@ describe('TransferVolumes', () => {
     var wrapper
 
     beforeEach(() => {
+      purposeConfigForTube.mockClear()
+
       purposeConfigForTube.mockReturnValue(mockPurposeConfig)
       wrapper = wrapperFactory()
     })
@@ -54,6 +56,8 @@ describe('TransferVolumes', () => {
     const sourceMolarity = 6
 
     beforeEach(() => {
+      tubeMostRecentMolarity.mockClear()
+
       tubeMostRecentMolarity.mockReturnValue(sourceMolarity)
       wrapper = wrapperFactory()
     })
@@ -73,6 +77,9 @@ describe('TransferVolumes', () => {
     const molarity = 250
 
     beforeEach(() => {
+      purposeConfigForTube.mockClear()
+      purposeTargetMolarityParameter.mockClear()
+
       purposeConfigForTube.mockReturnValue(mockPurposeConfig)
       purposeTargetMolarityParameter.mockReturnValue(molarity)
       wrapper = wrapperFactory()
@@ -93,6 +100,9 @@ describe('TransferVolumes', () => {
     const volume = 250
 
     beforeEach(() => {
+      purposeConfigForTube.mockClear()
+      purposeTargetVolumeParameter.mockClear()
+
       purposeConfigForTube.mockReturnValue(mockPurposeConfig)
       purposeTargetVolumeParameter.mockReturnValue(volume)
       wrapper = wrapperFactory()
@@ -117,6 +127,13 @@ describe('TransferVolumes', () => {
     const mockTransferVolumes = {}
 
     beforeEach(() => {
+      purposeConfigForTube.mockClear()
+      purposeTargetMolarityParameter.mockClear()
+      purposeTargetVolumeParameter.mockClear()
+      purposeMinimumPickParameter.mockClear()
+      tubeMostRecentMolarity.mockClear()
+      calculateTransferVolumes.mockClear()
+
       purposeConfigForTube.mockReturnValue(mockPurposeConfig)
       purposeTargetMolarityParameter.mockReturnValue(targetMolarity)
       purposeTargetVolumeParameter.mockReturnValue(targetVolume)
@@ -157,6 +174,8 @@ describe('TransferVolumes', () => {
     }
 
     beforeEach(() => {
+      calculateTransferVolumes.mockClear()
+
       calculateTransferVolumes.mockReturnValue(transferVolumes)
       wrapper = wrapperFactory()
     })
@@ -188,6 +207,8 @@ describe('TransferVolumes', () => {
     const sourceMolarity = 3.4567
 
     beforeEach(() => {
+      tubeMostRecentMolarity.mockClear()
+
       tubeMostRecentMolarity.mockReturnValue(sourceMolarity)
       wrapper = wrapperFactory()
     })
@@ -202,6 +223,9 @@ describe('TransferVolumes', () => {
     const molarity = 5.6789
 
     beforeEach(() => {
+      purposeConfigForTube.mockClear()
+      purposeTargetMolarityParameter.mockClear()
+
       purposeConfigForTube.mockReturnValue(mockPurposeConfig)
       purposeTargetMolarityParameter.mockReturnValue(molarity)
       wrapper = wrapperFactory()
@@ -217,6 +241,9 @@ describe('TransferVolumes', () => {
     const volume = 25.6789
 
     beforeEach(() => {
+      purposeConfigForTube.mockClear()
+      purposeTargetVolumeParameter.mockClear()
+
       purposeConfigForTube.mockReturnValue(mockPurposeConfig)
       purposeTargetVolumeParameter.mockReturnValue(volume)
       wrapper = wrapperFactory()
@@ -235,6 +262,8 @@ describe('TransferVolumes', () => {
       }
 
       beforeEach(() => {
+        calculateTransferVolumes.mockClear()
+
         calculateTransferVolumes.mockReturnValue(transferVolumes)
         wrapper = wrapperFactory()
       })
@@ -251,6 +280,8 @@ describe('TransferVolumes', () => {
       }
 
       beforeEach(() => {
+        calculateTransferVolumes.mockClear()
+
         calculateTransferVolumes.mockReturnValue(transferVolumes)
         wrapper = wrapperFactory()
       })
@@ -304,6 +335,10 @@ describe('TransferVolumes', () => {
     }
 
     beforeEach(() => {
+      purposeTargetMolarityParameter.mockClear()
+      purposeTargetVolumeParameter.mockClear()
+      calculateTransferVolumes.mockClear()
+
       purposeTargetMolarityParameter.mockReturnValue(targetMolarity)
       purposeTargetVolumeParameter.mockReturnValue(targetVolume)
       calculateTransferVolumes.mockReturnValue(transferVolumes)
@@ -321,11 +356,11 @@ describe('TransferVolumes', () => {
     })
 
     it('displays the sample volume', () => {
-      expect(wrapper.text()).toMatch(/Sample Volume.+150\.12 \u03BCl/)
+      expect(wrapper.text()).toMatch(/Sample Volume.*150\.12 \u03BCl/)
     })
 
     it('displays the buffer volume', () => {
-      expect(wrapper.text()).toMatch(/Buffer Volume.+49\.88 \u03BCl/)
+      expect(wrapper.text()).toMatch(/Buffer Volume.*49\.88 \u03BCl/)
     })
   })
 })
