@@ -103,7 +103,8 @@ module LabwareCreators::Tagging
     end
 
     def tag_layout_templates
-      Sequencescape::Api::V2::TagLayoutTemplate.all.map(&:coerce)
+      query = Sequencescape::Api::V2::TagLayoutTemplate.paginate(per_page: 100)
+      Sequencescape::Api::V2.merge_page_results(query).map(&:coerce)
     end
   end
 end
