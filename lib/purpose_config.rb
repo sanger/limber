@@ -34,7 +34,7 @@ class PurposeConfig
   def initialize(name, options, store, submission_templates, label_template_config)
     @name = name
     @options = options
-    @submission = options.delete(:submission)
+    @submission = @options.delete(:submission)
     @store = store
     @submission_templates = submission_templates
     @label_templates = label_template_config.fetch('templates')
@@ -82,8 +82,8 @@ class PurposeConfig
 
     def register!
       puts "Creating #{name}"
-      options = { name: name, target_type: options.fetch(:target), purpose_type: options.fetch(:type) }
-      Sequencescape::Api::V2::TubePurpose.create!(options)
+      options_for_creation = { name: name, target_type: @options.fetch(:target), purpose_type: @options.fetch(:type) }
+      Sequencescape::Api::V2::TubePurpose.create!(options_for_creation)
     end
   end
 
@@ -109,7 +109,7 @@ class PurposeConfig
       # maintains the behaviour of version 1, but includes an addditional
       # asset_shape option if configured. It raises an error if the purpose
       # cannot be created.
-      options =
+      options_for_creation =
         {
           name: name,
           stock_plate: config.fetch(:stock_plate, false),
@@ -117,7 +117,7 @@ class PurposeConfig
           input_plate: config.fetch(:input_plate, false),
           size: config.fetch(:size, 96)
         }.merge(config.slice(:asset_shape))
-      Sequencescape::Api::V2::PlatePurpose.create!(options)
+      Sequencescape::Api::V2::PlatePurpose.create!(options_for_creation)
     end
   end
 
