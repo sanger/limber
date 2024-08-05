@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources 'pipeline_work_in_progress', only: :show
-
   get '/health', controller: :health, action: 'show', as: :health
 
   scope 'search', controller: :search do
@@ -17,6 +15,9 @@ Rails.application.routes.draw do
     # Also map logout to destroy
     get 'logout', action: :destroy
   end
+
+  resources 'pipeline_work_in_progress', only: :show
+  resources 'labware_progress', only: :show
 
   # Robots help us batch work up by function, rather than plate
   resources :robots, controller: :robots do

@@ -162,21 +162,25 @@ header.limber-header {
   }
 }
 
-button#btnGroupInboxes,
-button#btnGroupRobots,
-button#btnGroupWip {
+.btn-big-primary {
   @extend .btn;
   @extend .btn-primary;
-  @extend .dropdown-toggle;
   @extend .btn-lg;
   @extend .btn-block;
 }
-
-#btnPipelinesOverview {
+.btn-big-primary-dropdown {
   @extend .btn;
   @extend .btn-primary;
   @extend .btn-lg;
   @extend .btn-block;
+  @extend .dropdown-toggle;
+}
+.btn-big-secondary-dropdown {
+  @extend .btn;
+  @extend .btn-secondary;
+  @extend .btn-lg;
+  @extend .btn-block;
+  @extend .dropdown-toggle;
 }
 
 .btn-upload {
@@ -381,26 +385,41 @@ dl#samples-information {
 
 .state-badge {
   @extend.badge;
+
+  &.pending {
+    @extend.badge-warning;
+  }
+  &.started,
+  &.process_1,
+  &.process_2 {
+    @extend.badge-info;
+  }
+  &.passed {
+    @extend.badge-success;
+  }
+  &.qc_completed {
+    @extend.badge-success;
+  }
+  &.cancelled {
+    @extend .list-group-item-danger;
+  }
+  &.failed {
+    @extend .list-group-item-danger;
+  }
+  &.ongoing {
+    @extend .badge-dark;
+  }
+  &.used {
+    @extend .bg-white;
+    @extend .text-dark;
+    @extend .border;
+  }
 }
-.state-badge.pending {
-  @extend.badge-warning;
-}
-.state-badge.started,
-.state-badge.process_1,
-.state-badge.process_2 {
-  @extend.badge-info;
-}
-.state-badge.passed {
-  @extend.badge-success;
-}
-.state-badge.qc_completed {
-  @extend.badge-success;
-}
-.state-badge.cancelled {
-  @extend .list-group-item-danger;
-}
-.state-badge.failed {
-  @extend .list-group-item-danger;
+
+@for $i from 1 through 10 {
+  .min-width-#{$i} {
+    min-width: #{$i}rem;
+  }
 }
 
 .flash {
@@ -524,6 +543,120 @@ form + .btn-block {
       @extend .small;
     }
   }
+}
+
+// Lightweight cards, designed to be incorporated as part of a larger diagram
+.lightweight-card {
+  @extend .py-1;
+
+  .card-header {
+    @extend .py-1;
+    @extend .px-2;
+    @extend .bg-transparent;
+    @extend .border-0;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .card-body {
+    @extend .py-1;
+    @extend .px-2;
+  }
+}
+
+.stacker {
+  @extend .d-flex;
+}
+
+.stacker + .stacker {
+  margin-top: -1px;
+}
+
+$tableau-10: #4e79a7, #f28e2b, #e15759, #76b7b2, #59a14f, #edc948, #b07aa1, #ff9da7, #9c755f, #bab0ac;
+
+.stacker-graph {
+  @extend .d-flex;
+  @extend .mr-2;
+
+  .pipeline {
+    @extend .d-block;
+
+    position: relative;
+    width: 0.5rem;
+    height: 100%;
+    margin: 0 0.25rem;
+
+    font-size: 0.5rem;
+    color: transparent; // hide text (little arrows)
+  }
+
+  .pipeline-shown {
+    @extend .text-center;
+    @extend .text-white; // show text
+
+    @for $i from 1 through length($tableau-10) {
+      &:nth-child(#{$i}) {
+        background-color: nth($tableau-10, $i);
+      }
+    }
+  }
+
+  .pipeline-purpose::before {
+    // draw a white circle with a black border, centred in the pipeline
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+
+    background-color: white;
+    border: 0.2rem solid black;
+    border-radius: 0.5rem;
+  }
+
+  .pipeline-start {
+    // hide the top half of the background-colour
+    background-image: linear-gradient(to bottom, white 50%, transparent 50%);
+  }
+  .pipeline-end {
+    // hide the bottom half of the background-colour
+    background-image: linear-gradient(to top, white 50%, transparent 50%);
+  }
+  .pipeline-start.pipeline-end {
+    // show the middle bit of the background-colour
+    background-image: linear-gradient(to bottom, white 25%, transparent 25%, transparent 75%, white 75%);
+  }
+
+  // merge multiple pipeline purposes together like an interchange station
+  // add a square over the circles to make it look like they are merged
+  .pipeline-purpose + .pipeline-purpose {
+    &::after {
+      // draw a white square with a black border, centred between two pipelines
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -50%;
+      transform: translate(-50%, -50%);
+
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+
+      background-color: white;
+      border: 0.2rem solid black;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+  }
+}
+
+.stacker > .lightweight-card {
+  @extend .flex-grow-1;
 }
 
 footer.version-info {
