@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'Alert',
+  name: 'LbAlert',
   props: {
     level: { type: String, default: 'info' },
     title: { type: String, default: '' },

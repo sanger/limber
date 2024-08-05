@@ -32,16 +32,16 @@
 </template>
 
 <script>
-import Well from 'shared/components/Well'
+import LbWell from 'shared/components/Well'
 import { rowNumToLetter } from 'shared/wellHelpers'
 
 export default {
-  name: 'Plate',
+  name: 'LbPlate',
   filters: {
     toLetter: rowNumToLetter,
   },
   components: {
-    'lb-well': Well,
+    'lb-well': LbWell,
   },
   props: {
     columns: { type: Number, default: 12 },

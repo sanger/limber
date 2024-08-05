@@ -11,6 +11,6 @@
 
 <script>
 export default {
-  name: 'Sidebar',
+  name: 'LbSidebar',
 }
 </script>

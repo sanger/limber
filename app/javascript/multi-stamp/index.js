@@ -13,9 +13,9 @@ import axios from 'axios'
 
 Vue.use(BootstrapVue)
 
-Vue.component('lb-main-content', MainContent)
-Vue.component('lb-page', Page)
-Vue.component('lb-sidebar', Sidebar)
+Vue.component('LbMainContent', MainContent)
+Vue.component('LbPage', Page)
+Vue.component('LbSidebar', Sidebar)
 
 document.addEventListener('DOMContentLoaded', () => {
   /*

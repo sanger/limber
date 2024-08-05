@@ -18,7 +18,7 @@ import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
 export default {
-  name: 'Well',
+  name: 'LbWell',
   props: {
     position: { type: String, required: true },
     // Previously this was pool index, and was not required. Caused a silent failure (invisible wells)
