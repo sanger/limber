@@ -4,7 +4,6 @@ module.exports = {
     browser: true,
     commonjs: true,
     es6: true,
-    jasmine: true,
     node: true,
   },
   globals: {
@@ -14,9 +13,8 @@ module.exports = {
   plugins: ['jest', 'vue'],
   extends: ['eslint:recommended', 'plugin:vue/recommended', 'plugin:jest/recommended', 'prettier'],
   parserOptions: {
-    parser: '@babel/eslint-parser',
+    ecmaVersion: 'latest',
     sourceType: 'module',
-    requireConfigFile: false,
   },
   rules: {
     'linebreak-style': ['error', 'unix'],
