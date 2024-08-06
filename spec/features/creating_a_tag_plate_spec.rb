@@ -66,12 +66,15 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     stub_api_get(plate_uuid, 'wells', body: json(:well_collection))
 
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
-    stub_api_get('tag_layout_templates', body: templates)
+    stub_v2_tag_layout_templates(templates)
     stub_api_get(plate_uuid, 'submission_pools', body: submission_pools)
 
     stub_api_get(tag_plate_qcable_uuid, body: tag_plate_qcable)
     stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: tag_lot_number, template_uuid: tag_template_uuid))
     stub_api_get('tag-lot-type-uuid', body: json(:tag_lot_type))
+
+    # TODO: {Y24-190} Drop this stub when we no longer need to use V1 in #create_labware! in tagged_plate.rb
+    stub_api_get(tag_template_uuid, body: json(:tag_layout_template, uuid: tag_template_uuid))
   end
 
   shared_examples 'it supports the plate' do
@@ -118,8 +121,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   end
 
   shared_examples 'a recognised template' do
-      let(:template_factory) { :tag_layout_template }
     context 'with a single indexed tag plate' do
+      let(:template_factory) { :v2_tag_layout_template }
 
       context 'when nothing has been done on a cross plate pool' do
         let(:submission_pools) { json(:dual_submission_pool_collection) }
@@ -148,8 +151,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       end
     end
 
-      let(:template_factory) { :dual_index_tag_layout_template }
     context 'with a dual indexed tag plate' do
+      let(:template_factory) { :v2_dual_index_tag_layout_template }
 
       context 'when nothing has been done' do
         let(:submission_pools) { json(:dual_submission_pool_collection) }
@@ -211,11 +214,14 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
   feature 'with no configured templates' do
     let(:acceptable_templates) { nil }
-    let(:templates) do
-      json(:tag_layout_template_collection, size: 2, direction: direction, template_factory: template_factory)
-    end
-    let(:tag_layout_template) { json(template_factory, uuid: tag_template_uuid) }
     let(:direction) { 'column' }
+
+    let(:templates) do
+      create_list(template_factory, 2, direction: direction) do |template, i|
+        template.uuid = "tag-layout-template-#{i}"
+        template.name = "Tag2 layout #{i}"
+      end
+    end
     let(:a2_tag) { '9' }
 
     it_behaves_like 'a recognised template'
@@ -224,8 +230,12 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   feature 'with configured templates' do
     let(:acceptable_templates) { ['Tag2 layout 0'] }
     let(:direction) { 'row' }
+
     let(:templates) do
-      json(:tag_layout_template_collection, size: 2, direction: direction, template_factory: template_factory)
+      create_list(template_factory, 2, direction: direction) do |template, i|
+        template.uuid = "tag-layout-template-#{i}"
+        template.name = "Tag2 layout #{i}"
+      end
     end
     let(:a2_tag) { '2' }
 
@@ -234,7 +244,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     end
 
     feature 'and non matching scanned template' do
-      let(:template_factory) { :dual_index_tag_layout_template }
+      let(:template_factory) { :v2_dual_index_tag_layout_template }
       let(:tag_template_uuid) { 'unrecognised template' }
       let(:tag_error) { 'It is not approved for use with this pipeline.' }
       it_behaves_like 'it rejects the candidate plate'
