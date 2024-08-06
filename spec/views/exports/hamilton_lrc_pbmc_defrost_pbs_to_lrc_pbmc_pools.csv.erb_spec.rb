@@ -121,6 +121,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
   let(:expected_content) do
     [
       ['Workflow', workflow],
+      [],
       [
         'Source Plate',
         'Source Well',
@@ -181,6 +182,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
     let(:expected_content) do
       [
         ['Workflow', workflow],
+        [],
         [
           'Source Plate',
           'Source Well',
