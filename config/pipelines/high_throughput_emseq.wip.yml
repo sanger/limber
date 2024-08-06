@@ -1,0 +1,13 @@
+---
+# This is the pipeline configuration for EMSeq
+EMSeq DNA Prep:
+  filters:
+    request_type_key: limber_emseq_dna_prep
+  relationships:
+    LCMT Lysate: LCMT DNA Adp Lig
+EMSeq WGS Library Prep:
+  relationships:
+    LCMT DNA Adp Lig: LCMT DNA Lib PCR
+EMSeq EM Library Prep:
+  relationships:
+    LCMT DNA Adp Lig: LCMT EM TET2 Ox
