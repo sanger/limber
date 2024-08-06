@@ -72,9 +72,6 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     stub_api_get(tag_plate_qcable_uuid, body: tag_plate_qcable)
     stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: tag_lot_number, template_uuid: tag_template_uuid))
     stub_api_get('tag-lot-type-uuid', body: json(:tag_lot_type))
-
-    # TODO: {Y24-190} Drop this stub when we no longer need to use V1 in #create_labware! in tagged_plate.rb
-    stub_api_get(tag_template_uuid, body: json(:tag_layout_template, uuid: tag_template_uuid))
   end
 
   shared_examples 'it supports the plate' do
