@@ -21,7 +21,7 @@
         <td v-for="column in columns" :key="column">
           <lb-well
             v-bind="wellAt(row, column)"
-            :tooltip_labL="tooltip_label(row, column)"
+            :tooltip_label="tooltip_label(row, column)"
             :position="position(row, column)"
             @onwellclicked="onWellClicked"
           />
