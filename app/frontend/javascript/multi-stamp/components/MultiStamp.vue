@@ -132,8 +132,13 @@ export default {
     // Default volume to define in the UI for the volume control
     defaultVolume: { type: String, required: false, default: null },
 
-    // Acceptable plate purpose names that can be used as source plates e.g. "['PurposeA', 'PurposeB']"
-    // See computed method for conversion to array
+    // Acceptable plate purpose names that can be used as source plates.
+    // Defines a prop `acceptablePurposes` that accepts a string. It is optional and
+    // defaults to a string representation of an array '[]' if not provided.
+    // e.g. "['PurposeA', 'PurposeB']"
+    // See computed method acceptablePurposesArray for conversion to array.
+    // If present is used in scanValidation to check if the user has scanned an
+    // a plate of the correct type.
     acceptablePurposes: { type: String, required: false, default: '[]' },
   },
   data() {

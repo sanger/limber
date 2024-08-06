@@ -350,8 +350,12 @@ const checkPlateWithSameReadyLibrarySubmissions = (cached_submission_ids) => {
   }
 }
 
-// Returns a validator that ensures that the scanned plate does not have an unacceptable plate purpose.
-// plate: The current plate being scanned
+// Checks that the scanned plate's purpose matches one of those in the provided list.
+// Args:
+//   acceptable_purposes - An array of acceptable plate purpose name strings e.g. ['Purpose1', 'Purpose2']
+//   plate - Plate object that contains the plate purpose
+// Returns:
+//   Validation object indicating if the plate has passed the condition
 const checkForUnacceptablePlatePurpose = (acceptable_purposes) => {
   return (plate) => {
     if (!acceptable_purposes || acceptable_purposes.length == 0) {
