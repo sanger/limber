@@ -46,7 +46,7 @@ RSpec.describe LabwareCreators::TenStamp do
       create :aggregation_purpose_with_args_config,
              name: child_purpose_name,
              uuid: child_purpose_uuid,
-             acceptable_purposes: {}
+             acceptable_purposes: nil
     end
 
     before { purpose_config }

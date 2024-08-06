@@ -60,7 +60,7 @@ module LabwareCreators
     end
 
     def labware_wells
-      parent.wells.filter_map { |well| well unless control_well_locations.include?(well.position['name']) }
+      parent.wells.reject { |well| control_well_locations.include?(well.position['name']) }
     end
 
     # check the selected well locations meet rules specified in purpose configuration

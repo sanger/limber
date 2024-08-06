@@ -12,8 +12,7 @@ require 'rails'
   'action_mailer/railtie',
   'active_job/railtie',
   'action_cable/engine',
-  'rails/test_unit/railtie',
-  'sprockets/railtie'
+  'rails/test_unit/railtie'
 ].each do |railtie|
   require railtie.to_s
 rescue LoadError

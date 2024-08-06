@@ -1,0 +1,5 @@
+/*
+Vite entrypoint and redirect
+*/
+
+@import '../stylesheets/limber/pipeline-graph.scss';
