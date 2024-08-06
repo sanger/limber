@@ -361,6 +361,12 @@ const checkForUnacceptablePlatePurpose = (acceptable_purposes) => {
     if (!acceptable_purposes || acceptable_purposes.length == 0) {
       // return valid if no acceptable purposes are provided
       return validScanMessage()
+    } else if (!plate.purpose) {
+      // guard for plate not having a purpose (should not happen)
+      return {
+        valid: false,
+        message: 'The scanned plate does not have a plate purpose',
+      }
     } else if (acceptable_purposes.includes(plate.purpose.name)) {
       // if we find a matching purpose, return valid
       return validScanMessage()

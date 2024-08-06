@@ -663,6 +663,8 @@ describe('checkForUnacceptablePlatePurpose', () => {
     purpose: { name: 'PurposeB' },
   }
 
+  const plate3 = {}
+
   describe('when there is not a list of acceptable purposes', () => {
     const validator = checkForUnacceptablePlatePurpose([])
 
@@ -682,6 +684,13 @@ describe('checkForUnacceptablePlatePurpose', () => {
       expect(validator(plate2)).toEqual({
         valid: false,
         message: 'The scanned plate has an unacceptable plate purpose type (should be PurposeA or PurposeC)',
+      })
+    })
+
+    it('fails when the plate does not have a purpose', () => {
+      expect(validator(plate3)).toEqual({
+        valid: false,
+        message: 'The scanned plate does not have a plate purpose',
       })
     })
   })
