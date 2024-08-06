@@ -16,7 +16,7 @@ LRC PBMC Cryostor:
     name: LabwareCreators::MultiStampTubesUsingTubeRackScan
     args:
       expected_request_type_keys:
-        - 'limber_scrna_core_cdna_prep_v2'
+        - 'limber_scrna_core_cdna_prep_gem_x_5p'
       expected_tube_purpose_names:
         - 'LRC Bank Seq'
         - 'LRC Bank Spare'
@@ -122,7 +122,7 @@ LRC GEM-X 5p cDNA PCR XP:
   :input_plate: false
   # close off the submission when the plate is created
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_cdna_prep_input'
+  :work_completion_request_type: ['limber_scrna_core_cdna_prep_input', 'limber_scrna_core_cdna_prep_gem_x_5p']
 # faculty input plate (alternate to LRC GEM-X 5p cDNA PCR XP intermediate plate)
 LRC GEM-X 5p cDNA Input:
   :asset_type: plate

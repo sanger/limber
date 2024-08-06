@@ -70,7 +70,6 @@ Rails.application.configure do
 
   config.pmb_uri = 'http://example.com:3002/v1/'
 
-  config.assets.debug = true
   config.disable_animations = true
 
   config.sprint_uri = 'http://example_sprint.com/graphql'

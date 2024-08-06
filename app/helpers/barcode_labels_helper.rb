@@ -13,7 +13,7 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
 
     print_job =
       PrintJob.new(
-        number_of_copies: Settings.printers['default_count'],
+        number_of_copies: Settings.printers[:default_count],
         printer_name: default_printer_name,
         label_templates_by_service: JSON.generate(labels.first.label_templates_by_service)
       )
