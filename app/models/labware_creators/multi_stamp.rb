@@ -12,7 +12,8 @@ module LabwareCreators
                     :transfers_creator,
                     :target_rows,
                     :target_columns,
-                    :source_plates
+                    :source_plates,
+                    :acceptable_purposes
 
     self.page = 'multi_stamp'
     self.aliquot_partial = 'standard_aliquot'
@@ -22,6 +23,7 @@ module LabwareCreators
     self.target_rows = 0
     self.target_columns = 0
     self.source_plates = 0
+    self.acceptable_purposes = []
 
     validates :transfers, presence: true
 

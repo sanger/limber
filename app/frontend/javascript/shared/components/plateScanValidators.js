@@ -84,31 +84,6 @@ const checkDuplicates = (plateList) => {
   }
 }
 
-// Returns a validator that checks if there are wells in the scanned plate that
-// are in excess (i.e. the sum of valid transfers across scanned
-// plates is greater than the number of wells in the target plate).
-// It also returns the excess wells' position.
-// excessTransfers: An array of transfers that cannot be included in the
-//                     target plate as all the wells are already occupied.
-const checkExcess = (excessTransfers) => {
-  return (plate) => {
-    const excessWells = []
-    for (let i = 0; i < excessTransfers.length; i++) {
-      if (plate && excessTransfers[i].plateObj.plate.uuid === plate.uuid) {
-        excessWells.push(excessTransfers[i].well.position.name)
-      }
-    }
-    if (excessWells.length > 0) {
-      return {
-        valid: false,
-        message: 'Wells in excess: ' + excessWells.join(', '),
-      }
-    } else {
-      return validScanMessage()
-    }
-  }
-}
-
 // Returns a validator that ensures the plate has a state that matches to the
 // supplied list of states. e.g. to check a plate has a state of 'available'
 // or 'exhausted':
@@ -375,10 +350,41 @@ const checkPlateWithSameReadyLibrarySubmissions = (cached_submission_ids) => {
   }
 }
 
+// Checks that the scanned plate's purpose matches one of those in the provided list.
+// Args:
+//   acceptable_purposes - An array of acceptable plate purpose name strings e.g. ['Purpose1', 'Purpose2']
+//   plate - Plate object that contains the plate purpose
+// Returns:
+//   Validation object indicating if the plate has passed the condition
+const checkForUnacceptablePlatePurpose = (acceptable_purposes) => {
+  return (plate) => {
+    if (!acceptable_purposes || acceptable_purposes.length == 0) {
+      // return valid if no acceptable purposes are provided
+      return validScanMessage()
+    } else if (!plate.purpose) {
+      // guard for plate not having a purpose (should not happen)
+      return {
+        valid: false,
+        message: 'The scanned plate does not have a plate purpose',
+      }
+    } else if (acceptable_purposes.includes(plate.purpose.name)) {
+      // if we find a matching purpose, return valid
+      return validScanMessage()
+    } else {
+      return {
+        valid: false,
+        message:
+          'The scanned plate has an unacceptable plate purpose type (should be ' +
+          acceptable_purposes.join(' or ') +
+          ')',
+      }
+    }
+  }
+}
+
 export {
   checkSize,
   checkDuplicates,
-  checkExcess,
   checkLibraryTypesInAllWells,
   getAllLibrarySubmissionsWithMatchingStateForPlate,
   checkAllLibraryRequestsWithSameReadySubmissions,
@@ -389,4 +395,5 @@ export {
   checkMaxCountRequests,
   checkMinCountRequests,
   checkAllSamplesInColumnsList,
+  checkForUnacceptablePlatePurpose,
 }
