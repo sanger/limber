@@ -1,4 +1,8 @@
-// // Import the component being tested
+// Note the .shared_spec.js file suffix: while not a formal convention, it indicates that this
+// file contains specs that are shared across multiple test files - while not being automatically
+// run as a test suite itself.
+
+// Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 import localVue from '@/javascript/test_support/base_vue.js'
 import { plateFactory, wellFactory, requestFactory } from '@/javascript/test_support/factories.js'
