@@ -13,13 +13,23 @@ LCMT DNA Adp Lig:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :state_changer_class: StateChangers::PlateStateChanger
+  :work_completion_request_type: limber_emseq_dna_prep
+  # TODO: Setting up buttons for creating WGS and EM plates.
+  # When in passed state we will see two buttons for creating WGS and EM plates
+  # because they don't have any filter on the relationship in pipeline config.
 LCMT DNA Lib PCR:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  # TODO: Add submission options for WGS Library Prep here.
+  # See example app/models/labware_creators/multi_stamp_tubes.rb
+  # We will create the request on the parent.
+  # The submission is done first. Then the request on child aliquots are set as you create the child.
 LCMT EM TET2 Ox:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  # TODO: Add submission options for EM Library Prep here.
