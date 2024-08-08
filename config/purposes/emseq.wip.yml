@@ -14,7 +14,7 @@ LCMT DNA Adp Lig:
   :cherrypickable_target: false
   :input_plate: false
   :state_changer_class: StateChangers::PlateStateChanger
-  :work_completion_request_type: limber_emseq_dna_prep
+  :work_completion_request_type: limber_lcm_triomics_dna_prep
   # TODO: Setting up buttons for creating WGS and EM plates.
   # When in passed state we will see two buttons for creating WGS and EM plates
   # because they don't have any filter on the relationship in pipeline config.
