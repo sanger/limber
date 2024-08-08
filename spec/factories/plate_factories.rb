@@ -134,17 +134,7 @@ FactoryBot.define do
     updated_at { '2017-06-29T09:31:59.000+01:00' }
     custom_metadatum_collection { nil }
 
-    # Set up the relationships.
-    # json_client_api handles assigning of relationship information in a frustrating manner
-    # which isn't amenable to setting up objects for testing. Instead it tends to strip
-    # the attributes off the associated records, leaving just a type and an id. This is not
-    # useful if you want to use this data later.
-    # Even more frustratingly is that if you attempt to bypass this and set the attribute directly
-    # the getter attempts to fetch the object via a cache instead.
-    # Here we populate the cache directly with the objects we want. This is *MUCH* faster
-    # than achieving the same through mocks.
-    # We could probably avoid needing to do anything sneaky at all if we instead generated
-    # json-api data and generated the objects from that.
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |plate, evaluator|
       Sequencescape::Api::V2::Plate.associations.each do |association|
         plate._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }

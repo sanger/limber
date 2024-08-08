@@ -30,7 +30,7 @@ module LabwareCreators::TaggedPlateBehaviour
   end
 
   def tag_plates
-    @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)
+    @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(labware, purpose_uuid)
   end
 
   #

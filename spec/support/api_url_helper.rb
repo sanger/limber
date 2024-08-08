@@ -125,6 +125,12 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
     end
 
+    def stub_v2_tag_layout_templates(templates)
+      query = double('tag_layout_template_query')
+      allow(Sequencescape::Api::V2::TagLayoutTemplate).to receive(:paginate).and_return(query)
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).with(query).and_return(templates)
+    end
+
     # Builds the basic v2 tube finding query.
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
