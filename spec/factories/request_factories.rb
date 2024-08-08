@@ -116,6 +116,10 @@ FactoryBot.define do
     factory :aggregation_request do
       request_type { create :aggregation_request_type }
     end
+
+    factory :isc_prep_request do
+      request_type { create :isc_prep_request_type }
+    end
   end
 
   factory :primer_panel, class: Sequencescape::Api::V2::PrimerPanel do
@@ -167,6 +171,12 @@ FactoryBot.define do
     factory :aggregation_request_type do
       name { 'Limber Bespoke Aggregation' }
       key { 'limber_bespoke_aggregation' }
+    end
+
+    # Request type for targeted_nanoseq_isc_prep
+    factory :isc_prep_request_type do
+      name { 'Limber Targeted NanoSeq ISC Prep' }
+      key { 'limber_targeted_nanoseq_isc_prep' }
     end
   end
 end

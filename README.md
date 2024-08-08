@@ -97,6 +97,12 @@ Only one terminal for Limber is needed (unless running the integration suite)
    bundle exec rails s
    ```
 
+1. In a second Limber terminal, start the Vite development server for faster development of frontend resources (will start on port 3036):
+
+   ```shell
+   yarn dev
+   ```
+
 ## Linting and formatting
 
 Linting and formatting are provided by rubocop, prettier and Eslint. I strongly
@@ -117,6 +123,29 @@ yarn prettier --write .
 ```
 
 ## Troubleshooting
+
+### ViteRuby::MissingEntrypointError in Search#new
+
+If you see an error like this:
+
+```
+Showing /code/app/views/layouts/application.html.erb where line #10 raised:
+
+Vite Ruby can't find entrypoints/application.css in the manifests.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  /code/node_modules/rollup/dist/native.js:59
+  		throw new Error(
+```
+
+Then you may need to run `bin/vite build --clear --mode=development` as suggested, and reload the page.
+
+Alternatively, run `./compile_build.sh` to compile the build files or run `yarn dev` to start the Vite development server.
+
+### Changes not updating
 
 If during development changes do not seem to be taking effect, try:
 
@@ -174,15 +203,6 @@ JavaScript unit tests:
 yarn test
 yarn test "path/to/file" -t "name of the test"
 ```
-
-If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install its dependencies properly. One way of doing this is by precompiling the assets:
-
-```bash
-yarn
-rake assets:precompile
-```
-
-This has the added benefit that it reduces the risk of timeouts when the tests are running, as assets will not get compiled on the fly.
 
 ### Writing specs
 
@@ -261,6 +281,18 @@ FactoryBot.define do
   end
 end
 ```
+
+#### Feature debugging
+
+To help with debugging feature specs, temporarily comment out the line `options.add_argument('--headless')` in `spec/spec_helper.rb`. This will allow you to see the browser as the tests run. To pause the execution at certain point, possibly before an expected failure, insert `binding.pry` at the appropriate place in the spec.
+
+To save a screenshot of the browser, insert the line below into the spec.
+
+```rb
+save_screenshot("#{Time.now.iso8601}.png")
+```
+
+Screenshots will be saved to `tmp/capybara/`.
 
 ### Lefthook
 
