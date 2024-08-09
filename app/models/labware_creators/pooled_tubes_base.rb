@@ -96,7 +96,7 @@ module LabwareCreators
     end
 
     def parent_metadata
-      if parent.is_a? Limber::Plate
+      if source_plate.is_a? Sequencescape::Api::V2::Plate
         LabwareMetadata.new(labware: source_plate).metadata
       else
         LabwareMetadata.new(barcode: parent.barcode.machine).metadata
