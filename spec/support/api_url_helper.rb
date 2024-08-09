@@ -123,6 +123,8 @@ module ApiUrlHelper
       else
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end
+
+      stub_v2_labware(plate)
     end
 
     def stub_v2_polymetadata(polymetadata, metadatable_id)
@@ -153,9 +155,16 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
     end
 
-    def stub_v2_user(user)
-      arguments = [{ uuid: user.uuid }]
-      allow(Sequencescape::Api::V2::User).to receive(:find).with(*arguments).and_return([user])
+    def stub_v2_user(user, swipecard = nil)
+      # Find by UUID
+      uuid_args = [{ uuid: user.uuid }]
+      allow(Sequencescape::Api::V2::User).to receive(:find).with(*uuid_args).and_return([user])
+
+      if swipecard
+        # Find by swipecard
+        swipecard_args = [{ user_code: swipecard }]
+        allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
+      end
     end
   end
   extend ClassMethods
