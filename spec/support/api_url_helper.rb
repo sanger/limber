@@ -4,10 +4,11 @@ module ApiUrlHelper
   API_ROOT = 'http://example.com:3000'
 
   def self.included(base)
-    base.extend(ClassMethods)
+    base.extend(V1Helpers)
+    base.extend(V2Helpers)
   end
 
-  module ClassMethods
+  module V1Helpers
     def api_root
       API_ROOT
     end
@@ -70,7 +71,9 @@ module ApiUrlHelper
     def stub_api_put(*components, body:, payload:)
       stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
     end
+  end
 
+  module V2Helpers
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true
@@ -160,17 +163,17 @@ module ApiUrlHelper
       uuid_args = [{ uuid: user.uuid }]
       allow(Sequencescape::Api::V2::User).to receive(:find).with(*uuid_args).and_return([user])
 
-      if swipecard
-        # Find by swipecard
-        swipecard_args = [{ user_code: swipecard }]
-        allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
-      end
+      return unless swipecard
+
+      # Find by swipecard
+      swipecard_args = [{ user_code: swipecard }]
+      allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
     end
   end
-  extend ClassMethods
 end
 
 RSpec.configure do |config|
   config.include ApiUrlHelper
-  config.include ApiUrlHelper::ClassMethods
+  config.include ApiUrlHelper::V1Helpers
+  config.include ApiUrlHelper::V2Helpers
 end
