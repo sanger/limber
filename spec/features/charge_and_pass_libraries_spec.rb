@@ -10,7 +10,6 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
-  let(:default_tube_printer) { 'tube printer 1' }
   let(:work_completion_request) do
     { 'work_completion' => { target: labware_uuid, submissions: submissions, user: user_uuid } }
   end

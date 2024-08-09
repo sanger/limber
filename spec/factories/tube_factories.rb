@@ -119,7 +119,7 @@ FactoryBot.define do
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
     end
 
-    # Mock the relationships. Should probably handle this all a bit differently
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |asset, evaluator|
       asset._cached_relationship(:purpose) { evaluator.purpose }
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)

@@ -1,6 +1,7 @@
 name: Javascript testing
 
 on:
+  # Warning: changing run conditions could prevent coverage report in PR, see codecov.yml for `after_n_builds`
   - push
   - pull_request
 
@@ -29,5 +30,5 @@ jobs:
           flags: javascript,${{ github.event_name }}
           fail_ci_if_error: true
           disable_search: true
-          files: ${{ github.workspace }}/app/javascript/coverage/lcov.info
+          files: ${{ github.workspace }}/app/frontend/coverage/lcov.info
           # Note: see codecov.yml for more additional settings

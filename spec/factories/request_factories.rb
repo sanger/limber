@@ -70,6 +70,7 @@ FactoryBot.define do
     factory :library_request do
       request_type { create :library_request_type }
 
+      # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
       after(:build) { |request, evaluator| request._cached_relationship(:request_type) { evaluator.request_type } }
 
       # Library request with primer panel information
@@ -114,6 +115,10 @@ FactoryBot.define do
     # one at the beginning of the process
     factory :aggregation_request do
       request_type { create :aggregation_request_type }
+    end
+
+    factory :isc_prep_request do
+      request_type { create :isc_prep_request_type }
     end
   end
 
@@ -166,6 +171,12 @@ FactoryBot.define do
     factory :aggregation_request_type do
       name { 'Limber Bespoke Aggregation' }
       key { 'limber_bespoke_aggregation' }
+    end
+
+    # Request type for targeted_nanoseq_isc_prep
+    factory :isc_prep_request_type do
+      name { 'Limber Targeted NanoSeq ISC Prep' }
+      key { 'limber_targeted_nanoseq_isc_prep' }
     end
   end
 end
