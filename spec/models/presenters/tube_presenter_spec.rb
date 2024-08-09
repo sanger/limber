@@ -5,8 +5,6 @@ require 'presenters/tube_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::TubePresenter do
-  has_a_working_api
-
   let(:labware) do
     build :v2_tube,
           receptacle: receptacle,
@@ -41,7 +39,7 @@ RSpec.describe Presenters::TubePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject { Presenters::TubePresenter.new(api: api, labware: labware) }
+  subject { Presenters::TubePresenter.new(labware: labware) }
 
   it_behaves_like 'a labware presenter'
 
