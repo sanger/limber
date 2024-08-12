@@ -51,7 +51,11 @@
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import LoadingModal from '@/javascript/shared/components/LoadingModal.vue'
 import Plate from '@/javascript/shared/components/Plate.vue'
-import { checkDuplicates, checkSize } from '@/javascript/shared/components/plateScanValidators.js'
+import {
+  checkDuplicates,
+  checkSize,
+  checkForUnacceptablePlatePurpose,
+} from '@/javascript/shared/components/plateScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import buildPlateObjs from '@/javascript/shared/plateHelpers.js'
 import { handleFailedRequest, requestIsActive, requestsFromPlates } from '@/javascript/shared/requestHelpers.js'
@@ -127,6 +131,15 @@ export default {
 
     // Default volume to define in the UI for the volume control
     defaultVolume: { type: String, required: false, default: null },
+
+    // Acceptable plate purpose names that can be used as source plates.
+    // Defines a prop `acceptablePurposes` that accepts a string. It is optional and
+    // defaults to a string representation of an array '[]' if not provided.
+    // e.g. "['PurposeA', 'PurposeB']"
+    // See computed method acceptablePurposesArray for conversion to array.
+    // If present is used in scanValidation to check if the user has scanned an
+    // a plate of the correct type.
+    acceptablePurposes: { type: String, required: false, default: '[]' },
   },
   data() {
     return {
@@ -174,6 +187,9 @@ export default {
     },
     targetColumnsNumber() {
       return Number.parseInt(this.targetColumns)
+    },
+    acceptablePurposesArray() {
+      return JSON.parse(this.acceptablePurposes)
     },
     valid() {
       return (
@@ -257,7 +273,7 @@ export default {
       return [
         checkSize(12, 8),
         checkDuplicates(currPlates),
-        // checkExcess(this.excessTransfers)
+        checkForUnacceptablePlatePurpose(this.acceptablePurposesArray),
       ]
     },
   },

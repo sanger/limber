@@ -10,7 +10,12 @@ LRC GEM-X 5p Aggregate:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
-  :creator_class: LabwareCreators::TenStamp
+  :creator_class:
+    name: LabwareCreators::TenStamp
+    args:
+      acceptable_purposes:
+        - LRC GEM-X 5p cDNA Input
+        - LRC GEM-X 5p cDNA PCR XP
   :file_links: []
 # NB. QC concentrations need to be uploaded via QuantHub for the Cherrypick plate in order for the binning
 # calculations in the Dil plate step to work.
@@ -19,9 +24,13 @@ LRC GEM-X 5p Cherrypick:
   :stock_plate: false
   :input_plate: false
   :cherrypickable_target: true
-  :creator_class: LabwareCreators::TenStamp
+  :creator_class:
+    name: LabwareCreators::TenStamp
+    args:
+      acceptable_purposes:
+        - LRC GEM-X 5p Aggregate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_chromium_gem_x_5p_aggregation'
+  :work_completion_request_type: 'limber_scrna_core_aggregation'
   :file_links:
     - name: 'Download Hamilton Aggregate Cherrypick CSV'
       id: 'hamilton_aggregate_cherrypick'

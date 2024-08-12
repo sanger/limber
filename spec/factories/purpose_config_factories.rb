@@ -176,6 +176,14 @@ FactoryBot.define do
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
+    factory :aggregation_purpose_with_args_config do
+      transient { acceptable_purposes { %w[Purpose1 Purpose2] } }
+
+      state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+      creator_class { { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes: acceptable_purposes } } }
+      work_completion_request_type { 'limber_bespoke_aggregation' }
+    end
+
     # Configuration for a plate merge purpose
     factory :merged_plate_purpose_config do
       merged_plate do
