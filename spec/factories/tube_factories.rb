@@ -117,6 +117,7 @@ FactoryBot.define do
       end
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+      custom_metadatum_collection { nil }
     end
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
@@ -133,10 +134,14 @@ FactoryBot.define do
       asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
       asset._cached_relationship(:parents) { evaluator.parents }
       asset._cached_relationship(:receptacle) { evaluator.receptacle }
+
+      if evaluator.custom_metadatum_collection
+        asset._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
+      end
     end
 
     factory :v2_tube_with_metadata do
-      with_belongs_to_associations 'custom_metadatum_collection'
+      transient { custom_metadatum_collection { create :custom_metadatum_collection } }
     end
 
     factory :v2_stock_tube do
