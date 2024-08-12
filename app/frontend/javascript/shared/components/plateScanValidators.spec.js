@@ -9,9 +9,9 @@ import {
   checkLibraryTypesInAllWells,
   checkSize,
   checkDuplicates,
-  checkExcess,
   checkState,
   checkQCableWalkingBy,
+  checkForUnacceptablePlatePurpose,
 } from '@/javascript/shared/components/plateScanValidators'
 
 describe('checkSize', () => {
@@ -62,39 +62,6 @@ describe('checkDuplicates', () => {
     const plate2 = { uuid: 'plate-uuid-2' }
 
     expect(checkDuplicates([empty, plate2])(plate1)).toEqual({ valid: true })
-  })
-})
-
-describe('checkExcess', () => {
-  it('passes when the plate is not the source of excess transfers', () => {
-    const plate = { uuid: 'plate-uuid-1' }
-    const other_plate = { uuid: 'plate-uuid-2' }
-    const excessTransfers = [
-      {
-        plateObj: { plate: other_plate },
-      },
-    ]
-
-    expect(checkExcess(excessTransfers)(plate)).toEqual({ valid: true })
-  })
-
-  it('fails when the plate is the source of excess transfers', () => {
-    const plate = { uuid: 'plate-uuid-1' }
-    const excessTransfers = [
-      {
-        plateObj: { plate: plate },
-        well: { position: { name: 'D11' } },
-      },
-      {
-        plateObj: { plate: plate },
-        well: { position: { name: 'D12' } },
-      },
-    ]
-
-    expect(checkExcess(excessTransfers)(plate)).toEqual({
-      valid: false,
-      message: 'Wells in excess: D11, D12',
-    })
   })
 })
 
@@ -682,6 +649,48 @@ describe('checkPlateWithSameReadyLibrarySubmissions', () => {
         valid: false,
         message:
           'The submission from this plate are different from the submissions from previous scanned plates in this screen.',
+      })
+    })
+  })
+})
+
+describe('checkForUnacceptablePlatePurpose', () => {
+  const plate1 = {
+    purpose: { name: 'PurposeA' },
+  }
+
+  const plate2 = {
+    purpose: { name: 'PurposeB' },
+  }
+
+  const plate3 = {}
+
+  describe('when there is not a list of acceptable purposes', () => {
+    const validator = checkForUnacceptablePlatePurpose([])
+
+    it('validates when there is no list of acceptable purposes', () => {
+      expect(validator(plate1)).toEqual({ valid: true })
+    })
+  })
+
+  describe('when there is a list of acceptable purposes', () => {
+    const validator = checkForUnacceptablePlatePurpose(['PurposeA', 'PurposeC'])
+
+    it('validates when the plate has an acceptable purpose', () => {
+      expect(validator(plate1)).toEqual({ valid: true })
+    })
+
+    it('fails when the plate has an unacceptable purpose', () => {
+      expect(validator(plate2)).toEqual({
+        valid: false,
+        message: 'The scanned plate has an unacceptable plate purpose type (should be PurposeA or PurposeC)',
+      })
+    })
+
+    it('fails when the plate does not have a purpose', () => {
+      expect(validator(plate3)).toEqual({
+        valid: false,
+        message: 'The scanned plate does not have a plate purpose',
       })
     })
   })

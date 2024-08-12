@@ -7,7 +7,13 @@
 
 ## Description
 
-A flexible front end to plate bases pipelines in Sequencescape.
+A flexible front end to pipelines in Sequencescape.
+
+## User Requirements
+
+- Used on laboratory instrument machines often running older browser versions due to vendor and network limitations.
+  The user-agent strings extracted from the nginx access logs of August 2024 indicate that the the oldest browser suspected of using Limber is Chrome 65. This means that the minified code served to browsers should be compatible with [ECMAScript 2018](https://www.w3schools.com/js/js_2018.asp).
+  Please see the [Limber page on Confluence](https://ssg-confluence.internal.sanger.ac.uk/display/PSDPUB/LIMBer) for more information.
 
 ## Initial Setup (using Docker)
 

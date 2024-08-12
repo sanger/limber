@@ -1,10 +1,11 @@
 <%# This is a picking file for a Hamilton robot for LRC PBMC Defrost plate to LRC PBMC Pools plate transfers %>
 <%= CSV.generate_line [
-    'Workflow', 
+    'Workflow',
     @workflow
-  ], 
-  row_sep: '' 
+  ],
+  row_sep: ''
 %>
+<%= CSV.generate_line [], row_sep: "" %>
 <%= CSV.generate_line [
     'Source Plate',
     'Source Well',
@@ -21,7 +22,7 @@
   args = Settings.purposes[@plate.purpose.uuid][:presenter_class][:args]
   default_required_number_of_cells = args[:default_required_number_of_cells]
   study_required_number_of_cells_key = args[:study_required_number_of_cells_key]
-  
+
   maximum_sample_volume = 50.0  # microlitres
   resuspension_volume_per_sample = 2.2  # microlitres
   minimum_resuspension_volume = 10.0  # microlitres
