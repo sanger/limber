@@ -18,14 +18,12 @@ LCM Triomics DNA WGS Library Prep:
   filter:
     request_type_key: limber_lcm_triomics_dna_wgs_library_prep
     library_type: LCM Triomics DNA WGS
-  # TODO: Add relationships for EMSeq WGS Library Prep
-  # relationships:
-  #   LCMT DNA Lib PCR: XXX
+    relationships:
+      LCMT DNA Lib PCR: LCM DNA Lib PCR
 
 LCM Triomics DNA EMSeq Library Prep:
   filter:
     request_type_key: limber_lcm_triomics_dna_emseq_library_prep
     library_type: LCM Triomics DNA EMSeq
-  # TODO: Add relationships for EMSeq EM Library Prep
-  # relationships:
-  #   LCMT EM TET2 Ox: XXX
+  relationships:
+    LCMT EM TET2 Ox: LCMT EM TET2 Stop
