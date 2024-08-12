@@ -8,7 +8,7 @@ RSpec.describe Presenters::StockPlatePresenter do
 
   subject { Presenters::StockPlatePresenter.new(labware: labware) }
 
-  let(:barcode_string) { 'DN2T' }
+  let(:barcode_string) { labware.human_barcode }
 
   it_behaves_like 'a stock presenter'
 end
