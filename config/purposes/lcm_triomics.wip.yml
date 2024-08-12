@@ -23,6 +23,14 @@ LCMT DNA Lib PCR:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :submission_options:
+    LCM Triomics DNA WGS Library Prep:
+      template_name: 'Limber - LCM Triomics DNA WGS Library Prep'
+      request_options:
+        library_type: 'LCM Triomics DNA WGS'
+        fragment_size_required_from: '200'
+        fragment_size_required_to: '800'
+      allowed_extra_barcodes: false
   # TODO: Add submission options for WGS Library Prep here.
   # See example app/models/labware_creators/multi_stamp_tubes.rb
   # We will create the request on the parent.
@@ -32,4 +40,11 @@ LCMT EM TET2 Ox:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  # TODO: Add submission options for EM Library Prep here.
+  :submission_options:
+    LCM Triomics DNA EMSeq Library Prep:
+      template_name: 'Limber - LCM Triomics DNA EMSeq Library Prep'
+      request_options:
+        library_type: 'LCM Triomics DNA EMSeq'
+        fragment_size_required_from: '200'
+        fragment_size_required_to: '800'
+      allowed_extra_barcodes: false
