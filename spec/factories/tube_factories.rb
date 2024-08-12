@@ -117,6 +117,8 @@ FactoryBot.define do
       end
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+
+      # The CustomMetadatumCollection will be cached as a relationship in the after(:build) block.
       custom_metadatum_collection { nil }
     end
 
@@ -147,6 +149,10 @@ FactoryBot.define do
     factory :v2_stock_tube do
       ancestors { nil }
       outer_request { nil }
+
+      factory :v2_stock_tube_with_metadata do
+        transient { custom_metadatum_collection { create :custom_metadatum_collection } }
+      end
     end
   end
 
