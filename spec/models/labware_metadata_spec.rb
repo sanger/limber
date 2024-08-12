@@ -5,81 +5,121 @@ require 'rails_helper'
 RSpec.describe LabwareMetadata do
   include FeatureHelpers
 
-  describe 'with api' do
-    let(:user_uuid) { SecureRandom.uuid }
-    let(:user) { json :v1_user, uuid: user_uuid }
-    let(:plate_uuid) { SecureRandom.uuid }
-    let(:plate) { json :stock_plate, uuid: plate_uuid }
-    let(:plate_with_metadata) { json :stock_plate_with_metadata, uuid: plate_uuid }
+  let(:user) { create :user }
+  let(:updated_metadata) { { created_with_robot: 'robot_barcode' } }
 
-    let(:tube_uuid) { SecureRandom.uuid }
-    let(:tube) { json :stock_tube, uuid: tube_uuid }
-    let(:tube_with_metadata) { json :stock_tube_with_metadata, uuid: tube_uuid }
+  before { stub_v2_user(user) }
 
-    has_a_working_api
+  it 'raises an exception if the barcode is invalid' do
+    error = Sequencescape::Api::ResourceNotFound.new('Not found')
+    invalid_barcode = 'not_a_barcode'
+    allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode: invalid_barcode).and_raise(error)
 
-    it 'raises an exception if the barcode is invalid' do
-      stub_asset_search(456, nil)
-      expect { LabwareMetadata.new(api: api, barcode: 456, user: user_uuid) }.to raise_error(
-        Sequencescape::Api::ResourceNotFound
-      )
+    expect { LabwareMetadata.new(barcode: invalid_barcode, user_uuid: user.uuid) }.to raise_error(error)
+  end
+
+  it 'raises an exception if both labware and barcode are nil' do
+    expect { LabwareMetadata.new }.to raise_error(ArgumentError)
+  end
+
+  context 'plates' do
+    let(:plate) { create :v2_stock_plate }
+    let(:plate_with_metadata) { create :v2_stock_plate_with_metadata }
+
+    before do
+      stub_v2_plate(plate)
+      stub_v2_plate(plate_with_metadata)
     end
 
-    context 'plates' do
-      it 'raises an exception if both plate and barcode are nil' do
-        expect { LabwareMetadata.new(api: api) }.to raise_error(ArgumentError)
-      end
-
-      it 'raises an exception if api is nil' do
-        expect { LabwareMetadata.new(labware: plate) }.to raise_error(ArgumentError)
-      end
-
+    context 'by labware' do
       it 'creates metadata' do
-        metadata = { created_with_robot: 'robot_barcode' }
-        stub = stub_create_labware_metadata(123, plate, plate_uuid, user_uuid, metadata)
+        expect_api_v2_posts(
+          'CustomMetadatumCollection',
+          [user_id: user.id, asset_id: plate.id, metadata: updated_metadata]
+        )
 
-        LabwareMetadata.new(api: api, barcode: 123, user: user_uuid).update!(created_with_robot: 'robot_barcode')
-        expect(stub).to have_been_requested
+        LabwareMetadata.new(labware: plate, user_uuid: user.uuid).update!(updated_metadata)
       end
 
       it 'updates metadata' do
-        metadata =
-          attributes_for(:v1_custom_metadatum_collection)
-            .fetch(:metadata, {})
-            .merge(created_with_robot: 'robot_barcode')
-        stub = stub_update_labware_metadata(123, plate_with_metadata, user, metadata)
+        metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
+        expect(plate_with_metadata.custom_metadatum_collection).to receive(:update!)
+          .with(metadata: metadata)
+          .and_return(true)
 
-        LabwareMetadata.new(api: api, barcode: 123, user: user_uuid).update!(created_with_robot: 'robot_barcode')
-        expect(stub).to have_been_requested
+        LabwareMetadata.new(labware: plate_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
       end
     end
 
-    context 'tubes' do
-      it 'raises an exception if both tube and barcode are nil' do
-        expect { LabwareMetadata.new(api: api) }.to raise_error(ArgumentError)
-      end
-
-      it 'raises an exception if api is nil' do
-        expect { LabwareMetadata.new(labware: tube) }.to raise_error(ArgumentError)
-      end
-
+    context 'by barcode' do
       it 'creates metadata' do
-        metadata = { created_with_robot: 'robot_barcode' }
-        stub = stub_create_labware_metadata(123, tube, tube_uuid, user_uuid, metadata)
+        expect_api_v2_posts(
+          'CustomMetadatumCollection',
+          [user_id: user.id, asset_id: plate.id, metadata: updated_metadata]
+        )
 
-        LabwareMetadata.new(api: api, barcode: 123, user: user_uuid).update!(created_with_robot: 'robot_barcode')
-        expect(stub).to have_been_requested
+        LabwareMetadata.new(barcode: plate.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
       end
 
       it 'updates metadata' do
-        metadata =
-          attributes_for(:v1_custom_metadatum_collection)
-            .fetch(:metadata, {})
-            .merge(created_with_robot: 'robot_barcode')
-        stub = stub_update_labware_metadata(123, plate_with_metadata, user, metadata)
+        metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
+        expect(plate_with_metadata.custom_metadatum_collection).to receive(:update!)
+          .with(metadata: metadata)
+          .and_return(true)
 
-        LabwareMetadata.new(api: api, barcode: 123, user: user_uuid).update!(created_with_robot: 'robot_barcode')
-        expect(stub).to have_been_requested
+        LabwareMetadata
+          .new(barcode: plate_with_metadata.barcode.machine, user_uuid: user.uuid)
+          .update!(updated_metadata)
+      end
+    end
+  end
+
+  context 'tubes' do
+    let(:tube) { create :v2_stock_tube }
+    let(:tube_with_metadata) { create :v2_stock_tube_with_metadata }
+
+    before do
+      stub_v2_tube(tube)
+      stub_v2_tube(tube_with_metadata)
+    end
+
+    context 'by labware' do
+      it 'creates metadata' do
+        expect_api_v2_posts(
+          'CustomMetadatumCollection',
+          [user_id: user.id, asset_id: tube.id, metadata: updated_metadata]
+        )
+
+        LabwareMetadata.new(labware: tube, user_uuid: user.uuid).update!(updated_metadata)
+      end
+
+      it 'updates metadata' do
+        metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
+        expect(tube_with_metadata.custom_metadatum_collection).to receive(:update!)
+          .with(metadata: metadata)
+          .and_return(true)
+
+        LabwareMetadata.new(labware: tube_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
+      end
+    end
+
+    context 'by barcode' do
+      it 'creates metadata' do
+        expect_api_v2_posts(
+          'CustomMetadatumCollection',
+          [user_id: user.id, asset_id: tube.id, metadata: updated_metadata]
+        )
+
+        LabwareMetadata.new(barcode: tube.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
+      end
+
+      it 'updates metadata' do
+        metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
+        expect(tube_with_metadata.custom_metadatum_collection).to receive(:update!)
+          .with(metadata: metadata)
+          .and_return(true)
+
+        LabwareMetadata.new(barcode: tube_with_metadata.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
       end
     end
   end

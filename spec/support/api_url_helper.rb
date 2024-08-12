@@ -156,6 +156,8 @@ module ApiUrlHelper
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
       arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+
+      stub_v2_labware(tube)
     end
 
     def stub_v2_user(user, swipecard = nil)
