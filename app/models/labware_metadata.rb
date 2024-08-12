@@ -18,7 +18,7 @@ class LabwareMetadata # rubocop:todo Style/Documentation
   def update!(metadata)
     if @labware.custom_metadatum_collection&.uuid.present?
       current_metadata = self.metadata.symbolize_keys
-      labware.custom_metadatum_collection.update!(metadata: current_metadata.merge(metadata.symbolize_keys))
+      @labware.custom_metadatum_collection.update!(metadata: current_metadata.merge(metadata.symbolize_keys))
     else
       Sequencescape::Api::V2::CustomMetadatumCollection.create!(
         user_id: @user&.id,
