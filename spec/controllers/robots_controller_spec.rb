@@ -12,14 +12,8 @@ RSpec.describe RobotsController, type: :controller, robots: true do
   describe '#start' do
     has_a_working_api
 
-    let(:user_uuid) { SecureRandom.uuid }
-    let(:plate_uuid) { 'plate_uuid' }
-    let!(:plate) do
-      create :v2_plate,
-             uuid: plate_uuid,
-             purpose_name: 'target_plate_purpose',
-             purpose_uuid: 'target_plate_purpose_uuid'
-    end
+    let(:user) { create :user }
+    let(:plate) { create :v2_plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
     let!(:state_chage) do
       stub_api_post(
@@ -29,8 +23,8 @@ RSpec.describe RobotsController, type: :controller, robots: true do
             'target_state' => 'passed',
             'reason' => 'Robot robot_name started',
             'customer_accepts_responsibility' => false,
-            'target' => 'plate_uuid',
-            'user' => user_uuid,
+            'target' => plate.uuid,
+            'user' => user.uuid,
             'contents' => nil
           }
         },
@@ -38,20 +32,8 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       )
     end
 
-    let!(:metadata_request) do
-      stub_api_post(
-        'custom_metadatum_collections',
-        payload: {
-          custom_metadatum_collection: {
-            user: user_uuid,
-            asset: plate_uuid,
-            metadata: {
-              created_with_robot: 'robot_barcode'
-            }
-          }
-        },
-        body: json(:custom_metadatum_collection)
-      )
+    let(:metadata_payload) do
+      { user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }
     end
 
     setup do
@@ -59,6 +41,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       create :purpose_config,
              uuid: 'target_plate_purpose_uuid',
              state_changer_class: 'StateChangers::DefaultStateChanger'
+      stub_v2_user(user)
       stub_v2_plate(plate)
       bed_labware_lookup(plate)
 
@@ -70,6 +53,8 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     end
 
     it 'adds robot barcode to plate metadata' do
+      expect_api_v2_posts('CustomMetadatumCollection', [metadata_payload])
+
       post :start,
            params: {
              bed_labwares: {
@@ -80,9 +65,9 @@ RSpec.describe RobotsController, type: :controller, robots: true do
              id: 'robot_id'
            },
            session: {
-             user_uuid: user_uuid
+             user_uuid: user.uuid
            }
-      expect(metadata_request).to have_been_requested
+
       expect(flash[:notice]).to match 'Robot robot_name has been started.'
     end
   end
@@ -90,22 +75,15 @@ RSpec.describe RobotsController, type: :controller, robots: true do
   describe '#verify' do
     has_a_working_api
 
-    let(:user_uuid) { SecureRandom.uuid }
-    let(:target_plate_uuid) { 'plate_uuid' }
-    let!(:target_plate) do
+    let(:user) { create :user }
+    let(:target_plate) do
       create :v2_plate,
-             uuid: target_plate_uuid,
              purpose_name: 'target_plate_purpose',
              purpose_uuid: 'target_plate_purpose_uuid',
              parents: [source_plate]
     end
-
-    let(:source_plate_uuid) { 'plate_uuid' }
-    let!(:source_plate) do
-      create :v2_plate,
-             uuid: source_plate_uuid,
-             purpose_name: 'source_plate_purpose',
-             purpose_uuid: 'source_plate_purpose_uuid'
+    let(:source_plate) do
+      create :v2_plate, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
     end
 
     it 'verifies robot and beds' do
@@ -129,7 +107,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
              id: 'robot_id'
            },
            session: {
-             user_uuid: user_uuid
+             user_uuid: user.uuid
            },
            format: :json
     end
