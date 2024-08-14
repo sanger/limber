@@ -11,5 +11,6 @@ services:
     environment:
       - GENERATE_CONFIG=${GENERATE_CONFIG:-true}
       - LOCALHOST=host.docker.internal
+      - PRECOMPILE_ASSETS=${PRECOMPILE_ASSETS:-true}
     volumes:
       - '.:/code'

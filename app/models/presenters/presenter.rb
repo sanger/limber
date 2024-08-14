@@ -8,6 +8,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   included do
     include Form
     include BarcodeLabelsHelper
+    include Presenters::Statemachine::FeatureInStates # provides the can_be_enabled?(states) method
 
     class_attribute :summary_items, :sidebar_partial, :summary_partial, :pooling_tab
 
@@ -39,11 +40,11 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   end
 
   def default_label_count
-    @default_label_count ||= Settings.printers['default_count']
+    @default_label_count ||= Settings.printers[:default_count]
   end
 
   def printer_limit
-    @printer_limit ||= Settings.printers['limit']
+    @printer_limit ||= Settings.printers[:limit]
   end
 
   def summary

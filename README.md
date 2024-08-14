@@ -7,7 +7,13 @@
 
 ## Description
 
-A flexible front end to plate bases pipelines in Sequencescape.
+A flexible front end to pipelines in Sequencescape.
+
+## User Requirements
+
+- Used on laboratory instrument machines often running older browser versions due to vendor and network limitations.
+  The user-agent strings extracted from the nginx access logs of August 2024 indicate that the the oldest browser suspected of using Limber is Chrome 65. This means that the minified code served to browsers should be compatible with [ECMAScript 2018](https://www.w3schools.com/js/js_2018.asp).
+  Please see the [Limber page on Confluence](https://ssg-confluence.internal.sanger.ac.uk/display/PSDPUB/LIMBer) for more information.
 
 ## Initial Setup (using Docker)
 
@@ -32,6 +38,8 @@ Variations on this command include:
   off again.
 - `GENERATE_CONFIG=false docker-compose up` which will avoid running the
   `config:generate` rake task as Limber is started.
+- `PRECOMPILE_ASSETS=false docker-compose up` which will avoid precompiling the
+  assets as Limber is started.
 - `docker-compose up --build` which forces a rebuild of the Docker image if your
   changes to the Dockerfile or related scripts don't seem to be taking effect.
 
@@ -39,8 +47,31 @@ Limber should be accessible via [http://localhost:3001](http://localhost:3001).
 
 ## Initial Setup (using native installation)
 
-Steps must be followed in either the Sequencescape repository or this Limber
-repository, as indicated:
+Because Limber is only a frontend that relies on SequenceScape as a backend, SequenceScape and it's jobs **must** be started first. SequenceScape **will** work standalone without Limber, Limber **won't** run without SequenceScape.
+
+> Note that this will require SequenceScape to have already been [setup](https://github.com/sanger/sequencescape/blob/develop/README.md) before
+
+1. The post deploy task will generate required records for Record Loader if they haven't been already. In a Sequencescape terminal, perform the post deploy actions:
+
+   ```shell
+   bundle exec rake application:post_deploy
+   ```
+
+1. In the same terminal, start the local server (will start on port 3000):
+
+   ```shell
+   bundle exec rails s
+   ```
+
+1. Open a **second** SequenceScape terminal, start the delayed job processor. This ensures that background processes are being handled:
+
+   ```shell
+   bundle exec rake jobs:work
+   ```
+
+All the setup for SequenceScape will have been completed. This should be done first as Limber will rely on some of the data generated previosly.
+
+Only one terminal for Limber is needed (unless running the integration suite)
 
 1. In Limber, ensure the appropriate version of Ruby is installed. The command
    here is for `rbenv` but you may want to use a different Ruby version manager:
@@ -58,43 +89,26 @@ repository, as indicated:
 1. In Limber, install the yarn dependencies:
 
    ```shell
+   nvm use  # If you manage node environments with nvm
    yarn install
    ```
 
-1. In Sequencescape, perform the post deploy actions:
-
-   ```shell
-   bundle exec rake application:post_deploy
-   ```
-
-1. In Sequencescape, start the local server (will start on port 3000):
-
-   ```shell
-   bundle exec rails s
-   ```
-
-1. In Limber, connect to Sequencescape to configure required data:
+1. In Limber, connect to Sequencescape to configure required data. This requires SequenceScape to be running, which will have been done in the previous steps:
 
    ```shell
    bundle exec rake config:generate
-   ```
-
-1. In Sequencescape, configure all Limber required data:
-
-   ```shell
-   bundle exec rake limber:setup
-   ```
-
-1. In Sequencescape, start the delayed job processor
-
-   ```shell
-   bundle exec rake jobs:work
    ```
 
 1. In Limber, start the local server (will start on port 3001):
 
    ```shell
    bundle exec rails s
+   ```
+
+1. In a second Limber terminal, start the Vite development server for faster development of frontend resources (will start on port 3036):
+
+   ```shell
+   yarn dev
    ```
 
 ## Linting and formatting
@@ -117,6 +131,29 @@ yarn prettier --write .
 ```
 
 ## Troubleshooting
+
+### ViteRuby::MissingEntrypointError in Search#new
+
+If you see an error like this:
+
+```
+Showing /code/app/views/layouts/application.html.erb where line #10 raised:
+
+Vite Ruby can't find entrypoints/application.css in the manifests.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  /code/node_modules/rollup/dist/native.js:59
+  		throw new Error(
+```
+
+Then you may need to run `bin/vite build --clear --mode=development` as suggested, and reload the page.
+
+Alternatively, run `./compile_build.sh` to compile the build files or run `yarn dev` to start the Vite development server.
+
+### Changes not updating
 
 If during development changes do not seem to be taking effect, try:
 
@@ -166,7 +203,7 @@ Ruby unit and feature tests:
 bundle exec rspec
 ```
 
-### Jest
+### Vitest
 
 JavaScript unit tests:
 
@@ -174,15 +211,6 @@ JavaScript unit tests:
 yarn test
 yarn test "path/to/file" -t "name of the test"
 ```
-
-If you get '[Webpacker] Compilation Failed' when trying to run specs, you might need to get yarn to install its dependencies properly. One way of doing this is by precompiling the assets:
-
-```bash
-yarn
-rake assets:precompile
-```
-
-This has the added benefit that it reduces the risk of timeouts when the tests are running, as assets will not get compiled on the fly.
 
 ### Writing specs
 
@@ -205,6 +233,18 @@ There are a few tools available to assist with writing specs:
 Request stubs are provided by webmock. Two helper methods will assist with the majority of mocking requests to the api, `stub_api_get` and `stub_api_post`. See `spec/support/api_url_helper.rb` for details.
 
 **Note**: Due to the way the api functions, the factories don't yet support nested associations.
+
+#### Feature debugging
+
+To help with debugging feature specs, temporarily comment out the line `options.add_argument('--headless')` in `spec/spec_helper.rb`. This will allow you to see the browser as the tests run. To pause the execution at certain point, possibly before an expected failure, insert `binding.pry` at the appropriate place in the spec.
+
+To save a screenshot of the browser, insert the line below into the spec.
+
+```rb
+save_screenshot("#{Time.now.iso8601}.png")
+```
+
+Screenshots will be saved to `tmp/capybara/`.
 
 ### Lefthook
 

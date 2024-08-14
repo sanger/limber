@@ -6,13 +6,13 @@ group :default do
   gem 'bootsnap'
   gem 'rails'
 
-  # Lets us easily inline our svg to allow styling. Supports the rails asset pipeline.
-  gem 'inline_svg'
-
   gem 'exception_notification'
   gem 'rake'
   gem 'state_machines'
-  gem 'webpacker'
+
+  # Build dependencies
+  gem 'vite_rails'
+  gem 'vite_ruby'
 
   # Adds easy conversions between units
   gem 'ruby-units'
@@ -34,7 +34,6 @@ group :default do
 
   gem 'puma'
   gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
-  gem 'sprockets-rails'
 end
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -46,26 +45,11 @@ group :test do
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
-  gem 'rspec-rails', '6.1.2'
+  gem 'rspec-rails', '6.1.3'
   gem 'selenium-webdriver', '~> 4.1', require: false
   gem 'simplecov', require: false
   gem 'simplecov-lcov', require: false
   gem 'webmock'
-end
-
-group :development, :test do
-  gem 'uglifier'
-
-  # Bootstrap is a css framework
-  # Pinning to v4 as bootstrap 5 drops compatibility with the latest versions of chrome and FF on XP
-  # Some lab machines are locked to XP due to vendor compatibility
-  gem 'bootstrap', '~>4'
-
-  # gem 'coffee-rails', require: false
-  # Use jquery as the JavaScript library
-  gem 'jquery-rails'
-  gem 'sass-rails'
-  gem 'select2-rails'
 end
 
 group :development do

@@ -152,6 +152,7 @@ FactoryBot.define do
       end
     end
 
+    # Configuration for a Targeted NanoSeq dilution plate
     factory :targeted_nano_seq_customer_csv_file_upload_purpose_config do
       csv_file_upload do
         {
@@ -165,12 +166,21 @@ FactoryBot.define do
           pcr_cycles_max: 20
         }
       end
+      expected_binning_request_type { 'limber_targeted_nanoseq_isc_prep' }
     end
 
     # Configuration for an aggregation plate
     factory :aggregation_purpose_config do
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
       creator_class { 'LabwareCreators::TenStamp' }
+      work_completion_request_type { 'limber_bespoke_aggregation' }
+    end
+
+    factory :aggregation_purpose_with_args_config do
+      transient { acceptable_purposes { %w[Purpose1 Purpose2] } }
+
+      state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+      creator_class { { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes: acceptable_purposes } } }
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
@@ -293,6 +303,24 @@ FactoryBot.define do
             pooling: pooling
           }
         }
+      end
+    end
+
+    factory :banking_plate_purpose_config do
+      name { 'banking-plate-purpose' }
+      presenter_class { 'Presenters::StandardPresenter' }
+      file_links do
+        [
+          {
+            name: 'Download PBMC Bank Tubes Content Report',
+            id: 'pbmc_bank_tubes_content_report',
+            states: {
+              includes: 'passed',
+              excludes: ['failed', :cancelled]
+            }
+          },
+          { name: 'Download Cellaca 4 Count CSV', id: 'hamilton_lrc_pbmc_bank_to_cellaca_4_count' }
+        ]
       end
     end
 

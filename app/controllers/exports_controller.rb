@@ -5,6 +5,7 @@ require 'csv'
 # The exports controller handles the generation of exported files,
 # such as CSV files used to drive robots.
 class ExportsController < ApplicationController
+  include ExportsFilenameBehaviour
   helper ExportsHelper
   before_action :locate_labware, only: :show
   rescue_from Export::NotFound, with: :not_found
@@ -16,7 +17,8 @@ class ExportsController < ApplicationController
     @ancestor_tubes = locate_ancestor_tubes
     @ancestor_plate_list = locate_ancestor_plate_list
 
-    set_filename if export.filename
+    # Set the filename for the export via the ExportsFilenameBehaviour concern
+    set_filename(@labware, @page) if export.filename
 
     render export.csv, locals: { test: 'this' }
   end
@@ -69,13 +71,6 @@ class ExportsController < ApplicationController
 
   def include_parameters
     export.plate_includes || 'wells'
-  end
-
-  def set_filename
-    filename = export.csv
-    filename += "_#{@labware.human_barcode}" if export.filename['include_barcode']
-    filename += "_#{@page + 1}" if export.filename['include_page']
-    response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.csv\""
   end
 
   def ancestor_tube_details(ancestor_results)

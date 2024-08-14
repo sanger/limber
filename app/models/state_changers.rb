@@ -83,8 +83,17 @@ module StateChangers
       @purpose_config ||= Settings.purposes[purpose_uuid]
     end
 
-    def work_completion_request_type
-      @work_completion_request_type ||= purpose_config[:work_completion_request_type]
+    def work_completion_request_types
+      @work_completion_request_types ||= parse_work_completion_request_types
+    end
+
+    # config can be a single request type or an array of request types
+    # convert them here into a consistent array format
+    def parse_work_completion_request_types
+      config = purpose_config[:work_completion_request_type]
+      return config if config.is_a?(Array)
+
+      [config]
     end
 
     # rubocop:todo Style/OptionalBooleanParameter
@@ -97,7 +106,7 @@ module StateChangers
 
     def complete_outstanding_requests
       in_prog_submissions =
-        v2_labware.in_progress_submission_uuids(request_type_to_complete: work_completion_request_type)
+        v2_labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
       return if in_prog_submissions.blank?
 
       api.work_completion.create!(submissions: in_prog_submissions, target: v2_labware.uuid, user: user_uuid)

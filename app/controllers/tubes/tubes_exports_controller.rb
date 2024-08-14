@@ -5,6 +5,7 @@ require 'csv'
 # The exports controller handles the generation of exported files for tubes,
 # such as CSV files for mbrave files.
 class Tubes::TubesExportsController < ApplicationController
+  include ExportsFilenameBehaviour
   helper ExportsHelper
   before_action :locate_labware, only: :show
   rescue_from Export::NotFound, with: :not_found
@@ -13,7 +14,8 @@ class Tubes::TubesExportsController < ApplicationController
     @page = params.fetch(:page, 0).to_i
     @workflow = export.workflow
 
-    set_filename if export.filename
+    # Set the filename for the export via the ExportsFilenameBehaviour concern
+    set_filename(@labware, @page) if export.filename
 
     render export.csv
   end
@@ -52,13 +54,5 @@ class Tubes::TubesExportsController < ApplicationController
   # https://jsonapi.org/format/#fetching-sparse-fieldsets
   def select_parameters
     export.tube_selects || nil
-  end
-
-  def set_filename
-    filename = export.csv
-    file_extension = export.file_extension || 'csv'
-    filename += "_#{@labware.human_barcode}" if export.filename['include_barcode']
-    filename += "_#{@page + 1}" if export.filename['include_page']
-    response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}.#{file_extension}\""
   end
 end

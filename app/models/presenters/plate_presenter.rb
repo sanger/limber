@@ -20,8 +20,8 @@ module Presenters
     self.pooling_tab = 'plates/pooling_tab'
     self.samples_partial = 'plates/samples_tab'
 
-    # summary_items is a hash of a label label, and a symbol representing the
-    # method to call to get the value
+    # Initializes `summary_items` with a hash mapping display names to their corresponding plate attributes.
+    # Used by the summary panel to display information about the plate in the GUI.
     self.summary_items = {
       'Barcode' => :barcode,
       'Number of wells' => :number_of_wells,
@@ -102,10 +102,14 @@ module Presenters
 
     alias child_assets child_plates
 
+    # Returns the CSV file links for the plate based on the configured states.
+    #
+    # @return [Array<Array<String, Array>>] the CSV file links
     def csv_file_links
       links =
         purpose_config
           .fetch(:file_links, [])
+          .select { |link| can_be_enabled?(link&.states) }
           .map do |link|
             [
               link.name,

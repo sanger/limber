@@ -11,8 +11,8 @@
     :plate_a: bac135c0-222b-11e4-8ce2-44fb42fffecc
     :plate_b: bac2e370-222b-11e4-8ce2-44fb42fffecc
     :tube: bacaf9c0-222b-11e4-8ce2-44fb42fffecc
-  limit: 5
-  default_count: 2
+  :limit: 5
+  :default_count: 2
 :purposes: {}
 :purpose_uuids: {}
 :robots:

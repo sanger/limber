@@ -152,30 +152,33 @@ ROBOT_CONFIG =
       }
     )
 
+    # Used for ISC and re-ISC pipelines
+    # Handles both LB Lib PCR-XP and LTN Lib PCR XP (for targeted nanoseq) source plates
+    # 4:1 pooling into the destination LB Lib PrePool plate
     custom_robot(
       'nx-8-lib-pcr-xp-to-isch-lib-pool',
       name: 'nx-8 Lib PCR-XP => LB Lib PrePool',
       beds: {
         bed(2).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 2'
         },
         bed(5).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 5'
         },
         bed(3).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 3'
         },
         bed(6).barcode => {
-          purpose: 'LB Lib PCR-XP',
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
           states: %w[passed qc_complete],
           child: bed(4).barcode,
           label: 'Bed 6'
@@ -183,16 +186,7 @@ ROBOT_CONFIG =
         bed(4).barcode => {
           purpose: 'LB Lib PrePool',
           states: %w[pending started],
-          parents: [
-            bed(2).barcode,
-            bed(5).barcode,
-            bed(3).barcode,
-            bed(6).barcode,
-            bed(2).barcode,
-            bed(5).barcode,
-            bed(3).barcode,
-            bed(6).barcode
-          ],
+          parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode],
           target_state: 'passed',
           label: 'Bed 4'
         }
@@ -1185,6 +1179,52 @@ ROBOT_CONFIG =
       }
     )
 
+    # WIP: Activate for ANOSPP release
+    # GBS pipeline bed verification
+    # Allows use of either GBS or ANOSPP 96-well source plates
+    # GBS-96 Stock or LANS-96 Lysate to GBS PCR1
+    # Transfers 4:1 (1-4 source 96-well plates of either type to 1 destination 384-well plate)
+    # custom_robot(
+    #   'mosquito-gbs-96-stock-to-gbs-pcr1',
+    #   name: 'Mosquito GBS-96 Stock or LANS-96 Lysate => GBS PCR1',
+    #   beds: {
+    #     bed(1).barcode => {
+    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
+    #       states: %w[passed qc_complete],
+    #       child: bed(3).barcode,
+    #       label: 'Bed 1'
+    #     },
+    #     bed(2).barcode => {
+    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
+    #       states: %w[passed qc_complete],
+    #       child: bed(3).barcode,
+    #       label: 'Bed 2'
+    #     },
+    #     bed(3).barcode => {
+    #       purpose: 'GBS PCR1',
+    #       states: %w[pending],
+    #       parents: [bed(1).barcode, bed(2).barcode, bed(4).barcode, bed(5).barcode],
+    #       target_state: 'passed',
+    #       label: 'Bed 3'
+    #     },
+    #     bed(4).barcode => {
+    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
+    #       states: %w[passed qc_complete],
+    #       child: bed(3).barcode,
+    #       label: 'Bed 4'
+    #     },
+    #     bed(5).barcode => {
+    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
+    #       states: %w[passed qc_complete],
+    #       child: bed(3).barcode,
+    #       label: 'Bed 5'
+    #     }
+    #   },
+    #   destination_bed: bed(3).barcode,
+    #   class: 'Robots::QuadrantRobot'
+    # )
+
+    # WIP: Delete this version for ANOSPP release
     custom_robot(
       'mosquito-gbs-96-stock-to-gbs-pcr1',
       name: 'Mosquito GBS-96 Stock => GBS PCR1',
@@ -1532,6 +1572,26 @@ ROBOT_CONFIG =
       }
     )
 
+    # For scRNA Core pipeline cherrypick to 5p Dil plate
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-ge-dil',
+      name: 'Hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p GE Dil',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p Cherrypick',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p GE Dil',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
     # For Chromium 10x pipeline 5p dilution to frag 2xp
     custom_robot(
       'hamilton-lbc-5p-gex-dil-to-lbc-5p-gex-frag-2xp',
@@ -1552,6 +1612,26 @@ ROBOT_CONFIG =
       }
     )
 
+    # For scRNA Core pipeline 5p dilution to frag 2xp
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-ge-dil-to-lrc-gem-x-5p-ge-frag-2xp',
+      name: 'Hamilton LRC GEM-X 5p GE Dil => LRC GEM-X 5p GE Frag 2XP',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p GE Dil',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p GE Frag 2XP',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
     # For Chromium 10x pipeline 5p frag 2xp to ligxp
     custom_robot(
       'hamilton-lbc-5p-gex-frag-2xp-to-lbc-5p-gex-ligxp',
@@ -1564,6 +1644,26 @@ ROBOT_CONFIG =
         },
         bed(3).barcode => {
           purpose: 'LBC 5p GEX LigXP',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    # For scRNA Core pipeline 5p frag 2xp to ligxp
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-ge-frag-2xp-to-lrc-gem-x-5p-ge-ligxp',
+      name: 'Hamilton LRC GEM-X 5p GE Frag 2XP => LRC GEM-X 5p GE LigXP',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p GE Frag 2XP',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p GE LigXP',
           states: ['pending'],
           label: 'Bed 3',
           target_state: 'passed',
@@ -3474,30 +3574,6 @@ ROBOT_CONFIG =
 
     # scRNA pipeline
     # Hamilton STARlet bed verification
-    # LRC PBMC Defrost PBS to LRC PBMC Pools
-    # Transfers 1:1
-    custom_robot(
-      'hamilton-starlet-lrc-pbmc-defrost-pbs-to-lrc-pbmc-pools',
-      name: 'Hamilton STARlet LRC PBMC Defrost PBS => LRC PBMC Pools',
-      require_robot: true,
-      beds: {
-        bed(15).barcode => {
-          purpose: 'LRC PBMC Defrost PBS',
-          states: ['passed'],
-          label: 'Bed 15'
-        },
-        bed(14).barcode => {
-          purpose: 'LRC PBMC Pools',
-          states: ['pending'],
-          label: 'Bed 14',
-          parent: bed(15).barcode,
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # scRNA pipeline
-    # Hamilton STARlet bed verification
     # Transfers 1:1
     # LRC PBMC Pools or LRC PBMC Pools Input to LRC GEM-X 5p Chip
     custom_robot(
@@ -3563,6 +3639,46 @@ ROBOT_CONFIG =
           label: 'Bed 5',
           parent: bed(15).barcode,
           target_state: 'passed'
+        }
+      }
+    )
+
+    # ANOSPP Beckman bed verification
+    # LANS-96 Stock ethanol removal step
+    custom_robot(
+      'beckman-lans-96-stock-preparation',
+      name: 'Beckman LANS-96 Stock Preparation',
+      require_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LANS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # ANOSPP Beckman bed verification
+    # LANS-96 Stock to LANS-96 Lysate
+    # one to one stamp with added randomised controls
+    custom_robot(
+      'beckman-lans-96-stock-to-lans-96-lysate',
+      name: 'Beckman LANS-96 Stock => LANS-96 Lysate',
+      require_robot: true,
+      beds: {
+        bed(9).barcode => {
+          purpose: 'LANS-96 Stock',
+          states: ['passed'],
+          label: 'Bed 9',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LANS-96 Lysate',
+          states: ['pending'],
+          label: 'Bed 14',
+          target_state: 'passed',
+          parent: bed(9).barcode
         }
       }
     )

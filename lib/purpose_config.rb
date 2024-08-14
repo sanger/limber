@@ -2,26 +2,25 @@
 
 # This is used as part of a rake task, and will be run within a console.
 # rubocop:disable Rails/Output
-# rubocop:disable Metrics/ParameterLists
 
 # Purpose config is used to translate the configuration options in the purposes/*.yml
 # files into the serialized versions in the config/settings/*.yml
 # It also handles the registration of new purposes within Sequencescape.
 class PurposeConfig
-  attr_reader :name, :options, :store, :api
+  attr_reader :name, :options, :store
 
   class_attribute :default_state_changer, :default_options
 
   self.default_state_changer = 'StateChangers::DefaultStateChanger'
 
-  def self.load(name, options, store, api, submission_templates, label_template_config)
+  def self.load(name, options, store, submission_templates, label_template_config)
     case options.fetch(:asset_type)
     when 'plate'
-      PurposeConfig::Plate.new(name, options, store, api, submission_templates, label_template_config)
+      PurposeConfig::Plate.new(name, options, store, submission_templates, label_template_config)
     when 'tube'
-      PurposeConfig::Tube.new(name, options, store, api, submission_templates, label_template_config)
+      PurposeConfig::Tube.new(name, options, store, submission_templates, label_template_config)
     when 'tube_rack'
-      PurposeConfig::TubeRack.new(name, options, store, api, submission_templates, label_template_config)
+      PurposeConfig::TubeRack.new(name, options, store, submission_templates, label_template_config)
     else
       raise "Unknown purpose type #{options.fetch(:asset_type)} for #{name}"
     end
@@ -32,12 +31,11 @@ class PurposeConfig
   # @param options [Hash] values under the name key from the purposes.yml file
   # @param label_template_config [Hash] hash version of the label_template_config.yml file
   #
-  def initialize(name, options, store, api, submission_templates, label_template_config)
+  def initialize(name, options, store, submission_templates, label_template_config)
     @name = name
     @options = options
-    @submission = options.delete(:submission)
+    @submission = @options.delete(:submission)
     @store = store
-    @api = api
     @submission_templates = submission_templates
     @label_templates = label_template_config.fetch('templates')
     @label_template_defaults = label_template_config.fetch('defaults_by_printer_type')
@@ -84,7 +82,8 @@ class PurposeConfig
 
     def register!
       puts "Creating #{name}"
-      api.tube_purpose.create!(name: name, target_type: options.fetch(:target), type: options.fetch(:type))
+      options_for_creation = { name: name, target_type: @options.fetch(:target), purpose_type: @options.fetch(:type) }
+      Sequencescape::Api::V2::TubePurpose.create!(options_for_creation)
     end
   end
 
@@ -110,7 +109,7 @@ class PurposeConfig
       # maintains the behaviour of version 1, but includes an addditional
       # asset_shape option if configured. It raises an error if the purpose
       # cannot be created.
-      options =
+      options_for_creation =
         {
           name: name,
           stock_plate: config.fetch(:stock_plate, false),
@@ -118,7 +117,7 @@ class PurposeConfig
           input_plate: config.fetch(:input_plate, false),
           size: config.fetch(:size, 96)
         }.merge(config.slice(:asset_shape))
-      Sequencescape::Api::V2::PlatePurpose.create!(options)
+      Sequencescape::Api::V2::PlatePurpose.create!(options_for_creation)
     end
   end
 
@@ -147,5 +146,4 @@ class PurposeConfig
     }
   end
 end
-# rubocop:enable Metrics/ParameterLists
 # rubocop:enable Rails/Output
