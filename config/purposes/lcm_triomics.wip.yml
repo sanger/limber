@@ -15,6 +15,7 @@ LCMT DNA Adp Lig:
   :input_plate: false
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: limber_lcm_triomics_dna_prep
+  :presenter_class: Presenters::PermissivePresenter
   # TODO: Setting up buttons for creating WGS and EM plates.
   # When in passed state we will see two buttons for creating WGS and EM plates
   # because they don't have any filter on the relationship in pipeline config.
@@ -32,6 +33,7 @@ LCMT DNA Lib PCR:
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
+  :presenter_class: Presenters::PermissivePresenter
   # TODO: See labware creator example for a similar submission.
   # app/models/labware_creators/multi_stamp_tubes.rb
   # We will create the request on the parent.
@@ -50,3 +52,4 @@ LCMT EM TET2 Ox:
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
       allowed_extra_barcodes: false
+  :presenter_class: Presenters::PermissivePresenter
