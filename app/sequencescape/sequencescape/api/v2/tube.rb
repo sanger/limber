@@ -16,16 +16,17 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   self.tube = true
 
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
-  has_many :descendants, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
-  has_many :parents, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :child_plates, class_name: 'Sequencescape::Api::V2::Plate'
   has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
-  has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
-
+  has_many :descendants, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :direct_submissions
+  has_many :parents, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :state_changes
   has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
+
+  has_one :custom_metadatum_collection
+  has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
 
   property :created_at, type: :time
   property :updated_at, type: :time

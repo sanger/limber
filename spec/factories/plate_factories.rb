@@ -116,6 +116,9 @@ FactoryBot.define do
       # Array of states for individual wells, used to overide plate state for, eg. failed wells
       well_states { [state] * size }
       is_stock { false }
+
+      # The CustomMetadatumCollection will be cached as a relationship in the after(:build) block.
+      custom_metadatum_collection { nil }
     end
 
     sequence(:id) { |i| i }
@@ -132,7 +135,6 @@ FactoryBot.define do
     state { 'pending' }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
-    custom_metadatum_collection { nil }
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |plate, evaluator|
@@ -150,6 +152,15 @@ FactoryBot.define do
       end
       RSpec::Mocks.allow_message(plate, :ancestors).and_return(ancestors_scope)
       plate._cached_relationship(:parents) { evaluator.parents }
+
+      if evaluator.custom_metadatum_collection
+        plate._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
+      end
+    end
+
+    # Set up a plate with a default custom_metadatum_collection.
+    factory :v2_plate_with_metadata do
+      transient { custom_metadatum_collection { create :custom_metadatum_collection } }
     end
 
     # Set up a stock plate. Changed behaviour relative to standard plate:
@@ -159,7 +170,6 @@ FactoryBot.define do
     # - Sets is_stock to true, which ensures the stock_plate matches itself
     factory :v2_stock_plate do
       transient do
-        barcode_number { 2 }
         well_factory { :v2_stock_well }
         purpose_name { 'Limber Cherrypicked' }
         purpose_uuid { 'stock-plate-purpose-uuid' }
@@ -168,6 +178,10 @@ FactoryBot.define do
       end
 
       state { 'passed' }
+
+      factory :v2_stock_plate_with_metadata do
+        transient { custom_metadatum_collection { create :custom_metadatum_collection } }
+      end
     end
 
     # Sets up a plate of GBS requests with configured primer panels

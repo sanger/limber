@@ -89,6 +89,6 @@ class LabwareController < ApplicationController
   end
 
   def presenter_for(labware)
-    Presenters.lookup_for(labware).new(api: api, labware: labware)
+    Presenters.lookup_for(labware).new(labware: labware)
   end
 end

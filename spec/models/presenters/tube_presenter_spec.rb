@@ -5,8 +5,6 @@ require 'presenters/tube_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::TubePresenter do
-  has_a_working_api
-
   let(:labware) do
     build :v2_tube,
           receptacle: receptacle,
@@ -35,13 +33,13 @@ RSpec.describe Presenters::TubePresenter do
       ['Barcode', 'NT6T <em>3980000006844</em>'],
       ['Tube type', purpose_name],
       ['Current tube state', state],
-      ['Input plate barcode', 'DN2T'],
+      ['Input plate barcode', labware.stock_plate.human_barcode],
       ['Created on', '2016-10-19']
     ]
   end
   let(:sidebar_partial) { 'default' }
 
-  subject { Presenters::TubePresenter.new(api: api, labware: labware) }
+  subject { Presenters::TubePresenter.new(labware: labware) }
 
   it_behaves_like 'a labware presenter'
 

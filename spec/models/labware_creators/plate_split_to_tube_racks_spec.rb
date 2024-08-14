@@ -17,7 +17,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     expect(described_class.page).to eq 'plate_split_to_tube_racks'
   end
 
-  let(:user_uuid) { SecureRandom.uuid }
+  let(:user) { create :user }
+  let(:user_uuid) { user.uuid }
   let(:child_sequencing_tube_purpose_uuid) { SecureRandom.uuid }
   let(:child_sequencing_tube_purpose_name) { 'Seq Child Purpose' }
   let(:child_contingency_tube_purpose_uuid) { SecureRandom.uuid }
@@ -825,61 +826,21 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       let(:child_tube_4_v1) { json :tube, uuid: child_tube_4_uuid, barcode_prefix: 'FX', barcode_number: 12 }
       let(:child_tube_5_v1) { json :tube, uuid: child_tube_5_uuid, barcode_prefix: 'FX', barcode_number: 13 }
 
-      # need to stub the creation of the tube metadata
+      # Metadata expected to be sent in POST requests
       let!(:metadata_for_tube_1) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'A1' } }
-      let!(:stub_create_metadata_for_tube_1) do
-        stub_create_labware_metadata(
-          child_tube_1_v2.barcode.machine,
-          child_tube_1_v1,
-          child_tube_1_uuid,
-          user_uuid,
-          metadata_for_tube_1
-        )
-      end
+      let(:tube_1_create_args) { { user_id: user.id, asset_id: child_tube_1_v2.id, metadata: metadata_for_tube_1 } }
 
       let!(:metadata_for_tube_2) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'B1' } }
-      let!(:stub_create_metadata_for_tube_2) do
-        stub_create_labware_metadata(
-          child_tube_2_v2.barcode.machine,
-          child_tube_2_v1,
-          child_tube_2_uuid,
-          user_uuid,
-          metadata_for_tube_2
-        )
-      end
+      let(:tube_2_create_args) { { user_id: user.id, asset_id: child_tube_2_v2.id, metadata: metadata_for_tube_2 } }
 
       let!(:metadata_for_tube_3) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'A1' } }
-      let!(:stub_create_metadata_for_tube_3) do
-        stub_create_labware_metadata(
-          child_tube_3_v2.barcode.machine,
-          child_tube_3_v1,
-          child_tube_3_uuid,
-          user_uuid,
-          metadata_for_tube_3
-        )
-      end
+      let(:tube_3_create_args) { { user_id: user.id, asset_id: child_tube_3_v2.id, metadata: metadata_for_tube_3 } }
 
       let!(:metadata_for_tube_4) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'B1' } }
-      let!(:stub_create_metadata_for_tube_4) do
-        stub_create_labware_metadata(
-          child_tube_4_v2.barcode.machine,
-          child_tube_4_v1,
-          child_tube_4_uuid,
-          user_uuid,
-          metadata_for_tube_4
-        )
-      end
+      let(:tube_4_create_args) { { user_id: user.id, asset_id: child_tube_4_v2.id, metadata: metadata_for_tube_4 } }
 
       let!(:metadata_for_tube_5) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'C1' } }
-      let!(:stub_create_metadata_for_tube_5) do
-        stub_create_labware_metadata(
-          child_tube_5_v2.barcode.machine,
-          child_tube_5_v1,
-          child_tube_5_uuid,
-          user_uuid,
-          metadata_for_tube_5
-        )
-      end
+      let(:tube_5_create_args) { { user_id: user.id, asset_id: child_tube_5_v2.id, metadata: metadata_for_tube_5 } }
 
       let(:contingency_file) do
         fixture_file_upload(
@@ -889,20 +850,21 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       before do
-        stub_get_labware_metadata(child_tube_1_v2.barcode.machine, child_tube_1_v1)
-        stub_get_labware_metadata(child_tube_2_v2.barcode.machine, child_tube_2_v1)
-        stub_get_labware_metadata(child_tube_3_v2.barcode.machine, child_tube_3_v1)
-        stub_get_labware_metadata(child_tube_4_v2.barcode.machine, child_tube_4_v1)
-        stub_get_labware_metadata(child_tube_5_v2.barcode.machine, child_tube_5_v1)
+        stub_v2_user(user)
 
-        stub_asset_search(child_tube_1_v2.barcode.machine, child_tube_1_v1)
-        stub_asset_search(child_tube_2_v2.barcode.machine, child_tube_2_v1)
-        stub_asset_search(child_tube_3_v2.barcode.machine, child_tube_3_v1)
-        stub_asset_search(child_tube_4_v2.barcode.machine, child_tube_4_v1)
-        stub_asset_search(child_tube_5_v2.barcode.machine, child_tube_5_v1)
+        stub_v2_labware(child_tube_1_v2)
+        stub_v2_labware(child_tube_2_v2)
+        stub_v2_labware(child_tube_3_v2)
+        stub_v2_labware(child_tube_4_v2)
+        stub_v2_labware(child_tube_5_v2)
       end
 
       it 'creates the child tubes' do
+        expect_api_v2_posts(
+          'CustomMetadatumCollection',
+          [tube_1_create_args, tube_2_create_args, tube_3_create_args, tube_4_create_args, tube_5_create_args]
+        )
+
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
         expect(stub_sequencing_file_upload).to have_been_made.once
@@ -910,11 +872,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(stub_contingency_file_upload).to have_been_made.once
         expect(stub_contingency_tube_creation_request).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
-        expect(stub_create_metadata_for_tube_1).to have_been_requested
-        expect(stub_create_metadata_for_tube_2).to have_been_requested
-        expect(stub_create_metadata_for_tube_3).to have_been_requested
-        expect(stub_create_metadata_for_tube_4).to have_been_requested
-        expect(stub_create_metadata_for_tube_5).to have_been_requested
       end
 
       context 'when a well has been failed' do
@@ -1037,6 +994,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         end
 
         it 'does not create a tube for the failed well' do
+          expect_api_v2_posts(
+            'CustomMetadatumCollection',
+            [tube_1_create_args, tube_2_create_args, tube_3_create_args, tube_4_create_args] # no tube 5
+          )
+
           expect(subject.valid?).to be_truthy
           expect(subject.save).to be_truthy
           expect(stub_sequencing_file_upload).to have_been_made.once
@@ -1044,12 +1006,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           expect(stub_contingency_file_upload).to have_been_made.once
           expect(stub_contingency_tube_creation_request).to have_been_made.once
           expect(stub_transfer_creation_request).to have_been_made.once
-          expect(stub_create_metadata_for_tube_1).to have_been_requested
-          expect(stub_create_metadata_for_tube_2).to have_been_requested
-          expect(stub_create_metadata_for_tube_3).to have_been_requested
-          expect(stub_create_metadata_for_tube_4).to have_been_requested
-
-          expect(stub_create_metadata_for_tube_5).to_not have_been_requested
         end
       end
     end
@@ -1212,85 +1168,41 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       # need to stub the creation of the tube metadata
       let!(:metadata_for_tube_1) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'A1' } }
-      let!(:stub_create_metadata_for_tube_1) do
-        stub_create_labware_metadata(
-          child_tube_1_v2.barcode.machine,
-          child_tube_1_v1,
-          child_tube_1_uuid,
-          user_uuid,
-          metadata_for_tube_1
-        )
-      end
+      let(:tube_1_create_args) { { user_id: user.id, asset_id: child_tube_1_v2.id, metadata: metadata_for_tube_1 } }
 
       let!(:metadata_for_tube_2) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'B1' } }
-      let!(:stub_create_metadata_for_tube_2) do
-        stub_create_labware_metadata(
-          child_tube_2_v2.barcode.machine,
-          child_tube_2_v1,
-          child_tube_2_uuid,
-          user_uuid,
-          metadata_for_tube_2
-        )
-      end
+      let(:tube_2_create_args) { { user_id: user.id, asset_id: child_tube_2_v2.id, metadata: metadata_for_tube_2 } }
 
       let!(:metadata_for_tube_3) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'C1' } }
-      let!(:stub_create_metadata_for_tube_3) do
-        stub_create_labware_metadata(
-          child_tube_3_v2.barcode.machine,
-          child_tube_3_v1,
-          child_tube_3_uuid,
-          user_uuid,
-          metadata_for_tube_3
-        )
-      end
+      let(:tube_3_create_args) { { user_id: user.id, asset_id: child_tube_3_v2.id, metadata: metadata_for_tube_3 } }
 
       let!(:metadata_for_tube_4) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'E1' } }
-      let!(:stub_create_metadata_for_tube_4) do
-        stub_create_labware_metadata(
-          child_tube_4_v2.barcode.machine,
-          child_tube_4_v1,
-          child_tube_4_uuid,
-          user_uuid,
-          metadata_for_tube_4
-        )
-      end
+      let(:tube_4_create_args) { { user_id: user.id, asset_id: child_tube_4_v2.id, metadata: metadata_for_tube_4 } }
 
       let!(:metadata_for_tube_5) { { tube_rack_barcode: 'TR00000002', tube_rack_position: 'F1' } }
-      let!(:stub_create_metadata_for_tube_5) do
-        stub_create_labware_metadata(
-          child_tube_5_v2.barcode.machine,
-          child_tube_5_v1,
-          child_tube_5_uuid,
-          user_uuid,
-          metadata_for_tube_5
-        )
-      end
+      let(:tube_5_create_args) { { user_id: user.id, asset_id: child_tube_5_v2.id, metadata: metadata_for_tube_5 } }
 
       before do
-        stub_get_labware_metadata(child_tube_1_v2.barcode.machine, child_tube_1_v1)
-        stub_get_labware_metadata(child_tube_2_v2.barcode.machine, child_tube_2_v1)
-        stub_get_labware_metadata(child_tube_3_v2.barcode.machine, child_tube_3_v1)
-        stub_get_labware_metadata(child_tube_4_v2.barcode.machine, child_tube_4_v1)
-        stub_get_labware_metadata(child_tube_5_v2.barcode.machine, child_tube_5_v1)
+        stub_v2_user(user)
 
-        stub_asset_search(child_tube_1_v2.barcode.machine, child_tube_1_v1)
-        stub_asset_search(child_tube_2_v2.barcode.machine, child_tube_2_v1)
-        stub_asset_search(child_tube_3_v2.barcode.machine, child_tube_3_v1)
-        stub_asset_search(child_tube_4_v2.barcode.machine, child_tube_4_v1)
-        stub_asset_search(child_tube_5_v2.barcode.machine, child_tube_5_v1)
+        stub_v2_labware(child_tube_1_v2)
+        stub_v2_labware(child_tube_2_v2)
+        stub_v2_labware(child_tube_3_v2)
+        stub_v2_labware(child_tube_4_v2)
+        stub_v2_labware(child_tube_5_v2)
       end
 
       it 'creates the child tubes' do
+        expect_api_v2_posts(
+          'CustomMetadatumCollection',
+          [tube_1_create_args, tube_2_create_args, tube_3_create_args, tube_4_create_args, tube_5_create_args]
+        )
+
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
         expect(stub_contingency_file_upload).to have_been_made.once
         expect(stub_contingency_tube_creation_request).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
-        expect(stub_create_metadata_for_tube_1).to have_been_requested
-        expect(stub_create_metadata_for_tube_2).to have_been_requested
-        expect(stub_create_metadata_for_tube_3).to have_been_requested
-        expect(stub_create_metadata_for_tube_4).to have_been_requested
-        expect(stub_create_metadata_for_tube_5).to have_been_requested
       end
     end
   end

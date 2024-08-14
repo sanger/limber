@@ -134,12 +134,6 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         )
       end
 
-      let!(:api_v2_post) { stub_api_v2_post('Sample') }
-
-      let!(:api_v2_update_sample_metadata) { stub_api_v2_post('SampleMetadata') }
-
-      let!(:api_v2_save_aliquot) { stub_api_v2_save('Aliquot') }
-
       let!(:transfer_creation_request) do
         stub_api_post(
           'transfer_request_collections',
@@ -151,6 +145,12 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
           },
           body: '{}'
         )
+      end
+
+      before do
+        stub_api_v2_patch('Sample')
+        stub_api_v2_patch('SampleMetadata')
+        stub_api_v2_save('Aliquot')
       end
 
       it 'makes the expected requests' do

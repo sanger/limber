@@ -18,6 +18,7 @@ module LabwareCreators
     include SupportParent::PlateOnly
 
     include LabwareCreators::RequireWellsWithCollectedBy
+    include LabwareCreators::SupportV2SourcePlate
 
     validate :wells_with_aliquots_must_have_collected_by
 
@@ -27,12 +28,6 @@ module LabwareCreators
 
     def filters=(filter_parameters)
       well_filter.assign_attributes(filter_parameters)
-    end
-
-    # parent is using SS v1 API
-    # so this method is used to access the plate via SS v2 API
-    def source_plate
-      @source_plate ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent.uuid)
     end
 
     # Returns: a list of passed wells passed_parent_wells

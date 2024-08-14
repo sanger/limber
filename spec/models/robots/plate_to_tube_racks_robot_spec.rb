@@ -23,12 +23,12 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
   let(:tube6_metadata) { { 'tube_rack_barcode' => tube_rack2_barcode, 'tube_rack_position' => 'C1' } }
 
   # tube custom metadata collections
-  let(:tube1_custom_metadata) { create(:custom_metadatum_collection, metadata: tube1_metadata) }
-  let(:tube2_custom_metadata) { create(:custom_metadatum_collection, metadata: tube2_metadata) }
-  let(:tube3_custom_metadata) { create(:custom_metadatum_collection, metadata: tube3_metadata) }
-  let(:tube4_custom_metadata) { create(:custom_metadatum_collection, metadata: tube4_metadata) }
-  let(:tube5_custom_metadata) { create(:custom_metadatum_collection, metadata: tube5_metadata) }
-  let(:tube6_custom_metadata) { create(:custom_metadatum_collection, metadata: tube6_metadata) }
+  let(:tube1_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube1_metadata) }
+  let(:tube2_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube2_metadata) }
+  let(:tube3_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube3_metadata) }
+  let(:tube4_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube4_metadata) }
+  let(:tube5_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube5_metadata) }
+  let(:tube6_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube6_metadata) }
 
   # tube uuids
   let(:tube1_uuid) { 'tube1_uuid' }
@@ -67,7 +67,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube1_uuid,
       barcode_prefix: 'FX',
       barcode_number: 4,
-      custom_metadatum_collection: tube1_custom_metadata,
+      custom_metadatum_collection: tube1_custom_metadatum_collection,
       purpose: tube_purpose1,
       state: tube1_state
     )
@@ -78,7 +78,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube2_uuid,
       barcode_prefix: 'FX',
       barcode_number: 5,
-      custom_metadatum_collection: tube2_custom_metadata,
+      custom_metadatum_collection: tube2_custom_metadatum_collection,
       purpose: tube_purpose1,
       state: tube2_state
     )
@@ -89,7 +89,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube3_uuid,
       barcode_prefix: 'FX',
       barcode_number: 6,
-      custom_metadatum_collection: tube3_custom_metadata,
+      custom_metadatum_collection: tube3_custom_metadatum_collection,
       purpose: tube_purpose1,
       state: tube3_state
     )
@@ -100,7 +100,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube4_uuid,
       barcode_prefix: 'FX',
       barcode_number: 7,
-      custom_metadatum_collection: tube4_custom_metadata,
+      custom_metadatum_collection: tube4_custom_metadatum_collection,
       purpose: tube_purpose2,
       state: tube4_state
     )
@@ -111,7 +111,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube5_uuid,
       barcode_prefix: 'FX',
       barcode_number: 8,
-      custom_metadatum_collection: tube5_custom_metadata,
+      custom_metadatum_collection: tube5_custom_metadatum_collection,
       purpose: tube_purpose2,
       state: tube5_state
     )
@@ -122,7 +122,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube6_uuid,
       barcode_prefix: 'FX',
       barcode_number: 9,
-      custom_metadatum_collection: tube6_custom_metadata,
+      custom_metadatum_collection: tube6_custom_metadatum_collection,
       purpose: tube_purpose2,
       state: tube6_state
     )
