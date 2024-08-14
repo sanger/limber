@@ -7,4 +7,12 @@ export default defineConfig({
     target: 'chrome65',
   },
   plugins: [RubyPlugin(), vue()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    coverage: {
+      provider: 'v8',
+      reporter: ['lcov', 'text'],
+    },
+  },
 })

@@ -38,6 +38,8 @@ Variations on this command include:
   off again.
 - `GENERATE_CONFIG=false docker-compose up` which will avoid running the
   `config:generate` rake task as Limber is started.
+- `PRECOMPILE_ASSETS=false docker-compose up` which will avoid precompiling the
+  assets as Limber is started.
 - `docker-compose up --build` which forces a rebuild of the Docker image if your
   changes to the Dockerfile or related scripts don't seem to be taking effect.
 
@@ -201,7 +203,7 @@ Ruby unit and feature tests:
 bundle exec rspec
 ```
 
-### Jest
+### Vitest
 
 JavaScript unit tests:
 

@@ -82,7 +82,7 @@ describe('AssetCommentsAddForm', () => {
 
   it('submits a comment via the comment store object on clicking the submit button', async () => {
     let wrapper = wrapperFactory([])
-    wrapper.vm.$parent.addComment = jest.fn().mockResolvedValue(true)
+    wrapper.vm.$parent.addComment = vi.fn().mockResolvedValue(true)
 
     await wrapper.setData({ assetComment: 'Test comment' })
 
@@ -97,7 +97,7 @@ describe('AssetCommentsAddForm', () => {
   it('adding a comment updates the state and button text', async () => {
     let wrapper = wrapperFactory([])
 
-    wrapper.vm.$parent.addComment = jest.fn().mockResolvedValue(true)
+    wrapper.vm.$parent.addComment = vi.fn().mockResolvedValue(true)
 
     await wrapper.setData({ assetComment: 'Test comment' })
     await wrapper.vm.submit()
@@ -110,7 +110,7 @@ describe('AssetCommentsAddForm', () => {
   it('adding unsuccessfully updates the state and button text', async () => {
     let wrapper = wrapperFactory([])
 
-    wrapper.vm.$parent.addComment = jest.fn().mockResolvedValue(false)
+    wrapper.vm.$parent.addComment = vi.fn().mockResolvedValue(false)
 
     await wrapper.setData({ assetComment: 'Test comment' })
     await wrapper.vm.submit()

@@ -4,7 +4,7 @@ import { checkDuplicates, checkMatchingPurposes } from '@/javascript/shared/comp
 import { shallowMount } from '@vue/test-utils'
 import { tubeFactory } from '@/javascript/test_support/factories.js'
 
-jest.mock('@/javascript/shared/components/tubeScanValidators')
+vi.mock('@/javascript/shared/components/tubeScanValidators')
 
 describe('MultiStampTubes', () => {
   const wrapperFactory = function (options = {}) {
