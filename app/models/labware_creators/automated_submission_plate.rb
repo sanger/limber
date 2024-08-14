@@ -1,21 +1,23 @@
 # frozen_string_literal: true
 
-# Experimental labware creator to do automated submission before creation.
-class AutomatedSubmissionPlate < StampedPlate
-  def create_labware!
-    create_and_build_submission
-    super
-  end
+module LabwareCreators
+  # Experimental labware creator to do automated submission before creation.
+  class AutomatedSubmissionPlate < StampedPlate
+    def create_labware!
+      create_and_build_submission
+      super
+    end
 
-  def create_and_build_submission
-    submission_options_from_config = purpose_config.submission_options
-    sequencescape_submission_parameters =
-      { api: api, user: user_uuid }.merge(submission_options_from_config.values.first)
-    create_submission(sequencescape_submission_parameters)
-  end
+    def create_and_build_submission
+      submission_options_from_config = purpose_config.submission_options
+      sequencescape_submission_parameters =
+        { api: api, user: user_uuid }.merge(submission_options_from_config.values.first)
+      create_submission(sequencescape_submission_parameters)
+    end
 
-  def cereate_submission(sequencescape_submission_parameters)
-    ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
-    ss.save
+    def cereate_submission(sequencescape_submission_parameters)
+      ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
+      ss.save
+    end
   end
 end
