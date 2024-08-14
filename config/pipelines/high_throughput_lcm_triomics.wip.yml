@@ -15,14 +15,14 @@ LCM Triomics DNA EMSeq Transition:
     LCMT DNA Adp Lig: LCMT EM TET2 Ox
 
 LCM Triomics DNA WGS Library Prep:
-  filter:
+  filters:
     request_type_key: limber_lcm_triomics_dna_wgs_library_prep
     library_type: LCM Triomics DNA WGS
     relationships:
       LCMT DNA Lib PCR: LCM DNA Lib PCR
 
 LCM Triomics DNA EMSeq Library Prep:
-  filter:
+  filters:
     request_type_key: limber_lcm_triomics_dna_emseq_library_prep
     library_type: LCM Triomics DNA EMSeq
   relationships:
