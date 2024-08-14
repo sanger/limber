@@ -13,7 +13,7 @@ LCMT DNA Adp Lig:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :state_changer_class: StateChangers::PlateStateChanger
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: limber_lcm_triomics_dna_prep
   # TODO: Setting up buttons for creating WGS and EM plates.
   # When in passed state we will see two buttons for creating WGS and EM plates
