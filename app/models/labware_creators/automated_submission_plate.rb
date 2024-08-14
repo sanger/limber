@@ -7,7 +7,7 @@ module LabwareCreators
       create_and_build_submission
       super
     end
-x
+    
     def create_and_build_submission
       submission_options_from_config = purpose_config.submission_options
       sequencescape_submission_parameters =
