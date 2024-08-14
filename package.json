@@ -20,7 +20,6 @@
     "@vue/test-utils": "^1.0.0-beta.25",
     "autoprefixer": "^10.4.19",
     "axios-mock-adapter": "^1.22.0",
-    "core-js": "^3.36.1",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-vitest": "^0.5.4",
