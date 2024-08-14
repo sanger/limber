@@ -7,15 +7,21 @@ module LabwareCreators
       create_and_build_submission
       super
     end
-
+x
     def create_and_build_submission
       submission_options_from_config = purpose_config.submission_options
       sequencescape_submission_parameters =
-        { api: api, user: user_uuid }.merge(submission_options_from_config.values.first)
+        {
+          api: api,
+          user: user_uuid,
+          asset_groups: [
+            { assets: asset_uuids, autodetect_studies: autodetect_studies, autodetect_projects: autodetect_projects }
+          ]
+        }.merge(submission_options_from_config.values.first)
       create_submission(sequencescape_submission_parameters)
     end
 
-    def cereate_submission(sequencescape_submission_parameters)
+    def create_submission(sequencescape_submission_parameters)
       ss = SequencescapeSubmission.new(sequencescape_submission_parameters)
       ss.save
     end
