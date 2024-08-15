@@ -3,6 +3,6 @@
   labware_path += "#relatives"
 %>
 <div class="relative-item list-group-item list-group-item-action">
-  <%= labware.purpose.name %> - <%= link_to labware_path, class: 'card-link stretched-link' do %><%= labware.barcode.human%><% end %>
-  <%= content_tag(:span, state_badge(labware.state), class: 'float-right' )%>
+  <% partial = labware.tube? ? 'labware/simple_tube' : 'labware/relative_item' %>
+  <%= render partial: partial, locals: { labware: labware, labware_path: labware_path, open_in_new_window: open_in_new_window } %>
 </div>

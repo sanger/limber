@@ -20,7 +20,7 @@
 
   <div id="children-list" class="max-vh-40 overflow-auto list-group list-group-flush rounded-bottom">
     <% if presenter.labware.children&.any? %>
-      <%= render partial: 'labware/relative_list_item', collection: presenter.labware.children, as: :labware %>
+      <%= render partial: 'labware/relative_list_item', collection: presenter.labware.children, as: :labware, locals: { open_in_new_window: true } %>
     <% else %>
       <div class="list-group-item text-muted">No children found</div>
     <% end %>
