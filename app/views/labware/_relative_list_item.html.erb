@@ -1,8 +1,0 @@
-<%
-  labware_path = labware.plate? ? limber_plate_path(labware.uuid) : limber_tube_path(labware.uuid)
-  labware_path += "#relatives"
-%>
-<div class="relative-item list-group-item list-group-item-action">
-  <% partial = labware.tube? ? 'labware/simple_tube' : 'labware/relative_item' %>
-  <%= render partial: partial, locals: { labware: labware, labware_path: labware_path, open_in_new_window: open_in_new_window } %>
-</div>

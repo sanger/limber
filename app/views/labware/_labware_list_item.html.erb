@@ -1,0 +1,7 @@
+<%# Handle differing labware types within a parent or children list -%>
+<%# locals: (labware:, open_in_new_window: false) -%>
+<% if labware.tube? %>
+  <%= render partial: 'labware/simple_tube', locals: { tube: labware, open_in_new_window: open_in_new_window } %>
+<% else %>
+  <%= render partial: 'labware/simple_relative', locals: { labware: labware, open_in_new_window: open_in_new_window } %>
+<% end %>
