@@ -1,6 +1,6 @@
 <%= link_to limber_tube_path(tube.uuid),  target: (open_in_new_window ? '_blank' : '_self'), class: 'list-group-item tube-item' do %>
   <div id="<%= "aliquot_#{tube.uuid}" %>" class="tube-svg colour-<%= 1 %>">
-    <%= inline_svg_tag 'images/tube.svg' %>
+    <%= inline_svg_tag 'images/tube.svg', height:'6em' %>
   </div>
   <dl class='metadata'>
     <dt>Tube name</dt>    <dd><%= tube.name %></dd>
