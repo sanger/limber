@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import MultiStamp from './MultiStamp.vue'
-import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.spec'
+import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.shared_spec'
 import flushPromises from 'flush-promises'
 import localVue from '@/javascript/test_support/base_vue.js'
 import { plateFactory } from '@/javascript/test_support/factories.js'

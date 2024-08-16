@@ -3,7 +3,7 @@ import eventBus from '@/javascript/shared/eventBus.js'
 
 describe('handleFailedRequest', () => {
   it('emits a danger alert with the provided payload', () => {
-    const mockEmit = jest.spyOn(eventBus, '$emit')
+    const mockEmit = vi.spyOn(eventBus, '$emit')
     const mockRequestPayload = {
       response: {
         data: {

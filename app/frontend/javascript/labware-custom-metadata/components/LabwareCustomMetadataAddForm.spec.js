@@ -25,7 +25,7 @@ describe('LabwareCustomMetadataAddForm', () => {
       },
     }
 
-    global.fetch = jest.fn().mockReturnValue(
+    global.fetch = vi.fn().mockReturnValue(
       Promise.resolve({
         json: () => Promise.resolve(data),
       })
@@ -222,7 +222,7 @@ describe('LabwareCustomMetadataAddForm', () => {
     describe('#submit', () => {
       it('trims data', () => {
         let wrapper = wrapperFactory()
-        wrapper.vm.postData = jest.fn()
+        wrapper.vm.postData = vi.fn()
 
         wrapper.setData({
           form: {
@@ -239,7 +239,7 @@ describe('LabwareCustomMetadataAddForm', () => {
 
       it('calls postData', () => {
         let wrapper = wrapperFactory()
-        wrapper.vm.postData = jest.fn()
+        wrapper.vm.postData = vi.fn()
 
         wrapper.setData({
           form: {
@@ -264,7 +264,7 @@ describe('LabwareCustomMetadataAddForm', () => {
         mockFetchData = { data: { id: labwareId } }
         let wrapper = wrapperFactory(mockFetchData)
 
-        wrapper.vm.refreshCustomMetadata = jest.fn()
+        wrapper.vm.refreshCustomMetadata = vi.fn()
 
         wrapper.setData({
           customMetadatumCollectionsId: labwareId,
@@ -283,7 +283,7 @@ describe('LabwareCustomMetadataAddForm', () => {
         mockFetchData = { data: { id: labwareId } }
         let wrapper = wrapperFactory(mockFetchData)
 
-        wrapper.vm.refreshCustomMetadata = jest.fn()
+        wrapper.vm.refreshCustomMetadata = vi.fn()
 
         wrapper.vm.postData({ 'RT LunaScript Super Mix': 'avalue' })
 
@@ -295,8 +295,8 @@ describe('LabwareCustomMetadataAddForm', () => {
       })
     })
 
-    describe('#buildPayload', () => {
-      // todo
-    })
+    // TODO: Y24-248 - add this test suite
+    // describe('#buildPayload', () => {
+    // })
   })
 })
