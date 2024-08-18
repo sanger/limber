@@ -7,9 +7,10 @@ module LabwareCreators
       create_and_build_submission
       super
     end
-    
+
     def create_and_build_submission
       submission_options_from_config = purpose_config.submission_options
+      autodetect_studies = autodetect_projects = true
       sequencescape_submission_parameters =
         {
           api: api,
@@ -19,6 +20,10 @@ module LabwareCreators
           ]
         }.merge(submission_options_from_config.values.first)
       create_submission(sequencescape_submission_parameters)
+    end
+
+    def asset_uuids
+      parent.wells.map(&:uuid)
     end
 
     def create_submission(sequencescape_submission_parameters)
