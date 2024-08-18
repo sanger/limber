@@ -27,7 +27,7 @@ LCMT DNA Lib PCR:
   :creator_class: LabwareCreators::AutomatedSubmissionPlate
   :submission_options:
     LCM Triomics DNA WGS Library Prep:
-      template_name: 'Limber - LCM Triomics DNA WGS Library Prep'
+      template_name: 'Limber-Htp - LCM Triomics DNA WGS Library Prep'
       request_options:
         library_type: 'LCM Triomics DNA WGS'
         fragment_size_required_from: '200'
@@ -46,7 +46,7 @@ LCMT EM TET2 Ox:
   :creator_class: LabwareCreators::AutomatedSubmissionPlate
   :submission_options:
     LCM Triomics DNA EMSeq Library Prep:
-      template_name: 'Limber - LCM Triomics DNA EMSeq Library Prep'
+      template_name: 'Limber-Htp - LCM Triomics DNA EMSeq Library Prep'
       request_options:
         library_type: 'LCM Triomics DNA EMSeq'
         fragment_size_required_from: '200'
