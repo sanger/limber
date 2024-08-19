@@ -7,7 +7,22 @@ on:
   - pull_request
 
 jobs:
-  setup:
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Install Node dependencies
+        run: yarn install
+      - name: Run prettier
+        run: yarn prettier --check .
+
+  rubocop:
+    name: RuboCop
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,58 +30,19 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true # Runs bundle install and caches gems.
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Node Information
-        run: node --version
-      - name: Install Node dependencies
-        run: yarn install
-      - name: Upload setup files
-        uses: actions/upload-artifact@v4
-        id: artifact-upload-step
-        with:
-          name: setup-files
-          path: |
-            node_modules
-          retention-days: 3
-
-  prettier:
-    name: Prettier
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download setup files
-        uses: actions/download-artifact@v4
-        with:
-          name: setup-files
-      - name: Run prettier
-        run: yarn prettier --check .
-
-  rubocop:
-    name: RuboCop
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download setup files
-        uses: actions/download-artifact@v4
-        with:
-          name: setup-files
       - name: Run lint
         run: bundle exec rubocop --extra-details --display-style-guide --parallel
 
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
-    needs: setup
     steps:
       - uses: actions/checkout@v4
-      - name: Download setup files
-        uses: actions/download-artifact@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          name: setup-files
+          node-version-file: '.nvmrc'
+      - name: Install Node dependencies
+        run: yarn install
       - name: Run ESLint
         run: yarn lint
