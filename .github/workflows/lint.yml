@@ -7,38 +7,43 @@ on:
   - pull_request
 
 jobs:
-  lint:
+  setup:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true # Runs bundle install and caches gems.
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Install
-        run: yarn install
-      - name: Run prettier
-        run: yarn prettier --check .
-      - name: Run lint
-        run: bundle exec rubocop --extra-details --display-style-guide --parallel
-
-  eslint:
-    name: EsLint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup node
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
       - name: Node Information
         run: node --version
-      - name: Install
+      - name: Install Node dependencies
         run: yarn install
-      - name: Run yarn lint
+
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Run prettier
+        run: yarn prettier --check .
+
+  rubocop:
+    name: RuboCop
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Run lint
+        run: bundle exec rubocop --extra-details --display-style-guide --parallel
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Run ESLint
         run: yarn lint
