@@ -14,7 +14,7 @@ module InlineSvgHelper
     attributes[:role] = 'img'
     attributes_string = attributes.map { |k, v| "#{k}=\"#{v}\"" }.join(' ')
     svg = ViteInlineSvgFileLoader.named(filename)
-    svg = svg.sub(/<svg/, '<svg ' + attributes_string)
+    svg = svg.sub('<svg', "<svg #{attributes_string}")
     svg.strip.html_safe # rubocop:disable Rails/OutputSafety
   end
 end
