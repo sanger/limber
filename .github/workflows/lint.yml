@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Ruby # Prettier has a Ruby dependency
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # Runs bundle install and caches gems.
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -30,6 +34,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true # Runs bundle install and caches gems.
+      - name: Setup Node # RuboCop has a Prettier dependency for formatting
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Install Node dependencies
+        run: yarn install
       - name: Run lint
         run: bundle exec rubocop --extra-details --display-style-guide --parallel
 
