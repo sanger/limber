@@ -12,11 +12,8 @@ RUN apt-get install -y build-essential
 RUN apt-get install -y curl
 RUN apt-get install -y git
 
-# TODO:
-# Set Node to install version 16+, a more recent version such as 20 is recommended
-#   https://github.com/nodesource/distributions
 RUN set -uex \
-    && NODE_MAJOR=18 \
+    && NODE_MAJOR=20 \
     && apt-get update \
     && apt-get install -y ca-certificates curl gnupg \
     && mkdir -p /etc/apt/keyrings \
