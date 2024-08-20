@@ -123,7 +123,7 @@ module LabwareCreators
     end
 
     def transfer_material_from_parent!(child_uuid)
-      transfer!(source_uuid: parent_uuid, destination_uuid: child_uuid, transfer: transfer_hash)
+      transfer!(source_uuid: parent_uuid, destination_uuid: child_uuid, transfers: transfer_hash)
     end
 
     # Override in classes with custom transfers
