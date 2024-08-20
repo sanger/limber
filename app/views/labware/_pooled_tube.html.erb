@@ -6,17 +6,14 @@
   </div>
   <dl class='metadata'>
     <dt>Pool name</dt>
-    <dd class="position-static"><%# relative positioning breaks the link, static is browser default -%>
-      <%= link_to tube_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %><%= tube.name %><% end %>
-    </dd>
-
+      <dd class="position-static"><%# relative positioning breaks the link, static is browser default -%>
+        <%= link_to tube_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %>
+          <%= tube.name %>
+        <% end %>
+      </dd>
     <dt>Barcode</dt>
     <dd><%= useful_barcode(tube.barcode) %></dd>
-
-    <dt>Current state</dt>
-    <dd><%= content_tag(:span, state_badge(tube.state)) %></dd>
-
-    <dt>Source wells</dt>
-    <dd><%= WellHelpers.formatted_range(tube.source_locations, size) %></dd>
+    <dt>Current state</dt><dd><%= content_tag(:span, state_badge(tube.state)) %></dd>
+    <dt>Source wells</dt><dd><%= WellHelpers.formatted_range(tube.source_locations, size) %></dd>
   </dl>
 </div>

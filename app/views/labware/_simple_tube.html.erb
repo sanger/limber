@@ -6,14 +6,12 @@
   </div>
   <dl class='metadata'>
     <dt>Tube name</dt>
-    <dd class="position-static"><%# relative positioning breaks the link, static is browser default -%>
-      <%= link_to tube_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %><%= tube.name %><% end %>
-    </dd>
-
-    <dt>Barcode</dt>
-    <dd><%= useful_barcode(tube.barcode) %></dd>
-
-    <dt>Current state</dt>
-    <dd><%= content_tag(:span, state_badge(tube.state)) %></dd>
+      <dd class="position-static"><%# relative positioning breaks the link, static is browser default -%>
+        <%= link_to tube_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %>
+          <%= tube.name %>
+        <% end %>
+      </dd>
+    <dt>Barcode</dt><dd><%= useful_barcode(tube.barcode) %></dd>
+    <dt>Current state</dt><dd><%= content_tag(:span, state_badge(tube.state)) %></dd>
   </dl>
 </div>
