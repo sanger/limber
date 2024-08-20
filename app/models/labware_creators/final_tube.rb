@@ -41,7 +41,7 @@ module LabwareCreators
     def redirection_target
       return :contents_not_transfered_to_mx_tube if all_tube_transfers.nil?
 
-      destination_uuids = all_tube_transfers.map { |tt| tt.destination.uuid }.uniq
+      destination_uuids = all_tube_transfers.map { |tt| tt.destination_uuid }.uniq
 
       # The client_api returns a 'barcoded asset' here, rather than a tube.
       # We know that its a tube though, so wrap it in this useful tool
