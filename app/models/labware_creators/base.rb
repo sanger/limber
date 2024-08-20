@@ -70,7 +70,7 @@ module LabwareCreators
 
     #
     # The uuid of the transfer template to be used.
-    # Extracted from the transfer template cache base on the name
+    # Extracted from the transfer template cache based on the name
     #
     # @return [String] UUID
     #
@@ -103,10 +103,6 @@ module LabwareCreators
 
     private
 
-    def transfer_template
-      @transfer_template ||= api.transfer_template.find(transfer_template_uuid)
-    end
-
     def create_plate_with_standard_transfer!
       plate_creation = create_plate_from_parent!
       @child = plate_creation.child
@@ -120,8 +116,14 @@ module LabwareCreators
       api.plate_creation.create!(parent: parent_uuid, child_purpose: purpose_uuid, user: user_uuid)
     end
 
+    def transfer!(attributes)
+      Sequencescape::Api::V2::Template.create!(
+        attributes.merge(transfer_template_uuid: transfer_template_uuid, user_uuid: user_uuid)
+      )
+    end
+
     def transfer_material_from_parent!(child_uuid)
-      transfer_template.create!(source: parent_uuid, destination: child_uuid, user: user_uuid, transfers: transfer_hash)
+      transfer!(source_uuid: parent_uuid, destination_uuid: child_uuid, transfer: transfer_hash)
     end
 
     # Override in classes with custom transfers

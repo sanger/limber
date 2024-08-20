@@ -13,7 +13,7 @@ module LabwareCreators
 
     validate :parents_suitable
 
-    def create_labware! # rubocop:todo Metrics/AbcSize
+    def create_labware!
       # Create a single tube
       # TODO: This should link to multiple parents in production
       @child =
@@ -29,9 +29,7 @@ module LabwareCreators
           .first
 
       # Transfer EVERYTHING into it
-      parents.each do |parent_plate|
-        transfer_template.create!(user: user_uuid, source: parent_plate.uuid, destination: @child.uuid)
-      end
+      parents.each { |parent_plate| transfer!(source_uuid: parent_plate.uuid, child_uuid: @child.uuid) }
     end
 
     def barcodes=(input)

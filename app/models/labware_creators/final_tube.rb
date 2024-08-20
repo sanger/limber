@@ -28,8 +28,7 @@ module LabwareCreators
     end
 
     def create_labware!
-      @all_tube_transfers =
-        parents.map { |this_parent_uuid| transfer_template.create!(user: user_uuid, source: this_parent_uuid) }
+      @all_tube_transfers = parents.map { |this_parent_uuid| transfer!(source_uuid: this_parent_uuid) }
       true
     end
 
