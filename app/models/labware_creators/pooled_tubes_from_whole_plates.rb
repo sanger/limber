@@ -29,7 +29,7 @@ module LabwareCreators
           .first
 
       # Transfer EVERYTHING into it
-      parents.each { |parent_plate| transfer!(source_uuid: parent_plate.uuid, child_uuid: @child.uuid) }
+      parents.each { |parent_plate| transfer!(source_uuid: parent_plate.uuid, destination_uuid: @child.uuid) }
     end
 
     def barcodes=(input)

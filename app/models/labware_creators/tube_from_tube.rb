@@ -13,7 +13,7 @@ module LabwareCreators
       @child_tube =
         api.tube_from_tube_creation.create!(parent: parent_uuid, child_purpose: purpose_uuid, user: user_uuid).child
 
-      @tube_transfer = transfer!(source_uuid: parent_uuid, child_uuid: @child_tube.uuid)
+      @tube_transfer = transfer!(source_uuid: parent_uuid, destination_uuid: @child_tube.uuid)
 
       true
     end
