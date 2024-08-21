@@ -89,13 +89,24 @@ module ApiUrlHelper
       allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
     end
 
-    def expect_api_v2_posts(klass, args_list)
-      # Expects the 'create!' method for any class beginning with
-      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns true
+    def stub_api_v2_post(klass)
+      # intercepts the 'create!' method for any class beginning with
+      # 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
-      expect(receiving_class).to receive(:create!).exactly(args_list.count).times do |args|
-        expect(args).to eq(args_list.shift)
-      end.and_return(true)
+      allow(receiving_class).to receive(:create!).and_return(true)
+    end
+
+    def expect_api_v2_posts(klass, args_list, return_values = [])
+      # Expects the 'create!' method for any class beginning with
+      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
+      # If return_values is empty, it will return true.
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      args_list
+        .zip(return_values)
+        .each do |args, ret|
+          ret ||= true
+          expect(receiving_class).to receive(:create!).with(args).and_return(ret)
+        end
     end
 
     def stub_barcode_search(barcode, labware)

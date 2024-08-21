@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  # API V2 Transfer
+  factory :v2_transfer, class: Sequencescape::Api::V2::Transfer do
+    skip_create
+
+    transient do
+      user
+      source { create :v2_plate }
+      destination { create :v2_plate }
+    end
+
+    uuid { SecureRandom.uuid }
+    user_uuid { user.uuid }
+    source_uuid { source.uuid }
+    destination_uuid { destination.uuid }
+    transfers { { 'A1' => 'A1', 'B1' => 'B1', 'C1' => 'C1' } }
+  end
+
   # API V1 Transfer
   factory :transfer, class: Sequencescape::Transfer, traits: [:api_object] do
     json_root { 'transfer' }
