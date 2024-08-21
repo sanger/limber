@@ -1,15 +1,14 @@
-<%# Handle differing labware types within a parent or children list -%>
-<%# locals: (presenter:, labware:, open_in_new_window: false) -%>
+<%# Handle differing labware types within a children list %>
+<%# locals: (presenter:, labware:, open_in_new_window: false) %>
+<% open_in_new_window = true %>
 <% if labware.tube? %>
   <%
     tube_and_sources = presenter.try(:tubes_and_sources)&.find { |tube_with_sources| tube_with_sources.tube.uuid == labware.uuid }
     if presenter.is_a?(Presenters::StandardPresenter) && tube_and_sources.present?
   %>
     <%= render partial: 'labware/pooled_tube', locals: { tube: tube_and_sources, size: presenter.try(:size) || 1, open_in_new_window: open_in_new_window } %>
-  <% elsif presenter.is_a?(Presenters::SimpleTubePresenter) %>
+  <% else presenter.is_a?(Presenters::SimpleTubePresenter) %>
     <%= render partial: 'labware/simple_tube', locals: { tube: labware, open_in_new_window: open_in_new_window } %>
-  <% else %>
-    <%= render partial: 'labware/basic_relative', locals: { labware: labware, open_in_new_window: open_in_new_window } %>
   <% end %>
 <% else %>
   <%= render partial: 'labware/basic_relative', locals: { labware: labware, open_in_new_window: open_in_new_window } %>
