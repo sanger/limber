@@ -2,7 +2,6 @@ module.exports = {
   env: {
     'vitest/env': true,
     browser: true,
-    commonjs: true,
     es6: true,
     node: true,
   },
