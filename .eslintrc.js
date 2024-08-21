@@ -23,8 +23,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
-    // The API sends snake case stuff, and this lets us pass things straight
-    // through. Not a great compromise though.
-    'vue/prop-name-casing': ['off'],
+    // Legacy in from the old days. We should remove these:
+    'vue/prop-name-casing': ['warn'],
   },
 }
