@@ -8,7 +8,7 @@ import jQuery from 'jquery'
 
   let SCAPE = exports.SCAPE
 
-  let WELLS_IN_COLUMN_MAJOR_ORDER = [
+  const WELLS_IN_COLUMN_MAJOR_ORDER = [
     'A1',
     'B1',
     'C1',
@@ -107,7 +107,7 @@ import jQuery from 'jquery'
     'H12',
   ]
 
-  let SOURCE_STATES = ['passed', 'qc_complete']
+  const SOURCE_STATES = ['passed', 'qc_complete']
 
   $(function (_event) {
     // If we are not on the multi-plate pooling page, don't set anything up.
@@ -233,7 +233,7 @@ import jQuery from 'jquery'
         .hide()
     }
 
-    var walkPreCapPools = function (preCapPools, block) {
+    const walkPreCapPools = function (preCapPools, block) {
       let poolNumber = -1
       for (let capPool of preCapPools) {
         poolNumber++
@@ -245,7 +245,7 @@ import jQuery from 'jquery'
     let renderPoolingSummary = function (plates) {
       let capPoolOffset = 0
 
-      for (var plate of plates) {
+      for (let plate of plates) {
         if (plate === undefined) {
           // Nothing
         } else {
@@ -268,7 +268,7 @@ import jQuery from 'jquery'
       let capPoolOffset = 0
       for (let plate of SCAPE.plates) {
         if (plate !== undefined) {
-          var well
+          let well
           capPoolOffset += walkPreCapPools(plate.preCapPools, function (wells, poolNumber) {
             well = $('.destination-plate .' + WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset + poolNumber])
             if (wells.length) well.append(SCAPE.newAliquot(capPoolOffset + poolNumber, wells.length))
@@ -279,7 +279,7 @@ import jQuery from 'jquery'
 
     SCAPE.renderSourceWells = function () {
       let capPoolOffset = 0
-      for (var plateIndex = 0; plateIndex < SCAPE.plates.length; plateIndex += 1) {
+      for (let plateIndex = 0; plateIndex < SCAPE.plates.length; plateIndex += 1) {
         if (SCAPE.plates[plateIndex] === undefined) {
           $('.plate-id-' + plateIndex).hide()
         } else {
@@ -290,7 +290,7 @@ import jQuery from 'jquery'
           $('.plate-id-' + plateIndex + ' caption').text(barcode)
           $('#well-transfers-' + plateIndex).detach()
 
-          var newInputs = $(document.createElement('div')).attr('id', 'well-transfers-' + plateIndex)
+          let newInputs = $(document.createElement('div')).attr('id', 'well-transfers-' + plateIndex)
           capPoolOffset += walkPreCapPools(preCapPools, function (wells, poolNumber) {
             let newInput, well
 
@@ -338,7 +338,7 @@ import jQuery from 'jquery'
       })
     }
 
-    var updateView = function () {
+    const updateView = function () {
       if (SCAPE.calculatePreCapPools()) {
         plateSummaryHandler()
         $('#pooling-summary').empty()

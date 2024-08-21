@@ -20,7 +20,7 @@ import jQuery from 'jquery'
 
     // Inefficient and limited Set polyfill for phantomjs and IE10
     if (Set === undefined) {
-      var Set = function () {
+      let Set = function () {
         this.array = []
       }
 

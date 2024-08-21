@@ -64,7 +64,7 @@ import jQuery from 'jquery'
       SCAPE.robot_barcode = robot_barcode
     }
 
-    var removeEntry = function () {
+    const removeEntry = function () {
       let lw_index, bed_list
       bed_list = SCAPE.robot_beds[$(this).attr('data-bed')]
       lw_index = bed_list.indexOf($(this).attr('data-labware'))
@@ -91,7 +91,7 @@ import jQuery from 'jquery'
       }
     }
 
-    var flagBeds = function (beds, message) {
+    const flagBeds = function (beds, message) {
       let bad_beds = []
       $.each(beds, function (bed_id) {
         // here we check the validity of each bed in the hash returned from the ruby robot
@@ -107,7 +107,7 @@ import jQuery from 'jquery'
       SCAPE.message('There were problems: ' + message, 'danger')
     }
 
-    var clearFlagFromBeds = function (beds) {
+    const clearFlagFromBeds = function (beds) {
       $.each(beds, function (bed_id) {
         if (beds[bed_id]) {
           clearFlagFromBed(bed_id)
@@ -115,7 +115,7 @@ import jQuery from 'jquery'
       })
     }
 
-    var clearFlagFromBed = function (bed_id) {
+    const clearFlagFromBed = function (bed_id) {
       $('#bed_list li[data-bed="' + bed_id + '"]').removeClass('bad_bed list-group-item-danger')
     }
 
@@ -123,13 +123,13 @@ import jQuery from 'jquery'
       $('#loadingModal').fadeIn(100)
     }
 
-    var pass = function () {
+    const pass = function () {
       $('#loadingModal').fadeOut(100)
       SCAPE.message('No problems detected!', 'success')
       $('#start-robot').prop('disabled', false)
     }
 
-    var fail = function () {
+    const fail = function () {
       $('#loadingModal').fadeOut(100)
       $('#start-robot').prop('disabled', true)
     }
