@@ -22,6 +22,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    'no-var': 'error',
     // Legacy in from the old days. We should remove these:
     'vue/prop-name-casing': ['warn'],
   },

@@ -26,6 +26,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    'no-var': 'error',
     // We need a proper logging solution (see https://github.com/sanger/limber/issues/836),
     // but until then:
     'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
