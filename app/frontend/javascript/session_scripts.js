@@ -3,7 +3,7 @@ import jQuery from 'jquery'
 ;(function ($, window, undefined) {
   'use strict'
 
-  var loggedIn, userName, wasLoggedIn, logIn, logOut, updateUserName, warning, alert, success
+  let loggedIn, userName, wasLoggedIn, logIn, logOut, updateUserName, warning, alert, success
 
   loggedIn = function () {
     return document.cookie.match(/; user_name=([^;]+)/) !== null
@@ -18,7 +18,7 @@ import jQuery from 'jquery'
   }
 
   logIn = function () {
-    var user_name = userName()
+    let user_name = userName()
     if (wasLoggedIn) {
       if (user_name !== wasLoggedIn) {
         updateUserName(user_name)
@@ -35,7 +35,7 @@ import jQuery from 'jquery'
   }
 
   logOut = function () {
-    var user_name = 'Guest'
+    let user_name = 'Guest'
     if (wasLoggedIn) {
       updateUserName(user_name)
       $('body').addClass('logged_out').removeClass('logged_in')
@@ -56,8 +56,8 @@ import jQuery from 'jquery'
   }
 
   alert = function (message, category, title_text) {
-    var newDiv = document.createElement('div')
-    var title = document.createElement('strong')
+    let newDiv = document.createElement('div')
+    let title = document.createElement('strong')
     title.appendChild(document.createTextNode(title_text + ' '))
     newDiv.appendChild(title)
     newDiv.appendChild(document.createTextNode(message))

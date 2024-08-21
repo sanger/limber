@@ -9,7 +9,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
       return
     }
 
-    var newScanned,
+    let newScanned,
       tubeCollector,
       siblingTube,
       barcodeRegister = {}
@@ -30,7 +30,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
         this.setMessage('Scanned in and ready to go!')
       },
       setState: function (state) {
-        for (var i = 0; i < this.states.length; i += 1) {
+        for (let i = 0; i < this.states.length; i += 1) {
           if (state === this.states[i]) {
             this.listElement.addClass(this.states[i] + '-tube')
           } else {
@@ -46,7 +46,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
 
     newScanned = function (tube_barcode, collector) {
       // Return immediately if the box is empty
-      var stripped
+      let stripped
       stripped = tube_barcode.replace(/\s*/g, '')
       if (stripped === '') {
         return
@@ -66,7 +66,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
         $('#scanned_tube_list').append(this.newElement())
       },
       newElement: function () {
-        var scanned = this
+        let scanned = this
         this.listElement = $(document.createElement('li'))
           .attr('id', 'listElement[' + this.tubeBarcode + ']')
           .attr('class', 'wait-tube')
@@ -119,7 +119,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
         this.listElement.find('.tube_validation_report').text(message)
       },
       setState: function (state) {
-        for (var i = 0; i < this.states.length; i += 1) {
+        for (let i = 0; i < this.states.length; i += 1) {
           if (state === this.states[i]) {
             this.listElement.addClass(this.states[i] + '-tube')
           } else {
@@ -157,7 +157,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
     $('#tube_submit').prop('disabled', true)
 
     $('#tube_scan').on('keydown', function (e) {
-      var code = e.charCode || e.keyCode
+      let code = e.charCode || e.keyCode
       if (code === ENTER_KEYCODE || code === TAB_KEYCODE) {
         e.preventDefault()
         new newScanned(this.value, tubeCollector)

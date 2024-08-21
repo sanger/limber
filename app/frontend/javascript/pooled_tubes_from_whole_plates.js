@@ -2,7 +2,7 @@ import jQuery from 'jquery'
 ;(function ($, _exports, undefined) {
   'use strict'
 
-  var SOURCE_STATES = ['passed', 'qc_complete']
+  let SOURCE_STATES = ['passed', 'qc_complete']
 
   $(function (_event) {
     if ($('#pooled-tubes-from-whole-plates').length === 0) {
@@ -11,7 +11,7 @@ import jQuery from 'jquery'
 
     //= require lib/array_fill_polyfill
 
-    var Pooler = function (labware_number, button) {
+    let Pooler = function (labware_number, button) {
       this.tags = Array(labware_number).fill([])
       this.labware_details = Array(labware_number).fill({})
       this.clashing_tags = null
@@ -81,11 +81,11 @@ import jQuery from 'jquery'
         this.button.attr('disabled', null)
       },
       noDupes: function () {
-        var set = new Set()
-        var poolerObj = this
+        let set = new Set()
+        let poolerObj = this
         return this.tags.every(function (tag_set) {
           return tag_set.every(function (tag) {
-            var tagsAsString = String(tag)
+            let tagsAsString = String(tag)
             if (set.has(tagsAsString)) {
               poolerObj.clashing_tags = tagsAsString
               return false
@@ -98,7 +98,7 @@ import jQuery from 'jquery'
       },
     }
 
-    var pooler = new Pooler($('.labware-box').length, $('#create-labware'))
+    let pooler = new Pooler($('.labware-box').length, $('#create-labware'))
 
     $('.labware-box').on('change', function () {
       // When we scan in a labware
@@ -139,20 +139,20 @@ import jQuery from 'jquery'
           return $(this).closest('.labware-container')
         },
         checkLabware: function (data, status, scanned_barcode) {
-          var response = data[this.dataset.labwareType]
+          let response = data[this.dataset.labwareType]
           if (SOURCE_STATES.indexOf(response.state) === -1) {
             this.badLabware()
             SCAPE.message('Scanned ' + this.dataset.labwareType + 's are unsuitable', 'invalid')
           } else {
-            var position = $(this).data('position')
+            let position = $(this).data('position')
             if (pooler.record(response, position, scanned_barcode)) {
               this.goodLabware()
             } else {
-              var clashing_labware_barcodes = this.findClashingLabwares()
+              let clashing_labware_barcodes = this.findClashingLabwares()
 
               this.badLabware()
 
-              var msg =
+              let msg =
                 'The scanned ' +
                 this.dataset.labwareType +
                 ' contains tags that would clash with those in other ' +
@@ -165,10 +165,10 @@ import jQuery from 'jquery'
           }
         },
         findClashingLabwares: function () {
-          var clashing_labwares = []
+          let clashing_labwares = []
 
           Object.keys(pooler.labware_details).forEach(function (key) {
-            var current_labware_details = pooler.labware_details[key]
+            let current_labware_details = pooler.labware_details[key]
             // skip empty labware locations
             if (current_labware_details.tags == undefined) {
               return
@@ -176,8 +176,8 @@ import jQuery from 'jquery'
 
             // check for clashing tags
             if (current_labware_details.tags.includes(pooler.clashing_tags)) {
-              var human_barcode = String(current_labware_details.human_barcode)
-              var machine_barcode = String(current_labware_details.machine_barcode)
+              let human_barcode = String(current_labware_details.human_barcode)
+              let machine_barcode = String(current_labware_details.machine_barcode)
               clashing_labwares.push('' + human_barcode + ' (' + machine_barcode + ')')
             }
           })

@@ -3,7 +3,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
 ;(function ($, _exports, undefined) {
   'use strict'
 
-  var PlateViewModel = function (plateElement) {
+  let PlateViewModel = function (plateElement) {
     this['pools-view'] = {
       activate: function () {
         $('#pools-information li').fadeIn('fast')
@@ -28,22 +28,22 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
     }
   }
 
-  var limberPlateView = function (defaultTab) {
-    var plateElement = $(this)
+  let limberPlateView = function (defaultTab) {
+    let plateElement = $(this)
 
-    var control = $('#plate-view-control')
+    let control = $('#plate-view-control')
 
-    var viewModel = new PlateViewModel(plateElement)
+    let viewModel = new PlateViewModel(plateElement)
 
     control.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      var viewName = e.target.dataset.plateView
+      let viewName = e.target.dataset.plateView
       if (viewModel[viewName]) {
         viewModel[viewName].activate()
       }
     })
 
     control.find('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {
-      var viewName = e.target.dataset.plateView
+      let viewName = e.target.dataset.plateView
       if (viewModel[viewName]) {
         viewModel[viewName].deactivate()
       }
@@ -52,7 +52,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
     control.find('a[href="' + defaultTab + '"]').tab('show')
 
     plateElement.on('click', '.aliquot', function (event) {
-      var pool = $(event.currentTarget).data('pool')
+      let pool = $(event.currentTarget).data('pool')
 
       control.find('a[data-plate-view="pools-view"]').tab('show')
 
@@ -90,7 +90,7 @@ import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
     //= require lib/keycodes
     // Trap the carriage return sent by barcode scanner
     $(document).on('keydown', '.plate-barcode', function (event) {
-      var code = event.charCode || event.keyCode
+      let code = event.charCode || event.keyCode
       // Check for carrage return (key code ENTER_KEYCODE)
       if (code === ENTER_KEYCODE || code === TAB_KEYCODE) {
         if ($(event.currentTarget).val().length > 0) {

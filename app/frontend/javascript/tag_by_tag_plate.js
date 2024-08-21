@@ -10,20 +10,20 @@ import validator from '@/javascript/lib/validator.js'
     if ($('#tag-creation-page').length === 0) {
       return
     }
-    var qcableLookup
+    let qcableLookup
 
     //= require lib/ajax_support
 
     // Set up some null objects
-    var unknownTemplate = { unknown: true, dual_index: false }
-    var unknownQcable = { template_uuid: 'not-loaded' }
+    let unknownTemplate = { unknown: true, dual_index: false }
+    let unknownQcable = { template_uuid: 'not-loaded' }
 
     qcableLookup = function (barcodeBox, collector) {
       if (barcodeBox.length === 0) {
         return false
       }
 
-      var qc_lookup = this
+      let qc_lookup = this
       this.inputBox = barcodeBox
 
       // the `data` attribute is set when declaring the element in tagged_plate.html.erb
@@ -63,7 +63,7 @@ import validator from '@/javascript/lib/validator.js'
         }).then(this.success(), this.error())
       },
       success: function () {
-        var qc_lookup = this
+        let qc_lookup = this
         return function (response) {
           if (response.error) {
             qc_lookup.message(response.error, 'danger')
@@ -76,7 +76,7 @@ import validator from '@/javascript/lib/validator.js'
         }
       },
       error: function () {
-        var qc_lookup = this
+        let qc_lookup = this
         return function () {
           qc_lookup.message(
             'The barcode could not be found. There may be network issues, or problems with Sequencescape.',
@@ -141,8 +141,8 @@ import validator from '@/javascript/lib/validator.js'
       validPlate: function () {
         // run through the `validators`, and collect any errors
         this.errors = ''
-        for (var i = 0; i < this.validators.length; i += 1) {
-          var response = this.validators[i].validate(this)
+        for (let i = 0; i < this.validators.length; i += 1) {
+          let response = this.validators[i].validate(this)
           if (!response.valid) {
             this.errors += ' ' + response.message
           }
@@ -166,7 +166,7 @@ import validator from '@/javascript/lib/validator.js'
       errors: '',
     }
 
-    var qcCollector = new tagStatusCollector(
+    let qcCollector = new tagStatusCollector(
       SCAPE.dualRequired,
       function () {
         $('#submit-summary').text('Marks the tag sources as used, and convert the tag plate.')
@@ -187,7 +187,7 @@ import validator from '@/javascript/lib/validator.js'
 
     $.extend(SCAPE, {
       fetch_tags: function () {
-        var selected_layout = $('#plate_tag_plate_template_uuid').val()
+        let selected_layout = $('#plate_tag_plate_template_uuid').val()
         if (SCAPE.tag_plates_list[selected_layout] === undefined) {
           return $([])
         } else {
@@ -195,7 +195,7 @@ import validator from '@/javascript/lib/validator.js'
         }
       },
       update_layout: function () {
-        var tags = this.fetch_tags()
+        let tags = this.fetch_tags()
 
         tags.each(function (_index) {
           $('#tagging-plate #aliquot_' + this[0])

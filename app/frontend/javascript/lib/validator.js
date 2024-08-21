@@ -1,6 +1,6 @@
 // accepts a `validation` function which returns true (valid) or false (invalid)
 // and a `message` string for when it's invalid
-var validator = function (validation, message) {
+let validator = function (validation, message) {
   this.validation = validation
   this.message = message
 }

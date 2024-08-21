@@ -11,7 +11,7 @@ import jQuery from 'jquery'
 
     //= require lib/ajax_support
 
-    var closeIcon = function () {
+    let closeIcon = function () {
       return $(document.createElement('a'))
         .attr('class', 'close')
         .attr('aria-label', 'close')
@@ -21,8 +21,8 @@ import jQuery from 'jquery'
     SCAPE.robot_beds = {}
     SCAPE.robot_barcode = ''
 
-    var newScanned = function (bed, labware) {
-      var new_li
+    let newScanned = function (bed, labware) {
+      let new_li
       // $('#whole\\['+bed+'\\]').detach();
       new_li = $(document.createElement('li'))
         .attr('data-bed', bed)
@@ -58,14 +58,14 @@ import jQuery from 'jquery'
       $('#bed_list').append(new_li)
     }
 
-    var newRobotScanned = function (robot_barcode) {
+    let newRobotScanned = function (robot_barcode) {
       $('#robot').text('Robot: ' + robot_barcode)
       $('#robot_barcode').val(robot_barcode)
       SCAPE.robot_barcode = robot_barcode
     }
 
     var removeEntry = function () {
-      var lw_index, bed_list
+      let lw_index, bed_list
       bed_list = SCAPE.robot_beds[$(this).attr('data-bed')]
       lw_index = bed_list.indexOf($(this).attr('data-labware'))
       bed_list.splice(lw_index, 1)
@@ -76,7 +76,7 @@ import jQuery from 'jquery'
       $('#bed_list')
     }
 
-    var checkResponse = function (response) {
+    let checkResponse = function (response) {
       if ($('#bed_list').children().length === 0) {
         // We don't have any content
         $('#loadingModal').fadeOut(100)
@@ -92,7 +92,7 @@ import jQuery from 'jquery'
     }
 
     var flagBeds = function (beds, message) {
-      var bad_beds = []
+      let bad_beds = []
       $.each(beds, function (bed_id) {
         // here we check the validity of each bed in the hash returned from the ruby robot
         // valid_relationships method and if the bed is valid clear the error flags (in case the
@@ -119,7 +119,7 @@ import jQuery from 'jquery'
       $('#bed_list li[data-bed="' + bed_id + '"]').removeClass('bad_bed list-group-item-danger')
     }
 
-    var wait = function () {
+    let wait = function () {
       $('#loadingModal').fadeIn(100)
     }
 
@@ -135,7 +135,7 @@ import jQuery from 'jquery'
     }
 
     $('#plate_scan').on('change', function () {
-      var plate_barcode, bed_barcode, robot_barcode
+      let plate_barcode, bed_barcode, robot_barcode
       plate_barcode = this.value
       bed_barcode = $('#bed_scan').val()
       robot_barcode = $('#robot_scan').val()
@@ -147,7 +147,7 @@ import jQuery from 'jquery'
     })
 
     $('#robot_scan').on('change', function () {
-      var robot_barcode
+      let robot_barcode
       robot_barcode = this.value
       newRobotScanned(robot_barcode)
     })

@@ -61,7 +61,7 @@ export default {
     // Create a dictionary of tube barcodes and their numbers of replicates for use
     // in the summary table
     tubesDict() {
-      var summary_dict = {}
+      let summary_dict = {}
       const machine_barcodes = this.tubes.reduce((acc, tube) => {
         if (tube.labware && tube.labware.state == 'passed') {
           acc.push(tube.labware.labware_barcode.machine_barcode)
@@ -70,8 +70,8 @@ export default {
       }, [])
 
       this.tubes.forEach(function (tube) {
-        var tube_machine_barcode = 'Empty'
-        var tube_human_barcode = 'Empty'
+        let tube_machine_barcode = 'Empty'
+        let tube_human_barcode = 'Empty'
 
         // extract the labware barcodes where the labware has been scanned
         if (tube.labware != null) {

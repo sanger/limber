@@ -4,7 +4,7 @@ import jQuery from 'jquery'
 
   //= require lib/ajax_support
 
-  var Events = {
+  let Events = {
     on: function () {
       if (!this.o) this.o = $({})
 
@@ -18,7 +18,7 @@ import jQuery from 'jquery'
     },
   }
 
-  var StateMachine = function () {}
+  let StateMachine = function () {}
 
   StateMachine.fn = StateMachine.prototype
 
