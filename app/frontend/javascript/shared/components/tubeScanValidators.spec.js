@@ -15,8 +15,8 @@ import {
   tubeMostRecentMolarity,
 } from '@/javascript/shared/tubeTransferVolumes'
 
-jest.mock('@/javascript/shared/tubeHelpers')
-jest.mock('@/javascript/shared/tubeTransferVolumes')
+vi.mock('@/javascript/shared/tubeHelpers')
+vi.mock('@/javascript/shared/tubeTransferVolumes')
 
 describe('checkDuplicates', () => {
   it('passes if it has distinct tubes', () => {
@@ -219,6 +219,10 @@ describe('checkTransferParameters', () => {
 
   describe('all transfer parameters', () => {
     beforeEach(() => {
+      purposeTargetMolarityParameter.mockClear()
+      purposeTargetVolumeParameter.mockClear()
+      purposeMinimumPickParameter.mockClear()
+
       purposeTargetMolarityParameter.mockReturnValue(4)
       purposeTargetVolumeParameter.mockReturnValue(192)
       purposeMinimumPickParameter.mockReturnValue(2)

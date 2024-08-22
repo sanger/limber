@@ -17,7 +17,9 @@ GBS PCR1:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
-  :presenter_class: Presenters::MinimalPcrPlatePresenter
+  # Changed from using MinimalPcrPlatePresenter to allow well failing.
+  # Can be reverted if well failing functionality on stock plates is implemented.
+  :presenter_class: Presenters::PcrWithPrimerPanelPlatePresenter
   :input_plate: false
   :creator_class: LabwareCreators::QuadrantStampPrimerPanel
   :size: 384

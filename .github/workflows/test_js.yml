@@ -22,7 +22,7 @@ jobs:
       - name: Install
         run: yarn install
       - name: Run yarn test
-        run: yarn test
+        run: yarn coverage
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:

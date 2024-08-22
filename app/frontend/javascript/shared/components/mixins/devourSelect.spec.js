@@ -80,7 +80,7 @@ describe('DevourSelect mixin', () => {
 
       // Devour logs the error automatically, which clutters the feedback
       // so we disable logging here
-      jest.spyOn(console, 'log').mockImplementation(() => {})
+      vi.spyOn(console, 'log').mockImplementation(() => {})
 
       // mock the devour api: url, params, response
       api.mockFail(

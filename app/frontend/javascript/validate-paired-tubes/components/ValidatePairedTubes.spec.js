@@ -8,7 +8,7 @@ import {
   checkState,
   checkTransferParameters,
 } from '@/javascript/shared/components/tubeScanValidators'
-jest.mock('@/javascript/shared/components/tubeScanValidators')
+vi.mock('@/javascript/shared/components/tubeScanValidators')
 
 describe('TransferVolumes', () => {
   const wrapperFactory = function (options = {}) {
@@ -48,6 +48,11 @@ describe('TransferVolumes', () => {
     const mockCheckId = (_) => validMessage
 
     beforeEach(() => {
+      checkState.mockClear()
+      checkTransferParameters.mockClear()
+      checkMolarityResult.mockClear()
+      checkId.mockClear()
+
       checkState.mockReturnValue(mockCheckState)
       checkTransferParameters.mockReturnValue(mockCheckTransferParameters)
       checkMolarityResult.mockReturnValue(mockCheckMolarityResult)
@@ -105,7 +110,6 @@ describe('TransferVolumes', () => {
       wrapper.vm.destinationTubeValidators // Refresh the evaluation to cause more calls to checkId
 
       // After setting a source tube
-      console.log(checkId.mock.calls)
       expect(checkId.mock.calls[1][0]).toEqual(['test1', 'test2'])
       expect(checkId.mock.calls[1][1]).toEqual('Does not match the source tube')
     })
