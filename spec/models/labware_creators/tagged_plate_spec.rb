@@ -207,8 +207,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       it_behaves_like 'it has a custom page', 'tagged_plate'
 
       context 'on save' do
-        Settings.transfer_templates['Custom pooling'] = 'custom-plate-transfer-template-uuid'
-
         it 'creates a tag plate' do
           expect_api_v2_posts(
             'Transfer',

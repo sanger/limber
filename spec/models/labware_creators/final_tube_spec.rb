@@ -13,18 +13,14 @@ RSpec.describe LabwareCreators::FinalTube do
   context 'on creation' do
     subject { LabwareCreators::FinalTube.new(api, form_attributes) }
 
-    before do
-      Settings.transfer_templates['Transfer from tube to tube by submission'] = transfer_template_uuid
-      stub_api_get(parent_uuid, body: tube_json)
-      stub_api_get(transfer_template_uuid, body: json(:transfer_template, uuid: transfer_template_uuid))
-    end
+    before { stub_api_get(parent_uuid, body: tube_json) }
 
     let(:controller) { TubeCreationController.new }
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }
     let(:user_uuid) { 'user-uuid' }
     let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube--uuid' }
-    let(:transfer_template_uuid) { 'transfer-template-uuid' }
+    let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
     let(:transfer) { create :v2_transfer }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }

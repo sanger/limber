@@ -17,9 +17,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   let(:plate) { json :plate, uuid: parent_uuid, barcode_number: '2', pool_sizes: [8, 8] }
   let(:wells) { json :well_collection, size: 16 }
   let(:wells_in_column_order) { WellHelpers.column_order }
-  let(:transfer_template_name) { 'Pool wells based on submission' }
-  let(:transfer_template_uuid) { 'custom-transfer-template' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid, name: transfer_template_name }
+  let(:transfer_template_uuid) { 'custom-transfer-template' } # Defined in spec_helper.rb
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -28,7 +26,6 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
 
   before do
     create(:templated_transfer_config, name: child_purpose_name, uuid: child_purpose_uuid)
-    Settings.transfer_templates[transfer_template_name] = transfer_template_uuid
     stub_api_get(parent_uuid, body: plate)
     stub_api_get(parent_uuid, 'wells', body: wells)
   end

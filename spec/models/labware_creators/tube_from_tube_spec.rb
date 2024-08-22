@@ -31,17 +31,14 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
     it_behaves_like 'it has no custom page'
 
-    before do
-      Settings.transfer_templates['Transfer between specific tubes'] = transfer_template_uuid
-      creation_request
-    end
+    before { creation_request }
 
     let(:controller) { TubeCreationController.new }
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }
     let(:child_uuid) { 'child-uuid' }
     let(:user_uuid) { 'user-uuid' }
-    let(:transfer_template_uuid) { 'transfer-between-specific-tubes' }
+    let(:transfer_template_uuid) { 'transfer-between-specific-tubes' } # Defined in spec_helper.rb
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
