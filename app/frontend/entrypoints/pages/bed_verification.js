@@ -1,10 +1,7 @@
 import $ from 'jquery'
+import SCAPE from '@/javascript/lib/global_message_system.js'
 
 // Bed Robot Page
-
-/* global SCAPE */
-// SCAPE is defined in global_message_system.js and inherited from the global namespace
-// It should be refactored into a more modular design
 
 //= require lib/ajax_support
 

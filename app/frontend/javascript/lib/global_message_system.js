@@ -1,11 +1,10 @@
 import $ from 'jquery'
+
 // Global SCAPE.message method
 
-if (exports.SCAPE === undefined) {
-  exports.SCAPE = {}
-}
+let SCAPE = {}
 
-exports.SCAPE.message = function (message, status) {
+SCAPE.message = function (message, status) {
   if (message == '') {
     $('#validation_report').empty()
     return
@@ -20,3 +19,5 @@ exports.SCAPE.message = function (message, status) {
         .text(message)
     )
 }
+
+export default SCAPE

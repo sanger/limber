@@ -1,10 +1,5 @@
 import $ from 'jquery'
-
-if (exports.SCAPE === undefined) {
-  exports.SCAPE = {}
-}
-
-let SCAPE = exports.SCAPE
+import SCAPE from '@/javascript/lib/global_message_system.js'
 
 const WELLS_IN_COLUMN_MAJOR_ORDER = [
   'A1',

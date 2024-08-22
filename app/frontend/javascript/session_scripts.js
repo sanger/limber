@@ -1,5 +1,4 @@
 import $ from 'jquery'
-// Global SCAPE.message method
 
 let loggedIn, userName, wasLoggedIn, logIn, logOut, updateUserName, warning, alert, success
 
