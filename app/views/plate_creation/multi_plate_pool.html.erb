@@ -1,4 +1,5 @@
 <%= page('multi-plate-pooling-page') do %>
+  <%= vite_javascript_tag 'entrypoints/pages/multi_plate_pooling.js', defer: true %>
   <%= content do %>
     <%= card without_block: true, id: 'main-content' do %>
       <div id="labware-summary-div">
@@ -44,5 +45,4 @@
        <ul id="pooling-summary" class="list-group"></ul>
     <% end %>
   <% end %>
-  <%= vite_javascript_tag 'multi_plate_pooling.js' %>
 <% end %>
