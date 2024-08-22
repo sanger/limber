@@ -35,7 +35,6 @@ import 'popper.js'
 
 // Load all javascript files previously in the app/assets directory
 import '@/javascript/bed_verification.js'
-import '@/javascript/choose_workflow.js'
 import '@/javascript/global_message_system.js'
 import '@/javascript/legacy_scripts_a.js'
 import '@/javascript/session_scripts.js'
