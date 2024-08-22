@@ -18,7 +18,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   let(:wells) { json :well_collection, size: 16 }
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
+  let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -210,14 +210,28 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         Settings.transfer_templates['Custom pooling'] = 'custom-plate-transfer-template-uuid'
 
         it 'creates a tag plate' do
+          expect_api_v2_posts(
+            'Transfer',
+            [
+              {
+                user_uuid: user_uuid,
+                source_uuid: plate_uuid,
+                destination_uuid: tag_plate_uuid,
+                transfer_template_uuid: transfer_template_uuid,
+                transfers: expected_transfers
+              }
+            ]
+          )
+
           expect(subject.save).to be true
           expect(state_change_tag_plate_request).to have_been_made.once
           expect(plate_conversion_request).to have_been_made.once
-          expect(transfer_creation_request).to have_been_made.once
           expect(tag_layout_creation_request).to have_been_made.once
         end
 
         it 'has the correct child (and uuid)' do
+          stub_api_v2_post('Transfer')
+
           expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)
         end

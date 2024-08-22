@@ -60,25 +60,21 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
 
     let!(:plate_request) { stub_api_get(parent_uuid, body: plate) }
 
-    let!(:transfer_template_request) { stub_api_get('custom-transfer-template', body: transfer_template) }
-
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        transfer_template_uuid,
-        payload: {
-          transfer: {
-            destination: 'child-uuid',
-            source: parent_uuid,
-            user: user_uuid
-          }
-        },
-        body: '{}'
-      )
-    end
     it 'makes the expected requests' do
+      expect_api_v2_posts(
+        'Transfer',
+        [
+          {
+            user_uuid: user_uuid,
+            source_uuid: parent_uuid,
+            destination_uuid: 'child-uuid',
+            transfer_template_uuid: transfer_template_uuid
+          }
+        ]
+      )
+
       expect(subject.save!).to eq true
       expect(plate_creation_request).to have_been_made
-      expect(transfer_creation_request).to have_been_made
     end
   end
 end

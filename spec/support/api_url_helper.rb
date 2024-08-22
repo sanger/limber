@@ -76,7 +76,7 @@ module ApiUrlHelper
   module V2Helpers
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
-      # 'Sequencescape::Api::V2::' and returns true
+      # 'Sequencescape::Api::V2::' and returns true.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:update).and_return(true)
       allow_any_instance_of(receiving_class).to receive(:update!).and_return(true)
@@ -84,15 +84,16 @@ module ApiUrlHelper
 
     def stub_api_v2_save(klass)
       # intercepts the 'save' method for any instance of the class beginning with
-      # 'Sequencescape::Api::V2::' and returns true
+      # 'Sequencescape::Api::V2::' and returns true.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
     end
 
-    def stub_api_v2_post(klass, return_value = true)
+    def stub_api_v2_post(klass, return_value = nil)
       # intercepts the 'create!' method for any class beginning with
-      # 'Sequencescape::Api::V2::' and returns true
+      # 'Sequencescape::Api::V2::' and returns the given value or else true.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      return_value ||= true
       allow(receiving_class).to receive(:create!).and_return(return_value)
     end
 

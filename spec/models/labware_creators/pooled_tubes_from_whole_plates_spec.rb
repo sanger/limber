@@ -21,7 +21,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:purpose) { json :purpose, uuid: purpose_uuid }
-  let(:transfer_template_uuid) { SecureRandom.uuid }
   let(:parent_uuid) { SecureRandom.uuid }
   let(:parent2_uuid) { SecureRandom.uuid }
   let(:parent3_uuid) { SecureRandom.uuid }
@@ -39,8 +38,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
       SBCF::SangerBarcode.new(prefix: 'DN', number: 4).human_barcode
     ]
   end
-
-  before { Settings.transfer_templates['Whole plate to tube'] = transfer_template_uuid }
 
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_plates'
@@ -97,7 +94,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
               user_uuid: user_uuid,
               source_uuid: source_uuid,
               destination_uuid: 'tube-0',
-              transfer_template_uuid: transfer_template_uuid
+              transfer_template_uuid: 'whole-plate-to-tube'
             }
           end
         )

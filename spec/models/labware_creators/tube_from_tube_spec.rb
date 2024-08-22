@@ -33,9 +33,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
     before do
       Settings.transfer_templates['Transfer between specific tubes'] = transfer_template_uuid
-      stub_api_get(transfer_template_uuid, body: json(:transfer_template, uuid: transfer_template_uuid))
       creation_request
-      transfer_request
     end
 
     let(:controller) { TubeCreationController.new }
@@ -61,26 +59,23 @@ RSpec.describe LabwareCreators::TubeFromTube do
       )
     end
 
-    let(:transfer_request) do
-      stub_api_post(
-        transfer_template_uuid,
-        payload: {
-          transfer: {
-            user: user_uuid,
-            source: parent_uuid,
-            destination: child_uuid
-          }
-        },
-        body: json(:transfer_between_specific_tubes, destination_uuid: child_uuid)
-      )
-    end
-
     describe '#save!' do
       it 'creates the child' do
+        expect_api_v2_posts(
+          'Transfer',
+          [
+            {
+              user_uuid: user_uuid,
+              source_uuid: parent_uuid,
+              destination_uuid: child_uuid,
+              transfer_template_uuid: transfer_template_uuid
+            }
+          ]
+        )
+
         subject.save!
         expect(subject.redirection_target.uuid).to eq(child_uuid)
         expect(creation_request).to have_been_made.once
-        expect(transfer_request).to have_been_made.once
       end
     end
   end
