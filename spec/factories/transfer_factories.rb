@@ -16,6 +16,19 @@ FactoryBot.define do
     source_uuid { source.uuid }
     destination_uuid { destination.uuid }
     transfers { { 'A1' => 'A1', 'B1' => 'B1', 'C1' => 'C1' } }
+
+    factory :v2_transfer_to_tubes_by_submission do
+      transient do
+        tube_count { 2 }
+        tubes { create_list(:v2_tube, tube_count) }
+        well_coordinates { WellHelpers.column_order[0, tube_count] }
+      end
+
+      destination_uuid { nil }
+
+      # Transfers will be a hash with column names as keys and tube-like objects for the values.
+      transfers { (0..tube_count - 1).map { |i| [well_coordinates[i], { uuid: tubes[i].uuid }] }.to_h }
+    end
   end
 
   # API V1 Transfer

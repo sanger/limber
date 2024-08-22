@@ -89,11 +89,11 @@ module ApiUrlHelper
       allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
     end
 
-    def stub_api_v2_post(klass)
+    def stub_api_v2_post(klass, return_value = true)
       # intercepts the 'create!' method for any class beginning with
       # 'Sequencescape::Api::V2::' and returns true
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
-      allow(receiving_class).to receive(:create!).and_return(true)
+      allow(receiving_class).to receive(:create!).and_return(return_value)
     end
 
     def expect_api_v2_posts(klass, args_list, return_values = [])
