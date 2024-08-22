@@ -1,5 +1,9 @@
 import $ from 'jquery'
 
+/* global SCAPE */
+// SCAPE is defined in global_message_system.js and inherited from the global namespace
+// It should be refactored into a more modular design
+
 const SOURCE_STATES = ['passed', 'qc_complete']
 
 //= require lib/array_fill_polyfill
