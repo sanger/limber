@@ -27,7 +27,7 @@ FactoryBot.define do
       destination_uuid { nil }
 
       # Transfers will be a hash with column names as keys and tube-like objects for the values.
-      transfers { (0..tube_count - 1).to_h { |i| [well_coordinates[i], { uuid: tubes[i].uuid }] } }
+      transfers { (0..destination_tube_count - 1).to_h { |i| [well_coordinates[i], { uuid: tubes[i].uuid }] } }
     end
 
     factory :v2_transfer_between_tubes do
