@@ -32,7 +32,7 @@ LCMT EM PCRXP:
   :cherrypickable_target: false
   :input_plate: false
 # Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
-# pooling so the flow is directly from PCRXP to Pool XP. 
+# pooling so the flow is directly from PCRXP to Pool XP).
 LCMT EM Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
