@@ -11,20 +11,18 @@ LCMT Lysate:
 
 LCMT DNA Frag:
   :asset_type: plate
-  :stock_plate: true
+  :stock_plate: false
   :cherrypickable_target: false
-  :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
-  :creator_class: LabwareCreators::Uncreatable
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
   :size: 96
 
 LCMT DNA End Prep:
   :asset_type: plate
-  :stock_plate: true
+  :stock_plate: false
   :cherrypickable_target: false
-  :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
-  :creator_class: LabwareCreators::Uncreatable
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
   :size: 96
 
 LCMT DNA Adp Lig:
@@ -32,6 +30,5 @@ LCMT DNA Adp Lig:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: limber_lcm_triomics_dna_prep
   :presenter_class: Presenters::PermissivePresenter
+  :size: 96
