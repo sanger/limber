@@ -31,6 +31,11 @@ LCMT EM PCRXP:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :file_links:
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
 # Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
 # pooling so the flow is directly from PCRXP to Pool XP).
 LCMT EM Pool XP:
