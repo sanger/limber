@@ -1,0 +1,34 @@
+# EMSeq plate purposes
+---
+LCMT Lysate:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :size: 96
+
+LCMT DNA Frag:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
+  :size: 96
+
+LCMT DNA End Prep:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
+  :size: 96
+
+LCMT DNA Adp Lig:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
+  :size: 96
