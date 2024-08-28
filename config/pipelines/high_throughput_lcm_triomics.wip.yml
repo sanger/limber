@@ -7,3 +7,16 @@ LCM Triomics:
     LCMT Lysate: LCMT DNA Frag
     LCMT DNA Frag: LCMT DNA End Prep
     LCMT DNA End Prep: LCMT DNA Adp Lig
+
+LCM Triomics EMSeq:
+  filters:
+    request_type_key: limber_lcm_triomics
+  relationships:
+    LCMT DNA Adp Lig: LCMT EM TET2 Ox
+    LCMT EM TET2 Ox: LCMT EM TET2 Stop
+    LCMT EM TET2 Stop: LCMT EM NaOH Denat
+    LCMT EM NaOH Denat: LCMT EM APOBEC Deam
+    LCMT EM APOBEC Deam: LCMT EM LibPCR
+    LCMT EM LibPCR: LCMT EM PCRXP
+    LCMT EM PCRXP: LCMT EM Pool XP
+    LCMT EM Pool XP: LCMT EM Pool XP Norm
