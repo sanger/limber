@@ -1,0 +1,58 @@
+# LCM Trimoics Pipeline EMSeq Branch Purpose Configuration
+---
+# TODO: LCMT DNA Adp Lig plate will be created by the start story, Y24-271, 
+# and it will have different configuration. It has been added here for the 
+# EMSeq branch development, which is the continuation of the start story.
+LCMT DNA Adp Lig:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :presenter_class: Presenters::PermissivePresenter
+LCMT EM TET2 Ox:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
+LCMT EM TET2 Stop:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM NaOH Denat:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM APOBEC Deam:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM LibPCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM PCRXP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+# Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
+# pooling so the flow is directly from PCRXP to Pool XP. 
+LCMT EM Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LCMT EM Pool XP Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
