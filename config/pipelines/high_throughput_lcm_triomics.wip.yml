@@ -1,14 +1,9 @@
 ---
 # Pipeline configuration for EMSeq
-LCM Triomics DNA Prep:
+LCM Triomics:
   filters:
-    request_type_key: limber_lcm_triomics_dna_prep
+    request_type_key: limber_lcm_triomics
   relationships:
-    LCMT Lysate: LCMT DNA Adp Lig
-
-LCM Triomics DNA WGS Library Prep:
-  filters:
-    request_type_key: limber_lcm_triomics_dna_wgs_library_prep
-    library_type: LCM Triomics DNA WGS
-    relationships:
-      LCMT DNA Lib PCR: LCM DNA Lib PCR
+    LCMT Lysate: LCMT DNA Frag
+    LCMT DNA Frag: LCMT DNA End Prep
+    LCMT DNA End Prep: LCMT DNA Adp Lig
