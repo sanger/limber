@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Poling multiple plates into a tube', js: true do
+RSpec.feature 'Pooling multiple plates into a tube', js: true do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -90,23 +90,6 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
     stub_asset_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
   end
 
-  let!(:transfer_creation_request) do
-    stub_api_get('whole-plate-to-tube', body: json(:whole_plate_to_tube))
-    [plate_uuid, plate_uuid_2].map do |uuid|
-      stub_api_post(
-        'whole-plate-to-tube',
-        payload: {
-          transfer: {
-            user: user_uuid,
-            source: uuid,
-            destination: 'tube-0'
-          }
-        },
-        body: '{}'
-      )
-    end
-  end
-
   let(:well_set_a) { json(:well_collection, aliquot_factory: :tagged_aliquot) }
 
   background do
@@ -148,6 +131,19 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
 
   scenario 'creates multiple plates' do
     stub_v2_plate(example_plate_2)
+
+    expect_api_v2_posts(
+      'Transfer',
+      [plate_uuid, plate_uuid_2].map do |source_uuid|
+        {
+          user_uuid: user_uuid,
+          source_uuid: source_uuid,
+          destination_uuid: 'tube-0',
+          transfer_template_uuid: 'whole-plate-to-tube'
+        }
+      end
+    )
+
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('example-purpose')
@@ -165,7 +161,6 @@ RSpec.feature 'Poling multiple plates into a tube', js: true do
     # of confirming that the right information got passed to the back end otherwise.
     # (Although you expect it to fail on an incorrect request)
     expect(tube_creation_request).to have_been_made
-    transfer_creation_request.map { |r| expect(r).to have_been_made }
   end
 
   scenario 'detects tag clash' do

@@ -114,19 +114,18 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
     let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
-    let!(:transfer_creation_request) do
-      stub_api_get(transfer_template_uuid, body: transfer_template)
-      stub_api_post(
-        transfer_template_uuid,
-        payload: {
-          transfer: {
-            source: plate_uuid,
-            destination: child_plate_uuid,
-            user: user_uuid,
+    def expect_transfer_creation
+      expect_api_v2_posts(
+        'Transfer',
+        [
+          {
+            user_uuid: user_uuid,
+            source_uuid: plate_uuid,
+            destination_uuid: child_plate_uuid,
+            transfer_template_uuid: transfer_template_uuid,
             transfers: expected_transfers
           }
-        },
-        body: '{}'
+        ]
       )
     end
 
@@ -200,14 +199,17 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           let(:tag_plate_state) { 'available' }
 
           it 'creates a tag plate' do
+            expect_transfer_creation
+
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(transfer_creation_request).to have_been_made.once
             expect(state_change_tag_plate_request).to have_been_made.once
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 
           it 'has the correct child (and uuid)' do
+            stub_api_v2_post('Transfer')
+
             expect(subject.save).to be true
 
             # This will be our new plate
@@ -232,9 +234,10 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
             end
 
             it 'creates a tag plate' do
+              expect_transfer_creation
+
               expect(subject.save).to be true
               expect(plate_creation_request).to have_been_made.once
-              expect(transfer_creation_request).to have_been_made.once
               expect(state_change_tag_plate_request).to have_been_made
               expect(custom_tag_layout_creation_request).to have_been_made.once
             end
@@ -245,9 +248,10 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           let(:tag_plate_state) { 'exhausted' }
 
           it 'creates a tagged plate' do
+            expect_transfer_creation
+
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(transfer_creation_request).to have_been_made.once
             expect(state_change_tag_plate_request).not_to have_been_made
 
             # This one will be VERY different
@@ -255,6 +259,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           it 'has the correct child (and uuid)' do
+            stub_api_v2_post('Transfer')
+
             expect(subject.save).to be true
 
             # This will be our new plate
@@ -268,14 +274,17 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           let(:parents) { [plate_uuid] }
 
           it 'creates a tag plate' do
+            expect_transfer_creation
+
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(transfer_creation_request).to have_been_made.once
             expect(state_change_tag_plate_request).not_to have_been_made
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 
           it 'has the correct child (and uuid)' do
+            stub_api_v2_post('Transfer')
+
             expect(subject.save).to be true
             expect(subject.child.uuid).to eq(child_plate_uuid)
           end

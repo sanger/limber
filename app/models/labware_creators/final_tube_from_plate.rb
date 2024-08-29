@@ -21,7 +21,7 @@ module LabwareCreators
     self.default_transfer_template_name = 'Transfer wells to MX library tubes by submission'
 
     def create_labware!
-      transfer_into_existing_tubes!
+      create_transfer!
       pass_tubes!
     end
 
@@ -40,15 +40,12 @@ module LabwareCreators
 
     private
 
-    # rubocop:todo Naming/MemoizedInstanceVariableName
-    def transfer_into_existing_tubes!
-      @transfer ||= transfer_template.create!(user: user_uuid, source: parent_uuid)
+    def create_transfer!
+      @create_transfer ||= transfer!(source_uuid: parent_uuid)
     end
 
-    # rubocop:enable Naming/MemoizedInstanceVariableName
-
     def pass_tubes!
-      raise StandardError, 'Tubes cannot be passed before transfer' if @transfer.nil?
+      raise StandardError, 'Tubes cannot be passed before transfer' if @create_transfer.nil?
 
       tubes_from_transfer.each do |tube_uuid|
         api.state_change.create!(user: user_uuid, target: tube_uuid, target_state: 'passed')
@@ -56,7 +53,7 @@ module LabwareCreators
     end
 
     def tubes_from_transfer
-      @transfer
+      create_transfer!
         .transfers
         .values
         .each_with_object(Set.new) { |tube_details, tube_uuids| tube_uuids << tube_details.fetch('uuid') }

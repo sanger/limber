@@ -33,7 +33,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   let(:tag_plate_uuid) { 'tag-plate-uuid' }
   let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid, lot_uuid: 'lot-uuid' }
   let(:transfer_template_uuid) { 'custom-pooling' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
+  let(:expected_transfers) { WellHelpers.stamp_hash(96) }
   let(:tag_template_uuid) { 'tag-layout-template-0' }
 
   let(:submission_pools) { json(:submission_pool_collection) }
@@ -77,7 +77,22 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   shared_examples 'it supports the plate' do
     let(:help_text) { "Click 'Create plate'" }
 
-    before { stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid')) }
+    before do
+      stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
+
+      expect_api_v2_posts(
+        'Transfer',
+        [
+          {
+            user_uuid: user_uuid,
+            source_uuid: plate_uuid,
+            destination_uuid: tag_plate_uuid,
+            transfer_template_uuid: transfer_template_uuid,
+            transfers: expected_transfers
+          }
+        ]
+      )
+    end
 
     scenario 'creation with the plate' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
