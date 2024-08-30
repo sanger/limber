@@ -2,7 +2,7 @@ import {
   checkDuplicates,
   checkId,
   checkMatchingPurposes,
-  checkPermittedPurposes,
+  checkAcceptablePurposes,
   checkMolarityResult,
   checkState,
   checkTransferParameters,
@@ -148,39 +148,39 @@ describe('checkMatchingPurposes', () => {
   })
 })
 
-describe('checkPermittedPurposes', () => {
+describe('checkAcceptablePurposes', () => {
   it('passes if the tube has a matching purpose', () => {
     const tube = { purpose: { name: 'A Purpose' } }
-    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+    expect(checkAcceptablePurposes(['A Purpose'])(tube)).toEqual({
       valid: true,
     })
   })
 
   it('passes if the tube is undefined', () => {
     const tube = undefined
-    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+    expect(checkAcceptablePurposes(['A Purpose'])(tube)).toEqual({
       valid: true,
     })
   })
 
-  it('passes if the permittedPurposeList is undefined', () => {
+  it('passes if the acceptablePurposesList is undefined', () => {
     const tube = { purpose: { name: 'A Purpose' } }
-    expect(checkPermittedPurposes(undefined)(tube)).toEqual({ valid: true })
+    expect(checkAcceptablePurposes(undefined)(tube)).toEqual({ valid: true })
   })
 
   it('fails if the tube purpose is undefined', () => {
     const tube = {}
-    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+    expect(checkAcceptablePurposes(['A Purpose'])(tube)).toEqual({
       valid: false,
-      message: "Tube purpose 'UNKNOWN' is not in the permitted purpose list: A Purpose",
+      message: "Tube purpose 'UNKNOWN' is not in the acceptable purpose list: A Purpose",
     })
   })
 
-  it('fails if the tube purpose is not in the permittedPurposeList', () => {
+  it('fails if the tube purpose is not in the acceptablePurposesList', () => {
     const tube = { purpose: { name: 'Another Purpose' } }
-    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+    expect(checkAcceptablePurposes(['A Purpose'])(tube)).toEqual({
       valid: false,
-      message: "Tube purpose 'Another Purpose' is not in the permitted purpose list: A Purpose",
+      message: "Tube purpose 'Another Purpose' is not in the acceptable purpose list: A Purpose",
     })
   })
 })

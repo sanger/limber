@@ -55,7 +55,7 @@ import Plate from '@/javascript/shared/components/Plate.vue'
 import {
   checkDuplicates,
   checkState,
-  checkPermittedPurposes,
+  checkAcceptablePurposes,
 } from '@/javascript/shared/components/tubeScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
@@ -147,9 +147,11 @@ export default {
     // Also referenced as require-tube-passed and require_tube_passed
     requireTubePassed: { type: String, required: true },
 
-    // A permitted list of purpose names that can be scanned
-    // If left empty all purposes are permitted
-    permittedPurposes: { type: Array, required: false, default: () => [] },
+    // A acceptable list of purpose names that can be scanned
+    // If left empty all purposes are acceptable
+    // Also referenced as data-acceptable-purposes and data_acceptable_purposes
+    // See computed method acceptablePurposesArray for conversion to array.
+    acceptablePurposes: { type: String, required: false, default: '[]' },
   },
   data() {
     return {
@@ -186,6 +188,9 @@ export default {
     },
     targetColumnsNumber() {
       return Number.parseInt(this.targetColumns)
+    },
+    acceptablePurposesArray() {
+      return JSON.parse(this.acceptablePurposes)
     },
     // Returns a boolean indicating whether the provided tubes are valid.
     // Used to enable and disable the 'Create' button.
@@ -255,8 +260,8 @@ export default {
     scanValidation() {
       const validators = []
 
-      // If any permittedPurposes specified then ensure we validate against them
-      if (this.permittedPurposes.length) validators.push(checkPermittedPurposes(this.permittedPurposes))
+      // If any acceptablePurposes specified then ensure we validate against them
+      if (this.acceptablePurposesArray.length) validators.push(checkAcceptablePurposes(this.acceptablePurposesArray))
 
       if (this.requireTubePassed === 'true') validators.push(checkState(['passed']))
 

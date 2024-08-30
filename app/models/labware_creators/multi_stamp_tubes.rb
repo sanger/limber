@@ -31,8 +31,8 @@ module LabwareCreators
       params.fetch('require_tube_passed', false)
     end
 
-    def permitted_purposes
-      params.fetch('permitted_purposes', [])
+    def acceptable_purposes
+      params.fetch('acceptable_purposes', [])
     end
 
     private

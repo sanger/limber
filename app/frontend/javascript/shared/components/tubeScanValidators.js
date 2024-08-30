@@ -100,15 +100,15 @@ const checkMatchingPurposes = (purpose) => {
   }
 }
 
-// Returns a validator than ensures the purpose names of all tubes is in the permitted purpose list
-const checkPermittedPurposes = (permittedPurposeList) => {
+// Returns a validator than ensures the purpose names of all tubes is in the acceptable purpose list
+const checkAcceptablePurposes = (acceptablePurposesList) => {
   return (tube) => {
-    if (tube && permittedPurposeList && !permittedPurposeList.includes(tube.purpose?.name)) {
+    if (tube && acceptablePurposesList && !acceptablePurposesList.includes(tube.purpose?.name)) {
       return {
         valid: false,
         message: `Tube purpose '${
           tube.purpose?.name || 'UNKNOWN'
-        }' is not in the permitted purpose list: ${permittedPurposeList}`,
+        }' is not in the acceptable purpose list: ${acceptablePurposesList.join(',')}`,
       }
     } else {
       return validScanMessage()
@@ -170,7 +170,7 @@ export {
   checkDuplicates,
   checkId,
   checkMatchingPurposes,
-  checkPermittedPurposes,
+  checkAcceptablePurposes,
   checkMolarityResult,
   checkState,
   checkTransferParameters,
