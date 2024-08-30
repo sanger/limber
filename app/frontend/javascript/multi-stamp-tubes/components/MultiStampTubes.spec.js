@@ -29,6 +29,7 @@ describe('MultiStampTubes', () => {
         transfersCreator: 'multi-stamp-tubes',
         allowTubeDuplicates: 'false',
         requireTubePassed: 'false',
+        permittedPurposes: [],
         ...options,
       },
       localVue,
@@ -512,6 +513,39 @@ describe('MultiStampTubes', () => {
       wrapper.vm.updateTube(1, passedTube)
 
       const validation = aggregate(wrapper.vm.scanValidation, passedTube.labware)
+      expect(validation).toHaveProperty('valid')
+      expect(validation.valid).toEqual(true)
+    })
+  })
+
+  describe('when tubes are required to be in the permittedPurposes list', () => {
+    it('is not valid when we scan tubes with purposes not in the permittedPurposes list', async () => {
+      const wrapper = wrapperFactory({ permittedPurposes: ['A Purpose'] })
+      const tube1 = {
+        state: 'valid',
+        labware: tubeFactory({ uuid: 'tube-uuid-1', purpose: { name: 'Another Purpose' } }),
+      }
+
+      wrapper.vm.updateTube(1, tube1)
+
+      const validationMessage = {
+        message: "Tube purpose 'Another Purpose' is not in the permitted purpose list: A Purpose",
+        valid: false,
+      }
+      expect(wrapper.vm.scanValidation.length).toEqual(2)
+      expect(aggregate(wrapper.vm.scanValidation, tube1.labware)).toEqual(validationMessage)
+    })
+
+    it('is valid when we scan tubes with purposes in the permittedPurposes list', async () => {
+      const wrapper = wrapperFactory({ permittedPurposes: ['A Purpose'] })
+      const tube1 = {
+        state: 'valid',
+        labware: tubeFactory({ uuid: 'tube-uuid-1', purpose: { name: 'A Purpose' } }),
+      }
+
+      wrapper.vm.updateTube(1, tube1)
+
+      const validation = aggregate(wrapper.vm.scanValidation, tube1.labware)
       expect(validation).toHaveProperty('valid')
       expect(validation.valid).toEqual(true)
     })

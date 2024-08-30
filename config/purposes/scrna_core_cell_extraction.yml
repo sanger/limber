@@ -39,6 +39,7 @@ LRC Blood Bank:
     params:
       allow_tube_duplicates: yes
       require_tube_passed: yes
+      permitted_purposes: ['LRC Blood Aliquot']
   :submission_options:
     scRNA core cell extraction:
       template_name: 'Limber - scRNA Core Cell Extraction'

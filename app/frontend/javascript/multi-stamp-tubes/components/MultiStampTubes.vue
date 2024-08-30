@@ -52,7 +52,11 @@
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import LoadingModal from '@/javascript/shared/components/LoadingModal.vue'
 import Plate from '@/javascript/shared/components/Plate.vue'
-import { checkDuplicates, checkState } from '@/javascript/shared/components/tubeScanValidators.js'
+import {
+  checkDuplicates,
+  checkState,
+  checkPermittedPurposes,
+} from '@/javascript/shared/components/tubeScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
@@ -142,6 +146,10 @@ export default {
     // Should tubes be required to be in passed state
     // Also referenced as require-tube-passed and require_tube_passed
     requireTubePassed: { type: String, required: true },
+
+    // A permitted list of purpose names that can be scanned
+    // If left empty all purposes are permitted
+    permittedPurposes: { type: Array, required: false, default: () => [] },
   },
   data() {
     return {
@@ -246,6 +254,9 @@ export default {
     },
     scanValidation() {
       const validators = []
+
+      // If any permittedPurposes specified then ensure we validate against them
+      if (this.permittedPurposes.length) validators.push(checkPermittedPurposes(this.permittedPurposes))
 
       if (this.requireTubePassed === 'true') validators.push(checkState(['passed']))
 

@@ -302,6 +302,7 @@ const resources = [
       uuid: "",
       name: "",
       size: "",
+      lifespan: ""
     },
     options: {},
   },

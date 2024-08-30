@@ -31,6 +31,10 @@ module LabwareCreators
       params.fetch('require_tube_passed', false)
     end
 
+    def permitted_purposes
+      params.fetch('permitted_purposes', [])
+    end
+
     private
 
     def create_labware!

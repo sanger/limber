@@ -100,6 +100,22 @@ const checkMatchingPurposes = (purpose) => {
   }
 }
 
+// Returns a validator than ensures the purpose names of all tubes is in the permitted purpose list
+const checkPermittedPurposes = (permittedPurposeList) => {
+  return (tube) => {
+    if (tube && permittedPurposeList && !permittedPurposeList.includes(tube.purpose?.name)) {
+      return {
+        valid: false,
+        message: `Tube purpose '${
+          tube.purpose?.name || 'UNKNOWN'
+        }' is not in the permitted purpose list: ${permittedPurposeList}`,
+      }
+    } else {
+      return validScanMessage()
+    }
+  }
+}
+
 // Returns a validator that ensures the tube contains at least one QC result
 // for molarity in nM.
 const checkMolarityResult = () => {
@@ -150,4 +166,12 @@ const checkTransferParameters = (purposeConfigs) => {
   }
 }
 
-export { checkDuplicates, checkId, checkMatchingPurposes, checkMolarityResult, checkState, checkTransferParameters }
+export {
+  checkDuplicates,
+  checkId,
+  checkMatchingPurposes,
+  checkPermittedPurposes,
+  checkMolarityResult,
+  checkState,
+  checkTransferParameters,
+}

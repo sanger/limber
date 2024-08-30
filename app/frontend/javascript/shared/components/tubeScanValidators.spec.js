@@ -2,6 +2,7 @@ import {
   checkDuplicates,
   checkId,
   checkMatchingPurposes,
+  checkPermittedPurposes,
   checkMolarityResult,
   checkState,
   checkTransferParameters,
@@ -143,6 +144,43 @@ describe('checkMatchingPurposes', () => {
     expect(checkMatchingPurposes({ name: 'A Purpose' })(tube)).toEqual({
       valid: false,
       message: "Tube purpose 'Another Purpose' doesn't match other tubes",
+    })
+  })
+})
+
+describe('checkPermittedPurposes', () => {
+  it('passes if the tube has a matching purpose', () => {
+    const tube = { purpose: { name: 'A Purpose' } }
+    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+      valid: true,
+    })
+  })
+
+  it('passes if the tube is undefined', () => {
+    const tube = undefined
+    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+      valid: true,
+    })
+  })
+
+  it('passes if the permittedPurposeList is undefined', () => {
+    const tube = { purpose: { name: 'A Purpose' } }
+    expect(checkPermittedPurposes(undefined)(tube)).toEqual({ valid: true })
+  })
+
+  it('fails if the tube purpose is undefined', () => {
+    const tube = {}
+    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+      valid: false,
+      message: "Tube purpose 'UNKNOWN' is not in the permitted purpose list: A Purpose",
+    })
+  })
+
+  it('fails if the tube purpose is not in the permittedPurposeList', () => {
+    const tube = { purpose: { name: 'Another Purpose' } }
+    expect(checkPermittedPurposes(['A Purpose'])(tube)).toEqual({
+      valid: false,
+      message: "Tube purpose 'Another Purpose' is not in the permitted purpose list: A Purpose",
     })
   })
 })
