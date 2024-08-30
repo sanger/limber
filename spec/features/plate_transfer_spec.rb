@@ -47,25 +47,17 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
 
     # We look up the user
     stub_v2_user(user, swipecard)
-
-    stub_state_changes_post
   end
 
-  let(:stub_state_changes_post) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        state_change: {
-          target_state: 'started',
-          reason: 'Robot bravo LB Post Shear => LB End Prep started',
-          customer_accepts_responsibility: false,
-          target: plate_uuid,
-          user: user_uuid,
-          contents: nil
-        }
-      },
-      body: json(:state_change, target_state: 'started')
-    )
+  let(:state_change_attributes) do
+    {
+      contents: nil,
+      customer_accepts_responsibility: false,
+      reason: 'Robot bravo LB Post Shear => LB End Prep started',
+      target_state: 'started',
+      target_uuid: plate_uuid,
+      user_uuid: user_uuid
+    }
   end
 
   scenario 'starts the robot and saves the robot barcode' do
@@ -73,6 +65,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
       'CustomMetadatumCollection',
       [{ user_id: user.id, asset_id: example_plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
     )
+    expect_api_v2_posts('StateChange', [state_change_attributes])
 
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return(
       beds: {
@@ -135,7 +128,6 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     end
     click_button('Start the bravo LB Post Shear => LB End Prep')
     expect(page).to have_content('Robot bravo LB Post Shear => LB End Prep has been started.')
-    expect(stub_state_changes_post).to have_been_requested
   end
 
   scenario 'informs if the robot barcode is wrong' do

@@ -26,13 +26,11 @@ RSpec.feature 'Cancelling a whole plate', js: true do
     json :plate, barcode_number: example_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
   end
 
-  let!(:state_change_request) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        'state_change' => {
-          user: user_uuid,
-          target: plate_uuid,
+  def expect_state_change_create
+    expect_api_v2_posts(
+      'StateChange',
+      [
+        {
           contents: %w[
             A1
             B1
@@ -130,12 +128,13 @@ RSpec.feature 'Cancelling a whole plate', js: true do
             G12
             H12
           ],
-          target_state: 'cancelled',
+          customer_accepts_responsibility: nil,
           reason: 'Not required',
-          customer_accepts_responsibility: nil
+          target_state: 'cancelled',
+          target_uuid: plate_uuid,
+          user_uuid: user_uuid
         }
-      },
-      body: '{}' # We don't care about the response
+      ]
     )
   end
 
@@ -164,6 +163,8 @@ RSpec.feature 'Cancelling a whole plate', js: true do
   end
 
   scenario 'from the interface' do
+    expect_state_change_create
+
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
 
     # Spotted a potential bug where we could accidentally persist details
@@ -180,6 +181,5 @@ RSpec.feature 'Cancelling a whole plate', js: true do
     click_on('Cancel Labware')
 
     expect(find('#flashes')).to have_content("Labware: #{plate_barcode} has been changed to a state of Cancelled.")
-    expect(state_change_request).to have_been_made
   end
 end

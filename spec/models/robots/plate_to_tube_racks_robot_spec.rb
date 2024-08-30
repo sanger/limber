@@ -355,40 +355,29 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
   end
 
   describe '#perform_transfer' do
-    let(:state_change_requests) do
-      tube_uuids.map do |tube_uuid|
-        stub_api_post(
-          'state_changes',
-          payload: {
-            state_change: {
-              target_state: 'passed',
-              reason: "Robot #{robot_name} started",
-              customer_accepts_responsibility: false,
-              target: tube_uuid,
-              user: user_uuid,
-              contents: nil
-            }
-          },
-          body: json(:state_change, target_state: 'passed')
-        )
-      end
-    end
-
     before do
       # Create purpose configs in Settings for state changers.
       create(:purpose_config, uuid: plate_purpose_uuid, name: plate_purpose_name)
       create(:purpose_config, uuid: tube_purpose1_uuid, name: tube_purpose1_name)
       create(:purpose_config, uuid: tube_purpose2_uuid, name: tube_purpose2_name)
-
-      # Stub state change requests to the Sequencescape API; one for each tube on tube-racks.
-      state_change_requests
     end
 
     it 'performs transfers for all tubes on the tube-racks' do
-      robot.perform_transfer(scanned_layout)
+      expect_api_v2_posts(
+        'StateChange',
+        tube_uuids.map do |tube_uuid|
+          {
+            contents: nil,
+            customer_accepts_responsibility: false,
+            reason: "Robot #{robot_name} started",
+            target_state: 'passed',
+            target_uuid: tube_uuid,
+            user_uuid: user_uuid
+          }
+        end
+      )
 
-      expect(state_change_requests[0]).to have_been_requested
-      tube_uuids.each_with_index { |_tube_uuid, index| expect(state_change_requests[index]).to have_been_requested }
+      robot.perform_transfer(scanned_layout)
     end
   end
 end

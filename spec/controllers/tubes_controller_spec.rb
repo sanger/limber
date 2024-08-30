@@ -34,24 +34,21 @@ RSpec.describe TubesController, type: :controller do
       tube_request
     end
 
-    let!(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          'state_change' => {
-            user: user_uuid,
-            target: tube_uuid,
-            target_state: 'cancelled',
-            reason: 'Because testing',
-            customer_accepts_responsibility: true,
-            contents: nil
-          }
-        },
-        body: '{}'
-      ) # We don't care about the response
-    end
-
     it 'transitions the tube' do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: nil,
+            customer_accepts_responsibility: true,
+            reason: 'Because testing',
+            target_state: 'cancelled',
+            target_uuid: tube_uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+
       put :update,
           params: {
             id: tube_uuid,
@@ -65,7 +62,7 @@ RSpec.describe TubesController, type: :controller do
           session: {
             user_uuid: user_uuid
           }
-      expect(state_change_request).to have_been_made
+
       expect(response).to redirect_to(search_path)
     end
   end

@@ -4,36 +4,30 @@ require 'rails_helper'
 require './app/controllers/robots_controller'
 
 RSpec.describe RobotsController, type: :controller, robots: true do
+  has_a_working_api
+
   include FeatureHelpers
   include RobotHelpers
 
   let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
   describe '#start' do
-    has_a_working_api
-
     let(:user) { create :user }
     let(:plate) { create :v2_plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
-    let!(:state_chage) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            'target_state' => 'passed',
-            'reason' => 'Robot robot_name started',
-            'customer_accepts_responsibility' => false,
-            'target' => plate.uuid,
-            'user' => user.uuid,
-            'contents' => nil
-          }
-        },
-        body: json(:state_change)
-      )
+    let(:metadata_attributes) do
+      { user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }
     end
 
-    let(:metadata_payload) do
-      { user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }
+    let(:state_change_attributes) do
+      {
+        contents: nil,
+        customer_accepts_responsibility: false,
+        reason: 'Robot robot_name started',
+        target_state: 'passed',
+        target_uuid: plate.uuid,
+        user_uuid: user.uuid
+      }
     end
 
     setup do
@@ -53,7 +47,8 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     end
 
     it 'adds robot barcode to plate metadata' do
-      expect_api_v2_posts('CustomMetadatumCollection', [metadata_payload])
+      expect_api_v2_posts('CustomMetadatumCollection', [metadata_attributes])
+      expect_api_v2_posts('StateChange', [state_change_attributes])
 
       post :start,
            params: {
@@ -73,8 +68,6 @@ RSpec.describe RobotsController, type: :controller, robots: true do
   end
 
   describe '#verify' do
-    has_a_working_api
-
     let(:user) { create :user }
     let(:target_plate) do
       create :v2_plate,
