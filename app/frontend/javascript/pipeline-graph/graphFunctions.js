@@ -86,7 +86,7 @@ const getElementPipeline = function (element) {
 }
 
 const pipelineColourEdge = function (edge) {
-  var pipeline = getElementPipeline(edge)
+  let pipeline = getElementPipeline(edge)
   return colourMapping.getPipelineColour(pipeline)
 }
 

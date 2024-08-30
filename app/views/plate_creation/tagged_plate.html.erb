@@ -1,11 +1,11 @@
 <%= page(:'tag-creation-page', prevent_row: true) do -%>
+  <%= vite_javascript_tag 'entrypoints/pages/tagged-plate.js', defer: true %>
+
   <div id="labware-creator-config"
       data-tag-plates-list="<%= @labware_creator.tag_plates_list.to_json %>"
       data-dual-required="<%= @labware_creator.requires_tag2? %>"
       data-enforce-same-template-within-pool="<%= @labware_creator.enforce_same_template_within_pool? %>">
   </div>
-
-  <%= vite_javascript_tag 'tagged-plate' %>
 
   <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>

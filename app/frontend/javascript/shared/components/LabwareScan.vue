@@ -202,7 +202,7 @@ export default {
   },
   watch: {
     state() {
-      var message
+      let message
       if (this.labwareType == 'tube') {
         message = { labware: this.labware, state: this.state }
       } else {
