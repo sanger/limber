@@ -31,7 +31,7 @@ function processTagsPerWell(acc, well, relIndex, absIndex, tagsPerWell, walker) 
   let relIndexAdj = relIndex * tagsPerWell
   let absIndexAdj = absIndex * tagsPerWell
 
-  for (var i = 0; i < tagsPerWell; i++) {
+  for (let i = 0; i < tagsPerWell; i++) {
     acc[well.position].push(walker(well, relIndexAdj + i, absIndexAdj + i))
   }
   return acc

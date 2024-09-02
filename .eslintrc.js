@@ -1,14 +1,13 @@
 module.exports = {
   env: {
+    'vitest/env': true,
     browser: true,
-    commonjs: true,
-    es6: true,
-    jasmine: true,
     node: true,
   },
-  plugins: ['vue'],
+  plugins: ['vitest', 'vue'],
   extends: ['eslint:recommended', 'plugin:vue/recommended', 'prettier'],
   parserOptions: {
+    ecmaVersion: 'latest',
     sourceType: 'module',
     requireConfigFile: false,
   },
@@ -23,8 +22,11 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
-    // The API sends snake case stuff, and this lets us pass things straight
-    // through. Not a great compromise though.
-    'vue/prop-name-casing': ['off'],
+    'no-var': 'error',
+    // We need a proper logging solution (see https://github.com/sanger/limber/issues/836),
+    // but until then:
+    'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
+    // Legacy in from the old days. We should remove these:
+    'vue/prop-name-casing': ['warn'],
   },
 }

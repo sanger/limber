@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('files-list')) {
     /* The files-list element isn't on all pages. So only initialize our
      * Vue app if we actually find it */
-    var app = new Vue({
+    let app = new Vue({
       el: '#files-list',
       render: (h) => h(FileList),
     })

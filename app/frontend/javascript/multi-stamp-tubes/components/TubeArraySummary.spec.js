@@ -6,15 +6,15 @@ import TubeArraySummary from './TubeArraySummary.vue'
 import localVue from '@/javascript/test_support/base_vue.js'
 
 describe('TubeArraySummary', () => {
-  var emptyTubes = []
+  let emptyTubes = []
   for (let i = 0; i < 96; i++) {
     emptyTubes.push({ index: i, labware: null, state: 'empty' })
   }
 
-  var fullSetOfTubes = []
+  let fullSetOfTubes = []
   for (let i = 0; i < 96; i++) {
-    var machine_barcode = (1000000000000 + i).toString()
-    var human_barcode = 'NT' + (1000 + i).toString() + 'G'
+    let machine_barcode = (1000000000000 + i).toString()
+    let human_barcode = 'NT' + (1000 + i).toString() + 'G'
     fullSetOfTubes.push({
       index: i,
       labware: { labware_barcode: { human_barcode: human_barcode, machine_barcode: machine_barcode } },
@@ -22,39 +22,29 @@ describe('TubeArraySummary', () => {
     })
   }
 
-  var mixtureOfTubesWithDuplicates = []
+  let mixtureOfTubesWithDuplicates = []
   for (let i = 0; i < 96; i++) {
-    switch (true) {
-      case i < 6:
-        var human_barcode1 = 'NT1001G'
-        var machine_barcode1 = '1000000000001'
-        mixtureOfTubesWithDuplicates.push({
-          index: i.toString(),
-          labware: { labware_barcode: { human_barcode: human_barcode1, machine_barcode: machine_barcode1 } },
-          state: 'valid',
-        })
-        break
-      case i < 12:
-        var human_barcode2 = 'NT1002H'
-        var machine_barcode2 = '1000000000002'
-        mixtureOfTubesWithDuplicates.push({
-          index: i.toString(),
-          labware: { labware_barcode: { human_barcode: human_barcode2, machine_barcode: machine_barcode2 } },
-          state: 'valid',
-        })
-        break
-      case i < 18:
-        var human_barcode3 = 'NT1003I'
-        var machine_barcode3 = '1000000000003'
-        mixtureOfTubesWithDuplicates.push({
-          index: i.toString(),
-          labware: { labware_barcode: { human_barcode: human_barcode3, machine_barcode: machine_barcode3 } },
-          state: 'valid',
-        })
-        break
-      default:
-        mixtureOfTubesWithDuplicates.push({ index: i.toString(), labware: null, state: 'empty' })
-        break
+    let human_barcode, machine_barcode
+
+    if (i < 6) {
+      human_barcode = 'NT1001G'
+      machine_barcode = '1000000000001'
+    } else if (i < 12) {
+      human_barcode = 'NT1002H'
+      machine_barcode = '1000000000002'
+    } else if (i < 18) {
+      human_barcode = 'NT1003I'
+      machine_barcode = '1000000000003'
+    }
+
+    if (human_barcode && machine_barcode) {
+      mixtureOfTubesWithDuplicates.push({
+        index: i.toString(),
+        labware: { labware_barcode: { human_barcode, machine_barcode } },
+        state: 'valid',
+      })
+    } else {
+      mixtureOfTubesWithDuplicates.push({ index: i.toString(), labware: null, state: 'empty' })
     }
   }
 

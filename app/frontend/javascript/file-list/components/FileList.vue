@@ -25,9 +25,9 @@ export default {
   },
   methods: {
     fetchData: function () {
-      var self = this
+      let self = this
       self.loading = true
-      var xhr = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest()
       xhr.open('GET', self.base_url)
       xhr.onload = function () {
         self.qc_files = JSON.parse(xhr.responseText)['qc_files']
