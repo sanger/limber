@@ -5,7 +5,7 @@
 %>
 <div class="relative-item">
     <%= labware.purpose.name %> - <%= link_to labware_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %>
-        <%= labware.barcode.human %>
+        <%= labware.barcode.human.present? ? labware.barcode.human : labware.barcode.machine %>
     <% end %>
     <%= content_tag(:span, state_badge(labware.state), class: 'float-right') %>
 </div>
