@@ -24,15 +24,14 @@ module StateChangers
 
     # rubocop:todo Style/OptionalBooleanParameter
     def move_to!(state, reason = nil, customer_accepts_responsibility = false)
-      state_details = {
-        target: labware_uuid,
-        user: user_uuid,
-        target_state: state,
-        reason: reason,
+      Sequencescape::Api::V2::StateChange.create!(
+        contents: contents_for(state),
         customer_accepts_responsibility: customer_accepts_responsibility,
-        contents: contents_for(state)
-      }
-      api.state_change.create!(state_details)
+        reason: reason,
+        target_state: state,
+        target_uuid: labware_uuid,
+        user_uuid: user_uuid
+      )
     end
 
     # rubocop:enable Style/OptionalBooleanParameter

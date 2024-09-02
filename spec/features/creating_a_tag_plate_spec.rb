@@ -5,6 +5,7 @@ require_relative '../support/shared_tagging_examples'
 
 RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   has_a_working_api
+
   let(:user_uuid) { 'user-uuid' }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
@@ -92,6 +93,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
           }
         ]
       )
+
+      stub_api_v2_post('StateChange')
     end
 
     scenario 'creation with the plate' do

@@ -26,13 +26,11 @@ RSpec.feature 'Failing a whole plate', js: true do
     json :plate, barcode_number: example_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
   end
 
-  let!(:state_change_request) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        'state_change' => {
-          user: user_uuid,
-          target: plate_uuid,
+  def expect_state_change_create
+    expect_api_v2_posts(
+      'StateChange',
+      [
+        {
           contents: %w[
             A1
             B1
@@ -130,12 +128,13 @@ RSpec.feature 'Failing a whole plate', js: true do
             G12
             H12
           ],
-          target_state: 'failed',
+          customer_accepts_responsibility: true,
           reason: 'Power failure',
-          customer_accepts_responsibility: true
+          target_state: 'failed',
+          target_uuid: plate_uuid,
+          user_uuid: user_uuid
         }
-      },
-      body: '{}' # We don't care about the response
+      ]
     )
   end
 
@@ -162,6 +161,8 @@ RSpec.feature 'Failing a whole plate', js: true do
   end
 
   scenario 'failing a plate' do
+    expect_state_change_create
+
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
 
     within_fieldset('Change state to') { choose('failed', allow_label_click: true) }
@@ -175,6 +176,5 @@ RSpec.feature 'Failing a whole plate', js: true do
     expect(find('#flashes')).to have_content(
       "Labware: #{plate_barcode} has been changed to a state of Failed. The customer will still be charged."
     )
-    expect(state_change_request).to have_been_made
   end
 end

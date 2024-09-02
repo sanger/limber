@@ -129,18 +129,17 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
       )
     end
 
-    let!(:state_change_tag_plate_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            user: user_uuid,
-            target: tag_plate_uuid,
+    def expect_state_change_creation
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
             reason: 'Used in Library creation',
-            target_state: 'exhausted'
+            target_uuid: tag_plate_uuid,
+            target_state: 'exhausted',
+            user_uuid: user_uuid
           }
-        },
-        body: json(:state_change)
+        ]
       )
     end
 
@@ -200,15 +199,16 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
           it 'creates a tag plate' do
             expect_transfer_creation
+            expect_state_change_creation
 
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(state_change_tag_plate_request).to have_been_made.once
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 
           it 'has the correct child (and uuid)' do
             stub_api_v2_post('Transfer')
+            stub_api_v2_post('StateChange')
 
             expect(subject.save).to be true
 
@@ -217,28 +217,12 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           context 'when a user has exhausted the plate in another tab' do
-            let!(:state_change_tag_plate_request) do
-              stub_api_post(
-                'state_changes',
-                payload: {
-                  state_change: {
-                    user: user_uuid,
-                    target: tag_plate_uuid,
-                    reason: 'Used in Library creation',
-                    target_state: 'exhausted'
-                  }
-                },
-                status: 500,
-                body: '{"general":["No obvious transition from \"passed\" to \"passed\""]}'
-              )
-            end
-
             it 'creates a tag plate' do
               expect_transfer_creation
+              expect_state_change_creation
 
               expect(subject.save).to be true
               expect(plate_creation_request).to have_been_made.once
-              expect(state_change_tag_plate_request).to have_been_made
               expect(custom_tag_layout_creation_request).to have_been_made.once
             end
           end
@@ -249,10 +233,10 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
           it 'creates a tagged plate' do
             expect_transfer_creation
+            expect(Sequencescape::Api::V2::StateChange).not_to receive(:create!)
 
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(state_change_tag_plate_request).not_to have_been_made
 
             # This one will be VERY different
             expect(custom_tag_layout_creation_request).to have_been_made.once
@@ -275,10 +259,10 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
           it 'creates a tag plate' do
             expect_transfer_creation
+            expect(Sequencescape::Api::V2::StateChange).not_to receive(:create!)
 
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(state_change_tag_plate_request).not_to have_been_made
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 

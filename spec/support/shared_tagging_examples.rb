@@ -1,22 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.shared_context 'a tag plate creator' do
-  # Requests that might get made
-  let!(:state_change_tag_plate_request) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        state_change: {
-          user: user_uuid,
-          target: tag_plate_uuid,
-          reason: 'Used in Library creation',
-          target_state: 'exhausted'
-        }
-      },
-      body: json(:state_change)
-    )
-  end
-
   let!(:plate_conversion_request) do
     stub_api_post(
       'plate_conversions',

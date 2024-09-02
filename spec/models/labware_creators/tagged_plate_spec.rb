@@ -221,14 +221,26 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
             ]
           )
 
+          expect_api_v2_posts(
+            'StateChange',
+            [
+              {
+                reason: 'Used in Library creation',
+                target_state: 'exhausted',
+                target_uuid: tag_plate_uuid,
+                user_uuid: user_uuid
+              }
+            ]
+          )
+
           expect(subject.save).to be true
-          expect(state_change_tag_plate_request).to have_been_made.once
           expect(plate_conversion_request).to have_been_made.once
           expect(tag_layout_creation_request).to have_been_made.once
         end
 
         it 'has the correct child (and uuid)' do
           stub_api_v2_post('Transfer')
+          stub_api_v2_post('StateChange')
 
           expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)

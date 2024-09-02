@@ -48,7 +48,11 @@ module LabwareCreators
       raise StandardError, 'Tubes cannot be passed before transfer' if @create_transfer.nil?
 
       tubes_from_transfer.each do |tube_uuid|
-        api.state_change.create!(user: user_uuid, target: tube_uuid, target_state: 'passed')
+        Sequencescape::Api::V2::StateChange.create!(
+          target_state: 'passed',
+          target_uuid: tube_uuid,
+          user_uuid: user_uuid
+        )
       end
     end
 

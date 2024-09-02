@@ -25,23 +25,6 @@ RSpec.feature 'Failing thresholds', js: true do
     create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells
   end
 
-  let!(:state_change_request) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        'state_change' => {
-          user: user_uuid,
-          target: plate_uuid,
-          contents: %w[A1 A3],
-          target_state: 'failed',
-          reason: 'Individual Well Failure',
-          customer_accepts_responsibility: nil
-        }
-      },
-      body: '{}' # We don't care about the response
-    )
-  end
-
   # Setup stubs
   background do
     # Set-up the plate config
@@ -66,14 +49,25 @@ RSpec.feature 'Failing thresholds', js: true do
   end
 
   scenario 'failing wells' do
+    expect_api_v2_posts(
+      'StateChange',
+      [
+        {
+          contents: %w[A1 A3],
+          customer_accepts_responsibility: nil,
+          reason: 'Individual Well Failure',
+          target_state: 'failed',
+          target_uuid: plate_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    )
+
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-
     click_on('Fail Wells')
-
     fill_in 'Molarity', with: 15
-
     click_on('Fail selected wells')
+
     expect(find('#flashes')).to have_content('Selected wells have been failed')
-    expect(state_change_request).to have_been_made
   end
 end
