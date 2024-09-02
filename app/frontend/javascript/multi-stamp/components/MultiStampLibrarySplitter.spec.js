@@ -272,10 +272,10 @@ describe('MultiStampLibrarySplitter', () => {
           },
         }
 
-        var payloads = [plate1Payload, plate2Payload]
+        let payloads = [plate1Payload, plate2Payload]
 
-        var numCalls = 0
-        var listChecks = []
+        let numCalls = 0
+        let listChecks = []
         mock.onPost().reply((config) => {
           listChecks.push(config)
           numCalls = numCalls + 1
@@ -289,9 +289,9 @@ describe('MultiStampLibrarySplitter', () => {
 
         expect(numCalls).toEqual(2)
 
-        for (var i = 0; i < listChecks.length; i++) {
-          var config = listChecks[i]
-          var payload = payloads[i]
+        for (let i = 0; i < listChecks.length; i++) {
+          let config = listChecks[i]
+          let payload = payloads[i]
           expect(config.url).toEqual('example/example')
           expect(config.data).toEqual(JSON.stringify(payload))
         }

@@ -1,4 +1,5 @@
 <%= page(:"robot-verification-bed") do %>
+  <%= vite_javascript_tag 'entrypoints/pages/bed_verification.js', defer: true %>
   <%= content do %>
     <%= card title: robot.name do %>
       <div id="robot-verification">

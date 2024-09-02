@@ -1,7 +1,7 @@
 // A status collector can have monitors registered. It will trigger
 // its onSuccess event when all monitors are true, and its onRevert
 // event if any are false.
-var tagStatusCollector = function (dualRequired, onSuccess, onRevert) {
+let tagStatusCollector = function (dualRequired, onSuccess, onRevert) {
   // Fires when all guards are true
   this.onSuccess = onSuccess
   // Fires if a guard is invalidated
@@ -13,7 +13,7 @@ var tagStatusCollector = function (dualRequired, onSuccess, onRevert) {
 
 // Monitors are registered to a collector. When the change state they
 // trigger the collector to check the state of all its monitors.
-var tagMonitor = function (state, collector, monitored) {
+let tagMonitor = function (state, collector, monitored) {
   this.valid = state || false
   this.collector = collector
   this.monitored = monitored
@@ -35,13 +35,13 @@ tagMonitor.prototype = {
 
 tagStatusCollector.prototype = {
   register: function (status, monitored) {
-    var new_monitor = new tagMonitor(status, this, monitored)
+    let new_monitor = new tagMonitor(status, this, monitored)
     this.monitors.push(new_monitor)
     return new_monitor
   },
   collate: function () {
-    var dual_count = 0
-    for (var i = 0; i < this.monitors.length; i += 1) {
+    let dual_count = 0
+    for (let i = 0; i < this.monitors.length; i += 1) {
       if (!this.monitors[i].valid) {
         return this.onRevert()
       }

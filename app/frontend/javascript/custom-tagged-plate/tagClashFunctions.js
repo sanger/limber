@@ -70,7 +70,7 @@ function extractParentUsedOligos(parentPlate) {
       parentUsedOligos[submDetails.id] = {}
 
       // add the submission used tags
-      for (var i = 0; i < submDetails.usedTags.length; i++) {
+      for (let i = 0; i < submDetails.usedTags.length; i++) {
         const oligoStr = submDetails.usedTags[i].join(':')
         parentUsedOligos[submDetails.id][oligoStr] = ['submission']
       }
@@ -107,7 +107,7 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayo
     const tagMapIds = tagLayout[position]
     let oligos = []
 
-    for (var i = 0; i < tagMapIds.length; i++) {
+    for (let i = 0; i < tagMapIds.length; i++) {
       let tagMapId = tagMapIds[i]
 
       // check for tag substitution
@@ -173,7 +173,7 @@ function extractSubmDetailsFromRequestsAsSource(well) {
   let submDetails = { id: null, usedTags: [] }
 
   const requestsLen = well.requests_as_source.length
-  for (var i = 0; i < requestsLen; i++) {
+  for (let i = 0; i < requestsLen; i++) {
     if (well.requests_as_source[i] && well.requests_as_source[i].submission) {
       submDetails.id = well.requests_as_source[i].submission.id
       if (well.requests_as_source[i].submission.used_tags) {
@@ -192,7 +192,7 @@ function extractSubmDetailsFromAliquots(well) {
   let submDetails = { id: null, usedTags: [] }
 
   const requestsLen = well.aliquots.length
-  for (var i = 0; i < requestsLen; i++) {
+  for (let i = 0; i < requestsLen; i++) {
     if (well.aliquots[i] && well.aliquots[i].request && well.aliquots[i].request.submission) {
       submDetails.id = well.aliquots[i].request.submission.id
       if (well.aliquots[i].request.submission.used_tags) {

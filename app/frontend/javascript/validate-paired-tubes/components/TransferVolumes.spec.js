@@ -31,7 +31,7 @@ describe('TransferVolumes', () => {
   }
 
   describe('purposeConfig', () => {
-    var wrapper
+    let wrapper
 
     beforeEach(() => {
       purposeConfigForTube.mockClear()
@@ -52,7 +52,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('sourceMolarity', () => {
-    var wrapper
+    let wrapper
     const sourceMolarity = 6
 
     beforeEach(() => {
@@ -73,7 +73,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('targetMolarity', () => {
-    var wrapper
+    let wrapper
     const molarity = 250
 
     beforeEach(() => {
@@ -96,7 +96,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('targetVolume', () => {
-    var wrapper
+    let wrapper
     const volume = 250
 
     beforeEach(() => {
@@ -119,7 +119,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('transferVolumes', () => {
-    var wrapper
+    let wrapper
     const targetMolarity = 4
     const targetVolume = 192
     const minimumPick = 2
@@ -167,7 +167,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('sampleVolumeForDisplay', () => {
-    var wrapper
+    let wrapper
     const transferVolumes = {
       sampleVolume: 150.12345,
       bufferVolume: 49.87655,
@@ -186,7 +186,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('bufferVolumeForDisplay', () => {
-    var wrapper
+    let wrapper
     const transferVolumes = {
       sampleVolume: 150.12345,
       bufferVolume: 49.87655,
@@ -203,7 +203,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('sourceMolarityForDisplay', () => {
-    var wrapper
+    let wrapper
     const sourceMolarity = 3.4567
 
     beforeEach(() => {
@@ -219,7 +219,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('targetMolarityForDisplay', () => {
-    var wrapper
+    let wrapper
     const molarity = 5.6789
 
     beforeEach(() => {
@@ -237,7 +237,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('targetVolumeForDisplay', () => {
-    var wrapper
+    let wrapper
     const volume = 25.6789
 
     beforeEach(() => {
@@ -256,7 +256,7 @@ describe('TransferVolumes', () => {
 
   describe('belowTargetMolarity', () => {
     describe('is below target molarity', () => {
-      var wrapper
+      let wrapper
       const transferVolumes = {
         belowTarget: true,
       }
@@ -274,7 +274,7 @@ describe('TransferVolumes', () => {
     })
 
     describe('is not below target molarity', () => {
-      var wrapper
+      let wrapper
       const transferVolumes = {
         belowTarget: false,
       }
@@ -326,7 +326,7 @@ describe('TransferVolumes', () => {
   })
 
   describe('ready to display result', () => {
-    var wrapper
+    let wrapper
     const targetMolarity = 4
     const targetVolume = 192
     const transferVolumes = {
