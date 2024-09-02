@@ -59,17 +59,14 @@ class PurposeConfig
     store.fetch(name).uuid
   end
 
+  # A helper class to register new TubeRack::Purpose
   class TubeRack < PurposeConfig
-    self.default_options = {
-      default_printer_type: :tube_rack,
-      presenter_class: 'Presenters::TubeRackPresenter' 
-    }.freeze
+    self.default_options = { default_printer_type: :tube_rack, presenter_class: 'Presenters::TubeRackPresenter' }.freeze
 
     def register!
       puts "Creating #{name}"
-      options_for_creation = { name: name, size: config.fetch(:size, 96) }
-      # Waiting on Sequencescape API implementation
-      # Sequencescape::Api::V2::TubeRackPurpose.create!(options_for_creation)
+      options_for_creation = { name: name, size: config.fetch(:size, 96), target_type: 'TubeRack' }
+      Sequencescape::Api::V2::TubeRackPurpose.create!(options_for_creation)
     end
   end
 
