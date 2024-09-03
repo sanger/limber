@@ -74,7 +74,10 @@ module LabwareCreators
 
     def validate_file_presence
       if contingency_file.blank? && sequencing_file.blank?
-        errors.add(:base, 'Either both contingency_file and sequencing_file must be present, or only sequencing_file must be present.')
+        errors.add(
+          :base,
+          'Either both contingency_file and sequencing_file must be present, or only sequencing_file must be present.'
+        )
       elsif contingency_file.present? && sequencing_file.blank?
         errors.add(:base, 'If contingency_file is present, sequencing_file must also be present.')
       end
@@ -235,16 +238,14 @@ module LabwareCreators
     # Sets errors if there are insufficient or too many tubes.
     def must_have_correct_number_of_tubes_in_rack_files
       return unless files_valid?
-      if require_sequencing_tubes_only?
-        add_error_if_wrong_number_of_tubes(:sequencing_csv_file, num_sequencing_tubes, num_parent_unique_samples)
-      else
+      unless require_sequencing_tubes_only?
         add_error_if_wrong_number_of_tubes(
           :contingency_csv_file,
           num_contingency_tubes,
           num_parent_wells - num_parent_unique_samples
         )
-        add_error_if_wrong_number_of_tubes(:sequencing_csv_file, num_sequencing_tubes, num_parent_unique_samples)
       end
+      add_error_if_wrong_number_of_tubes(:sequencing_csv_file, num_sequencing_tubes, num_parent_unique_samples)
     end
 
     # Checks the files passed their validations
@@ -379,7 +380,6 @@ module LabwareCreators
     #
     # @return [Array<Well>] An array of parent wells.
     def find_parent_wells_for_sequencing
-
       unique_sample_uuids = []
       parent_wells_for_seq = []
 
