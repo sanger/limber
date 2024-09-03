@@ -1266,6 +1266,32 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
+      # body for stubbing the sequencing file upload
+      let(:sequencing_file_content) do
+        content = sequencing_file.read
+        sequencing_file.rewind
+        content
+      end
+
+      # stub the sequencing file upload
+      let!(:stub_sequencing_file_upload) do
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
+          .with(
+            body: sequencing_file_content,
+            headers: {
+              'Content-Type' => 'sequencescape/qc_file',
+              'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
+            }
+          )
+          .to_return(
+            status: 201,
+            body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
+            headers: {
+              'content-type' => 'application/json'
+            }
+          )
+      end
+
       before do
         stub_get_labware_metadata(child_tube_1_v2.barcode.machine, child_tube_1_v1)
         stub_get_labware_metadata(child_tube_2_v2.barcode.machine, child_tube_2_v1)
