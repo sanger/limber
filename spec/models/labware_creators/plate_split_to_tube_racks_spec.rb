@@ -275,7 +275,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       before do
-        allow(subject).to receive(:require_contingency_tubes_only?).and_return(true)
+        allow(subject).to receive(:require_sequencing_tubes_only?).and_return(true)
         subject.must_have_correct_number_of_tubes_in_rack_files
       end
 
@@ -319,7 +319,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       before do
-        allow(subject).to receive(:require_contingency_tubes_only?).and_return(false)
+        allow(subject).to receive(:require_sequencing_tubes_only?).and_return(false)
         subject.must_have_correct_number_of_tubes_in_rack_files
       end
 
