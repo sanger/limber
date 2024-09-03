@@ -1054,12 +1054,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
     end
 
-    context 'with just a contingency file' do
-      let(:sequencing_file) { nil }
+    context 'with just a sequencing file' do
+      let(:contingency_file) { nil }
 
-      let(:contingency_file) do
+      let(:sequencing_file) do
         fixture_file_upload(
-          'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan.csv',
+          'spec/fixtures/files/scrna_core/scrna_core_sequencing_tube_rack_scan.csv',
           'sequencescape/qc_file'
         )
       end
@@ -1067,9 +1067,9 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
-          purpose_uuid: child_contingency_tube_purpose_uuid,
+          purpose_uuid: child_sequencing_tube_purpose_uuid,
           parent_uuid: parent_uuid,
-          contingency_file: contingency_file
+          sequencing_file: sequencing_file
         }
       end
 
@@ -1078,7 +1078,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         create(
           :v2_stock_tube,
           state: 'passed',
-          purpose_name: child_contingency_tube_purpose_name,
+          purpose_name: child_sequencing_tube_purpose_name,
           aliquots: [child_tube_1_aliquot],
           barcode_prefix: 'FX',
           barcode_number: 11,
@@ -1090,7 +1090,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         create(
           :v2_stock_tube,
           state: 'passed',
-          purpose_name: child_contingency_tube_purpose_name,
+          purpose_name: child_sequencing_tube_purpose_name,
           aliquots: [child_tube_2_aliquot],
           barcode_prefix: 'FX',
           barcode_number: 12,
@@ -1102,7 +1102,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         create(
           :v2_stock_tube,
           state: 'passed',
-          purpose_name: child_contingency_tube_purpose_name,
+          purpose_name: child_sequencing_tube_purpose_name,
           aliquots: [child_tube_3_aliquot],
           barcode_prefix: 'FX',
           barcode_number: 13,
@@ -1114,7 +1114,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         create(
           :v2_stock_tube,
           state: 'passed',
-          purpose_name: child_contingency_tube_purpose_name,
+          purpose_name: child_sequencing_tube_purpose_name,
           aliquots: [child_tube_4_aliquot],
           barcode_prefix: 'FX',
           barcode_number: 14,
@@ -1126,7 +1126,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         create(
           :v2_stock_tube,
           state: 'passed',
-          purpose_name: child_contingency_tube_purpose_name,
+          purpose_name: child_sequencing_tube_purpose_name,
           aliquots: [child_tube_5_aliquot],
           barcode_prefix: 'FX',
           barcode_number: 15,
@@ -1135,17 +1135,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       # stub the contingency tube creation
-      let!(:stub_contingency_tube_creation_request) do
+      let!(:stub_sequencing_tube_creation_request) do
         stub_api_post(
           'specific_tube_creations',
           payload: {
             specific_tube_creation: {
               child_purposes: [
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid
+                child_sequencing_tube_purpose_uuid,
+                child_sequencing_tube_purpose_uuid,
+                child_sequencing_tube_purpose_uuid,
+                child_sequencing_tube_purpose_uuid,
+                child_sequencing_tube_purpose_uuid
               ],
               tube_attributes: [
                 # sample 1 from well A1 to contingency tube 1 in A1
@@ -1163,14 +1163,14 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
               parent: parent_uuid
             }
           },
-          body: json(:specific_tube_creation, uuid: stub_contingency_tube_creation_request_uuid, children_count: 5)
+          body: json(:specific_tube_creation, uuid: stub_sequencing_tube_creation_request_uuid, children_count: 5)
         )
       end
 
       # stub what contingency tubes were just made
-      let!(:stub_contingency_tube_creation_children_request) do
+      let!(:stub_sequencing_tube_creation_children_request) do
         stub_api_get(
-          stub_contingency_tube_creation_request_uuid,
+          stub_sequencing_tube_creation_request_uuid,
           'children',
           body:
             json(
@@ -1283,8 +1283,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'creates the child tubes' do
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
-        expect(stub_contingency_file_upload).to have_been_made.once
-        expect(stub_contingency_tube_creation_request).to have_been_made.once
+        expect(stub_sequencing_file_upload).to have_been_made.once
+        expect(stub_sequencing_tube_creation_request).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
         expect(stub_create_metadata_for_tube_1).to have_been_requested
         expect(stub_create_metadata_for_tube_2).to have_been_requested
