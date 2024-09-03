@@ -50,3 +50,6 @@ LB Lib Pool:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+TR Test Rack:
+  :asset_type: tube_rack
+  :size: 96
