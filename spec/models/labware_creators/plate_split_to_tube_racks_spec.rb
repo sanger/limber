@@ -260,17 +260,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'does not call the validation' do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:must_have_correct_number_of_tubes_in_rack_files)
-        expect(subject.errors.full_messages).to include("Contingency file can't be blank")
+        expect(subject.errors.full_messages).to include("Sequencing file can't be blank")
       end
     end
 
-    context 'when require_contingency_tubes_only? is true' do
+    context 'when require_sequencing_tubes_only? is true' do
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
           parent_uuid: parent_uuid,
-          contingency_file: contingency_file
+          sequencing_file: sequencing_file
         }
       end
 
@@ -279,35 +279,35 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         subject.must_have_correct_number_of_tubes_in_rack_files
       end
 
-      context 'when there are enough contingency tubes' do
-        let(:num_contingency_tubes) { 96 }
+      context 'when there are enough sequencing tubes' do
+        let(:num_sequencing_tubes) { 48 }
 
         it 'is valid and does not create an error' do
-          expect(subject.errors[:contingency_csv_file]).to be_empty
+          expect(subject.errors[:sequencing_csv_file]).to be_empty
         end
       end
 
       context 'when there are not enough contingency tubes' do
-        let(:num_contingency_tubes) { 47 }
+        let(:num_sequencing_tubes) { 47 }
 
         it 'is not valid and does create an error' do
-          expect(subject.errors.full_messages).to include('Contingency csv file contains insufficient tubes')
+          expect(subject.errors.full_messages).to include('Sequencing csv file contains insufficient tubes')
         end
       end
 
       context 'when there are too many contingency tubes' do
         let(:num_parent_wells) { 48 }
         let(:num_parent_unique_samples) { 24 }
-        let(:num_sequencing_tubes) { 0 }
-        let(:num_contingency_tubes) { 49 }
+        let(:num_contingency_tubes) { 0 }
+        let(:num_sequencing_tubes) { 49 }
 
         it 'is not valid and does create an error' do
-          expect(subject.errors.full_messages).to include('Contingency csv file contains more tubes than needed')
+          expect(subject.errors.full_messages).to include('Sequencing csv file contains more tubes than needed')
         end
       end
     end
 
-    context 'when require_contingency_tubes_only? is false' do
+    context 'when require_sequencing_tubes_only? is false' do
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
@@ -387,7 +387,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'does not call the validation' do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_rack_barcodes_differ_between_files)
-        expect(subject.errors.full_messages).to include("Contingency file can't be blank")
+        expect(subject.errors.full_messages).to include("Sequencing file can't be blank")
       end
     end
 
@@ -512,7 +512,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'does not call the validation' do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_barcodes_differ_between_files)
-        expect(subject.errors.full_messages).to include("Contingency file can't be blank")
+        expect(subject.errors.full_messages).to include("Sequencing file can't be blank")
       end
     end
 

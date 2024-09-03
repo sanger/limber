@@ -76,7 +76,7 @@ module LabwareCreators
       if contingency_file.blank? && sequencing_file.blank?
         errors.add(
           :base,
-          'Either both contingency_file and sequencing_file must be present, or only sequencing_file must be present.'
+          "Sequencing file can't be blank"
         )
       elsif contingency_file.present? && sequencing_file.blank?
         errors.add(:base, 'If contingency_file is present, sequencing_file must also be present.')
