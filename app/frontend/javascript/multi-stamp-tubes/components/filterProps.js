@@ -6,7 +6,7 @@ const filterProps = {
     aliquots: 'request',
   },
   plateIncludes: 'wells,wells.requests_as_source,wells.aliquots.request',
-  tubeIncludes: 'receptacle',
+  tubeIncludes: 'receptacle,purpose',
   requestsFilter: 'lb-null-filter',
 }
 

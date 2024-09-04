@@ -371,15 +371,12 @@ const resources = [
     }
   },
   {
-    "resource": "poly_metadatum",
-    "attributes": {
-      "key": "",
-      "value": "",
-      "created_at": "",
-      "updated_at": "",
-      "metadatable": {
-        "jsonApi": "hasOne"
-      }
+    resource: "purpose",
+    attributes: {
+      uuid: "",
+      name: "",
+      size: "",
+      lifespan: ""
     },
     "options": {
     }

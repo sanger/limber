@@ -53,16 +53,6 @@ module Presenters
       s
     end
 
-    def child_plates
-      labware.child_plates.tap { |child_plates| yield child_plates if block_given? && child_plates.present? }
-    end
-
-    alias child_assets child_plates
-
-    def tubes_and_sources
-      labware.child_tubes.tap { |child_tubes| yield child_tubes if block_given? && child_tubes.present? }
-    end
-
     def qc_summary?
       labware.receptacle&.all_latest_qc&.to_a.present?
     end

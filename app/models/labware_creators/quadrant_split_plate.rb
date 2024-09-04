@@ -16,7 +16,7 @@ module LabwareCreators
     end
 
     def anchor
-      'children_tab'
+      'relatives_tab'
     end
 
     private
