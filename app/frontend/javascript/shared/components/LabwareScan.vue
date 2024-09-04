@@ -239,7 +239,7 @@ export default {
 
       if (this.labwareType == 'tube') {
         return {
-          tubes: 'labware_barcode,uuid,receptacle,state',
+          tubes: 'labware_barcode,uuid,receptacle,state,purpose',
           receptacles: 'uuid',
         }
       } else {
