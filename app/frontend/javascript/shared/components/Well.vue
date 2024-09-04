@@ -21,7 +21,7 @@ export default {
   name: 'LbWell',
   props: {
     position: { type: String, required: true },
-    colour_index: { type: Number, default: null },
+    colour_index: { type: Number, required: true },
     tooltip_label: { type: String, default: null },
     tagMapIds: {
       type: Array,

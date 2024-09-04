@@ -15,7 +15,7 @@ describe('Well', () => {
 
   const wrapperWithoutAliquot = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: { position: 'A1', colour_index: null },
+    propsData: { position: 'A1', colour_index: 1 },
   })
 
   it('renders a well', () => {
@@ -63,7 +63,7 @@ describe('Well', () => {
   it('renders a tooltip with the specified label', () => {
     const wrapperWithTooltipLabel = shallowMount(Well, {
       attachTo: createContainer(),
-      propsData: { position: 'A1', tooltip_label: 'Test' },
+      propsData: { position: 'A1', tooltip_label: 'Test', colour_index: 1 },
     })
     expect(wrapperWithTooltipLabel.vm.tooltipText).toEqual('A1 - Test')
   })
@@ -79,7 +79,7 @@ describe('Well', () => {
 
   const wrapperWithPosition = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: { position: 'B3' },
+    propsData: { position: 'B3', colour_index: 1 },
   })
 
   it('renders a well with tag name', () => {
