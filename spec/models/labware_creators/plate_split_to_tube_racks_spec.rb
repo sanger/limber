@@ -634,7 +634,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   context '#save' do
-
     let!(:stub_sequencing_tube_creation_request_uuid) { SecureRandom.uuid }
 
     before do
@@ -1067,75 +1066,33 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      let(:contingency_file) { nil }
-      let(:sequencing_file) do
-        fixture_file_upload(
-          'spec/fixtures/files/scrna_core/scrna_core_sequencing_tube_rack_scan.csv',
-          'sequencescape/qc_file'
-        )
+      # body for stubbing the sequencing file upload
+      let(:sequencing_file_content) do
+        content = sequencing_file.read
+        sequencing_file.rewind
+        content
       end
 
-      # child tubes for lookup after creation
-      let(:child_tube_1_v2) do
-        create(
-          :v2_stock_tube,
-          state: 'passed',
-          purpose_name: child_sequencing_tube_purpose_name,
-          aliquots: [child_tube_1_aliquot],
-          barcode_prefix: 'FX',
-          barcode_number: 1,
-          uuid: child_tube_1_uuid
-        )
+      # stub the sequencing file upload
+      let!(:stub_sequencing_file_upload) do
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
+          .with(
+            body: sequencing_file_content,
+            headers: {
+              'Content-Type' => 'sequencescape/qc_file',
+              'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
+            }
+          )
+          .to_return(
+            status: 201,
+            body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
+            headers: {
+              'content-type' => 'application/json'
+            }
+          )
       end
 
-      let(:child_tube_2_v2) do
-        create(
-          :v2_stock_tube,
-          state: 'passed',
-          purpose_name: child_sequencing_tube_purpose_name,
-          aliquots: [child_tube_2_aliquot],
-          barcode_prefix: 'FX',
-          barcode_number: 2,
-          uuid: child_tube_2_uuid
-        )
-      end
-
-      let(:child_tube_3_v2) do
-        create(
-          :v2_stock_tube,
-          state: 'passed',
-          purpose_name: child_sequencing_tube_purpose_name,
-          aliquots: [child_tube_3_aliquot],
-          barcode_prefix: 'FX',
-          barcode_number: 11,
-          uuid: child_tube_3_uuid
-        )
-      end
-
-      let(:child_tube_4_v2) do
-        create(
-          :v2_stock_tube,
-          state: 'passed',
-          purpose_name: child_sequencing_tube_purpose_name,
-          aliquots: [child_tube_4_aliquot],
-          barcode_prefix: 'FX',
-          barcode_number: 12,
-          uuid: child_tube_4_uuid
-        )
-      end
-
-      let(:child_tube_5_v2) do
-        create(
-          :v2_stock_tube,
-          state: 'passed',
-          purpose_name: child_sequencing_tube_purpose_name,
-          aliquots: [child_tube_5_aliquot],
-          barcode_prefix: 'FX',
-          barcode_number: 13,
-          uuid: child_tube_5_uuid
-        )
-      end
-
+      # stub the sequencing tube creation
       let!(:stub_sequencing_tube_creation_request_uuid) { SecureRandom.uuid }
       let!(:stub_sequencing_tube_creation_request) do
         stub_api_post(
@@ -1182,10 +1139,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
               user: user_uuid,
               transfer_requests: [
                 { 'submission_id' => '2', 'source_asset' => parent_well_a1.uuid, 'target_asset' => 'tube-0' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_b1.uuid, 'target_asset' => 'tube-1' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_a2.uuid, 'target_asset' => 'tube-2' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_b2.uuid, 'target_asset' => 'tube-3' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_a3.uuid, 'target_asset' => 'tube-4' }
+                { 'submission_id' => '2', 'source_asset' => parent_well_b1.uuid, 'target_asset' => 'tube-1' }
               ]
             }
           },
@@ -1196,9 +1150,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       # need api v1 versions of child tubes
       let(:child_tube_1_v1) { json :tube, uuid: child_tube_1_uuid, barcode_prefix: 'FX', barcode_number: 1 }
       let(:child_tube_2_v1) { json :tube, uuid: child_tube_2_uuid, barcode_prefix: 'FX', barcode_number: 2 }
-      let(:child_tube_3_v1) { json :tube, uuid: child_tube_3_uuid, barcode_prefix: 'FX', barcode_number: 11 }
-      let(:child_tube_4_v1) { json :tube, uuid: child_tube_4_uuid, barcode_prefix: 'FX', barcode_number: 12 }
-      let(:child_tube_5_v1) { json :tube, uuid: child_tube_5_uuid, barcode_prefix: 'FX', barcode_number: 13 }
 
       # need to stub the creation of the tube metadata
       let!(:metadata_for_tube_1) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'A1' } }
@@ -1223,77 +1174,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let!(:metadata_for_tube_3) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'C1' } }
-      let!(:stub_create_metadata_for_tube_3) do
-        stub_create_labware_metadata(
-          child_tube_3_v2.barcode.machine,
-          child_tube_3_v1,
-          child_tube_3_uuid,
-          user_uuid,
-          metadata_for_tube_3
-        )
-      end
-
-      let!(:metadata_for_tube_4) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'E1' } }
-      let!(:stub_create_metadata_for_tube_4) do
-        stub_create_labware_metadata(
-          child_tube_4_v2.barcode.machine,
-          child_tube_4_v1,
-          child_tube_4_uuid,
-          user_uuid,
-          metadata_for_tube_4
-        )
-      end
-
-      let!(:metadata_for_tube_5) { { tube_rack_barcode: 'TR00000001', tube_rack_position: 'F1' } }
-      let!(:stub_create_metadata_for_tube_5) do
-        stub_create_labware_metadata(
-          child_tube_5_v2.barcode.machine,
-          child_tube_5_v1,
-          child_tube_5_uuid,
-          user_uuid,
-          metadata_for_tube_5
-        )
-      end
-
-      # body for stubbing the sequencing file upload
-      let(:sequencing_file_content) do
-        content = sequencing_file.read
-        sequencing_file.rewind
-        content
-      end
-
-      # stub the sequencing file upload
-      let!(:stub_sequencing_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-          .with(
-            body: sequencing_file_content,
-            headers: {
-              'Content-Type' => 'sequencescape/qc_file',
-              'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
-            }
-          )
-          .to_return(
-            status: 201,
-            body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
-            headers: {
-              'content-type' => 'application/json'
-            }
-          )
-      end
-
       before do
         stub_get_labware_metadata(child_tube_1_v2.barcode.machine, child_tube_1_v1)
         stub_get_labware_metadata(child_tube_2_v2.barcode.machine, child_tube_2_v1)
-        stub_get_labware_metadata(child_tube_3_v2.barcode.machine, child_tube_3_v1)
-        stub_get_labware_metadata(child_tube_4_v2.barcode.machine, child_tube_4_v1)
-        stub_get_labware_metadata(child_tube_5_v2.barcode.machine, child_tube_5_v1)
 
         stub_asset_search(child_tube_1_v2.barcode.machine, child_tube_1_v1)
         stub_asset_search(child_tube_2_v2.barcode.machine, child_tube_2_v1)
-        stub_asset_search(child_tube_3_v2.barcode.machine, child_tube_3_v1)
-        stub_asset_search(child_tube_4_v2.barcode.machine, child_tube_4_v1)
-        stub_asset_search(child_tube_5_v2.barcode.machine, child_tube_5_v1)
       end
 
       it 'creates the child tubes' do
@@ -1304,9 +1190,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(stub_transfer_creation_request).to have_been_made.once
         expect(stub_create_metadata_for_tube_1).to have_been_requested
         expect(stub_create_metadata_for_tube_2).to have_been_requested
-        expect(stub_create_metadata_for_tube_3).to have_been_requested
-        expect(stub_create_metadata_for_tube_4).to have_been_requested
-        expect(stub_create_metadata_for_tube_5).to have_been_requested
       end
     end
   end

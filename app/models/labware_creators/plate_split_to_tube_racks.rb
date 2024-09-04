@@ -74,10 +74,7 @@ module LabwareCreators
 
     def validate_file_presence
       if contingency_file.blank? && sequencing_file.blank?
-        errors.add(
-          :base,
-          "Sequencing file can't be blank"
-        )
+        errors.add(:base, "Sequencing file can't be blank")
       elsif contingency_file.present? && sequencing_file.blank?
         errors.add(:base, 'If contingency_file is present, sequencing_file must also be present.')
       end
