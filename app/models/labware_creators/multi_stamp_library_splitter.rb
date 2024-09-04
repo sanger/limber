@@ -53,7 +53,7 @@ module LabwareCreators
     end
 
     def anchor
-      'children_tab'
+      'relatives_tab'
     end
 
     def library_type_split_plate_purpose

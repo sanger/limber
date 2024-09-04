@@ -47,6 +47,11 @@ let limberPlateView = function (defaultTab) {
     }
   })
 
+  // Activate the default tab from the URL hash
+  // append '_tab' to the defaultTab to match the tab id, this prevents the page from jumping
+  if (!defaultTab.endsWith('_tab')) {
+    defaultTab += '_tab'
+  }
   control.find('a[href="' + defaultTab + '"]').tab('show')
 
   plateElement.on('click', '.aliquot', function (event) {
