@@ -21,8 +21,7 @@ export default {
   name: 'LbWell',
   props: {
     position: { type: String, required: true },
-    // Previously this was pool index, and was not required. Caused a silent failure (invisible wells)
-    colour_index: { type: Number, required: true },
+    colour_index: { type: Number, default: null },
     tooltip_label: { type: String, default: null },
     tagMapIds: {
       type: Array,

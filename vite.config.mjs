@@ -14,5 +14,9 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['lcov', 'text'],
     },
+    // This hides the "Download the Vue Devtools extension" message from the console
+    onConsoleLog (log) {
+      if (log.includes('Download the Vue Devtools extension')) return false
+    }
   },
 })
