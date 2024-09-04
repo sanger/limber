@@ -73,7 +73,7 @@ module LabwareCreators
       'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
 
     def validate_file_presence
-      if contingency_file.blank? && sequencing_file.blank?
+      if sequencing_file.blank?
         errors.add(:base, "Sequencing file can't be blank")
       elsif contingency_file.present? && sequencing_file.blank?
         errors.add(:base, 'If contingency_file is present, sequencing_file must also be present.')
