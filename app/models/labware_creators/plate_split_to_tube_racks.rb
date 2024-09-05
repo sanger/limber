@@ -145,7 +145,7 @@ module LabwareCreators
 
     # Display the children tab in the plate view so we see the child tubes listed.
     def anchor
-      'children_tab'
+      'relatives_tab'
     end
 
     # Returns a CsvFile object for the sequencing tube rack scan CSV file, or nil if the file doesn't exist.

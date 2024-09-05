@@ -1,0 +1,9 @@
+<%# Handle differing labware types within a parent list %>
+<%# Showing a pooled-tube as a parent is tricky due to the need for the correct presenter. %>
+<%# locals: (labware:) %>
+<% open_in_new_window = false %>
+<% if labware.tube? %>
+  <%= render partial: 'labware/simple_tube', locals: { tube: labware, open_in_new_window: open_in_new_window } %>
+<% else %>
+  <%= render partial: 'labware/basic_relative', locals: { labware: labware, open_in_new_window: open_in_new_window } %>
+<% end %>

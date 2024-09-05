@@ -134,7 +134,7 @@ describe('LabwareScan', () => {
           include: '',
           filter: { barcode: 'DN12345' },
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },
@@ -166,7 +166,7 @@ describe('LabwareScan', () => {
           filter: { barcode: 'not a barcode' },
           include: '',
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },
@@ -198,7 +198,7 @@ describe('LabwareScan', () => {
           include: '',
           filter: { barcode: 'Good barcode' },
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },
@@ -246,7 +246,7 @@ describe('LabwareScan', () => {
           filter: { barcode: 'Good barcode' },
           include: '',
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },

@@ -17,8 +17,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :descendants, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
-  has_many :child_plates, class_name: 'Sequencescape::Api::V2::Plate'
-  has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
   has_many :direct_submissions, class_name: 'Sequencescape::Api::V2::Submission'
   has_many :state_changes
   has_one :custom_metadatum_collection
