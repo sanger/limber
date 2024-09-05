@@ -1,7 +1,7 @@
 ---
 # Pipeline configuration for EMSeq
 LCM Triomics:
-  pipeline_group: LCM Triomics DNA WGS and EMSeq
+  pipeline_group: LCM Triomics WGS and EMSeq
   filters:
     request_type_key: limber_lcm_triomics
     library_type: LCM Triomics EMSeq
