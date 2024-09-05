@@ -1,10 +1,11 @@
 ---
 # Pipeline configuration for EMSeq
-LCM Triomics:
+LCM Triomics EMSeq:
   pipeline_group: LCM Triomics WGS and EMSeq
   filters:
     request_type_key: limber_lcm_triomics_emseq
     library_type: LCM Triomics EMSeq
+  library_pass: LCMT EM LibPCR
   relationships:
     LCMT Lysate: LCMT DNA Frag
     LCMT DNA Frag: LCMT DNA End Prep
@@ -14,6 +15,13 @@ LCM Triomics:
     LCMT EM TET2 Stop: LCMT EM NaOH Denat
     LCMT EM NaOH Denat: LCMT EM APOBEC Deam
     LCMT EM APOBEC Deam: LCMT EM LibPCR
+
+LCM Triomics EMSeq Pooling:
+  pipeline_group: LCM Triomics WGS and EMSeq
+  filters:
+    request_type_key: limber_lcm_triomics_emseq
+    state: passed
+  relationships:
     LCMT EM LibPCR: LCMT EM PCRXP
     LCMT EM PCRXP: LCMT EM Pool XP
     LCMT EM Pool XP: LCMT EM Pool XP Norm
