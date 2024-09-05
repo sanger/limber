@@ -8,7 +8,6 @@ LCMT Lysate:
   :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
-
 LCMT DNA Frag:
   :asset_type: plate
   :stock_plate: false
@@ -16,7 +15,6 @@ LCMT DNA Frag:
   :input_plate: false
   :presenter_class: Presenters::PermissivePresenter
   :size: 96
-
 LCMT DNA End Prep:
   :asset_type: plate
   :stock_plate: false
@@ -24,7 +22,6 @@ LCMT DNA End Prep:
   :input_plate: false
   :presenter_class: Presenters::PermissivePresenter
   :size: 96
-
 LCMT DNA Adp Lig:
   :asset_type: plate
   :stock_plate: false
@@ -32,3 +29,55 @@ LCMT DNA Adp Lig:
   :input_plate: false
   :presenter_class: Presenters::PermissivePresenter
   :size: 96
+LCMT EM TET2 Ox:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
+LCMT EM TET2 Stop:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM NaOH Denat:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM APOBEC Deam:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM LibPCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+LCMT EM PCRXP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :file_links:
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+# Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
+# pooling so the flow is directly from PCRXP to Pool XP).
+LCMT EM Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LCMT EM Pool XP Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
