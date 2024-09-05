@@ -55,6 +55,8 @@ LCMT EM LibPCR:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
 LCMT EM PCRXP:
   :asset_type: plate
   :stock_plate: false
