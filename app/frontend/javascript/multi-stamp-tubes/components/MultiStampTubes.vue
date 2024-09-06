@@ -288,7 +288,7 @@ export default {
       let colour_index = -1
 
       const tube = this.tubes[tubeIndex]
-      if (tube.state !== 'valid') return colour_index
+      if (!tube || tube.state !== 'valid') return colour_index
 
       const tube_machine_barcode = tube.labware.labware_barcode.machine_barcode
       const tube_machine_barcodes = this.tubes
