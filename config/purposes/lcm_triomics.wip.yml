@@ -57,6 +57,9 @@ LCMT EM LibPCR:
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+    # TODO: Update this list with the correct tag layout templates
+    - LCM Triomics EMSeq Test Tag Layout Template
 LCMT EM PCRXP:
   :asset_type: plate
   :stock_plate: false
