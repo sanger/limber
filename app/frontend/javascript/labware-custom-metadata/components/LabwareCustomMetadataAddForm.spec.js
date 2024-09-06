@@ -31,7 +31,17 @@ describe('LabwareCustomMetadataAddForm', () => {
       })
     )
 
+    // This is a workaround for the following warning:
+    // [BootstrapVue warn]: tooltip - The provided target is no valid HTML element.
+    const createContainer = (tag = 'div') => {
+      const container = document.createElement(tag)
+      document.body.appendChild(container)
+
+      return container
+    }
+
     return mount(LabwareCustomMetadataAddForm, {
+      attachTo: createContainer(),
       localVue,
       parentComponent: parent,
       propsData: {
@@ -41,9 +51,7 @@ describe('LabwareCustomMetadataAddForm', () => {
         sequencescapeApiUrl,
         sequencescapeUrl,
       },
-      // Getting:
-      // [BootstrapVue warn]: tooltip - The provided target is no valid HTML element.
-      // Here https://github.com/molgenis/molgenis-frontend/issues/466 suggests it's a bug
+      // b-icon is unknown to the component so we stub it
       stubs: {
         'b-icon': true,
       },

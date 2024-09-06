@@ -1,13 +1,17 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
+import { plateFactory } from '@/javascript/test_support/factories.js'
 
 import LbPlate from '@/javascript/shared/components/Plate.vue'
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('LbPlate', () => {
   const myCaption = 'Caption'
+  const wells = {}
+  // Populate the wells props with a full plate worth of wells
+  plateFactory({ _wellOptions: { colour_index: 1 } }).wells.forEach((well) => (wells[well.position.name] = well))
   const wrapper = shallowMount(LbPlate, {
-    propsData: { columns: 12, rows: 8, caption: myCaption, wells: { B3: {} } },
+    propsData: { columns: 12, rows: 8, caption: myCaption, wells: wells },
   })
 
   // Inspect the raw component options
