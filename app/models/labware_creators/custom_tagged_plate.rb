@@ -18,10 +18,10 @@ module LabwareCreators
       {
         tag_plate: %i[asset_uuid template_uuid state],
         tag_layout: [
-          :user,
-          :plate,
-          :tag_group,
-          :tag2_group,
+          :user_uuid,
+          :plate_uuid,
+          :tag_group_uuid,
+          :tag2_group_uuid,
           :direction,
           :walking_by,
           :initial_tag,
@@ -107,7 +107,9 @@ module LabwareCreators
 
     def create_labware!
       create_plate! do |plate_uuid|
-        api.tag_layout.create!(tag_layout_attributes.merge(plate: plate_uuid, user: user_uuid))
+        Sequencescape::Api::V2::TagLayout.create!(
+          tag_layout_attributes.merge(plate_uuid: plate_uuid, user_uuid: user_uuid)
+        )
       end
     end
   end
