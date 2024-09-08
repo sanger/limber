@@ -58,8 +58,11 @@ LCMT EM LibPCR:
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-    # TODO: Update this list with the correct tag layout templates
-    - LCM Triomics EMSeq Test Tag Layout Template
+    - TS_pWGSA_UDI96v2
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSC_UDI_tag60_61_swap
+    - TS_pWGSD_UDI96
 LCMT EM PCRXP:
   :asset_type: plate
   :stock_plate: false
