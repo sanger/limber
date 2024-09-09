@@ -34,6 +34,7 @@ Bespoke PCR:
       - TruSeq mRNA (RNA Seq)
   library_pass: LBB Lib PCR-XP
   relationships:
+    Stock Plate: LBB Ligation
     LBB Cherrypick: LBB Ligation
     LBC Cherrypick: LBB Ligation
     LBB Ligation: LBB Lib PCR-XP
