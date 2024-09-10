@@ -134,7 +134,7 @@ describe('LabwareScan', () => {
           include: '',
           filter: { barcode: 'DN12345' },
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },
@@ -166,7 +166,7 @@ describe('LabwareScan', () => {
           filter: { barcode: 'not a barcode' },
           include: '',
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },
@@ -198,7 +198,7 @@ describe('LabwareScan', () => {
           include: '',
           filter: { barcode: 'Good barcode' },
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },
@@ -238,7 +238,11 @@ describe('LabwareScan', () => {
       //         ]
       //       }
       //     }
-      // Please do not panic, but it would be nice to suppress _only this output_ this in the console
+      // We suppress this error with the below spy.
+      vi.spyOn(console, 'log').mockImplementation((log) => {
+        if (log.includes('devour error')) return false
+      })
+
       const api = mockApi()
       api.mockFail(
         'tubes',
@@ -246,7 +250,7 @@ describe('LabwareScan', () => {
           filter: { barcode: 'Good barcode' },
           include: '',
           fields: {
-            tubes: 'labware_barcode,uuid,receptacle,state',
+            tubes: 'labware_barcode,uuid,receptacle,state,purpose',
             receptacles: 'uuid',
           },
         },

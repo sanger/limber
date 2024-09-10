@@ -231,7 +231,7 @@ export default {
     transfersError() {
       const errorMessages = []
       if (this.duplicatedTransfers.length > 0) {
-        var sourceBarcodes = new Set()
+        let sourceBarcodes = new Set()
         this.duplicatedTransfers.forEach((transfer) => {
           sourceBarcodes.add(transfer.plateObj.plate.labware_barcode.human_barcode)
         })

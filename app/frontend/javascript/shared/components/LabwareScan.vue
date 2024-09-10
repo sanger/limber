@@ -202,7 +202,7 @@ export default {
   },
   watch: {
     state() {
-      var message
+      let message
       if (this.labwareType == 'tube') {
         message = { labware: this.labware, state: this.state }
       } else {
@@ -239,7 +239,7 @@ export default {
 
       if (this.labwareType == 'tube') {
         return {
-          tubes: 'labware_barcode,uuid,receptacle,state',
+          tubes: 'labware_barcode,uuid,receptacle,state,purpose',
           receptacles: 'uuid',
         }
       } else {

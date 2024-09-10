@@ -226,7 +226,7 @@ export default {
 
           tagMapIds = this.tagLayout[position].slice(0)
 
-          for (var i = 0; i < tagMapIds.length; i++) {
+          for (let i = 0; i < tagMapIds.length; i++) {
             if (tagMapIds[i] === -1) {
               cw[position]['validity'] = {
                 valid: false,
@@ -440,19 +440,19 @@ export default {
       if (this.numberOfTag1GroupTags > 0) {
         if (this.numberOfTag2GroupTags > 0) {
           const numUseableTags = Math.min(this.numberOfTag1GroupTags, this.numberOfTag2GroupTags)
-          for (var iBoth = 0; iBoth < numUseableTags; iBoth++) {
+          for (let iBoth = 0; iBoth < numUseableTags; iBoth++) {
             const tg1 = this.tag1GroupTags[iBoth]
             const tg2 = this.tag2GroupTags[iBoth]
             tagOligoStrings[tg1.index] = tg1.oligo + ':' + tg2.oligo
           }
         } else {
-          for (var i1 = 0; i1 < this.tag1GroupTags.length; i1++) {
+          for (let i1 = 0; i1 < this.tag1GroupTags.length; i1++) {
             const tg = this.tag1GroupTags[i1]
             tagOligoStrings[tg.index] = tg.oligo
           }
         }
       } else if (this.numberOfTag2GroupTags > 0) {
-        for (var i2 = 0; i2 < this.tag2GroupTags.length; i2++) {
+        for (let i2 = 0; i2 < this.tag2GroupTags.length; i2++) {
           const tg = this.tag2GroupTags[i2]
           tagOligoStrings[tg.index] = tg.oligo
         }

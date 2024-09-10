@@ -9,13 +9,12 @@ module InlineSvgHelper
   # Generates an inline SVG tag for a given filename. Optionally adds a title element within the SVG for accessibility.
   # Note that the output is marked as safe, so make sure the provided SVG file is trusted.
   # @param filename [String] the name of the SVG file to be inlined.
-  # @param title [String, nil] the title to be added inside the SVG.
   # @return [String] HTML safe string containing the inline SVG with or without a title.
-  def inline_svg_tag(filename, title: nil)
+  def inline_svg_tag(filename, **attributes)
+    attributes[:role] = 'img'
+    attributes_string = attributes.map { |k, v| "#{k}=\"#{v}\"" }.join(' ')
     svg = ViteInlineSvgFileLoader.named(filename)
-    svg = svg.sub(/\A<svg/, '<svg role="img"')
-    svg = svg.sub(/\A<svg.*?>/, safe_join(['\0', "\n", tag.title(title)])) if title.present?
-
+    svg = svg.sub('<svg', "<svg #{attributes_string}")
     svg.strip.html_safe # rubocop:disable Rails/OutputSafety
   end
 end

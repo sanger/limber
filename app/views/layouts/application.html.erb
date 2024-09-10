@@ -11,11 +11,11 @@
     <%= vite_stylesheet_tag 'print', media: 'print' %>
 
     <%= vite_client_tag %>
-    <%= vite_javascript_tag 'application' %>
+    <%= vite_javascript_tag 'application', defer: true %>
 
     <% if Rails.application.config.disable_animations %>
       <%= vite_stylesheet_tag 'disable-animations' %>
-      <%= vite_javascript_tag 'disable-animations' %>
+      <%= vite_javascript_tag 'disable-animations', defer: true %>
     <% end %>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/<%= apple_touch_icon %>" />

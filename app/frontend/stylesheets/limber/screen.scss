@@ -138,17 +138,17 @@ header.limber-header {
   font-weight: 300;
 }
 
-.tube-list,
-.plate-list {
+#parents-list,
+#children-list {
   @extend .list-group;
   @extend .list-group-flush;
+  @extend .max-vh-40;
+  @extend .overflow-auto;
   @extend .pool-colours;
 
-  .tube-item,
-  .plate-item {
+  .relative-item {
     @extend .list-group-item;
-    @extend .justify-content-between;
-    @extend .d-flex;
+    @extend .list-group-item-action;
   }
 }
 
@@ -311,16 +311,15 @@ nav.robots-list {
 dl.metadata,
 dl#samples-information {
   @extend .row;
+  @extend .m-0;
   dt {
-    @extend .col-3;
+    @extend .col-12;
+    @extend .col-lg-4;
   }
   dd {
-    @extend .col-9;
+    @extend .col-12;
+    @extend .col-lg-8;
   }
-}
-
-dl#samples-information {
-  @extend .row;
 }
 
 .well {
@@ -720,4 +719,12 @@ dl.descriptive-list-inline {
 
 .pool-data {
   float: left;
+}
+
+// Additional Utilities
+// max-vh-{value} for values 10, 20, 30, ..., 100
+@for $i from 1 through 10 {
+  .max-vh-#{$i}0 {
+    max-height: #{$i * 10}vh;
+  }
 }

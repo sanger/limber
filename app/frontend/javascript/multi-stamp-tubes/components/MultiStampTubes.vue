@@ -52,7 +52,11 @@
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import LoadingModal from '@/javascript/shared/components/LoadingModal.vue'
 import Plate from '@/javascript/shared/components/Plate.vue'
-import { checkDuplicates, checkState } from '@/javascript/shared/components/tubeScanValidators.js'
+import {
+  checkDuplicates,
+  checkState,
+  checkAcceptablePurposes,
+} from '@/javascript/shared/components/tubeScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
@@ -142,6 +146,12 @@ export default {
     // Should tubes be required to be in passed state
     // Also referenced as require-tube-passed and require_tube_passed
     requireTubePassed: { type: String, required: true },
+
+    // A acceptable list of purpose names that can be scanned
+    // If left empty all purposes are acceptable
+    // Also referenced as data-acceptable-purposes and data_acceptable_purposes
+    // See computed method acceptablePurposesArray for conversion to array.
+    acceptablePurposes: { type: String, required: false, default: '[]' },
   },
   data() {
     return {
@@ -178,6 +188,9 @@ export default {
     },
     targetColumnsNumber() {
       return Number.parseInt(this.targetColumns)
+    },
+    acceptablePurposesArray() {
+      return JSON.parse(this.acceptablePurposes)
     },
     // Returns a boolean indicating whether the provided tubes are valid.
     // Used to enable and disable the 'Create' button.
@@ -247,6 +260,9 @@ export default {
     scanValidation() {
       const validators = []
 
+      // If any acceptablePurposes specified then ensure we validate against them
+      if (this.acceptablePurposesArray.length) validators.push(checkAcceptablePurposes(this.acceptablePurposesArray))
+
       if (this.requireTubePassed === 'true') validators.push(checkState(['passed']))
 
       if (this.allowTubeDuplicates === 'true') return validators
@@ -272,7 +288,7 @@ export default {
       let colour_index = -1
 
       const tube = this.tubes[tubeIndex]
-      if (tube.state !== 'valid') return colour_index
+      if (!tube || tube.state !== 'valid') return colour_index
 
       const tube_machine_barcode = tube.labware.labware_barcode.machine_barcode
       const tube_machine_barcodes = this.tubes
