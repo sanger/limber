@@ -34,10 +34,22 @@ Bespoke PCR:
       - TruSeq mRNA (RNA Seq)
   library_pass: LBB Lib PCR-XP
   relationships:
-    Stock Plate: LBB Ligation
     LBB Cherrypick: LBB Ligation
     LBC Cherrypick: LBB Ligation
     LBB Ligation: LBB Lib PCR-XP
+
+Bespoke PCR Stock plate:
+  pipeline_group: Bespoke PCR
+  filters:
+    request_type_key: limber_pcr_bespoke
+    library_type:
+      - Chromium single cell surface protein
+      - emSEQ
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    Stock Plate: LBB Ligation
+    LBB Ligation: LBB Lib PCR-XP
+
 Bespoke PCR BCR:
   filters:
     request_type_key: limber_pcr_bespoke
