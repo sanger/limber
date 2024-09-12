@@ -32,7 +32,7 @@ Bespoke PCR:
       - Standard
       - TraDIS
       - TruSeq mRNA (RNA Seq)
-      - SGE Library v0.2
+#      - SGE Library v0.2
   library_pass: LBB Lib PCR-XP
   relationships:
     LBB Cherrypick: LBB Ligation
