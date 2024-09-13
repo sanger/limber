@@ -17,13 +17,12 @@ module LabwareCreators
       # Create a single tube
       # TODO: This should link to multiple parents in production
       @child =
-        api
-          .specific_tube_creation
+        Sequencescape::Api::V2::SpecificTubeCreation
           .create!(
-            user: user_uuid,
-            parent: parents.first.uuid,
-            child_purposes: [purpose_uuid],
-            tube_attributes: [{ name: "#{stock_plate_barcode}+" }]
+            child_purpose_uuids: [purpose_uuid],
+            parent_uuids: [parents.first.uuid],
+            tube_attributes: [{ name: "#{stock_plate_barcode}+" }],
+            user_uuid: user_uuid
           )
           .children
           .first
