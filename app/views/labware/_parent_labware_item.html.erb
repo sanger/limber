@@ -4,6 +4,8 @@
 <% open_in_new_window = false %>
 <% if labware.tube? %>
   <%= render partial: 'labware/simple_tube', locals: { tube: labware, open_in_new_window: open_in_new_window } %>
-<% else %>
+<% elsif labware.purpose.present? %>
   <%= render partial: 'labware/basic_relative', locals: { labware: labware, open_in_new_window: open_in_new_window } %>
+<% else %>
+  <%= render partial: 'labware/asset', locals: { labware: labware } %>
 <% end %>

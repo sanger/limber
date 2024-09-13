@@ -1,0 +1,15 @@
+<%# A Sequencescape::Api::V2::Asset type, essentially a fallback -%>
+<%# locals: (labware:) -%>
+<%
+  labware_path = "#{ Limber::Application.config.sequencescape_url }/labware/#{labware.id}"
+  open_in_new_window = true # always open an external link in a new window
+%>
+<div class="relative-item">
+    External <%= labware&.type.to_s.titleize %> -
+    <%= link_to labware_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %>
+        <%= labware.id %> (<%= labware.name %>)
+    <% end %>
+    <% if labware.state.present? %>
+      <%= content_tag(:span, state_badge(labware.state), class: 'float-right') %>
+    <% end %>
+</div>
