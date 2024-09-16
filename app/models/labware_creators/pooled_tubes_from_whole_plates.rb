@@ -15,7 +15,7 @@ module LabwareCreators
 
     def create_labware!
       # Create a single tube
-      # TODO: This should link to multiple parents in production
+      # TODO: {Y24-190} See if we can do all the transfers as part of the SpecificTubeCreation instead of separately.
       @child =
         Sequencescape::Api::V2::SpecificTubeCreation
           .create!(
@@ -37,6 +37,10 @@ module LabwareCreators
 
     def stock_plate_barcode
       "#{parents.first.stock_plate.barcode.prefix}#{parents.first.stock_plate.barcode.number}"
+    end
+
+    def redirection_target
+      TubeProxy.new(@child.uuid)
     end
 
     # TODO: This should probably be asynchronous
