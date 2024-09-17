@@ -59,13 +59,18 @@ class PurposeConfig
     store.fetch(name).uuid
   end
 
-  # Currently limber does not register its own tube racks. This is because we
-  # will delegate most behaviour to the contained tube purposes
+  # A helper class to register new TubeRack::Purpose
   class TubeRack < PurposeConfig
     self.default_options = { default_printer_type: :tube_rack, presenter_class: 'Presenters::TubeRackPresenter' }.freeze
 
     def register!
-      warn 'Cannot create tube racks from within limber'
+      puts "Creating #{name}"
+      options_for_creation = {
+        name: name,
+        size: config.fetch(:size, 96),
+        target_type: config.fetch(:target, 'TubeRack')
+      }
+      Sequencescape::Api::V2::TubeRackPurpose.create!(options_for_creation)
     end
   end
 
