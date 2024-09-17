@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - develop
-      - sh51/create-release-apr-action
+      - sh51/create-release-pr-action
 jobs:
   create_update_pull_request:
     runs-on: ubuntu-latest
