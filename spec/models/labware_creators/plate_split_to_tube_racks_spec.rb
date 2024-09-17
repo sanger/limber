@@ -165,7 +165,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     expected_call_args =
       tubes_hash.flat_map do |tube_rack_barcode, tubes|
         tubes.map do |tube|
-          metadata = {
+          {
             user_id: user.id,
             asset_id: tube.id,
             metadata: {
