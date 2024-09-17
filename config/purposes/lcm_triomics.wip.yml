@@ -80,7 +80,7 @@ LCMT EM PCR XP:
       id: concentrations_ngul
   :size: 96
 # Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
-# pooling so the flow is directly from PCRXP to Pool XP).
+# pooling so the flow is directly from PCR XP to Pool XP).
 LCMT EM Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

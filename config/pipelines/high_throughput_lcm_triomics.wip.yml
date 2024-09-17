@@ -5,7 +5,7 @@ LCM Triomics EMSeq:
   filters:
     request_type_key: limber_lcm_triomics_emseq
     library_type: LCM Triomics EMSeq
-  library_pass: LCMT EM PCRXP
+  library_pass: LCMT EM PCR XP
   relationships:
     LCMT Lysate: LCMT DNA Frag
     LCMT DNA Frag: LCMT DNA End Prep
@@ -15,7 +15,7 @@ LCM Triomics EMSeq:
     LCMT EM TET2 Stop: LCMT EM NaOH Denat
     LCMT EM NaOH Denat: LCMT EM APOBEC Deam
     LCMT EM APOBEC Deam: LCMT EM LibPCR
-    LCMT EM LibPCR: LCMT EM PCRXP
+    LCMT EM LibPCR: LCMT EM PCR XP
 
 LCM Triomics EMSeq Custom Pooling:
   pipeline_group: LCM Triomics WGS and EMSeq
@@ -23,5 +23,5 @@ LCM Triomics EMSeq Custom Pooling:
     request_type_key: limber_lcm_triomics_emseq
     state: passed
   relationships:
-    LCMT EM PCRXP: LCMT EM Pool XP
+    LCMT EM PCR XP: LCMT EM Pool XP
     LCMT EM Pool XP: LCMT EM Pool XP Norm
