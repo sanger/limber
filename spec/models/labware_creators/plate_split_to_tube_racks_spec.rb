@@ -201,6 +201,56 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
+  def prepare_created_child_tubes(tube_attributes)
+    # Prepare child tubes and stub their lookups.
+    child_tubes =
+      tube_attributes.map { |attrs| create(:v2_tube, name: attrs[:name], foreign_barcode: attrs[:foreign_barcode]) }
+    child_tubes.each { |child_tube| stub_v2_labware(child_tube) }
+
+    child_tubes
+  end
+
+  def expect_specific_tube_creation(child_purpose_uuid, child_tubes)
+    # Create a mock for the specific tube creation.
+    specific_tube_creation = double
+    allow(specific_tube_creation).to receive(:children).and_return(child_tubes)
+
+    # Expect the post request and return the mock.
+    expect_api_v2_posts(
+      'SpecificTubeCreation',
+      [
+        {
+          child_purpose_uuids: [child_purpose_uuid] * child_tubes.size,
+          parent_uuids: [parent_uuid],
+          tube_attributes: child_tubes.map { |tube| { name: tube.name, foreign_barcode: tube.foreign_barcode } },
+          user_uuid: user_uuid
+        }
+      ],
+      [specific_tube_creation]
+    )
+  end
+
+  # tubes_hash should be a hash with tube rack barcodes as keys and arrays of tubes as values.
+  def expect_custom_metadatum_collection_posts(tubes_hash)
+    # Prepare the expected call arguments.
+    expected_call_args =
+      tubes_hash.flat_map do |tube_rack_barcode, tubes|
+        tubes.map do |tube|
+          metadata = {
+            user_id: user.id,
+            asset_id: tube.id,
+            metadata: {
+              tube_rack_barcode: tube_rack_barcode,
+              tube_rack_position: tube.name.split(':').last
+            }
+          }
+        end
+      end
+
+    # Expect the post requests.
+    expect_api_v2_posts('CustomMetadatumCollection', expected_call_args)
+  end
+
   before do
     # need both child tubes to have a purpose config here
     create(
@@ -661,48 +711,16 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
     end
 
-    # stub the contingency tube creation
-    let!(:stub_contingency_tube_creation_request_uuid) { SecureRandom.uuid }
-    let!(:stub_contingency_tube_creation_request) do
-      stub_api_post(
-        'specific_tube_creations',
-        payload: {
-          specific_tube_creation: {
-            child_purposes: [
-              child_contingency_tube_purpose_uuid,
-              child_contingency_tube_purpose_uuid,
-              child_contingency_tube_purpose_uuid
-            ],
-            tube_attributes: [
-              # sample 1 from well A2 to contingency tube 1 in A1
-              { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
-              # sample 2 from well B2 to contingency tube 2 in B1
-              { name: 'SPR:NT2P:B1', foreign_barcode: 'FX00000012' },
-              # sample 1 from well A3 to contingency tube 3 in C1
-              { name: 'SPR:NT1O:C1', foreign_barcode: 'FX00000013' }
-            ],
-            user: user_uuid,
-            parent: parent_uuid
-          }
-        },
-        body: json(:specific_tube_creation, uuid: stub_contingency_tube_creation_request_uuid, children_count: 3)
-      )
-    end
-
-    # stub what contingency tubes were just made
-    let!(:stub_contingency_tube_creation_children_request) do
-      stub_api_get(
-        stub_contingency_tube_creation_request_uuid,
-        'children',
-        body:
-          json(
-            :tube_collection_with_barcodes_specified,
-            size: 3,
-            names: %w[SPR:NT1O:A1 SPR:NT2P:B1 SPR:NT1O:C1],
-            barcode_prefix: 'FX',
-            barcode_numbers: [11, 12, 13],
-            uuid_index_offset: 2
-          )
+    let(:contingency_tubes) do
+      prepare_created_child_tubes(
+        [
+          # sample 1 from well A2 to contingency tube 1 in A1
+          { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
+          # sample 2 from well B2 to contingency tube 2 in B1
+          { name: 'SPR:NT2P:B1', foreign_barcode: 'FX00000012' },
+          # sample 1 from well A3 to contingency tube 3 in C1
+          { name: 'SPR:NT1O:C1', foreign_barcode: 'FX00000013' }
+        ]
       )
     end
 
@@ -742,6 +760,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         content
       end
 
+      let(:sequencing_tubes) do
+        prepare_created_child_tubes(
+          [
+            # sample 1 in well A1 to seq tube 1 in A1
+            { name: 'SEQ:NT1O:A1', foreign_barcode: 'FX00000001' },
+            # sample 2 in well B1 to seq tube 2 in B1
+            { name: 'SEQ:NT2P:B1', foreign_barcode: 'FX00000002' }
+          ]
+        )
+      end
+
       # stub the sequencing file upload
       let!(:stub_sequencing_file_upload) do
         stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
@@ -761,58 +790,20 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           )
       end
 
-      # stub the sequencing tube creation
-      let!(:stub_sequencing_tube_creation_request_uuid) { SecureRandom.uuid }
-      let!(:stub_sequencing_tube_creation_request) do
-        stub_api_post(
-          'specific_tube_creations',
-          payload: {
-            specific_tube_creation: {
-              child_purposes: [child_sequencing_tube_purpose_uuid, child_sequencing_tube_purpose_uuid],
-              tube_attributes: [
-                # sample 1 in well A1 to seq tube 1 in A1
-                { name: 'SEQ:NT1O:A1', foreign_barcode: 'FX00000001' },
-                # sample 2 in well B1 to seq tube 2 in B1
-                { name: 'SEQ:NT2P:B1', foreign_barcode: 'FX00000002' }
-              ],
-              user: user_uuid,
-              parent: parent_uuid
-            }
-          },
-          body: json(:specific_tube_creation, uuid: stub_sequencing_tube_creation_request_uuid, children_count: 2)
-        )
-      end
-
-      # stub what sequencing tubes were just made
-      let!(:stub_sequencing_tube_creation_children_request) do
-        stub_api_get(
-          stub_sequencing_tube_creation_request_uuid,
-          'children',
-          body:
-            json(
-              :tube_collection_with_barcodes_specified,
-              size: 2,
-              names: %w[SEQ:NT1O:A1 SEQ:NT2P:B1],
-              barcode_prefix: 'FX',
-              barcode_numbers: [1, 2]
-            )
-        )
-      end
-
       # stub the transfer creation
       let!(:stub_transfer_creation_request) do
+        parent_wells = [parent_well_a1, parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
+        target_tubes = sequencing_tubes + contingency_tubes
+        transfer_requests =
+          parent_wells.map.with_index do |parent_well, index|
+            { 'submission_id' => '2', 'source_asset' => parent_well.uuid, 'target_asset' => target_tubes[index].uuid }
+          end
         stub_api_post(
           'transfer_request_collections',
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests: [
-                { 'submission_id' => '2', 'source_asset' => parent_well_a1.uuid, 'target_asset' => 'tube-0' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_b1.uuid, 'target_asset' => 'tube-1' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_a2.uuid, 'target_asset' => 'tube-2' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_b2.uuid, 'target_asset' => 'tube-3' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_a3.uuid, 'target_asset' => 'tube-4' }
-              ]
+              transfer_requests: transfer_requests
             }
           },
           body: '{}'
@@ -860,17 +851,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       it 'creates the child tubes' do
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [tube_1_create_args, tube_2_create_args, tube_3_create_args, tube_4_create_args, tube_5_create_args]
+        expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
+        expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
+
+        expect_custom_metadatum_collection_posts(
+          { 'TR00000001' => sequencing_tubes, 'TR00000002' => contingency_tubes }
         )
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
         expect(stub_sequencing_file_upload).to have_been_made.once
-        expect(stub_sequencing_tube_creation_request).to have_been_made.once
         expect(stub_contingency_file_upload).to have_been_made.once
-        expect(stub_contingency_tube_creation_request).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
       end
 
@@ -880,94 +871,20 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'failed')
         end
 
-        # as A1 is failed order of samples is changed
-        let!(:stub_sequencing_tube_creation_request) do
-          stub_api_post(
-            'specific_tube_creations',
-            payload: {
-              specific_tube_creation: {
-                child_purposes: [child_sequencing_tube_purpose_uuid, child_sequencing_tube_purpose_uuid],
-                tube_attributes: [
-                  # sample 2 in well B1 to seq tube 1 in A1
-                  { name: 'SEQ:NT2P:A1', foreign_barcode: 'FX00000001' },
-                  # sample 1 in well A2 to seq tube 2 in B1
-                  { name: 'SEQ:NT1O:B1', foreign_barcode: 'FX00000002' }
-                ],
-                user: user_uuid,
-                parent: parent_uuid
-              }
-            },
-            body: json(:specific_tube_creation, uuid: stub_sequencing_tube_creation_request_uuid, children_count: 2)
-          )
-        end
-
-        # stub what sequencing tubes were just made (order changed)
-        let!(:stub_sequencing_tube_creation_children_request) do
-          stub_api_get(
-            stub_sequencing_tube_creation_request_uuid,
-            'children',
-            body:
-              json(
-                :tube_collection_with_barcodes_specified,
-                size: 2,
-                names: %w[SEQ:NT2P:A1 SEQ:NT1O:B1],
-                barcode_prefix: 'FX',
-                barcode_numbers: [1, 2]
-              )
-          )
-        end
-
-        # only 2 contingency tubes will be needed
-        let!(:stub_contingency_tube_creation_request) do
-          stub_api_post(
-            'specific_tube_creations',
-            payload: {
-              specific_tube_creation: {
-                child_purposes: [child_contingency_tube_purpose_uuid, child_contingency_tube_purpose_uuid],
-                tube_attributes: [
-                  # sample 2 from well B2 to contingency tube 1 in A1
-                  { name: 'SPR:NT2P:A1', foreign_barcode: 'FX00000011' },
-                  # sample 1 from well A3 to contingency tube 2 in B1
-                  { name: 'SPR:NT1O:B1', foreign_barcode: 'FX00000012' }
-                ],
-                user: user_uuid,
-                parent: parent_uuid
-              }
-            },
-            body: json(:specific_tube_creation, uuid: stub_contingency_tube_creation_request_uuid, children_count: 3)
-          )
-        end
-
-        # stub what contingency tubes were just made (just 2)
-        let!(:stub_contingency_tube_creation_children_request) do
-          stub_api_get(
-            stub_contingency_tube_creation_request_uuid,
-            'children',
-            body:
-              json(
-                :tube_collection_with_barcodes_specified,
-                size: 2,
-                names: %w[SPR:NT2P:A1 SPR:NT1O:B1],
-                barcode_prefix: 'FX',
-                barcode_numbers: [11, 12],
-                uuid_index_offset: 2
-              )
-          )
-        end
-
         # one fewer transfer request
         let!(:stub_transfer_creation_request) do
+          parent_wells = [parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
+          target_tubes = sequencing_tubes + contingency_tubes
+          transfer_requests =
+            parent_wells.map.with_index do |parent_well, index|
+              { 'submission_id' => '2', 'source_asset' => parent_well.uuid, 'target_asset' => target_tubes[index].uuid }
+            end
           stub_api_post(
             'transfer_request_collections',
             payload: {
               transfer_request_collection: {
                 user: user_uuid,
-                transfer_requests: [
-                  { 'submission_id' => '2', 'source_asset' => parent_well_b1.uuid, 'target_asset' => 'tube-0' },
-                  { 'submission_id' => '2', 'source_asset' => parent_well_a2.uuid, 'target_asset' => 'tube-1' },
-                  { 'submission_id' => '2', 'source_asset' => parent_well_b2.uuid, 'target_asset' => 'tube-2' },
-                  { 'submission_id' => '2', 'source_asset' => parent_well_a3.uuid, 'target_asset' => 'tube-3' }
-                ]
+                transfer_requests: transfer_requests
               }
             },
             body: '{}'
@@ -978,6 +895,28 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           fixture_file_upload(
             'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_2_tubes.csv',
             'sequencescape/qc_file'
+          )
+        end
+
+        let(:sequencing_tubes) do
+          prepare_created_child_tubes(
+            [
+              # sample 2 in well B1 to seq tube 1 in A1
+              { name: 'SEQ:NT2P:A1', foreign_barcode: 'FX00000001' },
+              # sample 1 in well A2 to seq tube 2 in B1
+              { name: 'SEQ:NT1O:B1', foreign_barcode: 'FX00000002' }
+            ]
+          )
+        end
+
+        let(:contingency_tubes) do
+          prepare_created_child_tubes(
+            [
+              # sample 2 from well B2 to contingency tube 1 in A1
+              { name: 'SPR:NT2P:A1', foreign_barcode: 'FX00000011' },
+              # sample 1 from well A3 to contingency tube 2 in B1
+              { name: 'SPR:NT1O:B1', foreign_barcode: 'FX00000012' }
+            ]
           )
         end
 
@@ -994,17 +933,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         end
 
         it 'does not create a tube for the failed well' do
-          expect_api_v2_posts(
-            'CustomMetadatumCollection',
-            [tube_1_create_args, tube_2_create_args, tube_3_create_args, tube_4_create_args] # no tube 5
+          expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
+          expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
+
+          expect_custom_metadatum_collection_posts(
+            { 'TR00000001' => sequencing_tubes, 'TR00000002' => contingency_tubes }
           )
 
           expect(subject.valid?).to be_truthy
           expect(subject.save).to be_truthy
           expect(stub_sequencing_file_upload).to have_been_made.once
-          expect(stub_sequencing_tube_creation_request).to have_been_made.once
           expect(stub_contingency_file_upload).to have_been_made.once
-          expect(stub_contingency_tube_creation_request).to have_been_made.once
           expect(stub_transfer_creation_request).to have_been_made.once
         end
       end
@@ -1090,69 +1029,40 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      # stub the contingency tube creation
-      let!(:stub_contingency_tube_creation_request) do
-        stub_api_post(
-          'specific_tube_creations',
-          payload: {
-            specific_tube_creation: {
-              child_purposes: [
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid
-              ],
-              tube_attributes: [
-                # sample 1 from well A1 to contingency tube 1 in A1
-                { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
-                # sample 2 from well B1 to contingency tube 2 in B1
-                { name: 'SPR:NT2P:B1', foreign_barcode: 'FX00000012' },
-                # sample 1 from well A2 to contingency tube 3 in C1
-                { name: 'SPR:NT1O:C1', foreign_barcode: 'FX00000013' },
-                # sample 2 from well B2 to contingency tube 4 in E1  (D1 set as NO READ)
-                { name: 'SPR:NT2P:E1', foreign_barcode: 'FX00000014' },
-                # sample 1 from well A3 to contingency tube 5 in F1
-                { name: 'SPR:NT1O:F1', foreign_barcode: 'FX00000015' }
-              ],
-              user: user_uuid,
-              parent: parent_uuid
-            }
-          },
-          body: json(:specific_tube_creation, uuid: stub_contingency_tube_creation_request_uuid, children_count: 5)
-        )
-      end
-
-      # stub what contingency tubes were just made
-      let!(:stub_contingency_tube_creation_children_request) do
-        stub_api_get(
-          stub_contingency_tube_creation_request_uuid,
-          'children',
-          body:
-            json(
-              :tube_collection_with_barcodes_specified,
-              size: 5,
-              names: %w[SPR:NT1O:A1 SPR:NT2P:B1 SPR:NT1O:C1 SPR:NT2P:E1 SPR:NT1O:F1],
-              barcode_prefix: 'FX',
-              barcode_numbers: [11, 12, 13, 14, 15]
-            )
+      let(:contingency_tubes) do
+        prepare_created_child_tubes(
+          [
+            # sample 1 from well A1 to contingency tube 1 in A1
+            { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
+            # sample 2 from well B1 to contingency tube 2 in B1
+            { name: 'SPR:NT2P:B1', foreign_barcode: 'FX00000012' },
+            # sample 1 from well A2 to contingency tube 3 in C1
+            { name: 'SPR:NT1O:C1', foreign_barcode: 'FX00000013' },
+            # sample 2 from well B2 to contingency tube 4 in E1  (D1 set as NO READ)
+            { name: 'SPR:NT2P:E1', foreign_barcode: 'FX00000014' },
+            # sample 1 from well A3 to contingency tube 5 in F1
+            { name: 'SPR:NT1O:F1', foreign_barcode: 'FX00000015' }
+          ]
         )
       end
 
       # stub the transfer creation
       let!(:stub_transfer_creation_request) do
+        parent_wells = [parent_well_a1, parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
+        transfer_requests =
+          parent_wells.map.with_index do |parent_well, index|
+            {
+              'submission_id' => '2',
+              'source_asset' => parent_well.uuid,
+              'target_asset' => contingency_tubes[index].uuid
+            }
+          end
         stub_api_post(
           'transfer_request_collections',
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests: [
-                { 'submission_id' => '2', 'source_asset' => parent_well_a1.uuid, 'target_asset' => 'tube-0' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_b1.uuid, 'target_asset' => 'tube-1' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_a2.uuid, 'target_asset' => 'tube-2' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_b2.uuid, 'target_asset' => 'tube-3' },
-                { 'submission_id' => '2', 'source_asset' => parent_well_a3.uuid, 'target_asset' => 'tube-4' }
-              ]
+              transfer_requests: transfer_requests
             }
           },
           body: '{}'
@@ -1193,15 +1103,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       it 'creates the child tubes' do
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [tube_1_create_args, tube_2_create_args, tube_3_create_args, tube_4_create_args, tube_5_create_args]
-        )
+        # Contingency tubes creation
+        expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
+        expect_custom_metadatum_collection_posts({ 'TR00000002' => contingency_tubes })
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
         expect(stub_contingency_file_upload).to have_been_made.once
-        expect(stub_contingency_tube_creation_request).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
       end
     end
