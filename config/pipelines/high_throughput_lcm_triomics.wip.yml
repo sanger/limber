@@ -14,8 +14,8 @@ LCM Triomics EMSeq:
     LCMT EM TET2 Ox: LCMT EM TET2 Stop
     LCMT EM TET2 Stop: LCMT EM NaOH Denat
     LCMT EM NaOH Denat: LCMT EM APOBEC Deam
-    LCMT EM APOBEC Deam: LCMT EM LibPCR
-    LCMT EM LibPCR: LCMT EM PCR XP
+    LCMT EM APOBEC Deam: LCMT EM Lib PCR
+    LCMT EM Lib PCR: LCMT EM PCR XP
 
 LCM Triomics EMSeq Custom Pooling:
   pipeline_group: LCM Triomics WGS and EMSeq

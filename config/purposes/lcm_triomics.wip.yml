@@ -54,7 +54,7 @@ LCMT EM APOBEC Deam:
   :cherrypickable_target: false
   :input_plate: false
   :size: 96
-LCMT EM LibPCR:
+LCMT EM Lib PCR:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
