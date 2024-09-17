@@ -1,16 +1,18 @@
-name: Create/Update merge to master pull request for production releases
-
+# Create or update merge-to-master pull requests for production releases
+name: Release
 on:
   push:
     branches:
       - develop
       - sh51/create-release-pr-action
 jobs:
-  create_update_pull_request:
+  pull_request:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Create pull request
+      - name: Create or update PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          gh_pr_up() { gh pr create $* || gh pr edit $* }
+          gh_pr_up() { IFS=$'\n'; gh pr create $* || gh pr edit $*; }
           gh_pr_up --base master --head develop --title "Merge Develop into Master" --fill
