@@ -1,29 +1,20 @@
-name: Create merge to master pull request for production releases
+name: Create/Update merge to master pull request for production releases
+
 on:
-  workflow_dispatch:
   push:
     branches:
       - develop
+      - sh51/create-release-apr-action
 jobs:
-  productionPromotion:
+  create_update_pull_request:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: master
-      - name: Reset master branch
+      - uses: actions/checkout@v3
+      - name: Create pull request
         run: |
-          git fetch origin develop:develop
-          git reset --hard develop
-      - name: Set output variables
-        id: vars
-        run: |
-          pr_body="This PR was auto-generated on $(date +%d-%m-%Y) \
-            by [create-pull-request](https://github.com/peter-evans/create-pull-request)."
-          echo "pr_body=$pr_body" >> $GITHUB_OUTPUT
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          branch: master
-          title: Merge Develop into Master
-          body: ${{ steps.vars.outputs.pr_body }}
+          gh_pr_up() { gh pr create $* || gh pr edit $* }
+          gh_pr_up \
+            --base master \
+            --head develop \
+            --title "Merge Develop into Master" \
+            --fill # Fill in the body with the commit messages
