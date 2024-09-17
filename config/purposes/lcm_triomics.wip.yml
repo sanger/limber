@@ -68,7 +68,7 @@ LCMT EM LibPCR:
     - TS_pWGSC_UDI_tag60_61_swap
     - TS_pWGSD_UDI96
   :size: 96
-LCMT EM PCRXP:
+LCMT EM PCR XP:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
