@@ -13,8 +13,4 @@ jobs:
       - name: Create pull request
         run: |
           gh_pr_up() { gh pr create $* || gh pr edit $* }
-          gh_pr_up \
-            --base master \
-            --head develop \
-            --title "Merge Develop into Master" \
-            --fill
+          gh_pr_up --base master --head develop --title "Merge Develop into Master" --fill
