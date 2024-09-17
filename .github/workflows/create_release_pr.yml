@@ -1,5 +1,6 @@
 name: Create merge to master pull request for production releases
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
