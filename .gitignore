@@ -53,3 +53,6 @@ release.tar.gz
 
 # Bye-bug history
 .byebug_history
+
+# RubyMine
+.idea

@@ -242,54 +242,54 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'does not call the validation' do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:must_have_correct_number_of_tubes_in_rack_files)
-        expect(subject.errors.full_messages).to include("Contingency file can't be blank")
+        expect(subject.errors.full_messages).to include("Sequencing file can't be blank")
       end
     end
 
-    context 'when require_contingency_tubes_only? is true' do
+    context 'when require_sequencing_tubes_only? is true' do
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
           parent_uuid: parent_uuid,
-          contingency_file: contingency_file
+          sequencing_file: sequencing_file
         }
       end
 
       before do
-        allow(subject).to receive(:require_contingency_tubes_only?).and_return(true)
+        allow(subject).to receive(:require_sequencing_tubes_only?).and_return(true)
         subject.must_have_correct_number_of_tubes_in_rack_files
       end
 
-      context 'when there are enough contingency tubes' do
-        let(:num_contingency_tubes) { 96 }
+      context 'when there are enough sequencing tubes' do
+        let(:num_sequencing_tubes) { 48 }
 
         it 'is valid and does not create an error' do
-          expect(subject.errors[:contingency_csv_file]).to be_empty
+          expect(subject.errors[:sequencing_csv_file]).to be_empty
         end
       end
 
       context 'when there are not enough contingency tubes' do
-        let(:num_contingency_tubes) { 47 }
+        let(:num_sequencing_tubes) { 47 }
 
         it 'is not valid and does create an error' do
-          expect(subject.errors.full_messages).to include('Contingency csv file contains insufficient tubes')
+          expect(subject.errors.full_messages).to include('Sequencing csv file contains insufficient tubes')
         end
       end
 
       context 'when there are too many contingency tubes' do
         let(:num_parent_wells) { 48 }
         let(:num_parent_unique_samples) { 24 }
-        let(:num_sequencing_tubes) { 0 }
-        let(:num_contingency_tubes) { 49 }
+        let(:num_contingency_tubes) { 0 }
+        let(:num_sequencing_tubes) { 49 }
 
         it 'is not valid and does create an error' do
-          expect(subject.errors.full_messages).to include('Contingency csv file contains more tubes than needed')
+          expect(subject.errors.full_messages).to include('Sequencing csv file contains more tubes than needed')
         end
       end
     end
 
-    context 'when require_contingency_tubes_only? is false' do
+    context 'when require_sequencing_tubes_only? is false' do
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
@@ -301,7 +301,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       before do
-        allow(subject).to receive(:require_contingency_tubes_only?).and_return(false)
+        allow(subject).to receive(:require_sequencing_tubes_only?).and_return(false)
         subject.must_have_correct_number_of_tubes_in_rack_files
       end
 
@@ -362,7 +362,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'does not call the validation' do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_rack_barcodes_differ_between_files)
-        expect(subject.errors.full_messages).to include("Contingency file can't be blank")
+        expect(subject.errors.full_messages).to include("Sequencing file can't be blank")
       end
     end
 
@@ -480,7 +480,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'does not call the validation' do
         expect(subject).not_to be_valid
         expect(subject).not_to receive(:check_tube_barcodes_differ_between_files)
-        expect(subject.errors.full_messages).to include("Contingency file can't be blank")
+        expect(subject.errors.full_messages).to include("Sequencing file can't be blank")
       end
     end
 
@@ -663,6 +663,77 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
+      # stub the contingency tube creation
+      let!(:stub_contingency_tube_creation_request_uuid) { SecureRandom.uuid }
+      let!(:stub_contingency_tube_creation_request) do
+        stub_api_post(
+          'specific_tube_creations',
+          payload: {
+            specific_tube_creation: {
+              child_purposes: [
+                child_contingency_tube_purpose_uuid,
+                child_contingency_tube_purpose_uuid,
+                child_contingency_tube_purpose_uuid
+              ],
+              tube_attributes: [
+                # sample 1 from well A2 to contingency tube 1 in A1
+                { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
+                # sample 2 from well B2 to contingency tube 2 in B1
+                { name: 'SPR:NT2P:B1', foreign_barcode: 'FX00000012' },
+                # sample 1 from well A3 to contingency tube 3 in C1
+                { name: 'SPR:NT1O:C1', foreign_barcode: 'FX00000013' }
+              ],
+              user: user_uuid,
+              parent: parent_uuid
+            }
+          },
+          body: json(:specific_tube_creation, uuid: stub_contingency_tube_creation_request_uuid, children_count: 3)
+        )
+      end
+
+      # stub what contingency tubes were just made
+      let!(:stub_contingency_tube_creation_children_request) do
+        stub_api_get(
+          stub_contingency_tube_creation_request_uuid,
+          'children',
+          body:
+            json(
+              :tube_collection_with_barcodes_specified,
+              size: 3,
+              names: %w[SPR:NT1O:A1 SPR:NT2P:B1 SPR:NT1O:C1],
+              barcode_prefix: 'FX',
+              barcode_numbers: [11, 12, 13],
+              uuid_index_offset: 2
+            )
+        )
+      end
+
+      # body for stubbing the contingency file upload
+      let(:contingency_file_content) do
+        content = contingency_file.read
+        contingency_file.rewind
+        content
+      end
+
+      # stub the contingency file upload
+      let!(:stub_contingency_file_upload) do
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
+          .with(
+            body: contingency_file_content,
+            headers: {
+              'Content-Type' => 'sequencescape/qc_file',
+              'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
+            }
+          )
+          .to_return(
+            status: 201,
+            body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
+            headers: {
+              'content-type' => 'application/json'
+            }
+          )
+      end
+
       # body for stubbing the sequencing file upload
       let(:sequencing_file_content) do
         content = sequencing_file.read
@@ -816,51 +887,62 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
     end
 
-    context 'with just a contingency file' do
-      let(:sequencing_file) { nil }
-
-      let(:contingency_file) do
-        fixture_file_upload(
-          'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan.csv',
-          'sequencescape/qc_file'
-        )
-      end
-
+    context 'with just a sequencing file' do
       let(:form_attributes) do
         {
           user_uuid: user_uuid,
-          purpose_uuid: child_contingency_tube_purpose_uuid,
+          purpose_uuid: child_sequencing_tube_purpose_uuid,
           parent_uuid: parent_uuid,
-          contingency_file: contingency_file
+          sequencing_file: sequencing_file
         }
       end
 
-      let(:contingency_tubes) do
+      # body for stubbing the sequencing file upload
+      let(:sequencing_file_content) do
+        content = sequencing_file.read
+        sequencing_file.rewind
+        content
+      end
+
+      # stub the sequencing file upload
+      let!(:stub_sequencing_file_upload) do
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
+          .with(
+            body: sequencing_file_content,
+            headers: {
+              'Content-Type' => 'sequencescape/qc_file',
+              'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
+            }
+          )
+          .to_return(
+            status: 201,
+            body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
+            headers: {
+              'content-type' => 'application/json'
+            }
+          )
+      end
+
+      let(:sequencing_tubes) do
         prepare_created_child_tubes(
           [
-            # sample 1 from well A1 to contingency tube 1 in A1
-            { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
-            # sample 2 from well B1 to contingency tube 2 in B1
-            { name: 'SPR:NT2P:B1', foreign_barcode: 'FX00000012' },
-            # sample 1 from well A2 to contingency tube 3 in C1
-            { name: 'SPR:NT1O:C1', foreign_barcode: 'FX00000013' },
-            # sample 2 from well B2 to contingency tube 4 in E1  (D1 set as NO READ)
-            { name: 'SPR:NT2P:E1', foreign_barcode: 'FX00000014' },
-            # sample 1 from well A3 to contingency tube 5 in F1
-            { name: 'SPR:NT1O:F1', foreign_barcode: 'FX00000015' }
+            # sample 1 from well A1 to sequencing tube 1 in A1
+            { name: 'SEQ:NT1O:A1', foreign_barcode: 'FX00000001' },
+            # sample 2 from well B1 to sequencing tube 2 in B1
+            { name: 'SEQ:NT2P:B1', foreign_barcode: 'FX00000002' }
           ]
         )
       end
 
       # stub the transfer creation
       let!(:stub_transfer_creation_request) do
-        parent_wells = [parent_well_a1, parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
+        parent_wells = [parent_well_a1, parent_well_b1]
         transfer_requests =
           parent_wells.map.with_index do |parent_well, index|
             {
               'submission_id' => '2',
               'source_asset' => parent_well.uuid,
-              'target_asset' => contingency_tubes[index].uuid
+              'target_asset' => sequencing_tubes[index].uuid
             }
           end
         stub_api_post(
@@ -879,12 +961,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       it 'creates the child tubes' do
         # Contingency tubes creation
-        expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
-        expect_custom_metadatum_collection_posts({ 'TR00000002' => contingency_tubes })
+        expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
+        expect_custom_metadatum_collection_posts({ 'TR00000001' => sequencing_tubes })
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
-        expect(stub_contingency_file_upload).to have_been_made.once
+        expect(stub_sequencing_file_upload).to have_been_made.once
         expect(stub_transfer_creation_request).to have_been_made.once
       end
     end
