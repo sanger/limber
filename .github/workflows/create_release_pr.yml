@@ -14,7 +14,15 @@ jobs:
         run: |
           git fetch origin develop:develop
           git reset --hard develop
+      - name: Set output variables
+        id: vars
+        run: |
+          pr_body="This PR was auto-generated on $(date +%d-%m-%Y) \
+            by [create-pull-request](https://github.com/peter-evans/create-pull-request)."
+          echo "pr_body=$pr_body" >> $GITHUB_OUTPUT
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           branch: master
+          title: Merge Develop into Master
+          body: ${{ steps.vars.outputs.pr_body }}
