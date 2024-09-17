@@ -17,4 +17,4 @@ jobs:
             --base master \
             --head develop \
             --title "Merge Develop into Master" \
-            --fill # Fill in the body with the commit messages
+            --fill
