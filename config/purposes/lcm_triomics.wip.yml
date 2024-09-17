@@ -1,0 +1,55 @@
+# EMSeq plate purposes
+---
+LCMT Lysate:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: false
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
+  :creator_class: LabwareCreators::Uncreatable
+  :size: 96
+LCMT DNA Adp Lig:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: limber_lcm_triomics_dna_prep
+  :presenter_class: Presenters::PermissivePresenter
+  # TODO: Setting up buttons for creating WGS and EM plates.
+  # When in passed state we will see two buttons for creating WGS and EM plates
+  # because they don't have any filter on the relationship in pipeline config.
+LCMT DNA Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :creator_class: LabwareCreators::AutomatedSubmissionPlate
+  :submission_options:
+    LCM Triomics DNA WGS Library Prep:
+      template_name: 'Limber-Htp - LCM Triomics DNA WGS Library Prep'
+      request_options:
+        library_type: 'LCM Triomics DNA WGS'
+        fragment_size_required_from: '200'
+        fragment_size_required_to: '800'
+      allowed_extra_barcodes: false
+  :presenter_class: Presenters::PermissivePresenter
+  # TODO: See labware creator example for a similar submission.
+  # app/models/labware_creators/multi_stamp_tubes.rb
+  # We will create the request on the parent.
+  # The submission is done first. Then the request on child aliquots are set as you create the child.
+LCMT EM TET2 Ox:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :creator_class: LabwareCreators::AutomatedSubmissionPlate
+  :submission_options:
+    LCM Triomics DNA EMSeq Library Prep:
+      template_name: 'Limber-Htp - LCM Triomics DNA EMSeq Library Prep'
+      request_options:
+        library_type: 'LCM Triomics DNA EMSeq'
+        fragment_size_required_from: '200'
+        fragment_size_required_to: '800'
+      allowed_extra_barcodes: false
+  :presenter_class: Presenters::PermissivePresenter
