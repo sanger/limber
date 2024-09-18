@@ -67,6 +67,8 @@ LCMT EM Lib PCR:
     - TS_pWGSC_UDI96
     - TS_pWGSC_UDI_tag60_61_swap
     - TS_pWGSD_UDI96
+    - TSISC_UDI96
+    - TSRNAhWGS_UDI96
   :size: 96
 LCMT EM PCR XP:
   :asset_type: plate
