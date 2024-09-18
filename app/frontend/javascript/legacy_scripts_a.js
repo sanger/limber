@@ -1,6 +1,10 @@
 import $ from 'jquery'
 import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
 
+// The majority of the code below is for the data-plate-view data attribute used to
+// show differing colours based on the view selected, eg: pools, binning, etc.
+// The pattern is to have a data-plate-view attribute on all tab links, but only have the
+// required views defined below. This allows for easy extension of the views in the future.
 let PlateViewModel = function (plateElement) {
   this['pools-view'] = {
     activate: function () {
