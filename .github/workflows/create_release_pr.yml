@@ -27,7 +27,7 @@ jobs:
           &nbsp; &nbsp; \- _Check version is appropiate_
 
           This description will be overwritten on the next push
-          This PR was auto-generated on $(date +%d-%m-%Y) at $(date +%H:%M:%S)"
+          This PR was auto-generated on $(TZ=Europe/London date --iso-8601=seconds)"
 
           # Check if a PR already exists
           EXISTING_PR=$(gh pr list --base master --head develop --json number --jq '.[0].number')
