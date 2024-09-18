@@ -15,4 +15,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh_pr_up() { IFS=$'\n'; gh pr create $* || gh pr edit $*; }
-          gh_pr_up --base master --head develop --title "Merge Develop into Master" --body "This PR was auto-generated on $(date +%d-%m-%Y)"
+          PR_NUMBERS=$(gh api repos/:owner/:repo/compare/master...develop --jq '.commits[] | select(.commit.message | startswith("Merge pull request")) | .commit.message | capture("#(?<pr_number>\\d+)") | "#\(.pr_number)"')
+          gh_pr_up --base master --head develop --title "Merge Develop into Master" --body "Merges in:\n$(echo "$PR_NUMBERS" | sed 's/^/- /')\n\nThis PR was auto-generated on $(date +%d-%m-%Y) at $(date +%H:%M:%S)"
