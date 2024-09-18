@@ -130,18 +130,18 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
         'Sample Volume (µL)',
         'Resuspension Volume (µL)'
       ],
-      %w[DN1S A1 DN3U A1 5.00 13.20],
-      %w[DN1S B1 DN3U B1 2.50 13.20],
-      %w[DN1S A2 DN3U A1 1.00 13.20],
-      %w[DN1S B2 DN3U B1 0.83 13.20],
-      %w[DN1S A3 DN3U A1 0.56 13.20],
-      %w[DN1S B3 DN3U B1 0.50 13.20],
-      %w[DN2T C1 DN3U A1 1.67 13.20],
-      %w[DN2T D1 DN3U B1 1.25 13.20],
-      %w[DN2T C2 DN3U A1 0.71 13.20],
-      %w[DN2T D2 DN3U B1 0.62 13.20],
-      %w[DN2T C3 DN3U A1 0.45 13.20],
-      %w[DN2T D3 DN3U B1 0.42 13.20]
+      %w[DN1S A1 DN3U A1 5.00 11.90],
+      %w[DN1S B1 DN3U B1 2.50 11.90],
+      %w[DN1S A2 DN3U A1 1.00 11.90],
+      %w[DN1S B2 DN3U B1 0.83 11.90],
+      %w[DN1S A3 DN3U A1 0.56 11.90],
+      %w[DN1S B3 DN3U B1 0.50 11.90],
+      %w[DN2T C1 DN3U A1 1.67 11.90],
+      %w[DN2T D1 DN3U B1 1.25 11.90],
+      %w[DN2T C2 DN3U A1 0.71 11.90],
+      %w[DN2T D2 DN3U B1 0.62 11.90],
+      %w[DN2T C3 DN3U A1 0.45 11.90],
+      %w[DN2T D3 DN3U B1 0.42 11.90]
     ]
   end
 
@@ -191,18 +191,18 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
           'Sample Volume (µL)',
           'Resuspension Volume (µL)'
         ],
-        %w[DN1S A1 DN3U A1 9.00 13.20],
-        %w[DN1S B1 DN3U B1 4.50 13.20],
-        %w[DN1S A2 DN3U A1 1.80 13.20],
-        %w[DN1S B2 DN3U B1 1.50 13.20],
-        %w[DN1S A3 DN3U A1 1.00 13.20],
-        %w[DN1S B3 DN3U B1 0.90 13.20],
-        %w[DN2T C1 DN3U A1 3.00 13.20],
-        %w[DN2T D1 DN3U B1 2.25 13.20],
-        %w[DN2T C2 DN3U A1 1.29 13.20],
-        %w[DN2T D2 DN3U B1 1.12 13.20],
-        %w[DN2T C3 DN3U A1 0.82 13.20],
-        %w[DN2T D3 DN3U B1 0.75 13.20]
+        %w[DN1S A1 DN3U A1 9.00 11.90],
+        %w[DN1S B1 DN3U B1 4.50 11.90],
+        %w[DN1S A2 DN3U A1 1.80 11.90],
+        %w[DN1S B2 DN3U B1 1.50 11.90],
+        %w[DN1S A3 DN3U A1 1.00 11.90],
+        %w[DN1S B3 DN3U B1 0.90 11.90],
+        %w[DN2T C1 DN3U A1 3.00 11.90],
+        %w[DN2T D1 DN3U B1 2.25 11.90],
+        %w[DN2T C2 DN3U A1 1.29 11.90],
+        %w[DN2T D2 DN3U B1 1.12 11.90],
+        %w[DN2T C3 DN3U A1 0.82 11.90],
+        %w[DN2T D3 DN3U B1 0.75 11.90]
       ]
     end
     it 'renders the csv' do

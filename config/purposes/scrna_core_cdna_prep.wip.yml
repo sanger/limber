@@ -49,7 +49,7 @@ LRC PBMC Pools:
     name: Presenters::DonorPoolingPlatePresenter
     args:
       # The default number of cells to calculate the required volumes.
-      default_required_number_of_cells: 5000
+      default_required_number_of_cells: 30000
       # poly_metadatum key for study specific required number of cells.
       study_required_number_of_cells_key: scrna_core_pbmc_donor_pooling_required_number_of_cells
   :creator_class:

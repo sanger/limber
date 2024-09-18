@@ -23,10 +23,12 @@
   default_required_number_of_cells = args[:default_required_number_of_cells]
   study_required_number_of_cells_key = args[:study_required_number_of_cells_key]
 
-  maximum_sample_volume = 50.0  # microlitres
+  maximum_sample_volume = 60.0  # microlitres
   resuspension_volume_per_sample = 2.2  # microlitres
   minimum_resuspension_volume = 10.0  # microlitres
   millilitres_to_microlitres = 1_000.0
+  wastage_accountment = 0.95238 # Accounting for wastage of material during transfer between labware
+  desired_chip_loading_concentration = 2400
 
   # Make a mapping { src_barcode => { src_location => src_well } }
 
@@ -67,7 +69,7 @@
 
   rows_array = transfer_request_data.map do |data|
     samples_in_pool = samples_by_dest_well[data[3]].count
-    resuspension_volume = [samples_in_pool * resuspension_volume_per_sample, minimum_resuspension_volume].max
+    resuspension_volume = [(samples_in_pool * default_required_number_of_cells * wastage_accountment) / desired_chip_loading_concentration, minimum_resuspension_volume].max
     data + ['%0.2f' % resuspension_volume]
   end
 %>
