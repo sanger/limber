@@ -19,8 +19,8 @@ jobs:
 
           $(echo "$PR_NUMBERS" | sed 's/^/- /')
 
-          This PR was auto-generated on $(date +%d-%m-%Y) at $(date +%H:%M:%S)
-          Changes will be overwritten on next push"
+          This description will be overwritten on the next push
+          This PR was auto-generated on $(date +%d-%m-%Y) at $(date +%H:%M:%S)"
 
           # Check if a PR already exists
           EXISTING_PR=$(gh pr list --base master --head develop --json number --jq '.[0].number')
