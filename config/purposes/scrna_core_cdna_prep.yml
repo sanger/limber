@@ -45,6 +45,10 @@ LRC PBMC Defrost PBS:
 LRC PBMC Pools:
   :asset_type: plate
   :label_template: plate_quad_qc # creates QC4 barcodes
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: 70
   :presenter_class:
     name: Presenters::DonorPoolingPlatePresenter
     args:
