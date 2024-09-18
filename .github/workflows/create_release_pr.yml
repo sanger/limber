@@ -15,9 +15,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           PR_NUMBERS=$(gh api repos/${{ github.repository }}/compare/master...develop --jq '.commits[] | select(.commit.message | startswith("Merge pull request")) | .commit.message | capture("#(?<pr_number>\\d+)") | "#\(.pr_number)"')
-          PR_BODY="Merges in:
+          PR_BODY="#### Changes proposed in this pull request
 
           $(echo "$PR_NUMBERS" | sed 's/^/- /')
+
+          #### Instructions for Reviewers
+
+          &nbsp; &nbsp; \- _Check stories are ready for release_
+          &nbsp; &nbsp; \- _Check for any database migrations_
+          &nbsp; &nbsp; \- _Check for debug code_
+          &nbsp; &nbsp; \- _Check version is appropiate_
 
           This description will be overwritten on the next push
           This PR was auto-generated on $(date +%d-%m-%Y) at $(date +%H:%M:%S)"
