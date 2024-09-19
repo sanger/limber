@@ -1,4 +1,5 @@
 # Create or update merge-to-master pull requests for production releases
+# Note that by design, creating or editing a PR will not trigger a downstream `pull_request` event as this could lead to recursion
 name: Release
 on:
   push:
