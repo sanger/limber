@@ -119,6 +119,14 @@ FactoryBot.define do
     factory :isc_prep_request do
       request_type { create :isc_prep_request_type }
     end
+
+    factory :scrna_customer_request do
+      request_metadata { create(:v2_request_metadata) }
+
+      after(:build) do |request, evaluator|
+        request._cached_relationship(:request_metadata) { evaluator.request_metadata }
+      end
+    end
   end
 
   factory :primer_panel, class: Sequencescape::Api::V2::PrimerPanel do
@@ -177,5 +185,13 @@ FactoryBot.define do
       name { 'Limber Targeted NanoSeq ISC Prep' }
       key { 'limber_targeted_nanoseq_isc_prep' }
     end
+  end
+
+  # Request Metadata
+  factory :v2_request_metadata, class: Sequencescape::Api::V2::RequestMetadata do
+    skip_create
+
+    number_of_samples_per_pool { nil }
+    cells_per_chip_well { nil }
   end
 end
