@@ -10,58 +10,58 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
   let(:plate1_barcode) { 'DN1S' }
   let(:plate2_barcode) { 'DN2T' }
 
-  let(:live_cell_count_a1) { create(:qc_result, key: 'live_cell_count', value: '1_000_000', units: 'cells/ml') }
-  let(:live_cell_count_b1) { create(:qc_result, key: 'live_cell_count', value: '2_000_000', units: 'cells/ml') }
-  let(:live_cell_count_c1) { create(:qc_result, key: 'live_cell_count', value: '3_000_000', units: 'cells/ml') }
-  let(:live_cell_count_d1) { create(:qc_result, key: 'live_cell_count', value: '4_000_000', units: 'cells/ml') }
+  let(:total_cell_count_a1) { create(:qc_result, key: 'total_cell_count', value: '1_000_000', units: 'cells/ml') }
+  let(:total_cell_count_b1) { create(:qc_result, key: 'total_cell_count', value: '2_000_000', units: 'cells/ml') }
+  let(:total_cell_count_c1) { create(:qc_result, key: 'total_cell_count', value: '3_000_000', units: 'cells/ml') }
+  let(:total_cell_count_d1) { create(:qc_result, key: 'total_cell_count', value: '4_000_000', units: 'cells/ml') }
 
-  let(:live_cell_count_a2) { create(:qc_result, key: 'live_cell_count', value: '5_000_000', units: 'cells/ml') }
-  let(:live_cell_count_b2) { create(:qc_result, key: 'live_cell_count', value: '6_000_000', units: 'cells/ml') }
-  let(:live_cell_count_c2) { create(:qc_result, key: 'live_cell_count', value: '7_000_000', units: 'cells/ml') }
-  let(:live_cell_count_d2) { create(:qc_result, key: 'live_cell_count', value: '8_000_000', units: 'cells/ml') }
+  let(:total_cell_count_a2) { create(:qc_result, key: 'total_cell_count', value: '5_000_000', units: 'cells/ml') }
+  let(:total_cell_count_b2) { create(:qc_result, key: 'total_cell_count', value: '6_000_000', units: 'cells/ml') }
+  let(:total_cell_count_c2) { create(:qc_result, key: 'total_cell_count', value: '7_000_000', units: 'cells/ml') }
+  let(:total_cell_count_d2) { create(:qc_result, key: 'total_cell_count', value: '8_000_000', units: 'cells/ml') }
 
-  let(:live_cell_count_a3) { create(:qc_result, key: 'live_cell_count', value: '9_000_000', units: 'cells/ml') }
-  let(:live_cell_count_b3) { create(:qc_result, key: 'live_cell_count', value: '10_000_000', units: 'cells/ml') }
-  let(:live_cell_count_c3) { create(:qc_result, key: 'live_cell_count', value: '11_000_000', units: 'cells/ml') }
-  let(:live_cell_count_d3) { create(:qc_result, key: 'live_cell_count', value: '12_000_000', units: 'cells/ml') }
+  let(:total_cell_count_a3) { create(:qc_result, key: 'total_cell_count', value: '9_000_000', units: 'cells/ml') }
+  let(:total_cell_count_b3) { create(:qc_result, key: 'total_cell_count', value: '10_000_000', units: 'cells/ml') }
+  let(:total_cell_count_c3) { create(:qc_result, key: 'total_cell_count', value: '11_000_000', units: 'cells/ml') }
+  let(:total_cell_count_d3) { create(:qc_result, key: 'total_cell_count', value: '12_000_000', units: 'cells/ml') }
 
   let(:source_well_a1) do
-    create(:v2_well, location: 'A1', qc_results: [live_cell_count_a1], plate_barcode: plate1_barcode)
+    create(:v2_well, location: 'A1', qc_results: [total_cell_count_a1], plate_barcode: plate1_barcode)
   end
   let(:source_well_b1) do
-    create(:v2_well, location: 'B1', qc_results: [live_cell_count_b1], plate_barcode: plate1_barcode)
+    create(:v2_well, location: 'B1', qc_results: [total_cell_count_b1], plate_barcode: plate1_barcode)
   end
   let(:source_well_c1) do
-    create(:v2_well, location: 'C1', qc_results: [live_cell_count_c1], plate_barcode: plate2_barcode)
+    create(:v2_well, location: 'C1', qc_results: [total_cell_count_c1], plate_barcode: plate2_barcode)
   end
   let(:source_well_d1) do
-    create(:v2_well, location: 'D1', qc_results: [live_cell_count_d1], plate_barcode: plate2_barcode)
+    create(:v2_well, location: 'D1', qc_results: [total_cell_count_d1], plate_barcode: plate2_barcode)
   end
 
   let(:source_well_a2) do
-    create(:v2_well, location: 'A2', qc_results: [live_cell_count_a2], plate_barcode: plate1_barcode)
+    create(:v2_well, location: 'A2', qc_results: [total_cell_count_a2], plate_barcode: plate1_barcode)
   end
   let(:source_well_b2) do
-    create(:v2_well, location: 'B2', qc_results: [live_cell_count_b2], plate_barcode: plate1_barcode)
+    create(:v2_well, location: 'B2', qc_results: [total_cell_count_b2], plate_barcode: plate1_barcode)
   end
   let(:source_well_c2) do
-    create(:v2_well, location: 'C2', qc_results: [live_cell_count_c2], plate_barcode: plate2_barcode)
+    create(:v2_well, location: 'C2', qc_results: [total_cell_count_c2], plate_barcode: plate2_barcode)
   end
   let(:source_well_d2) do
-    create(:v2_well, location: 'D2', qc_results: [live_cell_count_d2], plate_barcode: plate2_barcode)
+    create(:v2_well, location: 'D2', qc_results: [total_cell_count_d2], plate_barcode: plate2_barcode)
   end
 
   let(:source_well_a3) do
-    create(:v2_well, location: 'A3', qc_results: [live_cell_count_a3], plate_barcode: plate1_barcode)
+    create(:v2_well, location: 'A3', qc_results: [total_cell_count_a3], plate_barcode: plate1_barcode)
   end
   let(:source_well_b3) do
-    create(:v2_well, location: 'B3', qc_results: [live_cell_count_b3], plate_barcode: plate1_barcode)
+    create(:v2_well, location: 'B3', qc_results: [total_cell_count_b3], plate_barcode: plate1_barcode)
   end
   let(:source_well_c3) do
-    create(:v2_well, location: 'C3', qc_results: [live_cell_count_c3], plate_barcode: plate2_barcode)
+    create(:v2_well, location: 'C3', qc_results: [total_cell_count_c3], plate_barcode: plate2_barcode)
   end
   let(:source_well_d3) do
-    create(:v2_well, location: 'D3', qc_results: [live_cell_count_d3], plate_barcode: plate2_barcode)
+    create(:v2_well, location: 'D3', qc_results: [total_cell_count_d3], plate_barcode: plate2_barcode)
   end
 
   let(:source_plate1_wells) do
@@ -191,18 +191,18 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
           'Sample Volume (µL)',
           'Resuspension Volume (µL)'
         ],
-        %w[DN1S A1 DN3U A1 9.00 11.90],
-        %w[DN1S B1 DN3U B1 4.50 11.90],
-        %w[DN1S A2 DN3U A1 1.80 11.90],
-        %w[DN1S B2 DN3U B1 1.50 11.90],
-        %w[DN1S A3 DN3U A1 1.00 11.90],
-        %w[DN1S B3 DN3U B1 0.90 11.90],
-        %w[DN2T C1 DN3U A1 3.00 11.90],
-        %w[DN2T D1 DN3U B1 2.25 11.90],
-        %w[DN2T C2 DN3U A1 1.29 11.90],
-        %w[DN2T D2 DN3U B1 1.12 11.90],
-        %w[DN2T C3 DN3U A1 0.82 11.90],
-        %w[DN2T D3 DN3U B1 0.75 11.90]
+        %w[DN1S A1 DN3U A1 9.00 21.43],
+        %w[DN1S B1 DN3U B1 4.50 21.43],
+        %w[DN1S A2 DN3U A1 1.80 21.43],
+        %w[DN1S B2 DN3U B1 1.50 21.43],
+        %w[DN1S A3 DN3U A1 1.00 21.43],
+        %w[DN1S B3 DN3U B1 0.90 21.43],
+        %w[DN2T C1 DN3U A1 3.00 21.43],
+        %w[DN2T D1 DN3U B1 2.25 21.43],
+        %w[DN2T C2 DN3U A1 1.29 21.43],
+        %w[DN2T D2 DN3U B1 1.12 21.43],
+        %w[DN2T C3 DN3U A1 0.82 21.43],
+        %w[DN2T D3 DN3U B1 0.75 21.43]
       ]
     end
     it 'renders the csv' do
