@@ -15,6 +15,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          PR_TITLE="[Automated] Merge Develop into Master"
           PR_NUMBERS=$(gh api repos/${{ github.repository }}/compare/master...develop --jq '.commits[] | select(.commit.message | startswith("Merge pull request")) | .commit.message | capture("#(?<pr_number>\\d+)") | "#\(.pr_number)"')
           PR_BODY="#### Changes proposed in this pull request
 
@@ -34,7 +35,7 @@ jobs:
           EXISTING_PR=$(gh pr list --base master --head develop --json number --jq '.[0].number')
 
           if [ -z "$EXISTING_PR" ]; then
-            gh pr create --base master --head develop --title "Merge Develop into Master" --body "$PR_BODY"
+            gh pr create --base master --head develop --title "$PR_TITLE" --body "$PR_BODY"
           else
             gh pr edit "$EXISTING_PR" --body "$PR_BODY"
           fi
