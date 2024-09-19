@@ -33,7 +33,6 @@ module SearchHelper # rubocop:todo Style/Documentation
     Settings
       .purposes
       .select { |_uuid, settings| settings[:asset_type] == type }
-      .sort_by { |_uuid, settings| settings[:name] }
       .map { |uuid, settings| [settings[:name], uuid] }
   end
 end
