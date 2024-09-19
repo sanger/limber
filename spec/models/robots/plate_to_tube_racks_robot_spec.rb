@@ -23,12 +23,12 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
   let(:tube6_metadata) { { 'tube_rack_barcode' => tube_rack2_barcode, 'tube_rack_position' => 'C1' } }
 
   # tube custom metadata collections
-  let(:tube1_custom_metadata) { create(:custom_metadatum_collection, metadata: tube1_metadata) }
-  let(:tube2_custom_metadata) { create(:custom_metadatum_collection, metadata: tube2_metadata) }
-  let(:tube3_custom_metadata) { create(:custom_metadatum_collection, metadata: tube3_metadata) }
-  let(:tube4_custom_metadata) { create(:custom_metadatum_collection, metadata: tube4_metadata) }
-  let(:tube5_custom_metadata) { create(:custom_metadatum_collection, metadata: tube5_metadata) }
-  let(:tube6_custom_metadata) { create(:custom_metadatum_collection, metadata: tube6_metadata) }
+  let(:tube1_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube1_metadata) }
+  let(:tube2_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube2_metadata) }
+  let(:tube3_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube3_metadata) }
+  let(:tube4_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube4_metadata) }
+  let(:tube5_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube5_metadata) }
+  let(:tube6_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube6_metadata) }
 
   # tube uuids
   let(:tube1_uuid) { 'tube1_uuid' }
@@ -67,7 +67,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube1_uuid,
       barcode_prefix: 'FX',
       barcode_number: 4,
-      custom_metadatum_collection: tube1_custom_metadata,
+      custom_metadatum_collection: tube1_custom_metadatum_collection,
       purpose: tube_purpose1,
       state: tube1_state
     )
@@ -78,7 +78,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube2_uuid,
       barcode_prefix: 'FX',
       barcode_number: 5,
-      custom_metadatum_collection: tube2_custom_metadata,
+      custom_metadatum_collection: tube2_custom_metadatum_collection,
       purpose: tube_purpose1,
       state: tube2_state
     )
@@ -89,7 +89,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube3_uuid,
       barcode_prefix: 'FX',
       barcode_number: 6,
-      custom_metadatum_collection: tube3_custom_metadata,
+      custom_metadatum_collection: tube3_custom_metadatum_collection,
       purpose: tube_purpose1,
       state: tube3_state
     )
@@ -100,7 +100,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube4_uuid,
       barcode_prefix: 'FX',
       barcode_number: 7,
-      custom_metadatum_collection: tube4_custom_metadata,
+      custom_metadatum_collection: tube4_custom_metadatum_collection,
       purpose: tube_purpose2,
       state: tube4_state
     )
@@ -111,7 +111,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube5_uuid,
       barcode_prefix: 'FX',
       barcode_number: 8,
-      custom_metadatum_collection: tube5_custom_metadata,
+      custom_metadatum_collection: tube5_custom_metadatum_collection,
       purpose: tube_purpose2,
       state: tube5_state
     )
@@ -122,7 +122,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       uuid: tube6_uuid,
       barcode_prefix: 'FX',
       barcode_number: 9,
-      custom_metadatum_collection: tube6_custom_metadata,
+      custom_metadatum_collection: tube6_custom_metadatum_collection,
       purpose: tube_purpose2,
       state: tube6_state
     )
@@ -355,40 +355,29 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
   end
 
   describe '#perform_transfer' do
-    let(:state_change_requests) do
-      tube_uuids.map do |tube_uuid|
-        stub_api_post(
-          'state_changes',
-          payload: {
-            state_change: {
-              target_state: 'passed',
-              reason: "Robot #{robot_name} started",
-              customer_accepts_responsibility: false,
-              target: tube_uuid,
-              user: user_uuid,
-              contents: nil
-            }
-          },
-          body: json(:state_change, target_state: 'passed')
-        )
-      end
-    end
-
     before do
       # Create purpose configs in Settings for state changers.
       create(:purpose_config, uuid: plate_purpose_uuid, name: plate_purpose_name)
       create(:purpose_config, uuid: tube_purpose1_uuid, name: tube_purpose1_name)
       create(:purpose_config, uuid: tube_purpose2_uuid, name: tube_purpose2_name)
-
-      # Stub state change requests to the Sequencescape API; one for each tube on tube-racks.
-      state_change_requests
     end
 
     it 'performs transfers for all tubes on the tube-racks' do
-      robot.perform_transfer(scanned_layout)
+      expect_api_v2_posts(
+        'StateChange',
+        tube_uuids.map do |tube_uuid|
+          {
+            contents: nil,
+            customer_accepts_responsibility: false,
+            reason: "Robot #{robot_name} started",
+            target_state: 'passed',
+            target_uuid: tube_uuid,
+            user_uuid: user_uuid
+          }
+        end
+      )
 
-      expect(state_change_requests[0]).to have_been_requested
-      tube_uuids.each_with_index { |_tube_uuid, index| expect(state_change_requests[index]).to have_been_requested }
+      robot.perform_transfer(scanned_layout)
     end
   end
 end

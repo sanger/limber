@@ -28,21 +28,15 @@ RSpec.feature 'Failing quadrants', js: true do
            size: 384
   end
 
-  let!(:state_change_request) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        'state_change' => {
-          user: user_uuid,
-          target: plate_uuid,
-          contents: %w[A1 A3],
-          target_state: 'failed',
-          reason: 'Individual Well Failure',
-          customer_accepts_responsibility: nil
-        }
-      },
-      body: '{}' # We don't care about the response
-    )
+  let(:state_change_attributes) do
+    {
+      contents: %w[A1 A3],
+      customer_accepts_responsibility: nil,
+      reason: 'Individual Well Failure',
+      target_state: 'failed',
+      target_uuid: plate_uuid,
+      user_uuid: user_uuid
+    }
   end
 
   # Setup stubs
@@ -65,10 +59,12 @@ RSpec.feature 'Failing quadrants', js: true do
       'wells',
       body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' })
     )
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'failing wells' do
+    expect_api_v2_posts('StateChange', [state_change_attributes])
+
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     click_on('Fail Wells')
 
@@ -77,6 +73,5 @@ RSpec.feature 'Failing quadrants', js: true do
 
     click_on('Fail selected wells')
     expect(find('#flashes')).to have_content('Selected wells have been failed')
-    expect(state_change_request).to have_been_made
   end
 end

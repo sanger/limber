@@ -39,8 +39,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     ]
   end
 
-  before { Settings.transfer_templates['Whole plate to tube'] = 'whole-plate-to-tube' }
-
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_plates'
     has_a_working_api
@@ -81,35 +79,28 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let(:stub_barcode_searches) { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
 
-    let(:transfer_creation_request) do
-      stub_api_get('whole-plate-to-tube', body: json(:whole_plate_to_tube))
-      [parent_uuid, parent2_uuid, parent3_uuid, parent4_uuid].map do |uuid|
-        stub_api_post(
-          'whole-plate-to-tube',
-          payload: {
-            transfer: {
-              user: user_uuid,
-              source: uuid,
-              destination: 'tube-0'
-            }
-          },
-          body: '{}'
-        )
-      end
-    end
-
     before do
       stub_barcode_searches
       tube_creation_children_request
       tube_creation_request
-      transfer_creation_request
     end
 
     context 'with compatible plates' do
       it 'pools from all the plates' do
+        expect_api_v2_posts(
+          'Transfer',
+          [parent_uuid, parent2_uuid, parent3_uuid, parent4_uuid].map do |source_uuid|
+            {
+              user_uuid: user_uuid,
+              source_uuid: source_uuid,
+              destination_uuid: 'tube-0',
+              transfer_template_uuid: 'whole-plate-to-tube'
+            }
+          end
+        )
+
         expect(subject.save!).to be_truthy
         expect(tube_creation_request).to have_been_made.once
-        transfer_creation_request.each { |transfer| expect(transfer).to have_been_made.once }
       end
     end
   end
