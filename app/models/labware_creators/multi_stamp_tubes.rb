@@ -41,13 +41,15 @@ module LabwareCreators
       create_and_build_submission
       return if errors.size.positive?
 
-      plate_creation =
-        api.pooled_plate_creation.create!(parents: parent_uuids, child_purpose: purpose_uuid, user: user_uuid)
+      @child =
+        Sequencescape::Api::V2::PooledPlateCreation.create!(
+          child_purpose_uuid: purpose_uuid,
+          parent_uuids: parent_uuids,
+          user_uuid: user_uuid
+        )
+        .child
 
-      @child = plate_creation.child
-      child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
-
-      transfer_material_from_parent!(child_v2)
+      transfer_material_from_parent!(@child.uuid)
 
       yield(@child) if block_given?
       true

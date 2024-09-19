@@ -17,10 +17,13 @@ module LabwareCreators
     private
 
     def create_labware!
-      plate_creation =
-        api.pooled_plate_creation.create!(parents: transfers.keys, child_purpose: purpose_uuid, user: user_uuid)
-
-      @child = plate_creation.child
+      @child =
+        Sequencescape::Api::V2::PooledPlateCreation.create!(
+          child_purpose_uuid: purpose_uuid,
+          parent_uuids: transfers.keys,
+          user_uuid: user_uuid
+        )
+        .child
 
       api.bulk_transfer.create!(user: user_uuid, well_transfers: well_transfers)
 
