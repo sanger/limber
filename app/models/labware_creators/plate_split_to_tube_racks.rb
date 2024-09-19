@@ -408,13 +408,12 @@ module LabwareCreators
     # @param tube_attributes [Hash] A hash of attributes to use for the created tubes.
     # @return [Hash<String, Tube>] A hash of the created tubes indexed by name.
     def create_tubes(tube_purpose_uuid, number_of_tubes, tube_attributes)
-      api
-        .specific_tube_creation
+      Sequencescape::Api::V2::SpecificTubeCreation
         .create!(
-          user: user_uuid,
-          parent: parent_uuid,
-          child_purposes: [tube_purpose_uuid] * number_of_tubes,
-          tube_attributes: tube_attributes
+          child_purpose_uuids: [tube_purpose_uuid] * number_of_tubes,
+          parent_uuids: [parent_uuid],
+          tube_attributes: tube_attributes,
+          user_uuid: user_uuid
         )
         .children
         .index_by(&:name)
