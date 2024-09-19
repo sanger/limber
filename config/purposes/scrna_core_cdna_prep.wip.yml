@@ -73,6 +73,8 @@ LRC PBMC Pools:
   :file_links:
     - name: 'Download Hamilton LRC PBMC Defrost PBS to LRC PBMC Pools CSV'
       id: hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools
+    - name: 'Download LRC PBMC Pools to Cellaca Count CSV'
+      id: 'hamilton_lrc_pbmc_pools_to_cellaca_count'
 # Plate containing pooled PBMCs from different donors.
 # This plate has come from faculty and is entering the SeqOps pipeline for the first time here.
 LRC PBMC Pools Input:
