@@ -52,6 +52,11 @@ LRC PBMC Pools:
       default_required_number_of_cells: 5000
       # poly_metadatum key for study specific required number of cells.
       study_required_number_of_cells_key: scrna_core_pbmc_donor_pooling_required_number_of_cells
+      # Constants used to calculate source well volume
+      required_number_of_cells: 30_000
+      wastage_factor: 0.95238
+      desired_chip_loading_concentration: 2_400
+
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:

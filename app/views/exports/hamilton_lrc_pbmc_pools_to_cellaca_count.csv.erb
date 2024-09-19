@@ -17,10 +17,11 @@
 <%
   rows_array = []
 
-  # Constants
-  required_number_of_cells = 30_000
-  wastage_factor = 0.95238
-  desired_chip_loading_concentration = 2_400
+  # Reading constants
+  args = Settings.purposes[@plate.purpose.uuid][:presenter_class][:args]
+  required_number_of_cells = args[:required_number_of_cells]
+  wastage_factor = args[:wastage_factor]
+  desired_chip_loading_concentration = args[:desired_chip_loading_concentration]
 
   filtered_wells = @plate.wells_in_columns.reject { |well| well.empty? || well.failed? }
   filtered_wells.each do | well |
