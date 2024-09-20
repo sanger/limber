@@ -57,6 +57,7 @@ jobs:
 
           if [ -z "$EXISTING_PR" ]; then
             gh pr create --base master --head develop --title "$PR_TITLE" --body "$PR_BODY"
+            gh workflow run check_release_version.yml
           else
             gh pr edit "$EXISTING_PR" --body "$PR_BODY"
           fi
