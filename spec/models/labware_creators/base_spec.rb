@@ -19,6 +19,8 @@ RSpec.describe LabwareCreators::Base do
   context 'with a custom transfer-template' do
     before do
       create :purpose_config, transfer_template: 'Custom transfer template', uuid: 'test-purpose'
+
+      # Note this next change is persisted across the whole test run
       Settings.transfer_templates['Custom transfer template'] = 'custom-template-uuid'
     end
 
