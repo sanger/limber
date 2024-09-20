@@ -49,11 +49,11 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
     body =
       (5..12).map do |index|  # one-based index
         well = plate.wells_in_columns[index - 1]
-        source_well_vol = [
+        [
           plate.labware_barcode.human,
           well.location,
           well.name,
-          '%0.2f' % ((well.aliquots.size * 30_000 * 0.95238) / 2_400)
+          format('%0.2f', ((well.aliquots.size * 30_000 * 0.95238) / 2_400))
         ]
       end
     header + body
