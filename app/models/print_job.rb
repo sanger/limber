@@ -26,7 +26,7 @@ class PrintJob # rubocop:todo Style/Documentation
   def print_to_pmb
     job =
       PMB::PrintJob.new(
-        printer_name: printer_name,
+        printer_name:,
         label_template_id: pmb_label_template_id,
         labels: {
           body: (labels * number_of_copies)

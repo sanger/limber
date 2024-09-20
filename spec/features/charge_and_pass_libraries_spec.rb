@@ -11,7 +11,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
   let(:work_completion_request) do
-    { 'work_completion' => { target: labware_uuid, submissions: submissions, user: user_uuid } }
+    { 'work_completion' => { target: labware_uuid, submissions:, user: user_uuid } }
   end
   let(:work_completion) { json :work_completion }
   let(:template_uuid) { SecureRandom.uuid }
@@ -55,8 +55,8 @@ RSpec.feature 'Charge and pass libraries', js: true do
     before do
       create :passable_tube,
              submission: {
-               request_options: request_options,
-               template_uuid: template_uuid
+               request_options:,
+               template_uuid:
              },
              uuid: 'example-purpose-uuid'
     end
@@ -74,7 +74,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
         payload: {
           order: {
             assets: [labware_uuid],
-            request_options: request_options,
+            request_options:,
             user: user_uuid
           }
         },

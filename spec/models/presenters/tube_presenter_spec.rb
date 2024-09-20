@@ -7,10 +7,10 @@ require_relative 'shared_labware_presenter_examples'
 RSpec.describe Presenters::TubePresenter do
   let(:labware) do
     build :v2_tube,
-          receptacle: receptacle,
-          purpose: purpose,
-          purpose_name: purpose_name,
-          state: state,
+          receptacle:,
+          purpose:,
+          purpose_name:,
+          state:,
           barcode_number: 6,
           created_at: '2016-10-19 12:00:00 +0100'
   end
@@ -27,7 +27,7 @@ RSpec.describe Presenters::TubePresenter do
       create(:qc_result, key: 'molarity', value: '5.5', units: 'nM')
     ]
   end
-  let(:receptacle) { create :v2_receptacle, qc_results: qc_results }
+  let(:receptacle) { create :v2_receptacle, qc_results: }
   let(:summary_tab) do
     [
       ['Barcode', 'NT6T <em>3980000006844</em>'],
@@ -39,7 +39,7 @@ RSpec.describe Presenters::TubePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject { Presenters::TubePresenter.new(labware: labware) }
+  subject { Presenters::TubePresenter.new(labware:) }
 
   it_behaves_like 'a labware presenter'
 

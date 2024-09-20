@@ -17,14 +17,14 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
 
   let(:parent_wells) do
     locations = WellHelpers.column_order(96, rows: 8, columns: 12)
-    locations.take(8).map { |location| create(:v2_well, location: location, aliquot_count: 2, state: 'passed') }
+    locations.take(8).map { |location| create(:v2_well, location:, aliquot_count: 2, state: 'passed') }
   end
 
   let(:parent) { create(:v2_plate, size: 96, uuid: parent_uuid, wells: parent_wells) }
 
   let(:child_wells) do
     locations = WellHelpers.row_order(8, rows: 1, columns: 8)
-    locations.take(8).map { |location| create(:v2_well, location: location, aliquot_count: 0) }
+    locations.take(8).map { |location| create(:v2_well, location:, aliquot_count: 0) }
   end
 
   let(:child_uuid) { 'child-uuid' }
@@ -33,7 +33,7 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     create(:v2_plate, size: 8, number_of_rows: 1, number_of_columns: 8, wells: child_wells, uuid: child_uuid)
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
 
   subject { described_class.new(api, form_attributes) }
 
@@ -91,7 +91,7 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     let(:expect_transfer_requests) do
       expect(api).to receive_message_chain(:transfer_request_collection, :create!).with(
         user: user_uuid,
-        transfer_requests: transfer_requests
+        transfer_requests:
       )
       subject.save!
     end
@@ -127,7 +127,7 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
       context 'when there are more source wells than the child plate size' do
         let(:parent_wells) do
           locations = WellHelpers.column_order(96, rows: 8, columns: 12)
-          locations.take(9).map { |location| create(:v2_well, location: location, aliquot_count: 2, state: 'passed') }
+          locations.take(9).map { |location| create(:v2_well, location:, aliquot_count: 2, state: 'passed') }
         end
 
         it 'reports the error' do

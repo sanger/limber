@@ -19,8 +19,8 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
       )
 
     # Is redirection_url needed?
-    locals = { print_job: print_job, printers: printers, labels: labels, redirection_url: redirection_url }
-    render(partial: 'labware/barcode_printing_form', locals: locals)
+    locals = { print_job:, printers:, labels:, redirection_url: }
+    render(partial: 'labware/barcode_printing_form', locals:)
   end
 
   def printers_of_type(printer_types)

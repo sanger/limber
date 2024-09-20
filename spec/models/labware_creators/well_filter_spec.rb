@@ -33,7 +33,7 @@ RSpec.describe LabwareCreators::WellFilter do
 
     let(:basic_purpose) { 'test-purpose' }
     let(:labware_creator) do
-      LabwareCreators::StampedPlate.new(nil, purpose_uuid: 'test-purpose', parent_uuid: parent_uuid)
+      LabwareCreators::StampedPlate.new(nil, purpose_uuid: 'test-purpose', parent_uuid:)
     end
 
     let(:request_type_key_a) { 'rt_a' }

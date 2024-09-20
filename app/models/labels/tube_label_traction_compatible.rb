@@ -27,8 +27,8 @@
 class Labels::TubeLabelTractionCompatible < Labels::TubeLabel
   def attributes
     {
-      first_line: first_line,
-      second_line: second_line,
+      first_line:,
+      second_line:,
       third_line: labware.purpose_name,
       fourth_line: date_today,
       round_label_top_line: labware.barcode.prefix,

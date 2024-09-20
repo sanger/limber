@@ -31,7 +31,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   end
   let(:child) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
-  let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+  let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
   before { create :purpose_config, pcr_stage: 'pcr 1', uuid: purpose_uuid }
 
@@ -93,7 +93,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests: transfer_requests
+            transfer_requests:
           }
         },
         body: '{}'

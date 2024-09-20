@@ -36,7 +36,7 @@ module LabwareCreators
 
     def create_labware!
       super do |child|
-        LabwareMetadata.new(user_uuid: user_uuid, labware: child).update!(stock_barcodes_by_quadrant)
+        LabwareMetadata.new(user_uuid:, labware: child).update!(stock_barcodes_by_quadrant)
         yield(child) if block_given?
       end
     end
@@ -57,7 +57,7 @@ module LabwareCreators
       source_plates_by_quadrant.each_with_index do |uuid, index|
         next if uuid.nil?
 
-        source_plate = Sequencescape::Api::V2::Plate.find_by(uuid: uuid)
+        source_plate = Sequencescape::Api::V2::Plate.find_by(uuid:)
         stock_barcode = source_plate&.stock_plate&.barcode&.human
         quadrants[:"stock_barcode_q#{index}"] = stock_barcode unless stock_barcode.nil?
       end

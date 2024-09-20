@@ -51,7 +51,7 @@ module LabwareCreators
         Sequencescape::Api::V2::StateChange.create!(
           target_state: 'passed',
           target_uuid: tube_uuid,
-          user_uuid: user_uuid
+          user_uuid:
         )
       end
     end

@@ -16,7 +16,7 @@ RSpec.describe PlatesController, type: :controller do
   def expect_state_change_create(attributes)
     expect_api_v2_posts(
       'StateChange',
-      [{ target_state: 'failed', target_uuid: plate_uuid, user_uuid: user_uuid }.merge(attributes)]
+      [{ target_state: 'failed', target_uuid: plate_uuid, user_uuid: }.merge(attributes)]
     )
   end
 
@@ -68,7 +68,7 @@ RSpec.describe PlatesController, type: :controller do
             purpose_uuid: 'stock-plate-purpose-uuid'
           },
           session: {
-            user_uuid: user_uuid
+            user_uuid:
           }
 
       expect(response).to redirect_to(search_path)
@@ -94,7 +94,7 @@ RSpec.describe PlatesController, type: :controller do
              }
            },
            session: {
-             user_uuid: user_uuid
+             user_uuid:
            }
 
       expect(response).to redirect_to(limber_plate_path(plate_uuid))

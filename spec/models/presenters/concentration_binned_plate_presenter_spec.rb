@@ -40,8 +40,8 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
 
   let(:labware) do
     build :v2_plate,
-          purpose_name: purpose_name,
-          state: state,
+          purpose_name:,
+          state:,
           barcode_number: 1,
           pool_sizes: [],
           wells: [well_a1, well_a2, well_b2, well_a3],
@@ -56,7 +56,7 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::ConcentrationBinnedPlatePresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::ConcentrationBinnedPlatePresenter.new(labware:) }
 
   context 'when binning configuration is missing' do
     it 'throws an exception' do
@@ -69,8 +69,8 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
       create(
         :concentration_binning_purpose_config,
         uuid: labware.purpose.uuid,
-        warnings: warnings,
-        label_class: label_class
+        warnings:,
+        label_class:
       )
     end
 

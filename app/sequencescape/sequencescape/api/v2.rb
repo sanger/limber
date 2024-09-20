@@ -31,7 +31,7 @@ module Sequencescape::Api::V2
   #
   def self.minimal_labware_by_barcode(barcode, select: :uuid)
     Sequencescape::Api::V2::Labware
-      .where(barcode: barcode)
+      .where(barcode:)
       .select(tube_racks: select, plates: select, tubes: select)
       .first
   end
@@ -53,7 +53,7 @@ module Sequencescape::Api::V2
   end
 
   def self.plate_with_wells(uuid)
-    Plate.includes('wells').find(uuid: uuid).first
+    Plate.includes('wells').find(uuid:).first
   end
 
   def self.tube_rack_for_presenter(query)
@@ -67,13 +67,13 @@ module Sequencescape::Api::V2
   end
 
   def self.plate_for_completion(uuid)
-    Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type').find(uuid: uuid).first
+    Plate.includes('wells.aliquots.request.submission,wells.aliquots.request.request_type').find(uuid:).first
   end
 
   def self.tube_for_completion(uuid)
     Tube
       .includes('receptacle.aliquots.request.submission,receptacle.aliquots.request.request_type')
-      .find(uuid: uuid)
+      .find(uuid:)
       .first
   end
 

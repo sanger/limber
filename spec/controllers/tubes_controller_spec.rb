@@ -44,7 +44,7 @@ RSpec.describe TubesController, type: :controller do
             reason: 'Because testing',
             target_state: 'cancelled',
             target_uuid: tube_uuid,
-            user_uuid: user_uuid
+            user_uuid:
           }
         ]
       )
@@ -60,7 +60,7 @@ RSpec.describe TubesController, type: :controller do
             purpose_uuid: 'stock-tube-purpose-uuid'
           },
           session: {
-            user_uuid: user_uuid
+            user_uuid:
           }
 
       expect(response).to redirect_to(search_path)

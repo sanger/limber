@@ -68,8 +68,8 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
 
   let(:labware) do
     build :v2_plate,
-          purpose_name: purpose_name,
-          state: state,
+          purpose_name:,
+          state:,
           barcode_number: 1,
           pool_sizes: [],
           wells: [well_a1, well_a2, well_b2, well_a3],
@@ -84,7 +84,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter.new(labware:) }
 
   context 'when binning' do
     it_behaves_like 'a labware presenter'

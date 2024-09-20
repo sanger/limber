@@ -103,7 +103,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         'pooled_plate_creations',
         payload: {
           pooled_plate_creation: {
-            parents: parents,
+            parents:,
             child_purpose: child_purpose_uuid,
             user: user_uuid
           }
@@ -119,10 +119,10 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         'Transfer',
         [
           {
-            user_uuid: user_uuid,
+            user_uuid:,
             source_uuid: plate_uuid,
             destination_uuid: child_plate_uuid,
-            transfer_template_uuid: transfer_template_uuid,
+            transfer_template_uuid:,
             transfers: expected_transfers
           }
         ]
@@ -137,7 +137,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
             reason: 'Used in Library creation',
             target_uuid: tag_plate_uuid,
             target_state: 'exhausted',
-            user_uuid: user_uuid
+            user_uuid:
           }
         ]
       )
@@ -150,7 +150,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         {
           purpose_uuid: child_purpose_uuid,
           parent_uuid: plate_uuid,
-          user_uuid: user_uuid,
+          user_uuid:,
           tag_plate: {
             asset_uuid: tag_plate_uuid,
             template_uuid: tag_template_uuid,

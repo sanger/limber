@@ -53,7 +53,7 @@ FactoryBot.define do
 
       factory :tube_without_siblings do
         json_root { 'tube' }
-        sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
+        sibling_tubes { [{ name:, uuid:, ean13_barcode: ean13, state: }] }
       end
 
       factory :tube_with_siblings do
@@ -73,14 +73,14 @@ FactoryBot.define do
           end
         end
 
-        sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + other_siblings }
+        sibling_tubes { [{ name:, uuid:, ean13_barcode: ean13, state: }] + other_siblings }
       end
     end
 
     factory :stock_tube do
       purpose_name { 'Limber Cherrypicked' }
       purpose_uuid { 'stock-plate-purpose-uuid' }
-      stock_plate { { barcode: barcode, uuid: uuid } }
+      stock_plate { { barcode:, uuid: } }
 
       factory :stock_tube_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
@@ -98,7 +98,7 @@ FactoryBot.define do
     state { 'passed' }
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
-    receptacle { create(:v2_receptacle, qc_results: [], aliquots: aliquots) }
+    receptacle { create(:v2_receptacle, qc_results: [], aliquots:) }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 
@@ -108,12 +108,12 @@ FactoryBot.define do
       barcode_prefix { 'NT' }
       library_state { 'pending' }
       priority { 0 }
-      outer_request { create request_factory, state: library_state, priority: priority }
+      outer_request { create request_factory, state: library_state, priority: }
       request_factory { :library_request }
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }
       aliquots do
-        create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request
+        create_list aliquot_factory, aliquot_count, library_state:, outer_request:
       end
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
@@ -181,7 +181,7 @@ FactoryBot.define do
         study_count { 1 }
       end
       children do
-        Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count) }
+        Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count:) }
       end
     end
 
@@ -196,7 +196,7 @@ FactoryBot.define do
           associated(
             tube_factory,
             uuid: "tube-#{uuid_index_offset + i}",
-            barcode_prefix: barcode_prefix,
+            barcode_prefix:,
             barcode_number: barcode_numbers[i],
             name: names[i]
           )

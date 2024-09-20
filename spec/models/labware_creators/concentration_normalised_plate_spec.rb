@@ -57,7 +57,7 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
     )
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
 
   subject { LabwareCreators::ConcentrationNormalisedPlate.new(api, form_attributes) }
 
@@ -106,7 +106,7 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests: transfer_requests
+              transfer_requests:
             }
           },
           body: '{}'

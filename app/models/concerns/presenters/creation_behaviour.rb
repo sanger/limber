@@ -30,7 +30,7 @@ module Presenters::CreationBehaviour
           creator: LabwareCreators.class_for(purpose_uuid),
           parent_uuid: uuid,
           parent: labware,
-          purpose_uuid: purpose_uuid,
+          purpose_uuid:,
           name: purpose_settings.name,
           type: purpose_settings.asset_type,
           filters: purpose_settings.filters || {}

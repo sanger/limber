@@ -5,15 +5,15 @@ module PageHelper # rubocop:todo Style/Documentation
     render(partial: 'application/flash_messages')
   end
 
-  def grouping(_data_role, options = {}, &block)
-    tag.div(**options, &block)
+  def grouping(_data_role, options = {}, &)
+    tag.div(**options, &)
   end
   private :grouping
 
   # Renders the content in the block in the
   # standard page template, including heading flash and sidebar
   def page(id, css_class = nil, prevent_row: false, &block)
-    grouping(:page, id: id, class: "container-fluid #{css_class}") do
+    grouping(:page, id:, class: "container-fluid #{css_class}") do
       if prevent_row
         concat yield
       else
@@ -23,17 +23,17 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   # Main body of the page, provides information about what you HAVE
-  def content(&block)
-    grouping(:content, class: 'content-main', &block)
+  def content(&)
+    grouping(:content, class: 'content-main', &)
   end
 
   # Provides information about what you can DO
-  def sidebar(&block)
-    grouping(:sidebar, class: 'sidebar content-secondary', &block)
+  def sidebar(&)
+    grouping(:sidebar, class: 'sidebar content-secondary', &)
   end
 
   def card(title: nil, css_class: '', without_block: false, id: nil, &block)
-    tag.div(class: "card #{css_class}", id: id) do
+    tag.div(class: "card #{css_class}", id:) do
       concat tag.h3(title, class: 'card-header') if title
       if without_block
         yield
@@ -43,11 +43,11 @@ module PageHelper # rubocop:todo Style/Documentation
     end
   end
 
-  def jumbotron(jumbotron_id = nil, options = {}, &block)
+  def jumbotron(jumbotron_id = nil, options = {}, &)
     options[:class] ||= +''
     options[:class] << ' jumbotron'
     options[:id] = jumbotron_id
-    tag.div(**options, &block)
+    tag.div(**options, &)
   end
 
   # eg. state_badge('pending')

@@ -24,7 +24,7 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
       purpose_uuid: target_purpose_uuid,
       barcode_number: 2,
       parents: target_plate_parents,
-      wells: wells
+      wells:
     }
   end
 
@@ -43,10 +43,10 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
   let(:target_plate) { create :v2_plate, target_plate_attributes }
 
   let(:target_plate_parents) { [source_plate] }
-  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: metadata }
+  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: }
   let(:metadata) { { 'other_key' => 'value' } }
 
-  let(:robot) { Robots::QuadrantRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::QuadrantRobot.new(robot_spec.merge(api:, user_uuid:)) }
 
   let(:robot_spec) do
     {
@@ -103,7 +103,7 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
   let(:transfer_source_plates) { [source_plate] }
 
   let(:wells) do
-    %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: transfer_source_plates }
+    %w[C1 D1].map { |location| create :v2_well, location:, upstream_plates: transfer_source_plates }
   end
 
   before do
@@ -173,8 +173,8 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
       let(:transfer_source_plates) { [source_plate, source_plate2] }
 
       let(:wells) do
-        %w[B1 D1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]] } +
-          %w[A1 C1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]] }
+        %w[B1 D1].map { |location| create :v2_well, location:, upstream_plates: [transfer_source_plates[1]] } +
+          %w[A1 C1].map { |location| create :v2_well, location:, upstream_plates: [transfer_source_plates[0]] }
       end
 
       before { bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }]) }
@@ -225,8 +225,8 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
       let(:transfer_source_plates) { [source_plate, source_plate2] }
 
       let(:wells) do
-        %w[B1 D1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]] } +
-          %w[C1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]] }
+        %w[B1 D1].map { |location| create :v2_well, location:, upstream_plates: [transfer_source_plates[1]] } +
+          %w[C1].map { |location| create :v2_well, location:, upstream_plates: [transfer_source_plates[0]] }
       end
 
       before { bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }]) }
@@ -272,7 +272,7 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
             reason: 'Robot Pooling Robot started',
             target_state: 'passed',
             target_uuid: target_plate_uuid,
-            user_uuid: user_uuid
+            user_uuid:
           }
         ]
       )

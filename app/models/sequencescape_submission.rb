@@ -117,7 +117,7 @@ class SequencescapeSubmission
 
   def generate_orders
     asset_groups_for_orders_creation.map do |asset_group|
-      order_parameters = { request_options: request_options, user: user }.merge(asset_group)
+      order_parameters = { request_options:, user: }.merge(asset_group)
       submission_template.orders.create!(order_parameters)
     end
   end
@@ -125,7 +125,7 @@ class SequencescapeSubmission
   # rubocop:disable Metrics/AbcSize
   def generate_submissions
     orders = generate_orders
-    submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
+    submission = api.submission.create!(orders: orders.map(&:uuid), user:)
     @submission_uuid = submission.uuid
     submission.submit!
     true

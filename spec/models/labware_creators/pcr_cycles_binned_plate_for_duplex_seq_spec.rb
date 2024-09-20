@@ -256,7 +256,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   context 'on new' do
     has_a_working_api
 
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: } }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq
@@ -273,7 +273,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
     end
 
     let(:form_attributes) do
-      { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
+      { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, file: }
     end
 
     let(:stub_upload_file_creation) do
@@ -299,10 +299,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
     before do
       stub_parent_request
 
-      create :duplex_seq_customer_csv_file_upload_purpose_config,
+      create(:duplex_seq_customer_csv_file_upload_purpose_config,
              uuid: child_purpose_uuid,
              name: child_purpose_name,
-             library_type_name: library_type_name
+             library_type_name:)
 
       stub_v2_plate(
         parent_plate,
@@ -440,7 +440,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests: transfer_requests
+              transfer_requests:
             }
           },
           body: '{}'

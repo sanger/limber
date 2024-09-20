@@ -7,8 +7,8 @@ require_relative 'shared_labware_presenter_examples'
 RSpec.describe Presenters::MinimalStockPlatePresenter do
   let(:labware) do
     create :v2_stock_plate,
-           purpose_name: purpose_name,
-           state: state,
+           purpose_name:,
+           state:,
            barcode_number: 1,
            pool_sizes: [2, 2],
            created_at: '2016-10-19 12:00:00 +0100'
@@ -33,7 +33,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
 
   before { create :stock_plate_config, uuid: labware.purpose.uuid, name: purpose_name }
 
-  subject(:presenter) { Presenters::MinimalStockPlatePresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::MinimalStockPlatePresenter.new(labware:) }
 
   it 'returns label attributes' do
     expected_label = {

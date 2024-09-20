@@ -7,11 +7,11 @@ RSpec.describe Presenters::StandardPresenter do
   let(:labware) do
     create :v2_plate,
            barcode_number: 1,
-           state: state,
-           purpose_name: purpose_name,
+           state:,
+           purpose_name:,
            purpose_uuid: 'test-purpose',
            uuid: 'plate-uuid',
-           wells: wells
+           wells:
   end
   let(:wells) do
     [
@@ -39,7 +39,7 @@ RSpec.describe Presenters::StandardPresenter do
   end
   let(:suggest_passes) { nil }
 
-  subject { Presenters::StandardPresenter.new(labware: labware) }
+  subject { Presenters::StandardPresenter.new(labware:) }
 
   it 'returns the priority' do
     expect(subject.priority).to eq(2)

@@ -30,7 +30,7 @@ module ApiUrlHelper
     def stub_api_get(*components, status: 200, body: '{}')
       stub_request(:get, api_url_for(*components))
         .with(headers: { 'Accept' => 'application/json' })
-        .to_return(status: status, body: body, headers: { 'content-type' => 'application/json' })
+        .to_return(status:, body:, headers: { 'content-type' => 'application/json' })
     end
 
     # Generate an API stub for a post request.
@@ -50,7 +50,7 @@ module ApiUrlHelper
     # @param [Int] status: the response status, defaults to 201
     # @return mocked_request
     def stub_api_post(*components, status: 201, body: '{}', payload: {})
-      stub_api_modify(*components, status: status, body: body, payload: payload)
+      stub_api_modify(*components, status:, body:, payload:)
     end
 
     def stub_api_modify(*components, body:, payload:, action: :post, status: 201)
@@ -64,12 +64,12 @@ module ApiUrlHelper
             body: payload
           )
         ) do |request, response|
-          request.to_return(status: status, body: response, headers: { 'content-type' => 'application/json' })
+          request.to_return(status:, body: response, headers: { 'content-type' => 'application/json' })
         end
     end
 
     def stub_api_put(*components, body:, payload:)
-      stub_api_modify(*components, action: :put, status: 200, body: body, payload: payload)
+      stub_api_modify(*components, action: :put, status: 200, body:, payload:)
     end
   end
 
@@ -143,7 +143,7 @@ module ApiUrlHelper
     end
 
     def stub_v2_polymetadata(polymetadata, metadatable_id)
-      arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
+      arguments = [{ key: polymetadata.key, metadatable_id: }]
       allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
     end
 

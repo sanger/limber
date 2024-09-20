@@ -44,7 +44,7 @@ RSpec.describe LabwareMetadata do
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(plate_with_metadata.custom_metadatum_collection).to receive(:update!)
-          .with(metadata: metadata)
+          .with(metadata:)
           .and_return(true)
 
         LabwareMetadata.new(labware: plate_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
@@ -64,7 +64,7 @@ RSpec.describe LabwareMetadata do
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(plate_with_metadata.custom_metadatum_collection).to receive(:update!)
-          .with(metadata: metadata)
+          .with(metadata:)
           .and_return(true)
 
         LabwareMetadata
@@ -96,7 +96,7 @@ RSpec.describe LabwareMetadata do
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(tube_with_metadata.custom_metadatum_collection).to receive(:update!)
-          .with(metadata: metadata)
+          .with(metadata:)
           .and_return(true)
 
         LabwareMetadata.new(labware: tube_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
@@ -116,7 +116,7 @@ RSpec.describe LabwareMetadata do
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(tube_with_metadata.custom_metadatum_collection).to receive(:update!)
-          .with(metadata: metadata)
+          .with(metadata:)
           .and_return(true)
 
         LabwareMetadata.new(barcode: tube_with_metadata.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)

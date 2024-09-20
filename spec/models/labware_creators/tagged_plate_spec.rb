@@ -30,10 +30,10 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   let(:disable_cross_plate_pool_detection) { false }
 
   before do
-    create :purpose_config,
+    create(:purpose_config,
            name: child_purpose_name,
            uuid: child_purpose_uuid,
-           disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
+           disable_cross_plate_pool_detection:)
     plate_request
     wells_request
   end
@@ -191,8 +191,8 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         {
           purpose_uuid: child_purpose_uuid,
           parent_uuid: plate_uuid,
-          user_uuid: user_uuid,
-          tag_plate_barcode: tag_plate_barcode,
+          user_uuid:,
+          tag_plate_barcode:,
           tag_plate: {
             asset_uuid: tag_plate_uuid,
             template_uuid: tag_template_uuid
@@ -212,10 +212,10 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
             'Transfer',
             [
               {
-                user_uuid: user_uuid,
+                user_uuid:,
                 source_uuid: plate_uuid,
                 destination_uuid: tag_plate_uuid,
-                transfer_template_uuid: transfer_template_uuid,
+                transfer_template_uuid:,
                 transfers: expected_transfers
               }
             ]
@@ -228,7 +228,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
                 reason: 'Used in Library creation',
                 target_state: 'exhausted',
                 target_uuid: tag_plate_uuid,
-                user_uuid: user_uuid
+                user_uuid:
               }
             ]
           )

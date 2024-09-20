@@ -100,7 +100,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       :stamp_with_randomised_controls_purpose_config,
       name: child_purpose_name,
       uuid: child_purpose_uuid,
-      control_study_name: control_study_name
+      control_study_name:
     )
     stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
     stub_v2_plate(parent_plate_v2, stub_search: false, custom_includes: parent_plate_includes)
@@ -108,7 +108,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
     stub_v2_project(control_project)
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
 
   subject { LabwareCreators::StampedPlateAddingRandomisedControls.new(api, form_attributes) }
 
@@ -140,7 +140,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests: transfer_requests
+              transfer_requests:
             }
           },
           body: '{}'
@@ -235,7 +235,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
           :stamp_with_randomised_controls_purpose_config,
           name: child_purpose_name,
           uuid: child_purpose_uuid,
-          control_study_name: control_study_name,
+          control_study_name:,
           controls: [
             { control_type: 'pcr positive', name_prefix: 'CONTROL_POS_', fixed_location: 'G12' },
             { control_type: 'pcr negative', name_prefix: 'CONTROL_NEG_' }
@@ -271,7 +271,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
           :stamp_with_randomised_controls_purpose_config,
           name: child_purpose_name,
           uuid: child_purpose_uuid,
-          control_study_name: control_study_name,
+          control_study_name:,
           control_location_rules: [{ type: 'not', value: %w[H1 G1] }]
         )
       end
@@ -299,7 +299,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
           :stamp_with_randomised_controls_purpose_config,
           name: child_purpose_name,
           uuid: child_purpose_uuid,
-          control_study_name: control_study_name,
+          control_study_name:,
           control_location_rules: [{ type: 'well_exclusions', value: %w[H10 H11 H12] }]
         )
       end

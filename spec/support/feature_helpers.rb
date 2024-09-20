@@ -55,10 +55,10 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
         custom_metadatum_collection: {
           user: user_uuid,
           asset: labware_uuid,
-          metadata: metadata
+          metadata:
         }
       },
-      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata: metadata)
+      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata:)
     )
   end
 
@@ -70,10 +70,10 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
       'custom_metadatum_collection-uuid',
       payload: {
         custom_metadatum_collection: {
-          metadata: metadata
+          metadata:
         }
       },
-      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata: metadata)
+      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata:)
     )
   end
 
@@ -111,7 +111,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
   end
 
   def ean13(number, prefix = 'DN')
-    SBCF::SangerBarcode.new(prefix: prefix, number: number).machine_barcode.to_s
+    SBCF::SangerBarcode.new(prefix:, number:).machine_barcode.to_s
   end
 
   # Because wells can get quite small on 384 well plates, we use a tooltip

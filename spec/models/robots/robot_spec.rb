@@ -36,10 +36,10 @@ RSpec.describe Robots::Robot, robots: true do
   end
   let(:target_plate_parents) { [source_plate] }
   let(:target_tube_parents) { [source_plate] }
-  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: metadata }
+  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: }
   let(:metadata) { { 'other_key' => 'value' } }
 
-  let(:robot) { Robots::Robot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::Robot.new(robot_spec.merge(api:, user_uuid:)) }
 
   shared_examples 'a robot' do
     context 'with an unknown plate' do
@@ -620,7 +620,7 @@ RSpec.describe Robots::Robot, robots: true do
                  barcode_number: '123',
                  purpose_name: 'Limber Cherrypicked',
                  state: 'passed',
-                 custom_metadatum_collection: custom_metadatum_collection
+                 custom_metadatum_collection:
         end
 
         it "is invalid if the barcode isn't recorded" do
@@ -737,7 +737,7 @@ RSpec.describe Robots::Robot, robots: true do
             reason: 'Robot bravo LB End Prep started',
             target_state: 'passed',
             target_uuid: plate.uuid,
-            user_uuid: user_uuid
+            user_uuid:
           }
         ]
       )

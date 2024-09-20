@@ -23,7 +23,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   end
 
   # Attributes for initialising the labware creator
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_plate_uuid, user_uuid: user_uuid } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_plate_uuid, user_uuid: } }
 
   # Child plate assumed to be created
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }

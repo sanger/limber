@@ -109,7 +109,7 @@ FactoryBot.define do
 
     tag_layout_templates do
       Array.new(size) do |i|
-        associated(template_factory, uuid: "tag-layout-template-#{i}", name: "Tag2 layout #{i}", direction: direction)
+        associated(template_factory, uuid: "tag-layout-template-#{i}", name: "Tag2 layout #{i}", direction:)
       end
     end
 

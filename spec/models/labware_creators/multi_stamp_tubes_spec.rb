@@ -73,7 +73,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {
@@ -96,7 +96,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
             parents: [parent1_tube_uuid, parent2_tube_uuid]
           }
         },
-        body: json(:plate_creation, child_uuid: child_uuid)
+        body: json(:plate_creation, child_uuid:)
       )
     end
 
@@ -113,7 +113,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests: transfer_requests
+            transfer_requests:
           }
         },
         body: '{}'
@@ -201,7 +201,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           'custom_metadatum_collection-uuid',
           payload: {
             custom_metadatum_collection: {
-              metadata: metadata
+              metadata:
             }
           },
           body: json(:v1_custom_metadatum_collection)

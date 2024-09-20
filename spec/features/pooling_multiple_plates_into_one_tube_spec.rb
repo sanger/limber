@@ -136,8 +136,8 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       'Transfer',
       [plate_uuid, plate_uuid_2].map do |source_uuid|
         {
-          user_uuid: user_uuid,
-          source_uuid: source_uuid,
+          user_uuid:,
+          source_uuid:,
           destination_uuid: 'tube-0',
           transfer_template_uuid: 'whole-plate-to-tube'
         }

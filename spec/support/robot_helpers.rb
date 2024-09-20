@@ -7,7 +7,7 @@ module RobotHelpers
 
   def bed_labware_lookup_with_barcode(barcode, result, includes = %i[purpose parents])
     allow(Sequencescape::Api::V2::Labware).to receive(:find_all)
-      .with({ barcode: Array(barcode) }, includes: includes)
+      .with({ barcode: Array(barcode) }, includes:)
       .and_return(result)
   end
 
@@ -17,7 +17,7 @@ module RobotHelpers
 
   def bed_plate_lookup_with_barcode(barcode, result, includes = %i[purpose parents])
     allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-      .with({ barcode: Array(barcode) }, includes: includes)
+      .with({ barcode: Array(barcode) }, includes:)
       .and_return(result)
   end
 end

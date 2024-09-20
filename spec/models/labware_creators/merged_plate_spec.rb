@@ -75,7 +75,7 @@ RSpec.describe LabwareCreators::MergedPlate do
     stub_v2_plate(source_plate_2, stub_search: false)
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: source_plate_1.uuid, user_uuid: user_uuid } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: source_plate_1.uuid, user_uuid: } }
 
   shared_examples 'a merged plate creator' do
     describe '#save!' do
@@ -110,7 +110,7 @@ RSpec.describe LabwareCreators::MergedPlate do
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests: transfer_requests
+              transfer_requests:
             }
           },
           body: '{}'
@@ -130,8 +130,8 @@ RSpec.describe LabwareCreators::MergedPlate do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid,
+        parent_uuid:,
+        user_uuid:,
         barcodes: [source_plate_1.barcode.machine, source_plate_2.barcode.machine]
       }
     end
@@ -193,8 +193,8 @@ RSpec.describe LabwareCreators::MergedPlate do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid,
+        parent_uuid:,
+        user_uuid:,
         barcodes: [source_plate_1.barcode.machine, source_plate_3.barcode.machine]
       }
     end
@@ -235,8 +235,8 @@ RSpec.describe LabwareCreators::MergedPlate do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid,
+        parent_uuid:,
+        user_uuid:,
         barcodes: [source_plate_1.barcode.machine, source_plate_3.barcode.machine]
       }
     end
@@ -264,8 +264,8 @@ RSpec.describe LabwareCreators::MergedPlate do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid,
+        parent_uuid:,
+        user_uuid:,
         barcodes: [source_plate_1.barcode.machine, '']
       }
     end
@@ -294,8 +294,8 @@ RSpec.describe LabwareCreators::MergedPlate do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid,
+        parent_uuid:,
+        user_uuid:,
         barcodes: [source_plate_1.barcode.machine, source_plate_1.barcode.machine]
       }
     end
@@ -334,8 +334,8 @@ RSpec.describe LabwareCreators::MergedPlate do
     let(:form_attributes) do
       {
         purpose_uuid: child_purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid,
+        parent_uuid:,
+        user_uuid:,
         barcodes: [source_plate_1.barcode.machine, source_plate_4.barcode.machine]
       }
     end

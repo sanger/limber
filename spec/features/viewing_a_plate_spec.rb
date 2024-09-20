@@ -15,11 +15,11 @@ RSpec.feature 'Viewing a plate', js: true do
     create :v2_stock_plate,
            uuid: plate_uuid,
            barcode_number: 1,
-           state: state,
+           state:,
            wells: wells_collection,
-           purpose_uuid: purpose_uuid
+           purpose_uuid:
   end
-  let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
+  let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state:, position: { 'name' => loc }) } }
   let(:printer_list) { create_list(:v2_tube_barcode_printer, 2) + create_list(:v2_plate_barcode_printer, 2) }
   let(:default_tube_printer) { printer_list.first.name }
   let(:purpose_config) { create :purpose_config, uuid: purpose_uuid }
@@ -80,7 +80,7 @@ RSpec.feature 'Viewing a plate', js: true do
 
   feature 'with a suboptimal well' do
     let(:wells_collection) do
-      %w[A1 B1].map { |loc| create(:v2_well, state: state, location: loc, aliquot_factory: :v2_suboptimal_aliquot) }
+      %w[A1 B1].map { |loc| create(:v2_well, state:, location: loc, aliquot_factory: :v2_suboptimal_aliquot) }
     end
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode

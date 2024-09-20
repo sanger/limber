@@ -29,7 +29,7 @@ RSpec.shared_context 'a tag plate creator' do
         tag_layout: {
           plate: tag_plate_uuid,
           user: user_uuid,
-          enforce_uniqueness: enforce_uniqueness
+          enforce_uniqueness:
         }
       },
       body: '{}'

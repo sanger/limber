@@ -53,7 +53,7 @@ module LabwareCreators
           user: user_uuid,
           parent: parent_uuid,
           child_purposes: [purpose_uuid] * pool_uuids.length,
-          tube_attributes: tube_attributes
+          tube_attributes:
         )
         .children
         .index_by(&:name)
@@ -186,7 +186,7 @@ module LabwareCreators
     def locate_ancestor_tubes
       purpose_name = purpose_config[:ancestor_stock_tube_purpose_name]
 
-      ancestor_results = parent.ancestors.where(purpose_name: purpose_name)
+      ancestor_results = parent.ancestors.where(purpose_name:)
       return {} if ancestor_results.blank?
 
       ancestor_results.each_with_object({}) do |ancestor_result, tube_list|

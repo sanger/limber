@@ -21,7 +21,7 @@ FactoryBot.define do
       tubes { {} }
 
       racked_tubes do
-        tubes.map { |coordinate, tube| create :racked_tube, coordinate: coordinate, tube: tube, tube_rack: instance }
+        tubes.map { |coordinate, tube| create :racked_tube, coordinate:, tube:, tube_rack: instance }
       end
     end
 

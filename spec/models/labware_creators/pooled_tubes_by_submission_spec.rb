@@ -24,7 +24,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
   let(:parent) { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], stock_plate_barcode: 5, for_multiplexing: true }
   let(:source_plate) { create :v2_plate, uuid: parent_uuid }
 
-  let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+  let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
   let(:wells_json) { json :well_collection, size: 9, default_state: 'passed' }
 
@@ -98,7 +98,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests: transfer_requests
+            transfer_requests:
           }
         },
         body: '{}'

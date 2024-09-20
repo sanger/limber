@@ -75,7 +75,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on create' do
-    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {
@@ -256,7 +256,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
             parents: [parent1_uuid, parent2_uuid]
           }
         },
-        body: json(:plate_creation, child_uuid: child_uuid)
+        body: json(:plate_creation, child_uuid:)
       )
     end
 
@@ -291,7 +291,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests: transfer_requests
+            transfer_requests:
           }
         },
         body: '{}'
@@ -318,7 +318,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
           'custom_metadatum_collection-uuid',
           payload: {
             custom_metadatum_collection: {
-              metadata: metadata
+              metadata:
             }
           },
           body: json(:v1_custom_metadatum_collection)

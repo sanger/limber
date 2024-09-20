@@ -56,7 +56,7 @@ class SearchController < ApplicationController
   end
 
   def find_qcable(barcode)
-    api.search.find(Settings.searches['Find qcable by barcode']).first(barcode: barcode)
+    api.search.find(Settings.searches['Find qcable by barcode']).first(barcode:)
   rescue Sequencescape::Api::ResourceNotFound => e
     raise e, "Sorry, could not find qcable with the barcode '#{barcode}'."
   end

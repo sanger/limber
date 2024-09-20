@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
   let(:parent_uuid) { SecureRandom.uuid }
   let(:parent) { json :plate, uuid: parent_uuid, pool_sizes: [3, 3] }
 
-  let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+  let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
   context '#save!' do
     has_a_working_api
@@ -37,7 +37,7 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
         'Transfer',
         [
           {
-            user_uuid: user_uuid,
+            user_uuid:,
             source_uuid: parent_uuid,
             transfer_template_uuid: 'transfer-to-mx-tubes-on-submission'
           }
@@ -52,8 +52,8 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
       expect_api_v2_posts(
         'StateChange',
         [
-          { target_state: 'passed', target_uuid: destination_tubes[0].uuid, user_uuid: user_uuid },
-          { target_state: 'passed', target_uuid: destination_tubes[1].uuid, user_uuid: user_uuid }
+          { target_state: 'passed', target_uuid: destination_tubes[0].uuid, user_uuid: },
+          { target_state: 'passed', target_uuid: destination_tubes[1].uuid, user_uuid: }
         ]
       )
 

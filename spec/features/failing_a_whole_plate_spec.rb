@@ -20,7 +20,7 @@ RSpec.feature 'Failing a whole plate', js: true do
     ]
   end
   let(:example_plate) do
-    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells
+    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells:
   end
   let(:old_api_example_plate) do
     json :plate, barcode_number: example_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
@@ -132,7 +132,7 @@ RSpec.feature 'Failing a whole plate', js: true do
           reason: 'Power failure',
           target_state: 'failed',
           target_uuid: plate_uuid,
-          user_uuid: user_uuid
+          user_uuid:
         }
       ]
     )

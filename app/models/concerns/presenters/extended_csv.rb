@@ -18,8 +18,8 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
             {
               index: (index += 1),
               name: "#{bed_prefix}#{(offset * 4) + bed_index + 1}",
-              source_well: source_well,
-              destination_well: destination_well
+              source_well:,
+              destination_well:
             }.merge(transfers_list)
           )
         end
@@ -58,12 +58,12 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
       transfers =
         ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
       {
-        source_ean: source_ean,
-        source_barcode: source_barcode,
-        source_stock: source_stock,
-        destination_ean: destination_ean,
-        destination_barcode: destination_barcode,
-        transfers: transfers
+        source_ean:,
+        source_barcode:,
+        source_stock:,
+        destination_ean:,
+        destination_barcode:,
+        transfers:
       }
     end
   end

@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   let(:child_uuid) { 'example-dest-uuid' }
   let(:child_plate) { create(:v2_plate, uuid: child_uuid, well_count: plate_size) }
 
-  let(:form_attributes) { { purpose_uuid: dest_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
+  let(:form_attributes) { { purpose_uuid: dest_purpose_uuid, parent_uuid:, user_uuid: } }
 
   let(:dummy_v1_plate) { create(:plate, uuid: parent_uuid) }
 

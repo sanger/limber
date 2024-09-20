@@ -60,7 +60,7 @@ module PlateHelper # rubocop:todo Style/Documentation
             next unless request.pre_capture_pool
 
             pool_id = request.pre_capture_pool.id
-            pool_store[pool_id] ||= { pool_id: pool_id, order_id: request.order_id, wells: [] }
+            pool_store[pool_id] ||= { pool_id:, order_id: request.order_id, wells: [] }
             pool_store[pool_id][:wells] << well.location
           end
         end

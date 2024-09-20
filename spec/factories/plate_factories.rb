@@ -49,7 +49,7 @@ FactoryBot.define do
                    pcr_cycles: pool_prc_cycles[index],
                    state: library_state[index],
                    submission_id: index,
-                   include_submissions: include_submissions,
+                   include_submissions:,
                    order_id: index * 2,
                    uuid: "request-#{request_index += 1}"
           end
@@ -71,14 +71,14 @@ FactoryBot.define do
         Array.new(well_count) do |i|
           location = WellHelpers.well_at_column_index(i, size)
           create well_factory,
-                 location: location,
+                 location:,
                  state: well_states[i] || state,
                  outer_request: outer_requests[i],
                  downstream_tubes: transfer_targets[location],
                  uuid: well_uuid_result % location,
                  aliquot_count: outer_requests[i] ? 1 : aliquots_without_requests,
-                 study: study,
-                 project: project
+                 study:,
+                 project:
         end
       end
 
@@ -248,14 +248,14 @@ FactoryBot.define do
         Array.new(well_count) do |i|
           location = WellHelpers.well_at_column_index(i, size)
           create well_factory,
-                 location: location,
+                 location:,
                  state: well_states[i] || state,
                  outer_request: nil,
                  downstream_tubes: nil,
                  uuid: well_uuid_result % location,
                  aliquot_count: 0,
-                 study: study,
-                 project: project
+                 study:,
+                 project:
         end
       end
     end
@@ -335,7 +335,7 @@ FactoryBot.define do
     factory :stock_plate do
       purpose_name { 'Limber Cherrypicked' }
       purpose_uuid { 'stock-plate-purpose-uuid' }
-      stock_plate { { barcode: barcode, uuid: uuid } }
+      stock_plate { { barcode:, uuid: } }
 
       factory :stock_plate_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'

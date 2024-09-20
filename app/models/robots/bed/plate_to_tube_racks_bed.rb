@@ -18,7 +18,7 @@ module Robots::Bed
       # RobotController uses machine barcode for initialising LabwareMetadata
       labware.tubes.each do |tube|
         LabwareMetadata
-          .new(user_uuid: user_uuid, barcode: tube.barcode.machine)
+          .new(user_uuid:, barcode: tube.barcode.machine)
           .update!(created_with_robot: robot_barcode)
       end
     end

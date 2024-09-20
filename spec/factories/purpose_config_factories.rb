@@ -180,7 +180,7 @@ FactoryBot.define do
       transient { acceptable_purposes { %w[Purpose1 Purpose2] } }
 
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
-      creator_class { { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes: acceptable_purposes } } }
+      creator_class { { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes: } } }
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
@@ -271,7 +271,7 @@ FactoryBot.define do
         {
           name: 'LabwareCreators::PooledWellsBySampleInGroups',
           args: {
-            number_of_source_wells: number_of_source_wells
+            number_of_source_wells:
           }
         }
       end
@@ -298,9 +298,9 @@ FactoryBot.define do
         {
           name: 'LabwareCreators::DonorPoolingPlate',
           args: {
-            default_number_of_pools: default_number_of_pools,
-            max_number_of_source_plates: max_number_of_source_plates,
-            pooling: pooling
+            default_number_of_pools:,
+            max_number_of_source_plates:,
+            pooling:
           }
         }
       end

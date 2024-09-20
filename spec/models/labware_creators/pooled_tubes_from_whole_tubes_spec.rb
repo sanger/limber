@@ -34,7 +34,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   before do
     create :purpose_config,
            submission: {
-             template_uuid: template_uuid,
+             template_uuid:,
              request_options: {
                read_length: 150
              }
@@ -46,14 +46,14 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_tubes'
     has_a_working_api
 
-    let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+    let(:form_attributes) { { purpose_uuid:, parent_uuid: } }
   end
 
   describe '#save!' do
     has_a_working_api
 
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, barcodes: barcodes }
+      { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: }
     end
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
@@ -69,7 +69,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
             child_purpose: purpose_uuid
           }
         },
-        body: json(:tube_creation, child_uuid: child_uuid)
+        body: json(:tube_creation, child_uuid:)
       )
     end
 

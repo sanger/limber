@@ -180,7 +180,7 @@ end
 
 RSpec.describe 'v2_plate' do
   context 'with specified study and project at plate level' do
-    subject { create(:v2_plate, aliquots_without_requests: 1, study: study, project: project) }
+    subject { create(:v2_plate, aliquots_without_requests: 1, study:, project:) }
 
     # study
     let(:study_uuid) { SecureRandom.uuid }
@@ -222,7 +222,7 @@ end
 
 RSpec.describe 'v2_plate_for_submission' do
   context 'with specified study and project at plate level' do
-    subject { create(:v2_plate_for_submission, aliquots_without_requests: 1, study: study, project: project) }
+    subject { create(:v2_plate_for_submission, aliquots_without_requests: 1, study:, project:) }
 
     # study
     let(:study_uuid) { SecureRandom.uuid }

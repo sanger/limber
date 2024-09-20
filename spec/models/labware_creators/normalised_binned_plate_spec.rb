@@ -85,10 +85,10 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    create :normalised_binning_purpose_config,
+    create(:normalised_binning_purpose_config,
            uuid: child_purpose_uuid,
            name: child_purpose_name,
-           library_type_name: library_type_name
+           library_type_name:)
     stub_v2_plate(child_plate, stub_search: false)
     stub_v2_plate(
       parent_plate,
@@ -98,7 +98,7 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
     )
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
 
   subject { LabwareCreators::NormalisedBinnedPlate.new(api, form_attributes) }
 

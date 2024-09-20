@@ -191,7 +191,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   context '#save when everything is valid' do
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+      { user_uuid:, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: }
     end
 
     let!(:ms_plate_creation_request) do
@@ -204,7 +204,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
             parents: [parent_tube_1_uuid, parent_tube_2_uuid]
           }
         },
-        body: json(:plate_creation, child_plate_uuid: child_plate_uuid)
+        body: json(:plate_creation, child_plate_uuid:)
       )
     end
 
@@ -221,7 +221,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests: transfer_requests
+            transfer_requests:
           }
         },
         body: '{}'
@@ -253,7 +253,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     end
 
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+      { user_uuid:, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: }
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
@@ -278,7 +278,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     end
 
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+      { user_uuid:, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: }
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
@@ -302,7 +302,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   context 'when a tube is not of expected purpose type' do
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+      { user_uuid:, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: }
     end
 
     let(:parent_tube_2_purpose_uuid) { 'parent-tube-purpose-type-unknown-uuid' }
@@ -323,7 +323,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   context 'when a tube does not have an active request of the expected type' do
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+      { user_uuid:, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: }
     end
 
     let(:request_type_2) { create :request_type, key: 'unrelated_request_type_key' }
@@ -361,7 +361,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     end
 
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+      { user_uuid:, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: }
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
@@ -390,7 +390,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     end
 
     let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
+      { user_uuid:, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: }
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }

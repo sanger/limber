@@ -29,7 +29,7 @@ RSpec.describe PrintJobsController, type: :controller do
       allow(PrintJob).to receive(:new).and_return(print_job_mock)
       allow(print_job_mock).to receive(:execute).and_return(true)
 
-      post :create, params: params, format: :json
+      post :create, params:, format: :json
 
       assert assigns(:print_job)
       assert_equal 'Your label(s) have been sent to tube printer 1', flash.notice

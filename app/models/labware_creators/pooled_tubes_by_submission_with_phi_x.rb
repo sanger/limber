@@ -19,9 +19,9 @@ module LabwareCreators
         .specific_tube_creation
         .create!(
           user: user_uuid,
-          parents: parents,
+          parents:,
           child_purposes: [purpose_uuid] * pool_uuids.length,
-          tube_attributes: tube_attributes
+          tube_attributes:
         )
         .children
         .index_by(&:name)

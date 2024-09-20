@@ -46,8 +46,8 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
     expect_api_v2_posts(
       'Transfer',
       [
-        { user_uuid: user_uuid, source_uuid: tube_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' },
-        { user_uuid: user_uuid, source_uuid: sibling_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' }
+        { user_uuid:, source_uuid: tube_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' },
+        { user_uuid:, source_uuid: sibling_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' }
       ],
       create_list(:v2_transfer_between_tubes, 2, destination_uuid: multiplexed_library_tube_uuid)
     )

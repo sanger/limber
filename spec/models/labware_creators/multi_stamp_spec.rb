@@ -77,7 +77,7 @@ RSpec.describe LabwareCreators::MultiStamp do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiStamp.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::MultiStamp.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {
@@ -484,7 +484,7 @@ RSpec.describe LabwareCreators::MultiStamp do
             parents: [parent1_uuid, parent2_uuid]
           }
         },
-        body: json(:plate_creation, child_uuid: child_uuid)
+        body: json(:plate_creation, child_uuid:)
       )
     end
 
@@ -547,7 +547,7 @@ RSpec.describe LabwareCreators::MultiStamp do
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests: transfer_requests
+            transfer_requests:
           }
         },
         body: '{}'

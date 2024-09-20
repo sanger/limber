@@ -22,7 +22,7 @@ module LabwareCreators
 
       @child = plate_creation.child
 
-      api.bulk_transfer.create!(user: user_uuid, well_transfers: well_transfers)
+      api.bulk_transfer.create!(user: user_uuid, well_transfers:)
 
       yield(@child) if block_given?
       true

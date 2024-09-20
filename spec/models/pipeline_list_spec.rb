@@ -10,7 +10,7 @@ RSpec.describe PipelineList do
       let(:pipeline_config) do
         {
           'Pipeline A' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 1' => 'Purpose 2',
@@ -19,7 +19,7 @@ RSpec.describe PipelineList do
             name: 'Pipeline A'
           },
           'Pipeline B' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 4',
             relationships: {
               'Purpose 3' => 'Purpose 4'
@@ -27,7 +27,7 @@ RSpec.describe PipelineList do
             name: 'Pipeline B'
           },
           'Pipeline C' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 5',
             relationships: {
               'Purpose 4' => 'Purpose 5'
@@ -49,7 +49,7 @@ RSpec.describe PipelineList do
       let(:pipeline_config) do
         {
           'Pipeline A' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 2' => 'Purpose 3',
@@ -58,7 +58,7 @@ RSpec.describe PipelineList do
             name: 'Pipeline A'
           },
           'Pipeline B' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 4',
             relationships: {
               'Purpose 3' => 'Purpose 4'
@@ -80,7 +80,7 @@ RSpec.describe PipelineList do
       let(:pipeline_config) do
         {
           'Pipeline A' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 2' => 'Purpose 3',
@@ -103,7 +103,7 @@ RSpec.describe PipelineList do
       let(:pipeline_config) do
         {
           'Pipeline A' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 1' => 'Purpose 2',
@@ -112,7 +112,7 @@ RSpec.describe PipelineList do
             name: 'Pipeline A'
           },
           'Pipeline B' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 4',
             relationships: {
               'Purpose 2' => 'Purpose 4'
@@ -137,7 +137,7 @@ RSpec.describe PipelineList do
         {
           'Pipeline A' => {
             pipeline_group: 'Pipeline X',
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 1' => 'Purpose 2',
@@ -147,7 +147,7 @@ RSpec.describe PipelineList do
           },
           'Pipeline B' => {
             pipeline_group: 'Pipeline X',
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 4',
             relationships: {
               'Purpose 2' => 'Purpose 4'
@@ -168,7 +168,7 @@ RSpec.describe PipelineList do
       let(:pipeline_config) do
         {
           'Pipeline A' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 1' => 'Purpose 2',
@@ -246,7 +246,7 @@ RSpec.describe PipelineList do
       let(:pipeline_config) do
         {
           'Pipeline A' => {
-            filters: filters,
+            filters:,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 1' => 'Purpose 2',
