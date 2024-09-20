@@ -16,6 +16,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           PR_TITLE="[automated] Merge Develop into Master"
+
+          # Extract numbers from PRs that have been merged into develop
           PR_NUMBERS=$(gh api repos/:owner/:repo/compare/master...develop --jq '
           .commits[]
           | select(.commit.message
@@ -24,8 +26,18 @@ jobs:
           | capture("#(?<pr_number>\\d+)")
           | .pr_number'
           )
+
+          # Fetch titles for each PR number
+          PR_NUMBERS_AND_TITLES=$(for PR_NUMBER in $PR_NUMBERS; do
+            gh pr view $PR_NUMBER --json number,title --jq '{number: .number, title: .title}'
+          done | jq -s 'sort_by(.title)')
+
+          # Sort extracted PR numbers by title
+          SORTED_PR_NUMBERS=$(echo "$PR_DETAILS" | jq -r '.[].number')
+
           STORIES=$(xargs -I {} gh pr view {} --json body --jq '.body | if . | test("Closes #\\d+") then capture("Closes #(?<issue_number>\\d+)") | "- #{}
-            - Closes #" + .issue_number else "- #{}" end' <<< "$PR_NUMBERS")
+            - Closes #" + .issue_number else "- #{}" end' <<< "$SORTED_PR_NUMBERS") # Note the line-break on this line is for formatting
+
           PR_BODY="#### Changes proposed in this pull request
 
           $(echo "$STORIES")
