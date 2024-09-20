@@ -291,13 +291,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
     def expect_pooled_plate_creation
       expect_api_v2_posts(
         'PooledPlateCreation',
-        [
-          {
-            child_purpose_uuid: child_purpose_uuid,
-            parent_uuids: [parent1_uuid, parent2_uuid],
-            user_uuid: user.uuid
-          }
-        ],
+        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }],
         [pooled_plate_creation]
       )
     end
@@ -308,7 +302,10 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
         [
           {
             asset_id: child_plate.id,
-            metadata: { stock_barcode_q0: stock_plate1.barcode.human, stock_barcode_q1: stock_plate2.barcode.human },
+            metadata: {
+              stock_barcode_q0: stock_plate1.barcode.human,
+              stock_barcode_q1: stock_plate2.barcode.human
+            },
             user_id: user.id
           }
         ]

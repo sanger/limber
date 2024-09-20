@@ -111,13 +111,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     def expect_pooled_plate_creation
       expect_api_v2_posts(
         'PooledPlateCreation',
-        [
-          {
-            child_purpose_uuid: child_purpose_uuid,
-            parent_uuids: parents,
-            user_uuid: user_uuid
-          }
-        ],
+        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }],
         [pooled_plate_creation]
       )
     end

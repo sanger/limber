@@ -70,8 +70,7 @@ module LabwareCreators
           child_purpose_uuid: purpose_uuid,
           parent_uuids: parent_tube_uuids,
           user_uuid: user_uuid
-        )
-        .child
+        ).child
 
       transfer_material_from_parent!
 
@@ -235,10 +234,7 @@ module LabwareCreators
 
     # Transfers material from the parent tubes to the given child plate.
     def transfer_material_from_parent!
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes
-      )
+      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
     end
 
     # Returns an array of hashes representing the transfer requests for the given child plate.

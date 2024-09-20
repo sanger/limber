@@ -66,12 +66,7 @@ RSpec.feature 'Multi plate pooling', js: true do
     )
   end
 
-  let(:child_plate) do
-    create :v2_plate,
-           purpose_uuid: 'child-purpose-0',
-           purpose_name: 'Pool Plate',
-           barcode_number: 3
-  end
+  let(:child_plate) { create :v2_plate, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool Plate', barcode_number: 3 }
 
   let(:pooled_plate_creation) do
     response = double
@@ -83,13 +78,7 @@ RSpec.feature 'Multi plate pooling', js: true do
   def expect_pooled_plate_creation
     expect_api_v2_posts(
       'PooledPlateCreation',
-      [
-        {
-          child_purpose_uuid: 'child-purpose-0',
-          parent_uuids: [plate_uuid, plate_uuid_2],
-          user_uuid: user_uuid
-        }
-      ],
+      [{ child_purpose_uuid: 'child-purpose-0', parent_uuids: [plate_uuid, plate_uuid_2], user_uuid: user_uuid }],
       [pooled_plate_creation]
     )
   end

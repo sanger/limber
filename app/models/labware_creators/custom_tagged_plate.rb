@@ -47,13 +47,11 @@ module LabwareCreators
 
     def create_plate! # rubocop:todo Metrics/AbcSize
       @child =
-        Sequencescape::Api::V2::PooledPlateCreation
-          .create!(
-            child_purpose_uuid: purpose_uuid,
-            parent_uuids: [parent_uuid, tag_plate.asset_uuid].compact_blank,
-            user_uuid: user_uuid
-          )
-          .child
+        Sequencescape::Api::V2::PooledPlateCreation.create!(
+          child_purpose_uuid: purpose_uuid,
+          parent_uuids: [parent_uuid, tag_plate.asset_uuid].compact_blank,
+          user_uuid: user_uuid
+        ).child
 
       transfer_material_from_parent!(@child.uuid)
 

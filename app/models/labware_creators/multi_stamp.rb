@@ -35,8 +35,7 @@ module LabwareCreators
           child_purpose_uuid: purpose_uuid,
           parent_uuids: parent_uuids,
           user_uuid: user_uuid
-        )
-        .child
+        ).child
 
       transfer_material_from_parent!(@child.uuid)
 

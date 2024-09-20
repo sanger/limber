@@ -22,8 +22,7 @@ module LabwareCreators
           child_purpose_uuid: purpose_uuid,
           parent_uuids: transfers.keys,
           user_uuid: user_uuid
-        )
-        .child
+        ).child
 
       api.bulk_transfer.create!(user: user_uuid, well_transfers: well_transfers)
 
