@@ -73,7 +73,7 @@ module LabwareCreators
         )
         .child
 
-      transfer_material_from_parent!(@child.uuid)
+      transfer_material_from_parent!
 
       yield(@child) if block_given?
       true
@@ -234,24 +234,22 @@ module LabwareCreators
     end
 
     # Transfers material from the parent tubes to the given child plate.
-    # @param child_plate [Sequencescape::Api::V2::Plate] The plate to transfer material to.
-    def transfer_material_from_parent!(child_plate)
+    def transfer_material_from_parent!
       api.transfer_request_collection.create!(
         user: user_uuid,
-        transfer_requests: transfer_request_attributes(child_plate)
+        transfer_requests: transfer_request_attributes
       )
     end
 
     # Returns an array of hashes representing the transfer requests for the given child plate.
     # Each hash includes the UUIDs of the parent tube and child well, and the UUID of the outer request.
-    # @param child_plate [Sequencescape::Api::V2::Plate] The plate to get the transfer requests for.
     # @return [Array<Hash>] An array of hashes representing the transfer requests.
-    def transfer_request_attributes(child_plate)
+    def transfer_request_attributes
       parent_tubes.each_with_object([]) do |(foreign_barcode, parent_tube), tube_transfers|
         tube_transfers <<
           request_hash(
             parent_tube.uuid,
-            child_plate
+            @child
               .wells
               .detect { |child_well| child_well.location == csv_file.location_by_barcode_details[foreign_barcode] }
               &.uuid,

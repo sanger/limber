@@ -41,21 +41,19 @@ RSpec.describe LabwareCreators::MultiStamp do
       stock_plate: stock_plate2
     )
   end
-  let(:child_plate_v2) { create :v2_plate, uuid: child_uuid, barcode_number: '5', size: 96 }
-  let(:child_plate_v1) { json :stock_plate_with_metadata, stock_plate: { barcode: '5', uuid: child_uuid } }
+  let(:child_plate) { create :v2_plate, barcode_number: '5', size: 96 }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
-  let(:user) { json :v1_user, uuid: user_uuid }
 
   before do
     create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid
 
     stub_v2_plate(parent1, stub_search: false)
     stub_v2_plate(parent2, stub_search: false)
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
+    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
   end
 
   context 'on new' do
@@ -484,7 +482,7 @@ RSpec.describe LabwareCreators::MultiStamp do
             parents: [parent1_uuid, parent2_uuid]
           }
         },
-        body: json(:plate_creation, child_uuid: child_uuid)
+        body: json(:plate_creation, child_uuid: child_plate.uuid)
       )
     end
 
@@ -554,19 +552,39 @@ RSpec.describe LabwareCreators::MultiStamp do
       )
     end
 
+    let(:pooled_plate_creation) do
+      response = double
+      allow(response).to receive(:child).and_return(child_plate)
+
+      response
+    end
+
+    def expect_pooled_plate_creation
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        [
+          {
+            child_purpose_uuid: child_purpose_uuid,
+            parent_uuids: [parent1_uuid, parent2_uuid],
+            user_uuid: user_uuid
+          }
+        ],
+        [pooled_plate_creation]
+      )
+    end
+
     context '#save!' do
       setup do
-        stub_api_get(child_plate_v2.uuid, body: child_plate_v1)
-
-        stub_api_get('user-uuid', body: user)
-        stub_api_get('asset-uuid', body: child_plate_v1)
+        # stub_api_get('user-uuid', body: user)
       end
 
       it 'creates a plate!' do
+        expect_pooled_plate_creation
+
         subject.save!
-        expect(pooled_plate_creation_request).to have_been_made.once
+
         expect(transfer_creation_request).to have_been_made.once
-        expect(subject.child.uuid).to eq(child_uuid)
+        expect(subject.child.uuid).to eq(child_plate.uuid)
         expect(subject).to be_valid
         expect(subject.errors.messages).to be_empty
       end

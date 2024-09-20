@@ -32,13 +32,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
            receptacle: parent2_receptacle
   end
 
-  let(:child_uuid) { 'child-uuid' }
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
-  let(:child_plate_v2) do
-    create :v2_plate_for_submission, uuid: child_uuid, purpose_name: child_purpose_name, barcode_number: '5', size: 96
-  end
-  let(:child_plate_v1) { json :stock_plate_with_metadata, stock_plate: { barcode: '5', uuid: child_uuid } }
 
   let(:user_uuid) { 'user-uuid' }
   let(:user) { json :v1_user, uuid: user_uuid }
@@ -51,7 +46,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
     Settings.submission_templates = { 'example' => example_template_uuid }
     stub_v2_tube(parent1, stub_search: false)
     stub_v2_tube(parent2, stub_search: false)
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_includes: 'wells,wells.aliquots,wells.aliquots.study')
   end
 
   context 'on new' do
@@ -86,20 +80,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
       }
     end
 
-    let!(:ms_plate_creation_request) do
-      stub_api_post(
-        'pooled_plate_creations',
-        payload: {
-          pooled_plate_creation: {
-            user: user_uuid,
-            child_purpose: child_purpose_uuid,
-            parents: [parent1_tube_uuid, parent2_tube_uuid]
-          }
-        },
-        body: json(:plate_creation, child_uuid: child_uuid)
-      )
-    end
-
     let(:transfer_requests) do
       [
         { source_asset: 'tube1', target_asset: '5-well-A1', outer_request: 'outer-request-1' },
@@ -119,6 +99,32 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         body: '{}'
       )
     end
+
+    let(:child_plate) do
+      create :v2_plate_for_submission, purpose_name: child_purpose_name, barcode_number: '5', size: 96
+    end
+
+    let(:pooled_plate_creation) do
+      response = double
+      allow(response).to receive(:child).and_return(child_plate)
+
+      response
+    end
+
+    def expect_pooled_plate_creation
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        [
+          {
+            child_purpose_uuid: child_purpose_uuid,
+            parent_uuids: [parent1_tube_uuid, parent2_tube_uuid],
+            user_uuid: user_uuid
+          }
+        ],
+        [pooled_plate_creation]
+      )
+    end
+
     context 'when the submission is created' do
       describe 'internal methods' do
         it 'determines the configuration for the submission' do
@@ -185,31 +191,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
 
     context '#save!' do
       setup do
-        stub_api_get(child_plate_v2.uuid, body: child_plate_v1)
-        stub_api_get(
-          'custom_metadatum_collection-uuid',
-          body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid')
-        )
-        stub_api_get('user-uuid', body: user)
-        stub_api_get('asset-uuid', body: child_plate_v1)
-
         expect(subject).to receive(:parent_tubes).and_return([parent1, parent2])
 
-        metadata = attributes_for(:v1_custom_metadatum_collection).fetch(:metadata, {})
-
-        stub_api_put(
-          'custom_metadatum_collection-uuid',
-          payload: {
-            custom_metadatum_collection: {
-              metadata: metadata
-            }
-          },
-          body: json(:v1_custom_metadatum_collection)
-        )
-
-        expect('Sequencescape::Api::V2'.constantize).to receive(:plate_with_wells)
-          .with(child_uuid)
-          .and_return(child_plate_v2)
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent1).and_return('outer-request-1')
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent2).and_return('outer-request-2')
       end
@@ -240,19 +223,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
                  purpose_uuid: 'parent-tube-purpose-uuid',
                  receptacle: parent2_receptacle,
                  aliquots: [aliquot2]
-        end
-
-        let(:child_aliquot1) { create :v2_aliquot, study_id: 1 }
-        let(:child_aliquot2) { create :v2_aliquot, study_id: 2 }
-        let(:child_well1) { create :v2_stock_well, location: 'A1', uuid: '5-well-A1', aliquots: [child_aliquot1] }
-        let(:child_well2) { create :v2_stock_well, location: 'B1', uuid: '5-well-B1', aliquots: [child_aliquot2] }
-        let(:child_plate_v2) do
-          create :v2_plate_for_submission,
-                 uuid: child_uuid,
-                 purpose_name: child_purpose_name,
-                 barcode_number: '5',
-                 size: 96,
-                 wells: [child_well1, child_well2]
         end
 
         let!(:order_request) do
@@ -291,8 +261,10 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         end
 
         it 'creates a plate!' do
+          expect_pooled_plate_creation
+
           subject.save!
-          expect(ms_plate_creation_request).to have_been_made.once
+
           expect(transfer_creation_request).to have_been_made.once
           expect(order_request).to have_been_made.once
           expect(submission_request).to have_been_made.once
