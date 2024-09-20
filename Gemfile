@@ -67,4 +67,9 @@ group :lint do
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
+
+  gem 'prettier_print', require: false
+  gem 'syntax_tree', require: false
+  gem 'syntax_tree-haml', require: false
+  gem 'syntax_tree-rbs', require: false
 end
