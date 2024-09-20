@@ -47,6 +47,15 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
         )
       end
     end
+
+    context 'when row_data contains valid characters and empty cells' do
+      let(:row_data) { ['A1', '', nil] }
+
+      it 'does not add any errors' do
+        subject.check_for_invalid_characters
+        expect(subject.errors.full_messages).to be_empty
+      end
+    end
   end
 
   # Testing the validation for the number of columns

@@ -86,9 +86,7 @@ module LabwareCreators
       private
 
       def cell_is_blank?(cell)
-        # NB. cannot use cell.blank? as triggers an exception if cell contains the unusual characters
-        # are trying to spot
-        cell.nil? || cell.strip.empty?
+        cell.nil?
       end
 
       def cell_is_valid_utf8?(cell)
