@@ -25,7 +25,6 @@
 
   filtered_wells = @plate.wells_in_columns.reject { |well| well.empty? || well.failed? }
   filtered_wells.each do | well |
-    sample = well.aliquots.first.sample
     samples_in_pool = well.aliquots.size
     source_well_volume = (samples_in_pool * required_number_of_cells * wastage_factor) / desired_chip_loading_concentration
     row = [
