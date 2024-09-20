@@ -16,7 +16,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           PR_TITLE="[automated] Merge Develop into Master"
-          PR_NUMBERS=$(gh api repos/:owner/:repo/compare/master...develop --jq '.commits[] | select(.commit.message | startswith("Merge pull request")) | .commit.message | capture("#(?<pr_number>\\d+)") | .pr_number')
+          PR_NUMBERS=$(gh api repos/:owner/:repo/compare/master...develop --jq '
+          .commits[]
+          | select(.commit.message
+          | startswith("Merge pull request"))
+          | .commit.message
+          | capture("#(?<pr_number>\\d+)")
+          | .pr_number'
+          )
           STORIES=$(xargs -I {} gh pr view {} --json body --jq '.body | if . | test("Closes #\\d+") then capture("Closes #(?<issue_number>\\d+)") | "- #{}
             - Closes #" + .issue_number else "- #{}" end' <<< "$PR_NUMBERS")
           PR_BODY="#### Changes proposed in this pull request
