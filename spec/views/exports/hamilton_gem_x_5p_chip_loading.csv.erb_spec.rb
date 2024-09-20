@@ -33,16 +33,39 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
   let(:workflow_row) { ['Workflow', workflow] }
   let(:empty_row) { [] }
   let(:header_row) do
- ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well', 'Source Well Volume',
-'Sample Volume', 'PBS Volume'] end
+    [
+      'Source Plate ID',
+      'Source Plate Well',
+      'Destination Plate ID',
+      'Destination Plate Well',
+      'Source Well Volume',
+      'Sample Volume',
+      'PBS Volume'
+    ]
+  end
+
   # The number of samples is 1, so the sample volume is 1.90 µL ((1*30000*0.95238)/2400 -10.0)
   let(:row_source_a1) do
-    [source_plate.barcode.human, source_well_a1.location, dest_plate.barcode.human, mapping[dest_well_a1.location],
-'1.90','37.50','0.00']
+    [
+      source_plate.barcode.human,
+      source_well_a1.location,
+      dest_plate.barcode.human,
+      mapping[dest_well_a1.location],
+      '1.90',
+      '37.50',
+      '0.00'
+    ]
   end
   let(:row_source_b1) do
-    [source_plate.barcode.human, source_well_b1.location, dest_plate.barcode.human, mapping[dest_well_a2.location],
-'1.90','37.50','0.00']
+    [
+      source_plate.barcode.human,
+      source_well_b1.location,
+      dest_plate.barcode.human,
+      mapping[dest_well_a2.location],
+      '1.90',
+      '37.50',
+      '0.00'
+    ]
   end
 
   before do
