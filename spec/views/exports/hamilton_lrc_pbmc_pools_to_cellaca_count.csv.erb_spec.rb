@@ -9,8 +9,9 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
     # 8 because of the Pools plate.
     (1..8).map do |index|  # one-based index
       aliquots = []
+
       # Initiate 10 aliquots per each well
-      (1..10).each do |i|
+      (1..10).each do |_i|
         supplier_name = "vac-tube-barcode-#{index}"
         sample_metadata = create(:v2_sample_metadata, supplier_name: supplier_name)
         sample = create(:v2_sample, sample_metadata: sample_metadata)
@@ -72,6 +73,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
 
   it 'renders the expected content' do
     rows = CSV.parse(render)
+
     # Only 4 wells (out of 8; the rest are either emtpy or failed) used
     expect(rows.size).to eq(7) # 4 body + 3 header rows
     expect(rows).to eq(expected_content)
