@@ -81,12 +81,10 @@ RSpec.describe LabwareCreators::MergedPlate do
     describe '#save!' do
       before do
         allow(Sequencescape::Api::V2::Plate).to(
-          receive(:find_all)
-            .with(
-              { barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] },
-              includes: plate_includes
-            )
-            .and_return([source_plate_1, source_plate_2])
+          receive(:find_all).with(
+            { barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] },
+            includes: plate_includes
+          ).and_return([source_plate_1, source_plate_2])
         )
       end
 
@@ -209,9 +207,10 @@ RSpec.describe LabwareCreators::MergedPlate do
       )
       stub_v2_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_3])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_3])
       )
     end
 
@@ -251,9 +250,10 @@ RSpec.describe LabwareCreators::MergedPlate do
       )
       stub_v2_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_3])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_3])
       )
     end
 
@@ -262,12 +262,7 @@ RSpec.describe LabwareCreators::MergedPlate do
 
   context 'with a missing barcode' do
     let(:form_attributes) do
-      {
-        purpose_uuid: child_purpose_uuid,
-        parent_uuid:,
-        user_uuid:,
-        barcodes: [source_plate_1.barcode.machine, '']
-      }
+      { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, barcodes: [source_plate_1.barcode.machine, ''] }
     end
 
     before do
@@ -279,9 +274,9 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1])
+        receive(:find_all).with({ barcode: [source_plate_1.barcode.machine] }, includes: plate_includes).and_return(
+          [source_plate_1]
+        )
       )
     end
 
@@ -309,9 +304,10 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_1.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_1.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1])
       )
     end
 
@@ -349,9 +345,10 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_4.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_4])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_4.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_4])
       )
     end
 

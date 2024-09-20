@@ -272,26 +272,22 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
       content
     end
 
-    let(:form_attributes) do
-      { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, file: }
-    end
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, file: } }
 
     let(:stub_upload_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-        .with(
-          body: file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="duplex_seq_customer_file.csv"'
-          }
-        )
-        .to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'duplex_seq_dil_file.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
+      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+        body: file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="duplex_seq_customer_file.csv"'
+        }
+      ).to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'duplex_seq_dil_file.csv'),
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
     end
 
     let(:stub_parent_request) { stub_api_get(parent_uuid, body: parent_plate_v1) }
@@ -299,10 +295,12 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
     before do
       stub_parent_request
 
-      create(:duplex_seq_customer_csv_file_upload_purpose_config,
-             uuid: child_purpose_uuid,
-             name: child_purpose_name,
-             library_type_name:)
+      create(
+        :duplex_seq_customer_csv_file_upload_purpose_config,
+        uuid: child_purpose_uuid,
+        name: child_purpose_name,
+        library_type_name:
+      )
 
       stub_v2_plate(
         parent_plate,

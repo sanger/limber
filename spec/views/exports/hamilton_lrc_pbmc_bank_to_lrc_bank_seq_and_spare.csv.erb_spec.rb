@@ -196,24 +196,36 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb
       assign(:workflow, workflow_name)
 
       # stub the v2 child tube lookups
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube1.barcode.machine)
-        .and_return(dest_tube1)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube2.barcode.machine)
-        .and_return(dest_tube2)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube3.barcode.machine)
-        .and_return(dest_tube3)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube4.barcode.machine)
-        .and_return(dest_tube4)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube5.barcode.machine)
-        .and_return(dest_tube5)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube6.barcode.machine)
-        .and_return(dest_tube6)
+      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+        'custom_metadatum_collection',
+        nil,
+        barcode: dest_tube1.barcode.machine
+      ).and_return(dest_tube1)
+      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+        'custom_metadatum_collection',
+        nil,
+        barcode: dest_tube2.barcode.machine
+      ).and_return(dest_tube2)
+      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+        'custom_metadatum_collection',
+        nil,
+        barcode: dest_tube3.barcode.machine
+      ).and_return(dest_tube3)
+      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+        'custom_metadatum_collection',
+        nil,
+        barcode: dest_tube4.barcode.machine
+      ).and_return(dest_tube4)
+      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+        'custom_metadatum_collection',
+        nil,
+        barcode: dest_tube5.barcode.machine
+      ).and_return(dest_tube5)
+      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+        'custom_metadatum_collection',
+        nil,
+        barcode: dest_tube6.barcode.machine
+      ).and_return(dest_tube6)
     end
 
     it 'renders the expected content' do

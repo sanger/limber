@@ -20,9 +20,7 @@ FactoryBot.define do
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
       tubes { {} }
 
-      racked_tubes do
-        tubes.map { |coordinate, tube| create :racked_tube, coordinate:, tube:, tube_rack: instance }
-      end
+      racked_tubes { tubes.map { |coordinate, tube| create :racked_tube, coordinate:, tube:, tube_rack: instance } }
     end
 
     id

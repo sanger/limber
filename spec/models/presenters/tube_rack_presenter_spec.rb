@@ -37,13 +37,7 @@ RSpec.describe Presenters::TubeRackPresenter do
   let(:label_class) { 'Labels::PlateLabel' }
 
   before do
-    create(
-      :tube_rack_config,
-      uuid: labware.purpose.uuid,
-      warnings:,
-      label_class:,
-      file_links:
-    )
+    create(:tube_rack_config, uuid: labware.purpose.uuid, warnings:, label_class:, file_links:)
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 

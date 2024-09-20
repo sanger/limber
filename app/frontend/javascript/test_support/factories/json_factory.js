@@ -71,7 +71,7 @@ const extractAssociations = (resource_config, attributeValues, resourceUrl) => {
 
       return { relationships, included }
     },
-    { relationships: {}, included: [] }
+    { relationships: {}, included: [] },
   )
 }
 
@@ -94,7 +94,7 @@ const buildMany = (associationName, associationValue) => {
       includeData.push(...singleResource.includeData)
       return { relationData, includeData }
     },
-    { relationData: { data: [] }, includeData: [] }
+    { relationData: { data: [] }, includeData: [] },
   )
 }
 
@@ -168,7 +168,7 @@ const jsonCollectionFactory = (factoryName, collectionAttributes, options = {}) 
       included.push(...json.included)
       return { data, included }
     },
-    { data: [], included: [] }
+    { data: [], included: [] },
   )
 
   return {

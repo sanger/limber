@@ -130,9 +130,10 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   before do
     create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
-    allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-      .with({ uuid: %w[child-a-uuid child-b-uuid child-c-uuid child-d-uuid] }, includes: ['wells'])
-      .and_return([child_plate_a, child_plate_b, child_plate_c, child_plate_d])
+    allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+      { uuid: %w[child-a-uuid child-b-uuid child-c-uuid child-d-uuid] },
+      includes: ['wells']
+    ).and_return([child_plate_a, child_plate_b, child_plate_c, child_plate_d])
     stub_v2_plate(plate, stub_search: false)
   end
 

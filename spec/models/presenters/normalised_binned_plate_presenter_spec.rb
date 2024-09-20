@@ -66,14 +66,7 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
   end
 
   context 'when binning configuration is present' do
-    before do
-      create(
-        :normalised_binning_purpose_config,
-        uuid: labware.purpose.uuid,
-        warnings:,
-        label_class:
-      )
-    end
+    before { create(:normalised_binning_purpose_config, uuid: labware.purpose.uuid, warnings:, label_class:) }
 
     it_behaves_like 'a labware presenter'
 

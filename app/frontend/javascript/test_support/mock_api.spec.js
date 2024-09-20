@@ -42,7 +42,7 @@ describe('mockApi', () => {
             status: 500,
           },
         ],
-      }
+      },
     )
 
     let response = await api.devour

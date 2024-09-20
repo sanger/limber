@@ -104,9 +104,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
 
   let(:transfer_source_plates) { [source_plate] }
 
-  let(:wells) do
-    %w[C1 D1].map { |location| create :v2_well, location:, upstream_plates: transfer_source_plates }
-  end
+  let(:wells) { %w[C1 D1].map { |location| create :v2_well, location:, upstream_plates: transfer_source_plates } }
 
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name

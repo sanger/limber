@@ -109,14 +109,13 @@ class PurposeConfig
       # maintains the behaviour of version 1, but includes an addditional
       # asset_shape option if configured. It raises an error if the purpose
       # cannot be created.
-      options_for_creation =
-        {
-          name:,
-          stock_plate: config.fetch(:stock_plate, false),
-          cherrypickable_target: config.fetch(:cherrypickable_target, false),
-          input_plate: config.fetch(:input_plate, false),
-          size: config.fetch(:size, 96)
-        }.merge(config.slice(:asset_shape))
+      options_for_creation = {
+        name:,
+        stock_plate: config.fetch(:stock_plate, false),
+        cherrypickable_target: config.fetch(:cherrypickable_target, false),
+        input_plate: config.fetch(:input_plate, false),
+        size: config.fetch(:size, 96)
+      }.merge(config.slice(:asset_shape))
       Sequencescape::Api::V2::PlatePurpose.create!(options_for_creation)
     end
   end

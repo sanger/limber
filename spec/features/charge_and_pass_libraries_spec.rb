@@ -10,9 +10,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
-  let(:work_completion_request) do
-    { 'work_completion' => { target: labware_uuid, submissions:, user: user_uuid } }
-  end
+  let(:work_completion_request) { { 'work_completion' => { target: labware_uuid, submissions:, user: user_uuid } } }
   let(:work_completion) { json :work_completion }
   let(:template_uuid) { SecureRandom.uuid }
 
@@ -52,14 +50,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
   end
 
   context 'tube with submissions to be made' do
-    before do
-      create :passable_tube,
-             submission: {
-               request_options:,
-               template_uuid:
-             },
-             uuid: 'example-purpose-uuid'
-    end
+    before { create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid' }
     let(:submissions) { [] }
     let(:request_options) { { read_length: '150' } }
     let(:labware_barcode) { example_tube_v2.labware_barcode.machine }

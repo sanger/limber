@@ -85,10 +85,7 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    create(:fixed_normalisation_purpose_config,
-           uuid: child_purpose_uuid,
-           name: child_purpose_name,
-           library_type_name:)
+    create(:fixed_normalisation_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name, library_type_name:)
 
     stub_v2_plate(child_plate, stub_search: false)
     stub_v2_plate(
