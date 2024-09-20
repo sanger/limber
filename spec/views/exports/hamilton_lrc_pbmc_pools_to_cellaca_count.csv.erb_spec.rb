@@ -6,11 +6,16 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
   has_a_working_api
 
   let(:wells) do
-    (1..12).map do |index|  # one-based index
-      supplier_name = "vac-tube-barcode-#{index}"
-      sample_metadata = create(:v2_sample_metadata, supplier_name: supplier_name)
-      sample = create(:v2_sample, sample_metadata: sample_metadata)
-      aliquots = [create(:v2_aliquot, sample: sample)]
+    # 8 because of the Pools plate.
+    (1..8).map do |index|  # one-based index
+      aliquots = []
+      # Initiate 10 aliquots per each well
+      (1..10).each do |i|
+        supplier_name = "vac-tube-barcode-#{index}"
+        sample_metadata = create(:v2_sample_metadata, supplier_name: supplier_name)
+        sample = create(:v2_sample, sample_metadata: sample_metadata)
+        aliquots << create(:v2_aliquot, sample: sample)
+      end
       location = WellHelpers.well_at_column_index(index - 1)
       create(:v2_well, aliquots: aliquots, location: location)
     end
@@ -47,7 +52,8 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
   let(:expected_content) do
     header = [['Workflow', workflow], [], ['Plate Barcode', 'Well Position', 'Well Name', 'Source Well Volume']]
     body =
-      (5..12).map do |index|  # one-based index
+      # 8 wells - first two wells (empty + failed)
+      (5..8).map do |index|  # one-based index
         well = plate.wells_in_columns[index - 1]
         [
           plate.labware_barcode.human,
@@ -66,7 +72,8 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
 
   it 'renders the expected content' do
     rows = CSV.parse(render)
-    expect(rows.size).to eq(11) # 8 body + 3 header rows
+    # Only 4 wells (out of 8; the rest are either emtpy or failed) used
+    expect(rows.size).to eq(7) # 4 body + 3 header rows
     expect(rows).to eq(expected_content)
   end
 end

@@ -214,8 +214,6 @@ hamilton_lrc_pbmc_pools_to_cellaca_count:
   workflow: scRNA Core LRC PBMC Pools Cell Count
   plate_includes:
     - wells.aliquots
-    - wells.aliquots.sample
-    - wells.aliquots.sample.sample_metadata
   filename:
     labware_barcode:
       prepend: true
