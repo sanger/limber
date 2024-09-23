@@ -2129,10 +2129,10 @@ js-yaml@^4.1.0:
   dependencies:
     argparse "^2.0.1"
 
-jsdom@^24.1.1:
-  version "24.1.1"
-  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-24.1.1.tgz#f41df8f4f3b2fbfa7e1bdc5df62c9804fd14a9d0"
-  integrity sha512-5O1wWV99Jhq4DV7rCLIoZ/UIhyQeDR7wHVyZAHAshbrvZsLs+Xzz7gtwnlJTJDjleiTKh54F4dXrX70vJQTyJQ==
+jsdom@^24.1.2:
+  version "24.1.2"
+  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-24.1.2.tgz#d3f4ebb73eafd7775f08e5c668b226f9fbcd71f3"
+  integrity sha512-Fzeg0F93nMZ/dJncmxsXqL7oU/RBvE33RAvr+8otVU9719wHEyV9bUoIfylWWKiuARRV/6tHLX/0W1pe2IixsA==
   dependencies:
     cssstyle "^4.0.1"
     data-urls "^5.0.0"
