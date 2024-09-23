@@ -18,8 +18,7 @@ class Labels::PlateSplit < Labels::PlateLabelXpBase # rubocop:todo Style/Documen
   private
 
   def stock_plate_barcode_getter
-    api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options.dup)
-    metadata = LabwareMetadata.new(api: api, barcode: labware.barcode.machine).metadata
+    metadata = LabwareMetadata.new(barcode: labware.barcode.machine).metadata
     barcode = 'N/A'
     barcode = metadata.fetch('stock_barcode', barcode) unless metadata.nil?
     barcode

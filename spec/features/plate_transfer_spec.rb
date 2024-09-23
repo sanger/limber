@@ -45,46 +45,28 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     Settings.robots['bravo-lb-post-shear-to-lb-end-prep'] = settings[:robots]['bravo-lb-post-shear-to-lb-end-prep']
     Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
 
-    # # We look up the user
-    stub_swipecard_search(swipecard, user)
-
-    stub_custom_metdatum_collections_post
-    stub_state_changes_post
+    # We look up the user
+    stub_v2_user(user, swipecard)
   end
 
-  let(:payload) do
+  let(:state_change_attributes) do
     {
-      custom_metadatum_collection: {
-        user: user_uuid,
-        asset: plate_uuid,
-        metadata: {
-          created_with_robot: 'robot_barcode'
-        }
-      }
+      contents: nil,
+      customer_accepts_responsibility: false,
+      reason: 'Robot bravo LB Post Shear => LB End Prep started',
+      target_state: 'started',
+      target_uuid: plate_uuid,
+      user_uuid: user_uuid
     }
   end
 
-  let(:stub_custom_metdatum_collections_post) do
-    stub_api_post('custom_metadatum_collections', payload: payload, body: json(:custom_metadatum_collection))
-  end
-  let(:stub_state_changes_post) do
-    stub_api_post(
-      'state_changes',
-      payload: {
-        state_change: {
-          target_state: 'started',
-          reason: 'Robot bravo LB Post Shear => LB End Prep started',
-          customer_accepts_responsibility: false,
-          target: plate_uuid,
-          user: user_uuid,
-          contents: nil
-        }
-      },
-      body: json(:state_change, target_state: 'started')
-    )
-  end
-
   scenario 'starts the robot and saves the robot barcode' do
+    expect_api_v2_posts(
+      'CustomMetadatumCollection',
+      [{ user_id: user.id, asset_id: example_plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
+    )
+    expect_api_v2_posts('StateChange', [state_change_attributes])
+
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return(
       beds: {
         '580000004838' => true,
@@ -146,8 +128,6 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     end
     click_button('Start the bravo LB Post Shear => LB End Prep')
     expect(page).to have_content('Robot bravo LB Post Shear => LB End Prep has been started.')
-    expect(stub_custom_metdatum_collections_post).to have_been_requested
-    expect(stub_state_changes_post).to have_been_requested
   end
 
   scenario 'informs if the robot barcode is wrong' do

@@ -22,9 +22,8 @@ FactoryBot.define do
     factory(:labware_tube) { type { 'tubes' } }
     factory(:labware_tube_rack) { type { 'tube_racks' } }
 
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |labware, evaluator|
-      # see plate_factories -> v2_plate factory -> after(:build) for an explanation of _cached_relationship
-      # basically, it allows you to call .purpose on the labware and get a Sequencescape::Api::V2::Purpose
       labware._cached_relationship(:purpose) { evaluator.purpose } if evaluator.purpose
       labware._cached_relationship(:ancestors) { evaluator.ancestors } if evaluator.ancestors
     end

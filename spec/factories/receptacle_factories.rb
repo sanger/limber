@@ -12,6 +12,7 @@ FactoryBot.define do
 
     transient { qc_results { [] } }
 
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |receptacle, evaluator|
       receptacle._cached_relationship(:qc_results) { evaluator.qc_results || [] }
       receptacle._cached_relationship(:requests_as_source) { evaluator.requests_as_source || [] }

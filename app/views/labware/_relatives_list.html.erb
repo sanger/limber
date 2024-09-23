@@ -7,7 +7,7 @@
   </div>
 
   <div id="parents-list" class="border-bottom">
-    <% if presenter.labware.parents&.any? %>
+    <% if presenter.labware.parents&.any? { |parent| parent.purpose.present? } %>
       <%= render partial: 'labware/parent_labware_item', collection: presenter.labware.parents, as: :labware %>
     <% else %>
       <div class="list-group-item text-muted">No parents found</div>
@@ -20,7 +20,7 @@
   </div>
 
   <div id="children-list" class="rounded-bottom">
-    <% if presenter.labware.children&.any? %>
+    <% if presenter.labware.children&.any? { |child| child.purpose.present? } %>
       <%= render partial: 'labware/child_labware_item', collection: presenter.labware.children, as: :labware, locals: { presenter: presenter, open_in_new_window: true } %>
     <% else %>
       <div class="list-group-item text-muted">No children found</div>
