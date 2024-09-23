@@ -663,51 +663,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      # stub the contingency tube creation
-      let!(:stub_contingency_tube_creation_request_uuid) { SecureRandom.uuid }
-      let!(:stub_contingency_tube_creation_request) do
-        stub_api_post(
-          'specific_tube_creations',
-          payload: {
-            specific_tube_creation: {
-              child_purposes: [
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid,
-                child_contingency_tube_purpose_uuid
-              ],
-              tube_attributes: [
-                # sample 1 from well A2 to contingency tube 1 in A1
-                { name: 'SPR:NT1O:A1', foreign_barcode: 'FX00000011' },
-                # sample 2 from well B2 to contingency tube 2 in B1
-                { name: 'SPR:NT2P:B1', foreign_barcode: 'FX00000012' },
-                # sample 1 from well A3 to contingency tube 3 in C1
-                { name: 'SPR:NT1O:C1', foreign_barcode: 'FX00000013' }
-              ],
-              user: user_uuid,
-              parent: parent_uuid
-            }
-          },
-          body: json(:specific_tube_creation, uuid: stub_contingency_tube_creation_request_uuid, children_count: 3)
-        )
-      end
-
-      # stub what contingency tubes were just made
-      let!(:stub_contingency_tube_creation_children_request) do
-        stub_api_get(
-          stub_contingency_tube_creation_request_uuid,
-          'children',
-          body:
-            json(
-              :tube_collection_with_barcodes_specified,
-              size: 3,
-              names: %w[SPR:NT1O:A1 SPR:NT2P:B1 SPR:NT1O:C1],
-              barcode_prefix: 'FX',
-              barcode_numbers: [11, 12, 13],
-              uuid_index_offset: 2
-            )
-        )
-      end
-
       # body for stubbing the contingency file upload
       let(:contingency_file_content) do
         content = contingency_file.read
