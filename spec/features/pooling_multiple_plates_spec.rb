@@ -66,7 +66,7 @@ RSpec.feature 'Multi plate pooling', js: true do
     )
   end
 
-  let(:child_plate) { create :v2_plate, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool Plate', barcode_number: 3 }
+  let(:child_plate) { create :v2_plate, purpose_name: 'Pool Plate', barcode_number: 3 }
 
   let(:pooled_plate_creation) do
     response = double
@@ -78,7 +78,9 @@ RSpec.feature 'Multi plate pooling', js: true do
   def expect_pooled_plate_creation
     expect_api_v2_posts(
       'PooledPlateCreation',
-      [{ child_purpose_uuid: 'child-purpose-0', parent_uuids: [plate_uuid, plate_uuid_2], user_uuid: user_uuid }],
+      [
+        { child_purpose_uuid: child_plate.purpose.uuid, parent_uuids: [plate_uuid, plate_uuid_2], user_uuid: user_uuid }
+      ],
       [pooled_plate_creation]
     )
   end
@@ -88,7 +90,7 @@ RSpec.feature 'Multi plate pooling', js: true do
     create :purpose_config,
            creator_class: 'LabwareCreators::MultiPlatePool',
            name: 'Pool Plate',
-           uuid: 'child-purpose-0'
+           uuid: child_plate.purpose.uuid
     create :pipeline, relationships: { 'Pooled example' => 'Pool Plate' }
 
     # We look up the user
