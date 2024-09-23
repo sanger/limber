@@ -68,18 +68,12 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
   let(:barcodes) { source_plates.map(&:human_barcode) }
 
-  let(:default_number_of_pools) { 16 }
-
   before do
     # Create the pooling config and add to Settings.
     create(:donor_pooling_config)
 
     # Create the plate purpose config and add to Settings.
-    create(
-      :donor_pooling_plate_purpose_config,
-      uuid: child_purpose_uuid,
-      default_number_of_pools: default_number_of_pools
-    )
+    create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid)
 
     # Allow the API call to return two plates by default.
     allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
@@ -401,12 +395,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.study = studies[index % 16]
           well.aliquots.first.project = projects[index % 16]
           well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
         end
       end
 
       it 'returns correct number of pools' do
         pools = subject.build_pools
-        expect(pools.size).to eq(default_number_of_pools)
         expect(pools.flatten).to match_array(wells)
       end
 
@@ -431,7 +426,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         pools = subject.build_pools
         pools.each do |pool|
           number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
-          expect(number_of_unique_donor_ids).to eq(wells.size / default_number_of_pools)
+          expect(number_of_unique_donor_ids).to eq(wells.size / num_samples_per_pool)
         end
       end
     end

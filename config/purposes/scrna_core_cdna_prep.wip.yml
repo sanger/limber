@@ -59,9 +59,6 @@ LRC PBMC Pools:
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:
-      # If the the lookup table in pooling configuration does not specify the
-      # number of pools for a given number of samples, this value will be used.
-      default_number_of_pools: 16
       # The maximum number of source plates that can be used to create the pool.
       # This is also used for bed verification of the source plates.
       max_number_of_source_plates: 2
