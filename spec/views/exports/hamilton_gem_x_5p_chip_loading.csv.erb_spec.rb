@@ -11,9 +11,10 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
 
   let(:aliquots_a1) { create_list(:v2_aliquot, 2) }
   let(:aliquots_b1) { create_list(:v2_aliquot, 10) }
+
   # Source wells
-  let(:source_well_a1) { create(:v2_well, location: 'A1', aliquots:aliquots_a1) }
-  let(:source_well_b1) { create(:v2_well, location: 'B1', aliquots:aliquots_b1 ) }
+  let(:source_well_a1) { create(:v2_well, location: 'A1', aliquots: aliquots_a1) }
+  let(:source_well_b1) { create(:v2_well, location: 'B1', aliquots: aliquots_b1) }
 
   # Transfer requests from source wells
   let(:transfer_request1) { create(:v2_transfer_request, source_asset: source_well_a1, target_asset: nil) }
@@ -58,6 +59,7 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
       '0.00'
     ]
   end
+
   # The number of samples is 10, so the sample volume is 109.05 µL ((10*30000*0.95238)/2400 -10.0)
   let(:row_source_b1) do
     [
