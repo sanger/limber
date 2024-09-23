@@ -20,7 +20,8 @@ RSpec.feature 'Viewing a plate', js: true do
            purpose_uuid: purpose_uuid
   end
   let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
-  let(:default_tube_printer) { 'tube printer 1' }
+  let(:printer_list) { create_list(:v2_tube_barcode_printer, 2) + create_list(:v2_plate_barcode_printer, 2) }
+  let(:default_tube_printer) { printer_list.first.name }
   let(:purpose_config) { create :purpose_config, uuid: purpose_uuid }
 
   # Setup stubs
@@ -36,7 +37,7 @@ RSpec.feature 'Viewing a plate', js: true do
 
     # We get the actual plate
     stub_v2_plate(example_plate)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(printer_list)
   end
 
   scenario 'of a recognised type' do
@@ -132,7 +133,7 @@ RSpec.feature 'Viewing a plate', js: true do
              },
              purpose_uuid: 'child-purpose-0'
     end
-    let(:barcode_printer) { 'tube printer 0' }
+    let(:barcode_printer) { printer_list[1].name }
     let(:print_copies) { 2 }
 
     let(:label_a) do

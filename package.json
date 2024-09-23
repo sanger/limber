@@ -25,7 +25,7 @@
     "eslint-plugin-vitest": "^0.5.4",
     "eslint-plugin-vue": "^9.0.0",
     "jsdom": "^24.1.1",
-    "postcss": "^8.4.39",
+    "postcss": "^8.4.47",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "16.1.0",
     "postcss-nested": "^6.0.1",
@@ -38,10 +38,16 @@
     "vitest": "^2.0.5",
     "vue-template-compiler": "^2.7.0"
   },
+  "_comment": "Required to address https://github.com/npm/cli/issues/4828",
+  "optionalDependencies": {
+    "@rollup/rollup-darwin-arm64": "*",
+    "@rollup/rollup-linux-x64-gnu": "*",
+    "@rollup/rollup-win32-x64-msvc": "*"
+  },
   "name": "limber",
   "scripts": {
     "dev": "vite dev",
-    "lint": "eslint --ext .js --ext .vue app/frontend",
+    "lint": "eslint --ext .js --ext .vue app/frontend --format compact",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "lintOnly": "eslint --ext .js --ext .vue"

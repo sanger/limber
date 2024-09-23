@@ -35,22 +35,26 @@ LCMT EM TET2 Ox:
   :cherrypickable_target: false
   :input_plate: false
   :presenter_class: Presenters::PermissivePresenter
+  :size: 96
 LCMT EM TET2 Stop:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :size: 96
 LCMT EM NaOH Denat:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :size: 96
 LCMT EM APOBEC Deam:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-LCMT EM LibPCR:
+  :size: 96
+LCMT EM Lib PCR:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
@@ -63,7 +67,10 @@ LCMT EM LibPCR:
     - TS_pWGSC_UDI96
     - TS_pWGSC_UDI_tag60_61_swap
     - TS_pWGSD_UDI96
-LCMT EM PCRXP:
+    - TSISC_UDI96
+    - TSRNAhWGS_UDI96
+  :size: 96
+LCMT EM PCR XP:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
@@ -73,8 +80,9 @@ LCMT EM PCRXP:
       id: concentrations_nm
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
+  :size: 96
 # Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
-# pooling so the flow is directly from PCRXP to Pool XP).
+# pooling so the flow is directly from PCR XP to Pool XP).
 LCMT EM Pool XP:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

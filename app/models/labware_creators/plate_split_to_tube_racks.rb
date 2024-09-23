@@ -53,7 +53,7 @@ module LabwareCreators
     validates_nested :well_filter
 
     # Don't create the tubes until at least the contingency file has been uploaded
-    validates :contingency_file, presence: true
+    validate :validate_file_presence
 
     # N.B. contingency file is required, sequencing file is optional
     validates_nested :sequencing_csv_file, if: :sequencing_file
@@ -71,6 +71,14 @@ module LabwareCreators
 
     PARENT_PLATE_INCLUDES =
       'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
+
+    def validate_file_presence
+      if sequencing_file.blank?
+        errors.add(:base, "Sequencing file can't be blank")
+      elsif contingency_file.present? && sequencing_file.blank?
+        errors.add(:base, 'If contingency_file is present, sequencing_file must also be present.')
+      end
+    end
 
     def save
       # NB. need the && true!!
@@ -111,8 +119,6 @@ module LabwareCreators
     #
     # @return [Array<Tube>] The child sequencing tubes.
     def create_child_sequencing_tubes
-      return [] if require_contingency_tubes_only?
-
       create_tubes(sequencing_tube_purpose_uuid, parent_wells_for_sequencing.length, sequencing_tube_attributes)
     end
 
@@ -120,6 +126,8 @@ module LabwareCreators
     #
     # @return [Array<Tube>] The child contingency tubes.
     def create_child_contingency_tubes
+      return [] if require_sequencing_tubes_only?
+
       create_tubes(contingency_tube_purpose_uuid, parent_wells_for_contingency.length, contingency_tube_attributes)
     end
 
@@ -201,7 +209,7 @@ module LabwareCreators
     #
     # Sets errors if the tube rack barcodes are the same
     def check_tube_barcodes_differ_between_files
-      return unless contingency_file_valid? && sequencing_file_valid?
+      return unless sequencing_file_valid? && contingency_file_valid?
 
       seq_barcodes = extract_barcodes(sequencing_csv_file)
       cont_barcodes = extract_barcodes(contingency_csv_file)
@@ -227,22 +235,19 @@ module LabwareCreators
     # Sets errors if there are insufficient or too many tubes.
     def must_have_correct_number_of_tubes_in_rack_files
       return unless files_valid?
-
-      if require_contingency_tubes_only?
-        add_error_if_wrong_number_of_tubes(:contingency_csv_file, num_contingency_tubes, num_parent_wells)
-      else
+      unless require_sequencing_tubes_only?
         add_error_if_wrong_number_of_tubes(
           :contingency_csv_file,
           num_contingency_tubes,
           num_parent_wells - num_parent_unique_samples
         )
-        add_error_if_wrong_number_of_tubes(:sequencing_csv_file, num_sequencing_tubes, num_parent_unique_samples)
       end
+      add_error_if_wrong_number_of_tubes(:sequencing_csv_file, num_sequencing_tubes, num_parent_unique_samples)
     end
 
     # Checks the files passed their validations
     def files_valid?
-      return contingency_file_valid? if require_contingency_tubes_only?
+      return sequencing_file_valid? if require_sequencing_tubes_only?
 
       contingency_file_valid? && sequencing_file_valid?
     end
@@ -347,17 +352,17 @@ module LabwareCreators
     #
     # @return [void]
     def upload_tube_rack_files
-      unless require_contingency_tubes_only?
-        parent_v1.qc_files.create_from_file!(sequencing_file, 'scrna_core_sequencing_tube_rack_scan.csv')
+      unless require_sequencing_tubes_only?
+        parent_v1.qc_files.create_from_file!(contingency_file, 'scrna_core_contingency_tube_rack_scan.csv')
       end
-      parent_v1.qc_files.create_from_file!(contingency_file, 'scrna_core_contingency_tube_rack_scan.csv')
+      parent_v1.qc_files.create_from_file!(sequencing_file, 'scrna_core_sequencing_tube_rack_scan.csv')
     end
 
     # Returns true if only contingency tubes are required for the parent plate, false otherwise.
     #
     # @return [Boolean]
-    def require_contingency_tubes_only?
-      sequencing_file.blank?
+    def require_sequencing_tubes_only?
+      contingency_file.blank?
     end
 
     # Returns an array of parent wells that should be transferred to sequencing tubes based on the current well filter.
@@ -372,8 +377,6 @@ module LabwareCreators
     #
     # @return [Array<Well>] An array of parent wells.
     def find_parent_wells_for_sequencing
-      return [] if require_contingency_tubes_only?
-
       unique_sample_uuids = []
       parent_wells_for_seq = []
 
@@ -607,8 +610,8 @@ module LabwareCreators
     # @param well [Well] The well to find the child tube for.
     # @return [Tube, nil] The child tube corresponding to the given well, or nil if no child tube was found.
     def find_child_tube(well)
-      if require_contingency_tubes_only?
-        @child_contingency_tubes[@contingency_wells_to_tube_names[well]]
+      if require_sequencing_tubes_only?
+        @child_sequencing_tubes[@sequencing_wells_to_tube_names[well]]
       else
         @child_sequencing_tubes[@sequencing_wells_to_tube_names[well]] ||
           @child_contingency_tubes[@contingency_wells_to_tube_names[well]]
@@ -619,9 +622,9 @@ module LabwareCreators
     #
     # @return [void]
     def add_child_tube_metadata
-      add_sequencing_tube_metadata unless require_contingency_tubes_only?
+      add_sequencing_tube_metadata
 
-      add_contingency_tube_metadata
+      add_contingency_tube_metadata unless require_sequencing_tubes_only?
     end
 
     # Adds tube rack barcode and position metadata to child sequencing tubes.
@@ -652,7 +655,7 @@ module LabwareCreators
     # @return [void]
     def add_tube_metadata(child_tube, tube_posn, tube_details)
       LabwareMetadata
-        .new(api: api, user: user_uuid, barcode: child_tube.barcode.machine)
+        .new(user_uuid: user_uuid, barcode: child_tube.barcode.machine)
         .update!(tube_rack_barcode: tube_details['tube_rack_barcode'], tube_rack_position: tube_posn)
     end
 

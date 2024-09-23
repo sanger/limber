@@ -12,7 +12,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
     class_attribute :summary_items, :sidebar_partial, :summary_partial, :pooling_tab
 
-    attr_accessor :api, :labware
+    attr_accessor :labware
 
     self.page = 'show'
     self.sidebar_partial = 'default'
@@ -92,7 +92,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
   def stock_plate_barcode_from_metadata(plate_machine_barcode)
     begin
-      metadata = LabwareMetadata.new(api: api, barcode: plate_machine_barcode).metadata
+      metadata = LabwareMetadata.new(barcode: plate_machine_barcode).metadata
     rescue Sequencescape::Api::ResourceNotFound
       metadata = nil
     end

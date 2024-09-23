@@ -212,28 +212,22 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   end
 
   describe '#perform_transfer' do
-    let(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            target_state: 'passed',
-            reason: 'Robot Pooling Robot started',
-            customer_accepts_responsibility: false,
-            target: target_plate_uuid,
-            user: user_uuid,
-            contents: nil
-          }
-        },
-        body: json(:state_change, target_state: 'passed')
-      )
-    end
-
-    before { state_change_request }
-
     it 'performs transfer from started to passed' do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: nil,
+            customer_accepts_responsibility: false,
+            reason: 'Robot Pooling Robot started',
+            target_state: 'passed',
+            target_uuid: target_plate_uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+
       robot.perform_transfer('bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode])
-      expect(state_change_request).to have_been_requested
     end
 
     context 'if the bed is unexpectedly invalid' do
