@@ -33,8 +33,8 @@ LRC PBMC Defrost PBS:
     viability:
       units: '%'
       default_threshold: 50
-    live_cell_count:
-      name: Cell count
+    total_cell_count:
+      name: Total cell count
       units: 'cells/ml'
       default_threshold: 400000
       decimal_places: 0

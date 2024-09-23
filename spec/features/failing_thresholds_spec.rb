@@ -45,7 +45,17 @@ RSpec.feature 'Failing thresholds', js: true do
   # Setup stubs
   background do
     # Set-up the plate config
-    create :purpose_config, uuid: 'stock-plate-purpose-uuid'
+    create :purpose_config,
+           uuid: 'stock-plate-purpose-uuid',
+           qc_thresholds: {
+             molarity: {
+               name: 'molarity',
+               default_threshold: 20,
+               max: 50,
+               min: 5,
+               units: 'nM'
+             }
+           }
     create :purpose_config, uuid: 'child-purpose-0'
 
     # We look up the user
