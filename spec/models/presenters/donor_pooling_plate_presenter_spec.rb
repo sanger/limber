@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe Presenters::DonorPoolingPlatePresenter do
-  has_a_working_api
-
   # First set of source wells
 
   let(:source_well_a1) { create(:v2_well, location: 'A1') }
@@ -76,7 +74,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:option_key) { 'scrna_core_pbmc_donor_pooling_required_number_of_cells' }
   let(:default_cell_count) { 5000 }
 
-  subject { Presenters::DonorPoolingPlatePresenter.new(api: api, labware: labware) }
+  subject { Presenters::DonorPoolingPlatePresenter.new(labware: labware) }
 
   before do
     Settings.purposes = {

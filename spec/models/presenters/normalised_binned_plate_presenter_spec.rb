@@ -5,8 +5,6 @@ require 'presenters/normalised_binned_plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
-  has_a_working_api
-
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -59,7 +57,7 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::NormalisedBinnedPlatePresenter.new(api: api, labware: labware) }
+  subject(:presenter) { Presenters::NormalisedBinnedPlatePresenter.new(labware: labware) }
 
   context 'when configuration is missing' do
     it 'throws an exception' do

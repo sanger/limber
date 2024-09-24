@@ -15,6 +15,7 @@ FactoryBot.define do
     sample_manifest { create(:v2_sample_manifest) }
     uuid { SecureRandom.uuid }
 
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) { |sample, evaluator| sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata } }
   end
 

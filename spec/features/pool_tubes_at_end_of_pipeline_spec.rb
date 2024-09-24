@@ -18,39 +18,10 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
   let(:example_tube) do
     json(:tube_with_siblings, uuid: tube_uuid, siblings_count: 1, state: 'passed', barcode_number: 1)
   end
-  let(:transfer_template_uuid) { 'transfer-template-uuid' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
   let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube-uuid' }
-
-  let(:transfer_request) do
-    stub_api_post(
-      transfer_template_uuid,
-      payload: {
-        transfer: {
-          user: user_uuid,
-          source: tube_uuid
-        }
-      },
-      body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
-    )
-  end
-  let(:transfer_request_b) do
-    stub_api_post(
-      transfer_template_uuid,
-      payload: {
-        transfer: {
-          user: user_uuid,
-          source: sibling_uuid
-        }
-      },
-      body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
-    )
-  end
 
   # Setup stubs
   background do
-    Settings.transfer_templates['Transfer from tube to tube by submission'] = transfer_template_uuid
-
     # Set-up the tube config
     create :tube_config, name: 'Example Purpose', uuid: 'example-purpose-uuid'
     create :tube_config,
@@ -68,11 +39,18 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
 
     # Creator uses the old tube
     stub_api_get(tube_uuid, body: example_tube)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
     stub_api_get('transfer-template-uuid', body: json(:transfer_template, uuid: 'transfer-template-uuid'))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_v2_tube(create(:v2_tube, uuid: multiplexed_library_tube_uuid))
-    transfer_request
-    transfer_request_b
+
+    expect_api_v2_posts(
+      'Transfer',
+      [
+        { user_uuid: user_uuid, source_uuid: tube_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' },
+        { user_uuid: user_uuid, source_uuid: sibling_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' }
+      ],
+      create_list(:v2_transfer_between_tubes, 2, destination_uuid: multiplexed_library_tube_uuid)
+    )
   end
 
   shared_examples 'a tube validation form' do
@@ -89,8 +67,6 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
       find_field('Tube barcode').send_keys barcode_reader_key
       click_on('Make Tube')
       expect(page).to have_content('New empty labware added to the system.')
-      expect(transfer_request).to have_been_made.once
-      expect(transfer_request_b).to have_been_made.once
     end
   end
 
