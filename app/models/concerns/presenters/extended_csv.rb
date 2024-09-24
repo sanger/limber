@@ -5,6 +5,8 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   included do
     class_attribute :bed_prefix
     self.bed_prefix = 'PCRXP'
+
+    attr_accessor :api
   end
 
   # Yields information for the show_extended.csv
