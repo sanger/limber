@@ -48,7 +48,52 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
       end
     end
 
-    context 'when row_data contains valid characters and empty cells' do
+    context 'when row_data contains valid characters with invisible spaces' do
+      let(:row_barcode) { "some\u00A0 data" } # \u00A0 is a non-breaking space
+
+      it 'adds an error for the invisible space' do
+        subject.check_for_invalid_characters
+        expect(subject.errors.full_messages).to include(
+          "contains invalid character(s) at column 2 in #{subject}, " \
+            'please use only standard characters and UTF-8 encoding for your csv file'
+        )
+      end
+    end
+
+    context 'when row_data contains only spaces' do
+      let(:row_barcode) { '    ' }
+
+      it 'does not add any errors' do
+        subject.check_for_invalid_characters
+        expect(subject.errors.full_messages).to be_empty
+      end
+    end
+
+    context 'when row_data contains spaces with invisible characters' do
+      let(:row_barcode) { " \u200B \u200B " } # \u200B is a zero-width space
+
+      it 'adds an error for the invisible space' do
+        subject.check_for_invalid_characters
+        expect(subject.errors.full_messages).to include(
+          "contains invalid character(s) at column 2 in #{subject}, " \
+            'please use only standard characters and UTF-8 encoding for your csv file'
+        )
+      end
+    end
+
+    context 'when row_data contains invalid invisible characters' do
+      let(:row_barcode) { "\u200Csome data\u200C" } # \u200C is a zero-width non-joiner
+
+      it 'adds an error for the invalid invisible character' do
+        subject.check_for_invalid_characters
+        expect(subject.errors.full_messages).to include(
+          "contains invalid character(s) at column 2 in #{subject}, " \
+            'please use only standard characters and UTF-8 encoding for your csv file'
+        )
+      end
+    end
+
+    context 'when row_data contains valid characters and nil cells' do
       let(:row_data) { ['A1', '', nil] }
 
       it 'does not add any errors' do
