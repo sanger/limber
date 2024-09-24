@@ -44,10 +44,10 @@ jobs:
 
           #### Instructions for Reviewers
 
-          &nbsp; &nbsp; \- _Check stories are ready for release_
-          &nbsp; &nbsp; \- _Check for any database migrations_
-          &nbsp; &nbsp; \- _Check for debug code_
-          &nbsp; &nbsp; \- _Check version is appropiate_
+          - _Check stories are ready for release._
+          - _Check for any database migrations._
+          - _Check for debug code._
+          - _Check version is appropriate._
 
           This description will be overwritten on the next push
           This PR was auto-generated on $(TZ=Europe/London date --iso-8601=seconds)"
