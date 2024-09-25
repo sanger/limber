@@ -60,7 +60,6 @@ LRC PBMC Pools:
       required_number_of_cells: 30_000
       wastage_factor: 0.95238
       desired_chip_loading_concentration: 2_400
-
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:
