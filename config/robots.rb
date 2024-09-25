@@ -3814,6 +3814,22 @@ ROBOT_CONFIG =
       }
     )
 
+    # LCM Triomics EMSeq Bravo bed verification
+    # Bravo LCMT DNA Frag Verification
+    custom_robot(
+      'bravo-lcmt-dna-frag-verification',
+      name: 'Bravo LCMT DNA Frag Verification',
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT DNA Frag',
+          states: ['pending'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
     
 
   end
