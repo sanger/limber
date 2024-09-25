@@ -3769,4 +3769,51 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # LCM Triomics EMSeq Bravo BenchCel bed verification
+    # Verify initial setup
+    custom_robot(
+      'bravo-verify-initial-setup',
+      name: 'Bravo Verify Initial Setup',
+      beds: {
+      bed(4).barcode => {
+          purpose: 'LCMT Lysate',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+      car('1,4').barcode => {
+          purpose: 'DNA Frag',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode
+        },
+        car('2,4').barcode => {
+          purpose: 'LCMT DNA End Prep',
+          states: ['pending'],
+          label: 'Carousel 2,4',
+          parent: bed(4).barcode
+        },
+        car('3,5').barcode => {
+          purpose: 'LCMT DNA Adp Lig',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: bed(4).barcode
+        },
+        car('4,4').barcode => {
+          purpose: 'LCMT EM TET2 Ox',
+          states: ['pending'],
+          label: 'Carousel 4,4',
+          parent: bed(4).barcode
+        },
+        car('4,3').barcode => {
+          purpose: 'LCMT EM TET2 Stop',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: bed(4).barcode
+        },
+      }
+    )
+
+    
+
   end
