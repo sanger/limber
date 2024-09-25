@@ -87,7 +87,7 @@ qcableLookup.prototype = {
     return function () {
       qc_lookup.message(
         'The barcode could not be found. There may be network issues, or problems with Sequencescape.',
-        'danger',
+        'danger'
       )
     }
   },
@@ -164,7 +164,7 @@ qcableLookup.prototype = {
         $(document.createElement('div'))
           .addClass('alert')
           .addClass('alert-' + status)
-          .text(message),
+          .text(message)
       )
   },
   dual: function () {
@@ -182,7 +182,7 @@ let qcCollector = new tagStatusCollector(
   function (message) {
     $('#submit-summary').text(message)
     $('#plate_submit').prop('disabled', true)
-  },
+  }
 )
 
 new qcableLookup($('#plate_tag_plate_barcode'), qcCollector)

@@ -16,8 +16,7 @@ module ContractHelper
     # rubocop:todo Lint/MissingCopEnableDirective
     # rubocop:todo Layout/LineLength
     # rubocop:enable Lint/MissingCopEnableDirective
-    REQUEST_REGEXP =
-      %r{ # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes
+    REQUEST_REGEXP = %r{ # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes
     # rubocop:enable Layout/LineLength
       (?<eol>       \r\n|\r|\n){0}
       (?<verb>      GET|PUT|POST|DELETE){0}

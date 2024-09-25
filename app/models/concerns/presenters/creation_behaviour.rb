@@ -23,9 +23,10 @@ module Presenters::CreationBehaviour
   end
 
   def construct_buttons(scope)
-    scope
-      .map do |purpose_uuid, purpose_settings|
-        LabwareCreators.class_for(purpose_uuid).creator_button(
+    scope.map do |purpose_uuid, purpose_settings|
+      LabwareCreators
+        .class_for(purpose_uuid)
+        .creator_button(
           creator: LabwareCreators.class_for(purpose_uuid),
           parent_uuid: uuid,
           parent: labware,
@@ -34,8 +35,7 @@ module Presenters::CreationBehaviour
           type: purpose_settings.asset_type,
           filters: purpose_settings.filters || {}
         )
-      end
-      .force
+    end.force
   end
 
   def active_pipelines

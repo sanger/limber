@@ -117,7 +117,9 @@ module LabwareCreators
     end
 
     def transfer!(attributes)
-      Sequencescape::Api::V2::Transfer.create!(attributes.merge(transfer_template_uuid:, user_uuid:))
+      Sequencescape::Api::V2::Transfer.create!(
+        attributes.merge(transfer_template_uuid:, user_uuid:)
+      )
     end
 
     def transfer_material_from_parent!(child_uuid)

@@ -39,7 +39,7 @@ export default {
         return []
       }
       const primerPanelsIterable = Array.from(primerPanelsByPlate.values()).reduce((accu, current) =>
-        accu.filter((val) => current.includes(val)),
+        accu.filter((val) => current.includes(val))
       )
       return primerPanelsIterable
     },

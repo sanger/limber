@@ -30,21 +30,21 @@ let newScanned = function (bed, labware) {
         .append(
           $(document.createElement('h3'))
             .attr('class', 'ui-li-heading')
-            .text('Bed: ' + bed),
+            .text('Bed: ' + bed)
         )
         .append(closeIcon())
         .append(
           $(document.createElement('p'))
             .attr('class', 'ui-li-desc')
-            .text('Labware: ' + labware),
+            .text('Labware: ' + labware)
         )
         .append(
           $(document.createElement('input'))
             .attr('type', 'hidden')
             .attr('id', 'bed_labwares[' + bed + ']')
             .attr('name', 'bed_labwares[' + bed + '][]')
-            .val(labware),
-        ),
+            .val(labware)
+        )
     )
   SCAPE.robot_beds[bed] = SCAPE.robot_beds[bed] || []
   SCAPE.robot_beds[bed].push(labware)
@@ -162,7 +162,7 @@ $('#validate_layout').on('click', function () {
   }).fail(function (_data, _status) {
     SCAPE.message(
       'The beds could not be validated. There may be network issues, or problems with Sequencescape.',
-      'danger',
+      'danger'
     )
     fail()
   })

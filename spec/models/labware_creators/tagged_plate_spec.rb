@@ -30,7 +30,10 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   let(:disable_cross_plate_pool_detection) { false }
 
   before do
-    create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid, disable_cross_plate_pool_detection:)
+    create(:purpose_config,
+           name: child_purpose_name,
+           uuid: child_purpose_uuid,
+           disable_cross_plate_pool_detection:)
     plate_request
     wells_request
   end
@@ -220,7 +223,14 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
           expect_api_v2_posts(
             'StateChange',
-            [{ reason: 'Used in Library creation', target_state: 'exhausted', target_uuid: tag_plate_uuid, user_uuid: }]
+            [
+              {
+                reason: 'Used in Library creation',
+                target_state: 'exhausted',
+                target_uuid: tag_plate_uuid,
+                user_uuid:
+              }
+            ]
           )
 
           expect(subject.save).to be true

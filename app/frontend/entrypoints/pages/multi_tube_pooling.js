@@ -74,7 +74,7 @@ newScanned.prototype = {
           .append(
             $(document.createElement('h3'))
               .attr('class', 'ui-li-heading')
-              .text('Tube: ' + this.tubeBarcode),
+              .text('Tube: ' + this.tubeBarcode)
           )
           .append($(document.createElement('div')).attr('class', 'tube_validation_report').text('Waiting...'))
           .append(
@@ -82,8 +82,8 @@ newScanned.prototype = {
               .attr('type', 'hidden')
               .attr('id', 'tube[parents][' + this.tubeBarcode + ']')
               .attr('name', 'tube[parents][' + this.tubeBarcode + ']')
-              .val(1),
-          ),
+              .val(1)
+          )
       )
     return this.listElement
   },
@@ -140,7 +140,7 @@ tubeCollector = new statusCollector(
   },
   function () {
     $('#tube_submit').prop('disabled', true)
-  },
+  }
 )
 
 $('.sibling-tube').each(function () {

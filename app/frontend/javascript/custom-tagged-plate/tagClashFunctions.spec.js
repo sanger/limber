@@ -362,7 +362,7 @@ describe('extractChildUsedOligos', () => {
         parentWellSubmDetsForPools,
         tagLayout,
         tagSubs,
-        tagGroupOligos,
+        tagGroupOligos
       )
 
       expect(response).toEqual(exptSubmUsedTags)
@@ -399,7 +399,7 @@ describe('extractChildUsedOligos', () => {
         parentWellSubmDetsForPools,
         tagLayout,
         tagSubs,
-        tagGroupOligos,
+        tagGroupOligos
       )
 
       expect(response).toEqual(exptSubmUsedTags)
@@ -435,7 +435,7 @@ describe('extractChildUsedOligos', () => {
         parentWellSubmDetsForPools,
         tagLayout,
         tagSubs,
-        tagGroupOligos,
+        tagGroupOligos
       )
 
       expect(response).toEqual(exptSubmUsedTags)
@@ -473,7 +473,7 @@ describe('extractChildUsedOligos', () => {
         parentWellSubmDetsForPools,
         tagLayout,
         tagSubs,
-        tagGroupOligos,
+        tagGroupOligos
       )
 
       expect(response).toEqual(exptSubmUsedTags)
@@ -509,7 +509,7 @@ describe('extractChildUsedOligos', () => {
         parentWellSubmDetsForPools,
         tagLayout,
         tagSubs,
-        tagGroupOligos,
+        tagGroupOligos
       )
 
       expect(response).toEqual(exptSubmUsedTags)

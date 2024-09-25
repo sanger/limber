@@ -28,7 +28,7 @@ describe('LabwareCustomMetadataAddForm', () => {
     global.fetch = vi.fn().mockReturnValue(
       Promise.resolve({
         json: () => Promise.resolve(data),
-      }),
+      })
     )
 
     // This is a workaround for the following warning:
@@ -80,7 +80,7 @@ describe('LabwareCustomMetadataAddForm', () => {
         // expect(wrapper.find('#RT DFD Syringe Lot Number').exists()).toBe(true)
         expect(wrapper.find('#labware_custom_metadata_submit_button').exists()).toBe(true)
         expect(wrapper.find('#labware_custom_metadata_submit_button').text()).toEqual(
-          'Add Custom Metadata to Sequencescape',
+          'Add Custom Metadata to Sequencescape'
         )
       })
     })

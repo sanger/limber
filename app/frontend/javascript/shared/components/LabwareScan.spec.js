@@ -138,7 +138,7 @@ describe('LabwareScan', () => {
             receptacles: 'uuid',
           },
         },
-        goodTube,
+        goodTube
       )
 
       wrapper.find('input').setValue('DN12345')
@@ -170,7 +170,7 @@ describe('LabwareScan', () => {
             receptacles: 'uuid',
           },
         },
-        nullTube,
+        nullTube
       )
       const wrapper = wrapperFactoryTube(api)
 
@@ -202,7 +202,7 @@ describe('LabwareScan', () => {
             receptacles: 'uuid',
           },
         },
-        pendingTube,
+        pendingTube
       )
 
       wrapper.find('input').setValue('Good barcode')
@@ -263,7 +263,7 @@ describe('LabwareScan', () => {
               status: 500,
             },
           ],
-        },
+        }
       )
       const wrapper = wrapperFactoryTube(api)
 
@@ -312,7 +312,7 @@ describe('LabwareScan', () => {
             plates: 'labware_barcode,uuid,number_of_rows,number_of_columns',
           },
         },
-        goodPlate,
+        goodPlate
       )
 
       wrapper.find('input').setValue('DN12345')
@@ -343,7 +343,7 @@ describe('LabwareScan', () => {
             plates: 'labware_barcode,uuid,number_of_rows,number_of_columns',
           },
         },
-        nullPlate,
+        nullPlate
       )
       const wrapper = wrapperFactoryPlate(api)
 
@@ -373,7 +373,7 @@ describe('LabwareScan', () => {
             plates: 'labware_barcode,uuid,number_of_rows,number_of_columns',
           },
         },
-        badPlate,
+        badPlate
       )
 
       wrapper.find('input').setValue('Good barcode')
@@ -428,7 +428,7 @@ describe('LabwareScan', () => {
               status: 500,
             },
           ],
-        },
+        }
       )
       const wrapper = wrapperFactoryPlate(api)
 

@@ -35,7 +35,13 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     it 'pools by submission' do
       expect_api_v2_posts(
         'Transfer',
-        [{ user_uuid:, source_uuid: parent_uuid, transfer_template_uuid: 'transfer-to-mx-tubes-on-submission' }],
+        [
+          {
+            user_uuid:,
+            source_uuid: parent_uuid,
+            transfer_template_uuid: 'transfer-to-mx-tubes-on-submission'
+          }
+        ],
         [transfer]
       )
 

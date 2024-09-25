@@ -43,11 +43,9 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
 
     allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(parent)
 
-    allow(api).to receive_message_chain(:plate_creation, :create!).with(
-      parent: parent_uuid,
-      child_purpose: child_purpose_uuid,
-      user: user_uuid
-    ).and_return(double(child: child_plate))
+    allow(api).to receive_message_chain(:plate_creation, :create!)
+      .with(parent: parent_uuid, child_purpose: child_purpose_uuid, user: user_uuid)
+      .and_return(double(child: child_plate))
 
     allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child_plate)
   end

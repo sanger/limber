@@ -23,7 +23,7 @@ function extractParentWellSubmissionDetails(parentPlate) {
         // TODO Replace this with generic limber logging when available
         // See https://github.com/sanger/limber/issues/836
         console.error(
-          'Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well',
+          'Tag clash functions: extractParentWellSubmissionDetails: Error: Submission Id not found for well'
         )
         return
       }
@@ -94,7 +94,7 @@ function extractChildUsedOligos(parentUsedOligos, parentWellSubmDetails, tagLayo
       parentWellSubmDetails,
       tagLayout,
       tagSubstitutions,
-      tagGroupOligos,
+      tagGroupOligos
     )
   ) {
     return {}
@@ -135,7 +135,7 @@ function isValidChildUsedOligoParameters(
   parentWellSubmDetails,
   tagLayout,
   tagSubstitutions,
-  tagGroupOligos,
+  tagGroupOligos
 ) {
   let isValid = true
 

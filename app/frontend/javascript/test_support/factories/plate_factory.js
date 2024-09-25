@@ -26,7 +26,7 @@ const plateFactory = function (options = {}) {
           position: { name: indexToName(iteration, 8) },
         },
         ..._wellOptions,
-      }),
+      })
     ),
   }
   return { ...plateDefaults, ...(plateOptions || {}) }

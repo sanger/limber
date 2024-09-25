@@ -12,7 +12,12 @@ RSpec.feature 'Viewing a plate', js: true do
   let(:state) { 'pending' }
   let(:purpose_uuid) { 'stock-plate-purpose-uuid' }
   let(:example_plate) do
-    create :v2_stock_plate, uuid: plate_uuid, barcode_number: 1, state:, wells: wells_collection, purpose_uuid:
+    create :v2_stock_plate,
+           uuid: plate_uuid,
+           barcode_number: 1,
+           state:,
+           wells: wells_collection,
+           purpose_uuid:
   end
   let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state:, position: { 'name' => loc }) } }
   let(:printer_list) { create_list(:v2_tube_barcode_printer, 2) + create_list(:v2_plate_barcode_printer, 2) }

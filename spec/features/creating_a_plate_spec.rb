@@ -33,7 +33,11 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   let(:another_plate) do
-    create :v2_stock_plate, barcode_number: 106, uuid: another_plate_uuid, wells:, purpose_name: 'Limber Cherrypicked'
+    create :v2_stock_plate,
+           barcode_number: 106,
+           uuid: another_plate_uuid,
+           wells:,
+           purpose_name: 'Limber Cherrypicked'
   end
 
   let(:alternative_plate) do
@@ -121,9 +125,9 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
       allow(child_plate).to receive(:stock_plate).and_return(stock_plates.last)
       allow(child_plate).to receive(:ancestors).and_return(ancestors_scope)
-      allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_purpose_name).and_return(
-        [alternative_plate]
-      )
+      allow(ancestors_scope).to receive(:where)
+        .with(purpose_name: alternative_purpose_name)
+        .and_return([alternative_plate])
 
       allow(job).to receive(:save).and_return(true)
       allow(PMB::PrintJob).to receive(:new) do |args|

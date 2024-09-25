@@ -34,7 +34,7 @@ describe('AssetLookupByUuid', () => {
         filter: { uuid: assetUuid },
         fields: {},
       },
-      { data: [] }, // no plates found
+      { data: [] } // no plates found
     )
 
     const wrapper = wrapperFactoryPlate(api)
@@ -59,7 +59,7 @@ describe('AssetLookupByUuid', () => {
         filter: { uuid: assetUuid },
         fields: {},
       },
-      goodPlate,
+      goodPlate
     )
 
     const wrapper = wrapperFactoryPlate(api)

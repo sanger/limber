@@ -31,9 +31,8 @@ module FactoryBot
         send(association) do
           {}.tap do |h|
             h['size'] = send(:"#{association}_count") if send(:"#{association}_actions").include?('read')
-            h['actions'] = send(:"#{association}_actions").index_with do |_action_name|
-              "#{resource_url}/#{association}"
-            end
+            h['actions'] =
+              send(:"#{association}_actions").index_with { |_action_name| "#{resource_url}/#{association}" }
           end
         end
       end

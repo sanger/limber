@@ -284,7 +284,7 @@ SCAPE.renderSourceWells = function () {
         for (let wellName of wells) {
           well = $('.plate-id-' + plateIndex + ' .' + wellName)
           well.append(
-            SCAPE.newAliquot(capPoolOffset + poolNumber, WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset + poolNumber]),
+            SCAPE.newAliquot(capPoolOffset + poolNumber, WELLS_IN_COLUMN_MAJOR_ORDER[capPoolOffset + poolNumber])
           )
 
           newInput = $(document.createElement('input'))

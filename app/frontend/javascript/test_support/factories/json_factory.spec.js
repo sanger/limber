@@ -242,7 +242,7 @@ describe('jsonCollectionFactory', () => {
       ],
       {
         base: 'assets/123/comments',
-      },
+      }
     )
 
     expect(json).toEqual({

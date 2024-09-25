@@ -114,7 +114,9 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a labware presenter'
     it_behaves_like 'a stock presenter'
 
-    let(:labware) { create :v2_plate_for_submission, purpose_name:, barcode_number: 2, direct_submissions: submissions }
+    let(:labware) do
+      create :v2_plate_for_submission, purpose_name:, barcode_number: 2, direct_submissions: submissions
+    end
 
     let(:submissions) { create_list :v2_submission, 1, state: 'pending' }
     let(:barcode_string) { 'DN2T' }
@@ -154,7 +156,9 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
       end
     end
 
-    let(:labware) { create :v2_plate_for_submission, purpose_name:, barcode_number: 2, direct_submissions: submissions }
+    let(:labware) do
+      create :v2_plate_for_submission, purpose_name:, barcode_number: 2, direct_submissions: submissions
+    end
     let(:now) { Time.zone.parse('2020-11-24 16:13:43 +0000') }
     let(:submissions) { create_list :v2_submission, 1, state: 'ready', updated_at: now - 5.seconds }
     let(:barcode_string) { 'DN2T' }
@@ -209,7 +213,12 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_stock_plate, purpose_name:, barcode_number: 2, pool_sizes: [2], direct_submissions: submissions, state:
+      create :v2_stock_plate,
+             purpose_name:,
+             barcode_number: 2,
+             pool_sizes: [2],
+             direct_submissions: submissions,
+             state:
     end
     let(:submissions) { create_list :v2_submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
@@ -246,7 +255,12 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_stock_plate, purpose_name:, barcode_number: 2, pool_sizes: [2], direct_submissions: submissions, state:
+      create :v2_stock_plate,
+             purpose_name:,
+             barcode_number: 2,
+             pool_sizes: [2],
+             direct_submissions: submissions,
+             state:
     end
     let(:submissions) { create_list :v2_submission, 1, state: }
     let(:barcode_string) { 'DN2T' }

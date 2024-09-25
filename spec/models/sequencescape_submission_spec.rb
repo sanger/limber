@@ -11,7 +11,9 @@ RSpec.describe SequencescapeSubmission do
   let(:template_uuid) { 'template-uuid' }
   let(:request_options) { { read_length: 150 } }
   let(:user_uuid) { 'user-uuid' }
-  let(:attributes) { { api:, assets:, template_uuid:, request_options:, user: user_uuid } }
+  let(:attributes) do
+    { api:, assets:, template_uuid:, request_options:, user: user_uuid }
+  end
 
   describe '#template_uuid' do
     context 'when set directly' do
@@ -22,7 +24,9 @@ RSpec.describe SequencescapeSubmission do
 
     context 'when set via template_name' do
       let(:template_name) { 'Submission template' }
-      let(:attributes) { { api:, assets:, template_uuid:, request_options:, user: user_uuid } }
+      let(:attributes) do
+        { api:, assets:, template_uuid:, request_options:, user: user_uuid }
+      end
 
       before { Settings.submission_templates = { template_name => template_uuid } }
 
@@ -33,7 +37,9 @@ RSpec.describe SequencescapeSubmission do
   end
 
   describe '#extra_barcodes_trimmed' do
-    let(:attributes) { { api:, assets:, template_uuid:, request_options:, user: user_uuid } }
+    let(:attributes) do
+      { api:, assets:, template_uuid:, request_options:, user: user_uuid }
+    end
 
     it 'removes any extra whitespaces' do
       obj = described_class.new(attributes.merge(extra_barcodes: ['   1234   ', '  5678        ', ' ', '']))
@@ -42,7 +48,9 @@ RSpec.describe SequencescapeSubmission do
   end
 
   describe '#extra_plates' do
-    let(:attributes) { { api:, assets:, template_uuid:, request_options:, user: user_uuid } }
+    let(:attributes) do
+      { api:, assets:, template_uuid:, request_options:, user: user_uuid }
+    end
 
     let(:plate) { create :v2_plate }
     let(:obj) { described_class.new(attributes.merge(extra_barcodes: %w[1234 5678])) }
@@ -57,23 +65,25 @@ RSpec.describe SequencescapeSubmission do
   end
 
   describe '#extra_assets' do
-    let(:attributes) { { api:, assets:, template_uuid:, request_options:, user: user_uuid } }
+    let(:attributes) do
+      { api:, assets:, template_uuid:, request_options:, user: user_uuid }
+    end
 
     let(:plate) { create(:passed_plate) }
     let(:plate2) { create(:passed_plate) }
     it 'returns the uuids of the labwares wells' do
       obj = described_class.new(attributes.merge(extra_barcodes: %w[1234 5678]))
-      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
-        barcode: %w[1234 5678]
-      ).and_return([plate, plate2])
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
+        .with(barcode: %w[1234 5678])
+        .and_return([plate, plate2])
 
       # There are 4 non-empty wells in each labware
       expect(obj.extra_assets.count).to eq(8)
     end
     it 'removes duplicates uuids in the returned list' do
-      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
-        barcode: %w[1234 1234 5678]
-      ).and_return([plate, plate, plate2])
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
+        .with(barcode: %w[1234 1234 5678])
+        .and_return([plate, plate, plate2])
       obj = described_class.new(attributes.merge(extra_barcodes: %w[1234 1234 5678]))
       expect(obj.extra_assets.count).to eq(8)
       expect(obj.extra_assets.uniq.count).to eq(8)
@@ -81,7 +91,9 @@ RSpec.describe SequencescapeSubmission do
   end
 
   describe '#asset_groups_for_orders_creation' do
-    let(:attributes) { { api:, assets:, template_uuid:, request_options:, user: user_uuid } }
+    let(:attributes) do
+      { api:, assets:, template_uuid:, request_options:, user: user_uuid }
+    end
 
     it 'returns normal asset groups when no extra barcodes provided' do
       obj = described_class.new(attributes)
@@ -92,9 +104,9 @@ RSpec.describe SequencescapeSubmission do
       let(:plate2) { create(:passed_plate) }
 
       before do
-        allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
-          barcode: %w[1234 5678]
-        ).and_return([plate, plate2])
+        allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
+          .with(barcode: %w[1234 5678])
+          .and_return([plate, plate2])
       end
 
       it 'returns the current assets plus the extra assets' do

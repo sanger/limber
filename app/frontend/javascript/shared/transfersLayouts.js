@@ -54,7 +54,7 @@ const quadrantTransfers = function (requestsWithPlates) {
       plateObj.index,
       well.position.name,
       quadrantOffsets.rowOffset,
-      quadrantOffsets.colOffset,
+      quadrantOffsets.colOffset
     )
     const transfer = {
       request: request,
@@ -189,7 +189,7 @@ const buildSequentialTransfersArray = function (transferRequests) {
 //
 const buildSequentialLibrarySplitTransfersArray = function (
   transferRequests,
-  numberOfWellsForEachSourcePlateInColumnOrder = 24,
+  numberOfWellsForEachSourcePlateInColumnOrder = 24
 ) {
   const libraryTypes = []
   return transferRequests.map((requestWithPlate) => {

@@ -17,7 +17,12 @@ module LabwareCreators
     def create_child_stock_tubes
       api
         .specific_tube_creation
-        .create!(user: user_uuid, parents:, child_purposes: [purpose_uuid] * pool_uuids.length, tube_attributes:)
+        .create!(
+          user: user_uuid,
+          parents:,
+          child_purposes: [purpose_uuid] * pool_uuids.length,
+          tube_attributes:
+        )
         .children
         .index_by(&:name)
     end

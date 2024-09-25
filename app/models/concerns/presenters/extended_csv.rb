@@ -57,7 +57,14 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
       destination_barcode = ct.destination.barcode.machine
       transfers =
         ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
-      { source_ean:, source_barcode:, source_stock:, destination_ean:, destination_barcode:, transfers: }
+      {
+        source_ean:,
+        source_barcode:,
+        source_stock:,
+        destination_ean:,
+        destination_barcode:,
+        transfers:
+      }
     end
   end
 end

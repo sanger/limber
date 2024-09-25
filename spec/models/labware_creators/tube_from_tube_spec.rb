@@ -60,7 +60,14 @@ RSpec.describe LabwareCreators::TubeFromTube do
       it 'creates the child' do
         expect_api_v2_posts(
           'Transfer',
-          [{ user_uuid:, source_uuid: parent_uuid, destination_uuid: child_uuid, transfer_template_uuid: }]
+          [
+            {
+              user_uuid:,
+              source_uuid: parent_uuid,
+              destination_uuid: child_uuid,
+              transfer_template_uuid:
+            }
+          ]
         )
 
         subject.save!

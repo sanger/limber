@@ -12,12 +12,8 @@ class Sequencescape::Api::V2::Base < JsonApiClient::Resource # rubocop:todo Styl
 
   # set the api base url in an abstract base class
   self.site = Limber::Application.config.api.v2.connection_options.url
-  connection.faraday.headers['X-Sequencescape-Client-Id'] = Limber::Application
-    .config
-    .api
-    .v2
-    .connection_options
-    .authorisation
+  connection.faraday.headers['X-Sequencescape-Client-Id'] =
+    Limber::Application.config.api.v2.connection_options.authorisation
   self.plate = false
   self.tube = false
   self.paginator = SequencescapePaginator

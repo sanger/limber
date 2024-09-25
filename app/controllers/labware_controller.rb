@@ -22,9 +22,8 @@ class LabwareController < ApplicationController
       format.html { render @presenter.page }
       format.csv do
         render @presenter.csv
-        response.headers[
-          'Content-Disposition'
-        ] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+        response.headers['Content-Disposition'] =
+          "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
       end
       format.json
     end

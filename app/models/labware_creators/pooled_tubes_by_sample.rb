@@ -69,11 +69,12 @@ module LabwareCreators
     def transfer_request_attributes
       pools.each_with_object([]) do |(pool_identifier, pool), transfer_requests|
         pool.each do |location|
-          transfer_requests << request_hash(
-            well_locations.fetch(location).uuid,
-            child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
-            pool_identifier
-          )
+          transfer_requests <<
+            request_hash(
+              well_locations.fetch(location).uuid,
+              child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
+              pool_identifier
+            )
         end
       end
     end

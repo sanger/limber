@@ -14,14 +14,8 @@ module LabwareCreators
     class CsvFileForDuplexSeq < CsvFileBase
       delegate :submit_for_sequencing_column, :sub_pool_column, :coverage_column, to: :well_details_header_row
 
-      FIELDS_FOR_WELL_DETAILS = %w[
-        diluent_volume
-        pcr_cycles
-        submit_for_sequencing
-        sub_pool
-        coverage
-        sample_volume
-      ].freeze
+      FIELDS_FOR_WELL_DETAILS = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage sample_volume]
+        .freeze
 
       # Returns the contents of the header row for the well detail columns
       def well_details_header_row

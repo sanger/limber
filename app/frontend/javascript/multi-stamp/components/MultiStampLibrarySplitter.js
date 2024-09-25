@@ -95,7 +95,7 @@ export default Vue.extend({
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
             data: payload,
           })
-        }),
+        })
       )
         .then((responses) => {
           const response = responses[0]

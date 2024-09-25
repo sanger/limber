@@ -132,7 +132,14 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     def expect_state_change_creation
       expect_api_v2_posts(
         'StateChange',
-        [{ reason: 'Used in Library creation', target_uuid: tag_plate_uuid, target_state: 'exhausted', user_uuid: }]
+        [
+          {
+            reason: 'Used in Library creation',
+            target_uuid: tag_plate_uuid,
+            target_state: 'exhausted',
+            user_uuid:
+          }
+        ]
       )
     end
 
@@ -156,8 +163,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
             direction: 'column',
             walking_by: 'manual by plate',
             initial_tag: '1',
-            substitutions: {
-            },
+            substitutions: {},
             tags_per_well: 1
           }
         }
