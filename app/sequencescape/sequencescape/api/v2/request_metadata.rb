@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Represents a request metadatum in Limber via the Sequencescape API
+# Represents a request metadata in Limber via the Sequencescape API
 class Sequencescape::Api::V2::RequestMetadata < Sequencescape::Api::V2::Base
   has_one :request, class_name: 'Sequencescape::Api::V2::Request'
 
