@@ -20,6 +20,6 @@
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   # inflect.acronym 'RESTful' # supported but not enabled by default
-  inflect.uncountable %w[sample_metadata]
+  inflect.uncountable %w[sample_metadata request_metadata]
   inflect.acronym 'SCRNA'
 end
