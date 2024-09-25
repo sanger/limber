@@ -18,6 +18,8 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
   let(:form_attributes) { { purpose_uuid: dest_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
+  let(:dummy_v1_plate) { create(:plate, uuid: parent_uuid) }
+
   # TODO: rename throughout to source and dest
   # SS V2 API Plate
   let(:plate) do
@@ -38,7 +40,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     plate1
   end
 
-  before { allow(subject).to receive(:parent).and_return(plate) }
+  before { allow(subject).to receive(:parent).and_return(dummy_v1_plate) }
 
   subject { LabwareCreators::CardinalPoolsPlate.new(api, form_attributes) }
 

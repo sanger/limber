@@ -5,8 +5,6 @@ require 'presenters/plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::MinimalPcrPlatePresenter do
-  has_a_working_api
-
   let(:labware) do
     create :v2_plate_with_primer_panels,
            purpose_name: purpose_name,
@@ -33,7 +31,7 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(api: api, labware: labware) }
+  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(labware: labware) }
 
   before do
     create(:purpose_config, uuid: labware.purpose.uuid)

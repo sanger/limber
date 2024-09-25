@@ -1,9 +1,9 @@
 <%= content do %>
-  <%= card title: search_title do %>
+  <%= card title: search_title, css_class: 'mb-3' do %>
     <%= render partial: @search_options %>
   <% end %>
 
-  <%= card title: 'Results', without_block: true do %>
+  <%= card title: 'Results', css_class: 'mb-3' , without_block: true do %>
     <%= render(partial: 'pagination', locals: {search_options: @search_options }) %>
     <%= render(partial: 'inbox', locals: { search_results: search_results }) %>
   <% end %>

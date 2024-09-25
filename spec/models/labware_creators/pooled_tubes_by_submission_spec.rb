@@ -22,10 +22,13 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
   let(:parent_uuid) { SecureRandom.uuid }
   let(:parent) { json :plate, uuid: parent_uuid, pool_sizes: [3, 6], stock_plate_barcode: 5, for_multiplexing: true }
+  let(:source_plate) { create :v2_plate, uuid: parent_uuid }
 
   let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
 
   let(:wells_json) { json :well_collection, size: 9, default_state: 'passed' }
+
+  before { stub_v2_plate(source_plate, stub_search: false) }
 
   context '#save!' do
     has_a_working_api
@@ -118,8 +121,8 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
     end
 
     context 'with parent metadata' do
-      let(:child_1_name) { 'DN6 A1:C1' }
-      let(:child_2_name) { 'DN6 D1:A2' }
+      let(:child_1_name) { 'DN8 A1:C1' }
+      let(:child_2_name) { 'DN8 D1:A2' }
 
       let(:parent) do
         json :plate_with_metadata,

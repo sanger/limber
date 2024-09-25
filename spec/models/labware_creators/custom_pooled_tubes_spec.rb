@@ -9,6 +9,8 @@ require_relative 'shared_examples'
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
+  has_a_working_api
+
   it_behaves_like 'it only allows creation from charged and passed plates'
 
   subject { described_class.new(api, form_attributes) }
@@ -22,22 +24,29 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   let(:purpose) { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid) { SecureRandom.uuid }
   let(:parent) { json :plate, uuid: parent_uuid, stock_plate_barcode: 5, qc_files_actions: %w[read create] }
+  let(:v2_plate) { create(:v2_plate, uuid: parent_uuid) }
+  let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
 
   let(:wells_json) { json :well_collection, size: 16, default_state: 'passed' }
 
   context 'on new' do
-    has_a_working_api
-
-    let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
-
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::CustomPooledTubes
     end
   end
 
-  context '#save' do
-    has_a_working_api
+  context '#source_plate' do
+    before do
+      stub_api_get(parent_uuid, body: parent)
+      stub_v2_plate(v2_plate, stub_search: false)
+    end
 
+    it 'returns V2 plate' do
+      expect(subject.source_plate).to eq(v2_plate)
+    end
+  end
+
+  context '#save' do
     let(:file_content) do
       content = file.read
       file.rewind
@@ -92,6 +101,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
 
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let(:stub_parent_request) do
+      stub_v2_plate(v2_plate, stub_search: false)
       stub_api_get(parent_uuid, body: parent)
       stub_api_get(parent_uuid, 'wells', body: wells_json)
     end

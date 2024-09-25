@@ -74,7 +74,7 @@ class RobotsController < ApplicationController
   #
   def labware_created_with_robot(labware_barcode, robot_barcode)
     LabwareMetadata
-      .new(api: api, user: current_user_uuid, barcode: labware_barcode)
+      .new(user_uuid: current_user_uuid, barcode: labware_barcode)
       .update!(created_with_robot: robot_barcode)
   end
 
