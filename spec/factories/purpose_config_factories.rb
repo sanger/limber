@@ -23,6 +23,7 @@ FactoryBot.define do
     printer_type { '96 Well Plate' }
     pmb_template { 'sqsc_96plate_label_template' }
     file_links { [{ name: 'Download Concentration CSV', id: 'concentrations' }] }
+    qc_thresholds { {} }
 
     # Sets up a stock plate configuration
     factory :stock_plate_config do

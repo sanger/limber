@@ -33,8 +33,8 @@ LRC PBMC Defrost PBS:
     viability:
       units: '%'
       default_threshold: 50
-    live_cell_count:
-      name: Cell count
+    total_cell_count:
+      name: Total cell count
       units: 'cells/ml'
       default_threshold: 400000
       decimal_places: 0
@@ -53,7 +53,7 @@ LRC PBMC Pools:
     name: Presenters::DonorPoolingPlatePresenter
     args:
       # The default number of cells to calculate the required volumes.
-      default_required_number_of_cells: 5000
+      default_required_number_of_cells: 30000
       # poly_metadatum key for study specific required number of cells.
       study_required_number_of_cells_key: scrna_core_pbmc_donor_pooling_required_number_of_cells
       # Constants used to calculate source well volume
