@@ -56,6 +56,11 @@ LRC PBMC Pools:
       default_required_number_of_cells: 5000
       # poly_metadatum key for study specific required number of cells.
       study_required_number_of_cells_key: scrna_core_pbmc_donor_pooling_required_number_of_cells
+      # Constants used to calculate source well volume
+      required_number_of_cells: 30_000
+      wastage_factor: 0.95238
+      desired_chip_loading_concentration: 2_400
+
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:
@@ -67,6 +72,8 @@ LRC PBMC Pools:
   :file_links:
     - name: 'Download Hamilton LRC PBMC Defrost PBS to LRC PBMC Pools CSV'
       id: hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools
+    - name: 'Download Cellaca Count CSV'
+      id: 'hamilton_lrc_pbmc_pools_to_cellaca_count'
 # Plate containing pooled PBMCs from different donors.
 # This plate has come from faculty and is entering the SeqOps pipeline for the first time here.
 LRC PBMC Pools Input:
