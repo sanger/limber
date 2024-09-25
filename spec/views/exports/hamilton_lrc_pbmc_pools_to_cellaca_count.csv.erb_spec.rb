@@ -34,14 +34,18 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
     create(:v2_plate, wells: wells)
   end
 
+  let(:required_number_of_cells) { 30_000 }
+  let(:wastage_factor) { 0.95238 }
+  let(:desired_chip_loading_concentration) { 2_400 }
+
   before do
     Settings.purposes = {
       plate.purpose.uuid => {
         presenter_class: {
           args: {
-            required_number_of_cells: 30_000,
-            wastage_factor: 0.95238,
-            desired_chip_loading_concentration: 2_400
+            required_number_of_cells: required_number_of_cells,
+            wastage_factor: wastage_factor,
+            desired_chip_loading_concentration: desired_chip_loading_concentration
           }
         }
       }
@@ -60,7 +64,10 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
           plate.labware_barcode.human,
           well.location,
           well.name,
-          format('%0.2f', ((well.aliquots.size * 30_000 * 0.95238) / 2_400))
+          format(
+            '%0.2f',
+            ((well.aliquots.size * required_number_of_cells * wastage_factor) / desired_chip_loading_concentration)
+          )
         ]
       end
     header + body
