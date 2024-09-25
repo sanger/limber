@@ -3830,6 +3830,20 @@ ROBOT_CONFIG =
       }
     )
 
-    
+    # LCM Triomics EMSeq Bravo bed verification
+    # Bravo LCMT DNA End Prep Verification
+    custom_robot(
+      'bravo-lcmt-dna-end-prep-verification',
+      name: 'Bravo LCMT DNA End Prep Verification',
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT DNA End Prep',
+          states: ['pending'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
 
   end
