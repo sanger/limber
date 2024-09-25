@@ -22,9 +22,8 @@ class LabwareController < ApplicationController
       format.html { render @presenter.page }
       format.csv do
         render @presenter.csv
-        response.headers[
-          'Content-Disposition'
-        ] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+        response.headers['Content-Disposition'] =
+          "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
       end
       format.json
     end
@@ -36,7 +35,7 @@ class LabwareController < ApplicationController
     notice = +"Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
     notice << ' The customer will still be charged.' if update_params[2]
 
-    respond_to { |format| format.html { redirect_to(search_path, notice:) } }
+    respond_to { |format| format.html { redirect_to(search_path, notice: notice) } }
   rescue StateChangers::StateChangeError => e
     respond_to do |format|
       format.html { redirect_to(search_path, alert: e.message) }
@@ -90,6 +89,11 @@ class LabwareController < ApplicationController
   end
 
   def presenter_for(labware)
-    Presenters.lookup_for(labware).new(labware:)
+    presenter = Presenters.lookup_for(labware).new(labware: labware)
+
+    # TODO: {Y24-190} - Remove this line when the API v1 is removed from Presenters::ExtendedCsv
+    presenter.api = api if presenter.respond_to?(:api=)
+
+    presenter
   end
 end

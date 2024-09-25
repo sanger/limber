@@ -35,6 +35,10 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     latest_qc(key: 'live_cell_count', units: 'cells/ml')
   end
 
+  def latest_total_cell_count
+    latest_qc(key: 'total_cell_count', units: 'cells/ml')
+  end
+
   def latest_cell_viability
     latest_qc(key: 'viability', units: '%')
   end
