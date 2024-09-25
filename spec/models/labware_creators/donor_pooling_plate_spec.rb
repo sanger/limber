@@ -64,7 +64,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   # This is the form that includes plate barcodes, submitted by user.
   let(:form_attributes) do
-    { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes, user_uuid: user_uuid }
+    { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes:, user_uuid: }
   end
   let(:barcodes) { source_plates.map(&:human_barcode) }
 

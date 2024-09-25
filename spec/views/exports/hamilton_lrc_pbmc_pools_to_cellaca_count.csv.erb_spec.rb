@@ -13,12 +13,12 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
       # Initiate 10 aliquots per each well
       (1..10).each do |_i|
         supplier_name = "vac-tube-barcode-#{index}"
-        sample_metadata = create(:v2_sample_metadata, supplier_name: supplier_name)
-        sample = create(:v2_sample, sample_metadata: sample_metadata)
-        aliquots << create(:v2_aliquot, sample: sample)
+        sample_metadata = create(:v2_sample_metadata, supplier_name:)
+        sample = create(:v2_sample, sample_metadata:)
+        aliquots << create(:v2_aliquot, sample:)
       end
       location = WellHelpers.well_at_column_index(index - 1)
-      create(:v2_well, aliquots: aliquots, location: location)
+      create(:v2_well, aliquots:, location:)
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
     wells[2].state = 'failed'
     wells[3].state = 'failed'
 
-    create(:v2_plate, wells: wells)
+    create(:v2_plate, wells:)
   end
 
   let(:required_number_of_cells) { 30_000 }
@@ -43,9 +43,9 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
       plate.purpose.uuid => {
         presenter_class: {
           args: {
-            required_number_of_cells: required_number_of_cells,
-            wastage_factor: wastage_factor,
-            desired_chip_loading_concentration: desired_chip_loading_concentration
+            required_number_of_cells:,
+            wastage_factor:,
+            desired_chip_loading_concentration:
           }
         }
       }
