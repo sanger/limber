@@ -7,7 +7,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
 
   let(:wells) do
     # 8 because of the Pools plate.
-    (1..8).map do |index|  # one-based index
+    (1..8).map do |index| # one-based index
       aliquots = []
 
       # Initiate 10 aliquots per each well
@@ -58,7 +58,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
     header = [['Workflow', workflow], [], ['Plate Barcode', 'Well Position', 'Well Name', 'Source Well Volume']]
     body =
       # 8 wells - first two wells (empty + failed)
-      (5..8).map do |index|  # one-based index
+      (5..8).map do |index| # one-based index
         well = plate.wells_in_columns[index - 1]
         [
           plate.labware_barcode.human,
