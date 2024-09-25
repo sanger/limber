@@ -22,20 +22,12 @@ RSpec.describe BarcodeLabelsHelper do
     end
 
     it 'renders a partial' do
-      barcode_printing_form(
-        labels:,
-        redirection_url:,
-        default_printer_name:
-      )
+      barcode_printing_form(labels:, redirection_url:, default_printer_name:)
       expect(rendered).to be_truthy
     end
 
     it 'has the right locals set' do
-      barcode_printing_form(
-        labels:,
-        redirection_url:,
-        default_printer_name:
-      )
+      barcode_printing_form(labels:, redirection_url:, default_printer_name:)
 
       printer_types = labels.map(&:printer_type)
       printers = @printers.select { |printer| printer_types.include?(printer.barcode_type) }

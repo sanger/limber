@@ -9,9 +9,9 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
       stub_api_post(search_uuid, 'first', status: 301, payload: query, body: result)
     else
       search_url = "http://example.com:3000/#{search_uuid}"
-      stub_request(:post, "#{search_url}/first")
-        .with(body: query.to_json)
-        .to_raise(Sequencescape::Api::ResourceNotFound)
+      stub_request(:post, "#{search_url}/first").with(body: query.to_json).to_raise(
+        Sequencescape::Api::ResourceNotFound
+      )
     end
   end
 

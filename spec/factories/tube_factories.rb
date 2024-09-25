@@ -112,9 +112,7 @@ FactoryBot.define do
       request_factory { :library_request }
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }
-      aliquots do
-        create_list aliquot_factory, aliquot_count, library_state:, outer_request:
-      end
+      aliquots { create_list aliquot_factory, aliquot_count, library_state:, outer_request: }
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
 
@@ -180,9 +178,7 @@ FactoryBot.define do
         tube_factory { :multiplexed_library_tube }
         study_count { 1 }
       end
-      children do
-        Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count:) }
-      end
+      children { Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count:) } }
     end
 
     factory :tube_collection_with_barcodes_specified do

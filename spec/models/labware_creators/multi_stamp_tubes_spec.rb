@@ -207,9 +207,9 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           body: json(:v1_custom_metadatum_collection)
         )
 
-        expect('Sequencescape::Api::V2'.constantize).to receive(:plate_with_wells)
-          .with(child_uuid)
-          .and_return(child_plate_v2)
+        expect('Sequencescape::Api::V2'.constantize).to receive(:plate_with_wells).with(child_uuid).and_return(
+          child_plate_v2
+        )
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent1).and_return('outer-request-1')
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent2).and_return('outer-request-2')
       end

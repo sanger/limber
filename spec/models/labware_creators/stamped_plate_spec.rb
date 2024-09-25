@@ -188,14 +188,7 @@ RSpec.describe LabwareCreators::StampedPlate do
 
         context 'when a library type is supplied' do
           let(:form_attributes) do
-            {
-              purpose_uuid: child_purpose_uuid,
-              parent_uuid:,
-              user_uuid:,
-              filters: {
-                library_type: [lib_type_a]
-              }
-            }
+            { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, filters: { library_type: [lib_type_a] } }
           end
 
           it_behaves_like 'a stamped plate creator'
@@ -219,14 +212,7 @@ RSpec.describe LabwareCreators::StampedPlate do
 
         context 'when a library type is supplied that does not match any request' do
           let(:form_attributes) do
-            {
-              purpose_uuid: child_purpose_uuid,
-              parent_uuid:,
-              user_uuid:,
-              filters: {
-                library_type: ['LibTypeB']
-              }
-            }
+            { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, filters: { library_type: ['LibTypeB'] } }
           end
 
           it 'raises an exception' do

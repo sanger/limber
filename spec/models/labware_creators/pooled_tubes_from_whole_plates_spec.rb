@@ -49,9 +49,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   describe '#save!' do
     has_a_working_api
 
-    let(:form_attributes) do
-      { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: }
-    end
+    let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: } }
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
 
@@ -90,12 +88,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
         expect_api_v2_posts(
           'Transfer',
           [parent_uuid, parent2_uuid, parent3_uuid, parent4_uuid].map do |source_uuid|
-            {
-              user_uuid:,
-              source_uuid:,
-              destination_uuid: 'tube-0',
-              transfer_template_uuid: 'whole-plate-to-tube'
-            }
+            { user_uuid:, source_uuid:, destination_uuid: 'tube-0', transfer_template_uuid: 'whole-plate-to-tube' }
           end
         )
 

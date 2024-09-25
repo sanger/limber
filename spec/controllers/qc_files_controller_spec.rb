@@ -12,14 +12,12 @@ RSpec.describe QcFilesController, type: :controller do
 
     before do
       stub_api_get(file_uuid, body: json(:qc_file, uuid: file_uuid, filename:))
-      stub_request(:get, api_url_for(file_uuid))
-        .with(headers: { 'Accept' => 'sequencescape/qc_file' })
-        .to_return(
-          body: 'example file content',
-          headers: {
-            'Content-Disposition' => "attachment; filename=\"#{filename}\""
-          }
-        )
+      stub_request(:get, api_url_for(file_uuid)).with(headers: { 'Accept' => 'sequencescape/qc_file' }).to_return(
+        body: 'example file content',
+        headers: {
+          'Content-Disposition' => "attachment; filename=\"#{filename}\""
+        }
+      )
     end
 
     it 'returns a file' do
@@ -39,21 +37,19 @@ RSpec.describe QcFilesController, type: :controller do
     let(:plate_uuid) { 'plate-uuid' }
 
     let(:stub_post) do
-      stub_request(:post, api_url_for(plate_uuid, 'qc_files'))
-        .with(
-          body: file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="test_file.txt"'
-          }
-        )
-        .to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'test_file.txt'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
+      stub_request(:post, api_url_for(plate_uuid, 'qc_files')).with(
+        body: file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="test_file.txt"'
+        }
+      ).to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'test_file.txt'),
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
     end
 
     before do

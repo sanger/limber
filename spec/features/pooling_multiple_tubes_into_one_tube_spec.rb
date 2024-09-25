@@ -145,22 +145,21 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   end
 
   before do
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(
-        include_used: false,
-        purpose_name: ['example-purpose'],
-        includes: 'purpose',
-        paginate: {
-          size: 30,
-          number: 1
-        }
-      )
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      include_used: false,
+      purpose_name: ['example-purpose'],
+      includes: 'purpose',
+      paginate: {
+        size: 30,
+        number: 1
+      }
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Parent lookup
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      barcode: [tube_barcode_1, tube_barcode_2],
+      includes: []
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Allow parent plates to be found in API v2
     stub_v2_plate(parent_1, stub_search: false)
@@ -186,22 +185,21 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     stub_v2_tube(example_v2_tube2)
 
     # Available tubes search
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(
-        include_used: false,
-        purpose_name: ['example-purpose'],
-        includes: 'purpose',
-        paginate: {
-          size: 30,
-          number: 1
-        }
-      )
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      include_used: false,
+      purpose_name: ['example-purpose'],
+      includes: 'purpose',
+      paginate: {
+        size: 30,
+        number: 1
+      }
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Parent lookup
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      barcode: [tube_barcode_1, tube_barcode_2],
+      includes: []
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Old API still used when loading parent
     stub_api_get(tube_uuid, body: example_tube)

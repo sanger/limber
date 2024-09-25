@@ -73,9 +73,9 @@ class RobotsController < ApplicationController
   # @raise [Sequencescape::Api::ResourceNotFound] if the labware cannot be found
   #
   def labware_created_with_robot(labware_barcode, robot_barcode)
-    LabwareMetadata
-      .new(user_uuid: current_user_uuid, barcode: labware_barcode)
-      .update!(created_with_robot: robot_barcode)
+    LabwareMetadata.new(user_uuid: current_user_uuid, barcode: labware_barcode).update!(
+      created_with_robot: robot_barcode
+    )
   end
 
   def verify

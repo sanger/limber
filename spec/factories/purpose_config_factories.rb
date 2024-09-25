@@ -238,11 +238,13 @@ FactoryBot.define do
         {
           'Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {}
+            'request_options' => {
+            }
           },
           'Another Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {}
+            'request_options' => {
+            }
           }
         }
       end
@@ -267,14 +269,7 @@ FactoryBot.define do
     # Configuration to set number_of_source_wells argument
     factory :pooled_wells_by_sample_in_groups_purpose_config do
       transient { number_of_source_wells { 2 } }
-      creator_class do
-        {
-          name: 'LabwareCreators::PooledWellsBySampleInGroups',
-          args: {
-            number_of_source_wells:
-          }
-        }
-      end
+      creator_class { { name: 'LabwareCreators::PooledWellsBySampleInGroups', args: { number_of_source_wells: } } }
     end
 
     factory :multi_stamp_tubes_using_tube_rack_scan_purpose_config do

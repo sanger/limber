@@ -49,10 +49,12 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   background do
     # Set-up the plate config
     create :purpose_config, uuid: 'stock-plate-purpose-uuid', name: 'Limber Cherrypicked'
-    create(:tagged_purpose_config,
-           tag_layout_templates: acceptable_templates,
-           uuid: child_purpose_uuid,
-           enforce_same_template_within_pool:)
+    create(
+      :tagged_purpose_config,
+      tag_layout_templates: acceptable_templates,
+      uuid: child_purpose_uuid,
+      enforce_same_template_within_pool:
+    )
     create :pipeline, relationships: { 'Limber Cherrypicked' => 'Tag Purpose' }
 
     # We look up the user

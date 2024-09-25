@@ -56,21 +56,19 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
     let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, file: } }
 
     let(:stub_qc_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-        .with(
-          body: file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="robot_pooling_file.csv"'
-          }
-        )
-        .to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'pooling_file.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
+      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+        body: file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="robot_pooling_file.csv"'
+        }
+      ).to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'pooling_file.csv'),
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
     end
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }

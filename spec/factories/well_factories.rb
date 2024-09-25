@@ -196,13 +196,7 @@ FactoryBot.define do
           associated(:empty_well, location:, uuid: "example-well-uuid-#{i}")
         else
           state = custom_state[location] || default_state
-          associated(
-            :well,
-            location:,
-            uuid: "example-well-uuid-#{i}",
-            state:,
-            aliquot_factory:
-          )
+          associated(:well, location:, uuid: "example-well-uuid-#{i}", state:, aliquot_factory:)
         end
       end
     end

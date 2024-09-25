@@ -30,10 +30,7 @@ module Sequencescape::Api::V2
   # @return [Sequencescape::V2::Api::Labware] Found labware object
   #
   def self.minimal_labware_by_barcode(barcode, select: :uuid)
-    Sequencescape::Api::V2::Labware
-      .where(barcode:)
-      .select(tube_racks: select, plates: select, tubes: select)
-      .first
+    Sequencescape::Api::V2::Labware.where(barcode:).select(tube_racks: select, plates: select, tubes: select).first
   end
 
   # sample_description added into includes here for use in bioscan plate label creation
@@ -71,10 +68,7 @@ module Sequencescape::Api::V2
   end
 
   def self.tube_for_completion(uuid)
-    Tube
-      .includes('receptacle.aliquots.request.submission,receptacle.aliquots.request.request_type')
-      .find(uuid:)
-      .first
+    Tube.includes('receptacle.aliquots.request.submission,receptacle.aliquots.request.request_type').find(uuid:).first
   end
 
   def self.plate_with_custom_includes(include_params, search_params)
