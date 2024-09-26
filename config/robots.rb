@@ -3951,4 +3951,38 @@ ROBOT_CONFIG =
       }
     )
 
+    # LCM Triomics EMSeq Bravo bed verification
+    # Hamilton LCMT DNA Lib PCR => LCMT DNA PCR XP
+    custom_robot(
+      'hamilton-lcmt-dna-lib-pcr-to-lcmt-dna-pcr-xp',
+      name: 'Hamilton LCMT DNA Lib PCR => LCMT DNA PCR XP',
+      verify_robot: false,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMT DNA Lib PCR',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'LCMT DNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'LCMT DNA Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'LCMT DNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
   end
