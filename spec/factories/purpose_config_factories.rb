@@ -23,6 +23,7 @@ FactoryBot.define do
     printer_type { '96 Well Plate' }
     pmb_template { 'sqsc_96plate_label_template' }
     file_links { [{ name: 'Download Concentration CSV', id: 'concentrations' }] }
+    qc_thresholds { {} }
 
     # Sets up a stock plate configuration
     factory :stock_plate_config do
@@ -291,14 +292,12 @@ FactoryBot.define do
     end
 
     factory :donor_pooling_plate_purpose_config do
-      transient { default_number_of_pools { 16 } }
       transient { max_number_of_source_plates { 2 } }
       transient { pooling { 'donor_pooling' } }
       creator_class do
         {
           name: 'LabwareCreators::DonorPoolingPlate',
           args: {
-            default_number_of_pools: default_number_of_pools,
             max_number_of_source_plates: max_number_of_source_plates,
             pooling: pooling
           }
