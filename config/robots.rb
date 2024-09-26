@@ -3859,9 +3859,9 @@ ROBOT_CONFIG =
           label: 'Bed 6'
         },
         bed(7).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR',
+          purpose: 'LCMT DNA Lib PCR',
           states: ['pending'],
-          label: 'Bed 5',
+          label: 'Bed 7',
           parent: bed(6).barcode,
           target_state: 'passed'
         }
