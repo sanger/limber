@@ -3868,4 +3868,20 @@ ROBOT_CONFIG =
       }
     )
 
+    # LCM Triomics EMSeq Bravo bed verification
+    # Bravo LCMT EM TET2 Ox Verification
+    custom_robot(
+      'bravo-lcmt-em-tet2-ox-verification',
+      name: 'Bravo LCMT EM TET2 Ox Verification',
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT EM TET2 Ox',
+          states: ['pending'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
   end
