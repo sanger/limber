@@ -60,7 +60,7 @@ FactoryBot.define do
       aliquot_factory { :v2_aliquot }
       aliquots do
         # Conditional to avoid generating requests when not required
-        if aliquot_count > 0
+        if aliquot_count.positive?
           create_list aliquot_factory, aliquot_count, outer_request: outer_request, study: study, project: project
         else
           []
