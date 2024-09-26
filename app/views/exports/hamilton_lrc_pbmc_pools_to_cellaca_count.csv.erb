@@ -1,0 +1,41 @@
+<%# This template generates Hamilton LRC PBMC Pool to Cellaca CSV download. %>
+<%= CSV.generate_line [
+        'Workflow',
+        @workflow
+      ],
+      row_sep: ''
+%>
+<%= CSV.generate_line [], row_sep: "" %>
+<%=
+  CSV.generate_line [
+    'Plate Barcode',
+    'Well Position',
+    'Well Name',
+    'Source Well Volume',
+  ], row_sep: ''
+%>
+<%
+  rows_array = []
+
+  # Reading constants
+  args = Settings.purposes[@plate.purpose.uuid][:presenter_class][:args]
+  required_number_of_cells = args[:required_number_of_cells]
+  wastage_factor = args[:wastage_factor]
+  desired_chip_loading_concentration = args[:desired_chip_loading_concentration]
+
+  filtered_wells = @plate.wells_in_columns.reject { |well| well.empty? || well.failed? }
+  filtered_wells.each do | well |
+    samples_in_pool = well.aliquots.size
+    source_well_volume = (samples_in_pool * required_number_of_cells * wastage_factor) / desired_chip_loading_concentration
+    row = [
+      @plate.labware_barcode.human,
+      well.location,
+      well.name,
+      '%0.2f' % source_well_volume
+    ]
+    rows_array << row
+  end
+%>
+<% rows_array.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>

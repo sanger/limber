@@ -10,20 +10,44 @@
                         'Source Plate ID',
                         'Source Plate Well',
                         'Destination Plate ID',
-                        'Destination Plate Well'
+                        'Destination Plate Well',
+                        'Source Well Volume',
+                        'Sample Volume',
+                        'PBS Volume',
+
                       ],
                       row_sep: ""
 %>
 <%
+  # Configuration specific to this export
+
+  required_number_of_cells = 30000 
+  wastage_factor = 0.95238 # accounting for wastage of material when transferring between labware
+  chip_loading_concentration = 2400 
+  desired_number_of_cells_per_chip_well = 90000
+  desired_sample_volume = 37.5 # microlitres
+  volume_taken_for_cell_counting = 10.0 # microlitres
+
   # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
   mapping = (1..8).each_with_object({}) { |i, hash| hash["A#{i}"] = (16 + i).to_s }
+
+  # Make a mapping { src_location => src_well  }
+  ancestral_plate_wells = @ancestor_plate.wells.index_by(&:location)
   rows_array = []
   each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
+    number_of_samples =  ancestral_plate_wells[src_location].aliquots.length
+    resuspension_volume = (number_of_samples * required_number_of_cells * wastage_factor).to_f / chip_loading_concentration
+    source_well_volume = resuspension_volume - volume_taken_for_cell_counting
+    sample_volume = desired_number_of_cells_per_chip_well.to_f/chip_loading_concentration 
+    pbs_volume = desired_sample_volume - sample_volume
     rows_array << [
       src_barcode,
       src_location,
       @plate.labware_barcode.human,
-      mapping[dest_well.location]
+      mapping[dest_well.location],
+       '%0.2f' % source_well_volume,
+       '%0.2f' % sample_volume,
+       '%0.2f' % pbs_volume
     ]
   end
 %>
