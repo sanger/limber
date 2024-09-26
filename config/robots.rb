@@ -3913,4 +3913,20 @@ ROBOT_CONFIG =
       }
     )
 
+    # LCM Triomics EMSeq Bravo bed verification
+    # Bravo LCMT EM NaOH Denat Verification
+    custom_robot(
+      'bravo-lcmt-em-naoh-denat-verification',
+      name: 'Bravo LCMT EM NaOH Denat Verification',
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT EM NaOH Denat',
+          states: ['pending'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
   end
