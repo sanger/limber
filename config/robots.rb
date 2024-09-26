@@ -3776,12 +3776,12 @@ ROBOT_CONFIG =
       'bravo-verify-initial-setup',
       name: 'Bravo Verify Initial Setup',
       beds: {
-      bed(4).barcode => {
+        bed(4).barcode => {
           purpose: 'LCMT Lysate',
           states: ['passed'],
           label: 'Bed 4'
         },
-      car('1,4').barcode => {
+        car('1,4').barcode => {
           purpose: 'DNA Frag',
           states: ['pending'],
           label: 'Carousel 1,4',
@@ -3810,7 +3810,7 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Carousel 4,3',
           parent: bed(4).barcode
-        },
+        }
       }
     )
 
@@ -4018,5 +4018,4 @@ ROBOT_CONFIG =
         }
       }
     )
-
   end
