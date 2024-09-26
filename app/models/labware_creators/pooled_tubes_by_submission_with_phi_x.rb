@@ -17,7 +17,7 @@ module LabwareCreators
     def create_child_stock_tubes
       Sequencescape::Api::V2::SpecificTubeCreation
         .create!(
-          child_purposes: [purpose_uuid] * pool_uuids.length,
+          child_purpose_uuids: [purpose_uuid] * pool_uuids.length,
           parent_uuids: parents,
           tube_attributes: tube_attributes,
           user_uuid: user_uuid
