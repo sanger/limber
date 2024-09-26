@@ -76,7 +76,7 @@ module LabwareCreators
         return if empty?
 
         @row_data.each_with_index do |cell, i|
-          next if cell_is_blank?(cell)
+          next if cell.nil?
           next if cell_is_valid_utf8?(cell)
 
           add_invalid_character_error(i)
@@ -84,10 +84,6 @@ module LabwareCreators
       end
 
       private
-
-      def cell_is_blank?(cell)
-        cell.nil?
-      end
 
       def cell_is_valid_utf8?(cell)
         cell.bytes.all? { |byte| byte < 128 } && cell.dup.force_encoding('UTF-8').valid_encoding?
