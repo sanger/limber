@@ -3782,7 +3782,7 @@ ROBOT_CONFIG =
           label: 'Bed 4'
         },
         car('1,4').barcode => {
-          purpose: 'DNA Frag',
+          purpose: 'LCMT DNA Frag',
           states: ['pending'],
           label: 'Carousel 1,4',
           parent: bed(4).barcode
@@ -3791,25 +3791,25 @@ ROBOT_CONFIG =
           purpose: 'LCMT DNA End Prep',
           states: ['pending'],
           label: 'Carousel 2,4',
-          parent: bed(4).barcode
+          parent: car('1,4').barcode
         },
         car('3,5').barcode => {
           purpose: 'LCMT DNA Adp Lig',
           states: ['pending'],
           label: 'Carousel 3,5',
-          parent: bed(4).barcode
+          parent: car('2,4').barcode
         },
         car('4,4').barcode => {
           purpose: 'LCMT EM TET2 Ox',
           states: ['pending'],
           label: 'Carousel 4,4',
-          parent: bed(4).barcode
+          parent: car('3,5').barcode
         },
         car('4,3').barcode => {
           purpose: 'LCMT EM TET2 Stop',
           states: ['pending'],
           label: 'Carousel 4,3',
-          parent: bed(4).barcode
+          parent: car('4,4').barcode
         }
       }
     )
@@ -3884,34 +3884,34 @@ ROBOT_CONFIG =
       }
     )
 
+    # XXX: The following suggest that we need to create Denat and Deam plates
+    # beforehand. Are we supposed to create them in pending state as well?
     # LCM Triomics EMSeq Bravo bed verification
     # Bravo LCMT EM TET2 Stop to Denat and Deam Setup
-    custom_robot(
-      'bravo-lcmt-em-tet2-stop-to-denat-and-deam-setup',
-      name: 'Bravo LCMT EM TET2 Stop to Denat and Deam Setup',
-      verify_robot: true,
-      beds: {
-        bed(4).barcode => {
-          purpose: 'LCMT EM TET2 Stop',
-          states: ['passed'],
-          label: 'Bed 4'
-        },
-        car('3,3').barcode => {
-          purpose: 'LCMT EM NaOH Denat',
-          states: ['pending'],
-          label: 'Carousel 4,4',
-          parent: bed(4).barcode,
-          target_state: 'passed'
-        },
-        car('4,3').barcode => {
-          purpose: 'LCMT EM APOBEC Deam',
-          states: ['pending'],
-          label: 'Carousel 3,4',
-          parent: bed(4).barcode,
-          target_state: 'passed'
-        }
-      }
-    )
+    # custom_robot(
+    #   'bravo-lcmt-em-tet2-stop-to-denat-and-deam-setup',
+    #   name: 'Bravo LCMT EM TET2 Stop to Denat and Deam Setup',
+    #   verify_robot: true,
+    #   beds: {
+    #     bed(4).barcode => {
+    #       purpose: 'LCMT EM TET2 Stop',
+    #       states: ['passed'],
+    #       label: 'Bed 4'
+    #     },
+    #     car('3,3').barcode => {
+    #       purpose: 'LCMT EM NaOH Denat',
+    #       states: ['pending'],
+    #       label: 'Carousel 4,4',
+    #       parent: bed(4).barcode
+    #     },
+    #     car('4,3').barcode => {
+    #       purpose: 'LCMT EM APOBEC Deam',
+    #       states: ['pending'],
+    #       label: 'Carousel 3,4',
+    #       parent: bed(4).barcode
+    #     }
+    #   }
+    # )
 
     # LCM Triomics EMSeq Bravo bed verification
     # Bravo LCMT EM NaOH Denat Verification
