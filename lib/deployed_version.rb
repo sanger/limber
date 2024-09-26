@@ -53,7 +53,7 @@ module Deployed # rubocop:todo Style/Documentation
     end
 
     def version_label
-      version_hash ? "#{major}.#{minor}.#{patch}" : 'WIP'
+      major == 0 && minor == 0 && patch == 0 ? 'WIP' : "#{major}.#{minor}.#{patch}"
     end
 
     private
