@@ -21,7 +21,7 @@ module LabwareCreators::TaggedPlateBehaviour
       reason: 'Used in Library creation',
       target_state: 'exhausted',
       target_uuid: tag_plate.asset_uuid,
-      user_uuid:
+      user_uuid: user_uuid
     )
   end
 

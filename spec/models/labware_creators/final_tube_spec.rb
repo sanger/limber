@@ -23,7 +23,7 @@ RSpec.describe LabwareCreators::FinalTube do
     let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
     let(:transfer) { create :v2_transfer }
 
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     context 'with a sibling-less parent tube' do
       let(:tube_json) { json(:tube_without_siblings, uuid: parent_uuid) }
@@ -32,7 +32,7 @@ RSpec.describe LabwareCreators::FinalTube do
         it 'should be vaild' do
           expect_api_v2_posts(
             'Transfer',
-            [{ user_uuid:, source_uuid: parent_uuid, transfer_template_uuid: }],
+            [{ user_uuid: user_uuid, source_uuid: parent_uuid, transfer_template_uuid: transfer_template_uuid }],
             [transfer]
           )
 
@@ -65,12 +65,12 @@ RSpec.describe LabwareCreators::FinalTube do
           let(:form_attributes) do
             {
               purpose_uuid: child_purpose_uuid,
-              parent_uuid:,
+              parent_uuid: parent_uuid,
               parents: {
                 '3980000001795' => '1',
                 '1234567890123' => '1'
               },
-              user_uuid:
+              user_uuid: user_uuid
             }
           end
 
@@ -81,8 +81,8 @@ RSpec.describe LabwareCreators::FinalTube do
             expect_api_v2_posts(
               'Transfer',
               [
-                { user_uuid:, source_uuid: parent_uuid, transfer_template_uuid: },
-                { user_uuid:, source_uuid: sibling_uuid, transfer_template_uuid: }
+                { user_uuid: user_uuid, source_uuid: parent_uuid, transfer_template_uuid: transfer_template_uuid },
+                { user_uuid: user_uuid, source_uuid: sibling_uuid, transfer_template_uuid: transfer_template_uuid }
               ],
               [transfer, transfer_b]
             )

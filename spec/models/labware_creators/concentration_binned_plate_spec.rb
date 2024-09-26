@@ -89,7 +89,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       :concentration_binning_purpose_config,
       uuid: child_purpose_uuid,
       name: child_purpose_name,
-      library_type_name:
+      library_type_name: library_type_name
     )
     stub_v2_plate(child_plate, stub_search: false)
     stub_v2_plate(
@@ -100,7 +100,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
     )
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
   subject { LabwareCreators::ConcentrationBinnedPlate.new(api, form_attributes) }
 

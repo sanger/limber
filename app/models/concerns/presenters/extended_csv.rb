@@ -20,8 +20,8 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
             {
               index: (index += 1),
               name: "#{bed_prefix}#{(offset * 4) + bed_index + 1}",
-              source_well:,
-              destination_well:
+              source_well: source_well,
+              destination_well: destination_well
             }.merge(transfers_list)
           )
         end

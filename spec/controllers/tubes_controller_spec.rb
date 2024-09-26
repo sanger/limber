@@ -44,7 +44,7 @@ RSpec.describe TubesController, type: :controller do
             reason: 'Because testing',
             target_state: 'cancelled',
             target_uuid: tube_uuid,
-            user_uuid:
+            user_uuid: user_uuid
           }
         ]
       )

@@ -30,7 +30,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
     stub_api_get(parent_uuid, 'wells', body: wells)
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
   subject { LabwareCreators::PlateWithTemplate.new(api, form_attributes) }
 
@@ -60,7 +60,14 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
     it 'makes the expected requests' do
       expect_api_v2_posts(
         'Transfer',
-        [{ user_uuid:, source_uuid: parent_uuid, destination_uuid: 'child-uuid', transfer_template_uuid: }]
+        [
+          {
+            user_uuid: user_uuid,
+            source_uuid: parent_uuid,
+            destination_uuid: 'child-uuid',
+            transfer_template_uuid: transfer_template_uuid
+          }
+        ]
       )
 
       expect(subject.save!).to eq true

@@ -7,10 +7,10 @@ require_relative 'shared_labware_presenter_examples'
 RSpec.describe Presenters::TubePresenter do
   let(:labware) do
     build :v2_tube,
-          receptacle:,
-          purpose:,
-          purpose_name:,
-          state:,
+          receptacle: receptacle,
+          purpose: purpose,
+          purpose_name: purpose_name,
+          state: state,
           barcode_number: 6,
           created_at: '2016-10-19 12:00:00 +0100'
   end

@@ -10,7 +10,7 @@ RSpec.describe Pipeline do
       let(:pipeline_config) do
         {
           pipeline_group: 'Group A',
-          filters:,
+          filters: filters,
           library_pass: 'Purpose 3',
           relationships: {
             'Purpose 1' => 'Purpose 2',
@@ -31,7 +31,7 @@ RSpec.describe Pipeline do
       context 'when there is no pipeline group' do
         let(:pipeline_config) do
           {
-            filters:,
+            filters: filters,
             library_pass: 'Purpose 3',
             relationships: {
               'Purpose 1' => 'Purpose 2',

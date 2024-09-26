@@ -193,10 +193,16 @@ FactoryBot.define do
     wells do
       locations.each_with_index.map do |location, i|
         if empty_wells.include?(location)
-          associated(:empty_well, location:, uuid: "example-well-uuid-#{i}")
+          associated(:empty_well, location: location, uuid: "example-well-uuid-#{i}")
         else
           state = custom_state[location] || default_state
-          associated(:well, location:, uuid: "example-well-uuid-#{i}", state:, aliquot_factory:)
+          associated(
+            :well,
+            location: location,
+            uuid: "example-well-uuid-#{i}",
+            state: state,
+            aliquot_factory: aliquot_factory
+          )
         end
       end
     end
@@ -210,7 +216,7 @@ FactoryBot.define do
     tag2 { {} }
     suboptimal { false }
 
-    sample { associated(:sample, name: sample_name, sample_id:, uuid: sample_uuid) }
+    sample { associated(:sample, name: sample_name, sample_id: sample_id, uuid: sample_uuid) }
 
     transient do
       sample_name { 'sample' }

@@ -40,8 +40,8 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
         'orders',
         payload: {
           order: {
-            assets:,
-            request_options:,
+            assets: assets,
+            request_options: request_options,
             user: user_uuid
           }
         },

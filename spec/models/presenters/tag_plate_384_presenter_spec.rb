@@ -10,7 +10,7 @@ RSpec.describe Presenters::TagPlate384Presenter do
   let(:date_format) { /\A\s?\d{1,2}-[A-Z]{3}-\d{4}\z/ } # e.g., ' 4 JUL 2023' or '24 JUL 2023'
   let(:purpose_name) { 'Tag Plate - 384' }
   let(:purpose) { create :v2_purpose, name: purpose_name }
-  let(:labware) { create :v2_plate, purpose:, size: 384, stock_plate: nil }
+  let(:labware) { create :v2_plate, purpose: purpose, size: 384, stock_plate: nil }
   let(:presenter) { described_class.new(labware:) }
 
   it 'can be looked up for labware' do

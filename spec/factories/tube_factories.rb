@@ -53,7 +53,7 @@ FactoryBot.define do
 
       factory :tube_without_siblings do
         json_root { 'tube' }
-        sibling_tubes { [{ name:, uuid:, ean13_barcode: ean13, state: }] }
+        sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] }
       end
 
       factory :tube_with_siblings do
@@ -73,7 +73,7 @@ FactoryBot.define do
           end
         end
 
-        sibling_tubes { [{ name:, uuid:, ean13_barcode: ean13, state: }] + other_siblings }
+        sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + other_siblings }
       end
     end
 
@@ -98,7 +98,7 @@ FactoryBot.define do
     state { 'passed' }
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
-    receptacle { create(:v2_receptacle, qc_results: [], aliquots:) }
+    receptacle { create(:v2_receptacle, qc_results: [], aliquots: aliquots) }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 
@@ -108,7 +108,7 @@ FactoryBot.define do
       barcode_prefix { 'NT' }
       library_state { 'pending' }
       priority { 0 }
-      outer_request { create request_factory, state: library_state, priority: }
+      outer_request { create request_factory, state: library_state, priority: priority }
       request_factory { :library_request }
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }
@@ -178,7 +178,9 @@ FactoryBot.define do
         tube_factory { :multiplexed_library_tube }
         study_count { 1 }
       end
-      children { Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count:) } }
+      children do
+        Array.new(size) { |i| associated(tube_factory, uuid: "tube-#{i}", name: names[i], study_count: study_count) }
+      end
     end
 
     factory :tube_collection_with_barcodes_specified do
@@ -192,7 +194,7 @@ FactoryBot.define do
           associated(
             tube_factory,
             uuid: "tube-#{uuid_index_offset + i}",
-            barcode_prefix:,
+            barcode_prefix: barcode_prefix,
             barcode_number: barcode_numbers[i],
             name: names[i]
           )

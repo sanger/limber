@@ -21,7 +21,7 @@ RSpec.describe Presenters::TubeRackPresenter do
   let(:sidebar_partial) { 'default' }
   let(:file_links) { [] }
 
-  let(:labware) { build :tube_rack, purpose_name:, tubes:, barcode_number: 2 }
+  let(:labware) { build :tube_rack, purpose_name: purpose_name, tubes: tubes, barcode_number: 2 }
 
   let(:states) { %w[pending pending pending] }
 
@@ -37,7 +37,13 @@ RSpec.describe Presenters::TubeRackPresenter do
   let(:label_class) { 'Labels::PlateLabel' }
 
   before do
-    create(:tube_rack_config, uuid: labware.purpose.uuid, warnings:, label_class:, file_links:)
+    create(
+      :tube_rack_config,
+      uuid: labware.purpose.uuid,
+      warnings: warnings,
+      label_class: label_class,
+      file_links: file_links
+    )
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 

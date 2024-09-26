@@ -620,7 +620,7 @@ RSpec.describe Robots::Robot, robots: true do
                  barcode_number: '123',
                  purpose_name: 'Limber Cherrypicked',
                  state: 'passed',
-                 custom_metadatum_collection:
+                 custom_metadatum_collection: custom_metadatum_collection
         end
 
         it "is invalid if the barcode isn't recorded" do
@@ -737,7 +737,7 @@ RSpec.describe Robots::Robot, robots: true do
             reason: 'Robot bravo LB End Prep started',
             target_state: 'passed',
             target_uuid: plate.uuid,
-            user_uuid:
+            user_uuid: user_uuid
           }
         ]
       )

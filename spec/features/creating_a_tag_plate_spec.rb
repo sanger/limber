@@ -53,7 +53,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       :tagged_purpose_config,
       tag_layout_templates: acceptable_templates,
       uuid: child_purpose_uuid,
-      enforce_same_template_within_pool:
+      enforce_same_template_within_pool: enforce_same_template_within_pool
     )
     create :pipeline, relationships: { 'Limber Cherrypicked' => 'Tag Purpose' }
 
@@ -87,10 +87,10 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         'Transfer',
         [
           {
-            user_uuid:,
+            user_uuid: user_uuid,
             source_uuid: plate_uuid,
             destination_uuid: tag_plate_uuid,
-            transfer_template_uuid:,
+            transfer_template_uuid: transfer_template_uuid,
             transfers: expected_transfers
           }
         ]

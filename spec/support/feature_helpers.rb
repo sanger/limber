@@ -55,10 +55,10 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
         custom_metadatum_collection: {
           user: user_uuid,
           asset: labware_uuid,
-          metadata:
+          metadata: metadata
         }
       },
-      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata:)
+      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata: metadata)
     )
   end
 
@@ -73,7 +73,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
           metadata:
         }
       },
-      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata:)
+      body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid', metadata: metadata)
     )
   end
 

@@ -5,7 +5,13 @@ RSpec.describe Presenters::StandardPresenter do
   let(:aliquot_type) { :v2_aliquot }
   let(:state) { 'pending' }
   let(:labware) do
-    create :v2_plate, barcode_number: 1, state:, purpose_name:, purpose_uuid: 'test-purpose', uuid: 'plate-uuid', wells:
+    create :v2_plate,
+           barcode_number: 1,
+           state: state,
+           purpose_name: purpose_name,
+           purpose_uuid: 'test-purpose',
+           uuid: 'plate-uuid',
+           wells: wells
   end
   let(:wells) do
     [

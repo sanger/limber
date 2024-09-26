@@ -157,7 +157,7 @@ FactoryBot.define do
         transfer_factory { :creation_transfer }
       end
 
-      transfers { sources.map { |source| associated(transfer_factory, source:, destination: plate) } }
+      transfers { sources.map { |source| associated(transfer_factory, source: source, destination: plate) } }
     end
   end
 end

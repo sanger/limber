@@ -63,7 +63,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_argument('--headless')
   options.add_argument('--disable_gpu')
   options.add_argument('--window-size=1600,3200')
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
 Capybara.javascript_driver = ENV.fetch('JS_DRIVER', 'headless_chrome').to_sym

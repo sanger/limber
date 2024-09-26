@@ -13,7 +13,7 @@ module PageHelper # rubocop:todo Style/Documentation
   # Renders the content in the block in the
   # standard page template, including heading flash and sidebar
   def page(id, css_class = nil, prevent_row: false, &block)
-    grouping(:page, id:, class: "container-fluid #{css_class}") do
+    grouping(:page, id: id, class: "container-fluid #{css_class}") do
       if prevent_row
         concat yield
       else
@@ -33,7 +33,7 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   def card(title: nil, css_class: '', without_block: false, id: nil, &block)
-    tag.div(class: "card #{css_class}", id:) do
+    tag.div(class: "card #{css_class}", id: id) do
       concat tag.h3(title, class: 'card-header') if title
       if without_block
         yield

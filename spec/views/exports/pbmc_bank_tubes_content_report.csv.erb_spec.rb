@@ -34,12 +34,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:ancestor_tubes) { { sample1_uuid => ancestor_vac_tube_1, sample2_uuid => ancestor_vac_tube_2 } }
 
     # source aliquots
-    let(:src_aliquot1_s1) { create(:v2_aliquot, sample: sample1, study:) }
-    let(:src_aliquot2_s1) { create(:v2_aliquot, sample: sample1, study:) }
-    let(:src_aliquot3_s1) { create(:v2_aliquot, sample: sample1, study:) }
-    let(:src_aliquot1_s2) { create(:v2_aliquot, sample: sample2, study:) }
-    let(:src_aliquot2_s2) { create(:v2_aliquot, sample: sample2, study:) }
-    let(:src_aliquot3_s2) { create(:v2_aliquot, sample: sample2, study:) }
+    let(:src_aliquot1_s1) { create(:v2_aliquot, sample: sample1, study: study) }
+    let(:src_aliquot2_s1) { create(:v2_aliquot, sample: sample1, study: study) }
+    let(:src_aliquot3_s1) { create(:v2_aliquot, sample: sample1, study: study) }
+    let(:src_aliquot1_s2) { create(:v2_aliquot, sample: sample2, study: study) }
+    let(:src_aliquot2_s2) { create(:v2_aliquot, sample: sample2, study: study) }
+    let(:src_aliquot3_s2) { create(:v2_aliquot, sample: sample2, study: study) }
 
     # qc results
     let(:live_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20000', units: 'cells/ml') }
@@ -49,12 +49,12 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     # source wells
     let(:source_well_attributes) do
       [
-        { location: 'A1', aliquots: [src_aliquot1_s1], downstream_tubes: [dest_tube1], qc_results: },
-        { location: 'A2', aliquots: [src_aliquot2_s1], downstream_tubes: [dest_tube2], qc_results: },
-        { location: 'A3', aliquots: [src_aliquot3_s1], downstream_tubes: [dest_tube3], qc_results: },
-        { location: 'B1', aliquots: [src_aliquot1_s2], downstream_tubes: [dest_tube4], qc_results: },
-        { location: 'B2', aliquots: [src_aliquot2_s2], downstream_tubes: [dest_tube5], qc_results: },
-        { location: 'B3', aliquots: [src_aliquot3_s2], downstream_tubes: [dest_tube6], qc_results: }
+        { location: 'A1', aliquots: [src_aliquot1_s1], downstream_tubes: [dest_tube1], qc_results: qc_results },
+        { location: 'A2', aliquots: [src_aliquot2_s1], downstream_tubes: [dest_tube2], qc_results: qc_results },
+        { location: 'A3', aliquots: [src_aliquot3_s1], downstream_tubes: [dest_tube3], qc_results: qc_results },
+        { location: 'B1', aliquots: [src_aliquot1_s2], downstream_tubes: [dest_tube4], qc_results: qc_results },
+        { location: 'B2', aliquots: [src_aliquot2_s2], downstream_tubes: [dest_tube5], qc_results: qc_results },
+        { location: 'B3', aliquots: [src_aliquot3_s2], downstream_tubes: [dest_tube6], qc_results: qc_results }
       ]
     end
 

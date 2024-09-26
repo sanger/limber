@@ -11,7 +11,7 @@ RSpec.describe QcFilesController, type: :controller do
     let(:filename) { 'my_holiday.jpg' }
 
     before do
-      stub_api_get(file_uuid, body: json(:qc_file, uuid: file_uuid, filename:))
+      stub_api_get(file_uuid, body: json(:qc_file, uuid: file_uuid, filename: filename))
       stub_request(:get, api_url_for(file_uuid)).with(headers: { 'Accept' => 'sequencescape/qc_file' }).to_return(
         body: 'example file content',
         headers: {

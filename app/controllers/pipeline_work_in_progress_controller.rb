@@ -84,7 +84,7 @@ class PipelineWorkInProgressController < ApplicationController
         state = decide_state(rec)
         next if state == 'cancelled'
 
-        output[rec.purpose.name] << { record: rec, state: }
+        output[rec.purpose.name] << { record: rec, state: state }
       end
     end
   end

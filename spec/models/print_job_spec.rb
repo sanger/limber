@@ -29,7 +29,7 @@ RSpec.describe PrintJob do
         PrintJob.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
-          label_templates_by_service:,
+          label_templates_by_service: label_templates_by_service,
           labels: [{ 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }],
           labels_sprint: {
             sprint: {
@@ -55,7 +55,7 @@ RSpec.describe PrintJob do
         PrintJob.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
-          label_templates_by_service:,
+          label_templates_by_service: label_templates_by_service,
           labels: [{ 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }],
           labels_sprint: {
             sprint: {
@@ -75,7 +75,7 @@ RSpec.describe PrintJob do
         PrintJob.new(
           printer_name: printer_sprint.name,
           printer: printer_sprint,
-          label_templates_by_service:,
+          label_templates_by_service: label_templates_by_service,
           labels: [{ 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }],
           labels_sprint: {
             sprint: {
@@ -95,7 +95,7 @@ RSpec.describe PrintJob do
         PrintJob.new(
           printer_name: printer_unknown.name,
           printer: printer_unknown,
-          label_templates_by_service:,
+          label_templates_by_service: label_templates_by_service,
           labels: [{ 'label' => { 'barcode' => '12345', 'test_attr' => 'test' } }],
           labels_sprint: {
             sprint: {
@@ -115,7 +115,7 @@ RSpec.describe PrintJob do
     let(:pmb_print_job) do
       PMB::PrintJob.new(
         printer_name: printer_pmb.name,
-        label_template_id:,
+        label_template_id: label_template_id,
         labels: [{ label: { barcode: '12345', test_attr: 'test' } }]
       )
     end
@@ -125,7 +125,7 @@ RSpec.describe PrintJob do
         PrintJob.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
-          label_templates_by_service:,
+          label_templates_by_service: label_templates_by_service,
           labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
           number_of_copies: 1
         )
@@ -142,7 +142,7 @@ RSpec.describe PrintJob do
         PrintJob.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
-          label_templates_by_service:,
+          label_templates_by_service: label_templates_by_service,
           labels: [
             { label: { barcode: '12345', test_attr: 'test' } },
             { label: { barcode: '67890', test_attr: 'test2' } }
@@ -189,9 +189,9 @@ RSpec.describe PrintJob do
         PrintJob.new(
           printer_name: printer_sprint.name,
           printer: printer_sprint,
-          label_templates_by_service:,
+          label_templates_by_service: label_templates_by_service,
           labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
-          labels_sprint:,
+          labels_sprint: labels_sprint,
           number_of_copies: 1
         )
 

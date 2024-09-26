@@ -40,7 +40,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
            uuid: tube_uuid,
            purpose_name: parent_purpose_name,
            aliquots: aliquot_set_1,
-           stock_plate:,
+           stock_plate: stock_plate,
            parents: [parent_1]
   end
   let(:example_tube) { json(*example_tube_args) }
@@ -59,7 +59,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
            uuid: tube_uuid_2,
            purpose_name: parent_purpose_name,
            aliquots: aliquot_set_2,
-           stock_plate:,
+           stock_plate: stock_plate,
            parents: [parent_2]
   end
   let(:example_tube_2_listed) { associated(*example_tube2_args) }
@@ -70,8 +70,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   let(:barcodes) { [tube_barcode_1, tube_barcode_2] }
 
   let(:child_uuid) { 'tube-0' }
-  let(:child_tube) { json :tube, purpose_uuid:, purpose_name: 'Pool tube', uuid: child_uuid }
-  let(:child_tube_v2) { create :v2_tube, purpose_uuid:, purpose_name: 'Pool tube', uuid: child_uuid }
+  let(:child_tube) { json :tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
+  let(:child_tube_v2) { create :v2_tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
 
   let(:tube_creation_request_uuid) { SecureRandom.uuid }
 
@@ -172,7 +172,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
            uuid: purpose_uuid,
            name: 'Pool tube',
            submission: {
-             template_uuid:,
+             template_uuid: template_uuid,
              options: {
                read_length: 150
              }

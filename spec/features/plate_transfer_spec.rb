@@ -35,7 +35,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
            purpose_uuid: 'lb_end_prep_uuid',
            state: 'started',
            barcode_number: 1,
-           custom_metadatum_collection:
+           custom_metadatum_collection: custom_metadatum_collection
   end
   let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
@@ -56,7 +56,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
       reason: 'Robot bravo LB Post Shear => LB End Prep started',
       target_state: 'started',
       target_uuid: plate_uuid,
-      user_uuid:
+      user_uuid: user_uuid
     }
   end
 

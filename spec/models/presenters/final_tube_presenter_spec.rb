@@ -5,7 +5,9 @@ require 'presenters/tube_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::FinalTubePresenter do
-  let(:labware) { build :v2_tube, purpose_name:, state:, barcode_number: 6, created_at: '2016-10-19 12:00:00 +0100' }
+  let(:labware) do
+    build :v2_tube, purpose_name: purpose_name, state: state, barcode_number: 6, created_at: '2016-10-19 12:00:00 +0100'
+  end
 
   before { create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid') }
 

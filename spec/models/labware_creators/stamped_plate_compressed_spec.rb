@@ -66,8 +66,8 @@ RSpec.describe LabwareCreators::StampedPlateCompressed do
   let(:form_attributes) do
     {
       purpose_uuid: child_purpose_uuid,
-      parent_uuid:,
-      user_uuid:,
+      parent_uuid: parent_uuid,
+      user_uuid: user_uuid,
       filters: {
         request_type_key: parent_well_b1.requests_as_source[0].request_type.key, # Standard
         library_type: parent_well_b1.requests_as_source[0].library_type # library-type-1

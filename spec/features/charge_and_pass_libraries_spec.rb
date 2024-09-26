@@ -10,7 +10,9 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
-  let(:work_completion_request) { { 'work_completion' => { target: labware_uuid, submissions:, user: user_uuid } } }
+  let(:work_completion_request) do
+    { 'work_completion' => { target: labware_uuid, submissions: submissions, user: user_uuid } }
+  end
   let(:work_completion) { json :work_completion }
   let(:template_uuid) { SecureRandom.uuid }
 
@@ -65,7 +67,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
         payload: {
           order: {
             assets: [labware_uuid],
-            request_options:,
+            request_options: request_options,
             user: user_uuid
           }
         },

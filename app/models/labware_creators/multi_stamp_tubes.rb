@@ -160,8 +160,10 @@ module LabwareCreators
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
-        asset_groups: [{ assets: asset_uuids, autodetect_studies:, autodetect_projects: }],
-        api:,
+        asset_groups: [
+          { assets: asset_uuids, autodetect_studies: autodetect_studies, autodetect_projects: autodetect_projects }
+        ],
+        api: api,
         user: user_uuid
       }
 

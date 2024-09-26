@@ -41,8 +41,8 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
 
   let(:labware) do
     build :v2_plate,
-          purpose_name:,
-          state:,
+          purpose_name: purpose_name,
+          state: state,
           barcode_number: 1,
           pool_sizes: [],
           wells: [well_a1, well_a2, well_b2, well_c2],
@@ -66,7 +66,14 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
   end
 
   context 'when binning configuration is present' do
-    before { create(:normalised_binning_purpose_config, uuid: labware.purpose.uuid, warnings:, label_class:) }
+    before do
+      create(
+        :normalised_binning_purpose_config,
+        uuid: labware.purpose.uuid,
+        warnings: warnings,
+        label_class: label_class
+      )
+    end
 
     it_behaves_like 'a labware presenter'
 

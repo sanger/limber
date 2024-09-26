@@ -14,7 +14,7 @@ RSpec.describe Robots, robots: true do
   describe '::find' do
     let(:user_uuid) { SecureRandom.uuid }
 
-    subject { Robots.find(id: robot_id, api:, user_uuid:) }
+    subject { Robots.find(id: robot_id, api: api, user_uuid: user_uuid) }
 
     context 'with a standard robot' do
       let(:robot_id) { 'robot_id' }

@@ -20,7 +20,12 @@ RSpec.feature 'Failing quadrants', js: true do
     ]
   end
   let(:example_plate) do
-    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells:, size: 384
+    create :v2_plate,
+           uuid: plate_uuid,
+           purpose_uuid: 'stock-plate-purpose-uuid',
+           state: 'passed',
+           wells: wells,
+           size: 384
   end
 
   let(:state_change_attributes) do
@@ -30,7 +35,7 @@ RSpec.feature 'Failing quadrants', js: true do
       reason: 'Individual Well Failure',
       target_state: 'failed',
       target_uuid: plate_uuid,
-      user_uuid:
+      user_uuid: user_uuid
     }
   end
 

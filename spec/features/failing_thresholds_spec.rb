@@ -22,7 +22,7 @@ RSpec.feature 'Failing thresholds', js: true do
     ]
   end
   let(:example_plate) do
-    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells:
+    create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells
   end
 
   # Setup stubs
@@ -68,7 +68,7 @@ RSpec.feature 'Failing thresholds', js: true do
           reason: 'Individual Well Failure',
           target_state: 'failed',
           target_uuid: plate_uuid,
-          user_uuid:
+          user_uuid: user_uuid
         }
       ]
     )

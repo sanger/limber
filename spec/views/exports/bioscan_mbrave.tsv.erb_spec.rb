@@ -24,7 +24,7 @@ RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
         :v2_tagged_aliquot_for_mbrave,
         well_location: 'C10',
         library_state: 'pending',
-        outer_request:,
+        outer_request: outer_request,
         sample: sample1,
         tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
         tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_11_v2'))
@@ -33,7 +33,7 @@ RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
         :v2_tagged_aliquot_for_mbrave,
         well_location: 'A01',
         library_state: 'pending',
-        outer_request:,
+        outer_request: outer_request,
         sample: sample2,
         tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
         tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_7_v2'))
@@ -42,7 +42,7 @@ RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
         :v2_tagged_aliquot_for_mbrave,
         well_location: 'A01',
         library_state: 'pending',
-        outer_request:,
+        outer_request: outer_request,
         sample: sample0,
         tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
         tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_1_v2'))
@@ -51,7 +51,7 @@ RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
         :v2_tagged_aliquot_for_mbrave,
         well_location: 'H12',
         library_state: 'pending',
-        outer_request:,
+        outer_request: outer_request,
         sample: sample3,
         tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
         tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_24_v2'))

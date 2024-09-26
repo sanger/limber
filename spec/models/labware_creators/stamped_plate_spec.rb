@@ -33,7 +33,7 @@ RSpec.describe LabwareCreators::StampedPlate do
     stub_v2_plate(plate, stub_search: false)
   end
 
-  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
+  let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
   subject { LabwareCreators::StampedPlate.new(api, form_attributes) }
 
@@ -65,7 +65,7 @@ RSpec.describe LabwareCreators::StampedPlate do
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests:
+              transfer_requests: transfer_requests
             }
           },
           body: '{}'
@@ -119,7 +119,7 @@ RSpec.describe LabwareCreators::StampedPlate do
   end
 
   context 'more complicated scenarios' do
-    let(:plate) { create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: }
+    let(:plate) { create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: wells }
 
     context 'with multiple requests of different types' do
       let(:request_type_a) { create :request_type, key: 'rt_a' }
@@ -158,8 +158,8 @@ RSpec.describe LabwareCreators::StampedPlate do
         let(:form_attributes) do
           {
             purpose_uuid: child_purpose_uuid,
-            parent_uuid:,
-            user_uuid:,
+            parent_uuid: parent_uuid,
+            user_uuid: user_uuid,
             filters: {
               request_type_key: [request_type_b.key]
             }
@@ -170,7 +170,7 @@ RSpec.describe LabwareCreators::StampedPlate do
       end
 
       context 'when a request_type is not supplied' do
-        let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
+        let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
         it 'raises an exception' do
           expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
@@ -188,7 +188,14 @@ RSpec.describe LabwareCreators::StampedPlate do
 
         context 'when a library type is supplied' do
           let(:form_attributes) do
-            { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, filters: { library_type: [lib_type_a] } }
+            {
+              purpose_uuid: child_purpose_uuid,
+              parent_uuid: parent_uuid,
+              user_uuid: user_uuid,
+              filters: {
+                library_type: [lib_type_a]
+              }
+            }
           end
 
           it_behaves_like 'a stamped plate creator'
@@ -198,8 +205,8 @@ RSpec.describe LabwareCreators::StampedPlate do
           let(:form_attributes) do
             {
               purpose_uuid: child_purpose_uuid,
-              parent_uuid:,
-              user_uuid:,
+              parent_uuid: parent_uuid,
+              user_uuid: user_uuid,
               filters: {
                 request_type_key: [request_type_b.key],
                 library_type: [lib_type_a]
@@ -212,7 +219,14 @@ RSpec.describe LabwareCreators::StampedPlate do
 
         context 'when a library type is supplied that does not match any request' do
           let(:form_attributes) do
-            { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, filters: { library_type: ['LibTypeB'] } }
+            {
+              purpose_uuid: child_purpose_uuid,
+              parent_uuid: parent_uuid,
+              user_uuid: user_uuid,
+              filters: {
+                library_type: ['LibTypeB']
+              }
+            }
           end
 
           it 'raises an exception' do
@@ -227,10 +241,10 @@ RSpec.describe LabwareCreators::StampedPlate do
       # We don't specify an outer request, and Sequencescape should just move the aliquots across
       # as normal.
       let(:request_type) { create :request_type, key: 'rt_a' }
-      let(:request_a) { create :library_request, request_type:, uuid: 'request-a', submission_id: '2' }
-      let(:request_b) { create :library_request, request_type:, uuid: 'request-b', submission_id: '2' }
-      let(:request_c) { create :library_request, request_type:, uuid: 'request-c', submission_id: '2' }
-      let(:request_d) { create :library_request, request_type:, uuid: 'request-d', submission_id: '2' }
+      let(:request_a) { create :library_request, request_type: request_type, uuid: 'request-a', submission_id: '2' }
+      let(:request_b) { create :library_request, request_type: request_type, uuid: 'request-b', submission_id: '2' }
+      let(:request_c) { create :library_request, request_type: request_type, uuid: 'request-c', submission_id: '2' }
+      let(:request_d) { create :library_request, request_type: request_type, uuid: 'request-d', submission_id: '2' }
       let(:aliquots_a) do
         [
           create(:v2_aliquot, library_state: 'started', outer_request: request_a),
@@ -252,7 +266,7 @@ RSpec.describe LabwareCreators::StampedPlate do
       end
 
       context 'when a request_type is supplied' do
-        let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid: } }
+        let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
         let(:transfer_requests) do
           [

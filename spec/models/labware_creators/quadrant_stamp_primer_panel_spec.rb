@@ -291,7 +291,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests:
+            transfer_requests: transfer_requests
           }
         },
         body: '{}'

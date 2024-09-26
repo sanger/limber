@@ -29,18 +29,22 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   let(:example_plate) do
-    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, wells:, purpose_name: 'Limber Cherrypicked'
+    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
   end
 
   let(:another_plate) do
-    create :v2_stock_plate, barcode_number: 106, uuid: another_plate_uuid, wells:, purpose_name: 'Limber Cherrypicked'
+    create :v2_stock_plate,
+           barcode_number: 106,
+           uuid: another_plate_uuid,
+           wells: wells,
+           purpose_name: 'Limber Cherrypicked'
   end
 
   let(:alternative_plate) do
     create :v2_stock_plate,
            barcode_number: 107,
            uuid: another_plate_uuid,
-           wells:,
+           wells: wells,
            purpose_name: alternative_purpose_name
   end
 
@@ -69,7 +73,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       payload: {
         transfer_request_collection: {
           user: user_uuid,
-          transfer_requests:
+          transfer_requests: transfer_requests
         }
       },
       body: '{}'
@@ -93,7 +97,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     # Set-up the plate config
     create :purpose_config, uuid: example_plate.purpose.uuid
     create(:purpose_config, name: child_purpose_name, uuid: 'child-purpose-0')
-    create(:pipeline, relationships: { 'Limber Cherrypicked' => child_purpose_name }, filters:)
+    create(:pipeline, relationships: { 'Limber Cherrypicked' => child_purpose_name }, filters: filters)
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)

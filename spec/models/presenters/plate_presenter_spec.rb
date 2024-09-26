@@ -23,8 +23,8 @@ RSpec.describe Presenters::PlatePresenter do
 
   let(:labware) do
     build :v2_plate,
-          purpose_name:,
-          state:,
+          purpose_name: purpose_name,
+          state: state,
           barcode_number: 1,
           pool_sizes: [48, 48],
           created_at: '2016-10-19 12:00:00 +0100'
@@ -34,7 +34,7 @@ RSpec.describe Presenters::PlatePresenter do
   let(:label_class) { 'Labels::PlateLabel' }
 
   before do
-    create(:purpose_config, uuid: labware.purpose.uuid, warnings:, label_class:)
+    create(:purpose_config, uuid: labware.purpose.uuid, warnings: warnings, label_class: label_class)
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
@@ -236,7 +236,7 @@ RSpec.describe Presenters::PlatePresenter do
     # split up onto different plates. They have different PCR cycle requirements, but
     # the warning is not required and is unwanted. This check disables the warning
     # if the plate contains split processes
-    let(:labware) { create :v2_plate, barcode_number: '2', wells: }
+    let(:labware) { create :v2_plate, barcode_number: '2', wells: wells }
     let(:request_a) { create :library_request, pcr_cycles: 1 }
     let(:request_b) { create :library_request, pcr_cycles: 2 }
     let(:request_c) { create :library_request, pcr_cycles: 1 }
@@ -337,7 +337,15 @@ RSpec.describe Presenters::PlatePresenter do
     end
 
     context 'with a plate that has no links' do
-      before { create(:purpose_config, uuid: labware.purpose.uuid, warnings:, label_class:, file_links: []) }
+      before do
+        create(
+          :purpose_config,
+          uuid: labware.purpose.uuid,
+          warnings: warnings,
+          label_class: label_class,
+          file_links: []
+        )
+      end
 
       it 'returns an empty array' do
         expect(presenter.csv_file_links).to eq([])
@@ -349,8 +357,8 @@ RSpec.describe Presenters::PlatePresenter do
         create(
           :purpose_config,
           uuid: labware.purpose.uuid,
-          warnings:,
-          label_class:,
+          warnings: warnings,
+          label_class: label_class,
           file_links: [
             { name: 'First type CSV', id: 'first_csv_id' },
             { name: 'Second type CSV', id: 'second_csv_id' },
@@ -369,8 +377,8 @@ RSpec.describe Presenters::PlatePresenter do
         create(
           :purpose_config,
           uuid: labware.purpose.uuid,
-          warnings:,
-          label_class:,
+          warnings: warnings,
+          label_class: label_class,
           file_links: [
             { name: 'Button 1', id: 'template', params: { page: 0 } },
             { name: 'Button 2', id: 'template', params: { page: 1 } }

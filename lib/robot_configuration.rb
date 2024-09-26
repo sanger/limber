@@ -6,14 +6,14 @@ module RobotConfiguration
 
   module BedHelpers # rubocop:todo Style/Documentation
     def bed(number)
-      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number:)
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
       ean13 = barcode.machine_barcode.to_s
       BedOrCar.new(ean13, "Bed #{number}")
     end
 
     def car(position)
       number = position.tr(',', '').to_i
-      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number:)
+      barcode = SBCF::SangerBarcode.new(prefix: 'BD', number: number)
       ean13 = barcode.machine_barcode.to_s
       BedOrCar.new(ean13, "Carousel #{position}")
     end
@@ -112,9 +112,9 @@ module RobotConfiguration
 
     def configuration
       {
-        name:,
-        verify_robot:,
-        require_robot:,
+        name: name,
+        verify_robot: verify_robot,
+        require_robot: require_robot,
         beds: {
           source_bed_barcode => {
             purpose: source_purpose,
@@ -127,7 +127,7 @@ module RobotConfiguration
             states: [target_bed_state],
             label: target_bed_name,
             parent: source_bed_barcode,
-            target_state:
+            target_state: target_state
           }
         }
       }

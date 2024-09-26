@@ -372,7 +372,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
             reason: "Robot #{robot_name} started",
             target_state: 'passed',
             target_uuid: tube_uuid,
-            user_uuid:
+            user_uuid: user_uuid
           }
         end
       )

@@ -44,7 +44,7 @@ class PurposeConfig
 
   def config
     {
-      name:,
+      name: name,
       **default_options,
       state_changer_class: default_state_changer,
       submission: submission_options,
@@ -82,7 +82,7 @@ class PurposeConfig
 
     def register!
       puts "Creating #{name}"
-      options_for_creation = { name:, target_type: @options.fetch(:target), purpose_type: @options.fetch(:type) }
+      options_for_creation = { name: name, target_type: @options.fetch(:target), purpose_type: @options.fetch(:type) }
       Sequencescape::Api::V2::TubePurpose.create!(options_for_creation)
     end
   end
@@ -110,7 +110,7 @@ class PurposeConfig
       # asset_shape option if configured. It raises an error if the purpose
       # cannot be created.
       options_for_creation = {
-        name:,
+        name: name,
         stock_plate: config.fetch(:stock_plate, false),
         cherrypickable_target: config.fetch(:cherrypickable_target, false),
         input_plate: config.fetch(:input_plate, false),

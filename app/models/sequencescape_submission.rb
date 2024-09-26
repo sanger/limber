@@ -125,7 +125,7 @@ class SequencescapeSubmission
   # rubocop:disable Metrics/AbcSize
   def generate_submissions
     orders = generate_orders
-    submission = api.submission.create!(orders: orders.map(&:uuid), user:)
+    submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
     @submission_uuid = submission.uuid
     submission.submit!
     true

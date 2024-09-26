@@ -24,7 +24,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       purpose_uuid: target_purpose_uuid,
       barcode_number: 2,
       parents: target_plate_parents,
-      wells:,
+      wells: wells,
       state: target_plate_state
     }
   end
@@ -104,7 +104,9 @@ RSpec.describe Robots::PoolingRobot, robots: true do
 
   let(:transfer_source_plates) { [source_plate] }
 
-  let(:wells) { %w[C1 D1].map { |location| create :v2_well, location:, upstream_plates: transfer_source_plates } }
+  let(:wells) do
+    %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: transfer_source_plates }
+  end
 
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
@@ -173,8 +175,8 @@ RSpec.describe Robots::PoolingRobot, robots: true do
       let(:transfer_source_plates) { [source_plate, source_plate2] }
 
       let(:wells) do
-        %w[C1 D1].map { |location| create :v2_well, location:, upstream_plates: [transfer_source_plates[1]] } +
-          %w[A1 B1].map { |location| create :v2_well, location:, upstream_plates: [transfer_source_plates[0]] }
+        %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]] } +
+          %w[A1 B1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]] }
       end
 
       before { bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }]) }
@@ -220,7 +222,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
             reason: 'Robot Pooling Robot started',
             target_state: 'passed',
             target_uuid: target_plate_uuid,
-            user_uuid:
+            user_uuid: user_uuid
           }
         ]
       )

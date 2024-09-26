@@ -16,7 +16,7 @@ RSpec.describe PlatesController, type: :controller do
   def expect_state_change_create(attributes)
     expect_api_v2_posts(
       'StateChange',
-      [{ target_state: 'failed', target_uuid: plate_uuid, user_uuid: }.merge(attributes)]
+      [{ target_state: 'failed', target_uuid: plate_uuid, user_uuid: user_uuid }.merge(attributes)]
     )
   end
 

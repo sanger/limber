@@ -10,14 +10,14 @@ RSpec.describe Robots::SplittingRobot, robots: true do
   let(:user_uuid) { SecureRandom.uuid }
   let(:plate_uuid) { SecureRandom.uuid }
 
-  let(:wells) { %w[C1 D1].map { |location| create :v2_well, location:, downstream_plates: transfer_target_1 } }
+  let(:wells) { %w[C1 D1].map { |location| create :v2_well, location: location, downstream_plates: transfer_target_1 } }
   let(:transfer_target_1) { [target_plate_1] }
 
   let(:source_barcode) { source_plate.human_barcode }
   let(:source_purpose_name) { 'Limber Cherrypicked' }
   let(:source_plate_state) { 'passed' }
   let(:source_plate) do
-    create :v2_plate, barcode_number: 1, purpose_name: source_purpose_name, state: source_plate_state, wells:
+    create :v2_plate, barcode_number: 1, purpose_name: source_purpose_name, state: source_plate_state, wells: wells
   end
   let(:target_barcode_1) { target_plate_1.human_barcode }
   let(:target_barcode_2) { target_plate_2.human_barcode }
@@ -166,7 +166,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
             reason: 'Robot bravo LB End Prep started',
             target_state: 'passed',
             target_uuid: plate.uuid,
-            user_uuid:
+            user_uuid: user_uuid
           }
         ]
       )

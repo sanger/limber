@@ -39,11 +39,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   # submission requests
   let(:request_type) { create :request_type, key: 'rt_1' }
-  let(:request_a) { create :library_request, request_type:, uuid: 'request-a1', submission_id: '2' }
-  let(:request_b) { create :library_request, request_type:, uuid: 'request-a2', submission_id: '2' }
-  let(:request_c) { create :library_request, request_type:, uuid: 'request-a3', submission_id: '2' }
-  let(:request_d) { create :library_request, request_type:, uuid: 'request-b1', submission_id: '2' }
-  let(:request_e) { create :library_request, request_type:, uuid: 'request-b2', submission_id: '2' }
+  let(:request_a) { create :library_request, request_type: request_type, uuid: 'request-a1', submission_id: '2' }
+  let(:request_b) { create :library_request, request_type: request_type, uuid: 'request-a2', submission_id: '2' }
+  let(:request_c) { create :library_request, request_type: request_type, uuid: 'request-a3', submission_id: '2' }
+  let(:request_d) { create :library_request, request_type: request_type, uuid: 'request-b1', submission_id: '2' }
+  let(:request_e) { create :library_request, request_type: request_type, uuid: 'request-b2', submission_id: '2' }
 
   # parent aliquots
   let(:parent_aliquot_sample1_aliquot1) { create(:v2_aliquot, sample: sample1, outer_request: request_a) }
@@ -112,7 +112,9 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   let(:parent_v1) { json :plate_with_metadata, uuid: parent_uuid, barcode_number: 6, qc_files_actions: %w[read create] }
 
   # form attributes - required parameters for the labware creator
-  let(:form_attributes) { { user_uuid:, purpose_uuid: child_sequencing_tube_purpose_uuid, parent_uuid: } }
+  let(:form_attributes) do
+    { user_uuid: user_uuid, purpose_uuid: child_sequencing_tube_purpose_uuid, parent_uuid: parent_uuid }
+  end
 
   # child tubes for lookup after creation
   let(:child_tube_1_uuid) { SecureRandom.uuid }
@@ -265,7 +267,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
     context 'when require_sequencing_tubes_only? is true' do
       let(:form_attributes) do
-        { user_uuid:, purpose_uuid: child_contingency_tube_purpose_uuid, parent_uuid:, sequencing_file: }
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_contingency_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file
+        }
       end
 
       before do
@@ -304,11 +311,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when require_sequencing_tubes_only? is false' do
       let(:form_attributes) do
         {
-          user_uuid:,
+          user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
-          parent_uuid:,
-          sequencing_file:,
-          contingency_file:
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
         }
       end
 
@@ -388,11 +395,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when a file is not correctly parsed' do
       let(:form_attributes) do
         {
-          user_uuid:,
+          user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
-          parent_uuid:,
-          sequencing_file:,
-          contingency_file:
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
         }
       end
 
@@ -417,11 +424,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when the files are the same' do
       let(:form_attributes) do
         {
-          user_uuid:,
+          user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
-          parent_uuid:,
+          parent_uuid: parent_uuid,
           sequencing_file: contingency_file,
-          contingency_file:
+          contingency_file: contingency_file
         }
       end
 
@@ -449,11 +456,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when the tube rack barcodes are the same' do
       let(:form_attributes) do
         {
-          user_uuid:,
+          user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
-          parent_uuid:,
-          sequencing_file:,
-          contingency_file:
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
         }
       end
 
@@ -513,11 +520,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when a file is not correctly parsed' do
       let(:form_attributes) do
         {
-          user_uuid:,
+          user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
-          parent_uuid:,
-          sequencing_file:,
-          contingency_file:
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
         }
       end
 
@@ -549,11 +556,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when there are duplicate tube barcodes between files' do
       let(:form_attributes) do
         {
-          user_uuid:,
+          user_uuid: user_uuid,
           purpose_uuid: child_contingency_tube_purpose_uuid,
-          parent_uuid:,
-          sequencing_file:,
-          contingency_file:
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
         }
       end
       let(:seq_tube_details) do
@@ -598,7 +605,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     let(:tube_rack_barcode) { 'TR00000001' }
     let(:tube_details) { { 'tube_barcode' => foreign_barcode, 'tube_rack_barcode' => tube_rack_barcode } }
     let(:msg_prefix) { 'Sequencing' }
-    let(:existing_tube) { create(:v2_tube, state: 'passed', barcode_number: 1, foreign_barcode:) }
+    let(:existing_tube) { create(:v2_tube, state: 'passed', barcode_number: 1, foreign_barcode: foreign_barcode) }
 
     before { allow(tube_rack_file).to receive(:position_details).and_return({ tube_posn => tube_details }) }
 
@@ -651,11 +658,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'with both sequencing and contingency files' do
       let(:form_attributes) do
         {
-          user_uuid:,
+          user_uuid: user_uuid,
           purpose_uuid: child_sequencing_tube_purpose_uuid,
-          parent_uuid:,
-          sequencing_file:,
-          contingency_file:
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file,
+          contingency_file: contingency_file
         }
       end
 
@@ -1003,7 +1010,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
     context 'with just a sequencing file' do
       let(:form_attributes) do
-        { user_uuid:, purpose_uuid: child_sequencing_tube_purpose_uuid, parent_uuid:, sequencing_file: }
+        {
+          user_uuid: user_uuid,
+          purpose_uuid: child_sequencing_tube_purpose_uuid,
+          parent_uuid: parent_uuid,
+          sequencing_file: sequencing_file
+        }
       end
 
       # body for stubbing the sequencing file upload

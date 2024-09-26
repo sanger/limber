@@ -53,7 +53,7 @@ module LabwareCreators
           user: user_uuid,
           parent: parent_uuid,
           child_purposes: [purpose_uuid] * pool_uuids.length,
-          tube_attributes:
+          tube_attributes: tube_attributes
         )
         .children
         .index_by(&:name)

@@ -414,7 +414,7 @@ module LabwareCreators
           user: user_uuid,
           parent: parent_uuid,
           child_purposes: [tube_purpose_uuid] * number_of_tubes,
-          tube_attributes:
+          tube_attributes: tube_attributes
         )
         .children
         .index_by(&:name)
@@ -654,7 +654,7 @@ module LabwareCreators
     # @param tube_details [Hash] The tube details hash from the tube rack scan file.
     # @return [void]
     def add_tube_metadata(child_tube, tube_posn, tube_details)
-      LabwareMetadata.new(user_uuid:, barcode: child_tube.barcode.machine).update!(
+      LabwareMetadata.new(user_uuid: user_uuid, barcode: child_tube.barcode.machine).update!(
         tube_rack_barcode: tube_details['tube_rack_barcode'],
         tube_rack_position: tube_posn
       )

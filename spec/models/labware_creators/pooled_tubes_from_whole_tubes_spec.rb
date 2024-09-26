@@ -32,7 +32,14 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   end
 
   before do
-    create :purpose_config, submission: { template_uuid:, request_options: { read_length: 150 } }, uuid: purpose_uuid
+    create :purpose_config,
+           submission: {
+             template_uuid: template_uuid,
+             request_options: {
+               read_length: 150
+             }
+           },
+           uuid: purpose_uuid
   end
 
   describe '#new' do

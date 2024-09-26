@@ -2,7 +2,7 @@
 
 RSpec.describe Presenters::SingleChildPermissivePresenter do
   let(:purpose_name) { 'Example purpose' }
-  let(:labware) { create :v2_plate, state:, purpose_name:, pool_sizes: [1] }
+  let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
   let(:child_purpose) { 'Child purpose' }
   let(:child_plate) { create :v2_plate, purpose_name: child_purpose }
 

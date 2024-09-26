@@ -6,8 +6,8 @@ class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
     # because otherwise we will lose important information about wells
     # if each well takes 3 (not 2) characters, like E10:H10, for example
     {
-      first_line:,
-      second_line:,
+      first_line: first_line,
+      second_line: second_line,
       third_line: labware.purpose_name,
       fourth_line: date_today,
       round_label_top_line: labware.barcode.prefix,

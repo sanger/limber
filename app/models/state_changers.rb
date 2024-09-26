@@ -26,11 +26,11 @@ module StateChangers
     def move_to!(state, reason = nil, customer_accepts_responsibility = false)
       Sequencescape::Api::V2::StateChange.create!(
         contents: contents_for(state),
-        customer_accepts_responsibility:,
-        reason:,
+        customer_accepts_responsibility: customer_accepts_responsibility,
+        reason: reason,
         target_state: state,
         target_uuid: labware_uuid,
-        user_uuid:
+        user_uuid: user_uuid
       )
     end
 

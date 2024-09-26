@@ -292,7 +292,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   context 'on new' do
     has_a_working_api
 
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: } }
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq
@@ -308,7 +308,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       content
     end
 
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid:, user_uuid:, file: } }
+    let(:form_attributes) do
+      { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
+    end
 
     let(:stub_upload_file_creation) do
       stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
@@ -474,7 +476,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests:
+              transfer_requests: transfer_requests
             }
           },
           body: '{}'
@@ -836,7 +838,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests:
+              transfer_requests: transfer_requests
             }
           },
           body: '{}'
@@ -1192,7 +1194,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests:
+              transfer_requests: transfer_requests
             }
           },
           body: '{}'
@@ -1555,7 +1557,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           payload: {
             transfer_request_collection: {
               user: user_uuid,
-              transfer_requests:
+              transfer_requests: transfer_requests
             }
           },
           body: '{}'

@@ -9,7 +9,7 @@ class OngoingTube < AssetSearchForm
       states: states || %w[pending started passed qc_complete failed cancelled],
       tube_purpose_uuids: purpose_uuids,
       include_used: include_used == '1',
-      page:
+      page: page
     }
   end
 

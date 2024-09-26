@@ -35,7 +35,13 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     it 'pools by submission' do
       expect_api_v2_posts(
         'Transfer',
-        [{ user_uuid:, source_uuid: parent_uuid, transfer_template_uuid: 'transfer-to-mx-tubes-on-submission' }],
+        [
+          {
+            user_uuid: user_uuid,
+            source_uuid: parent_uuid,
+            transfer_template_uuid: 'transfer-to-mx-tubes-on-submission'
+          }
+        ],
         [transfer]
       )
 
@@ -46,8 +52,8 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
       expect_api_v2_posts(
         'StateChange',
         [
-          { target_state: 'passed', target_uuid: destination_tubes[0].uuid, user_uuid: },
-          { target_state: 'passed', target_uuid: destination_tubes[1].uuid, user_uuid: }
+          { target_state: 'passed', target_uuid: destination_tubes[0].uuid, user_uuid: user_uuid },
+          { target_state: 'passed', target_uuid: destination_tubes[1].uuid, user_uuid: user_uuid }
         ]
       )
 

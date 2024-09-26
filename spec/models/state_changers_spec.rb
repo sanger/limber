@@ -21,11 +21,11 @@ RSpec.describe StateChangers::DefaultStateChanger do
         [
           {
             contents: wells_to_pass,
-            customer_accepts_responsibility:,
-            reason:,
-            target_state:,
+            customer_accepts_responsibility: customer_accepts_responsibility,
+            reason: reason,
+            target_state: target_state,
             target_uuid: plate_uuid,
-            user_uuid:
+            user_uuid: user_uuid
           }
         ]
       )
