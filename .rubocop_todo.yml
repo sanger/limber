@@ -15,3 +15,7 @@ Metrics/CollectionLiteralLength:
   Exclude:
     - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
     - 'spec/helpers/well_helpers_spec.rb'
+
+Style/NumericPredicate:
+  Exclude:
+    - 'lib/deployed_version.rb'
