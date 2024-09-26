@@ -3929,4 +3929,26 @@ ROBOT_CONFIG =
       }
     )
 
+    # LCM Triomics EMSeq Bravo bed verification
+    # Bravo LCMT EM APOBEC Deam => LCMT EM Lib PCR
+    custom_robot(
+      'bravo-lcmt-em-apobec-deam-to-lcmt-em-lib-pcr',
+      name: 'Bravo LCMT DNA Adp Lig => LCMT DNA Lib PCR',
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT DNA Adp Lig',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMT DNA Lib PCR',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(5).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
   end
