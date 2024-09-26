@@ -89,7 +89,10 @@ module LabwareCreators
     end
 
     def transfer_material_from_parent!
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     def transfer_request_attributes

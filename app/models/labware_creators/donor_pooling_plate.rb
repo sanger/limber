@@ -143,9 +143,9 @@ module LabwareCreators
     # @return [Boolean] Returns true if no exception is raised.
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(dest_plate)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes(dest_plate),
+        user_uuid: user_uuid
       )
       true
     end
