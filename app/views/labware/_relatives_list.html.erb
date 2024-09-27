@@ -1,7 +1,7 @@
 <%# locals: (presenter:) %>
 <%
-  valid_parents = presenter.labware.parents&.filter{ |parent| parent.purpose.present? }
-  valid_children = presenter.labware.children&.filter{ |child| child.purpose.present? }
+  valid_parents = presenter.labware.parents&.filter{ |parent| parent.purpose.present? } || []
+  valid_children = presenter.labware.children&.filter{ |child| child.purpose.present? } || []
 %>
 <div id="relatives-information" class="list-group list-group-flush">
 
