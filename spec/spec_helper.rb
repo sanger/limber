@@ -160,10 +160,12 @@ RSpec.configure do |config|
     FactoryBot.find_definitions
     Settings.robots = {}
     Settings.transfer_templates = {
-      'Transfer columns 1-12' => 'transfer-1-12',
-      'Transfer wells to MX library tubes by submission' => 'transfer-to-mx-tubes-on-submission',
       'Custom pooling' => 'custom-pooling',
+      'Pool wells based on submission' => 'custom-transfer-template',
+      'Transfer between specific tubes' => 'transfer-between-specific-tubes',
+      'Transfer columns 1-12' => 'transfer-1-12',
       'Transfer from tube to tube by submission' => 'tube-to-tube-by-sub',
+      'Transfer wells to MX library tubes by submission' => 'transfer-to-mx-tubes-on-submission',
       'Whole plate to tube' => 'whole-plate-to-tube'
     }
     YAML

@@ -12,7 +12,7 @@ RSpec.describe SearchController, type: :controller do
   let(:wells_json) { json :well_collection }
   let(:plate_request) { stub_api_get plate_uuid, body: plate_json }
   let(:plate_wells_request) { stub_api_get plate_uuid, 'wells', body: wells_json }
-  let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
+  let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
   let(:uuid) { SecureRandom.uuid }
 

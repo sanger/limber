@@ -4,54 +4,30 @@ require 'rails_helper'
 require './app/controllers/robots_controller'
 
 RSpec.describe RobotsController, type: :controller, robots: true do
+  has_a_working_api
+
   include FeatureHelpers
   include RobotHelpers
 
   let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
   describe '#start' do
-    has_a_working_api
+    let(:user) { create :user }
+    let(:plate) { create :v2_plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
-    let(:user_uuid) { SecureRandom.uuid }
-    let(:plate_uuid) { 'plate_uuid' }
-    let!(:plate) do
-      create :v2_plate,
-             uuid: plate_uuid,
-             purpose_name: 'target_plate_purpose',
-             purpose_uuid: 'target_plate_purpose_uuid'
+    let(:metadata_attributes) do
+      { user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }
     end
 
-    let!(:state_chage) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            'target_state' => 'passed',
-            'reason' => 'Robot robot_name started',
-            'customer_accepts_responsibility' => false,
-            'target' => 'plate_uuid',
-            'user' => user_uuid,
-            'contents' => nil
-          }
-        },
-        body: json(:state_change)
-      )
-    end
-
-    let!(:metadata_request) do
-      stub_api_post(
-        'custom_metadatum_collections',
-        payload: {
-          custom_metadatum_collection: {
-            user: user_uuid,
-            asset: plate_uuid,
-            metadata: {
-              created_with_robot: 'robot_barcode'
-            }
-          }
-        },
-        body: json(:custom_metadatum_collection)
-      )
+    let(:state_change_attributes) do
+      {
+        contents: nil,
+        customer_accepts_responsibility: false,
+        reason: 'Robot robot_name started',
+        target_state: 'passed',
+        target_uuid: plate.uuid,
+        user_uuid: user.uuid
+      }
     end
 
     setup do
@@ -59,6 +35,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       create :purpose_config,
              uuid: 'target_plate_purpose_uuid',
              state_changer_class: 'StateChangers::DefaultStateChanger'
+      stub_v2_user(user)
       stub_v2_plate(plate)
       bed_labware_lookup(plate)
 
@@ -70,6 +47,9 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     end
 
     it 'adds robot barcode to plate metadata' do
+      expect_api_v2_posts('CustomMetadatumCollection', [metadata_attributes])
+      expect_api_v2_posts('StateChange', [state_change_attributes])
+
       post :start,
            params: {
              bed_labwares: {
@@ -80,32 +60,23 @@ RSpec.describe RobotsController, type: :controller, robots: true do
              id: 'robot_id'
            },
            session: {
-             user_uuid: user_uuid
+             user_uuid: user.uuid
            }
-      expect(metadata_request).to have_been_requested
+
       expect(flash[:notice]).to match 'Robot robot_name has been started.'
     end
   end
 
   describe '#verify' do
-    has_a_working_api
-
-    let(:user_uuid) { SecureRandom.uuid }
-    let(:target_plate_uuid) { 'plate_uuid' }
-    let!(:target_plate) do
+    let(:user) { create :user }
+    let(:target_plate) do
       create :v2_plate,
-             uuid: target_plate_uuid,
              purpose_name: 'target_plate_purpose',
              purpose_uuid: 'target_plate_purpose_uuid',
              parents: [source_plate]
     end
-
-    let(:source_plate_uuid) { 'plate_uuid' }
-    let!(:source_plate) do
-      create :v2_plate,
-             uuid: source_plate_uuid,
-             purpose_name: 'source_plate_purpose',
-             purpose_uuid: 'source_plate_purpose_uuid'
+    let(:source_plate) do
+      create :v2_plate, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
     end
 
     it 'verifies robot and beds' do
@@ -129,7 +100,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
              id: 'robot_id'
            },
            session: {
-             user_uuid: user_uuid
+             user_uuid: user.uuid
            },
            format: :json
     end

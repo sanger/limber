@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::SingleChildPermissivePresenter do
-  has_a_working_api
-
   let(:purpose_name) { 'Example purpose' }
   let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
   let(:child_purpose) { 'Child purpose' }
   let(:child_plate) { create :v2_plate, purpose_name: child_purpose }
 
-  subject { Presenters::SingleChildPermissivePresenter.new(api: api, labware: labware) }
+  subject { Presenters::SingleChildPermissivePresenter.new(labware: labware) }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: child_purpose

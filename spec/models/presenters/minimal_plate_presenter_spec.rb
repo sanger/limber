@@ -5,8 +5,6 @@ require 'presenters/plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::MinimalPlatePresenter do
-  has_a_working_api
-
   let(:labware) do
     create :v2_plate,
            purpose_name: purpose_name,
@@ -37,7 +35,7 @@ RSpec.describe Presenters::MinimalPlatePresenter do
     create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
   end
 
-  subject(:presenter) { Presenters::MinimalPlatePresenter.new(api: api, labware: labware) }
+  subject(:presenter) { Presenters::MinimalPlatePresenter.new(labware: labware) }
 
   it 'returns label attributes' do
     expected_label = {

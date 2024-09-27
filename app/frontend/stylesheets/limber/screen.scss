@@ -526,6 +526,11 @@ form + .btn-block {
   }
 }
 
+#ongoing_plate_purposes,
+#ongoing_tube_purposes {
+  height: 33vh;
+}
+
 footer.version-info {
   @extend .text-muted;
   @extend .small;
