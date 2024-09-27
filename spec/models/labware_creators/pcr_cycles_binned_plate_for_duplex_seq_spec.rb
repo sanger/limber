@@ -345,114 +345,110 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         )
       end
 
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_a1.uuid,
-            'target_asset' => child_well_A2.uuid,
-            'outer_request' => requests[0].uuid
+            volume: '5.0',
+            source_asset: parent_well_a1.uuid,
+            target_asset: child_well_A2.uuid,
+            outer_request: requests[0].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b1.uuid,
-            'target_asset' => child_well_B2.uuid,
-            'outer_request' => requests[1].uuid
+            volume: '5.0',
+            source_asset: parent_well_b1.uuid,
+            target_asset: child_well_B2.uuid,
+            outer_request: requests[1].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d1.uuid,
-            'target_asset' => child_well_A1.uuid,
-            'outer_request' => requests[2].uuid
+            volume: '5.0',
+            source_asset: parent_well_d1.uuid,
+            target_asset: child_well_A1.uuid,
+            outer_request: requests[2].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e1.uuid,
-            'target_asset' => child_well_A3.uuid,
-            'outer_request' => requests[3].uuid
+            volume: '5.0',
+            source_asset: parent_well_e1.uuid,
+            target_asset: child_well_A3.uuid,
+            outer_request: requests[3].uuid
           },
           {
-            'volume' => '4.0',
-            'source_asset' => parent_well_f1.uuid,
-            'target_asset' => child_well_B3.uuid,
-            'outer_request' => requests[4].uuid
+            volume: '4.0',
+            source_asset: parent_well_f1.uuid,
+            target_asset: child_well_B3.uuid,
+            outer_request: requests[4].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_h1.uuid,
-            'target_asset' => child_well_C3.uuid,
-            'outer_request' => requests[5].uuid
+            volume: '5.0',
+            source_asset: parent_well_h1.uuid,
+            target_asset: child_well_C3.uuid,
+            outer_request: requests[5].uuid
           },
           {
-            'volume' => '3.2',
-            'source_asset' => parent_well_a2.uuid,
-            'target_asset' => child_well_D3.uuid,
-            'outer_request' => requests[6].uuid
+            volume: '3.2',
+            source_asset: parent_well_a2.uuid,
+            target_asset: child_well_D3.uuid,
+            outer_request: requests[6].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b2.uuid,
-            'target_asset' => child_well_E3.uuid,
-            'outer_request' => requests[7].uuid
+            volume: '5.0',
+            source_asset: parent_well_b2.uuid,
+            target_asset: child_well_E3.uuid,
+            outer_request: requests[7].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_c2.uuid,
-            'target_asset' => child_well_F3.uuid,
-            'outer_request' => requests[8].uuid
+            volume: '5.0',
+            source_asset: parent_well_c2.uuid,
+            target_asset: child_well_F3.uuid,
+            outer_request: requests[8].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d2.uuid,
-            'target_asset' => child_well_G3.uuid,
-            'outer_request' => requests[9].uuid
+            volume: '5.0',
+            source_asset: parent_well_d2.uuid,
+            target_asset: child_well_G3.uuid,
+            outer_request: requests[9].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e2.uuid,
-            'target_asset' => child_well_C2.uuid,
-            'outer_request' => requests[10].uuid
+            volume: '5.0',
+            source_asset: parent_well_e2.uuid,
+            target_asset: child_well_C2.uuid,
+            outer_request: requests[10].uuid
           },
           {
-            'volume' => '30.0',
-            'source_asset' => parent_well_f2.uuid,
-            'target_asset' => child_well_B1.uuid,
-            'outer_request' => requests[11].uuid
+            volume: '30.0',
+            source_asset: parent_well_f2.uuid,
+            target_asset: child_well_B1.uuid,
+            outer_request: requests[11].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_g2.uuid,
-            'target_asset' => child_well_D2.uuid,
-            'outer_request' => requests[12].uuid
+            volume: '5.0',
+            source_asset: parent_well_g2.uuid,
+            target_asset: child_well_D2.uuid,
+            outer_request: requests[12].uuid
           },
           {
-            'volume' => '3.621',
-            'source_asset' => parent_well_h2.uuid,
-            'target_asset' => child_well_C1.uuid,
-            'outer_request' => requests[13].uuid
+            volume: '3.621',
+            source_asset: parent_well_h2.uuid,
+            target_asset: child_well_C1.uuid,
+            outer_request: requests[13].uuid
           }
         ]
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
+      def expect_transfer_request_collection_creation
+        expect_api_v2_posts(
+          'TransferRequestCollection',
+          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
         )
       end
 
       before { stub_api_v2_patch('Well') }
 
       it 'makes the expected transfer requests to bin the wells' do
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to eq true
+
         expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
   end

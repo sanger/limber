@@ -127,31 +127,31 @@ RSpec.describe LabwareCreators::FixedNormalisedPlate do
   end
 
   context '96 well plate' do
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       [
         {
-          'volume' => subject.dilutions_calculator.source_volume.to_s,
-          'source_asset' => well_a1.uuid,
-          'target_asset' => '3-well-A1',
-          'outer_request' => requests[0].uuid
+          volume: subject.dilutions_calculator.source_volume.to_s,
+          source_asset: well_a1.uuid,
+          target_asset: '3-well-A1',
+          outer_request: requests[0].uuid
         },
         {
-          'volume' => subject.dilutions_calculator.source_volume.to_s,
-          'source_asset' => well_b1.uuid,
-          'target_asset' => '3-well-B1',
-          'outer_request' => requests[1].uuid
+          volume: subject.dilutions_calculator.source_volume.to_s,
+          source_asset: well_b1.uuid,
+          target_asset: '3-well-B1',
+          outer_request: requests[1].uuid
         },
         {
-          'volume' => subject.dilutions_calculator.source_volume.to_s,
-          'source_asset' => well_c1.uuid,
-          'target_asset' => '3-well-C1',
-          'outer_request' => requests[2].uuid
+          volume: subject.dilutions_calculator.source_volume.to_s,
+          source_asset: well_c1.uuid,
+          target_asset: '3-well-C1',
+          outer_request: requests[2].uuid
         },
         {
-          'volume' => subject.dilutions_calculator.source_volume.to_s,
-          'source_asset' => well_d1.uuid,
-          'target_asset' => '3-well-D1',
-          'outer_request' => requests[3].uuid
+          volume: subject.dilutions_calculator.source_volume.to_s,
+          source_asset: well_d1.uuid,
+          target_asset: '3-well-D1',
+          outer_request: requests[3].uuid
         }
       ]
     end

@@ -172,23 +172,17 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       [
         { source_asset: 'tube-1-uuid', target_asset: '5-well-A1', outer_request: 'request-1' },
         { source_asset: 'tube-2-uuid', target_asset: '5-well-B1', outer_request: 'request-2' }
       ]
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
       )
     end
 
@@ -220,12 +214,12 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       subject.labware.barcode.machine = 'AB10000001'
       subject.labware.barcode.ean13 = nil
 
+      expect_transfer_request_collection_creation
       expect_pooled_plate_creation
 
       subject.save
 
       expect(subject.errors.full_messages).to be_empty
-      expect(transfer_creation_request).to have_been_made.once
     end
   end
 

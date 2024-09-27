@@ -148,6 +148,20 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   shared_examples 'a quad-split plate creator' do
     describe '#save!' do
+      def expect_custom_metadatum_collection_creation
+        expect_api_v2_posts(
+          'CustomMetadatumCollection',
+          [child_plate_a_create_args, child_plate_b_create_args, child_plate_c_create_args, child_plate_d_create_args]
+        )
+      end
+
+      def expect_transfer_request_collection_creation
+        expect_api_v2_posts(
+          'TransferRequestCollection',
+          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+        )
+      end
+
       let!(:plate_creation_request) do
         stub_api_post(
           'plate_creations',
@@ -167,19 +181,6 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
         )
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
-      end
-
       before do
         allow(SearchHelper).to receive(:merger_plate_names).and_return(stock_purpose_name)
 
@@ -193,14 +194,12 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
       end
 
       it 'makes the expected requests' do
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [child_plate_a_create_args, child_plate_b_create_args, child_plate_c_create_args, child_plate_d_create_args]
-        )
+        expect_custom_metadatum_collection_creation
+        expect_transfer_request_collection_creation
 
         expect(subject.save!).to eq true
+
         expect(plate_creation_request).to have_been_made.times(4)
-        expect(transfer_creation_request).to have_been_made
         expect(subject.redirection_target).to eq(plate)
       end
     end
@@ -209,7 +208,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
   context '384 well plate' do
     let(:plate_size) { 384 }
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       # Hardcoding this to be explicit
       [
         { source_asset: '2-well-A1', target_asset: '3-well-A1', submission_id: '1' },
