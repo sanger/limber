@@ -252,7 +252,8 @@ RSpec.shared_examples 'a partial stamped plate creator' do
     end
 
     it 'makes the expected requests' do
-      # NB. QcAssay and TransferRequestCollection creations are done using API v2, whereas PlateCreation post is using API v1
+      # NB. QcAssay and TransferRequestCollection creations are using API v2;
+      #     PlateCreation post is using API v1
       expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
       expect_api_v2_posts(
         'TransferRequestCollection',
