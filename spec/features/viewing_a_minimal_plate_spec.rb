@@ -11,7 +11,8 @@ RSpec.feature 'Viewing a plate', js: true do
   let(:plate_uuid) { SecureRandom.uuid }
   let(:plate_state) { 'pending' }
   let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, size: 384, state: plate_state, pool_sizes: [3] }
-  let(:default_tube_printer) { 'tube printer 1' }
+  let(:printer_list) { create_list(:v2_tube_barcode_printer, 2) + create_list(:v2_plate_barcode_printer, 2) }
+  let(:default_tube_printer) { printer_list.first.name }
 
   # Setup stubs
   background do
@@ -26,7 +27,7 @@ RSpec.feature 'Viewing a plate', js: true do
 
     # We get the actual plate
     stub_v2_plate(example_plate)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(printer_list)
   end
 
   scenario 'of a recognised type' do
@@ -119,7 +120,7 @@ RSpec.feature 'Viewing a plate', js: true do
              },
              purpose_uuid: 'child-purpose-0'
     end
-    let(:barcode_printer) { 'tube printer 0' }
+    let(:barcode_printer) { printer_list[1].name }
     let(:print_copies) { 2 }
 
     let(:label_a) do

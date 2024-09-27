@@ -105,7 +105,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     # We get the actual plate
     2.times { stub_v2_plate(example_plate) }
     stub_v2_plate(child_plate, stub_search: false)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'basic plate creation' do

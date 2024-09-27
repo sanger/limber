@@ -1,0 +1,30 @@
+<%# locals: (presenter:) %>
+<div id="relatives-information" class="list-group list-group-flush">
+
+  <div class="list-group-item">
+    <strong>Parents</strong>
+    <%= content_tag :span, presenter.labware.parents.size, class: "badge badge-pill badge-secondary" if presenter.labware.parents&.any? %>
+  </div>
+
+  <div id="parents-list" class="border-bottom">
+    <% if presenter.labware.parents&.any? { |parent| parent.purpose.present? } %>
+      <%= render partial: 'labware/parent_labware_item', collection: presenter.labware.parents, as: :labware %>
+    <% else %>
+      <div class="list-group-item text-muted">No parents found</div>
+    <% end %>
+  </div>
+
+  <div class="list-group-item">
+    <strong>Children</strong>
+    <%= content_tag :span, presenter.labware.children.size, class: "badge badge-pill badge-secondary" if presenter.labware.children&.any? %>
+  </div>
+
+  <div id="children-list" class="rounded-bottom">
+    <% if presenter.labware.children&.any? { |child| child.purpose.present? } %>
+      <%= render partial: 'labware/child_labware_item', collection: presenter.labware.children, as: :labware, locals: { presenter: presenter, open_in_new_window: true } %>
+    <% else %>
+      <div class="list-group-item text-muted">No children found</div>
+    <% end %>
+  </div>
+
+</div>

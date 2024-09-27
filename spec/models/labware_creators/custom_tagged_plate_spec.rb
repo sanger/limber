@@ -58,8 +58,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     end
 
     context 'fetching layout templates' do
-      before { stub_api_get('tag_layout_templates', body: json(:tag_layout_template_collection, size: 2)) }
-
       let(:layout_hash) do
         WellHelpers.column_order.each_with_index.map do |w, i|
           pool = i < 8 ? 1 : 2
@@ -67,19 +65,22 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         end
       end
 
-      # rubocop:todo Layout/LineLength
-      # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging. Which is noe unused.
-      # rubocop:enable Layout/LineLength
+      let(:tag_layout_templates) { create_list :v2_tag_layout_template, 2 }
+
+      before { stub_v2_tag_layout_templates(tag_layout_templates) }
+
+      # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging.
+      # Which is now unused.
       it 'lists tag groups' do
         expect(subject.tag_plates_list).to eq(
-          'tag-layout-template-0' => {
+          tag_layout_templates[0].uuid => {
             tags: layout_hash,
             used: false,
             dual_index: false,
             approved: true,
             matches_templates_in_pool: true
           },
-          'tag-layout-template-1' => {
+          tag_layout_templates[1].uuid => {
             tags: layout_hash,
             used: false,
             dual_index: false,
@@ -113,34 +114,32 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
     let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
-    let!(:transfer_creation_request) do
-      stub_api_get(transfer_template_uuid, body: transfer_template)
-      stub_api_post(
-        transfer_template_uuid,
-        payload: {
-          transfer: {
-            source: plate_uuid,
-            destination: child_plate_uuid,
-            user: user_uuid,
+    def expect_transfer_creation
+      expect_api_v2_posts(
+        'Transfer',
+        [
+          {
+            user_uuid: user_uuid,
+            source_uuid: plate_uuid,
+            destination_uuid: child_plate_uuid,
+            transfer_template_uuid: transfer_template_uuid,
             transfers: expected_transfers
           }
-        },
-        body: '{}'
+        ]
       )
     end
 
-    let!(:state_change_tag_plate_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            user: user_uuid,
-            target: tag_plate_uuid,
+    def expect_state_change_creation
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
             reason: 'Used in Library creation',
-            target_state: 'exhausted'
+            target_uuid: tag_plate_uuid,
+            target_state: 'exhausted',
+            user_uuid: user_uuid
           }
-        },
-        body: json(:state_change)
+        ]
       )
     end
 
@@ -199,14 +198,18 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           let(:tag_plate_state) { 'available' }
 
           it 'creates a tag plate' do
+            expect_transfer_creation
+            expect_state_change_creation
+
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(transfer_creation_request).to have_been_made.once
-            expect(state_change_tag_plate_request).to have_been_made.once
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 
           it 'has the correct child (and uuid)' do
+            stub_api_v2_post('Transfer')
+            stub_api_v2_post('StateChange')
+
             expect(subject.save).to be true
 
             # This will be our new plate
@@ -214,27 +217,12 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           context 'when a user has exhausted the plate in another tab' do
-            let!(:state_change_tag_plate_request) do
-              stub_api_post(
-                'state_changes',
-                payload: {
-                  state_change: {
-                    user: user_uuid,
-                    target: tag_plate_uuid,
-                    reason: 'Used in Library creation',
-                    target_state: 'exhausted'
-                  }
-                },
-                status: 500,
-                body: '{"general":["No obvious transition from \"passed\" to \"passed\""]}'
-              )
-            end
-
             it 'creates a tag plate' do
+              expect_transfer_creation
+              expect_state_change_creation
+
               expect(subject.save).to be true
               expect(plate_creation_request).to have_been_made.once
-              expect(transfer_creation_request).to have_been_made.once
-              expect(state_change_tag_plate_request).to have_been_made
               expect(custom_tag_layout_creation_request).to have_been_made.once
             end
           end
@@ -244,16 +232,19 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           let(:tag_plate_state) { 'exhausted' }
 
           it 'creates a tagged plate' do
+            expect_transfer_creation
+            expect(Sequencescape::Api::V2::StateChange).not_to receive(:create!)
+
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(transfer_creation_request).to have_been_made.once
-            expect(state_change_tag_plate_request).not_to have_been_made
 
             # This one will be VERY different
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 
           it 'has the correct child (and uuid)' do
+            stub_api_v2_post('Transfer')
+
             expect(subject.save).to be true
 
             # This will be our new plate
@@ -267,14 +258,17 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           let(:parents) { [plate_uuid] }
 
           it 'creates a tag plate' do
+            expect_transfer_creation
+            expect(Sequencescape::Api::V2::StateChange).not_to receive(:create!)
+
             expect(subject.save).to be true
             expect(plate_creation_request).to have_been_made.once
-            expect(transfer_creation_request).to have_been_made.once
-            expect(state_change_tag_plate_request).not_to have_been_made
             expect(custom_tag_layout_creation_request).to have_been_made.once
           end
 
           it 'has the correct child (and uuid)' do
+            stub_api_v2_post('Transfer')
+
             expect(subject.save).to be true
             expect(subject.child.uuid).to eq(child_plate_uuid)
           end

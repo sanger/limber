@@ -52,5 +52,5 @@ RSpec.configure do |config|
   # issues eleswhere
   config.include ActionDispatch::TestProcess, with: :uploader
 
-  config.before(:suite) { Webpacker.compile }
+  config.before(:suite) { `bin/vite build` }
 end

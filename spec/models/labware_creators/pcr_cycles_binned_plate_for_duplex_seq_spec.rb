@@ -345,8 +345,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         )
       end
 
-      let!(:api_v2_post) { stub_api_v2_post('Well') }
-
       let(:transfer_requests) do
         [
           {
@@ -448,6 +446,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
           body: '{}'
         )
       end
+
+      before { stub_api_v2_patch('Well') }
 
       it 'makes the expected transfer requests to bin the wells' do
         expect(subject.save!).to eq true

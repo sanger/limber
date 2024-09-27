@@ -104,7 +104,7 @@ RSpec.feature 'Multi plate pooling', js: true do
     stub_v2_plate(example_plate_2)
     stub_v2_plate(child_plate)
 
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'creates multiple plates' do

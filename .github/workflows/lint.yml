@@ -7,38 +7,52 @@ on:
   - pull_request
 
 jobs:
-  lint:
+  prettier:
+    name: Prettier
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby # Prettier has a Ruby dependency
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # Runs bundle install and caches gems.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Install Node dependencies
+        run: yarn install
+      - name: Run prettier
+        run: yarn prettier --check .
 
+  rubocop:
+    name: RuboCop
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true # Runs bundle install and caches gems.
-      - name: Setup node
+      - name: Setup Node # RuboCop has a Prettier dependency for formatting
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-      - name: Install
+      - name: Install Node dependencies
         run: yarn install
-      - name: Run prettier
-        run: yarn prettier --check .
       - name: Run lint
         run: bundle exec rubocop --extra-details --display-style-guide --parallel
 
   eslint:
-    name: EsLint
+    name: ESLint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup node
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-      - name: Node Information
-        run: node --version
-      - name: Install
+      - name: Install Node dependencies
         run: yarn install
-      - name: Run yarn lint
+      - name: Run ESLint
         run: yarn lint

@@ -1,0 +1,34 @@
+scRNA Core Aggregation:
+  pipeline_group: scRNA Core Library Prep
+  filters:
+    request_type_key: limber_scrna_core_aggregation
+  relationships:
+    # 2 input routes to this pipeline:
+    #  - LRC GEM-X 5p cDNA PCR XP coming through SeqOps.
+    #  - LRC GEM-X 5p cDNA Input coming as direct input from faculty.
+    # So first stage of aggregation can take either PCR XP or Input plates,
+    # with a mixture of up to 10 plates used to create an Aggregate plate.
+    LRC GEM-X 5p cDNA Input: LRC GEM-X 5p Aggregate
+    LRC GEM-X 5p cDNA PCR XP: LRC GEM-X 5p Aggregate
+    # 2nd stage aggregation takes up to 10 Aggregate plates to make a Cherrypick plate.
+    # The Cherrypick plate is then submitted for Library Prep.
+    LRC GEM-X 5p Aggregate: LRC GEM-X 5p Cherrypick
+scRNA Core Chromium GEM-X 5p:
+  pipeline_group: scRNA Core Library Prep
+  filters:
+    request_type_key: limber_scrna_core_library_prep
+    library_type: Chromium single cell GEM-X 5p v3 GE
+  library_pass: LRC GEM-X 5p GE PCR 2XP
+  relationships:
+    LRC GEM-X 5p Cherrypick: LRC GEM-X 5p GE Dil
+    LRC GEM-X 5p GE Dil: LRC GEM-X 5p GE Frag 2XP
+    LRC GEM-X 5p GE Frag 2XP: LRC GEM-X 5p GE LigXP
+    LRC GEM-X 5p GE LigXP: LRC GEM-X 5p GE PCR 2XP
+scRNA Core Chromium GEM-X 5p MX:
+  pipeline_group: scRNA Core Library Prep
+  filters:
+    request_type_key: limber_multiplexing
+  relationships:
+    LRC GEM-X 5p GE PCR 2XP: LRC GEM-X 5p GE GLibPS
+    LRC GEM-X 5p GE GLibPS: LRC GEM-X 5p GE Pool Norm
+    LRC GEM-X 5p GE Pool Norm: LB Lib Pool Norm

@@ -1,0 +1,50 @@
+@import 'labware-mixins';
+
+.plate-view {
+  @include labware-view;
+  @include labware-grid-view;
+  @extend .mx-auto;
+
+  background-color: $gray-600;
+
+  th {
+    color: $gray-100;
+  }
+
+  .pool-id {
+    display: none;
+  }
+  &.pool-colours {
+    .pool-id {
+      display: inline;
+    }
+  }
+
+  .control-type {
+    font-weight: 500;
+    font-size: 25px;
+    line-height: 25px;
+  }
+  &.pool-colours {
+    .control-type {
+      display: none;
+    }
+  }
+
+  .well {
+    background: $gray-200;
+
+    .aliquot {
+      border-radius: 7px;
+    }
+  }
+}
+
+.plate-view.plate-384 {
+  @include labware-grid-view-384;
+}
+
+.selected-aliquot {
+  border: 2px $gray-100 solid;
+  position: relative;
+}

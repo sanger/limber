@@ -11,7 +11,7 @@ LRC Blood Vac:
   :input_plate: false
   :target: SampleTube
   :type: Tube::Purpose
-  :presenter_class: Presenters::VacTubePresenter
+  :presenter_class: Presenters::StockTubePresenter
   :creator_class: LabwareCreators::Uncreatable
   :default_printer_type: :tube
 # Manually aliquoted intermediate tube
@@ -39,6 +39,7 @@ LRC Blood Bank:
     params:
       allow_tube_duplicates: yes
       require_tube_passed: yes
+      acceptable_purposes: ['LRC Blood Aliquot']
   :submission_options:
     scRNA core cell extraction:
       template_name: 'Limber - scRNA Core Cell Extraction'
@@ -81,7 +82,7 @@ LRC PBMC Bank:
       units: '%'
       default_threshold: 50
     live_cell_count:
-      name: Cell count
+      name: Live cell count
       units: 'cells/ml'
       default_threshold: 400000
       decimal_places: 0
@@ -119,4 +120,4 @@ LRC Bank Input:
   :target: SampleTube
   :type: Tube::Purpose
   :creator_class: LabwareCreators::Uncreatable
-  :presenter_class: Presenters::SimpleTubePresenter
+  :presenter_class: Presenters::StockTubePresenter

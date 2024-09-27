@@ -1,10 +1,11 @@
 <%# This is a picking file for a Hamilton robot for LRC PBMC Defrost plate to LRC PBMC Pools plate transfers %>
 <%= CSV.generate_line [
-    'Workflow', 
+    'Workflow',
     @workflow
-  ], 
-  row_sep: '' 
+  ],
+  row_sep: ''
 %>
+<%= CSV.generate_line [], row_sep: "" %>
 <%= CSV.generate_line [
     'Source Plate',
     'Source Well',
@@ -21,11 +22,13 @@
   args = Settings.purposes[@plate.purpose.uuid][:presenter_class][:args]
   default_required_number_of_cells = args[:default_required_number_of_cells]
   study_required_number_of_cells_key = args[:study_required_number_of_cells_key]
-  
-  maximum_sample_volume = 50.0  # microlitres
+
+  maximum_sample_volume = 60.0  # microlitres
   resuspension_volume_per_sample = 2.2  # microlitres
   minimum_resuspension_volume = 10.0  # microlitres
   millilitres_to_microlitres = 1_000.0
+  wastage_accountment = 0.95238 # Accounting for wastage of material during transfer between labware
+  desired_chip_loading_concentration = 2400
 
   # Make a mapping { src_barcode => { src_location => src_well } }
 
@@ -38,7 +41,7 @@
   transfer_request_data = []
   each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
     src_well = ancestor_plates_wells[src_barcode][src_location]
-    cell_count = src_well.latest_live_cell_count  # cells / millilitres
+    cell_count = src_well.latest_total_cell_count  # cells / millilitres
     next if cell_count.nil?
 
     # Use the study's required number of cells if available, otherwise use the default
@@ -57,6 +60,8 @@
       @plate.labware_barcode.human,
       dest_well.location,
       '%0.2f' % required_volume,
+      # We pass in the required number of cells so that we can calculate the resuspension volume later
+      required_number_of_cells
     ]
   end
 
@@ -66,8 +71,11 @@
 
   rows_array = transfer_request_data.map do |data|
     samples_in_pool = samples_by_dest_well[data[3]].count
-    resuspension_volume = [samples_in_pool * resuspension_volume_per_sample, minimum_resuspension_volume].max
-    data + ['%0.2f' % resuspension_volume]
+    required_number_of_cells = data[5]
+    resuspension_volume = [(samples_in_pool * required_number_of_cells * wastage_accountment) / desired_chip_loading_concentration, minimum_resuspension_volume].max
+    # Replace required number of cells with resuspension volume
+    data[5] = '%0.2f' % resuspension_volume
+    data
   end
 %>
 <%= rows_array.sort_by{ |a| [ a[0], WellHelpers.well_coordinate(a[1])] }.map(&:to_csv).join %>

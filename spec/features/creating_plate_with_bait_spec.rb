@@ -39,7 +39,7 @@ RSpec.feature 'Creating a plate with bait', js: true do
     stub_v2_plate(example_plate)
     stub_v2_plate(child_plate)
 
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
 
     # end of stubs for plate show page
 

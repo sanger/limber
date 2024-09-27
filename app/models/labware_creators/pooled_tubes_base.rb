@@ -7,6 +7,9 @@ module LabwareCreators
   # the submission uuid - this should be changed
   class PooledTubesBase < Base
     include SupportParent::TaggedPlateOnly
+
+    include LabwareCreators::SupportV2SourcePlate
+
     attr_reader :tube_transfer, :child_stock_tubes
     attr_writer :metadata_stock_barcode
 
@@ -66,7 +69,7 @@ module LabwareCreators
     end
 
     def anchor
-      'children_tab'
+      'relatives_tab'
     end
 
     private
@@ -93,10 +96,10 @@ module LabwareCreators
     end
 
     def parent_metadata
-      if parent.is_a? Limber::Plate
-        LabwareMetadata.new(api: api, labware: parent).metadata
+      if source_plate
+        LabwareMetadata.new(labware: source_plate).metadata
       else
-        LabwareMetadata.new(api: api, barcode: parent.barcode.machine).metadata
+        LabwareMetadata.new(barcode: parent.barcode.machine).metadata
       end || {}
     end
 

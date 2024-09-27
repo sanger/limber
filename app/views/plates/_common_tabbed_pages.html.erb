@@ -4,7 +4,7 @@
       <a class="nav-link active" href="#summary_tab" data-toggle="tab" role="tab" data-plate-view="summary-view">Summary</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#children_tab" data-toggle="tab" role="tab" data-plate-view="pools-view">Children</a>
+      <a class="nav-link" href="#relatives_tab" data-toggle="tab" role="tab" data-plate-view="pools-view">Relatives</a>
     </li>
     <% if @presenter.pooling_tab.present? %>
     <li class="nav-item">
@@ -16,7 +16,7 @@
       <a id='files-tab-link' class="nav-link" href="#files_tab" data-toggle="tab" role="tab" data-plate-view="files-view">Files</a>
     </li>
     <li class="nav-item">
-      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-toggle="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter') %></a>
+      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-toggle="tab" role="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter') %></a>
     </li>
   </ul>
 </nav>
@@ -37,9 +37,8 @@
                              data-asset-id="<%= presenter.id %>">
     </div>
   </div>
-  <div class="tab-pane" id='children_tab' role="tabpanel">
-    <%= render partial: 'tube_list', locals: { presenter: presenter, tube_template: 'labware/pooled_tube' } %>
-    <%= render partial: 'plate_list', locals: { presenter: presenter } %>
+  <div class="tab-pane" id='relatives_tab' role="tabpanel">
+    <%= render partial: 'relatives_list', locals: { presenter: presenter } %>
   </div>
   <%= yield(:additional_panels) if content_for?(:additional_panels) %>
 </div>

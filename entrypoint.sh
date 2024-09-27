@@ -11,5 +11,10 @@ if [ "${GENERATE_CONFIG:-}" = "true" ]; then
   bundle exec rails config:generate
 fi
 
+# Build the static web assets
+if [ "${PRECOMPILE_ASSETS:-}" = "true" ]; then
+  bundle exec rails assets:precompile
+fi
+
 # Then exec the container's main process (what's set as CMD in the Dockerfile).
 exec "$@"
