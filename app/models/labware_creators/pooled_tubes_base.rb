@@ -54,7 +54,7 @@ module LabwareCreators
     end
 
     def request_hash(source, target, submission)
-      { 'source_asset' => source, 'target_asset' => target, 'submission' => submission }
+      { source_asset: source, target_asset: target, submission: submission }
     end
 
     def pool_uuids

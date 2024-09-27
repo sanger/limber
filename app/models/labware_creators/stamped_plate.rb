@@ -46,8 +46,8 @@ module LabwareCreators
 
     def request_hash(source_well, child_plate, additional_parameters)
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid
+        source_asset: source_well.uuid,
+        target_asset: child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid
       }.merge(additional_parameters)
     end
   end

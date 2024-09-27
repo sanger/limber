@@ -668,7 +668,7 @@ module LabwareCreators
     # @param additional_parameters [Hash] Additional parameters to include in the transfer request hash.
     # @return [Hash] A transfer request hash.
     def request_hash(source_well_uuid, target_tube_uuid, additional_parameters)
-      { 'source_asset' => source_well_uuid, 'target_asset' => target_tube_uuid }.merge(additional_parameters)
+      { source_asset: source_well_uuid, target_asset: target_tube_uuid }.merge(additional_parameters)
     end
   end
   # rubocop:enable Metrics/ClassLength

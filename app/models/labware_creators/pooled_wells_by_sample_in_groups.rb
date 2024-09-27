@@ -71,9 +71,9 @@ module LabwareCreators
     def request_hash(source_well, dest_plate, additional_parameters)
       dest_location = transfer_hash[source_well.location][:dest_locn]
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' => get_well_for_plate_location(dest_plate, dest_location)&.uuid,
-        'merge_equivalent_aliquots' => true
+        source_asset: source_well.uuid,
+        target_asset: get_well_for_plate_location(dest_plate, dest_location)&.uuid,
+        merge_equivalent_aliquots: true
       }.merge(additional_parameters)
     end
 

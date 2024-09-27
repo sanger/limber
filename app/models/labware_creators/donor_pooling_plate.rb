@@ -194,10 +194,10 @@ module LabwareCreators
     def request_hash(source_well, dest_plate, additional_parameters)
       dest_location = transfer_hash[source_well][:dest_locn]
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' => dest_plate.well_at_location(dest_location)&.uuid,
-        :aliquot_attributes => {
-          'tag_depth' => tag_depth_hash[source_well]
+        source_asset: source_well.uuid,
+        target_asset: dest_plate.well_at_location(dest_location)&.uuid,
+        aliquot_attributes: {
+          tag_depth: tag_depth_hash[source_well]
         }
       }.merge(additional_parameters)
     end

@@ -62,8 +62,8 @@ module LabwareCreators
       child_plate_index = source_well.quadrant_index
       child_well_name = WellHelpers.well_name(row / 2, col / 2)
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' =>
+        source_asset: source_well.uuid,
+        target_asset:
           child_plates[child_plate_index].wells.detect { |child_well| child_well.location == child_well_name }&.uuid
       }.merge(additional_parameters)
     end
