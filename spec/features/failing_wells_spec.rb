@@ -23,6 +23,19 @@ RSpec.feature 'Failing wells', js: true do
     create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells
   end
 
+  let(:state_changes_attributes) do
+    [
+      {
+        contents: %w[A2 A3],
+        customer_accepts_responsibility: nil,
+        reason: 'Individual Well Failure',
+        target_state: 'failed',
+        target_uuid: plate_uuid,
+        user_uuid: user_uuid
+      }
+    ]
+  end
+
   # Setup stubs
   background do
     # Set-up the plate config
@@ -48,19 +61,7 @@ RSpec.feature 'Failing wells', js: true do
   end
 
   scenario 'failing wells' do
-    expect_api_v2_posts(
-      'StateChange',
-      [
-        {
-          contents: %w[A2 A3],
-          customer_accepts_responsibility: nil,
-          reason: 'Individual Well Failure',
-          target_state: 'failed',
-          target_uuid: plate_uuid,
-          user_uuid: user_uuid
-        }
-      ]
-    )
+    expect_state_change_creation
 
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     click_on('Fail Wells')

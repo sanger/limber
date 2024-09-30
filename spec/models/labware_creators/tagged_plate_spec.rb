@@ -180,6 +180,17 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:tag2_tube_uuid) { 'tag2-tube' }
     let(:tag2_template_uuid) { 'tag2-layout-template' }
 
+    let(:state_changes_attributes) do
+      [
+        {
+          reason: 'Used in Library creation',
+          target_state: 'exhausted',
+          target_uuid: tag_plate_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     include_context 'a tag plate creator' do
       let(:enforce_uniqueness) { false }
     end
@@ -208,6 +219,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
       context 'on save' do
         it 'creates a tag plate' do
+          expect_state_change_creation
           expect_api_v2_posts(
             'Transfer',
             [
@@ -217,18 +229,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
                 destination_uuid: tag_plate_uuid,
                 transfer_template_uuid: transfer_template_uuid,
                 transfers: expected_transfers
-              }
-            ]
-          )
-
-          expect_api_v2_posts(
-            'StateChange',
-            [
-              {
-                reason: 'Used in Library creation',
-                target_state: 'exhausted',
-                target_uuid: tag_plate_uuid,
-                user_uuid: user_uuid
               }
             ]
           )

@@ -27,6 +27,13 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     let(:destination_tubes) { create_list :v2_tube, 2 }
     let(:transfer) { create :v2_transfer_to_tubes_by_submission, tubes: destination_tubes }
 
+    let(:state_changes_attributes) do
+      [
+        { target_state: 'passed', target_uuid: destination_tubes[0].uuid, user_uuid: user_uuid },
+        { target_state: 'passed', target_uuid: destination_tubes[1].uuid, user_uuid: user_uuid }
+      ]
+    end
+
     before do
       stub_api_v2_post('Transfer', transfer)
       stub_api_v2_post('StateChange')
@@ -49,13 +56,7 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     end
 
     it 'passes the tubes automatically' do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          { target_state: 'passed', target_uuid: destination_tubes[0].uuid, user_uuid: user_uuid },
-          { target_state: 'passed', target_uuid: destination_tubes[1].uuid, user_uuid: user_uuid }
-        ]
-      )
+      expect_state_change_creation
 
       subject.save!
     end
