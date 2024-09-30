@@ -641,6 +641,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       )
     end
 
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+      )
+    end
+
     before do
       stub_v2_plate(
         parent_plate,
@@ -726,24 +733,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           )
       end
 
-      # stub the transfer creation
-      let!(:stub_transfer_creation_request) do
+      let(:transfer_requests_attributes) do
         parent_wells = [parent_well_a1, parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
         target_tubes = sequencing_tubes + contingency_tubes
-        transfer_requests =
-          parent_wells.map.with_index do |parent_well, index|
-            { 'submission_id' => '2', 'source_asset' => parent_well.uuid, 'target_asset' => target_tubes[index].uuid }
-          end
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
+
+        parent_wells.map.with_index do |parent_well, index|
+          { submission_id: '2', source_asset: parent_well.uuid, target_asset: target_tubes[index].uuid }
+        end
       end
 
       let(:contingency_file) do
@@ -756,6 +752,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       before { stub_v2_user(user) }
 
       it 'creates the child tubes' do
+        expect_transfer_request_collection_creation
         expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
         expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
 
@@ -767,7 +764,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         expect(subject.save).to be_truthy
         expect(stub_sequencing_file_upload).to have_been_made.once
         expect(stub_contingency_file_upload).to have_been_made.once
-        expect(stub_transfer_creation_request).to have_been_made.once
       end
 
       context 'when a well has been failed' do
@@ -776,24 +772,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'failed')
         end
 
-        # one fewer transfer request
-        let!(:stub_transfer_creation_request) do
+        let(:transfer_requests_attributes) do
           parent_wells = [parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
           target_tubes = sequencing_tubes + contingency_tubes
-          transfer_requests =
-            parent_wells.map.with_index do |parent_well, index|
-              { 'submission_id' => '2', 'source_asset' => parent_well.uuid, 'target_asset' => target_tubes[index].uuid }
-            end
-          stub_api_post(
-            'transfer_request_collections',
-            payload: {
-              transfer_request_collection: {
-                user: user_uuid,
-                transfer_requests: transfer_requests
-              }
-            },
-            body: '{}'
-          )
+
+          parent_wells.map.with_index do |parent_well, index|
+            { submission_id: '2', source_asset: parent_well.uuid, target_asset: target_tubes[index].uuid }
+          end
         end
 
         let(:contingency_file) do
@@ -826,6 +811,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         end
 
         it 'does not create a tube for the failed well' do
+          expect_transfer_request_collection_creation
           expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
           expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
 
@@ -837,7 +823,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           expect(subject.save).to be_truthy
           expect(stub_sequencing_file_upload).to have_been_made.once
           expect(stub_contingency_file_upload).to have_been_made.once
-          expect(stub_transfer_creation_request).to have_been_made.once
         end
       end
     end
@@ -889,40 +874,23 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      # stub the transfer creation
-      let!(:stub_transfer_creation_request) do
-        parent_wells = [parent_well_a1, parent_well_b1]
-        transfer_requests =
-          parent_wells.map.with_index do |parent_well, index|
-            {
-              'submission_id' => '2',
-              'source_asset' => parent_well.uuid,
-              'target_asset' => sequencing_tubes[index].uuid
-            }
-          end
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
+      let(:transfer_requests_attributes) do
+        [parent_well_a1, parent_well_b1].map.with_index do |parent_well, index|
+          { submission_id: '2', source_asset: parent_well.uuid, target_asset: sequencing_tubes[index].uuid }
+        end
       end
 
       before { stub_v2_user(user) }
 
       it 'creates the child tubes' do
         # Contingency tubes creation
+        expect_transfer_request_collection_creation
         expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
         expect_custom_metadatum_collection_posts({ 'TR00000001' => sequencing_tubes })
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
         expect(stub_sequencing_file_upload).to have_been_made.once
-        expect(stub_transfer_creation_request).to have_been_made.once
       end
     end
   end

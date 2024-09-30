@@ -139,6 +139,16 @@ module ApiUrlHelper
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end
 
+      # Find by Barcode
+      barcode_args = { barcode: plate.barcode.machine }
+      barcode_args[:includes] = custom_includes if custom_includes
+      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(*[barcode_args]).and_return(plate)
+
+      # Find by UUID
+      uuid_args = { uuid: plate.uuid }
+      uuid_args[:includes] = custom_includes if custom_includes
+      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(*[uuid_args]).and_return(plate)
+
       stub_v2_labware(plate)
     end
 
@@ -166,8 +176,16 @@ module ApiUrlHelper
     # Builds the basic v2 tube finding query.
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
-      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+
+      # Find by Barcode
+      barcode_args = { barcode: tube.barcode.machine }
+      barcode_args[:includes] = custom_includes if custom_includes
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*[barcode_args]).and_return(tube)
+
+      # Find by UUID
+      uuid_args = { uuid: tube.uuid }
+      uuid_args[:includes] = custom_includes if custom_includes
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*[uuid_args]).and_return(tube)
 
       stub_v2_labware(tube)
     end

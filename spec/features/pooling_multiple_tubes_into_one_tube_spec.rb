@@ -99,22 +99,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     )
   end
 
-  let!(:transfer_creation_request) do
-    stub_api_post(
-      'transfer_request_collections',
-      payload: {
-        transfer_request_collection: {
-          user: user_uuid,
-          transfer_requests: [
-            { 'source_asset' => tube_uuid, 'target_asset' => child_uuid },
-            { 'source_asset' => tube_uuid_2, 'target_asset' => child_uuid }
-          ]
-        }
-      },
-      body: '{}'
-    )
-  end
-
   let!(:order_requests) do
     stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
     stub_api_post(
@@ -142,6 +126,17 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
     )
     stub_api_post('sub-uuid', 'submit')
+  end
+
+  let(:transfer_requests_attributes) do
+    [tube_uuid, tube_uuid_2].map { |source_uuid| { source_asset: source_uuid, target_asset: child_uuid } }
+  end
+
+  def expect_transfer_request_collection_creation
+    expect_api_v2_posts(
+      'TransferRequestCollection',
+      [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+    )
   end
 
   before do
@@ -219,6 +214,12 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     let(:aliquot_set_2) { create_list :v2_tagged_aliquot, 2, library_state: 'passed' }
 
     scenario 'creates multiple tubes' do
+      # This isn't strictly speaking correct to test. But there isn't a great way
+      # of confirming that the right information got passed to the back end otherwise.
+      # (Although you expect it to fail on an incorrect request)
+      # Also see the related note at the end of the scenario.
+      expect_transfer_request_collection_creation
+
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
       tube_title = find('#tube-title')
       expect(tube_title).to have_text(parent_purpose_name)
@@ -229,11 +230,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       expect(page).to have_text('New empty labware added to the system')
       expect(page).to have_text('Pool tube')
 
-      # This isn't strictly speaking correct to test. But there isn't a great way
-      # of confirming that the right information got passed to the back end otherwise.
-      # (Although you expect it to fail on an incorrect request)
+      # Ditto in relation to this not being the correct place to test this, but see the note at the top of the scenario.
       expect(tube_creation_request).to have_been_made
-      expect(transfer_creation_request).to have_been_made
     end
   end
 

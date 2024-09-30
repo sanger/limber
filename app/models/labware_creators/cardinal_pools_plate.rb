@@ -58,7 +58,7 @@ module LabwareCreators
     end
 
     # returns: a list of objects, mapping source well to destination well
-    # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
+    # e.g [{:source_asset: :auuid, :target_asset: :anotheruuid}]
     def transfer_request_attributes(dest_plate)
       passed_parent_wells.map { |source_well| request_hash(source_well, dest_plate) }
     end
