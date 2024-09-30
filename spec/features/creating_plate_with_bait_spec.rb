@@ -23,9 +23,9 @@ RSpec.feature 'Creating a plate with bait', js: true do
 
   let(:bait_library_layout) { create :bait_library_layout }
 
-  let(:transfer_requests) do
+  let(:transfer_requests_attributes) do
     WellHelpers.column_order(96)[0, 6].map do |well_name|
-      { 'source_asset' => "2-well-#{well_name}", 'target_asset' => "3-well-#{well_name}", 'submission_id' => '2' }
+      { source_asset: "2-well-#{well_name}", target_asset: "3-well-#{well_name}", submission_id: '2' }
     end
   end
 
@@ -52,6 +52,7 @@ RSpec.feature 'Creating a plate with bait', js: true do
       [[bait_library_layout]],
       method: :preview
     )
+    stub_api_v2_post('BaitLibraryLayout')
 
     # end of stubs for plate_creation baiting page
 
@@ -67,20 +68,10 @@ RSpec.feature 'Creating a plate with bait', js: true do
         }
       }
     )
-    stub_api_post(
-      'transfer_request_collections',
-      payload: {
-        transfer_request_collection: {
-          user: user_uuid,
-          transfer_requests: transfer_requests
-        }
-      },
-      body: '{}'
-    )
-
-    expect_api_v2_posts('BaitLibraryLayout', [{ plate_uuid: 'child-uuid', user_uuid: user_uuid }])
+    stub_api_v2_post('TransferRequestCollection')
 
     # end of stubs for creating a new plate with baits
+
     # Stub the requests for the next plate page
     stub_v2_plate(child_plate)
   end

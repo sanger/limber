@@ -254,12 +254,7 @@ module LabwareCreators
     end
 
     def request_hash(source, target, submission)
-      {
-        'source_asset' => source,
-        'target_asset' => target,
-        'submission' => submission,
-        'merge_equivalent_aliquots' => true
-      }
+      { source_asset: source, target_asset: target, submission: submission, merge_equivalent_aliquots: true }
     end
   end
 end

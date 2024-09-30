@@ -105,39 +105,29 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
       stub_api_get(parent_uuid, 'wells', body: wells_json)
     end
 
-    let(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: [
-              { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-6', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-8', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-9', 'target_asset' => 'tube-0' },
-              { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-1' },
-              { 'source_asset' => 'example-well-uuid-10', 'target_asset' => 'tube-1' },
-              { 'source_asset' => 'example-well-uuid-11', 'target_asset' => 'tube-1' },
-              { 'source_asset' => 'example-well-uuid-12', 'target_asset' => 'tube-1' },
-              { 'source_asset' => 'example-well-uuid-13', 'target_asset' => 'tube-1' },
-              { 'source_asset' => 'example-well-uuid-14', 'target_asset' => 'tube-1' }
-            ]
-          }
-        },
-        body: '{}'
-      )
+    let(:transfer_requests_attributes) do
+      [
+        { source_asset: 'example-well-uuid-0', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-1', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-3', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-4', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-5', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-6', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-7', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-8', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-9', target_asset: 'tube-0' },
+        { source_asset: 'example-well-uuid-2', target_asset: 'tube-1' },
+        { source_asset: 'example-well-uuid-10', target_asset: 'tube-1' },
+        { source_asset: 'example-well-uuid-11', target_asset: 'tube-1' },
+        { source_asset: 'example-well-uuid-12', target_asset: 'tube-1' },
+        { source_asset: 'example-well-uuid-13', target_asset: 'tube-1' },
+        { source_asset: 'example-well-uuid-14', target_asset: 'tube-1' }
+      ]
     end
 
     before do
       stub_parent_request
       stub_qc_file_creation
-      transfer_creation_request
     end
 
     context 'with a valid file' do
@@ -147,10 +137,10 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
 
       it 'pools according to the file' do
         expect_specific_tube_creation
+        expect_transfer_request_collection_creation
 
         expect(subject.save).to be_truthy
         expect(stub_qc_file_creation).to have_been_made.once
-        expect(transfer_creation_request).to have_been_made.once
       end
     end
 

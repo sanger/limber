@@ -44,6 +44,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user) { create :user }
+  let(:user_uuid) { user.uuid }
 
   before do
     create :purpose_config, name: child_purpose_name
@@ -243,7 +244,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       }
     end
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       [
         { source_asset: '3-well-A1', outer_request: 'request-0', target_asset: '5-well-A1' },
         { source_asset: '3-well-B1', outer_request: 'request-1', target_asset: '5-well-C1' },
@@ -266,19 +267,6 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
         { source_asset: '4-well-A2', outer_request: 'request-8', target_asset: '5-well-B3' },
         { source_asset: '4-well-B2', outer_request: 'request-9', target_asset: '5-well-D3' }
       ]
-    end
-
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user.uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
-      )
     end
 
     let(:pooled_plate_creation) do
@@ -314,12 +302,11 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
 
     context '#save!' do
       it 'creates a plate!' do
-        expect_pooled_plate_creation
         expect_custom_metadatum_collection_creation
+        expect_pooled_plate_creation
+        expect_transfer_request_collection_creation
 
         subject.save!
-
-        expect(transfer_creation_request).to have_been_made.once
       end
     end
   end

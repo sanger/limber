@@ -82,19 +82,6 @@ RSpec.describe LabwareCreators::MergedPlate do
         stub_v2_plate(child_plate, stub_search: false)
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
-      end
-
       let(:child_plate) do
         create :v2_plate,
                uuid: 'child-uuid',
@@ -127,11 +114,10 @@ RSpec.describe LabwareCreators::MergedPlate do
 
       it 'makes the expected requests' do
         expect_pooled_plate_creation
+        expect_transfer_request_collection_creation
 
         expect(subject).to be_valid
         expect(subject.save!).to eq true
-
-        expect(transfer_creation_request).to have_been_made
       end
     end
   end
@@ -146,16 +132,16 @@ RSpec.describe LabwareCreators::MergedPlate do
       }
     end
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       WellHelpers
         .column_order(plate_size)
         .each_with_index
         .map do |well_name, _index|
           {
-            'source_asset' => "2-well-#{well_name}",
-            'target_asset' => "4-well-#{well_name}",
-            'submission_id' => '1',
-            'merge_equivalent_aliquots' => true
+            source_asset: "2-well-#{well_name}",
+            target_asset: "4-well-#{well_name}",
+            submission_id: '1',
+            merge_equivalent_aliquots: true
           }
         end
         .concat(
@@ -164,10 +150,10 @@ RSpec.describe LabwareCreators::MergedPlate do
             .each_with_index
             .map do |well_name, _index|
               {
-                'source_asset' => "3-well-#{well_name}",
-                'target_asset' => "4-well-#{well_name}",
-                'submission_id' => '1',
-                'merge_equivalent_aliquots' => true
+                source_asset: "3-well-#{well_name}",
+                target_asset: "4-well-#{well_name}",
+                submission_id: '1',
+                merge_equivalent_aliquots: true
               }
             end
         )

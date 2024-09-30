@@ -5,7 +5,8 @@ module ApiUrlHelper
 
   def self.included(base)
     base.extend(V1Helpers)
-    base.extend(V2Helpers)
+    base.extend(V2Expectations)
+    base.extend(V2Stubs)
   end
 
   module V1Helpers
@@ -73,7 +74,29 @@ module ApiUrlHelper
     end
   end
 
-  module V2Helpers
+  module V2Expectations
+    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+      # Expects the specified `method` for any class beginning with
+      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
+      # If return_values is empty, it will return true.
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      args_list
+        .zip(return_values)
+        .each do |args, ret|
+          ret ||= true
+          expect(receiving_class).to receive(method).with(args).and_return(ret)
+        end
+    end
+
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+      )
+    end
+  end
+
+  module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true.
@@ -97,22 +120,21 @@ module ApiUrlHelper
       allow(receiving_class).to receive(method).and_return(return_value)
     end
 
-    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
-      # Expects the specified `method` for any class beginning with
-      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
-      # If return_values is empty, it will return true.
-      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
-      args_list
-        .zip(return_values)
-        .each do |args, ret|
-          ret ||= true
-          expect(receiving_class).to receive(method).with(args).and_return(ret)
-        end
-    end
-
     def stub_barcode_search(barcode, labware)
       labware_result = create :labware, type: labware.type, uuid: labware.uuid, id: labware.id
       allow(Sequencescape::Api::V2).to receive(:minimal_labware_by_barcode).with(barcode).and_return(labware_result)
+    end
+
+    def stub_find_by(klass, record, custom_includes: nil)
+      # Find by Barcode
+      barcode_args = { barcode: record.barcode.machine }
+      barcode_args[:includes] = custom_includes if custom_includes
+      allow(klass).to receive(:find_by).with(barcode_args).and_return(record)
+
+      # Find by UUID
+      uuid_args = { uuid: record.uuid }
+      uuid_args[:includes] = custom_includes if custom_includes
+      allow(klass).to receive(:find_by).with(uuid_args).and_return(record)
     end
 
     # Stubs a request for all barcode printers
@@ -139,6 +161,7 @@ module ApiUrlHelper
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end
 
+      stub_find_by(Sequencescape::Api::V2::Plate, plate, custom_includes: custom_includes)
       stub_v2_labware(plate)
     end
 
@@ -166,9 +189,8 @@ module ApiUrlHelper
     # Builds the basic v2 tube finding query.
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
-      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
 
+      stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes: custom_includes)
       stub_v2_labware(tube)
     end
 
@@ -189,5 +211,6 @@ end
 RSpec.configure do |config|
   config.include ApiUrlHelper
   config.include ApiUrlHelper::V1Helpers
-  config.include ApiUrlHelper::V2Helpers
+  config.include ApiUrlHelper::V2Expectations
+  config.include ApiUrlHelper::V2Stubs
 end

@@ -14,7 +14,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
   let(:purpose) { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid) { 'parent-uuid' }
   let(:requests) do
-    Array.new(6) { |i| create :library_request, :state => 'started', :uuid => "request-#{i}", 'submission_id' => '2' }
+    Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
   let(:parent) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
   let(:child) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
@@ -25,9 +25,9 @@ RSpec.describe LabwareCreators::BaitedPlate do
 
   let(:bait_library_layout) { create :bait_library_layout }
 
-  let(:transfer_requests) do
+  let(:transfer_requests_attributes) do
     WellHelpers.column_order(96)[0, 6].map do |well_name|
-      { 'source_asset' => "2-well-#{well_name}", 'target_asset' => "3-well-#{well_name}", 'submission_id' => '2' }
+      { source_asset: "2-well-#{well_name}", target_asset: "3-well-#{well_name}", submission_id: '2' }
     end
   end
 
@@ -60,19 +60,6 @@ RSpec.describe LabwareCreators::BaitedPlate do
       stub_api_v2_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
-      )
-    end
-
     it 'should make an api call for bait library layout preview' do
       bait_library_layout_preview = {
         'A1' => 'Human all exon 50MB',
@@ -84,6 +71,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
     end
 
     it 'should create objects' do
+      expect_transfer_request_collection_creation
       expect(subject.create_labware!).to eq true
     end
   end

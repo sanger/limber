@@ -19,7 +19,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   let(:plate_size) { 384 }
   let(:requests) do
     Array.new(plate_size) do |i|
-      create :gbs_library_request, :state => 'started', :uuid => "request-#{i}", 'submission_id' => '2'
+      create :gbs_library_request, state: 'started', uuid: "request-#{i}", submission_id: '2'
     end
   end
   let(:parent) do
@@ -79,30 +79,18 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
       end
     end
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       WellHelpers
         .column_order(plate_size)
         .map do |well_name|
-          { 'source_asset' => "2-well-#{well_name}", 'target_asset' => "3-well-#{well_name}", 'submission_id' => '2' }
+          { source_asset: "2-well-#{well_name}", target_asset: "3-well-#{well_name}", submission_id: '2' }
         end
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
-      )
-    end
-
     it 'should create objects' do
+      expect_transfer_request_collection_creation
+
       expect(subject.save!).to eq true
-      expect(transfer_creation_request).to have_been_made
     end
   end
 end

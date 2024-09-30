@@ -82,20 +82,11 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
       )
     end
 
-    let(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: [
-              { 'source_asset' => parent_uuid, 'target_asset' => child_uuid },
-              { 'source_asset' => parent2_uuid, 'target_asset' => child_uuid }
-            ]
-          }
-        },
-        body: '{}'
-      )
+    let(:transfer_requests_attributes) do
+      [
+        { source_asset: parent_uuid, target_asset: child_uuid },
+        { source_asset: parent2_uuid, target_asset: child_uuid }
+      ]
     end
 
     before do
@@ -105,14 +96,15 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
 
       tube_creation_request
       tube_creation_children_request
-      transfer_creation_request
     end
 
     context 'with compatible tubes' do
       it 'pools from all the tubes' do
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to be_truthy
+
         expect(tube_creation_request).to have_been_made.once
-        expect(transfer_creation_request).to have_been_made.once
       end
     end
   end

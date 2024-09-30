@@ -251,27 +251,18 @@ RSpec.shared_examples 'a partial stamped plate creator' do
       )
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
-      )
-    end
-
     it 'makes the expected requests' do
-      # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
-      expect(Sequencescape::Api::V2::QcAssay).to receive(:create)
-        .with(qc_results: dest_well_qc_attributes)
-        .and_return(true)
+      # NB. QcAssay and TransferRequestCollection creations are using API v2;
+      #     PlateCreation post is using API v1
+      expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+      )
+
       expect(subject.save!).to eq true
+
       expect(plate_creation_request).to have_been_made
-      expect(transfer_creation_request).to have_been_made
     end
   end
 end

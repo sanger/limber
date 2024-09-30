@@ -75,39 +75,28 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       child_tubes
     end
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       [
-        { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
-        { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
-        { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
-        { 'source_asset' => 'example-well-uuid-8', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-        { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-        { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-        { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-        { 'source_asset' => 'example-well-uuid-6', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-        { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' }
+        { source_asset: 'example-well-uuid-0', target_asset: 'tube-0', submission: 'pool-1-uuid' },
+        { source_asset: 'example-well-uuid-1', target_asset: 'tube-0', submission: 'pool-1-uuid' },
+        { source_asset: 'example-well-uuid-2', target_asset: 'tube-0', submission: 'pool-1-uuid' },
+        { source_asset: 'example-well-uuid-8', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+        { source_asset: 'example-well-uuid-3', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+        { source_asset: 'example-well-uuid-4', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+        { source_asset: 'example-well-uuid-5', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+        { source_asset: 'example-well-uuid-6', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+        { source_asset: 'example-well-uuid-7', target_asset: 'tube-1', submission: 'pool-2-uuid' }
       ]
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
-      )
-    end
-
     context 'without parent metadata' do
-      before { expect_specific_tube_creation(child_tubes) }
+      before do
+        expect_specific_tube_creation(child_tubes)
+        expect_transfer_request_collection_creation
+      end
 
       it 'pools by submission' do
         expect(subject.save!).to be_truthy
-        expect(transfer_creation_request).to have_been_made.once
       end
 
       it 'sets the correct tube name' do
@@ -131,10 +120,11 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
              for_multiplexing: true
       end
 
-      setup { stub_get_labware_metadata('DN10', parent, metadata: { stock_barcode: 'DN6' }) }
+      before { stub_get_labware_metadata('DN10', parent, metadata: { stock_barcode: 'DN6' }) }
 
       it 'sets the correct tube name' do
         expect_specific_tube_creation(child_tubes)
+        expect_transfer_request_collection_creation
 
         expect(subject.save!).to be_truthy
         expect(subject.child_stock_tubes.length).to eq(2)
@@ -145,24 +135,24 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
     context 'with a failed well' do
       let(:wells_json) { json :well_collection, size: 9, default_state: 'passed', custom_state: { 'B1' => 'failed' } }
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
-          { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
-          { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
-          { 'source_asset' => 'example-well-uuid-8', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-          { 'source_asset' => 'example-well-uuid-3', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-          { 'source_asset' => 'example-well-uuid-4', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-          { 'source_asset' => 'example-well-uuid-5', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-          { 'source_asset' => 'example-well-uuid-6', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' },
-          { 'source_asset' => 'example-well-uuid-7', 'target_asset' => 'tube-1', 'submission' => 'pool-2-uuid' }
+          { source_asset: 'example-well-uuid-0', target_asset: 'tube-0', submission: 'pool-1-uuid' },
+          { source_asset: 'example-well-uuid-2', target_asset: 'tube-0', submission: 'pool-1-uuid' },
+          { source_asset: 'example-well-uuid-8', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+          { source_asset: 'example-well-uuid-3', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+          { source_asset: 'example-well-uuid-4', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+          { source_asset: 'example-well-uuid-5', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+          { source_asset: 'example-well-uuid-6', target_asset: 'tube-1', submission: 'pool-2-uuid' },
+          { source_asset: 'example-well-uuid-7', target_asset: 'tube-1', submission: 'pool-2-uuid' }
         ]
       end
 
-      before { expect_specific_tube_creation(child_tubes) }
-
       it 'pools by submission' do
+        expect_specific_tube_creation(child_tubes)
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to be_truthy
-        expect(transfer_creation_request).to have_been_made.once
       end
     end
 
@@ -171,21 +161,21 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
         json :plate, uuid: parent_uuid, pool_sizes: [3, 6], pool_for_multiplexing: [true, false], stock_plate_barcode: 5
       end
 
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
-          { 'source_asset' => 'example-well-uuid-0', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
-          { 'source_asset' => 'example-well-uuid-1', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' },
-          { 'source_asset' => 'example-well-uuid-2', 'target_asset' => 'tube-0', 'submission' => 'pool-1-uuid' }
+          { source_asset: 'example-well-uuid-0', target_asset: 'tube-0', submission: 'pool-1-uuid' },
+          { source_asset: 'example-well-uuid-1', target_asset: 'tube-0', submission: 'pool-1-uuid' },
+          { source_asset: 'example-well-uuid-2', target_asset: 'tube-0', submission: 'pool-1-uuid' }
         ]
       end
 
       let(:tube_attributes) { [{ name: child_1_name }] }
 
-      before { expect_specific_tube_creation(child_tubes) }
-
       it 'pools by submission' do
+        expect_specific_tube_creation(child_tubes)
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to be_truthy
-        expect(transfer_creation_request).to have_been_made.once
       end
     end
   end
