@@ -105,13 +105,15 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
       { child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }
     end
 
-    let(:state_change_attributes) do
-      {
-        reason: 'Used in Library creation',
-        target_uuid: tag_plate_uuid,
-        target_state: 'exhausted',
-        user_uuid: user_uuid
-      }
+    let(:state_changes_attributes) do
+      [
+        {
+          reason: 'Used in Library creation',
+          target_uuid: tag_plate_uuid,
+          target_state: 'exhausted',
+          user_uuid: user_uuid
+        }
+      ]
     end
 
     def expect_tag_layout_creation

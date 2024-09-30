@@ -47,15 +47,17 @@ RSpec.describe PlatesController, type: :controller do
       json :plate, barcode_number: v2_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
     end
 
-    let(:state_change_attributes) do
-      {
-        contents: nil,
-        customer_accepts_responsibility: true,
-        reason: 'Because testing',
-        target_state: 'failed',
-        target_uuid: plate_uuid,
-        user_uuid: user_uuid
-      }
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: nil,
+          customer_accepts_responsibility: true,
+          reason: 'Because testing',
+          target_state: 'failed',
+          target_uuid: plate_uuid,
+          user_uuid: user_uuid
+        }
+      ]
     end
 
     it 'transitions the plate' do
@@ -80,15 +82,17 @@ RSpec.describe PlatesController, type: :controller do
   end
 
   describe '#fail_wells' do
-    let(:state_change_attributes) do
-      {
-        contents: ['A1'],
-        customer_accepts_responsibility: nil,
-        reason: 'Individual Well Failure',
-        target_state: 'failed',
-        target_uuid: plate_uuid,
-        user_uuid: user_uuid
-      }
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: ['A1'],
+          customer_accepts_responsibility: nil,
+          reason: 'Individual Well Failure',
+          target_state: 'failed',
+          target_uuid: plate_uuid,
+          user_uuid: user_uuid
+        }
+      ]
     end
 
     it 'fails the selected wells' do

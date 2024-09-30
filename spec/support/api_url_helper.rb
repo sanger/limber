@@ -102,7 +102,7 @@ module ApiUrlHelper
     end
 
     def expect_state_change_creation
-      expect_api_v2_posts('StateChange', [state_change_attributes])
+      expect_api_v2_posts('StateChange', state_changes_attributes)
     end
 
     def expect_transfer_request_collection_creation

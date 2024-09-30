@@ -49,15 +49,17 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     stub_v2_user(user, swipecard)
   end
 
-  let(:state_change_attributes) do
-    {
-      contents: nil,
-      customer_accepts_responsibility: false,
-      reason: 'Robot bravo LB Post Shear => LB End Prep started',
-      target_state: 'started',
-      target_uuid: plate_uuid,
-      user_uuid: user_uuid
-    }
+  let(:state_changes_attributes) do
+    [
+      {
+        contents: nil,
+        customer_accepts_responsibility: false,
+        reason: 'Robot bravo LB Post Shear => LB End Prep started',
+        target_state: 'started',
+        target_uuid: plate_uuid,
+        user_uuid: user_uuid
+      }
+    ]
   end
 
   scenario 'starts the robot and saves the robot barcode' do
@@ -65,7 +67,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
       'CustomMetadatumCollection',
       [{ user_id: user.id, asset_id: example_plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
     )
-    expect_api_v2_posts('StateChange', [state_change_attributes])
+    expect_state_change_creation
 
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return(
       beds: {
