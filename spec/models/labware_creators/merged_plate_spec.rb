@@ -91,12 +91,14 @@ RSpec.describe LabwareCreators::MergedPlate do
                purpose: child_purpose
       end
 
-      let(:pooled_plate_creation_attributes) do
-        {
-          child_purpose_uuid: child_purpose_uuid,
-          parent_uuids: [source_plate_1.uuid, source_plate_2.uuid],
-          user_uuid: user_uuid
-        }
+      let(:pooled_plates_attributes) do
+        [
+          {
+            child_purpose_uuid: child_purpose_uuid,
+            parent_uuids: [source_plate_1.uuid, source_plate_2.uuid],
+            user_uuid: user_uuid
+          }
+        ]
       end
 
       it 'makes the expected requests' do

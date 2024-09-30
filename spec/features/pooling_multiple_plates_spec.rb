@@ -68,8 +68,8 @@ RSpec.feature 'Multi plate pooling', js: true do
 
   let(:child_plate) { create :v2_plate, purpose_name: 'Pool Plate', barcode_number: 3 }
 
-  let(:pooled_plate_creation_attributes) do
-    { child_purpose_uuid: child_plate.purpose.uuid, parent_uuids: [plate_uuid, plate_uuid_2], user_uuid: user_uuid }
+  let(:pooled_plates_attributes) do
+    [{ child_purpose_uuid: child_plate.purpose.uuid, parent_uuids: [plate_uuid, plate_uuid_2], user_uuid: user_uuid }]
   end
 
   background do

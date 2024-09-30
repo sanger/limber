@@ -91,12 +91,14 @@ RSpec.describe LabwareCreators::MultiStampTubes do
       create :v2_plate_for_submission, purpose_name: child_purpose_name, barcode_number: '5', size: 96
     end
 
-    let(:pooled_plate_creation_attributes) do
-      {
-        child_purpose_uuid: child_purpose_uuid,
-        parent_uuids: [parent1_tube_uuid, parent2_tube_uuid],
-        user_uuid: user_uuid
-      }
+    let(:pooled_plates_attributes) do
+      [
+        {
+          child_purpose_uuid: child_purpose_uuid,
+          parent_uuids: [parent1_tube_uuid, parent2_tube_uuid],
+          user_uuid: user_uuid
+        }
+      ]
     end
 
     context 'when the submission is created' do

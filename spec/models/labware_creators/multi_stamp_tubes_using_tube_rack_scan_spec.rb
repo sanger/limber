@@ -179,12 +179,14 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       ]
     end
 
-    let(:pooled_plate_creation_attributes) do
-      {
-        child_purpose_uuid: child_plate_purpose_uuid,
-        parent_uuids: [parent_tube_1_uuid, parent_tube_2_uuid],
-        user_uuid: user_uuid
-      }
+    let(:pooled_plates_attributes) do
+      [
+        {
+          child_purpose_uuid: child_plate_purpose_uuid,
+          parent_uuids: [parent_tube_1_uuid, parent_tube_2_uuid],
+          user_uuid: user_uuid
+        }
+      ]
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }

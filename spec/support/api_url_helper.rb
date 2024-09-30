@@ -98,7 +98,11 @@ module ApiUrlHelper
       pooled_plate_creation = double
       allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
 
-      expect_api_v2_posts('PooledPlateCreation', [pooled_plate_creation_attributes], [pooled_plate_creation])
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        pooled_plates_attributes,
+        [pooled_plate_creation] * pooled_plates_attributes.size
+      )
     end
 
     def expect_state_change_creation

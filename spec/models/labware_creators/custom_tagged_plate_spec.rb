@@ -101,8 +101,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
     let(:child_plate) { create :v2_plate }
 
-    let(:pooled_plate_creation_attributes) do
-      { child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }
+    let(:pooled_plates_attributes) do
+      [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }]
     end
 
     let(:state_changes_attributes) do

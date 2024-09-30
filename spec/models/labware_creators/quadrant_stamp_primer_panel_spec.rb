@@ -282,8 +282,8 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       ]
     end
 
-    let(:pooled_plate_creation_attributes) do
-      { child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }
+    let(:pooled_plates_attributes) do
+      [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }]
     end
 
     context '#save!' do
