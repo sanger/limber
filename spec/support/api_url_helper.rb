@@ -115,6 +115,18 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2).to receive(:minimal_labware_by_barcode).with(barcode).and_return(labware_result)
     end
 
+    def stub_find_by(klass, record, custom_includes: nil)
+      # Find by Barcode
+      barcode_args = { barcode: record.barcode.machine }
+      barcode_args[:includes] = custom_includes if custom_includes
+      allow(klass).to receive(:find_by).with(barcode_args).and_return(record)
+
+      # Find by UUID
+      uuid_args = { uuid: record.uuid }
+      uuid_args[:includes] = custom_includes if custom_includes
+      allow(klass).to receive(:find_by).with(uuid_args).and_return(record)
+    end
+
     # Stubs a request for all barcode printers
     def stub_v2_barcode_printers(printers)
       allow(Sequencescape::Api::V2::BarcodePrinter).to receive(:all).and_return(printers)
@@ -139,16 +151,7 @@ module ApiUrlHelper
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end
 
-      # Find by Barcode
-      barcode_args = { barcode: plate.barcode.machine }
-      barcode_args[:includes] = custom_includes if custom_includes
-      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(*[barcode_args]).and_return(plate)
-
-      # Find by UUID
-      uuid_args = { uuid: plate.uuid }
-      uuid_args[:includes] = custom_includes if custom_includes
-      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(*[uuid_args]).and_return(plate)
-
+      stub_find_by(Sequencescape::Api::V2::Plate, plate, custom_includes: custom_includes)
       stub_v2_labware(plate)
     end
 
@@ -177,16 +180,7 @@ module ApiUrlHelper
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
 
-      # Find by Barcode
-      barcode_args = { barcode: tube.barcode.machine }
-      barcode_args[:includes] = custom_includes if custom_includes
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*[barcode_args]).and_return(tube)
-
-      # Find by UUID
-      uuid_args = { uuid: tube.uuid }
-      uuid_args[:includes] = custom_includes if custom_includes
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*[uuid_args]).and_return(tube)
-
+      stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes: custom_includes)
       stub_v2_labware(tube)
     end
 
