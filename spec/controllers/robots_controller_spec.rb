@@ -15,8 +15,8 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     let(:user) { create :user }
     let(:plate) { create :v2_plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
-    let(:metadata_attributes) do
-      { user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }
+    let(:custom_metadatum_collections_attributes) do
+      [{ user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
     end
 
     let(:state_changes_attributes) do
@@ -49,7 +49,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
     end
 
     it 'adds robot barcode to plate metadata' do
-      expect_api_v2_posts('CustomMetadatumCollection', [metadata_attributes])
+      expect_custom_metadatum_collection_creation
       expect_state_change_creation
 
       post :start,

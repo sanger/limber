@@ -26,6 +26,8 @@ RSpec.describe LabwareMetadata do
     let(:plate) { create :v2_stock_plate }
     let(:plate_with_metadata) { create :v2_stock_plate_with_metadata }
 
+    let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: plate.id, metadata: updated_metadata] }
+
     before do
       stub_v2_plate(plate)
       stub_v2_plate(plate_with_metadata)
@@ -33,10 +35,7 @@ RSpec.describe LabwareMetadata do
 
     context 'by labware' do
       it 'creates metadata' do
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [user_id: user.id, asset_id: plate.id, metadata: updated_metadata]
-        )
+        expect_custom_metadatum_collection_creation
 
         LabwareMetadata.new(labware: plate, user_uuid: user.uuid).update!(updated_metadata)
       end
@@ -53,10 +52,7 @@ RSpec.describe LabwareMetadata do
 
     context 'by barcode' do
       it 'creates metadata' do
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [user_id: user.id, asset_id: plate.id, metadata: updated_metadata]
-        )
+        expect_custom_metadatum_collection_creation
 
         LabwareMetadata.new(barcode: plate.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
       end
@@ -78,6 +74,8 @@ RSpec.describe LabwareMetadata do
     let(:tube) { create :v2_stock_tube }
     let(:tube_with_metadata) { create :v2_stock_tube_with_metadata }
 
+    let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: tube.id, metadata: updated_metadata] }
+
     before do
       stub_v2_tube(tube)
       stub_v2_tube(tube_with_metadata)
@@ -85,10 +83,7 @@ RSpec.describe LabwareMetadata do
 
     context 'by labware' do
       it 'creates metadata' do
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [user_id: user.id, asset_id: tube.id, metadata: updated_metadata]
-        )
+        expect_custom_metadatum_collection_creation
 
         LabwareMetadata.new(labware: tube, user_uuid: user.uuid).update!(updated_metadata)
       end
@@ -105,10 +100,7 @@ RSpec.describe LabwareMetadata do
 
     context 'by barcode' do
       it 'creates metadata' do
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [user_id: user.id, asset_id: tube.id, metadata: updated_metadata]
-        )
+        expect_custom_metadatum_collection_creation
 
         LabwareMetadata.new(barcode: tube.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
       end

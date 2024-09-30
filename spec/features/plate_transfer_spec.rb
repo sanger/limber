@@ -49,6 +49,10 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     stub_v2_user(user, swipecard)
   end
 
+  let(:custom_metadatum_collections_attributes) do
+    [{ user_id: user.id, asset_id: example_plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
+  end
+
   let(:state_changes_attributes) do
     [
       {
@@ -63,10 +67,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   end
 
   scenario 'starts the robot and saves the robot barcode' do
-    expect_api_v2_posts(
-      'CustomMetadatumCollection',
-      [{ user_id: user.id, asset_id: example_plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
-    )
+    expect_custom_metadatum_collection_creation
     expect_state_change_creation
 
     allow_any_instance_of(Robots::Robot).to receive(:verify).and_return(
