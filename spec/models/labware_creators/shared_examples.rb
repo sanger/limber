@@ -255,10 +255,7 @@ RSpec.shared_examples 'a partial stamped plate creator' do
       # NB. QcAssay and TransferRequestCollection creations are using API v2;
       #     PlateCreation post is using API v1
       expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
+      expect_transfer_request_collection_creation
 
       expect(subject.save!).to eq true
 

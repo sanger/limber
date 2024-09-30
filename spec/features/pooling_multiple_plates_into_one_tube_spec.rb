@@ -69,6 +69,19 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     stub_asset_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
   end
 
+  let(:transfers_attributes) do
+    [plate_uuid, plate_uuid_2].map do |source_uuid|
+      {
+        arguments: {
+          user_uuid: user_uuid,
+          source_uuid: source_uuid,
+          destination_uuid: child_tube.uuid,
+          transfer_template_uuid: 'whole-plate-to-tube'
+        }
+      }
+    end
+  end
+
   let(:well_set_a) { json(:well_collection, aliquot_factory: :tagged_aliquot) }
 
   background do
@@ -110,17 +123,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     stub_v2_plate(example_plate_2)
 
     expect_specific_tube_creation
-    expect_api_v2_posts(
-      'Transfer',
-      [plate_uuid, plate_uuid_2].map do |source_uuid|
-        {
-          user_uuid: user_uuid,
-          source_uuid: source_uuid,
-          destination_uuid: child_tube.uuid,
-          transfer_template_uuid: 'whole-plate-to-tube'
-        }
-      end
-    )
+    expect_transfer_creation
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find('#plate-title')

@@ -191,6 +191,20 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       ]
     end
 
+    let(:transfers_attributes) do
+      [
+        {
+          arguments: {
+            user_uuid: user_uuid,
+            source_uuid: plate_uuid,
+            destination_uuid: tag_plate_uuid,
+            transfer_template_uuid: transfer_template_uuid,
+            transfers: expected_transfers
+          }
+        }
+      ]
+    end
+
     include_context 'a tag plate creator' do
       let(:enforce_uniqueness) { false }
     end
@@ -220,18 +234,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       context 'on save' do
         it 'creates a tag plate' do
           expect_state_change_creation
-          expect_api_v2_posts(
-            'Transfer',
-            [
-              {
-                user_uuid: user_uuid,
-                source_uuid: plate_uuid,
-                destination_uuid: tag_plate_uuid,
-                transfer_template_uuid: transfer_template_uuid,
-                transfers: expected_transfers
-              }
-            ]
-          )
+          expect_transfer_creation
 
           expect(subject.save).to be true
           expect(plate_conversion_request).to have_been_made.once

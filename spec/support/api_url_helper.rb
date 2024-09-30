@@ -124,6 +124,14 @@ module ApiUrlHelper
       expect_api_v2_posts('StateChange', state_changes_attributes)
     end
 
+    def expect_transfer_creation
+      expect_api_v2_posts(
+        'Transfer',
+        transfers_attributes.map { |attrs| attrs[:arguments] },
+        transfers_attributes.map { |attrs| attrs.fetch(:response, true) }
+      )
+    end
+
     def expect_transfer_request_collection_creation
       expect_api_v2_posts(
         'TransferRequestCollection',
