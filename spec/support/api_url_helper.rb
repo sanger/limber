@@ -127,8 +127,8 @@ module ApiUrlHelper
     def expect_transfer_creation
       expect_api_v2_posts(
         'Transfer',
-        transfers_attributes.map { |attrs| attrs[:arguments] },
-        transfers_attributes.map { |attrs| attrs.fetch(:response, true) }
+        transfers_attributes.pluck(:arguments),
+        transfers_attributes.pluck(:response) # Missing responses become nil which will trigger a default value.
       )
     end
 
