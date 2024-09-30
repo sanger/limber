@@ -13,13 +13,6 @@ RSpec.describe PlatesController, type: :controller do
   let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
 
-  def expect_state_change_create(attributes)
-    expect_api_v2_posts(
-      'StateChange',
-      [{ target_state: 'failed', target_uuid: plate_uuid, user_uuid: user_uuid }.merge(attributes)]
-    )
-  end
-
   describe '#show' do
     before do
       create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
@@ -54,8 +47,19 @@ RSpec.describe PlatesController, type: :controller do
       json :plate, barcode_number: v2_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
     end
 
+    let(:state_change_attributes) do
+      {
+        contents: nil,
+        customer_accepts_responsibility: true,
+        reason: 'Because testing',
+        target_state: 'failed',
+        target_uuid: plate_uuid,
+        user_uuid: user_uuid
+      }
+    end
+
     it 'transitions the plate' do
-      expect_state_change_create(contents: nil, customer_accepts_responsibility: true, reason: 'Because testing')
+      expect_state_change_creation
 
       put :update,
           params: {
@@ -76,12 +80,19 @@ RSpec.describe PlatesController, type: :controller do
   end
 
   describe '#fail_wells' do
-    it 'fails the selected wells' do
-      expect_state_change_create(
+    let(:state_change_attributes) do
+      {
         contents: ['A1'],
         customer_accepts_responsibility: nil,
-        reason: 'Individual Well Failure'
-      )
+        reason: 'Individual Well Failure',
+        target_state: 'failed',
+        target_uuid: plate_uuid,
+        user_uuid: user_uuid
+      }
+    end
+
+    it 'fails the selected wells' do
+      expect_state_change_creation
 
       post :fail_wells,
            params: {

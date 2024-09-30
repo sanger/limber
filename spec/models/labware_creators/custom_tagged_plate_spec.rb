@@ -108,25 +108,20 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
       response
     end
 
+    let(:state_change_attributes) do
+      {
+        reason: 'Used in Library creation',
+        target_uuid: tag_plate_uuid,
+        target_state: 'exhausted',
+        user_uuid: user_uuid
+      }
+    end
+
     def expect_pooled_plate_creation
       expect_api_v2_posts(
         'PooledPlateCreation',
         [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }],
         [pooled_plate_creation]
-      )
-    end
-
-    def expect_state_change_creation
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            reason: 'Used in Library creation',
-            target_uuid: tag_plate_uuid,
-            target_state: 'exhausted',
-            user_uuid: user_uuid
-          }
-        ]
       )
     end
 
