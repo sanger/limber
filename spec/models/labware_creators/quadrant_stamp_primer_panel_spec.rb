@@ -244,6 +244,19 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       }
     end
 
+    let(:custom_metadatum_collections_attributes) do
+      [
+        {
+          asset_id: child_plate.id,
+          metadata: {
+            stock_barcode_q0: stock_plate1.barcode.human,
+            stock_barcode_q1: stock_plate2.barcode.human
+          },
+          user_id: user.id
+        }
+      ]
+    end
+
     let(:transfer_requests_attributes) do
       [
         { source_asset: '3-well-A1', outer_request: 'request-0', target_asset: '5-well-A1' },
@@ -271,22 +284,6 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
 
     let(:pooled_plate_creation_attributes) do
       { child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }
-    end
-
-    def expect_custom_metadatum_collection_creation
-      expect_api_v2_posts(
-        'CustomMetadatumCollection',
-        [
-          {
-            asset_id: child_plate.id,
-            metadata: {
-              stock_barcode_q0: stock_plate1.barcode.human,
-              stock_barcode_q1: stock_plate2.barcode.human
-            },
-            user_id: user.id
-          }
-        ]
-      )
     end
 
     context '#save!' do

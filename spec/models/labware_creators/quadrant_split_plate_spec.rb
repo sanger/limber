@@ -148,11 +148,8 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   shared_examples 'a quad-split plate creator' do
     describe '#save!' do
-      def expect_custom_metadatum_collection_creation
-        expect_api_v2_posts(
-          'CustomMetadatumCollection',
-          [child_plate_a_create_args, child_plate_b_create_args, child_plate_c_create_args, child_plate_d_create_args]
-        )
+      let(:custom_metadatum_collections_attributes) do
+        [child_plate_a_create_args, child_plate_b_create_args, child_plate_c_create_args, child_plate_d_create_args]
       end
 
       let!(:plate_creation_request) do

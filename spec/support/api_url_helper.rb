@@ -90,6 +90,10 @@ module ApiUrlHelper
         end
     end
 
+    def expect_custom_metadatum_collection_creation
+      expect_api_v2_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
+    end
+
     def expect_pooled_plate_creation
       pooled_plate_creation = double
       allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
