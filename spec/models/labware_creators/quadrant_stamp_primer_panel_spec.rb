@@ -269,19 +269,8 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       ]
     end
 
-    let(:pooled_plate_creation) do
-      response = double
-      allow(response).to receive(:child).and_return(child_plate)
-
-      response
-    end
-
-    def expect_pooled_plate_creation
-      expect_api_v2_posts(
-        'PooledPlateCreation',
-        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }],
-        [pooled_plate_creation]
-      )
+    let(:pooled_plate_creation_attributes) do
+      { child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }
     end
 
     def expect_custom_metadatum_collection_creation

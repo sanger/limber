@@ -74,6 +74,8 @@ module ApiUrlHelper
     end
   end
 
+  # Expectations for the V2 API.
+  # All methods here generate an expectation that the endpoint will be called with the correct arguments.
   module V2Expectations
     def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
@@ -88,6 +90,13 @@ module ApiUrlHelper
         end
     end
 
+    def expect_pooled_plate_creation
+      pooled_plate_creation = double
+      allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
+
+      expect_api_v2_posts('PooledPlateCreation', [pooled_plate_creation_attributes], [pooled_plate_creation])
+    end
+
     def expect_state_change_creation
       expect_api_v2_posts('StateChange', [state_change_attributes])
     end
@@ -100,6 +109,8 @@ module ApiUrlHelper
     end
   end
 
+  # Stubs for the V2 API.
+  # None of the methods here generate an expectation that the endpoint will be called.
   module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
@@ -208,6 +219,14 @@ module ApiUrlHelper
       # Find by swipecard
       swipecard_args = [{ user_code: swipecard }]
       allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
+    end
+
+    def stub_v2_pooled_plate_creation
+      # Stubs the creation of a pooled plate by returning a double with a child attribute.
+      pooled_plate_creation = double
+      allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
+
+      stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
     end
   end
 end

@@ -91,25 +91,12 @@ RSpec.describe LabwareCreators::MergedPlate do
                purpose: child_purpose
       end
 
-      let(:pooled_plate_creation) do
-        response = double
-        allow(response).to receive(:child).and_return(child_plate)
-
-        response
-      end
-
-      def expect_pooled_plate_creation
-        expect_api_v2_posts(
-          'PooledPlateCreation',
-          [
-            {
-              child_purpose_uuid: child_purpose_uuid,
-              parent_uuids: [source_plate_1.uuid, source_plate_2.uuid],
-              user_uuid: user_uuid
-            }
-          ],
-          [pooled_plate_creation]
-        )
+      let(:pooled_plate_creation_attributes) do
+        {
+          child_purpose_uuid: child_purpose_uuid,
+          parent_uuids: [source_plate_1.uuid, source_plate_2.uuid],
+          user_uuid: user_uuid
+        }
       end
 
       it 'makes the expected requests' do

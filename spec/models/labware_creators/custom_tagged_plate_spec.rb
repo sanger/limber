@@ -101,11 +101,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
     let(:child_plate) { create :v2_plate }
 
-    let(:pooled_plate_creation) do
-      response = double
-      allow(response).to receive(:child).and_return(child_plate)
-
-      response
+    let(:pooled_plate_creation_attributes) do
+      { child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }
     end
 
     let(:state_change_attributes) do
@@ -115,14 +112,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
         target_state: 'exhausted',
         user_uuid: user_uuid
       }
-    end
-
-    def expect_pooled_plate_creation
-      expect_api_v2_posts(
-        'PooledPlateCreation',
-        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }],
-        [pooled_plate_creation]
-      )
     end
 
     def expect_tag_layout_creation
@@ -204,7 +193,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+            stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
             stub_api_v2_post('Transfer')
             stub_api_v2_post('StateChange')
@@ -242,7 +231,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+            stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
             stub_api_v2_post('Transfer')
 
@@ -268,7 +257,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+            stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
             stub_api_v2_post('Transfer')
 
