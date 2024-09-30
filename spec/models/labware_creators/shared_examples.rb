@@ -235,7 +235,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
   end
 end
 
-RSpec.shared_examples 'a partial stamped plate creator' do
+RSpec.shared_examples 'a QC assaying plate creator' do
   describe '#save!' do
     let!(:plate_creation_request) do
       stub_api_post(
