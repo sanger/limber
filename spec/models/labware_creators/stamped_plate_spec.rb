@@ -59,13 +59,6 @@ RSpec.describe LabwareCreators::StampedPlate do
         )
       end
 
-      def expect_transfer_request_collection_creation
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
-      end
-
       it 'makes the expected requests' do
         expect_transfer_request_collection_creation
 

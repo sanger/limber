@@ -155,13 +155,6 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
         )
       end
 
-      def expect_transfer_request_collection_creation
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
-      end
-
       let!(:plate_creation_request) do
         stub_api_post(
           'plate_creations',

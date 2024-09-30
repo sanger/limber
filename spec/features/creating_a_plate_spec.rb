@@ -76,13 +76,6 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
   end
 
-  def expect_transfer_request_collection_creation
-    expect_api_v2_posts(
-      'TransferRequestCollection',
-      [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-    )
-  end
-
   # Setup stubs
   background do
     # Set-up the plate config

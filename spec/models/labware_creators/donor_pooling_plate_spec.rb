@@ -665,12 +665,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: subject.transfer_request_attributes(child_plate), user_uuid: user_uuid }]
-      )
-    end
+    let(:transfer_requests_attributes) { subject.transfer_request_attributes(child_plate) }
 
     before { stub_v2_plate(child_plate) }
 

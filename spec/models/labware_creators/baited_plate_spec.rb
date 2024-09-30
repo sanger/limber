@@ -31,13 +31,6 @@ RSpec.describe LabwareCreators::BaitedPlate do
     end
   end
 
-  def expect_transfer_request_collection_creation
-    expect_api_v2_posts(
-      'TransferRequestCollection',
-      [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-    )
-  end
-
   it 'should have page' do
     expect(LabwareCreators::BaitedPlate.page).to eq 'baited_plate'
   end

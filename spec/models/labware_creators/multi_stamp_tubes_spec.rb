@@ -87,13 +87,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
       ]
     end
 
-    def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
-    end
-
     let(:child_plate) do
       create :v2_plate_for_submission, purpose_name: child_purpose_name, barcode_number: '5', size: 96
     end

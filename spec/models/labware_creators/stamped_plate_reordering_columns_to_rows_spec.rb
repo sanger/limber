@@ -88,13 +88,6 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
       end
     end
 
-    def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
-    end
-
     context 'with all source wells' do
       it 'creates transfer requests by ordering columns to rows' do
         # A1 -> A1, B1 -> A2, C1 -> A3, D1 -> A4, E1 -> A5, F1 -> A6, G1 -> A7, H1 -> A8

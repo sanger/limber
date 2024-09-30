@@ -53,13 +53,6 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       )
     end
 
-    def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
-    end
-
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let!(:parent_request) do
       stub_api_get(parent_uuid, body: parent)

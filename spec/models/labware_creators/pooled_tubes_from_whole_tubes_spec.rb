@@ -89,13 +89,6 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
       ]
     end
 
-    def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
-    end
-
     before do
       allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
         .with(barcode: barcodes, includes: [])

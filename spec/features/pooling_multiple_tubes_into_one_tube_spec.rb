@@ -132,13 +132,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     [tube_uuid, tube_uuid_2].map { |source_uuid| { source_asset: source_uuid, target_asset: child_uuid } }
   end
 
-  def expect_transfer_request_collection_creation
-    expect_api_v2_posts(
-      'TransferRequestCollection',
-      [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-    )
-  end
-
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
       .with(

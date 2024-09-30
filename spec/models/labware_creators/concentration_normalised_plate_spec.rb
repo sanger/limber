@@ -100,13 +100,6 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
         )
       end
 
-      def expect_transfer_request_collection_creation
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
-      end
-
       it 'makes the expected requests' do
         # NB. QcAssay and TransferRequestCollection creations are using API v2;
         #     PlateCreation post is using API v1

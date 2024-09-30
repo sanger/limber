@@ -110,6 +110,13 @@ module ApiUrlHelper
         end
     end
 
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+      )
+    end
+
     def stub_barcode_search(barcode, labware)
       labware_result = create :labware, type: labware.type, uuid: labware.uuid, id: labware.id
       allow(Sequencescape::Api::V2).to receive(:minimal_labware_by_barcode).with(barcode).and_return(labware_result)

@@ -269,13 +269,6 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       ]
     end
 
-    def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
-    end
-
     let(:pooled_plate_creation) do
       response = double
       allow(response).to receive(:child).and_return(child_plate)

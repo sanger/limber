@@ -112,13 +112,6 @@ RSpec.describe LabwareCreators::MergedPlate do
         )
       end
 
-      def expect_transfer_request_collection_creation
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
-      end
-
       it 'makes the expected requests' do
         expect_pooled_plate_creation
         expect_transfer_request_collection_creation

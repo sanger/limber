@@ -434,13 +434,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         ]
       end
 
-      def expect_transfer_request_collection_creation
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
-      end
-
       before { stub_api_v2_patch('Well') }
 
       it 'makes the expected transfer requests to bin the wells' do
