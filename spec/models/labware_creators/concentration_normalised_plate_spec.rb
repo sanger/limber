@@ -100,57 +100,51 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
         )
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
+      def expect_transfer_request_collection_creation
+        expect_api_v2_posts(
+          'TransferRequestCollection',
+          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
         )
       end
 
       it 'makes the expected requests' do
-        # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
-        expect(Sequencescape::Api::V2::QcAssay).to receive(:create)
-          .with(qc_results: dest_well_qc_attributes)
-          .and_return(true)
+        # NB. QcAssay and TransferRequestCollection creations are using API v2;
+        #     PlateCreation post is using API v1
+        expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
   end
 
   context '96 well plate' do
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       [
         {
-          'source_asset' => well_a1.uuid,
-          'target_asset' => '3-well-A1',
-          'submission_id' => well_a1.submission_ids.first,
-          'volume' => '20.0'
+          source_asset: well_a1.uuid,
+          target_asset: '3-well-A1',
+          submission_id: well_a1.submission_ids.first,
+          volume: '20.0'
         },
         {
-          'source_asset' => well_b1.uuid,
-          'target_asset' => '3-well-B1',
-          'submission_id' => well_b1.submission_ids.first,
-          'volume' => '0.893'
+          source_asset: well_b1.uuid,
+          target_asset: '3-well-B1',
+          submission_id: well_b1.submission_ids.first,
+          volume: '0.893'
         },
         {
-          'source_asset' => well_c1.uuid,
-          'target_asset' => '3-well-C1',
-          'submission_id' => well_c1.submission_ids.first,
-          'volume' => '14.286'
+          source_asset: well_c1.uuid,
+          target_asset: '3-well-C1',
+          submission_id: well_c1.submission_ids.first,
+          volume: '14.286'
         },
         {
-          'source_asset' => well_d1.uuid,
-          'target_asset' => '3-well-D1',
-          'submission_id' => well_d1.submission_ids.first,
-          'volume' => '20.0'
+          source_asset: well_d1.uuid,
+          target_asset: '3-well-D1',
+          submission_id: well_d1.submission_ids.first,
+          volume: '20.0'
         }
       ]
     end

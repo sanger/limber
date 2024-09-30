@@ -80,23 +80,17 @@ RSpec.describe LabwareCreators::MultiStampTubes do
       }
     end
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       [
         { source_asset: 'tube1', target_asset: '5-well-A1', outer_request: 'outer-request-1' },
         { source_asset: 'tube2', target_asset: '5-well-B1', outer_request: 'outer-request-2' }
       ]
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
       )
     end
 
@@ -262,10 +256,10 @@ RSpec.describe LabwareCreators::MultiStampTubes do
 
         it 'creates a plate!' do
           expect_pooled_plate_creation
+          expect_transfer_request_collection_creation
 
           subject.save!
 
-          expect(transfer_creation_request).to have_been_made.once
           expect(order_request).to have_been_made.once
           expect(submission_request).to have_been_made.once
           expect(submission_submit).to have_been_made.once

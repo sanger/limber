@@ -67,30 +67,21 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       body: json(:plate_creation)
     )
   end
-  let!(:transfer_creation_request) do
-    stub_api_post(
-      'transfer_request_collections',
-      payload: {
-        transfer_request_collection: {
-          user: user_uuid,
-          transfer_requests: transfer_requests
-        }
-      },
-      body: '{}'
-    )
-  end
 
-  let(:transfer_requests) do
+  let(:filters) { {} }
+
+  let(:transfer_requests_attributes) do
     WellHelpers.column_order(96)[0, 2].each_with_index.map do |well_name, index|
-      {
-        'source_asset' => "6-well-#{well_name}",
-        'target_asset' => "7-well-#{well_name}",
-        'outer_request' => "request-#{index}"
-      }
+      { source_asset: "6-well-#{well_name}", target_asset: "7-well-#{well_name}", outer_request: "request-#{index}" }
     end
   end
 
-  let(:filters) { {} }
+  def expect_transfer_request_collection_creation
+    expect_api_v2_posts(
+      'TransferRequestCollection',
+      [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+    )
+  end
 
   # Setup stubs
   background do
@@ -109,6 +100,8 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   scenario 'basic plate creation' do
+    expect_transfer_request_collection_creation
+
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     plate_title = find('#plate-title')
     expect(plate_title).to have_text('Limber Cherrypicked')
@@ -121,7 +114,10 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     let(:label_templates) { [double('label_template', id: label_template_id)] }
     let(:job) { double('job') }
     let(:ancestors_scope) { double('ancestors_scope') }
+
     before do
+      expect_transfer_request_collection_creation
+
       allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
       allow(child_plate).to receive(:stock_plate).and_return(stock_plates.last)
       allow(child_plate).to receive(:ancestors).and_return(ancestors_scope)
@@ -140,7 +136,10 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       plate_title = find('#plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
     end
+
     context 'when the plate has one stock plate' do
+      let(:stock_plates) { [example_plate] }
+
       before do
         click_on('Add an empty Basic plate')
         expect(page).to have_content('New empty labware added to the system.')
@@ -148,7 +147,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
         click_on('Print Label')
         expect(PMB::PrintJob).to have_received(:new)
       end
-      let(:stock_plates) { [example_plate] }
+
       it 'prints the stock plate in the top right of the label' do
         first_label = @data_printed[:labels][:body][0]
         expect(first_label['main_label']['top_right']).to eq(child_plate.stock_plate.barcode.human)
@@ -156,7 +155,6 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
 
     context 'when the plate has several stock plates' do
-      let(:stock_plates) { [another_plate, example_plate] }
       before do
         allow(SearchHelper).to receive(:alternative_workline_reference_name).with(child_plate).and_return(alternatives)
 
@@ -166,6 +164,9 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
         click_on('Print Label')
         expect(PMB::PrintJob).to have_received(:new)
       end
+
+      let(:stock_plates) { [another_plate, example_plate] }
+
       context 'when there is not alternative workline_identifiers' do
         let(:alternatives) { nil }
         it 'prints the last stock plate in the top right of the label' do
@@ -173,6 +174,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
           expect(first_label['main_label']['top_right']).to eq(stock_plates.last.barcode.human)
         end
       end
+
       context 'when there is alternative workline identifier' do
         let(:alternatives) { alternative_purpose_name }
         it 'prints the workline identifier' do
@@ -238,6 +240,8 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
 
     scenario 'basic plate creation' do
+      expect_transfer_request_collection_creation
+
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       plate_title = find('#plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
@@ -249,9 +253,11 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   context 'with multiple requests and config with request and library type filters' do
     let(:library_type_name) { 'LibTypeA' }
     let(:filters) { { 'request_type_key' => ['rt_a'], 'library_type' => [library_type_name] } }
+
     let(:request_a) do
       create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name
     end
+
     let(:request_c) do
       create :library_request, request_type: request_type_a, uuid: 'request-1', library_type: library_type_name
     end
@@ -277,6 +283,8 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
 
     scenario 'basic plate creation' do
+      expect_transfer_request_collection_creation
+
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       plate_title = find('#plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')

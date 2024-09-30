@@ -134,16 +134,10 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         )
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
+      def expect_transfer_request_collection_creation
+        expect_api_v2_posts(
+          'TransferRequestCollection',
+          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
         )
       end
 
@@ -154,9 +148,11 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       end
 
       it 'makes the expected requests' do
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to eq true
+
         expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
   end
@@ -164,7 +160,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   context '96 well plate' do
     let(:plate_size) { 96 }
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       control_locations = subject.generate_control_well_locations
 
       WellHelpers
@@ -173,9 +169,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
           {
-            'source_asset' => "2-well-#{well_name}",
-            'target_asset' => "3-well-#{well_name}",
-            'outer_request' => "request-#{index}"
+            source_asset: "2-well-#{well_name}",
+            target_asset: "3-well-#{well_name}",
+            outer_request: "request-#{index}"
           }
         end
     end
@@ -191,7 +187,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   context '384 well plate' do
     let(:plate_size) { 384 }
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       control_locations = subject.generate_control_well_locations
 
       WellHelpers
