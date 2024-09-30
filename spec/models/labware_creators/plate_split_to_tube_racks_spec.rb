@@ -139,26 +139,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     child_tubes
   end
 
-  def expect_specific_tube_creation(child_purpose_uuid, child_tubes)
-    # Create a mock for the specific tube creation.
-    specific_tube_creation = double
-    allow(specific_tube_creation).to receive(:children).and_return(child_tubes)
-
-    # Expect the post request and return the mock.
-    expect_api_v2_posts(
-      'SpecificTubeCreation',
-      [
-        {
-          child_purpose_uuids: [child_purpose_uuid] * child_tubes.size,
-          parent_uuids: [parent_uuid],
-          tube_attributes: child_tubes.map { |tube| { name: tube.name, foreign_barcode: tube.foreign_barcode } },
-          user_uuid: user_uuid
-        }
-      ],
-      [specific_tube_creation]
-    )
-  end
-
   # Create attributes for the creation of a CustomMetadatumCollection.
   # @param tubes_hash [Hash] A hash with tube rack barcodes as keys and arrays of tubes as values.
   def create_custom_metadatum_collection_attributes(tubes_hash)
@@ -173,6 +153,18 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           }
         }
       end
+    end
+  end
+
+  # Create attributes for the creation of specific tubes.
+  # @param tubes_hash [Hash] A hash with child UUIDs as keys and the child tubes as values.
+  def create_specific_tube_attributes(tubes_hash)
+    tubes_hash.map do |uuid, child_tubes|
+      {
+        uuid: uuid,
+        child_tubes: child_tubes,
+        tube_attributes: child_tubes.map { |tube| { name: tube.name, foreign_barcode: tube.foreign_barcode } }
+      }
     end
   end
 
@@ -745,16 +737,23 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
+      let(:specific_tubes_attributes) do
+        create_specific_tube_attributes(
+          child_sequencing_tube_purpose_uuid => sequencing_tubes,
+          child_contingency_tube_purpose_uuid => contingency_tubes
+        )
+      end
+
       before { stub_v2_user(user) }
 
       it 'creates the child tubes' do
         expect_custom_metadatum_collection_creation
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
-        expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
-        expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
+
         expect(stub_sequencing_file_upload).to have_been_made.once
         expect(stub_contingency_file_upload).to have_been_made.once
       end
@@ -803,11 +802,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           )
         end
 
+        let(:specific_tubes_attributes) do
+          create_specific_tube_attributes(
+            child_sequencing_tube_purpose_uuid => sequencing_tubes,
+            child_contingency_tube_purpose_uuid => contingency_tubes
+          )
+        end
+
         it 'does not create a tube for the failed well' do
           expect_custom_metadatum_collection_creation
+          expect_specific_tube_creation
           expect_transfer_request_collection_creation
-          expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
-          expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
 
           expect(subject.valid?).to be_truthy
           expect(subject.save).to be_truthy
@@ -868,6 +873,10 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
+      let(:specific_tubes_attributes) do
+        create_specific_tube_attributes(child_sequencing_tube_purpose_uuid => sequencing_tubes)
+      end
+
       let(:transfer_requests_attributes) do
         [parent_well_a1, parent_well_b1].map.with_index do |parent_well, index|
           { submission_id: '2', source_asset: parent_well.uuid, target_asset: sequencing_tubes[index].uuid }
@@ -879,7 +888,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'creates the child tubes' do
         # Contingency tubes creation
         expect_custom_metadatum_collection_creation
-        expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
 
         expect(subject.valid?).to be_truthy

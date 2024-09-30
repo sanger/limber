@@ -95,14 +95,29 @@ module ApiUrlHelper
     end
 
     def expect_pooled_plate_creation
-      pooled_plate_creation = double
-      allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
-
       expect_api_v2_posts(
         'PooledPlateCreation',
         pooled_plates_attributes,
-        [pooled_plate_creation] * pooled_plates_attributes.size
+        [double(child: child_plate)] * pooled_plates_attributes.size
       )
+    end
+
+    def expect_specific_tube_creation
+      # Prepare the expected arguments and return values.
+      arguments =
+        specific_tubes_attributes.map do |attrs|
+          {
+            child_purpose_uuids: [attrs[:uuid]] * attrs[:child_tubes].size,
+            parent_uuids: [parent_uuid],
+            tube_attributes: attrs[:tube_attributes],
+            user_uuid: user_uuid
+          }
+        end
+
+      specific_tube_creations = specific_tubes_attributes.map { |attrs| double(children: attrs[:child_tubes]) }
+
+      # Create the expectation.
+      expect_api_v2_posts('SpecificTubeCreation', arguments, specific_tube_creations)
     end
 
     def expect_state_change_creation

@@ -33,26 +33,6 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
   before { stub_v2_plate(source_plate, stub_search: false) }
 
   context '#save!' do
-    def expect_specific_tube_creation(child_tubes)
-      # Create a mock for the specific tube creation.
-      specific_tube_creation = double
-      allow(specific_tube_creation).to receive(:children).and_return(child_tubes)
-
-      # Expect the post request and return the mock.
-      expect_api_v2_posts(
-        'SpecificTubeCreation',
-        [
-          {
-            child_purpose_uuids: [purpose_uuid] * child_tubes.size,
-            parent_uuids: [parent_uuid],
-            tube_attributes: child_tubes.map { |tube| { name: tube.name } },
-            user_uuid: user_uuid
-          }
-        ],
-        [specific_tube_creation]
-      )
-    end
-
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let!(:parent_request) do
       stub_api_get(parent_uuid, body: parent)
@@ -75,6 +55,16 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       child_tubes
     end
 
+    let(:specific_tubes_attributes) do
+      [
+        {
+          uuid: purpose_uuid,
+          child_tubes: child_tubes,
+          tube_attributes: child_tubes.map { |tube| { name: tube.name } }
+        }
+      ]
+    end
+
     let(:transfer_requests_attributes) do
       [
         { source_asset: 'example-well-uuid-0', target_asset: 'tube-0', submission: 'pool-1-uuid' },
@@ -91,7 +81,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
     context 'without parent metadata' do
       before do
-        expect_specific_tube_creation(child_tubes)
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
       end
 
@@ -123,7 +113,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       before { stub_get_labware_metadata('DN10', parent, metadata: { stock_barcode: 'DN6' }) }
 
       it 'sets the correct tube name' do
-        expect_specific_tube_creation(child_tubes)
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
 
         expect(subject.save!).to be_truthy
@@ -149,7 +139,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       end
 
       it 'pools by submission' do
-        expect_specific_tube_creation(child_tubes)
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
 
         expect(subject.save!).to be_truthy
@@ -172,7 +162,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       let(:tube_attributes) { [{ name: child_1_name }] }
 
       it 'pools by submission' do
-        expect_specific_tube_creation(child_tubes)
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
 
         expect(subject.save!).to be_truthy
