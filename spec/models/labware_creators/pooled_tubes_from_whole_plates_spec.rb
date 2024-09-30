@@ -54,29 +54,15 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
     end
 
     let(:child_tube) { create :v2_tube }
-    let(:specific_tube_creation) do
-      response = double
-      allow(response).to receive(:children).and_return([child_tube])
-
-      response
+    let(:specific_tubes_attributes) do
+      [{ uuid: purpose_uuid, child_tubes: [child_tube], tube_attributes: [{ name: 'DN2+' }] }]
     end
 
     before { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
 
     context 'with compatible plates' do
       it 'pools from all the plates' do
-        expect_api_v2_posts(
-          'SpecificTubeCreation',
-          [
-            {
-              child_purpose_uuids: [purpose_uuid],
-              parent_uuids: [parent_uuid],
-              tube_attributes: [{ name: 'DN2+' }],
-              user_uuid: user_uuid
-            }
-          ],
-          [specific_tube_creation]
-        )
+        expect_specific_tube_creation
         expect_api_v2_posts(
           'Transfer',
           [parent_uuid, parent2_uuid, parent3_uuid, parent4_uuid].map do |source_uuid|
