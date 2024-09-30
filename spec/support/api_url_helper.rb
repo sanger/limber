@@ -5,7 +5,8 @@ module ApiUrlHelper
 
   def self.included(base)
     base.extend(V1Helpers)
-    base.extend(V2Helpers)
+    base.extend(V2Expectations)
+    base.extend(V2Stubs)
   end
 
   module V1Helpers
@@ -73,7 +74,29 @@ module ApiUrlHelper
     end
   end
 
-  module V2Helpers
+  module V2Expectations
+    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+      # Expects the specified `method` for any class beginning with
+      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
+      # If return_values is empty, it will return true.
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      args_list
+        .zip(return_values)
+        .each do |args, ret|
+          ret ||= true
+          expect(receiving_class).to receive(method).with(args).and_return(ret)
+        end
+    end
+
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
+      )
+    end
+  end
+
+  module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true.
@@ -95,26 +118,6 @@ module ApiUrlHelper
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       return_value ||= true
       allow(receiving_class).to receive(method).and_return(return_value)
-    end
-
-    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
-      # Expects the specified `method` for any class beginning with
-      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
-      # If return_values is empty, it will return true.
-      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
-      args_list
-        .zip(return_values)
-        .each do |args, ret|
-          ret ||= true
-          expect(receiving_class).to receive(method).with(args).and_return(ret)
-        end
-    end
-
-    def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
     end
 
     def stub_barcode_search(barcode, labware)
@@ -208,5 +211,6 @@ end
 RSpec.configure do |config|
   config.include ApiUrlHelper
   config.include ApiUrlHelper::V1Helpers
-  config.include ApiUrlHelper::V2Helpers
+  config.include ApiUrlHelper::V2Expectations
+  config.include ApiUrlHelper::V2Stubs
 end
