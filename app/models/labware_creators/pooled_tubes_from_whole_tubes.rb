@@ -65,6 +65,10 @@ module LabwareCreators
       purpose_config.fetch(:number_of_parent_labwares, 4)
     end
 
+    def redirection_target
+      TubeProxy.new(@child.uuid)
+    end
+
     private
 
     def transfer_request_attributes

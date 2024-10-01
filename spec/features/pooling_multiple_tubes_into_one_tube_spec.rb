@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO try removing plates
+# TODO try removing v1 assets
+
 require 'rails_helper'
 
 RSpec.feature 'Pooling multiple tubes into a tube', js: true do
@@ -70,33 +73,10 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   let(:barcodes) { [tube_barcode_1, tube_barcode_2] }
 
   let(:child_uuid) { 'tube-0' }
-  let(:child_tube) { json :tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
-  let(:child_tube_v2) { create :v2_tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
+  let(:child_tube) { create :v2_tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
 
-  let(:tube_creation_request_uuid) { SecureRandom.uuid }
-
-  let!(:tube_creation_request) do
-    # TODO: In reality we want to link in all four parents.
-    stub_api_post(
-      'tube_from_tube_creations',
-      payload: {
-        tube_from_tube_creation: {
-          user: user_uuid,
-          parent: tube_uuid,
-          child_purpose: purpose_uuid
-        }
-      },
-      body: json(:tube_creation, child_uuid: child_uuid)
-    )
-  end
-
-  # Find out what tubes we've just made!
-  let!(:tube_creation_children_request) do
-    stub_api_get(
-      tube_creation_request_uuid,
-      'children',
-      body: json(:single_study_multiplexed_library_tube_collection, names: ['DN2+'])
-    )
+  let(:tube_from_tubes_attributes) do
+    [{ child_purpose_uuid: purpose_uuid, parent_uuid: tube_uuid, user_uuid: user_uuid }]
   end
 
   let!(:order_requests) do
@@ -194,9 +174,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     # Old API still used when loading parent
     stub_api_get(tube_uuid, body: example_tube)
 
-    # Used in the redirect. This is call is probably unnecessary
-    stub_api_get(child_uuid, body: child_tube)
-    stub_v2_tube(child_tube_v2)
+    # Used in the redirect. This call is probably unnecessary
+    stub_v2_tube(child_tube)
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
 
     allow(SearchHelper).to receive(:stock_plate_names).and_return([stock_plate_purpose_name])
@@ -210,8 +189,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       # This isn't strictly speaking correct to test. But there isn't a great way
       # of confirming that the right information got passed to the back end otherwise.
       # (Although you expect it to fail on an incorrect request)
-      # Also see the related note at the end of the scenario.
       expect_transfer_request_collection_creation
+      expect_tube_from_tube_creation
 
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
       tube_title = find('#tube-title')
@@ -222,9 +201,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       click_on('Make Pool')
       expect(page).to have_text('New empty labware added to the system')
       expect(page).to have_text('Pool tube')
-
-      # Ditto in relation to this not being the correct place to test this, but see the note at the top of the scenario.
-      expect(tube_creation_request).to have_been_made
     end
   end
 
