@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# TODO try removing plates
-# TODO try removing v1 assets
-
 require 'rails_helper'
 
 RSpec.feature 'Pooling multiple tubes into a tube', js: true do
@@ -17,8 +14,16 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   let(:tube_barcode_1) { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:tube_uuid) { SecureRandom.uuid }
   let(:parent_purpose_name) { 'example-purpose' }
-  let(:example_tube_args) do
-    [
+  let(:example_tube) do
+    create :v2_tube,
+           barcode_number: 1,
+           state: 'passed',
+           uuid: tube_uuid,
+           purpose_name: parent_purpose_name,
+           aliquots: aliquot_set_1
+  end
+  let(:example_tube_v1) do
+    json(
       :tube,
       {
         barcode_number: 1,
@@ -27,26 +32,12 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
         purpose_name: parent_purpose_name,
         aliquots: aliquot_set_1
       }
-    ]
+    )
   end
-  let(:example_v2_tube) do
-    create :v2_tube,
-           barcode_number: 1,
-           state: 'passed',
-           uuid: tube_uuid,
-           purpose_name: parent_purpose_name,
-           aliquots: aliquot_set_1
-  end
-  let(:example_tube) { json(*example_tube_args) }
-  let(:example_tube_listed) { associated(*example_tube_args) }
 
   let(:tube_barcode_2) { SBCF::SangerBarcode.new(prefix: 'NT', number: 2).machine_barcode.to_s }
   let(:tube_uuid_2) { SecureRandom.uuid }
-  let(:example_tube2_args) do
-    [:tube, { barcode_number: 2, state: 'passed', uuid: tube_uuid_2, aliquots: aliquot_set_2 }]
-  end
-  let(:example_tube_2) { json(*example_tube2_args) }
-  let(:example_v2_tube2) do
+  let(:example_tube_2) do
     create :v2_tube,
            barcode_number: 2,
            state: 'passed',
@@ -54,7 +45,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
            purpose_name: parent_purpose_name,
            aliquots: aliquot_set_2
   end
-  let(:example_tube_2_listed) { associated(*example_tube2_args) }
 
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:template_uuid) { SecureRandom.uuid }
@@ -112,12 +102,15 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
           number: 1
         }
       )
-      .and_return([example_v2_tube, example_v2_tube2])
+      .and_return([example_tube, example_tube_2])
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
       .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
-      .and_return([example_v2_tube, example_v2_tube2])
+      .and_return([example_tube, example_tube_2])
+
+    # Old API still used when loading parent
+    stub_api_get(tube_uuid, body: example_tube_v1)
   end
 
   background do
@@ -135,8 +128,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_tube(example_v2_tube)
-    stub_v2_tube(example_v2_tube2)
+    stub_v2_tube(example_tube)
+    stub_v2_tube(example_tube_2)
 
     # Available tubes search
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
@@ -149,15 +142,12 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
           number: 1
         }
       )
-      .and_return([example_v2_tube, example_v2_tube2])
+      .and_return([example_tube, example_tube_2])
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
       .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
-      .and_return([example_v2_tube, example_v2_tube2])
-
-    # Old API still used when loading parent
-    stub_api_get(tube_uuid, body: example_tube)
+      .and_return([example_tube, example_tube_2])
 
     # Used in the redirect. This call is probably unnecessary
     stub_v2_tube(child_tube)
