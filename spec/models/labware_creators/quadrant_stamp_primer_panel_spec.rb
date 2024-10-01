@@ -46,7 +46,8 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
-  let(:user) { json :v1_user, uuid: user_uuid }
+  let(:v1_user) { json :v1_user, uuid: user_uuid }
+  let(:user) { create :user, uuid: user_uuid }
 
   before do
     create :purpose_config, name: child_purpose_name
@@ -304,7 +305,8 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
           'custom_metadatum_collection-uuid',
           body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid')
         )
-        stub_api_get('user-uuid', body: user)
+        stub_api_get('user-uuid', body: v1_user)
+        stub_v2_user(user)
         stub_api_get('asset-uuid', body: child_plate_v1)
 
         metadata =

@@ -14,13 +14,13 @@ class PlatesController < LabwareController
         notice: 'No wells were selected to fail' # rubocop:todo Rails/I18nLocaleTexts
       )
     else
-      api.state_change.create!(
-        user: current_user_uuid,
-        target: params[:id],
+      Sequencescape::Api::V2::StateChange.create!(
         contents: wells_to_fail,
-        target_state: 'failed',
+        customer_accepts_responsibility: params[:customer_accepts_responsibility],
         reason: 'Individual Well Failure',
-        customer_accepts_responsibility: params[:customer_accepts_responsibility]
+        target_state: 'failed',
+        target_uuid: params[:id],
+        user_uuid: current_user_uuid
       )
       redirect_to(
         limber_plate_path(params[:id]),

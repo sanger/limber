@@ -10,8 +10,15 @@ RSpec.describe PlatesController, type: :controller do
   let(:v2_plate) { create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
   let(:wells_json) { json :well_collection }
   let(:plate_wells_request) { stub_api_get plate_uuid, 'wells', body: wells_json }
-  let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
+  let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
+
+  def expect_state_change_create(attributes)
+    expect_api_v2_posts(
+      'StateChange',
+      [{ target_state: 'failed', target_uuid: plate_uuid, user_uuid: user_uuid }.merge(attributes)]
+    )
+  end
 
   describe '#show' do
     before do
@@ -46,24 +53,10 @@ RSpec.describe PlatesController, type: :controller do
     let(:old_api_example_plate) do
       json :plate, barcode_number: v2_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
     end
-    let!(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          'state_change' => {
-            user: user_uuid,
-            target: plate_uuid,
-            target_state: 'failed',
-            reason: 'Because testing',
-            customer_accepts_responsibility: true,
-            contents: nil
-          }
-        },
-        body: '{}'
-      ) # We don't care about the response
-    end
 
     it 'transitions the plate' do
+      expect_state_change_create(contents: nil, customer_accepts_responsibility: true, reason: 'Because testing')
+
       put :update,
           params: {
             id: plate_uuid,
@@ -77,30 +70,19 @@ RSpec.describe PlatesController, type: :controller do
           session: {
             user_uuid: user_uuid
           }
-      expect(state_change_request).to have_been_made
+
       expect(response).to redirect_to(search_path)
     end
   end
 
   describe '#fail_wells' do
-    let!(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          'state_change' => {
-            user: user_uuid,
-            target: plate_uuid,
-            contents: ['A1'],
-            target_state: 'failed',
-            reason: 'Individual Well Failure',
-            customer_accepts_responsibility: nil
-          }
-        },
-        body: '{}'
-      ) # We don't care about the response
-    end
-
     it 'fails the selected wells' do
+      expect_state_change_create(
+        contents: ['A1'],
+        customer_accepts_responsibility: nil,
+        reason: 'Individual Well Failure'
+      )
+
       post :fail_wells,
            params: {
              id: plate_uuid,
@@ -114,7 +96,7 @@ RSpec.describe PlatesController, type: :controller do
            session: {
              user_uuid: user_uuid
            }
-      expect(state_change_request).to have_been_made
+
       expect(response).to redirect_to(limber_plate_path(plate_uuid))
     end
   end

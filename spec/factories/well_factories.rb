@@ -105,6 +105,7 @@ FactoryBot.define do
     sub_pool { nil }
     coverage { nil }
 
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |well, evaluator|
       well._cached_relationship(:qc_results) { evaluator.qc_results || [] }
       well._cached_relationship(:aliquots) { evaluator.aliquots || [] }
@@ -273,8 +274,8 @@ FactoryBot.define do
     sample { create :v2_sample, sample_attributes }
     request { outer_request }
 
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |aliquot, evaluator|
-      # Set up relationships downstream
       Sequencescape::Api::V2::Aliquot.associations.each do |association|
         aliquot._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
       end

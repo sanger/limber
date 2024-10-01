@@ -4,9 +4,7 @@ require 'spec_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::SubmissionPlatePresenter do
-  has_a_working_api
-
-  subject(:presenter) { described_class.new(api: api, labware: labware) }
+  subject(:presenter) { described_class.new(labware: labware) }
 
   let(:submission_options) do
     {

@@ -156,14 +156,16 @@ class Presenters::QcThresholdPresenter
   end
 
   def value_for(qc_result)
-    indexed_thresholds[qc_result.key].value_for(qc_result)
+    indexed_thresholds[qc_result.key]&.value_for(qc_result)
   end
 
   private
 
   def indexed_thresholds
     @indexed_thresholds ||=
-      all_thresholds.index_with { |key| Threshold.new(key, well_results.fetch(key, []), configuration.fetch(key, {})) }
+      configuration.keys.index_with do |key|
+        Threshold.new(key, well_results.fetch(key, []), configuration.fetch(key, {}))
+      end
   end
 
   #
@@ -173,16 +175,6 @@ class Presenters::QcThresholdPresenter
   #
   def well_results
     @well_results ||= plate.wells.flat_map(&:all_latest_qc).group_by(&:key)
-  end
-
-  #
-  # An array of all qc results associated with the plate or configuration.
-  # Configured qc results are displayed first
-  #
-  # @return [Array<String>] All qc results associated with the plate or configuration
-  #
-  def all_thresholds
-    (configuration.keys + well_results.keys).uniq
   end
 
   attr_reader :configuration, :plate

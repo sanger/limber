@@ -1,7 +1,9 @@
 <%= form_for(tube_search_form, method: :get) do |f| %>
   <%= f.label :purposes, 'Select tube purposes' %>
   <%= f.select :purposes, options_for_select(@purpose_options, tube_search_form.purposes), { include_hidden: false }, multiple: true, class: 'form-control' %>
-  <%= f.label :include_used, 'Include used tubes' %>
-  <%= f.check_box :include_used %>
+  <div class="custom-control custom-checkbox">
+    <%= f.check_box :include_used, class: 'custom-control-input' %>
+    <%= f.label :include_used, 'Include used tubes', class: 'custom-control-label' %>
+  </div>
   <%= f.submit 'Update', class: 'btn btn-primary' %>
 <% end %>
