@@ -56,7 +56,7 @@ jobs:
           EXISTING_PR=$(gh pr list --base master --head develop --json number --jq '.[0].number')
 
           if [ -z "$EXISTING_PR" ]; then
-            gh pr create --base master --head develop --title "$PR_TITLE" --body "$PR_BODY"
+            gh pr create --base master --head develop --title "$PR_TITLE" --body "$PR_BODY" --draft
           else
             gh pr edit "$EXISTING_PR" --body "$PR_BODY"
           fi
