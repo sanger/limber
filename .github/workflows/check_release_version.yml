@@ -13,7 +13,6 @@ on:
       # custom
       - ready_for_review # required for Github-created PRs
 
-
 jobs:
   check:
     runs-on: ubuntu-latest
