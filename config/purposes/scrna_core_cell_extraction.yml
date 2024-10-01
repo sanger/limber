@@ -82,7 +82,7 @@ LRC PBMC Bank:
       units: '%'
       default_threshold: 50
     live_cell_count:
-      name: Cell count
+      name: Live cell count
       units: 'cells/ml'
       default_threshold: 400000
       decimal_places: 0
