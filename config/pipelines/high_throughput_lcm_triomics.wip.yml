@@ -25,3 +25,8 @@ LCM Triomics EMSeq Custom Pooling:
   relationships:
     LCMT EM PCR XP: LCMT EM Pool XP
     LCMT EM Pool XP: LCMT EM Pool XP Norm
+
+LCM Triomics WGS:
+  pipeline_group: LCM Triomics WGS and EMSeq
+  relationships:
+    LCMT DNA Adp Lig: LCMT DNA Lib PCR
