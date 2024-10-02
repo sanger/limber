@@ -138,6 +138,14 @@ module ApiUrlHelper
         [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
       )
     end
+
+    def expect_tube_from_tube_creation
+      expect_api_v2_posts(
+        'TubeFromTubeCreation',
+        tube_from_tubes_attributes,
+        [double(child: child_tube)] * tube_from_tubes_attributes.size
+      )
+    end
   end
 
   # Stubs for the V2 API.
