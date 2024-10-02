@@ -35,6 +35,20 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid, lot_uuid: 'lot-uuid' }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
+  let(:transfers_attributes) do
+    [
+      {
+        arguments: {
+          user_uuid: user_uuid,
+          source_uuid: plate_uuid,
+          destination_uuid: tag_plate_uuid,
+          transfer_template_uuid: transfer_template_uuid,
+          transfers: expected_transfers
+        }
+      }
+    ]
+  end
+
   let(:tag_template_uuid) { 'tag-layout-template-0' }
 
   let(:submission_pools) { json(:submission_pool_collection) }
@@ -79,21 +93,9 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     let(:help_text) { "Click 'Create plate'" }
 
     before do
+      expect_transfer_creation
+
       stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
-
-      expect_api_v2_posts(
-        'Transfer',
-        [
-          {
-            user_uuid: user_uuid,
-            source_uuid: plate_uuid,
-            destination_uuid: tag_plate_uuid,
-            transfer_template_uuid: transfer_template_uuid,
-            transfers: expected_transfers
-          }
-        ]
-      )
-
       stub_api_v2_post('StateChange')
     end
 

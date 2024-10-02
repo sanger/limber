@@ -722,25 +722,26 @@ RSpec.describe Robots::Robot, robots: true do
              state: target_plate_state
     end
 
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: nil,
+          customer_accepts_responsibility: false,
+          reason: 'Robot bravo LB End Prep started',
+          target_state: 'passed',
+          target_uuid: plate.uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     before do
       create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
       bed_labware_lookup(plate)
     end
 
     it 'performs transfer from started to passed' do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: nil,
-            customer_accepts_responsibility: false,
-            reason: 'Robot bravo LB End Prep started',
-            target_state: 'passed',
-            target_uuid: plate.uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
+      expect_state_change_creation
 
       robot.perform_transfer('580000014851' => [plate.human_barcode])
     end

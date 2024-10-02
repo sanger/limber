@@ -257,6 +257,8 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   end
 
   describe '#transfer_material_from_parent!' do
+    let(:transfer_requests_attributes) { subject.transfer_request_attributes(child_plate) }
+
     before do
       parent_plate.wells.map { |well| well.state = 'failed' }
       parent_plate.wells[0..2].map { |well| well.state = 'passed' }
@@ -266,10 +268,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
     end
 
     it 'posts transfer requests to SS' do
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: subject.transfer_request_attributes(child_plate), user_uuid: user_uuid }]
-      )
+      expect_transfer_request_collection_creation
 
       subject.transfer_material_from_parent!(child_plate.uuid)
     end

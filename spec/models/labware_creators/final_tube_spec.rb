@@ -22,6 +22,18 @@ RSpec.describe LabwareCreators::FinalTube do
     let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube--uuid' }
     let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
     let(:transfer) { create :v2_transfer }
+    let(:transfers_attributes) do
+      [
+        {
+          arguments: {
+            user_uuid: user_uuid,
+            source_uuid: parent_uuid,
+            transfer_template_uuid: transfer_template_uuid
+          },
+          response: transfer
+        }
+      ]
+    end
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
@@ -30,11 +42,7 @@ RSpec.describe LabwareCreators::FinalTube do
 
       describe '#save' do
         it 'should be vaild' do
-          expect_api_v2_posts(
-            'Transfer',
-            [{ user_uuid: user_uuid, source_uuid: parent_uuid, transfer_template_uuid: transfer_template_uuid }],
-            [transfer]
-          )
+          expect_transfer_creation
 
           expect(subject.save).to be true
           expect(subject.redirection_target.to_param).to eq(transfer.destination_uuid)
@@ -77,15 +85,29 @@ RSpec.describe LabwareCreators::FinalTube do
           let(:sibling_uuid) { 'sibling-tube-0' }
           let(:transfer_b) { create :v2_transfer }
 
+          let(:transfers_attributes) do
+            [
+              {
+                arguments: {
+                  user_uuid: user_uuid,
+                  source_uuid: parent_uuid,
+                  transfer_template_uuid: transfer_template_uuid
+                },
+                response: transfer
+              },
+              {
+                arguments: {
+                  user_uuid: user_uuid,
+                  source_uuid: sibling_uuid,
+                  transfer_template_uuid: transfer_template_uuid
+                },
+                response: transfer_b
+              }
+            ]
+          end
+
           it 'should create transfers per sibling' do
-            expect_api_v2_posts(
-              'Transfer',
-              [
-                { user_uuid: user_uuid, source_uuid: parent_uuid, transfer_template_uuid: transfer_template_uuid },
-                { user_uuid: user_uuid, source_uuid: sibling_uuid, transfer_template_uuid: transfer_template_uuid }
-              ],
-              [transfer, transfer_b]
-            )
+            expect_transfer_creation
 
             expect(subject).to be_valid
             expect(subject.save).to be true

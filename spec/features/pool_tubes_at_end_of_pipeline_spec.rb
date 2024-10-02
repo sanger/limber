@@ -19,6 +19,26 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
     json(:tube_with_siblings, uuid: tube_uuid, siblings_count: 1, state: 'passed', barcode_number: 1)
   end
   let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube-uuid' }
+  let(:transfers_attributes) do
+    [
+      {
+        arguments: {
+          user_uuid: user_uuid,
+          source_uuid: tube_uuid,
+          transfer_template_uuid: 'tube-to-tube-by-sub'
+        },
+        response: create(:v2_transfer_between_tubes, destination_uuid: multiplexed_library_tube_uuid)
+      },
+      {
+        arguments: {
+          user_uuid: user_uuid,
+          source_uuid: sibling_uuid,
+          transfer_template_uuid: 'tube-to-tube-by-sub'
+        },
+        response: create(:v2_transfer_between_tubes, destination_uuid: multiplexed_library_tube_uuid)
+      }
+    ]
+  end
 
   # Setup stubs
   background do
@@ -42,19 +62,12 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
     stub_api_get('transfer-template-uuid', body: json(:transfer_template, uuid: 'transfer-template-uuid'))
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_v2_tube(create(:v2_tube, uuid: multiplexed_library_tube_uuid))
-
-    expect_api_v2_posts(
-      'Transfer',
-      [
-        { user_uuid: user_uuid, source_uuid: tube_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' },
-        { user_uuid: user_uuid, source_uuid: sibling_uuid, transfer_template_uuid: 'tube-to-tube-by-sub' }
-      ],
-      create_list(:v2_transfer_between_tubes, 2, destination_uuid: multiplexed_library_tube_uuid)
-    )
   end
 
   shared_examples 'a tube validation form' do
     scenario 'of a recognised type' do
+      expect_transfer_creation
+
       fill_in_swipecard_and_barcode user_swipecard, tube_barcode
       page_title = find('#tube-title')
       expect(page_title).to have_text('Example Purpose')

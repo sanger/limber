@@ -235,7 +235,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
   end
 end
 
-RSpec.shared_examples 'a partial stamped plate creator' do
+RSpec.shared_examples 'a QC assaying plate creator' do
   describe '#save!' do
     let!(:plate_creation_request) do
       stub_api_post(
@@ -255,10 +255,7 @@ RSpec.shared_examples 'a partial stamped plate creator' do
       # NB. QcAssay and TransferRequestCollection creations are using API v2;
       #     PlateCreation post is using API v1
       expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
+      expect_transfer_request_collection_creation
 
       expect(subject.save!).to eq true
 

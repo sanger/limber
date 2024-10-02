@@ -40,6 +40,19 @@ RSpec.describe LabwareCreators::TubeFromTube do
     let(:user_uuid) { 'user-uuid' }
     let(:transfer_template_uuid) { 'transfer-between-specific-tubes' } # Defined in spec_helper.rb
 
+    let(:transfers_attributes) do
+      [
+        {
+          arguments: {
+            user_uuid: user_uuid,
+            source_uuid: parent_uuid,
+            destination_uuid: child_uuid,
+            transfer_template_uuid: transfer_template_uuid
+          }
+        }
+      ]
+    end
+
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     let(:creation_request) do
@@ -58,17 +71,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
     describe '#save!' do
       it 'creates the child' do
-        expect_api_v2_posts(
-          'Transfer',
-          [
-            {
-              user_uuid: user_uuid,
-              source_uuid: parent_uuid,
-              destination_uuid: child_uuid,
-              transfer_template_uuid: transfer_template_uuid
-            }
-          ]
-        )
+        expect_transfer_creation
 
         subject.save!
         expect(subject.redirection_target.uuid).to eq(child_uuid)

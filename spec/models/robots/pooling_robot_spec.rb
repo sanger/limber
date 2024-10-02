@@ -212,20 +212,21 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   end
 
   describe '#perform_transfer' do
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: nil,
+          customer_accepts_responsibility: false,
+          reason: 'Robot Pooling Robot started',
+          target_state: 'passed',
+          target_uuid: target_plate_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     it 'performs transfer from started to passed' do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: nil,
-            customer_accepts_responsibility: false,
-            reason: 'Robot Pooling Robot started',
-            target_state: 'passed',
-            target_uuid: target_plate_uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
+      expect_state_change_creation
 
       robot.perform_transfer('bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode])
     end

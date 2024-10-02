@@ -57,18 +57,29 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
   end
   let(:example_plate_3_listed) { associated(*example_plate3_args) }
 
+  let(:parent_uuid) { plate_uuid }
   let(:child_tube) { create :v2_tube, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool tube' }
 
-  let(:specific_tube_creation) do
-    response = double
-    allow(response).to receive(:children).and_return([child_tube])
-
-    response
+  let(:specific_tubes_attributes) do
+    [{ uuid: child_tube.purpose.uuid, child_tubes: [child_tube], tube_attributes: [{ name: 'DN2+' }] }]
   end
 
   # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
   let!(:stub_barcode_searches) do
     stub_asset_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
+  end
+
+  let(:transfers_attributes) do
+    [plate_uuid, plate_uuid_2].map do |source_uuid|
+      {
+        arguments: {
+          user_uuid: user_uuid,
+          source_uuid: source_uuid,
+          destination_uuid: child_tube.uuid,
+          transfer_template_uuid: 'whole-plate-to-tube'
+        }
+      }
+    end
   end
 
   let(:well_set_a) { json(:well_collection, aliquot_factory: :tagged_aliquot) }
@@ -111,29 +122,8 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
   scenario 'creates multiple plates' do
     stub_v2_plate(example_plate_2)
 
-    expect_api_v2_posts(
-      'SpecificTubeCreation',
-      [
-        {
-          child_purpose_uuids: ['child-purpose-0'],
-          parent_uuids: [plate_uuid],
-          tube_attributes: [{ name: 'DN2+' }],
-          user_uuid: user_uuid
-        }
-      ],
-      [specific_tube_creation]
-    )
-    expect_api_v2_posts(
-      'Transfer',
-      [plate_uuid, plate_uuid_2].map do |source_uuid|
-        {
-          user_uuid: user_uuid,
-          source_uuid: source_uuid,
-          destination_uuid: child_tube.uuid,
-          transfer_template_uuid: 'whole-plate-to-tube'
-        }
-      end
-    )
+    expect_specific_tube_creation
+    expect_transfer_creation
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find('#plate-title')

@@ -179,25 +179,14 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       ]
     end
 
-    let(:pooled_plate_creation) do
-      response = double
-      allow(response).to receive(:child).and_return(child_plate)
-
-      response
-    end
-
-    def expect_pooled_plate_creation
-      expect_api_v2_posts(
-        'PooledPlateCreation',
-        [
-          {
-            child_purpose_uuid: child_plate_purpose_uuid,
-            parent_uuids: [parent_tube_1_uuid, parent_tube_2_uuid],
-            user_uuid: user_uuid
-          }
-        ],
-        [pooled_plate_creation]
-      )
+    let(:pooled_plates_attributes) do
+      [
+        {
+          child_purpose_uuid: child_plate_purpose_uuid,
+          parent_uuids: [parent_tube_1_uuid, parent_tube_2_uuid],
+          user_uuid: user_uuid
+        }
+      ]
     end
 
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
@@ -207,8 +196,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       subject.labware.barcode.machine = 'AB10000001'
       subject.labware.barcode.ean13 = nil
 
-      expect_transfer_request_collection_creation
       expect_pooled_plate_creation
+      expect_transfer_request_collection_creation
 
       subject.save
 
