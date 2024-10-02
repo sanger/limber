@@ -31,14 +31,12 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
     it_behaves_like 'it has no custom page'
 
-    before { creation_request }
-
     let(:controller) { TubeCreationController.new }
-    let(:child_purpose_uuid) { 'child-purpose-uuid' }
-    let(:parent_uuid) { 'parent-uuid' }
-    let(:child_uuid) { 'child-uuid' }
-    let(:user_uuid) { 'user-uuid' }
+    let(:child_purpose_uuid) { SecureRandom.uuid }
+    let(:parent_uuid) { SecureRandom.uuid }
+    let(:user_uuid) { SecureRandom.uuid }
     let(:transfer_template_uuid) { 'transfer-between-specific-tubes' } # Defined in spec_helper.rb
+    let(:child_tube) { create(:tube) }
 
     let(:transfers_attributes) do
       [
@@ -46,36 +44,26 @@ RSpec.describe LabwareCreators::TubeFromTube do
           arguments: {
             user_uuid: user_uuid,
             source_uuid: parent_uuid,
-            destination_uuid: child_uuid,
+            destination_uuid: child_tube.uuid,
             transfer_template_uuid: transfer_template_uuid
           }
         }
       ]
     end
 
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
-
-    let(:creation_request) do
-      stub_api_post(
-        'tube_from_tube_creations',
-        payload: {
-          tube_from_tube_creation: {
-            parent: 'parent-uuid',
-            child_purpose: 'child-purpose-uuid',
-            user: 'user-uuid'
-          }
-        },
-        body: json(:tube_creation, child_uuid: child_uuid)
-      )
+    let(:tube_from_tubes_attributes) do
+      [{ child_purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }]
     end
+
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     describe '#save!' do
       it 'creates the child' do
         expect_transfer_creation
+        expect_tube_from_tube_creation
 
         subject.save!
-        expect(subject.redirection_target.uuid).to eq(child_uuid)
-        expect(creation_request).to have_been_made.once
+        expect(subject.redirection_target.uuid).to eq(child_tube.uuid)
       end
     end
   end
