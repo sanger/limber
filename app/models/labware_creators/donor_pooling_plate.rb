@@ -152,7 +152,7 @@ module LabwareCreators
     def calculated_number_of_pools
       return if source_wells_for_pooling.blank?
 
-      # div enfoces integer division
+      # div enforces integer division
       source_wells_for_pooling.count.div(number_of_samples_per_pool)
     end
 
