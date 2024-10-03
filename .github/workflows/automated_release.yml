@@ -29,7 +29,7 @@ jobs:
 
       # Actually run our build
       - name: Create Build
-        run: ./compile-build
+        run: ./compile-build '' v${{ env.RELEASE_VERSION }} ${BRANCH_NAME}
 
       # Create a release tag based on the branch name and .release-version file
       - name: Set release tag
