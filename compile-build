@@ -10,7 +10,7 @@ bundle exec rake assets:clobber
 echo 'Compiling assets'
 bundle exec rake assets:precompile
 echo 'Generating sha'
-Teecho ${1:-$(git rev-parse HEAD)} > REVISION
+echo ${1:-$(git rev-parse HEAD)} > REVISION
 echo ${2:-$(git tag -l --points-at HEAD --sort -version:refname | head -1)} > TAG
 echo ${3:-$(git rev-parse --abbrev-ref HEAD)} > BRANCH
 echo 'Compiling tar.gz'
