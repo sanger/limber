@@ -89,16 +89,16 @@ module ApiUrlHelper
       allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
     end
 
-    def stub_api_v2_post(klass, return_value = nil)
-      # intercepts the 'create!' method for any class beginning with
-      # 'Sequencescape::Api::V2::' and returns the given value or else true.
+    def stub_api_v2_post(klass, return_value = nil, method: :create!)
+      # intercepts the specified `method` for any class beginning with
+      # 'Sequencescape::Api::V2::' and returns the given `return_value`, or else `true`.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       return_value ||= true
-      allow(receiving_class).to receive(:create!).and_return(return_value)
+      allow(receiving_class).to receive(method).and_return(return_value)
     end
 
-    def expect_api_v2_posts(klass, args_list, return_values = [])
-      # Expects the 'create!' method for any class beginning with
+    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+      # Expects the specified `method` for any class beginning with
       # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
       # If return_values is empty, it will return true.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
@@ -106,7 +106,7 @@ module ApiUrlHelper
         .zip(return_values)
         .each do |args, ret|
           ret ||= true
-          expect(receiving_class).to receive(:create!).with(args).and_return(ret)
+          expect(receiving_class).to receive(method).with(args).and_return(ret)
         end
     end
 

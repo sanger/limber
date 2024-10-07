@@ -13,7 +13,6 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
 
   let(:parent1_uuid) { 'example-plate-uuid' }
   let(:parent2_uuid) { 'example-plate2-uuid' }
-  let(:child_uuid) { 'child-uuid' }
   let(:requests) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
   let(:requests2) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
   let(:stock_plate1) { create :v2_stock_plate_for_plate, barcode_number: '1' }
@@ -40,20 +39,18 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       stock_plate: stock_plate2
     )
   end
-  let(:child_plate_v2) { create :v2_plate, uuid: child_uuid, barcode_number: '5', size: 384 }
-  let(:child_plate_v1) { json :stock_plate_with_metadata, stock_plate: { barcode: '5', uuid: child_uuid } }
+  let(:child_plate) { create :v2_plate, barcode_number: '5', size: 384 }
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
 
-  let(:user_uuid) { 'user-uuid' }
-  let(:v1_user) { json :v1_user, uuid: user_uuid }
-  let(:user) { create :user, uuid: user_uuid }
+  let(:user) { create :user }
 
   before do
     create :purpose_config, name: child_purpose_name
+    stub_v2_user(user)
     stub_v2_plate(parent1, stub_search: false)
     stub_v2_plate(parent2, stub_search: false)
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
+    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
   end
 
   context 'on new' do
@@ -75,7 +72,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on create' do
-    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user.uuid)) }
 
     let(:form_attributes) do
       {
@@ -246,20 +243,6 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       }
     end
 
-    let!(:pooled_plate_creation_request) do
-      stub_api_post(
-        'pooled_plate_creations',
-        payload: {
-          pooled_plate_creation: {
-            user: user_uuid,
-            child_purpose: child_purpose_uuid,
-            parents: [parent1_uuid, parent2_uuid]
-          }
-        },
-        body: json(:plate_creation, child_uuid: child_uuid)
-      )
-    end
-
     let(:transfer_requests) do
       [
         { source_asset: '3-well-A1', outer_request: 'request-0', target_asset: '5-well-A1' },
@@ -290,7 +273,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
         'transfer_request_collections',
         payload: {
           transfer_request_collection: {
-            user: user_uuid,
+            user: user.uuid,
             transfer_requests: transfer_requests
           }
         },
@@ -298,36 +281,44 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       )
     end
 
+    let(:pooled_plate_creation) do
+      response = double
+      allow(response).to receive(:child).and_return(child_plate)
+
+      response
+    end
+
+    def expect_pooled_plate_creation
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }],
+        [pooled_plate_creation]
+      )
+    end
+
+    def expect_custom_metadatum_collection_creation
+      expect_api_v2_posts(
+        'CustomMetadatumCollection',
+        [
+          {
+            asset_id: child_plate.id,
+            metadata: {
+              stock_barcode_q0: stock_plate1.barcode.human,
+              stock_barcode_q1: stock_plate2.barcode.human
+            },
+            user_id: user.id
+          }
+        ]
+      )
+    end
+
     context '#save!' do
-      setup do
-        stub_api_get(child_plate_v2.uuid, body: child_plate_v1)
-        stub_api_get(
-          'custom_metadatum_collection-uuid',
-          body: json(:v1_custom_metadatum_collection, uuid: 'custom_metadatum_collection-uuid')
-        )
-        stub_api_get('user-uuid', body: v1_user)
-        stub_v2_user(user)
-        stub_api_get('asset-uuid', body: child_plate_v1)
-
-        metadata =
-          attributes_for(:v1_custom_metadatum_collection)
-            .fetch(:metadata, {})
-            .merge(stock_barcode_q0: stock_plate1.barcode.human, stock_barcode_q1: stock_plate2.barcode.human)
-
-        stub_api_put(
-          'custom_metadatum_collection-uuid',
-          payload: {
-            custom_metadatum_collection: {
-              metadata: metadata
-            }
-          },
-          body: json(:v1_custom_metadatum_collection)
-        )
-      end
-
       it 'creates a plate!' do
+        expect_pooled_plate_creation
+        expect_custom_metadatum_collection_creation
+
         subject.save!
-        expect(pooled_plate_creation_request).to have_been_made.once
+
         expect(transfer_creation_request).to have_been_made.once
       end
     end

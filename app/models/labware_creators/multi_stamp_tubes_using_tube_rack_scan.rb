@@ -65,13 +65,14 @@ module LabwareCreators
     #
     # @return [Boolean] true if the child plate was created successfully.
     def create_labware!
-      plate_creation =
-        api.pooled_plate_creation.create!(parents: parent_tube_uuids, child_purpose: purpose_uuid, user: user_uuid)
+      @child =
+        Sequencescape::Api::V2::PooledPlateCreation.create!(
+          child_purpose_uuid: purpose_uuid,
+          parent_uuids: parent_tube_uuids,
+          user_uuid: user_uuid
+        ).child
 
-      @child = plate_creation.child
-      child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
-
-      transfer_material_from_parent!(child_v2)
+      transfer_material_from_parent!
 
       yield(@child) if block_given?
       true
@@ -232,24 +233,19 @@ module LabwareCreators
     end
 
     # Transfers material from the parent tubes to the given child plate.
-    # @param child_plate [Sequencescape::Api::V2::Plate] The plate to transfer material to.
-    def transfer_material_from_parent!(child_plate)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(child_plate)
-      )
+    def transfer_material_from_parent!
+      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
     end
 
     # Returns an array of hashes representing the transfer requests for the given child plate.
     # Each hash includes the UUIDs of the parent tube and child well, and the UUID of the outer request.
-    # @param child_plate [Sequencescape::Api::V2::Plate] The plate to get the transfer requests for.
     # @return [Array<Hash>] An array of hashes representing the transfer requests.
-    def transfer_request_attributes(child_plate)
+    def transfer_request_attributes
       parent_tubes.each_with_object([]) do |(foreign_barcode, parent_tube), tube_transfers|
         tube_transfers <<
           request_hash(
             parent_tube.uuid,
-            child_plate
+            @child
               .wells
               .detect { |child_well| child_well.location == csv_file.location_by_barcode_details[foreign_barcode] }
               &.uuid,
