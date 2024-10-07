@@ -16,6 +16,8 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # only run when PR is not draft
+    if: ${{ !github.event.pull_request.draft }}
     steps:
       - uses: actions/checkout@v4
 
