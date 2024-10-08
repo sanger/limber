@@ -7,7 +7,8 @@ class SearchController < ApplicationController
 
   before_action :check_for_login!, only: [:my_plates] # rubocop:todo Rails/LexicallyScopedActionFilter
 
-  def new; end
+  def new
+  end
 
   def ongoing_plates # rubocop:todo Metrics/AbcSize
     plate_search = api.search.find(Settings.searches.fetch('Find plates'))
@@ -56,7 +57,7 @@ class SearchController < ApplicationController
   end
 
   def find_qcable(barcode)
-    api.search.find(Settings.searches['Find qcable by barcode']).first(barcode: barcode)
+    api.search.find(Settings.searches['Find qcable by barcode']).first(barcode:)
   rescue Sequencescape::Api::ResourceNotFound => e
     raise e, "Sorry, could not find qcable with the barcode '#{barcode}'."
   end

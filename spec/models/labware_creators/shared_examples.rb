@@ -154,7 +154,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       end
 
       context 'with a previously passed library and a new repool' do
-        let(:parent) { build :plate, pools: pools }
+        let(:parent) { build :plate, pools: }
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         let(:pools) do
@@ -266,9 +266,9 @@ RSpec.shared_examples 'a partial stamped plate creator' do
 
     it 'makes the expected requests' do
       # NB. qc assay post is done using v2 Api, whereas plate creation and transfers posts are using v1 Api
-      expect(Sequencescape::Api::V2::QcAssay).to receive(:create)
-        .with(qc_results: dest_well_qc_attributes)
-        .and_return(true)
+      expect(Sequencescape::Api::V2::QcAssay).to receive(:create).with(qc_results: dest_well_qc_attributes).and_return(
+        true
+      )
       expect(subject.save!).to eq true
       expect(plate_creation_request).to have_been_made
       expect(transfer_creation_request).to have_been_made

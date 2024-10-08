@@ -30,10 +30,12 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   let(:disable_cross_plate_pool_detection) { false }
 
   before do
-    create :purpose_config,
-           name: child_purpose_name,
-           uuid: child_purpose_uuid,
-           disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
+    create(
+      :purpose_config,
+      name: child_purpose_name,
+      uuid: child_purpose_uuid,
+      disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
+    )
     plate_request
     wells_request
   end

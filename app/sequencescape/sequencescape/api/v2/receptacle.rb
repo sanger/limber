@@ -11,7 +11,8 @@ class Sequencescape::Api::V2::Receptacle < Sequencescape::Api::V2::Base
   end
 
   def latest_qc(key:, units:)
-    qc_results.to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
+    qc_results
+      .to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
       .select { |qc| qc.key.casecmp(key).zero? }
       .select { |qc| qc.units.casecmp(units).zero? }
       .max_by(&:created_at)

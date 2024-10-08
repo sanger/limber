@@ -148,7 +148,7 @@ FactoryBot.define do
         associated_on { 'transfers_to_tubes' }
         plate_uuid { SecureRandom.uuid }
         plate { associated :plate, uuid: plate_uuid }
-        sources { source_uuids.map { |uuid| associated :plate, uuid: uuid } }
+        sources { source_uuids.map { |uuid| associated :plate, uuid: } }
 
         # While resources can be paginated, wells wont be.
         # Furthermore, we trust the api gem to handle that side of things.

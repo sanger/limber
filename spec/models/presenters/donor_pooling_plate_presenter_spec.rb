@@ -74,7 +74,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:option_key) { 'scrna_core_pbmc_donor_pooling_required_number_of_cells' }
   let(:default_cell_count) { 5000 }
 
-  subject { Presenters::DonorPoolingPlatePresenter.new(labware: labware) }
+  subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
 
   before do
     Settings.purposes = {
