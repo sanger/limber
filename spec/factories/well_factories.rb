@@ -61,7 +61,7 @@ FactoryBot.define do
       aliquots do
         # Conditional to avoid generating requests when not required
         if aliquot_count > 0
-          create_list aliquot_factory, aliquot_count, outer_request: outer_request, study: study, project: project
+          create_list(aliquot_factory, aliquot_count, outer_request:, study:, project:)
         else
           []
         end

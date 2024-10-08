@@ -38,7 +38,7 @@ RSpec.describe Presenters::PlatePresenter do
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
-  subject(:presenter) { Presenters::PlatePresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::PlatePresenter.new(labware:) }
 
   describe '#custom_metadata_fields' do
     context 'with custom_metadata_fields' do

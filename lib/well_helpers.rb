@@ -43,8 +43,8 @@ module WellHelpers
   #
   # @return [Array] well names in column order ie. A1, B1, C1 ...
   def self.column_order(size = 96, rows: nil, columns: nil)
-    columns_range(size, columns: columns)
-      .each_with_object([]) { |c, wells| rows_range(size, rows: rows).each { |r| wells << "#{r}#{c}" } }
+    columns_range(size, columns:)
+      .each_with_object([]) { |c, wells| rows_range(size, rows:).each { |r| wells << "#{r}#{c}" } }
       .freeze
   end
 
@@ -53,8 +53,8 @@ module WellHelpers
   # @param [96,192] number of wells on the plate. Only valid for 3:2 ratio plate sizes
   # @return [Array] well names in row order ie. A1, A2, A3 ...
   def self.row_order(size = 96, rows: nil, columns: nil)
-    rows_range(size, rows: rows)
-      .each_with_object([]) { |r, wells| columns_range(size, columns: columns).each { |c| wells << "#{r}#{c}" } }
+    rows_range(size, rows:)
+      .each_with_object([]) { |r, wells| columns_range(size, columns:).each { |c| wells << "#{r}#{c}" } }
       .freeze
   end
 
@@ -66,7 +66,7 @@ module WellHelpers
   # @return [Hash] eg. { 'A1' => 'A1', 'B1' => 'B1', ...}
   #
   def self.stamp_hash(size, rows: nil, columns: nil)
-    column_order(size, rows: rows, columns: columns).each_with_object({}) { |well, hash| hash[well] = well }
+    column_order(size, rows:, columns:).each_with_object({}) { |well, hash| hash[well] = well }
   end
 
   # Returns the index of the well by column

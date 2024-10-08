@@ -30,7 +30,7 @@ module LabwareCreators
       @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
-    def initialize(*args, &block)
+    def initialize(*args, &)
       super
       parent.populate_wells_with_pool
     end

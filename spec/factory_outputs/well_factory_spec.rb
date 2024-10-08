@@ -134,7 +134,7 @@ RSpec.describe 'v2_well' do
     subject { create(:v2_well, location: 'A1', aliquots: [source_aliquot]) }
 
     # source aliquots
-    let(:source_aliquot) { create(:v2_aliquot, sample: sample) }
+    let(:source_aliquot) { create(:v2_aliquot, sample:) }
 
     describe 'first aliquot' do
       let(:first_well_aliquot) { subject.aliquots.first }
@@ -195,7 +195,7 @@ RSpec.describe 'v2_well' do
     let(:first_aliquot) { subject.aliquots.first }
 
     # source aliquots
-    let(:source_aliquot) { create(:v2_aliquot, sample: sample, study: study, project: project) }
+    let(:source_aliquot) { create(:v2_aliquot, sample:, study:, project:) }
 
     # study
     let(:study_uuid) { SecureRandom.uuid }
@@ -239,7 +239,7 @@ RSpec.describe 'v2_well' do
   end
 
   context 'with specified study and project at well level' do
-    subject { create(:v2_well, study: study, project: project) }
+    subject { create(:v2_well, study:, project:) }
     let(:first_aliquot) { subject.aliquots.first }
 
     # study

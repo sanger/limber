@@ -2,14 +2,22 @@
 name: Check release version
 
 on:
-  workflow_dispatch:
   pull_request:
     branches:
       - master
+    types:
+      # defaults
+      - opened
+      - synchronize
+      - reopened
+      # custom
+      - ready_for_review # required for Github-created PRs
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    # only run when PR is not draft
+    if: ${{ !github.event.pull_request.draft }}
     steps:
       - uses: actions/checkout@v4
 
