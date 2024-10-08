@@ -68,7 +68,7 @@
       child_tube_v2.barcode, # FluidX barcode
       child_tube_v2.created_at, # Extraction and freeze date
       destination, # Sequencing or contingency
-      source_well.latest_live_cell_count&.value, # Cell count
+      source_well.latest_total_cell_count&.value, # Total Cell Count
       source_well.latest_cell_viability&.value, # Viability
       volume, # Volume
       source_well.aliquots.first.study.name, # Study name
