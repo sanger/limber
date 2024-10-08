@@ -5,6 +5,5 @@
 class Tubes::ValidatePairedTubesController < ApplicationController
   before_action :check_for_current_user!
 
-  def index
-  end
+  def index; end
 end
