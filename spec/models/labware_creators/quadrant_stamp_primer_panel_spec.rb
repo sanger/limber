@@ -75,7 +75,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on create' do
-    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {
@@ -256,7 +256,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
             parents: [parent1_uuid, parent2_uuid]
           }
         },
-        body: json(:plate_creation, child_uuid: child_uuid)
+        body: json(:plate_creation, child_uuid:)
       )
     end
 
@@ -310,15 +310,16 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
         stub_api_get('asset-uuid', body: child_plate_v1)
 
         metadata =
-          attributes_for(:v1_custom_metadatum_collection)
-            .fetch(:metadata, {})
-            .merge(stock_barcode_q0: stock_plate1.barcode.human, stock_barcode_q1: stock_plate2.barcode.human)
+          attributes_for(:v1_custom_metadatum_collection).fetch(:metadata, {}).merge(
+            stock_barcode_q0: stock_plate1.barcode.human,
+            stock_barcode_q1: stock_plate2.barcode.human
+          )
 
         stub_api_put(
           'custom_metadatum_collection-uuid',
           payload: {
             custom_metadatum_collection: {
-              metadata: metadata
+              metadata:
             }
           },
           body: json(:v1_custom_metadatum_collection)

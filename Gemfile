@@ -67,4 +67,11 @@ group :lint do
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
+
+  # Ruby dependencies specifically requested by prettier/plugin-ruby v4
+  # https://github.com/prettier/plugin-ruby
+  gem 'prettier_print', require: false
+  gem 'syntax_tree', require: false
+  gem 'syntax_tree-haml', require: false
+  gem 'syntax_tree-rbs', require: false
 end

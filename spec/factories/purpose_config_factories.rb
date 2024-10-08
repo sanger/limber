@@ -23,6 +23,7 @@ FactoryBot.define do
     printer_type { '96 Well Plate' }
     pmb_template { 'sqsc_96plate_label_template' }
     file_links { [{ name: 'Download Concentration CSV', id: 'concentrations' }] }
+    qc_thresholds { {} }
 
     # Sets up a stock plate configuration
     factory :stock_plate_config do
@@ -180,7 +181,7 @@ FactoryBot.define do
       transient { acceptable_purposes { %w[Purpose1 Purpose2] } }
 
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
-      creator_class { { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes: acceptable_purposes } } }
+      creator_class { { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes: } } }
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
@@ -238,11 +239,13 @@ FactoryBot.define do
         {
           'Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {}
+            'request_options' => {
+            }
           },
           'Another Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {}
+            'request_options' => {
+            }
           }
         }
       end
@@ -267,14 +270,7 @@ FactoryBot.define do
     # Configuration to set number_of_source_wells argument
     factory :pooled_wells_by_sample_in_groups_purpose_config do
       transient { number_of_source_wells { 2 } }
-      creator_class do
-        {
-          name: 'LabwareCreators::PooledWellsBySampleInGroups',
-          args: {
-            number_of_source_wells: number_of_source_wells
-          }
-        }
-      end
+      creator_class { { name: 'LabwareCreators::PooledWellsBySampleInGroups', args: { number_of_source_wells: } } }
     end
 
     factory :multi_stamp_tubes_using_tube_rack_scan_purpose_config do
@@ -291,19 +287,9 @@ FactoryBot.define do
     end
 
     factory :donor_pooling_plate_purpose_config do
-      transient { default_number_of_pools { 16 } }
       transient { max_number_of_source_plates { 2 } }
       transient { pooling { 'donor_pooling' } }
-      creator_class do
-        {
-          name: 'LabwareCreators::DonorPoolingPlate',
-          args: {
-            default_number_of_pools: default_number_of_pools,
-            max_number_of_source_plates: max_number_of_source_plates,
-            pooling: pooling
-          }
-        }
-      end
+      creator_class { { name: 'LabwareCreators::DonorPoolingPlate', args: { max_number_of_source_plates:, pooling: } } }
     end
 
     factory :banking_plate_purpose_config do

@@ -56,7 +56,7 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::ConcentrationBinnedPlatePresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::ConcentrationBinnedPlatePresenter.new(labware:) }
 
   context 'when binning configuration is missing' do
     it 'throws an exception' do

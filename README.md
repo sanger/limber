@@ -28,19 +28,19 @@ You must have Docker Desktop installed on your machine. Then the only command
 you should need to run is:
 
 ```shell
-docker-compose up
+docker compose up
 ```
 
 Variations on this command include:
 
-- `docker-compose up -d` which starts the container as a background task
-  (freeing up the terminal). You can then use `docker-compose down` to turn it
+- `docker compose up -d` which starts the container as a background task
+  (freeing up the terminal). You can then use `docker compose down` to turn it
   off again.
-- `GENERATE_CONFIG=false docker-compose up` which will avoid running the
+- `GENERATE_CONFIG=false docker compose up` which will avoid running the
   `config:generate` rake task as Limber is started.
-- `PRECOMPILE_ASSETS=false docker-compose up` which will avoid precompiling the
+- `PRECOMPILE_ASSETS=false docker compose up` which will avoid precompiling the
   assets as Limber is started.
-- `docker-compose up --build` which forces a rebuild of the Docker image if your
+- `docker compose up --build` which forces a rebuild of the Docker image if your
   changes to the Dockerfile or related scripts don't seem to be taking effect.
 
 Limber should be accessible via [http://localhost:3001](http://localhost:3001).
@@ -158,7 +158,7 @@ Alternatively, run `./compile_build.sh` to compile the build files or run `yarn 
 If during development changes do not seem to be taking effect, try:
 
 - Restart the application:
-- Destroy and recreate the Docker container `docker-compose down && GENERATE_CONFIG=false docker-compose up -d`
+- Destroy and recreate the Docker container `docker compose down && GENERATE_CONFIG=false docker compose up -d`
 - Rebuild the Docker image, particularly useful for changing dependencies
 - Clobber local resources `rails assets:clobber`
 
@@ -167,7 +167,7 @@ If during development changes do not seem to be taking effect, try:
 The rest of the sections shown here were written for and apply to the native
 installation, but can also be used in the Docker container if required. In order
 to use Docker, it's probably best to create a shell in the running container.
-Assuming you started the container via `docker-compose` you can access the shell
+Assuming you started the container via `docker compose` you can access the shell
 using:
 
 ```shell

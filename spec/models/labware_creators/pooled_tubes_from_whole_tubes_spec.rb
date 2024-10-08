@@ -46,15 +46,13 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_tubes'
     has_a_working_api
 
-    let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+    let(:form_attributes) { { purpose_uuid:, parent_uuid: } }
   end
 
   describe '#save!' do
     has_a_working_api
 
-    let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, barcodes: barcodes }
-    end
+    let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: } }
 
     let(:tube_creation_request_uuid) { SecureRandom.uuid }
 
@@ -69,7 +67,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
             child_purpose: purpose_uuid
           }
         },
-        body: json(:tube_creation, child_uuid: child_uuid)
+        body: json(:tube_creation, child_uuid:)
       )
     end
 
@@ -99,9 +97,9 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     end
 
     before do
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-        .with(barcode: barcodes, includes: [])
-        .and_return([parent, parent2])
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(barcode: barcodes, includes: []).and_return(
+        [parent, parent2]
+      )
 
       tube_creation_request
       tube_creation_children_request

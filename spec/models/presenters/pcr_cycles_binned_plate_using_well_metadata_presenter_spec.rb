@@ -84,7 +84,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter.new(labware:) }
 
   context 'when binning' do
     it_behaves_like 'a labware presenter'
