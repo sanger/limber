@@ -46,3 +46,7 @@ Metrics/MethodLength:
     - 'spec/support/factory_bot_extensions.rb'
     - 'spec/support/feature_helpers.rb'
     - 'spec/support/with_pmb_stubbed.rb'
+
+Style/NumericPredicate:
+  Exclude:
+    - 'lib/deployed_version.rb'
