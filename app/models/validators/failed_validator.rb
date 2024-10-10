@@ -11,8 +11,8 @@ module Validators
       affected_range = WellHelpers.formatted_range(problem_wells, presenter.size)
 
       presenter.errors.add(
-        :libraries,
-        "on this plate have already been failed (#{affected_range}). You should not carry out further work. " \
+        :submission,
+        "on this plate has already been failed (#{affected_range}). You should not carry out further work. " \
           'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
     end
