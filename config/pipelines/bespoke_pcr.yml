@@ -38,7 +38,6 @@ Bespoke PCR:
     LBB Cherrypick: LBB Ligation
     LBC Cherrypick: LBB Ligation
     LBB Ligation: LBB Lib PCR-XP
-    LBB Lib PCR-XP: LBB Lib PCR-XP Norm
 Bespoke PCR BCR:
   filters:
     request_type_key: limber_pcr_bespoke
@@ -89,5 +88,6 @@ Bespoke PCR MX:
     request_type_key:
       - limber_multiplexing
   relationships:
-    LBB Lib PCR-XP: LBB Lib Pool Stock
+    LBB Lib PCR-XP: LBB Lib PCR-XP Norm
+    LBB Lib PCR-XP Norm: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm
