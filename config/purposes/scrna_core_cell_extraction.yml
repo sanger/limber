@@ -80,7 +80,7 @@ LRC PBMC Bank:
   :qc_thresholds:
     viability:
       units: '%'
-      default_threshold: 50
+      default_threshold: 85
     total_cell_count:
       name: Total cell count
       units: 'cells/ml'
