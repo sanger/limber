@@ -3733,7 +3733,8 @@ ROBOT_CONFIG =
     custom_robot(
       'bravo-verify-initial-setup',
       name: 'Bravo Verify Initial Setup',
-      require_robot: true,
+      require_robot: true, # Robot barcode must be scanned in.
+      verify_robot: false, # First robot step; no previous robot.
       beds: {
         bed(4).barcode => {
           purpose: 'LCMT Lysate',
@@ -3784,6 +3785,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-dna-frag-verification',
       name: 'Bravo LCMT DNA Frag Verification',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA Frag',
@@ -3800,6 +3802,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-dna-end-prep-verification',
       name: 'Bravo LCMT DNA End Prep Verification',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA End Prep',
@@ -3816,6 +3819,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-dna-adp-lig-to-lcmt-dna-lib-pcr',
       name: 'Bravo LCMT DNA Adp Lig => LCMT DNA Lib PCR',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(6).barcode => {
           purpose: 'LCMT DNA Adp Lig',
@@ -3838,6 +3842,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-dna-adp-lig-verification',
       name: 'Bravo LCMT DNA Adp Lig Verification',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA Adp Lig',
@@ -3854,6 +3859,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-em-tet2-ox-verification',
       name: 'Bravo LCMT EM TET2 Ox Verification',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Ox',
@@ -3870,6 +3876,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-em-tet2-stop-verification',
       name: 'Bravo LCMT EM TET2 Stop Verification',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Stop',
@@ -3886,6 +3893,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-em-tet2-stop-to-denat-and-deam-setup',
       name: 'Bravo LCMT EM TET2 Stop to Denat and Deam Setup',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(4).barcode => {
           purpose: 'LCMT EM TET2 Stop',
@@ -3915,6 +3923,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-em-naoh-denat-verification',
       name: 'Bravo LCMT EM NaOH Denat Verification',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM NaOH Denat',
@@ -3931,6 +3940,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-em-apobec-deam-verification',
       name: 'Bravo LCMT EM APOBEC Deam Verification',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM APOBEC Deam',
@@ -3947,6 +3957,7 @@ ROBOT_CONFIG =
       'bravo-lcmt-em-apobec-deam-to-lcmt-em-lib-pcr',
       name: 'Bravo LCMT EM APOBEC Deam => LCMT EM Lib PCR',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM APOBEC Deam',
@@ -3969,6 +3980,7 @@ ROBOT_CONFIG =
       'hamilton-lcmt-dna-lib-pcr-to-lcmt-dna-pcr-xp',
       name: 'Hamilton LCMT DNA Lib PCR => LCMT DNA PCR XP',
       require_robot: true,
+      verify_robot: true,
       beds: {
         bed(7).barcode => {
           purpose: 'LCMT DNA Lib PCR',
@@ -4003,6 +4015,7 @@ ROBOT_CONFIG =
       'hamilton-lcmt-em-lib-pcr-to-lcmt-em-pcr-xp',
       name: 'Hamilton LCMT EM Lib PCR => LCMT EM PCR XP',
       require_robot: true,
+      verify_robot: false, # Previous robot is Bravo.
       beds: {
         bed(7).barcode => {
           purpose: 'LCMT EM Lib PCR',
