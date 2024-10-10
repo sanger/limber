@@ -3744,31 +3744,36 @@ ROBOT_CONFIG =
           purpose: 'LCMT DNA Frag',
           states: ['pending'],
           label: 'Carousel 1,4',
-          parent: bed(4).barcode
+          parent: bed(4).barcode,
+          target_state: 'started'
         },
         car('2,4').barcode => {
           purpose: 'LCMT DNA End Prep',
           states: ['pending'],
           label: 'Carousel 2,4',
-          parent: car('1,4').barcode
+          parent: car('1,4').barcode,
+          target_state: 'started'
         },
         car('3,5').barcode => {
           purpose: 'LCMT DNA Adp Lig',
           states: ['pending'],
           label: 'Carousel 3,5',
-          parent: car('2,4').barcode
+          parent: car('2,4').barcode,
+          target_state: 'started'
         },
         car('4,4').barcode => {
           purpose: 'LCMT EM TET2 Ox',
           states: ['pending'],
           label: 'Carousel 4,4',
-          parent: car('3,5').barcode
+          parent: car('3,5').barcode,
+          target_state: 'started'
         },
         car('4,3').barcode => {
           purpose: 'LCMT EM TET2 Stop',
           states: ['pending'],
           label: 'Carousel 4,3',
-          parent: car('4,4').barcode
+          parent: car('4,4').barcode,
+          target_state: 'started'
         }
       }
     )
@@ -3782,7 +3787,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA Frag',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
         }
@@ -3798,7 +3803,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA End Prep',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
         }
@@ -3836,7 +3841,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA Adp Lig',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
         }
@@ -3852,7 +3857,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Ox',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
         }
@@ -3868,7 +3873,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Stop',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
         }
@@ -3891,13 +3896,15 @@ ROBOT_CONFIG =
           purpose: 'LCMT EM NaOH Denat',
           states: ['pending'],
           label: 'Carousel 3,3',
-          parent: bed(4).barcode
+          parent: bed(4).barcode,
+          target_state: 'started'
         },
         car('3,4').barcode => {
           purpose: 'LCMT EM APOBEC Deam',
           states: ['pending'],
           label: 'Carousel 3,4',
-          parent: car('3,3').barcode
+          parent: car('3,3').barcode,
+          target_state: 'started'
         }
       }
     )
@@ -3911,7 +3918,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM NaOH Denat',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
         }
@@ -3927,7 +3934,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM APOBEC Deam',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
         }
