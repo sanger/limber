@@ -3980,7 +3980,7 @@ ROBOT_CONFIG =
       'hamilton-lcmt-dna-lib-pcr-to-lcmt-dna-pcr-xp',
       name: 'Hamilton LCMT DNA Lib PCR => LCMT DNA PCR XP',
       require_robot: true,
-      verify_robot: true,
+      verify_robot: false, # Previous robot is Bravo.
       beds: {
         bed(7).barcode => {
           purpose: 'LCMT DNA Lib PCR',
