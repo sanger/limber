@@ -25,7 +25,7 @@ RSpec.describe Presenters::FinalTubePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject { Presenters::FinalTubePresenter.new(labware: labware) }
+  subject { Presenters::FinalTubePresenter.new(labware:) }
 
   it_behaves_like 'a labware presenter'
 end

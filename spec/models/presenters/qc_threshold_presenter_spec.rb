@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Presenters::QcThresholdPresenter do
   subject(:presenter) { described_class.new(plate, configuration) }
 
-  let(:plate) { instance_double(Sequencescape::Api::V2::Plate, wells: wells) }
+  let(:plate) { instance_double(Sequencescape::Api::V2::Plate, wells:) }
   let(:wells) { qc_results.map { |results| instance_double(Sequencescape::Api::V2::Well, all_latest_qc: results) } }
   let(:qc_results) do
     [

@@ -25,7 +25,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
     let(:date) { Date.new(2019, 5, 13) }
 
     it 'parses the date from the URL parameters' do
-      expect(controller.from_date({ date: date })).to eq date
+      expect(controller.from_date({ date: })).to eq date
     end
 
     it 'defaults to a month ago' do

@@ -22,6 +22,11 @@ Rails/FindBy:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+
+# Only use shorthand hash syntax when all keys match the variables for better readability
+Style/HashSyntax:
+  EnforcedShorthandSyntax: consistent
+
 # Filter out all the DSLs
 Metrics/BlockLength:
   CountAsOne:

@@ -2,11 +2,11 @@
 
 module LabwareHelper # rubocop:todo Style/Documentation
   def state_change_form(presenter)
-    render partial: 'labware/state_change', locals: { presenter: presenter }
+    render partial: 'labware/state_change', locals: { presenter: }
   end
 
   def simple_state_change_form(presenter)
-    render partial: 'labware/simple_state_change', locals: { presenter: presenter }
+    render partial: 'labware/simple_state_change', locals: { presenter: }
   end
 
   STANDARD_COLOURS = (1..384).map { |i| "colour-#{i}" }

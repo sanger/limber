@@ -5,8 +5,8 @@ module PageHelper # rubocop:todo Style/Documentation
     render(partial: 'application/flash_messages')
   end
 
-  def grouping(_data_role, options = {}, &block)
-    tag.div(**options, &block)
+  def grouping(_data_role, options = {}, &)
+    tag.div(**options, &)
   end
   private :grouping
 
@@ -23,13 +23,13 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   # Main body of the page, provides information about what you HAVE
-  def content(&block)
-    grouping(:content, class: 'content-main', &block)
+  def content(&)
+    grouping(:content, class: 'content-main', &)
   end
 
   # Provides information about what you can DO
-  def sidebar(&block)
-    grouping(:sidebar, class: 'sidebar content-secondary', &block)
+  def sidebar(&)
+    grouping(:sidebar, class: 'sidebar content-secondary', &)
   end
 
   def card(title: nil, css_class: '', without_block: false, id: nil, &block)
@@ -43,11 +43,11 @@ module PageHelper # rubocop:todo Style/Documentation
     end
   end
 
-  def jumbotron(jumbotron_id = nil, options = {}, &block)
+  def jumbotron(jumbotron_id = nil, options = {}, &)
     options[:class] ||= +''
     options[:class] << ' jumbotron'
     options[:id] = jumbotron_id
-    tag.div(**options, &block)
+    tag.div(**options, &)
   end
 
   # eg. state_badge('pending')

@@ -35,7 +35,7 @@ RSpec.describe Presenters::MinimalPlatePresenter do
     create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
   end
 
-  subject(:presenter) { Presenters::MinimalPlatePresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::MinimalPlatePresenter.new(labware:) }
 
   it 'returns label attributes' do
     expected_label = {

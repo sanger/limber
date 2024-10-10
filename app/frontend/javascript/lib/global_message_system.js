@@ -16,7 +16,7 @@ SCAPE.message = function (message, status) {
       $(document.createElement('div'))
         .addClass('alert')
         .addClass('alert-' + status)
-        .text(message)
+        .text(message),
     )
 }
 

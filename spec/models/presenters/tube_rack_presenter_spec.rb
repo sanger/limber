@@ -47,7 +47,7 @@ RSpec.describe Presenters::TubeRackPresenter do
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
-  subject(:presenter) { described_class.new(labware: labware) }
+  subject(:presenter) { described_class.new(labware:) }
 
   it_behaves_like 'a labware presenter'
 

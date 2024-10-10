@@ -73,7 +73,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
   end
   let(:target_plate_2) { create :v2_plate, target_plate_2_attributes }
 
-  let(:robot) { Robots::PoolingAndSplittingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::PoolingAndSplittingRobot.new(robot_spec.merge(api:, user_uuid:)) }
 
   let(:robot_spec) do
     {

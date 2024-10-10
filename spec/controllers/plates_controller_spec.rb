@@ -68,7 +68,7 @@ RSpec.describe PlatesController, type: :controller do
             purpose_uuid: 'stock-plate-purpose-uuid'
           },
           session: {
-            user_uuid: user_uuid
+            user_uuid:
           }
 
       expect(response).to redirect_to(search_path)
@@ -83,19 +83,7 @@ RSpec.describe PlatesController, type: :controller do
         reason: 'Individual Well Failure'
       )
 
-      post :fail_wells,
-           params: {
-             id: plate_uuid,
-             plate: {
-               wells: {
-                 'A1' => 1,
-                 'B1' => 0
-               }
-             }
-           },
-           session: {
-             user_uuid: user_uuid
-           }
+      post :fail_wells, params: { id: plate_uuid, plate: { wells: { 'A1' => 1, 'B1' => 0 } } }, session: { user_uuid: }
 
       expect(response).to redirect_to(limber_plate_path(plate_uuid))
     end

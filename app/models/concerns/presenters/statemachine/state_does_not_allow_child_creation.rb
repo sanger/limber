@@ -5,7 +5,7 @@ module Presenters::Statemachine
   module StateDoesNotAllowChildCreation
     extend ActiveSupport::Concern
     included do
-      def control_additional_creation(&block)
+      def control_additional_creation(&)
         # Does nothing because you can't!
       end
     end

@@ -39,7 +39,7 @@ RSpec.describe Presenters::StandardPresenter do
   end
   let(:suggest_passes) { nil }
 
-  subject { Presenters::StandardPresenter.new(labware: labware) }
+  subject { Presenters::StandardPresenter.new(labware:) }
 
   it 'returns the priority' do
     expect(subject.priority).to eq(2)

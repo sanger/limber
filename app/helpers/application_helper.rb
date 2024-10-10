@@ -27,8 +27,8 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     Rails.env
   end
 
-  def each_robot(&block)
-    Robots.each_robot(&block)
+  def each_robot(&)
+    Robots.each_robot(&)
   end
 
   # Return a list of unique pipeline group names

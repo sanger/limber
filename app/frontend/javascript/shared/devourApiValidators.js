@@ -25,7 +25,7 @@ const hasExpectedProperties = (expectedProperties) => {
 
     for (const currTagGroup of results) {
       const hasAllProperties = expectedProperties.every((property) =>
-        Object.prototype.hasOwnProperty.call(currTagGroup, property)
+        Object.prototype.hasOwnProperty.call(currTagGroup, property),
       )
 
       if (!hasAllProperties) {

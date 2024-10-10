@@ -6,7 +6,7 @@ RSpec.describe TubeRackWalking::Walker do
   subject { TubeRackWalking::Walker.new(rack) }
 
   context 'A v2 rack' do
-    let(:rack) { build :tube_rack, tubes: tubes }
+    let(:rack) { build :tube_rack, tubes: }
 
     let(:tubes) { { 'A1' => create(:v2_tube), 'B1' => create(:v2_tube), 'H10' => create(:v2_tube) } }
 

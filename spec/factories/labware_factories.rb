@@ -29,7 +29,7 @@ FactoryBot.define do
     end
 
     factory(:labware_with_state_changes) do
-      state_changes { create_list :v2_state_change, 2, target_state: target_state }
+      state_changes { create_list :v2_state_change, 2, target_state: }
 
       after(:build) { |labware, evaluator| labware._cached_relationship(:state_changes) { evaluator.state_changes } }
     end

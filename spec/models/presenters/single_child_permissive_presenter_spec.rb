@@ -6,7 +6,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
   let(:child_purpose) { 'Child purpose' }
   let(:child_plate) { create :v2_plate, purpose_name: child_purpose }
 
-  subject { Presenters::SingleChildPermissivePresenter.new(labware: labware) }
+  subject { Presenters::SingleChildPermissivePresenter.new(labware:) }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: child_purpose

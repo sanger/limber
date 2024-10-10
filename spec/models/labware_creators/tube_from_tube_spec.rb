@@ -52,7 +52,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
             user: 'user-uuid'
           }
         },
-        body: json(:tube_creation, child_uuid: child_uuid)
+        body: json(:tube_creation, child_uuid:)
       )
     end
 

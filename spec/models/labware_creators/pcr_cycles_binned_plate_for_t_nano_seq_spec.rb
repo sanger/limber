@@ -313,21 +313,19 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
     end
 
     let(:stub_upload_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-        .with(
-          body: file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="targeted_nano_seq_customer_file.csv"'
-          }
-        )
-        .to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'targeted_nano_seq_dil_file.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
+      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+        body: file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="targeted_nano_seq_customer_file.csv"'
+        }
+      ).to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'targeted_nano_seq_dil_file.csv'),
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
     end
 
     let(:stub_parent_request) { stub_api_get(parent_uuid, body: parent_plate_v1) }

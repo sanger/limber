@@ -60,12 +60,12 @@ RSpec.shared_examples 'a labware with a workline identifier' do
         let(:alternative_workline_name) { 'Some other plate with some stuff inside' }
 
         before do
-          allow(SearchHelper).to receive(:alternative_workline_reference_name)
-            .with(the_labware)
-            .and_return(alternative_workline_name)
-          allow(ancestors_scope).to receive(:where)
-            .with(purpose_name: alternative_workline_name)
-            .and_return(alternative_workline_reference_plates)
+          allow(SearchHelper).to receive(:alternative_workline_reference_name).with(the_labware).and_return(
+            alternative_workline_name
+          )
+          allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_workline_name).and_return(
+            alternative_workline_reference_plates
+          )
         end
 
         it 'returns the last alternative workline reference' do

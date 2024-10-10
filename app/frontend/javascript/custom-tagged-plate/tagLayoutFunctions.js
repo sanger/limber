@@ -147,7 +147,7 @@ const calculateTagLayout = function (data) {
     data.tagsPerWell,
     (well, relIndex, absIndex) => {
       return walkingByFunctions[data.walkingBy](well, tags, relIndex, absIndex, offset, counters)
-    }
+    },
   )
 }
 

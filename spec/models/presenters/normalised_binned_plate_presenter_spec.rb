@@ -57,7 +57,7 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::NormalisedBinnedPlatePresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::NormalisedBinnedPlatePresenter.new(labware:) }
 
   context 'when configuration is missing' do
     it 'throws an exception' do

@@ -91,7 +91,7 @@ module Presenters
     end
 
     def tubes_and_sources
-      @tubes_and_sources ||= Presenters::TubesWithSources.build(wells: wells, pools: pools)
+      @tubes_and_sources ||= Presenters::TubesWithSources.build(wells:, pools:)
       yield(@tubes_and_sources) if block_given? && @tubes_and_sources.tubes?
       @tubes_and_sources
     end

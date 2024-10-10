@@ -110,7 +110,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
     )
   end
 
-  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter.new(labware:) }
 
   context 'when binning' do
     it_behaves_like 'a labware presenter'

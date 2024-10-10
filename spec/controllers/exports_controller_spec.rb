@@ -63,9 +63,10 @@ RSpec.describe ExportsController, type: :controller do
 
   context 'on generating a csv' do
     before do
-      expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
-        .with(includes, barcode: plate_barcode)
-        .and_return(plate)
+      expect(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(
+        includes,
+        barcode: plate_barcode
+      ).and_return(plate)
     end
 
     context 'where csv id requested is concentrations_ngul.csv' do
@@ -318,9 +319,10 @@ RSpec.describe ExportsController, type: :controller do
     before do
       # Make the controller to receive the plate.
       # NB. Uses plate_includes if specified in the export configuration.
-      allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
-        .with(export.plate_includes, barcode: plate_barcode)
-        .and_return(plate)
+      allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(
+        export.plate_includes,
+        barcode: plate_barcode
+      ).and_return(plate)
 
       # Make the controller to use the export loaded from fixture config.
       allow(subject).to receive(:export).and_return(export)
@@ -334,16 +336,17 @@ RSpec.describe ExportsController, type: :controller do
       asset_ancestors =
         ancestor_plates.map { |ancestor_plate| double('Sequencescape::Api::V2::Asset', id: ancestor_plate.id) }
 
-      allow(plate).to receive_message_chain(:ancestors, :where)
-        .with(purpose_name: export.ancestor_purpose)
-        .and_return(asset_ancestors)
+      allow(plate).to receive_message_chain(:ancestors, :where).with(purpose_name: export.ancestor_purpose).and_return(
+        asset_ancestors
+      )
 
       # Stub the plate_with_custom_includes query to return the first ancestor plate.
       # NB. This stub is required to make the other methods in the show controller
       # action not to fail when they try to receive the first ancestor plate.
-      allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
-        .with(export.plate_includes, id: asset_ancestors.first.id)
-        .and_return(ancestor_plates.first)
+      allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(
+        export.plate_includes,
+        id: asset_ancestors.first.id
+      ).and_return(ancestor_plates.first)
 
       # Stub the plate query to return ancestor plates.
       builder = double('JsonApiClient::Query::Builder')

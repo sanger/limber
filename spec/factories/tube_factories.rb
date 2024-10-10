@@ -80,7 +80,7 @@ FactoryBot.define do
     factory :stock_tube do
       purpose_name { 'Limber Cherrypicked' }
       purpose_uuid { 'stock-plate-purpose-uuid' }
-      stock_plate { { barcode: barcode, uuid: uuid } }
+      stock_plate { { barcode:, uuid: } }
 
       factory :stock_tube_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
@@ -112,9 +112,7 @@ FactoryBot.define do
       request_factory { :library_request }
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }
-      aliquots do
-        create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request
-      end
+      aliquots { create_list aliquot_factory, aliquot_count, library_state:, outer_request: }
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
 

@@ -29,9 +29,11 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
 
   context 'on generating a csv' do
     before do
-      expect(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with(includes, selects, barcode: tube_barcode)
-        .and_return(tube)
+      expect(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+        includes,
+        selects,
+        barcode: tube_barcode
+      ).and_return(tube)
     end
 
     context 'where tsv id requested is bioscan_mbrave.tsv' do

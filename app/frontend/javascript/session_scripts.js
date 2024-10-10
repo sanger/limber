@@ -20,7 +20,7 @@ logIn = function () {
     if (user_name !== wasLoggedIn) {
       updateUserName(user_name)
       warning(
-        'The logged in user has changed since this page was last viewed. You are now logged in as ' + user_name + '.'
+        'The logged in user has changed since this page was last viewed. You are now logged in as ' + user_name + '.',
       )
     }
   } else {

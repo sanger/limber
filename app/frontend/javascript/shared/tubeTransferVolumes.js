@@ -13,10 +13,10 @@ const tubeMostRecentMolarity = function (tube) {
   const qcResults = tube?.receptacle?.qc_results
   const molarityEntries = qcResults?.filter((result) => result.key === 'molarity' && result.units === 'nM')
   const sortedByCreatedAt = molarityEntries?.sort(
-    (resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at)
+    (resultA, resultB) => -1 * ('' + resultA.created_at).localeCompare(resultB.created_at),
   )
   const sortedByIds = sortedByCreatedAt?.sort((resultA, resultB) =>
-    parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1
+    parseInt(resultA.id) > parseInt(resultB.id) ? -1 : 1,
   )
   const mostRecentMolarityResult = sortedByIds?.[0]
   return mostRecentMolarityResult ? parseFloat(mostRecentMolarityResult?.value) : undefined

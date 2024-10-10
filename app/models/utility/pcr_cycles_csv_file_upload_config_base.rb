@@ -29,8 +29,8 @@ module Utility
       raise '#initialize_pipeline_specific_methods must be implemented on subclasses'
     end
 
-    def create_method(name, &block)
-      self.class.send(:define_method, name, &block)
+    def create_method(name, &)
+      self.class.send(:define_method, name, &)
     end
 
     def submit_for_sequencing_valid_values

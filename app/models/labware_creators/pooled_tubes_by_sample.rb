@@ -69,12 +69,11 @@ module LabwareCreators
     def transfer_request_attributes
       pools.each_with_object([]) do |(pool_identifier, pool), transfer_requests|
         pool.each do |location|
-          transfer_requests <<
-            request_hash(
-              well_locations.fetch(location).uuid,
-              child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
-              pool_identifier
-            )
+          transfer_requests << request_hash(
+            well_locations.fetch(location).uuid,
+            child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
+            pool_identifier
+          )
         end
       end
     end
@@ -186,7 +185,7 @@ module LabwareCreators
     def locate_ancestor_tubes
       purpose_name = purpose_config[:ancestor_stock_tube_purpose_name]
 
-      ancestor_results = parent.ancestors.where(purpose_name: purpose_name)
+      ancestor_results = parent.ancestors.where(purpose_name:)
       return {} if ancestor_results.blank?
 
       ancestor_results.each_with_object({}) do |ancestor_result, tube_list|

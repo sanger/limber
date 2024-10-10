@@ -24,10 +24,14 @@ class PrintJob # rubocop:todo Style/Documentation
   end
 
   def print_to_pmb
+    # Ensure the template exists before attempting to print
+    label_template_id = pmb_label_template_id
+    return false if label_template_id.nil?
+
     job =
       PMB::PrintJob.new(
         printer_name: printer_name,
-        label_template_id: pmb_label_template_id,
+        label_template_id: label_template_id,
         labels: {
           body: (labels * number_of_copies)
         }
@@ -134,10 +138,17 @@ class PrintJob # rubocop:todo Style/Documentation
   private
 
   def pmb_label_template_id
-    # This isn't a rails finder; so we disable the cop.
-    PMB::LabelTemplate.where(name: get_label_template_by_service('PMB')).first.id
+    pmb_label_template = get_label_template_by_service('PMB')
+    template_id = PMB::LabelTemplate.where(name: pmb_label_template).first&.id
+    if template_id.nil?
+      errors.add(:pmb, "Unable to find label template: #{pmb_label_template}")
+      nil
+    else
+      template_id
+    end
   rescue JsonApiClient::Errors::ConnectionError
     errors.add(:pmb, 'PrintMyBarcode service is down')
+    nil
   end
 
   def get_label_template_by_service(print_service)

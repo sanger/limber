@@ -51,7 +51,7 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
           parents: [parent_uuid, parent2_uuid]
         }
       },
-      body: json(:plate_creation, child_uuid: child_uuid)
+      body: json(:plate_creation, child_uuid:)
     )
   end
 

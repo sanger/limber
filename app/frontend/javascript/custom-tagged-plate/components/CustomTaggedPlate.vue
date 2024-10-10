@@ -252,7 +252,7 @@ export default {
         this.parentWellSubmissionDetails,
         this.tagLayout,
         this.tagSubstitutions,
-        this.tagGroupOligoStrings
+        this.tagGroupOligoStrings,
       )
     },
     createButtonDisabled() {

@@ -31,7 +31,7 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(labware: labware) }
+  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(labware:) }
 
   before do
     create(:purpose_config, uuid: labware.purpose.uuid)

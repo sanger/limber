@@ -73,17 +73,17 @@ RSpec.describe SequencescapeSubmission do
     let(:plate2) { create(:passed_plate) }
     it 'returns the uuids of the labwares wells' do
       obj = described_class.new(attributes.merge(extra_barcodes: %w[1234 5678]))
-      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
-        .with(barcode: %w[1234 5678])
-        .and_return([plate, plate2])
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
+        barcode: %w[1234 5678]
+      ).and_return([plate, plate2])
 
       # There are 4 non-empty wells in each labware
       expect(obj.extra_assets.count).to eq(8)
     end
     it 'removes duplicates uuids in the returned list' do
-      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
-        .with(barcode: %w[1234 1234 5678])
-        .and_return([plate, plate, plate2])
+      allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
+        barcode: %w[1234 1234 5678]
+      ).and_return([plate, plate, plate2])
       obj = described_class.new(attributes.merge(extra_barcodes: %w[1234 1234 5678]))
       expect(obj.extra_assets.count).to eq(8)
       expect(obj.extra_assets.uniq.count).to eq(8)
@@ -104,9 +104,9 @@ RSpec.describe SequencescapeSubmission do
       let(:plate2) { create(:passed_plate) }
 
       before do
-        allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter)
-          .with(barcode: %w[1234 5678])
-          .and_return([plate, plate2])
+        allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
+          barcode: %w[1234 5678]
+        ).and_return([plate, plate2])
       end
 
       it 'returns the current assets plus the extra assets' do

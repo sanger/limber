@@ -99,7 +99,7 @@ describe('DevourSelect mixin', () => {
               status: 500,
             },
           ],
-        }
+        },
       )
 
       const wrapper = wrapperFactory(api)

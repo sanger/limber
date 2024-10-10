@@ -16,7 +16,8 @@ module ContractHelper
     # rubocop:todo Lint/MissingCopEnableDirective
     # rubocop:todo Layout/LineLength
     # rubocop:enable Lint/MissingCopEnableDirective
-    REQUEST_REGEXP = %r{ # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes
+    REQUEST_REGEXP =
+      %r{ # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes # rubocop:todo Lint/MixedRegexpCaptureTypes
     # rubocop:enable Layout/LineLength
       (?<eol>       \r\n|\r|\n){0}
       (?<verb>      GET|PUT|POST|DELETE){0}
@@ -67,11 +68,11 @@ module ContractHelper
 
     private
 
-    def contract(contract_name, &block)
+    def contract(contract_name, &)
       path = @root.dup
       until path.empty?
         filename = File.join(path, 'contracts', "#{contract_name}.txt")
-        return File.open(filename, 'r', &block) if File.file?(filename)
+        return File.open(filename, 'r', &) if File.file?(filename)
 
         path.pop
       end
@@ -94,15 +95,15 @@ module ContractHelper
   end
 
   module ClassMethods
-    def expect_request_from(request_filename, &block)
+    def expect_request_from(request_filename, &)
       stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w[.. contracts]))
       stubbed_request.request(request_filename)
-      stubbed_request.instance_eval(&block)
+      stubbed_request.instance_eval(&)
       stubbed_request.inject_into(self)
     end
 
     def has_a_working_api(times: :any)
-      expect_request_from('retrieve-api-root') { response('api-root', times: times) }
+      expect_request_from('retrieve-api-root') { response('api-root', times:) }
       let(:api) do
         Sequencescape::Api.new(
           url: 'http://example.com:3000/',

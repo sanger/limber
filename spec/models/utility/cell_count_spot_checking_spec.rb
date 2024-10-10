@@ -22,13 +22,13 @@ RSpec.describe Utility::CellCountSpotChecking do
         suffix = ((index - 1) / 3) + 1
         uuid = "sample-uuid-#{suffix}" # Match the samples of tubes
         supplier_name = ancestor_tubes[uuid].barcode.human
-        sample_metadata = create(:v2_sample_metadata, supplier_name: supplier_name)
-        sample = create(:v2_sample, uuid: uuid, sample_metadata: sample_metadata)
-        aliquots = [create(:v2_aliquot, sample: sample)]
+        sample_metadata = create(:v2_sample_metadata, supplier_name:)
+        sample = create(:v2_sample, uuid:, sample_metadata:)
+        aliquots = [create(:v2_aliquot, sample:)]
         location = WellHelpers.well_at_column_index(index - 1)
-        array << create(:v2_well, aliquots: aliquots, location: location)
+        array << create(:v2_well, aliquots:, location:)
       end
-    create(:v2_plate, wells: wells)
+    create(:v2_plate, wells:)
   end
 
   let(:plate_wells_grouped_by_barcode) do
