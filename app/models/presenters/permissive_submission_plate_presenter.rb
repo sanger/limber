@@ -2,6 +2,8 @@
 
 module Presenters
   #
+  # TODO: Edit this to better reflect reality!
+  #
   # The PermissiveSubmissionPlatePresenter is used when plates enter the process with no
   # assigned pipeline. It presents the user with a selection of workflows,
   # and allows them to generate corresponding Sequencescape submissions. Once
@@ -16,7 +18,6 @@ module Presenters
   #   request_options:
   #     <request_option_key>: <request_option_value>
   #     ...
-  # class PermissiveSubmissionPlatePresenter < SubmissionPlatePresenter
   class PermissiveSubmissionPlatePresenter < SubmissionPlatePresenter
     include Presenters::Statemachine::PermissiveSubmission
     # include Presenters::Statemachine::Permissive # a presenter which allows plate creation even when the plate is pending
