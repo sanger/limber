@@ -27,7 +27,7 @@ LCMT DNA Adp Lig:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :presenter_class: Presenters::SubmissionPlatePresenter
+  :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
   :submission_options:
     WGS Branch - Automated Submission:
       template_name: 'Limber-Htp - LCM Triomics WGS'
