@@ -20,7 +20,6 @@ module Presenters
   #     ...
   class PermissiveSubmissionPlatePresenter < SubmissionPlatePresenter
     include Presenters::Statemachine::PermissiveSubmission
-    # include Presenters::Statemachine::Permissive # a presenter which allows plate creation even when the plate is pending
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator
