@@ -17,7 +17,7 @@ module Presenters
   class SubmissionPlatePresenter < PlatePresenter
     include Presenters::Statemachine::Submission
     include Presenters::Statemachine::DoesNotAllowLibraryPassing
-    include Presenters::StateChangeless
+    # TODO: confirm Presenters::StateChangeless is not required here
 
     self.style_class = 'stock'
 
