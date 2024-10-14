@@ -89,7 +89,10 @@ module LabwareCreators
     end
 
     def transfer_material_from_parent!
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     def transfer_request_attributes
@@ -110,10 +113,10 @@ module LabwareCreators
       tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube])
 
       {
-        'source_asset' => transfer[:source_asset],
-        'target_asset' =>
+        source_asset: transfer[:source_asset],
+        target_asset:
           @child.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
-        'outer_request' => source_tube_outer_request_uuid(tube)
+        outer_request: source_tube_outer_request_uuid(tube)
       }
     end
 

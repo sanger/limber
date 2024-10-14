@@ -60,13 +60,13 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     it 'returns request hash by reordering columns to rows' do
       parent.wells_in_columns.each_with_index do |source_well, index|
         submission_id = source_well.aliquots.first.request.submission_id # Same for all aliquots in the well
-        additional_parameters = { 'submission_id' => submission_id }
+        additional_parameters = { submission_id: submission_id }
 
         request_hash = subject.request_hash(source_well, child_plate, additional_parameters)
 
-        expect(request_hash['source_asset']).to eq(source_well.uuid)
-        expect(request_hash['target_asset']).to eq(child_plate.wells_in_rows[index].uuid)
-        expect(request_hash['submission_id']).to eq(submission_id)
+        expect(request_hash[:source_asset]).to eq(source_well.uuid)
+        expect(request_hash[:target_asset]).to eq(child_plate.wells_in_rows[index].uuid)
+        expect(request_hash[:submission_id]).to eq(submission_id)
       end
     end
   end
@@ -76,30 +76,24 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     let(:transferred_wells) { parent_wells }
 
     # Expected transfer requests from source wells to child wells
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       transferred_wells.map.with_index do |source_well, index|
         # p "#{source_well.location} -> #{child_plate.wells_in_rows[index].location}"
         submission_id = source_well.aliquots.first.request.submission_id
         {
-          'source_asset' => source_well.uuid,
-          'target_asset' => child_plate.wells_in_rows[index].uuid,
-          'submission_id' => submission_id
+          source_asset: source_well.uuid,
+          target_asset: child_plate.wells_in_rows[index].uuid,
+          submission_id: submission_id
         }
       end
-    end
-
-    let(:expect_transfer_requests) do
-      expect(api).to receive_message_chain(:transfer_request_collection, :create!).with(
-        user: user_uuid,
-        transfer_requests: transfer_requests
-      )
-      subject.save!
     end
 
     context 'with all source wells' do
       it 'creates transfer requests by ordering columns to rows' do
         # A1 -> A1, B1 -> A2, C1 -> A3, D1 -> A4, E1 -> A5, F1 -> A6, G1 -> A7, H1 -> A8
-        expect_transfer_requests
+        expect_transfer_request_collection_creation
+
+        subject.save!
       end
     end
 
@@ -113,7 +107,9 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
 
       it 'compresses the wells in the child plate' do
         # B1 -> A1, C1 -> A2, D1 -> A3, F1 -> A4, G1 -> A5
-        expect_transfer_requests
+        expect_transfer_request_collection_creation
+
+        subject.save!
       end
     end
   end

@@ -24,6 +24,7 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
       outer_request: nil
     )
   end
+
   let(:well_b1) do
     create(
       :v2_well,
@@ -35,6 +36,7 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
       outer_request: nil
     )
   end
+
   let(:well_c1) do
     create(
       :v2_well,
@@ -46,6 +48,7 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
       outer_request: nil
     )
   end
+
   let(:well_d1) do
     create(
       :v2_well,
@@ -126,32 +129,12 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
   end
 
   context '96 well plate' do
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       [
-        {
-          'volume' => '20.0',
-          'source_asset' => well_a1.uuid,
-          'target_asset' => '3-well-A1',
-          'outer_request' => requests[0].uuid
-        },
-        {
-          'volume' => '0.893',
-          'source_asset' => well_b1.uuid,
-          'target_asset' => '3-well-A2',
-          'outer_request' => requests[1].uuid
-        },
-        {
-          'volume' => '14.286',
-          'source_asset' => well_c1.uuid,
-          'target_asset' => '3-well-B2',
-          'outer_request' => requests[2].uuid
-        },
-        {
-          'volume' => '20.0',
-          'source_asset' => well_d1.uuid,
-          'target_asset' => '3-well-C2',
-          'outer_request' => requests[3].uuid
-        }
+        { volume: '20.0', source_asset: well_a1.uuid, target_asset: '3-well-A1', outer_request: requests[0].uuid },
+        { volume: '0.893', source_asset: well_b1.uuid, target_asset: '3-well-A2', outer_request: requests[1].uuid },
+        { volume: '14.286', source_asset: well_c1.uuid, target_asset: '3-well-B2', outer_request: requests[2].uuid },
+        { volume: '20.0', source_asset: well_d1.uuid, target_asset: '3-well-C2', outer_request: requests[3].uuid }
       ]
     end
     let(:dest_well_qc_attributes) do

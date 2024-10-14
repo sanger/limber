@@ -50,15 +50,15 @@ module LabwareCreators
     # Send the transfer request to SS
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(dest_plate)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes(dest_plate),
+        user_uuid: user_uuid
       )
       true
     end
 
     # returns: a list of objects, mapping source well to destination well
-    # e.g [{'source_asset': 'auuid', 'target_asset': 'anotheruuid'}]
+    # e.g [{:source_asset: :auuid, :target_asset: :anotheruuid}]
     def transfer_request_attributes(dest_plate)
       passed_parent_wells.map { |source_well| request_hash(source_well, dest_plate) }
     end
@@ -71,10 +71,10 @@ module LabwareCreators
     def request_hash(source_well, dest_plate)
       source_location = transfer_hash[source_well.location][:dest_locn]
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' => get_well_for_plate_location(dest_plate, source_location)&.uuid,
-        :aliquot_attributes => {
-          'tag_depth' => tag_depth(source_well)
+        source_asset: source_well.uuid,
+        target_asset: get_well_for_plate_location(dest_plate, source_location)&.uuid,
+        aliquot_attributes: {
+          tag_depth: tag_depth(source_well)
         }
       }
     end

@@ -234,7 +234,10 @@ module LabwareCreators
 
     # Transfers material from the parent tubes to the given child plate.
     def transfer_material_from_parent!
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     # Returns an array of hashes representing the transfer requests for the given child plate.
@@ -261,7 +264,7 @@ module LabwareCreators
     # @param additional_parameters [Hash] Additional parameters to include in the transfer request hash.
     # @return [Hash] A transfer request hash.
     def request_hash(source_tube_uuid, target_plate_uuid, additional_parameters)
-      { 'source_asset' => source_tube_uuid, 'target_asset' => target_plate_uuid }.merge(additional_parameters)
+      { source_asset: source_tube_uuid, target_asset: target_plate_uuid }.merge(additional_parameters)
     end
 
     # Returns the UUID of the first active request of the expected type for the given tube.

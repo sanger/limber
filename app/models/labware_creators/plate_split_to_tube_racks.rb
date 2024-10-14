@@ -135,7 +135,10 @@ module LabwareCreators
     #
     # @return [void]
     def perform_transfers
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     # We will create multiple child tubes, so redirect to the parent plate
@@ -665,7 +668,7 @@ module LabwareCreators
     # @param additional_parameters [Hash] Additional parameters to include in the transfer request hash.
     # @return [Hash] A transfer request hash.
     def request_hash(source_well_uuid, target_tube_uuid, additional_parameters)
-      { 'source_asset' => source_well_uuid, 'target_asset' => target_tube_uuid }.merge(additional_parameters)
+      { source_asset: source_well_uuid, target_asset: target_tube_uuid }.merge(additional_parameters)
     end
   end
   # rubocop:enable Metrics/ClassLength

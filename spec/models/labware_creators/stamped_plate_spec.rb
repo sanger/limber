@@ -59,23 +59,11 @@ RSpec.describe LabwareCreators::StampedPlate do
         )
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
-      end
-
       it 'makes the expected requests' do
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to eq true
         expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
   end
@@ -83,15 +71,15 @@ RSpec.describe LabwareCreators::StampedPlate do
   context '96 well plate' do
     let(:plate_size) { 96 }
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       WellHelpers
         .column_order(plate_size)
         .each_with_index
         .map do |well_name, index|
           {
-            'source_asset' => "2-well-#{well_name}",
-            'target_asset' => "3-well-#{well_name}",
-            'outer_request' => "request-#{index}"
+            source_asset: "2-well-#{well_name}",
+            target_asset: "3-well-#{well_name}",
+            outer_request: "request-#{index}"
           }
         end
     end
@@ -102,7 +90,7 @@ RSpec.describe LabwareCreators::StampedPlate do
   context '384 well plate' do
     let(:plate_size) { 384 }
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       WellHelpers
         .column_order(plate_size)
         .each_with_index
@@ -147,10 +135,10 @@ RSpec.describe LabwareCreators::StampedPlate do
           create(:v2_stock_well, uuid: '2-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
         ]
       end
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
-          { 'source_asset' => '2-well-A1', 'target_asset' => '3-well-A1', 'outer_request' => 'request-b' },
-          { 'source_asset' => '2-well-B1', 'target_asset' => '3-well-B1', 'outer_request' => 'request-d' }
+          { source_asset: '2-well-A1', target_asset: '3-well-A1', outer_request: 'request-b' },
+          { source_asset: '2-well-B1', target_asset: '3-well-B1', outer_request: 'request-d' }
         ]
       end
 
@@ -268,10 +256,10 @@ RSpec.describe LabwareCreators::StampedPlate do
       context 'when a request_type is supplied' do
         let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
-        let(:transfer_requests) do
+        let(:transfer_requests_attributes) do
           [
-            { 'source_asset' => '2-well-A1', 'target_asset' => '3-well-A1', 'submission_id' => '2' },
-            { 'source_asset' => '2-well-B1', 'target_asset' => '3-well-B1', 'submission_id' => '2' }
+            { source_asset: '2-well-A1', target_asset: '3-well-A1', submission_id: '2' },
+            { source_asset: '2-well-B1', target_asset: '3-well-B1', submission_id: '2' }
           ]
         end
 
