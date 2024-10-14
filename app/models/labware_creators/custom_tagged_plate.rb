@@ -40,7 +40,7 @@ module LabwareCreators
       @tag_plate = OpenStruct.new(params) # rubocop:todo Style/OpenStructUse
     end
 
-    def initialize(*args, &block)
+    def initialize(*args, &)
       super
       parent.populate_wells_with_pool
     end

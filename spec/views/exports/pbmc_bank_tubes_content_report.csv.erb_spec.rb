@@ -42,9 +42,9 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:src_aliquot3_s2) { create(:v2_aliquot, sample: sample2, study: study) }
 
     # qc results
-    let(:live_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: '20000', units: 'cells/ml') }
+    let(:total_cell_count_qc) { create(:qc_result, key: 'total_cell_count', value: '20000', units: 'cells/ml') }
     let(:viability_qc) { create(:qc_result, key: 'viability', value: '75', units: '%') }
-    let(:qc_results) { [live_cell_count_qc, viability_qc] }
+    let(:qc_results) { [total_cell_count_qc, viability_qc] }
 
     # source wells
     let(:source_well_attributes) do
@@ -200,7 +200,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           'FluidX barcode',
           'Extraction and freeze date',
           'Sequencing or contingency',
-          'Cell count (cells/ml)',
+          'Total cell count (cells/ml)',
           'Viability (%)',
           'Volume (µl)',
           'Study name',
@@ -221,24 +221,16 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
       assign(:workflow, workflow_name)
 
       # stub the v2 child tube lookups
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube1.barcode.machine)
-        .and_return(dest_tube1)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube2.barcode.machine)
-        .and_return(dest_tube2)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube3.barcode.machine)
-        .and_return(dest_tube3)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube4.barcode.machine)
-        .and_return(dest_tube4)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube5.barcode.machine)
-        .and_return(dest_tube5)
-      allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes)
-        .with('custom_metadatum_collection', nil, barcode: dest_tube6.barcode.machine)
-        .and_return(dest_tube6)
+      custom_includes = 'custom_metadatum_collection'
+      dest_tubes = [dest_tube1, dest_tube2, dest_tube3, dest_tube4, dest_tube5, dest_tube6]
+
+      dest_tubes.each do |dest_tube|
+        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+          custom_includes,
+          nil,
+          barcode: dest_tube.barcode.machine
+        ).and_return(dest_tube)
+      end
     end
 
     it 'renders the expected content row by row' do
@@ -247,8 +239,8 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
 
     context 'when some data is missing' do
       # qc results, no viability_qc
-      let(:live_cell_count_qc) { create(:qc_result, key: 'live_cell_count', value: nil, units: 'cells/ml') }
-      let(:qc_results) { [live_cell_count_qc] }
+      let(:total_cell_count_qc) { create(:qc_result, key: 'total_cell_count', value: nil, units: 'cells/ml') }
+      let(:qc_results) { [total_cell_count_qc] }
 
       # expected file content
       let(:expected_content) do
@@ -262,7 +254,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
             'FluidX barcode',
             'Extraction and freeze date',
             'Sequencing or contingency',
-            'Cell count (cells/ml)',
+            'Total cell count (cells/ml)',
             'Viability (%)',
             'Volume (µl)',
             'Study name',
@@ -302,7 +294,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
             'FluidX barcode',
             'Extraction and freeze date',
             'Sequencing or contingency',
-            'Cell count (cells/ml)',
+            'Total cell count (cells/ml)',
             'Viability (%)',
             'Volume (µl)',
             'Study name',
@@ -395,7 +387,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
             'FluidX barcode',
             'Extraction and freeze date',
             'Sequencing or contingency',
-            'Cell count (cells/ml)',
+            'Total cell count (cells/ml)',
             'Viability (%)',
             'Volume (µl)',
             'Study name',
@@ -490,7 +482,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
             'FluidX barcode',
             'Extraction and freeze date',
             'Sequencing or contingency',
-            'Cell count (cells/ml)',
+            'Total cell count (cells/ml)',
             'Viability (%)',
             'Volume (µl)',
             'Study name',

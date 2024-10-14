@@ -10,20 +10,20 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
   let(:plate1_barcode) { 'DN1S' }
   let(:plate2_barcode) { 'DN2T' }
 
-  let(:total_cell_count_a1) { create(:qc_result, key: 'total_cell_count', value: '1_000_000', units: 'cells/ml') }
-  let(:total_cell_count_b1) { create(:qc_result, key: 'total_cell_count', value: '2_000_000', units: 'cells/ml') }
-  let(:total_cell_count_c1) { create(:qc_result, key: 'total_cell_count', value: '3_000_000', units: 'cells/ml') }
-  let(:total_cell_count_d1) { create(:qc_result, key: 'total_cell_count', value: '4_000_000', units: 'cells/ml') }
+  let(:total_cell_count_a1) { create(:qc_result, key: 'total_cell_count', value: '100_000', units: 'cells/ml') }
+  let(:total_cell_count_b1) { create(:qc_result, key: 'total_cell_count', value: '200_000', units: 'cells/ml') }
+  let(:total_cell_count_c1) { create(:qc_result, key: 'total_cell_count', value: '300_000', units: 'cells/ml') }
+  let(:total_cell_count_d1) { create(:qc_result, key: 'total_cell_count', value: '400_000', units: 'cells/ml') }
 
-  let(:total_cell_count_a2) { create(:qc_result, key: 'total_cell_count', value: '5_000_000', units: 'cells/ml') }
-  let(:total_cell_count_b2) { create(:qc_result, key: 'total_cell_count', value: '6_000_000', units: 'cells/ml') }
-  let(:total_cell_count_c2) { create(:qc_result, key: 'total_cell_count', value: '7_000_000', units: 'cells/ml') }
-  let(:total_cell_count_d2) { create(:qc_result, key: 'total_cell_count', value: '8_000_000', units: 'cells/ml') }
+  let(:total_cell_count_a2) { create(:qc_result, key: 'total_cell_count', value: '500_000', units: 'cells/ml') }
+  let(:total_cell_count_b2) { create(:qc_result, key: 'total_cell_count', value: '600_000', units: 'cells/ml') }
+  let(:total_cell_count_c2) { create(:qc_result, key: 'total_cell_count', value: '700_000', units: 'cells/ml') }
+  let(:total_cell_count_d2) { create(:qc_result, key: 'total_cell_count', value: '800_000', units: 'cells/ml') }
 
-  let(:total_cell_count_a3) { create(:qc_result, key: 'total_cell_count', value: '9_000_000', units: 'cells/ml') }
-  let(:total_cell_count_b3) { create(:qc_result, key: 'total_cell_count', value: '10_000_000', units: 'cells/ml') }
-  let(:total_cell_count_c3) { create(:qc_result, key: 'total_cell_count', value: '11_000_000', units: 'cells/ml') }
-  let(:total_cell_count_d3) { create(:qc_result, key: 'total_cell_count', value: '12_000_000', units: 'cells/ml') }
+  let(:total_cell_count_a3) { create(:qc_result, key: 'total_cell_count', value: '900_000', units: 'cells/ml') }
+  let(:total_cell_count_b3) { create(:qc_result, key: 'total_cell_count', value: '1_000_000', units: 'cells/ml') }
+  let(:total_cell_count_c3) { create(:qc_result, key: 'total_cell_count', value: '1_100_000', units: 'cells/ml') }
+  let(:total_cell_count_d3) { create(:qc_result, key: 'total_cell_count', value: '1_200_000', units: 'cells/ml') }
 
   let(:source_well_a1) do
     create(:v2_well, location: 'A1', qc_results: [total_cell_count_a1], plate_barcode: plate1_barcode)
@@ -130,18 +130,18 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
         'Sample Volume (µL)',
         'Resuspension Volume (µL)'
       ],
-      %w[DN1S A1 DN3U A1 5.00 11.90],
-      %w[DN1S B1 DN3U B1 2.50 11.90],
-      %w[DN1S A2 DN3U A1 1.00 11.90],
-      %w[DN1S B2 DN3U B1 0.83 11.90],
-      %w[DN1S A3 DN3U A1 0.56 11.90],
-      %w[DN1S B3 DN3U B1 0.50 11.90],
-      %w[DN2T C1 DN3U A1 1.67 11.90],
-      %w[DN2T D1 DN3U B1 1.25 11.90],
-      %w[DN2T C2 DN3U A1 0.71 11.90],
-      %w[DN2T D2 DN3U B1 0.62 11.90],
-      %w[DN2T C3 DN3U A1 0.45 11.90],
-      %w[DN2T D3 DN3U B1 0.42 11.90]
+      %w[DN1S A1 DN3U A1 50.0 11.9],
+      %w[DN1S B1 DN3U B1 25.0 11.9],
+      %w[DN1S A2 DN3U A1 10.0 11.9],
+      %w[DN1S B2 DN3U B1 8.3 11.9],
+      %w[DN1S A3 DN3U A1 5.6 11.9],
+      %w[DN1S B3 DN3U B1 5.0 11.9],
+      %w[DN2T C1 DN3U A1 16.7 11.9],
+      %w[DN2T D1 DN3U B1 12.5 11.9],
+      %w[DN2T C2 DN3U A1 7.1 11.9],
+      %w[DN2T D2 DN3U B1 6.2 11.9],
+      %w[DN2T C3 DN3U A1 5.0 11.9],
+      %w[DN2T D3 DN3U B1 5.0 11.9]
     ]
   end
 
@@ -175,7 +175,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   context 'with study-specific cell count option' do
     let!(:study) do
-      poly_metadatum = create(:poly_metadatum, key: cell_count_key, value: '9000')
+      poly_metadatum = create(:poly_metadatum, key: cell_count_key, value: '6000')
       create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
     end
 
@@ -191,18 +191,18 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
           'Sample Volume (µL)',
           'Resuspension Volume (µL)'
         ],
-        %w[DN1S A1 DN3U A1 9.00 21.43],
-        %w[DN1S B1 DN3U B1 4.50 21.43],
-        %w[DN1S A2 DN3U A1 1.80 21.43],
-        %w[DN1S B2 DN3U B1 1.50 21.43],
-        %w[DN1S A3 DN3U A1 1.00 21.43],
-        %w[DN1S B3 DN3U B1 0.90 21.43],
-        %w[DN2T C1 DN3U A1 3.00 21.43],
-        %w[DN2T D1 DN3U B1 2.25 21.43],
-        %w[DN2T C2 DN3U A1 1.29 21.43],
-        %w[DN2T D2 DN3U B1 1.12 21.43],
-        %w[DN2T C3 DN3U A1 0.82 21.43],
-        %w[DN2T D3 DN3U B1 0.75 21.43]
+        %w[DN1S A1 DN3U A1 60.0 14.3],
+        %w[DN1S B1 DN3U B1 30.0 14.3],
+        %w[DN1S A2 DN3U A1 12.0 14.3],
+        %w[DN1S B2 DN3U B1 10.0 14.3],
+        %w[DN1S A3 DN3U A1 6.7 14.3],
+        %w[DN1S B3 DN3U B1 6.0 14.3],
+        %w[DN2T C1 DN3U A1 20.0 14.3],
+        %w[DN2T D1 DN3U B1 15.0 14.3],
+        %w[DN2T C2 DN3U A1 8.6 14.3],
+        %w[DN2T D2 DN3U B1 7.5 14.3],
+        %w[DN2T C3 DN3U A1 5.5 14.3],
+        %w[DN2T D3 DN3U B1 5.0 14.3]
       ]
     end
     it 'renders the csv' do

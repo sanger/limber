@@ -47,8 +47,10 @@ namespace :config do
         # TODO: Y24-190 - Remove this once we have moved everything else over to V2;
         #                 also the config entries for :searches
         puts 'Preparing searches ...'
-        configuration[:searches] =
-          api.search.all.each_with_object({}) { |search, searches| searches[search.name] = search.uuid }
+        configuration[:searches] = api
+          .search
+          .all
+          .each_with_object({}) { |search, searches| searches[search.name] = search.uuid }
 
         puts 'Preparing transfer templates ...'
         query = Sequencescape::Api::V2::TransferTemplate.select(:uuid, :name).paginate(per_page: 100)
@@ -64,14 +66,14 @@ namespace :config do
           default_count: 2
         }
 
-        configuration[:purposes] =
-          {}.tap do |labware_purposes|
-            puts 'Preparing purpose configs...'
-            purpose_config.each { |purpose| labware_purposes[purpose.uuid] = purpose.config }
-          end
+        configuration[:purposes] = {}.tap do |labware_purposes|
+          puts 'Preparing purpose configs...'
+          purpose_config.each { |purpose| labware_purposes[purpose.uuid] = purpose.config }
+        end
 
-        configuration[:purpose_uuids] =
-          tracked_purposes.each_with_object({}) { |purpose, store| store[purpose.name] = purpose.uuid }
+        configuration[:purpose_uuids] = tracked_purposes.each_with_object({}) do |purpose, store|
+          store[purpose.name] = purpose.uuid
+        end
 
         configuration[:robots] = ROBOT_CONFIG
 
