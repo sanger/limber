@@ -32,9 +32,6 @@ LCMT DNA Adp Lig:
     WGS Branch - Automated Submission:
       template_name: 'Limber-Htp - LCM Triomics WGS'
       allowed_extra_barcodes: false
-      # We don't really need request options, but the Sequencescape API expects to
-      # receive an object and won't accept an empty one, so we pass it a key it
-      # it won't use and this stops it complaining about a "blank" object.
       request_options:
         # TODO: replace with the correct request options
         library_type: 'LCM Triomics WGS'
