@@ -39,13 +39,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userId = cookieJar(document.cookie).user_id
     const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
     const sequencescapeUrl = assetElem.dataset.sequencescapeUrl
+    const tractionUrl = assetElem.dataset.tractionUrl
 
     // UserId is required to make custom metadata, but will not be present in
     // older session cookies. To avoid errors or confusion, we render
     // a very basic vue component (essentially just an error message)
     // if userId is missing
 
-    console.log("*********INSIDE TUBE PANEL SUBMIT FORM*********")
+    
     if (userId) {
       new Vue({
         el: '#pool-xp-tube-submit-panel',
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           let barcode = this.$el.dataset.barcode
 
           return h(PoolXPTubeSubmitPanel, {
-            props: { barcode, userId, sequencescapeApiUrl, sequencescapeUrl },
+            props: { barcode, userId, sequencescapeApiUrl, sequencescapeUrl,tractionUrl },
           })
         },
       })
