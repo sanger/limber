@@ -61,6 +61,7 @@ LCMT EM NaOH Denat:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
   :size: 96
 LCMT EM APOBEC Deam:
   :asset_type: plate

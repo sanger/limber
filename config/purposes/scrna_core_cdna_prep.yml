@@ -36,7 +36,7 @@ LRC PBMC Defrost PBS:
     total_cell_count:
       name: Total cell count
       units: 'cells/ml'
-      default_threshold: 400000
+      default_threshold: 500000
       decimal_places: 0
   :stock_plate: false
   :input_plate: false
@@ -49,6 +49,11 @@ LRC PBMC Pools:
     viability:
       units: '%'
       default_threshold: 65
+    total_cell_count:
+      name: Total cell count
+      units: 'cells/ml'
+      default_threshold: 500000
+      decimal_places: 0
   :presenter_class:
     name: Presenters::DonorPoolingPlatePresenter
     args:
