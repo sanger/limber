@@ -104,7 +104,6 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
 
   context 'without submissions' do
     it_behaves_like 'a labware presenter'
-    it_behaves_like 'a stock presenter'
 
     let(:labware) do
       create :v2_plate_for_submission,
@@ -148,11 +147,14 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     it 'has no pending submissions' do
       expect(presenter.pending_submissions?).to eq false
     end
+
+    it 'allows state change' do
+      expect { |b| subject.default_state_change(&b) }.to yield_control
+    end
   end
 
   context 'with pending submissions' do
     it_behaves_like 'a labware presenter'
-    it_behaves_like 'a stock presenter'
 
     let(:labware) do
       create :v2_plate_for_submission, purpose_name: purpose_name, barcode_number: 2, direct_submissions: submissions
@@ -178,6 +180,10 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     it 'has pending submissions' do
       expect(presenter.pending_submissions?).to eq true
     end
+
+    it 'allows state change' do
+      expect { |b| subject.default_state_change(&b) }.to yield_control
+    end
   end
 
   context 'with a race condition' do
@@ -188,7 +194,6 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     # buttons. However, we don't want other submissions to block the appearance of the buttons.
     # So we use timestamps!
     it_behaves_like 'a labware presenter'
-    it_behaves_like 'a stock presenter'
 
     around do |example|
       travel_to now do
@@ -219,6 +224,10 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
 
     it 'has pending submissions' do
       expect(presenter.pending_submissions?).to eq true
+    end
+
+    it 'allows state change' do
+      expect { |b| subject.default_state_change(&b) }.to yield_control
     end
   end
 
