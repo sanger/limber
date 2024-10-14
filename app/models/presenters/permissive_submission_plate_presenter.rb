@@ -18,10 +18,25 @@ module Presenters
   #   request_options:
   #     <request_option_key>: <request_option_value>
   #     ...
-  class PermissiveSubmissionPlatePresenter < SubmissionPlatePresenter
+  class PermissiveSubmissionPlatePresenter < PlatePresenter
     include Presenters::Statemachine::PermissiveSubmission
+    include Presenters::SubmissionBehaviour
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator
+
+    self.allow_well_failure_in_states = []
+
+    # Stock style class causes well state to inherit from plate state.
+    self.style_class = 'stock'
+
+    self.summary_items = {
+      'Barcode' => :barcode,
+      'Number of wells' => :number_of_wells,
+      'Plate type' => :purpose_name,
+      'Current plate state' => :state,
+      'Input plate barcode' => :input_barcode,
+      'Created on' => :created_on
+    }
   end
 end
