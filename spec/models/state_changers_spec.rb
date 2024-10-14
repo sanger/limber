@@ -12,24 +12,23 @@ RSpec.describe StateChangers::DefaultStateChanger do
   let(:user_uuid) { SecureRandom.uuid }
   let(:reason) { 'Because I want to' }
   let(:customer_accepts_responsibility) { false }
+  let(:state_changes_attributes) do
+    [
+      {
+        contents: wells_to_pass,
+        customer_accepts_responsibility: customer_accepts_responsibility,
+        reason: reason,
+        target_state: target_state,
+        target_uuid: plate_uuid,
+        user_uuid: user_uuid
+      }
+    ]
+  end
+
   subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
 
   describe '#move_to!' do
-    before do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: wells_to_pass,
-            customer_accepts_responsibility: customer_accepts_responsibility,
-            reason: reason,
-            target_state: target_state,
-            target_uuid: plate_uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
-    end
+    before { expect_state_change_creation }
 
     shared_examples 'a state changer' do
       it 'generates a state change' do

@@ -139,45 +139,33 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     child_tubes
   end
 
-  def expect_specific_tube_creation(child_purpose_uuid, child_tubes)
-    # Create a mock for the specific tube creation.
-    specific_tube_creation = double
-    allow(specific_tube_creation).to receive(:children).and_return(child_tubes)
-
-    # Expect the post request and return the mock.
-    expect_api_v2_posts(
-      'SpecificTubeCreation',
-      [
+  # Create attributes for the creation of a CustomMetadatumCollection.
+  # @param tubes_hash [Hash] A hash with tube rack barcodes as keys and arrays of tubes as values.
+  def create_custom_metadatum_collection_attributes(tubes_hash)
+    tubes_hash.flat_map do |tube_rack_barcode, tubes|
+      tubes.map do |tube|
         {
-          child_purpose_uuids: [child_purpose_uuid] * child_tubes.size,
-          parent_uuids: [parent_uuid],
-          tube_attributes: child_tubes.map { |tube| { name: tube.name, foreign_barcode: tube.foreign_barcode } },
-          user_uuid: user_uuid
+          user_id: user.id,
+          asset_id: tube.id,
+          metadata: {
+            tube_rack_barcode: tube_rack_barcode,
+            tube_rack_position: tube.name.split(':').last
+          }
         }
-      ],
-      [specific_tube_creation]
-    )
+      end
+    end
   end
 
-  # tubes_hash should be a hash with tube rack barcodes as keys and arrays of tubes as values.
-  def expect_custom_metadatum_collection_posts(tubes_hash)
-    # Prepare the expected call arguments.
-    expected_call_args =
-      tubes_hash.flat_map do |tube_rack_barcode, tubes|
-        tubes.map do |tube|
-          {
-            user_id: user.id,
-            asset_id: tube.id,
-            metadata: {
-              tube_rack_barcode: tube_rack_barcode,
-              tube_rack_position: tube.name.split(':').last
-            }
-          }
-        end
-      end
-
-    # Expect the post requests.
-    expect_api_v2_posts('CustomMetadatumCollection', expected_call_args)
+  # Create attributes for the creation of specific tubes.
+  # @param tubes_hash [Hash] A hash with child UUIDs as keys and the child tubes as values.
+  def create_specific_tube_attributes(tubes_hash)
+    tubes_hash.map do |uuid, child_tubes|
+      {
+        uuid: uuid,
+        child_tubes: child_tubes,
+        tube_attributes: child_tubes.map { |tube| { name: tube.name, foreign_barcode: tube.foreign_barcode } }
+      }
+    end
   end
 
   before do
@@ -742,19 +730,30 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
+      let(:custom_metadatum_collections_attributes) do
+        create_custom_metadatum_collection_attributes(
+          'TR00000001' => sequencing_tubes,
+          'TR00000002' => contingency_tubes
+        )
+      end
+
+      let(:specific_tubes_attributes) do
+        create_specific_tube_attributes(
+          child_sequencing_tube_purpose_uuid => sequencing_tubes,
+          child_contingency_tube_purpose_uuid => contingency_tubes
+        )
+      end
+
       before { stub_v2_user(user) }
 
       it 'creates the child tubes' do
+        expect_custom_metadatum_collection_creation
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
-        expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
-        expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
-
-        expect_custom_metadatum_collection_posts(
-          { 'TR00000001' => sequencing_tubes, 'TR00000002' => contingency_tubes }
-        )
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
+
         expect(stub_sequencing_file_upload).to have_been_made.once
         expect(stub_contingency_file_upload).to have_been_made.once
       end
@@ -803,14 +802,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           )
         end
 
-        it 'does not create a tube for the failed well' do
-          expect_transfer_request_collection_creation
-          expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
-          expect_specific_tube_creation(child_contingency_tube_purpose_uuid, contingency_tubes)
-
-          expect_custom_metadatum_collection_posts(
-            { 'TR00000001' => sequencing_tubes, 'TR00000002' => contingency_tubes }
+        let(:specific_tubes_attributes) do
+          create_specific_tube_attributes(
+            child_sequencing_tube_purpose_uuid => sequencing_tubes,
+            child_contingency_tube_purpose_uuid => contingency_tubes
           )
+        end
+
+        it 'does not create a tube for the failed well' do
+          expect_custom_metadatum_collection_creation
+          expect_specific_tube_creation
+          expect_transfer_request_collection_creation
 
           expect(subject.valid?).to be_truthy
           expect(subject.save).to be_truthy
@@ -856,6 +858,10 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           )
       end
 
+      let(:custom_metadatum_collections_attributes) do
+        create_custom_metadatum_collection_attributes('TR00000001' => sequencing_tubes)
+      end
+
       let(:sequencing_tubes) do
         prepare_created_child_tubes(
           [
@@ -865,6 +871,10 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
             { name: 'SEQ:NT2P:B1', foreign_barcode: 'FX00000002' }
           ]
         )
+      end
+
+      let(:specific_tubes_attributes) do
+        create_specific_tube_attributes(child_sequencing_tube_purpose_uuid => sequencing_tubes)
       end
 
       let(:transfer_requests_attributes) do
@@ -877,9 +887,9 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       it 'creates the child tubes' do
         # Contingency tubes creation
+        expect_custom_metadatum_collection_creation
+        expect_specific_tube_creation
         expect_transfer_request_collection_creation
-        expect_specific_tube_creation(child_sequencing_tube_purpose_uuid, sequencing_tubes)
-        expect_custom_metadatum_collection_posts({ 'TR00000001' => sequencing_tubes })
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy

@@ -74,6 +74,8 @@ module ApiUrlHelper
     end
   end
 
+  # Expectations for the V2 API.
+  # All methods here generate an expectation that the endpoint will be called with the correct arguments.
   module V2Expectations
     def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
@@ -88,6 +90,48 @@ module ApiUrlHelper
         end
     end
 
+    def expect_custom_metadatum_collection_creation
+      expect_api_v2_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
+    end
+
+    def expect_pooled_plate_creation
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        pooled_plates_attributes,
+        [double(child: child_plate)] * pooled_plates_attributes.size
+      )
+    end
+
+    def expect_specific_tube_creation
+      # Prepare the expected arguments and return values.
+      arguments =
+        specific_tubes_attributes.map do |attrs|
+          {
+            child_purpose_uuids: [attrs[:uuid]] * attrs[:child_tubes].size,
+            parent_uuids: [parent_uuid],
+            tube_attributes: attrs[:tube_attributes],
+            user_uuid: user_uuid
+          }
+        end
+
+      specific_tube_creations = specific_tubes_attributes.map { |attrs| double(children: attrs[:child_tubes]) }
+
+      # Create the expectation.
+      expect_api_v2_posts('SpecificTubeCreation', arguments, specific_tube_creations)
+    end
+
+    def expect_state_change_creation
+      expect_api_v2_posts('StateChange', state_changes_attributes)
+    end
+
+    def expect_transfer_creation
+      expect_api_v2_posts(
+        'Transfer',
+        transfers_attributes.pluck(:arguments),
+        transfers_attributes.pluck(:response) # Missing responses become nil which will trigger a default value.
+      )
+    end
+
     def expect_transfer_request_collection_creation
       expect_api_v2_posts(
         'TransferRequestCollection',
@@ -96,6 +140,8 @@ module ApiUrlHelper
     end
   end
 
+  # Stubs for the V2 API.
+  # None of the methods here generate an expectation that the endpoint will be called.
   module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
@@ -204,6 +250,14 @@ module ApiUrlHelper
       # Find by swipecard
       swipecard_args = [{ user_code: swipecard }]
       allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
+    end
+
+    def stub_v2_pooled_plate_creation
+      # Stubs the creation of a pooled plate by returning a double with a child attribute.
+      pooled_plate_creation = double
+      allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
+
+      stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
     end
   end
 end

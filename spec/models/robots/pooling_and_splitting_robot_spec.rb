@@ -362,28 +362,29 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
       }
     end
 
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: nil,
+          customer_accepts_responsibility: false,
+          reason: 'Robot Pooling And Splitting Robot started',
+          target_state: 'passed',
+          target_uuid: target_plate_1_uuid,
+          user_uuid: user_uuid
+        },
+        {
+          contents: nil,
+          customer_accepts_responsibility: false,
+          reason: 'Robot Pooling And Splitting Robot started',
+          target_state: 'passed',
+          target_uuid: target_plate_2_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     it 'performs transfers from started to passed for all destination plates' do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: nil,
-            customer_accepts_responsibility: false,
-            reason: 'Robot Pooling And Splitting Robot started',
-            target_state: 'passed',
-            target_uuid: target_plate_1_uuid,
-            user_uuid: user_uuid
-          },
-          {
-            contents: nil,
-            customer_accepts_responsibility: false,
-            reason: 'Robot Pooling And Splitting Robot started',
-            target_state: 'passed',
-            target_uuid: target_plate_2_uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
+      expect_state_change_creation
 
       robot.perform_transfer(scanned_layout)
     end

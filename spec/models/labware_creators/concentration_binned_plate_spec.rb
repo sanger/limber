@@ -178,6 +178,6 @@ RSpec.describe LabwareCreators::ConcentrationBinnedPlate do
       end
     end
 
-    it_behaves_like 'a partial stamped plate creator'
+    it_behaves_like 'a QC assaying plate creator'
   end
 end

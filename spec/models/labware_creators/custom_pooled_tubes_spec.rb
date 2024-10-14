@@ -73,36 +73,26 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
         )
     end
 
-    def expect_specific_tube_creation
-      child_tubes = [
-        create(:v2_tube, name: 'DN5 A1:B2', uuid: 'tube-0'),
-        create(:v2_tube, name: 'DN5 C1:G2', uuid: 'tube-1')
-      ]
-
-      # Create a mock for the specific tube creation.
-      specific_tube_creation = double
-      allow(specific_tube_creation).to receive(:children).and_return(child_tubes)
-
-      # Expect the post request and return the mock.
-      expect_api_v2_posts(
-        'SpecificTubeCreation',
-        [
-          {
-            child_purpose_uuids: [purpose_uuid, purpose_uuid],
-            parent_uuids: [parent_uuid],
-            tube_attributes: child_tubes.map { |tube| { name: tube.name } },
-            user_uuid: user_uuid
-          }
-        ],
-        [specific_tube_creation]
-      )
-    end
-
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let(:stub_parent_request) do
       stub_v2_plate(v2_plate, stub_search: false)
       stub_api_get(parent_uuid, body: parent)
       stub_api_get(parent_uuid, 'wells', body: wells_json)
+    end
+
+    let(:specific_tubes_attributes) do
+      child_tubes = [
+        create(:v2_tube, name: 'DN5 A1:B2', uuid: 'tube-0'),
+        create(:v2_tube, name: 'DN5 C1:G2', uuid: 'tube-1')
+      ]
+
+      [
+        {
+          uuid: purpose_uuid,
+          child_tubes: child_tubes,
+          tube_attributes: child_tubes.map { |tube| { name: tube.name } }
+        }
+      ]
     end
 
     let(:transfer_requests_attributes) do

@@ -19,6 +19,19 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-transfer-template' } # Defined in spec_helper.rb
 
+  let(:transfers_attributes) do
+    [
+      {
+        arguments: {
+          user_uuid: user_uuid,
+          source_uuid: parent_uuid,
+          destination_uuid: 'child-uuid',
+          transfer_template_uuid: transfer_template_uuid
+        }
+      }
+    ]
+  end
+
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
 
@@ -58,17 +71,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
     let!(:plate_request) { stub_api_get(parent_uuid, body: plate) }
 
     it 'makes the expected requests' do
-      expect_api_v2_posts(
-        'Transfer',
-        [
-          {
-            user_uuid: user_uuid,
-            source_uuid: parent_uuid,
-            destination_uuid: 'child-uuid',
-            transfer_template_uuid: transfer_template_uuid
-          }
-        ]
-      )
+      expect_transfer_creation
 
       expect(subject.save!).to eq true
       expect(plate_creation_request).to have_been_made

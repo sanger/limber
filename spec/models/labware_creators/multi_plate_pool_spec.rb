@@ -79,11 +79,8 @@ RSpec.describe LabwareCreators::MultiPlatePool do
 
     let(:child_plate) { create :v2_plate }
 
-    let(:pooled_plate_creation) do
-      response = double
-      allow(response).to receive(:child).and_return(child_plate)
-
-      response
+    let(:pooled_plates_attributes) do
+      [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [plate_uuid, plate_b_uuid], user_uuid: user_uuid }]
     end
 
     let!(:bulk_transfer_request) do
@@ -121,14 +118,6 @@ RSpec.describe LabwareCreators::MultiPlatePool do
           }
         },
         body: json(:plate_creation, child_uuid: child_plate.uuid)
-      )
-    end
-
-    def expect_pooled_plate_creation
-      expect_api_v2_posts(
-        'PooledPlateCreation',
-        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [plate_uuid, plate_b_uuid], user_uuid: user_uuid }],
-        [pooled_plate_creation]
       )
     end
 

@@ -478,10 +478,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
+        expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the method was triggered.
@@ -828,10 +825,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
+        expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the method was triggered.
@@ -1177,10 +1171,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
+        expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the method was triggered.
@@ -1547,10 +1538,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
-        expect_api_v2_posts(
-          'TransferRequestCollection',
-          [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-        )
+        expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the correct method was triggered.

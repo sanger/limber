@@ -29,25 +29,26 @@ RSpec.describe TubesController, type: :controller do
   end
 
   describe '#update' do
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: nil,
+          customer_accepts_responsibility: true,
+          reason: 'Because testing',
+          target_state: 'cancelled',
+          target_uuid: tube_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     before do
       create :tube_config, uuid: 'stock-tube-purpose-uuid'
       tube_request
     end
 
     it 'transitions the tube' do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: nil,
-            customer_accepts_responsibility: true,
-            reason: 'Because testing',
-            target_state: 'cancelled',
-            target_uuid: tube_uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
+      expect_state_change_creation
 
       put :update,
           params: {
