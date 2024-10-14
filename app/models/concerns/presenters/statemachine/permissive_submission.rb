@@ -3,13 +3,15 @@
 require_dependency 'presenters/statemachine'
 module Presenters::Statemachine
   #
-  # Presenters::Statemachine::Submission can be included in a class to provide
-  # a state machine with the following behaviour:
-  # - When plates are 'pending' the submission sidebar will be displayed.
-  #   This sidebar allows the user to build a submission for the plate
-  # - In all other states the default sidebar will be used
-  # - When the plate is passed, the user will be allowed to create the child plates
-  # - In all other states the user will be unable to advanced the plate
+  # Presenters::Statemachine::PermissiveSubmission can be included in a class to
+  # provide a state machine with the following behaviour:
+  # - When plates are 'passed', a combined default and submission sidebar will
+  #   be displayed. This sidebar allows the user to build a submission for the
+  #   plate, while still allowing child plates to be created.
+  # - When plates are 'pending', only the default sidebar will be displayed,
+  #   allowing the user to create the child plates.
+  # - In all other states the default sidebar will be used.
+  # - In all states the library passing is not permitted.
   #
   # Typically this state machine should be used in conjunction with an input
   # plate purpose. {file:docs/purposes_yaml_files.md See the purposes yaml configuration.}

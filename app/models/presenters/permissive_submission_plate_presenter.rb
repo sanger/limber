@@ -2,14 +2,15 @@
 
 module Presenters
   #
-  # TODO: Edit this to better reflect reality!
-  #
-  # The PermissiveSubmissionPlatePresenter is used when plates enter the process with no
-  # assigned pipeline. It presents the user with a selection of workflows,
-  # and allows them to generate corresponding Sequencescape submissions. Once
-  # these submissions are passed, the plate behaves like a standard stock plate.
-  # Otherwise it includes aspects of the PermissivePresenter and allows plates to
-  # be created even when the plate is pending.
+  # The PermissiveSubmissionPlatePresenter is used when a pipeline needs to
+  # branch, but also needs to allow plates to be created in advance. Currently
+  # this is only used for the EMSeq pipeline's split to the WGS branch (and it
+  # is hoped that other use cases will be avoided in future). It presents the
+  # user with a selection of workflows, and allows them to generate
+  # corresponding Sequencescape submissions. Once these submissions are passed,
+  # the plate behaves like a standard stock plate. Otherwise it includes aspects
+  # of the PermissivePresenter and allows plates to be created even when the
+  # plate is pending.
   #
   # Submission options are defined by the submission_options config in the
   # purposes/*.yml file. Structure is:
