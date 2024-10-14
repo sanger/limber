@@ -28,9 +28,13 @@ module ApiUrlHelper
     # @param [Int] status: the response status, defaults to 200
     # @return mocked_request
     def stub_api_get(*components, status: 200, body: '{}')
-      stub_request(:get, api_url_for(*components))
-        .with(headers: { 'Accept' => 'application/json' })
-        .to_return(status: status, body: body, headers: { 'content-type' => 'application/json' })
+      stub_request(:get, api_url_for(*components)).with(headers: { 'Accept' => 'application/json' }).to_return(
+        status: status,
+        body: body,
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
     end
 
     # Generate an API stub for a post request.
@@ -50,22 +54,21 @@ module ApiUrlHelper
     # @param [Int] status: the response status, defaults to 201
     # @return mocked_request
     def stub_api_post(*components, status: 201, body: '{}', payload: {})
-      stub_api_modify(*components, status: status, body: body, payload: payload)
+      stub_api_modify(*components, status:, body:, payload:)
     end
 
     def stub_api_modify(*components, body:, payload:, action: :post, status: 201)
-      Array(body)
-        .reduce(
-          stub_request(action, api_url_for(*components)).with(
-            headers: {
-              'Accept' => 'application/json',
-              'content-type' => 'application/json'
-            },
-            body: payload
-          )
-        ) do |request, response|
-          request.to_return(status: status, body: response, headers: { 'content-type' => 'application/json' })
-        end
+      Array(body).reduce(
+        stub_request(action, api_url_for(*components)).with(
+          headers: {
+            'Accept' => 'application/json',
+            'content-type' => 'application/json'
+          },
+          body: payload
+        )
+      ) do |request, response|
+        request.to_return(status: status, body: response, headers: { 'content-type' => 'application/json' })
+      end
     end
 
     def stub_api_put(*components, body:, payload:)
@@ -132,9 +135,10 @@ module ApiUrlHelper
       if custom_query
         allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(plate)
       elsif custom_includes
-        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes)
-          .with(custom_includes, { uuid: plate.uuid })
-          .and_return(plate)
+        allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(
+          custom_includes,
+          { uuid: plate.uuid }
+        ).and_return(plate)
       else
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end

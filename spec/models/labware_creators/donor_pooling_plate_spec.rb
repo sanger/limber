@@ -17,7 +17,15 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:parent_purpose_uuid) { 'parent-purpose-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
-  let(:requests) { create_list(:request, 96, submission_id: 1) }
+  let(:num_samples_per_pool) { 16 }
+  let(:requests) do
+    create_list(
+      :scrna_customer_request,
+      192,
+      submission_id: 1,
+      request_metadata: create(:v2_request_metadata, number_of_samples_per_pool: num_samples_per_pool)
+    )
+  end
 
   let(:parent_1_plate) do
     # The aliquots_without_requests parameter is to prevent the default
@@ -35,7 +43,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     # request creation so we can use the same submission_id on requests.
     plate = create(:v2_plate, uuid: parent_2_plate_uuid, aliquots_without_requests: 1)
     plate.wells.each_with_index do |well, index|
-      well.aliquots.first.request = requests[index]
+      well.aliquots.first.request = requests[96 + index]
       well.aliquots.first.sample.sample_metadata.donor_id = nil
     end
     plate
@@ -60,23 +68,18 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
   let(:barcodes) { source_plates.map(&:human_barcode) }
 
-  let(:default_number_of_pools) { 16 }
-
   before do
     # Create the pooling config and add to Settings.
     create(:donor_pooling_config)
 
     # Create the plate purpose config and add to Settings.
-    create(
-      :donor_pooling_plate_purpose_config,
-      uuid: child_purpose_uuid,
-      default_number_of_pools: default_number_of_pools
-    )
+    create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid)
 
     # Allow the API call to return two plates by default.
-    allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-      .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-      .and_return(source_plates)
+    allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+      { barcode: barcodes },
+      includes: described_class::SOURCE_PLATE_INCLUDES
+    ).and_return(source_plates)
   end
 
   describe '.attributes' do
@@ -164,35 +167,32 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#number_of_pools' do
-    # TODO: Change this test once a new CSV file is provided.
-    context 'when number of samples is less than or equal to 96' do
-      it 'returns the number of pools from lookup table' do
-        {
-          1 => 1,
-          21 => 2,
-          27 => 3,
-          40 => 4,
-          53 => 5,
-          66 => 6,
-          77 => 7,
-          88 => 8,
-          96 => 8
-        }.each do |number_of_samples, number_of_pools|
-          parent_1_plate.wells[0..(number_of_samples - 1)].each { |well| well.state = 'passed' }
-          subject.well_filter.instance_variable_set(:@well_transfers, nil) # reset well_filter cache
-          expect(subject.number_of_pools).to eq(number_of_pools)
-        end
+    let(:source_well) { double('SourceWell') }
+    let(:aliquot) { double('Aliquot') }
+    let(:request) { double('Request') }
+    let(:request_metadata) { double('RequestMetadata') }
+
+    before do
+      allow(subject).to receive(:source_wells_for_pooling).and_return([source_well])
+      allow(source_well).to receive(:aliquots).and_return([aliquot])
+      allow(aliquot).to receive(:request).and_return(request)
+      allow(request).to receive(:request_metadata).and_return(request_metadata)
+    end
+
+    context 'when all dependencies are present' do
+      it 'returns the number of samples per pool' do
+        allow(request_metadata).to receive(:number_of_samples_per_pool).and_return(5)
+        expect(subject.fetch_number_of_samples_per_pool_from_request).to eq(5)
       end
     end
 
-    context 'when number of samples is greater than 96' do
-      it 'returns the number of pools from constant' do
-        parent_1_plate.wells[0..96].each { |well| well.state = 'passed' }
-        { 97 => default_number_of_pools, 160 => default_number_of_pools }.each do |number_of_samples, number_of_pools|
-          parent_2_plate.wells[0..(number_of_samples - 97)].each { |well| well.state = 'passed' }
-          subject.well_filter.instance_variable_set(:@well_transfers, nil) # reset well_filter cache
-          expect(subject.number_of_pools).to eq(number_of_pools)
-        end
+    context 'when request_metadata.number_of_samples_per_pool is nil' do
+      it 'raises an error' do
+        allow(request_metadata).to receive(:number_of_samples_per_pool).and_return(nil)
+        expect { subject.fetch_number_of_samples_per_pool_from_request }.to raise_error(
+          StandardError,
+          'Error: request_metadata.number_of_samples_per_pool is nil'
+        )
       end
     end
   end
@@ -384,48 +384,152 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#build_pools' do
-    let(:studies) { create_list(:v2_study, 16) }
-    let(:projects) { create_list(:v2_project, 16) }
-    let(:donor_ids) { (1..160).to_a }
-    let(:wells) { parent_1_plate.wells + parent_2_plate.wells[0..63] }
+    context 'when standard behaviour' do
+      let(:studies) { create_list(:v2_study, 16) }
+      let(:projects) { create_list(:v2_project, 16) }
+      let(:donor_ids) { (1..160).to_a }
+      let(:wells) { parent_1_plate.wells + parent_2_plate.wells[0..63] }
 
-    before do
-      wells.each_with_index do |well, index|
-        well.state = 'passed'
-        well.aliquots.first.study = studies[index % 16]
-        well.aliquots.first.project = projects[index % 16]
-        well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = studies[index % 16]
+          well.aliquots.first.project = projects[index % 16]
+          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+        end
+      end
+
+      it 'returns correct number of pools' do
+        pools = subject.build_pools
+        expect(pools.flatten).to match_array(wells)
+      end
+
+      it 'returns pools with correct number of studies' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
+          expect(number_of_unique_study_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of projects' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
+          expect(number_of_unique_project_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of donors' do
+        # Even distribution of donors across pools.
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
+          expect(number_of_unique_donor_ids).to eq(wells.size / num_samples_per_pool)
+        end
       end
     end
 
-    it 'returns correct number of pools' do
-      pools = subject.build_pools
-      expect(pools.size).to eq(default_number_of_pools)
-      expect(pools.flatten).to match_array(wells)
-    end
+    # Checks for behaviour for test runs
+    context 'when test run for 10 samples per pool and 8 pools' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:donor_ids) { (1..80).to_a }
+      let(:wells) { parent_1_plate.wells[0..79] }
+      let(:expected_number_of_pools) { 8 }
+      let(:num_samples_per_pool) { 10 }
 
-    it 'returns pools with correct number of studies' do
-      pools = subject.build_pools
-      pools.each do |pool|
-        number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
-        expect(number_of_unique_study_ids).to eq(1)
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+        end
+      end
+
+      it 'returns correct number of pools' do
+        pools = subject.build_pools
+        expect(pools.size).to eq(expected_number_of_pools)
+        expect(pools.flatten).to match_array(wells)
+      end
+
+      it 'returns pools with correct number of studies' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
+          expect(number_of_unique_study_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of projects' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
+          expect(number_of_unique_project_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of donors' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
+          expect(number_of_unique_donor_ids).to eq(pool.size)
+        end
       end
     end
 
-    it 'returns pools with correct number of projects' do
-      pools = subject.build_pools
-      pools.each do |pool|
-        number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
-        expect(number_of_unique_project_ids).to eq(1)
-      end
-    end
+    context 'when test run for 24 samples per pool and 8 pools' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:donor_ids) { (1..192).to_a }
+      let(:wells) { parent_1_plate.wells + parent_2_plate.wells }
+      let(:expected_number_of_pools) { 8 }
+      let(:num_samples_per_pool) { 24 }
 
-    it 'returns pools with correct number of donors' do
-      # Even distribution of donors across pools.
-      pools = subject.build_pools
-      pools.each do |pool|
-        number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
-        expect(number_of_unique_donor_ids).to eq(wells.size / default_number_of_pools)
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+        end
+      end
+
+      it 'returns correct number of pools' do
+        pools = subject.build_pools
+        expect(pools.size).to eq(expected_number_of_pools)
+        expect(pools.flatten).to match_array(wells)
+      end
+
+      it 'returns pools with correct number of studies' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
+          expect(number_of_unique_study_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of projects' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
+          expect(number_of_unique_project_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of donors' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
+          expect(number_of_unique_donor_ids).to eq(pool.size)
+        end
       end
     end
   end
@@ -484,13 +588,15 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#transfer_hash' do
-    let(:wells) do
+    let!(:wells) do
       wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
       wells.each_with_index do |well, index|
         well.state = 'passed'
         well.aliquots.first.study = study_1 # same study
         well.aliquots.first.project = project_1 # same project
         well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+        well.aliquots.first.request = requests[index]
+        well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
       end
     end
 
@@ -590,9 +696,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     describe '#source_barcodes_must_be_different' do
       before do
-        allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-          .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-          .and_return([parent_1_plate])
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+          { barcode: barcodes },
+          includes: described_class::SOURCE_PLATE_INCLUDES
+        ).and_return([parent_1_plate])
       end
       let(:barcodes) { [parent_1_plate.human_barcode] * 2 }
       it 'reports the error' do
@@ -607,13 +714,18 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.study = study_1
           well.aliquots.first.project = project_1
           well.aliquots.first.sample.sample_metadata.donor_id = 1
+          well.aliquots.first.request = requests[0]
+          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+
+          # TODO: are we changing this to total cell count?
           well.qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000)
           [well]
         end
         before do
-          allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-            .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-            .and_return([parent_1_plate])
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+            { barcode: barcodes },
+            includes: described_class::SOURCE_PLATE_INCLUDES
+          ).and_return([parent_1_plate])
         end
         let(:barcodes) { [parent_1_plate.human_barcode] }
         it 'allows plate creation' do
@@ -626,41 +738,15 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     describe '#source_plates_must_exist' do
       let(:barcodes) { [parent_1_plate.human_barcode, 'NOT-A-PLATE-BARCODE'] }
       before do
-        allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-          .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-          .and_return([parent_1_plate])
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+          { barcode: barcodes },
+          includes: described_class::SOURCE_PLATE_INCLUDES
+        ).and_return([parent_1_plate])
       end
       it 'reports the error' do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_plates]).to include(
           format(described_class::SOURCE_PLATES_MUST_EXIST, 'NOT-A-PLATE-BARCODE')
-        )
-      end
-    end
-
-    describe '#number_of_pools_must_not_exceed_configured' do
-      let!(:wells) do
-        # The number of pools validation is applied when all other conditions
-        # for building the pools are met, i.e. study, project, donor_id and cell_count.
-        #
-        # Up to 20 wells, the number of pools is configured as 1. If multiple
-        # studies, projects or the same donors are present, the number of pools
-        # calculated will be more than 1 to generate a validation error in this test.
-
-        wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
-        studies = [study_1, study_2, study_3]
-        wells.each_with_index do |well, index|
-          well.state = 'passed'
-          well.aliquots.first.study = studies[index] # different studies
-          well.aliquots.first.project = project_1 # same project
-          well.aliquots.first.sample.sample_metadata.donor_id = 1 # same donor
-          well.qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000) # QC
-        end
-      end
-      it 'reports the error' do
-        expect(subject).not_to be_valid
-        expect(subject.errors[:source_plates]).to include(
-          format(described_class::NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, 3, 1)
         )
       end
     end

@@ -10,8 +10,8 @@ RSpec.describe Presenters::StandardPresenter do
 
   let(:purpose_name) { 'banking-plate-purpose' }
   let(:purpose) { create :v2_purpose, name: purpose_name }
-  let(:labware) { create :v2_plate, purpose: purpose }
-  let(:presenter) { described_class.new(labware: labware) }
+  let(:labware) { create :v2_plate, purpose: }
+  let(:presenter) { described_class.new(labware:) }
 
   describe '#csv_file_links' do
     let(:download_in_passed_state_name) { 'Download PBMC Bank Tubes Content Report' }

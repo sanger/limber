@@ -21,7 +21,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
-  let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+  let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
   let(:bait_library_layout) { create :bait_library_layout }
 

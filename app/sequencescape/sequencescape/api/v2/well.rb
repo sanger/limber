@@ -35,12 +35,17 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     latest_qc(key: 'live_cell_count', units: 'cells/ml')
   end
 
+  def latest_total_cell_count
+    latest_qc(key: 'total_cell_count', units: 'cells/ml')
+  end
+
   def latest_cell_viability
     latest_qc(key: 'viability', units: '%')
   end
 
   def latest_qc(key:, units:)
-    qc_results.to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
+    qc_results
+      .to_a # Convert to array to resolve any api queries. Otherwise select fails to work.
       .select { |qc| qc.key.casecmp(key).zero? }
       .select { |qc| qc.units.casecmp(units).zero? }
       .max_by(&:created_at)

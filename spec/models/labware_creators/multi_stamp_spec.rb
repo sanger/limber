@@ -11,7 +11,6 @@ RSpec.describe LabwareCreators::MultiStamp do
 
   let(:parent1_uuid) { 'parent1-plate-uuid' }
   let(:parent2_uuid) { 'parent2-plate-uuid' }
-  let(:child_uuid) { 'child-uuid' }
 
   let(:requests_parent1) { Array.new(24) { |i| create :library_request, state: 'started', uuid: "request-p1-#{i}" } }
   let(:requests_parent2) { Array.new(24) { |i| create :library_request, state: 'started', uuid: "request-p2-#{i}" } }
@@ -75,7 +74,7 @@ RSpec.describe LabwareCreators::MultiStamp do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiStamp.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::MultiStamp.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {

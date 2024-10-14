@@ -22,12 +22,12 @@
         "*.swf",
         "*.jar",
         "*.zip",
-        "*.xls"
-      ]
+        "*.xls",
+      ],
     },
     {
-      "path": "coverage"
-    }
+      "path": "coverage",
+    },
   ],
   // These settings will be applied to anyone working
   // on the project. They are intended to set up the accepted
@@ -35,6 +35,6 @@
   "settings": {
     "tab_size": 2,
     "translate_tabs_to_spaces": true,
-    "trim_trailing_white_space_on_save": true
-  }
+    "trim_trailing_white_space_on_save": true,
+  },
 }
