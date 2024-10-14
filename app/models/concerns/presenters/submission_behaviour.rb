@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Include in a presenter to add support for creating a submission
 module Presenters::SubmissionBehaviour
   def each_submission_option
     purpose_config.submission_options.each do |button_text, options|
