@@ -104,9 +104,7 @@ module LabwareCreators
 
     def create_labware!
       create_plate! do |plate_uuid|
-        Sequencescape::Api::V2::TagLayout.create!(
-          tag_layout_attributes.merge(plate_uuid:, user_uuid:)
-        )
+        Sequencescape::Api::V2::TagLayout.create!(tag_layout_attributes.merge(plate_uuid:, user_uuid:))
       end
     end
   end
