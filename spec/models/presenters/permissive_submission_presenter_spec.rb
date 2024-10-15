@@ -148,6 +148,10 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       expect(presenter.pending_submissions?).to eq false
     end
 
+    it 'allows a new submission to be created' do
+      expect(presenter.allow_new_submission?).to eq true
+    end
+
     it 'allows state change' do
       expect { |b| subject.default_state_change(&b) }.to yield_control
     end
@@ -179,6 +183,10 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
 
     it 'has pending submissions' do
       expect(presenter.pending_submissions?).to eq true
+    end
+
+    it 'does not allow a new submission to be created' do
+      expect(presenter.allow_new_submission?).to eq false
     end
 
     it 'allows state change' do
@@ -224,6 +232,10 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
 
     it 'has pending submissions' do
       expect(presenter.pending_submissions?).to eq true
+    end
+
+    it 'does not allow a new submission to be created' do
+      expect(presenter.allow_new_submission?).to eq false
     end
 
     it 'allows state change' do
@@ -295,6 +307,10 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       # refresh, that would be a nightmare if you were trying to set up a submission
       expect(presenter.pending_submissions?).to eq false
     end
+
+    it 'allows a new submission to be created' do
+      expect(presenter.allow_new_submission?).to eq true
+    end
   end
 
   context 'with failed submissions' do
@@ -336,6 +352,10 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       # We have submissions, but they are built. pending_submissions? controls aspects like the
       # refresh, that would be a nightmare if you were trying to set up a submission
       expect(presenter.pending_submissions?).to eq false
+    end
+
+    it 'allows a new submission to be created' do
+      expect(presenter.allow_new_submission?).to eq true
     end
   end
 end

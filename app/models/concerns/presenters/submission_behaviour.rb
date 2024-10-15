@@ -11,12 +11,21 @@ module Presenters::SubmissionBehaviour
     end
   end
 
+  def submissions
+    labware.direct_submissions
+  end
+
   def pending_submissions?
     submissions.any? { |submission| submission.building_in_progress?(ready_buffer: 20.seconds) }
   end
 
-  def submissions
-    labware.direct_submissions
+  # Determine whether the Choose Workflow buttons should be displayed
+  def allow_new_submission?
+    # No more than one submission of a type can be active at time for a given labware.
+    # Prevent new submissions if any are currently in progress, as the submission type
+    # is currently not available.
+    submissions_in_progress = pending_submissions? || active_submissions?
+    submissions_in_progress == false
   end
 
   private
@@ -28,5 +37,9 @@ module Presenters::SubmissionBehaviour
         .compact_blank
         .group_by(&:order_group)
         .map { |_, wells| { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true } }
+  end
+
+  def active_submissions?
+    submissions.any?(&:ready?)
   end
 end

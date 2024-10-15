@@ -1,4 +1,4 @@
 <%= render 'pending_submissions', presenter: presenter %>
-<% unless presenter.pending_submissions? %>
+<% if presenter.allow_new_submission? %>
   <%= render 'choose_workflow', presenter: presenter %>
 <% end %>
