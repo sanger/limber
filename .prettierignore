@@ -10,6 +10,7 @@ public/stylesheets/*.css
 .sass-cache/
 *.orig
 *.sublime-workspace
+/bin
 /public/packs
 /public/packs-test
 /node_modules

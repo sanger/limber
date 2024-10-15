@@ -204,7 +204,7 @@ const applyMouseEvents = function () {
             <div class="graph-tooltip-inner">
               ${content}
             </div>
-          </div>`
+          </div>`,
         )
         return document.querySelector('.graph-tooltip')
       },

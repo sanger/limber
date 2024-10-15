@@ -20,13 +20,12 @@ module LabwareCreators
     end
 
     def create_child_stock_tubes
-      api
-        .specific_tube_creation
+      Sequencescape::Api::V2::SpecificTubeCreation
         .create!(
-          user: user_uuid,
-          parent: parent_uuid,
-          child_purposes: [purpose_uuid] * pool_uuids.length,
-          tube_attributes: tube_attributes
+          child_purpose_uuids: [purpose_uuid] * pool_uuids.length,
+          parent_uuids: [parent_uuid],
+          tube_attributes: tube_attributes,
+          user_uuid: user_uuid
         )
         .children
         .index_by(&:name)
@@ -41,12 +40,11 @@ module LabwareCreators
         # this currently assumes that pool_identifier will be the submission_uuid
         # (it would have always been, historically)
         pool.each do |location|
-          transfer_requests <<
-            request_hash(
-              well_locations.fetch(location).uuid,
-              child_stock_tubes.fetch(name_for(pool)).uuid,
-              pool_identifier
-            )
+          transfer_requests << request_hash(
+            well_locations.fetch(location).uuid,
+            child_stock_tubes.fetch(name_for(pool)).uuid,
+            pool_identifier
+          )
         end
       end
     end

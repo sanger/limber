@@ -20,13 +20,13 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
         suffix = ((index - 1) / 3) + 1
         uuid = "sample-uuid-#{suffix}" # Match the samples of tubes
         supplier_name = ancestor_tubes[uuid].barcode.human
-        sample_metadata = create(:v2_sample_metadata, supplier_name: supplier_name)
-        sample = create(:v2_sample, uuid: uuid, sample_metadata: sample_metadata)
-        aliquots = [create(:v2_aliquot, sample: sample)]
+        sample_metadata = create(:v2_sample_metadata, supplier_name:)
+        sample = create(:v2_sample, uuid:, sample_metadata:)
+        aliquots = [create(:v2_aliquot, sample:)]
         location = WellHelpers.well_at_column_index(index - 1)
-        array << create(:v2_well, aliquots: aliquots, location: location)
+        array << create(:v2_well, aliquots:, location:)
       end
-    create(:v2_plate, wells: wells)
+    create(:v2_plate, wells:)
   end
 
   let(:workflow) { 'scRNA Core LRC PBMC Bank Cell Count' }
@@ -39,7 +39,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
   context 'with first replicates' do
     let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_first_count' }
     it 'renders the expected content' do
-      render(template: template)
+      render(template:)
       content = CSV.parse(rendered)
       selected_wells = Utility::CellCountSpotChecking.new(plate).first_replicates
       expect(content).to eq(expected_content(selected_wells))
@@ -49,7 +49,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
   context 'with second replicates' do
     let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_second_count' }
     it 'renders the expected content' do
-      render(template: template)
+      render(template:)
       content = CSV.parse(rendered)
       selected_wells = Utility::CellCountSpotChecking.new(plate).second_replicates
       expect(content).to eq(expected_content(selected_wells))

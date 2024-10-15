@@ -7,7 +7,8 @@ module Robots
       @barcode = barcode
     end
 
-    def load(_plate_barcodes); end
+    def load(_plate_barcodes)
+    end
 
     def plate
       nil

@@ -8,7 +8,7 @@ class LabwareMetadata # rubocop:todo Style/Documentation
     @user = Sequencescape::Api::V2::User.find(uuid: @user_uuid).first unless @user_uuid.nil?
     @barcode = params.fetch(:barcode, nil)
     if barcode.present?
-      @labware = Sequencescape::Api::V2::Labware.find(barcode: barcode).first
+      @labware = Sequencescape::Api::V2::Labware.find(barcode:).first
     else
       @labware = params.fetch(:labware, nil)
       raise ArgumentError, 'Parameters labware or barcode missing' if labware.nil?
