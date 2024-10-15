@@ -42,5 +42,5 @@ LCM Triomics WGS Custom Pooling:
     request_type_key: limber_lcm_triomics_wgs
     state: passed
   relationships:
-    LCMT EM PCR XP: LCMT DNA Pool XP
-    LCMT EM Pool XP: LCMT DNA Pool XP Norm
+    LCMT DNA PCR XP: LCMT DNA Pool XP
+    LCMT DNA Pool XP: LCMT DNA Pool XP Norm
