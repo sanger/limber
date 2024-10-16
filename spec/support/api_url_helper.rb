@@ -136,10 +136,7 @@ module ApiUrlHelper
     end
 
     def expect_transfer_request_collection_creation
-      expect_api_v2_posts(
-        'TransferRequestCollection',
-        [{ transfer_requests_attributes: transfer_requests_attributes, user_uuid: user_uuid }]
-      )
+      expect_api_v2_posts('TransferRequestCollection', [{ transfer_requests_attributes:, user_uuid: }])
     end
 
     def expect_tube_from_tube_creation
@@ -219,7 +216,7 @@ module ApiUrlHelper
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end
 
-      stub_find_by(Sequencescape::Api::V2::Plate, plate, custom_includes: custom_includes)
+      stub_find_by(Sequencescape::Api::V2::Plate, plate, custom_includes:)
       stub_v2_labware(plate)
     end
 
@@ -248,7 +245,7 @@ module ApiUrlHelper
     def stub_v2_tube(tube, stub_search: true, custom_includes: false)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
 
-      stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes: custom_includes)
+      stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes:)
       stub_v2_labware(tube)
     end
 

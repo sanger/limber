@@ -207,7 +207,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
 
     it 'returns request hash' do
       submission_id = source_well.aliquots.first.request.submission_id
-      additional_parameters = { submission_id: submission_id }
+      additional_parameters = { submission_id: }
       request = subject.request_hash(source_well, child_plate, additional_parameters)
 
       # Assume A1 to A1 transfer

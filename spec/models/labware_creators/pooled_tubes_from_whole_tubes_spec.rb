@@ -33,9 +33,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   end
 
   describe '#save!' do
-    let(:form_attributes) do
-      { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, barcodes: barcodes }
-    end
+    let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: } }
 
     let(:transfer_requests_attributes) do
       parents.map { |parent| { source_asset: parent.uuid, target_asset: child_tube.uuid } }
@@ -46,9 +44,9 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
     end
 
     before do
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-        .with(barcode: barcodes, includes: [])
-        .and_return(parents)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(barcode: barcodes, includes: []).and_return(
+        parents
+      )
     end
 
     context 'with compatible tubes' do

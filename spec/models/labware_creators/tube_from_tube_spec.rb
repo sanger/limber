@@ -51,9 +51,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
       ]
     end
 
-    let(:tube_from_tubes_attributes) do
-      [{ child_purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }]
-    end
+    let(:tube_from_tubes_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 

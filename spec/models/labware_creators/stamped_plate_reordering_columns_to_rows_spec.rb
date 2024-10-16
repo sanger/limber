@@ -62,7 +62,7 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     it 'returns request hash by reordering columns to rows' do
       parent.wells_in_columns.each_with_index do |source_well, index|
         submission_id = source_well.aliquots.first.request.submission_id # Same for all aliquots in the well
-        additional_parameters = { submission_id: submission_id }
+        additional_parameters = { submission_id: }
 
         request_hash = subject.request_hash(source_well, child_plate, additional_parameters)
 
