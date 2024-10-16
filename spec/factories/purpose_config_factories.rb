@@ -257,8 +257,11 @@ FactoryBot.define do
           args: {
             child_seq_tube_purpose_name: 'Seq Child Purpose',
             child_seq_tube_name_prefix: 'SEQ',
+            child_seq_tube_rack_purpose_name: 'Seq Child TubeRack Purpose',
             child_spare_tube_purpose_name: 'Spare Child Purpose',
-            child_spare_tube_name_prefix: 'SPR'
+            child_spare_tube_name_prefix: 'SPR',
+            child_spare_tube_rack_purpose_name: 'Spare Child TubeRack Purpose',
+            child_tube_rack_metadata_key: 'tube_rack_barcode'
           }
         }
       end
