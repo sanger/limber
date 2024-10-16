@@ -48,7 +48,7 @@ module LabwareCreators
       metadata = LabwareMetadata.new(barcode: merger_plate.barcode.machine).metadata
       plates.each_with_index do |plate, index|
         stock_barcode = stock_barcode_from_quadrant(index, metadata) || "* #{plate.barcode.human}"
-        LabwareMetadata.new(user_uuid: user_uuid, barcode: plate.barcode.machine).update!(stock_barcode: stock_barcode)
+        LabwareMetadata.new(user_uuid: user_uuid, barcode: plate.barcode.machine).update!(stock_barcode:)
       end
     end
 

@@ -112,21 +112,19 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   let(:stub_upload_file_creation) do
-    stub_request(:post, api_url_for(child_plate.uuid, 'qc_files'))
-      .with(
-        body: file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="tube_rack_scan.csv"'
-        }
-      )
-      .to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'tube_rack_scan.csv'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
+    stub_request(:post, api_url_for(child_plate.uuid, 'qc_files')).with(
+      body: file_content,
+      headers: {
+        'Content-Type' => 'sequencescape/qc_file',
+        'Content-Disposition' => 'form-data; filename="tube_rack_scan.csv"'
+      }
+    ).to_return(
+      status: 201,
+      body: json(:qc_file, filename: 'tube_rack_scan.csv'),
+      headers: {
+        'content-type' => 'application/json'
+      }
+    )
   end
 
   let(:child_plate_v1) do
@@ -135,12 +133,14 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   before do
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-      .with(barcode: 'AB10000001', includes: tube_includes)
-      .and_return(parent_tube_1)
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-      .with(barcode: 'AB10000002', includes: tube_includes)
-      .and_return(parent_tube_2)
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(
+      barcode: 'AB10000001',
+      includes: tube_includes
+    ).and_return(parent_tube_1)
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(
+      barcode: 'AB10000002',
+      includes: tube_includes
+    ).and_return(parent_tube_2)
 
     stub_api_get(child_plate.uuid, body: child_plate_v1)
 
@@ -246,9 +246,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     before do
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-        .with(barcode: 'AB10000003', includes: tube_includes)
-        .and_return(nil)
+      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(
+        barcode: 'AB10000003',
+        includes: tube_includes
+      ).and_return(nil)
 
       subject.validate
     end

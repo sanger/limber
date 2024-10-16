@@ -200,7 +200,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
     }
   end
 
-  let(:robot) { described_class.new(robot_config.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { described_class.new(robot_config.merge(api:, user_uuid:)) }
 
   let(:scanned_layout) do
     {

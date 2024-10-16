@@ -27,7 +27,7 @@ RSpec.describe Presenters::TubePresenter do
       create(:qc_result, key: 'molarity', value: '5.5', units: 'nM')
     ]
   end
-  let(:receptacle) { create :v2_receptacle, qc_results: qc_results }
+  let(:receptacle) { create :v2_receptacle, qc_results: }
   let(:summary_tab) do
     [
       ['Barcode', 'NT6T <em>3980000006844</em>'],
@@ -39,7 +39,7 @@ RSpec.describe Presenters::TubePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject { Presenters::TubePresenter.new(labware: labware) }
+  subject { Presenters::TubePresenter.new(labware:) }
 
   it_behaves_like 'a labware presenter'
 

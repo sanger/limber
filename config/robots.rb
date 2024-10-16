@@ -1179,64 +1179,22 @@ ROBOT_CONFIG =
       }
     )
 
-    # WIP: Activate for ANOSPP release
     # GBS pipeline bed verification
     # Allows use of either GBS or ANOSPP 96-well source plates
     # GBS-96 Stock or LANS-96 Lysate to GBS PCR1
     # Transfers 4:1 (1-4 source 96-well plates of either type to 1 destination 384-well plate)
-    # custom_robot(
-    #   'mosquito-gbs-96-stock-to-gbs-pcr1',
-    #   name: 'Mosquito GBS-96 Stock or LANS-96 Lysate => GBS PCR1',
-    #   beds: {
-    #     bed(1).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 1'
-    #     },
-    #     bed(2).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 2'
-    #     },
-    #     bed(3).barcode => {
-    #       purpose: 'GBS PCR1',
-    #       states: %w[pending],
-    #       parents: [bed(1).barcode, bed(2).barcode, bed(4).barcode, bed(5).barcode],
-    #       target_state: 'passed',
-    #       label: 'Bed 3'
-    #     },
-    #     bed(4).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 4'
-    #     },
-    #     bed(5).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 5'
-    #     }
-    #   },
-    #   destination_bed: bed(3).barcode,
-    #   class: 'Robots::QuadrantRobot'
-    # )
-
-    # WIP: Delete this version for ANOSPP release
     custom_robot(
       'mosquito-gbs-96-stock-to-gbs-pcr1',
-      name: 'Mosquito GBS-96 Stock => GBS PCR1',
+      name: 'Mosquito GBS-96 Stock or LANS-96 Lysate => GBS PCR1',
       beds: {
         bed(1).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 1'
         },
         bed(2).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 2'
@@ -1249,13 +1207,13 @@ ROBOT_CONFIG =
           label: 'Bed 3'
         },
         bed(4).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 4'
         },
         bed(5).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 5'
@@ -3766,6 +3724,322 @@ ROBOT_CONFIG =
           label: 'Bed 14',
           target_state: 'passed',
           parent: bed(9).barcode
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Verify initial setup
+    custom_robot(
+      'bravo-verify-initial-setup',
+      name: 'Bravo Verify Initial Setup',
+      require_robot: true, # Robot barcode must be scanned in.
+      verify_robot: false, # First robot step; no previous robot.
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LCMT Lysate',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,4').barcode => {
+          purpose: 'LCMT DNA Frag',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        car('2,4').barcode => {
+          purpose: 'LCMT DNA End Prep',
+          states: ['pending'],
+          label: 'Carousel 2,4',
+          parent: car('1,4').barcode,
+          target_state: 'started'
+        },
+        car('3,5').barcode => {
+          purpose: 'LCMT DNA Adp Lig',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: car('2,4').barcode,
+          target_state: 'started'
+        },
+        car('4,4').barcode => {
+          purpose: 'LCMT EM TET2 Ox',
+          states: ['pending'],
+          label: 'Carousel 4,4',
+          parent: car('3,5').barcode,
+          target_state: 'started'
+        },
+        car('4,3').barcode => {
+          purpose: 'LCMT EM TET2 Stop',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: car('4,4').barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT DNA Frag Verification
+    custom_robot(
+      'bravo-lcmt-dna-frag-verification',
+      name: 'Bravo LCMT DNA Frag Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT DNA Frag',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT DNA End Prep Verification
+    custom_robot(
+      'bravo-lcmt-dna-end-prep-verification',
+      name: 'Bravo LCMT DNA End Prep Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT DNA End Prep',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT DNA Adp Lig to LCMT DNA Lib PCR
+    custom_robot(
+      'bravo-lcmt-dna-adp-lig-to-lcmt-dna-lib-pcr',
+      name: 'Bravo LCMT DNA Adp Lig => LCMT DNA Lib PCR',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(6).barcode => {
+          purpose: 'LCMT DNA Adp Lig',
+          states: ['passed'],
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: 'LCMT DNA Lib PCR',
+          states: ['pending'],
+          label: 'Bed 7',
+          parent: bed(6).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT DNA Adp Lig Verification
+    custom_robot(
+      'bravo-lcmt-dna-adp-lig-verification',
+      name: 'Bravo LCMT DNA Adp Lig Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT DNA Adp Lig',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT EM TET2 Ox Verification
+    custom_robot(
+      'bravo-lcmt-em-tet2-ox-verification',
+      name: 'Bravo LCMT EM TET2 Ox Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT EM TET2 Ox',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT EM TET2 Stop Verification
+    custom_robot(
+      'bravo-lcmt-em-tet2-stop-verification',
+      name: 'Bravo LCMT EM TET2 Stop Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT EM TET2 Stop',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT EM TET2 Stop to Denat and Deam Setup
+    custom_robot(
+      'bravo-lcmt-em-tet2-stop-to-denat-and-deam-setup',
+      name: 'Bravo LCMT EM TET2 Stop to Denat and Deam Setup',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LCMT EM TET2 Stop',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('3,3').barcode => {
+          purpose: 'LCMT EM NaOH Denat',
+          states: ['pending'],
+          label: 'Carousel 3,3',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        car('3,4').barcode => {
+          purpose: 'LCMT EM APOBEC Deam',
+          states: ['pending'],
+          label: 'Carousel 3,4',
+          parent: car('3,3').barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT EM NaOH Denat Verification
+    custom_robot(
+      'bravo-lcmt-em-naoh-denat-verification',
+      name: 'Bravo LCMT EM NaOH Denat Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT EM NaOH Denat',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT EM APOBEC Deam Verification
+    custom_robot(
+      'bravo-lcmt-em-apobec-deam-verification',
+      name: 'Bravo LCMT EM APOBEC Deam Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT EM APOBEC Deam',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Bravo LCMT EM APOBEC Deam => LCMT EM Lib PCR
+    custom_robot(
+      'bravo-lcmt-em-apobec-deam-to-lcmt-em-lib-pcr',
+      name: 'Bravo LCMT EM APOBEC Deam => LCMT EM Lib PCR',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT EM APOBEC Deam',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMT EM Lib PCR',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(5).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Hamilton LCMT DNA Lib PCR => LCMT DNA PCR XP
+    custom_robot(
+      'hamilton-lcmt-dna-lib-pcr-to-lcmt-dna-pcr-xp',
+      name: 'Hamilton LCMT DNA Lib PCR => LCMT DNA PCR XP',
+      require_robot: true,
+      verify_robot: false, # Previous robot is Bravo.
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMT DNA Lib PCR',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'LCMT DNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'LCMT DNA Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'LCMT DNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics WGS and EMSeq bed verification
+    # Hamilton LCMT EM Lib PCR => LCMT EM PCR XP
+    custom_robot(
+      'hamilton-lcmt-em-lib-pcr-to-lcmt-em-pcr-xp',
+      name: 'Hamilton LCMT EM Lib PCR => LCMT EM PCR XP',
+      require_robot: true,
+      verify_robot: false, # Previous robot is Bravo.
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMT EM Lib PCR',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'LCMT EM PCR XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'LCMT EM Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'LCMT EM PCR XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
         }
       }
     )

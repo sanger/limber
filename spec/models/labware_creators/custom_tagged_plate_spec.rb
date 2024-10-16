@@ -166,7 +166,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
             direction: 'column',
             walking_by: 'manual by plate',
             initial_tag: '1',
-            substitutions: {},
+            substitutions: {
+            },
             tags_per_well: 1
           }
         }

@@ -40,7 +40,7 @@ module LabwareCreators
       @tag_plate = OpenStruct.new(params) # rubocop:todo Style/OpenStructUse
     end
 
-    def initialize(*args, &block)
+    def initialize(*args, &)
       super
       parent.populate_wells_with_pool
     end
@@ -104,9 +104,7 @@ module LabwareCreators
 
     def create_labware!
       create_plate! do |plate_uuid|
-        Sequencescape::Api::V2::TagLayout.create!(
-          tag_layout_attributes.merge(plate_uuid: plate_uuid, user_uuid: user_uuid)
-        )
+        Sequencescape::Api::V2::TagLayout.create!(tag_layout_attributes.merge(plate_uuid:, user_uuid:))
       end
     end
   end

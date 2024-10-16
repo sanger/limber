@@ -76,9 +76,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     create(:donor_pooling_plate_purpose_config, uuid: child_purpose_uuid)
 
     # Allow the API call to return two plates by default.
-    allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-      .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-      .and_return(source_plates)
+    allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+      { barcode: barcodes },
+      includes: described_class::SOURCE_PLATE_INCLUDES
+    ).and_return(source_plates)
   end
 
   describe '.attributes' do
@@ -687,9 +688,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     describe '#source_barcodes_must_be_different' do
       before do
-        allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-          .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-          .and_return([parent_1_plate])
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+          { barcode: barcodes },
+          includes: described_class::SOURCE_PLATE_INCLUDES
+        ).and_return([parent_1_plate])
       end
       let(:barcodes) { [parent_1_plate.human_barcode] * 2 }
       it 'reports the error' do
@@ -712,9 +714,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           [well]
         end
         before do
-          allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-            .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-            .and_return([parent_1_plate])
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+            { barcode: barcodes },
+            includes: described_class::SOURCE_PLATE_INCLUDES
+          ).and_return([parent_1_plate])
         end
         let(:barcodes) { [parent_1_plate.human_barcode] }
         it 'allows plate creation' do
@@ -727,9 +730,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     describe '#source_plates_must_exist' do
       let(:barcodes) { [parent_1_plate.human_barcode, 'NOT-A-PLATE-BARCODE'] }
       before do
-        allow(Sequencescape::Api::V2::Plate).to receive(:find_all)
-          .with({ barcode: barcodes }, includes: described_class::SOURCE_PLATE_INCLUDES)
-          .and_return([parent_1_plate])
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+          { barcode: barcodes },
+          includes: described_class::SOURCE_PLATE_INCLUDES
+        ).and_return([parent_1_plate])
       end
       it 'reports the error' do
         expect(subject).not_to be_valid

@@ -566,9 +566,9 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
     context 'when the tube barcode already exists in the LIMS' do
       before do
-        allow(Sequencescape::Api::V2::Tube).to receive(:find_by)
-          .with(barcode: foreign_barcode)
-          .and_return(existing_tube)
+        allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: foreign_barcode).and_return(
+          existing_tube
+        )
       end
 
       it 'adds an error to the errors collection' do
@@ -599,21 +599,19 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
     # stub the contingency file upload
     let!(:stub_contingency_file_upload) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-        .with(
-          body: contingency_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
-          }
-        )
-        .to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
+      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+        body: contingency_file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
+        }
+      ).to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
     end
 
     let(:contingency_tubes) do
@@ -660,21 +658,19 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       # stub the contingency file upload
       let!(:stub_contingency_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-          .with(
-            body: contingency_file_content,
-            headers: {
-              'Content-Type' => 'sequencescape/qc_file',
-              'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
-            }
-          )
-          .to_return(
-            status: 201,
-            body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-            headers: {
-              'content-type' => 'application/json'
-            }
-          )
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+          body: contingency_file_content,
+          headers: {
+            'Content-Type' => 'sequencescape/qc_file',
+            'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
+          }
+        ).to_return(
+          status: 201,
+          body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
+          headers: {
+            'content-type' => 'application/json'
+          }
+        )
       end
 
       # body for stubbing the sequencing file upload
@@ -697,21 +693,19 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       # stub the sequencing file upload
       let!(:stub_sequencing_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-          .with(
-            body: sequencing_file_content,
-            headers: {
-              'Content-Type' => 'sequencescape/qc_file',
-              'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
-            }
-          )
-          .to_return(
-            status: 201,
-            body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
-            headers: {
-              'content-type' => 'application/json'
-            }
-          )
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+          body: sequencing_file_content,
+          headers: {
+            'Content-Type' => 'sequencescape/qc_file',
+            'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
+          }
+        ).to_return(
+          status: 201,
+          body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
+          headers: {
+            'content-type' => 'application/json'
+          }
+        )
       end
 
       let(:transfer_requests_attributes) do
@@ -841,21 +835,19 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       # stub the sequencing file upload
       let!(:stub_sequencing_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-          .with(
-            body: sequencing_file_content,
-            headers: {
-              'Content-Type' => 'sequencescape/qc_file',
-              'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
-            }
-          )
-          .to_return(
-            status: 201,
-            body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
-            headers: {
-              'content-type' => 'application/json'
-            }
-          )
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+          body: sequencing_file_content,
+          headers: {
+            'Content-Type' => 'sequencescape/qc_file',
+            'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
+          }
+        ).to_return(
+          status: 201,
+          body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
+          headers: {
+            'content-type' => 'application/json'
+          }
+        )
       end
 
       let(:custom_metadatum_collections_attributes) do

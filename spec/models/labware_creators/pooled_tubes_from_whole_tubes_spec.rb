@@ -29,7 +29,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_tubes'
 
-    let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+    let(:form_attributes) { { purpose_uuid:, parent_uuid: } }
   end
 
   describe '#save!' do

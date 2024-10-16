@@ -245,15 +245,14 @@ module LabwareCreators
     # @return [Array<Hash>] An array of hashes representing the transfer requests.
     def transfer_request_attributes
       parent_tubes.each_with_object([]) do |(foreign_barcode, parent_tube), tube_transfers|
-        tube_transfers <<
-          request_hash(
-            parent_tube.uuid,
-            @child
-              .wells
-              .detect { |child_well| child_well.location == csv_file.location_by_barcode_details[foreign_barcode] }
-              &.uuid,
-            { outer_request: source_tube_outer_request_uuid(parent_tube) }
-          )
+        tube_transfers << request_hash(
+          parent_tube.uuid,
+          @child
+            .wells
+            .detect { |child_well| child_well.location == csv_file.location_by_barcode_details[foreign_barcode] }
+            &.uuid,
+          { outer_request: source_tube_outer_request_uuid(parent_tube) }
+        )
       end
     end
 

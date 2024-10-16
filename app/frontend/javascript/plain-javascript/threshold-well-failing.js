@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // The well must meet all thresholds.
       const wellInvalid = Object.entries(threshold).some(
-        ([qcKey, thresholdValue]) => parseFloat(well.dataset[qcKey]) < thresholdValue
+        ([qcKey, thresholdValue]) => parseFloat(well.dataset[qcKey]) < thresholdValue,
       )
 
       well.checked = wellInvalid

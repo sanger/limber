@@ -71,12 +71,10 @@ RSpec.describe LabwareCreators::MergedPlate do
     describe '#save!' do
       before do
         allow(Sequencescape::Api::V2::Plate).to(
-          receive(:find_all)
-            .with(
-              { barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] },
-              includes: plate_includes
-            )
-            .and_return([source_plate_1, source_plate_2])
+          receive(:find_all).with(
+            { barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] },
+            includes: plate_includes
+          ).and_return([source_plate_1, source_plate_2])
         )
 
         stub_v2_plate(child_plate, stub_search: false)
@@ -194,9 +192,10 @@ RSpec.describe LabwareCreators::MergedPlate do
       )
       stub_v2_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_3])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_3])
       )
     end
 
@@ -236,9 +235,10 @@ RSpec.describe LabwareCreators::MergedPlate do
       )
       stub_v2_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_3])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_3])
       )
     end
 
@@ -264,9 +264,9 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1])
+        receive(:find_all).with({ barcode: [source_plate_1.barcode.machine] }, includes: plate_includes).and_return(
+          [source_plate_1]
+        )
       )
     end
 
@@ -294,9 +294,10 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_1.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_1.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1])
       )
     end
 
@@ -334,9 +335,10 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_4.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_4])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_4.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_4])
       )
     end
 

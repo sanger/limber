@@ -154,7 +154,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       end
 
       context 'with a previously passed library and a new repool' do
-        let(:parent) { build :plate, pools: pools }
+        let(:parent) { build :plate, pools: }
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         let(:pools) do

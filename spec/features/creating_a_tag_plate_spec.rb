@@ -63,10 +63,12 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   background do
     # Set-up the plate config
     create :purpose_config, uuid: 'stock-plate-purpose-uuid', name: 'Limber Cherrypicked'
-    create :tagged_purpose_config,
-           tag_layout_templates: acceptable_templates,
-           uuid: child_purpose_uuid,
-           enforce_same_template_within_pool: enforce_same_template_within_pool
+    create(
+      :tagged_purpose_config,
+      tag_layout_templates: acceptable_templates,
+      uuid: child_purpose_uuid,
+      enforce_same_template_within_pool: enforce_same_template_within_pool
+    )
     create :pipeline, relationships: { 'Limber Cherrypicked' => 'Tag Purpose' }
 
     # We look up the user
@@ -234,7 +236,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     let(:direction) { 'column' }
 
     let(:templates) do
-      create_list(template_factory, 2, direction: direction) do |template, i|
+      create_list(template_factory, 2, direction:) do |template, i|
         template.uuid = "tag-layout-template-#{i}"
         template.name = "Tag2 layout #{i}"
       end
@@ -249,7 +251,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     let(:direction) { 'row' }
 
     let(:templates) do
-      create_list(template_factory, 2, direction: direction) do |template, i|
+      create_list(template_factory, 2, direction:) do |template, i|
         template.uuid = "tag-layout-template-#{i}"
         template.name = "Tag2 layout #{i}"
       end

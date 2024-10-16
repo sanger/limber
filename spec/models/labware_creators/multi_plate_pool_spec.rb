@@ -53,7 +53,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
     let(:plate_b_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }

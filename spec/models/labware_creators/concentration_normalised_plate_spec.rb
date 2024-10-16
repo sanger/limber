@@ -113,6 +113,7 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
         }
       ]
     end
+
     let(:dest_well_qc_attributes) do
       [
         { 'well_name' => 'A1', 'conc' => '1.0' },

@@ -46,12 +46,7 @@ RSpec.feature 'Creating a plate with bait', js: true do
     # end of stubs for plate show page
 
     # These stubs are required to render plate_creation baiting page
-    expect_api_v2_posts(
-      'BaitLibraryLayout',
-      [{ plate_uuid: plate_uuid, user_uuid: user_uuid }],
-      [[bait_library_layout]],
-      method: :preview
-    )
+    expect_api_v2_posts('BaitLibraryLayout', [{ plate_uuid:, user_uuid: }], [[bait_library_layout]], method: :preview)
     stub_api_v2_post('BaitLibraryLayout')
 
     # end of stubs for plate_creation baiting page
