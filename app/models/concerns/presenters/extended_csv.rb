@@ -5,6 +5,8 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   included do
     class_attribute :bed_prefix
     self.bed_prefix = 'PCRXP'
+
+    attr_accessor :api
   end
 
   # Yields information for the show_extended.csv
@@ -57,14 +59,7 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
       destination_barcode = ct.destination.barcode.machine
       transfers =
         ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
-      {
-        source_ean: source_ean,
-        source_barcode: source_barcode,
-        source_stock: source_stock,
-        destination_ean: destination_ean,
-        destination_barcode: destination_barcode,
-        transfers: transfers
-      }
+      { source_ean:, source_barcode:, source_stock:, destination_ean:, destination_barcode:, transfers: }
     end
   end
 end

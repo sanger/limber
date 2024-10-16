@@ -171,7 +171,7 @@ const sharedSpecs = (args) => {
 
       expect(wrapper.vm.duplicatedTransfers.length).toEqual(1)
       expect(wrapper.vm.transfersError).toEqual(
-        'This would result in multiple transfers into the same well. Check if the source plates (DN1S) have more than one active submission.'
+        'This would result in multiple transfers into the same well. Check if the source plates (DN1S) have more than one active submission.',
       )
     })
 

@@ -9,9 +9,12 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
   # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
   let(:mapping) { ('A1'..'A8').zip((17..24).map(&:to_s)).to_h }
 
+  let(:aliquots_a1) { create_list(:v2_aliquot, 2) }
+  let(:aliquots_b1) { create_list(:v2_aliquot, 10) }
+
   # Source wells
-  let(:source_well_a1) { create(:v2_well, location: 'A1') }
-  let(:source_well_b1) { create(:v2_well, location: 'B1') }
+  let(:source_well_a1) { create(:v2_well, location: 'A1', aliquots: aliquots_a1) }
+  let(:source_well_b1) { create(:v2_well, location: 'B1', aliquots: aliquots_b1) }
 
   # Transfer requests from source wells
   let(:transfer_request1) { create(:v2_transfer_request, source_asset: source_well_a1, target_asset: nil) }
@@ -32,12 +35,42 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
   # Expected content
   let(:workflow_row) { ['Workflow', workflow] }
   let(:empty_row) { [] }
-  let(:header_row) { ['Source Plate ID', 'Source Plate Well', 'Destination Plate ID', 'Destination Plate Well'] }
-  let(:row_source_a1) do
-    [source_plate.barcode.human, source_well_a1.location, dest_plate.barcode.human, mapping[dest_well_a1.location]]
+  let(:header_row) do
+    [
+      'Source Plate ID',
+      'Source Plate Well',
+      'Destination Plate ID',
+      'Destination Plate Well',
+      'Source Well Volume',
+      'Sample Volume',
+      'PBS Volume'
+    ]
   end
+
+  # The number of samples is 2, so the sample volume is 13.81 µL ((2*30000*0.95238)/2400 -10.0)
+  let(:row_source_a1) do
+    [
+      source_plate.barcode.human,
+      source_well_a1.location,
+      dest_plate.barcode.human,
+      mapping[dest_well_a1.location],
+      '13.8',
+      '37.5',
+      '0.0'
+    ]
+  end
+
+  # The number of samples is 10, so the sample volume is 109.05 µL ((10*30000*0.95238)/2400 -10.0)
   let(:row_source_b1) do
-    [source_plate.barcode.human, source_well_b1.location, dest_plate.barcode.human, mapping[dest_well_a2.location]]
+    [
+      source_plate.barcode.human,
+      source_well_b1.location,
+      dest_plate.barcode.human,
+      mapping[dest_well_a2.location],
+      '109.0',
+      '37.5',
+      '0.0'
+    ]
   end
 
   before do

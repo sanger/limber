@@ -60,7 +60,7 @@ RSpec.describe TubesController, type: :controller do
             purpose_uuid: 'stock-tube-purpose-uuid'
           },
           session: {
-            user_uuid: user_uuid
+            user_uuid:
           }
 
       expect(response).to redirect_to(search_path)

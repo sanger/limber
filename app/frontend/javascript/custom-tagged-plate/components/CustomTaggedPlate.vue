@@ -252,7 +252,7 @@ export default {
         this.parentWellSubmissionDetails,
         this.tagLayout,
         this.tagSubstitutions,
-        this.tagGroupOligoStrings
+        this.tagGroupOligoStrings,
       )
     },
     createButtonDisabled() {
@@ -619,8 +619,8 @@ export default {
           purpose_uuid: this.purposeUuid,
           parent_uuid: this.parentUuid,
           tag_layout: {
-            tag_group: this.tag1GroupUuid,
-            tag2_group: this.tag2GroupUuid,
+            tag_group_uuid: this.tag1GroupUuid,
+            tag2_group_uuid: this.tag2GroupUuid,
             direction: this.direction,
             walking_by: this.walkingBy,
             initial_tag: initialTag,

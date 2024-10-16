@@ -21,9 +21,9 @@ module RobotConfiguration
 
   class Register # rubocop:todo Style/Documentation
     include BedHelpers
-    def self.configure(&block)
+    def self.configure(&)
       register = new
-      register.instance_eval(&block)
+      register.instance_eval(&)
       register.configuration
     end
 
@@ -31,18 +31,12 @@ module RobotConfiguration
       @robots[key] = hash
     end
 
-    def bravo_robot(transition_to: 'passed', verify_robot: false, require_robot: false, &block)
-      simple_robot(
-        'bravo',
-        transition_to: transition_to,
-        verify_robot: verify_robot,
-        require_robot: require_robot,
-        &block
-      )
+    def bravo_robot(transition_to: 'passed', verify_robot: false, require_robot: false, &)
+      simple_robot('bravo', transition_to:, verify_robot:, require_robot:, &)
     end
 
-    def simple_robot(type, transition_to: 'passed', verify_robot: false, require_robot: false, &block)
-      added_robot = RobotConfiguration::Simple.new(type, transition_to, verify_robot, require_robot, &block)
+    def simple_robot(type, transition_to: 'passed', verify_robot: false, require_robot: false, &)
+      added_robot = RobotConfiguration::Simple.new(type, transition_to, verify_robot, require_robot, &)
       @robots[added_robot.key] = added_robot.configuration
       added_robot
     end

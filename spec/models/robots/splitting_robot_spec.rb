@@ -27,7 +27,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
   let(:metadata_uuid) { SecureRandom.uuid }
   let(:custom_metadatum_collection) { create :custom_metdatum_collection, uuid: metadata_uuid }
 
-  let(:robot) { Robots::SplittingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::SplittingRobot.new(robot_spec.merge(api:, user_uuid:)) }
 
   describe '#verify' do
     subject { robot.verify(bed_labwares: scanned_layout) }
