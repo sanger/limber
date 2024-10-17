@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
      * Vue app if we actually find it */
     const userId = cookieJar(document.cookie).user_id
     const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
-    const sequencescapeUrl = assetElem.dataset.sequencescapeUrl
     const tractionServiceUrl = assetElem.dataset.tractionServiceUrl
     const tractionUIUrl = assetElem.dataset.tractionUiUrl
     // UserId is required to make custom metadata, but will not be present in
@@ -55,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           let barcode = this.$el.dataset.barcode
 
           return h(PoolXPTubeSubmitPanel, {
-            props: { barcode, userId, sequencescapeApiUrl, sequencescapeUrl,tractionServiceUrl,tractionUIUrl },
+            props: { barcode, userId, sequencescapeApiUrl,tractionServiceUrl,tractionUIUrl },
           })
         },
       })
