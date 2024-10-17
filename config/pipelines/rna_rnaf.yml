@@ -1,0 +1,15 @@
+---
+RNA FFPE:
+  pipeline_group: RNA
+  filters:
+    request_type_key: limber_rnaf
+    library_type: RNA FFPE
+  library_pass: LB Lib PCR-XP
+  relationships:
+    LRNAF Cherrypick: LRNAF Frag
+    LRNAF Frag: LB cDNA
+    LB cDNA: LB cDNA XP
+    LB cDNA XP: LB End Prep
+    LB End Prep: LB Lib PCR
+    LB Lib PCR: LB Lib PCR-XP
+# Then feeds into the standard limber_multiplexing
