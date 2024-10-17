@@ -9,7 +9,6 @@ module LabwareCreators::DonorPoolingValidator
     validate :source_barcodes_must_be_different
     validate :source_plates_must_exist
     validate :wells_with_aliquots_must_have_donor_id
-    validate :number_of_pools_must_not_exceed_configured
     validate :wells_with_aliquots_must_have_cell_count
   end
 
@@ -20,13 +19,6 @@ module LabwareCreators::DonorPoolingValidator
   SOURCE_PLATES_MUST_EXIST =
     'Source plates not found: %s. ' \
       'Please check you scanned the correct source plates. '
-
-  NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED =
-    'The calculated number of pools (%s) is higher than the number of pools ' \
-      '(%s) configured. This is due to constraints such as: ' \
-      '* samples with different Studies or Projects cannot be combined ' \
-      '* multiple samples from the same donor cannot be combined. ' \
-      'Please check you have scanned the correct set of source plates.'
 
   WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID =
     'All samples must have the donor_id specified. ' \
@@ -67,20 +59,6 @@ module LabwareCreators::DonorPoolingValidator
     formatted_string = (minimal_barcodes - source_plates.map(&:human_barcode)).join(', ')
 
     errors.add(:source_plates, format(SOURCE_PLATES_MUST_EXIST, formatted_string))
-  end
-
-  # Validates that the number of calculated pools does not exceed the configured
-  # number of pools. If the number of calculated pools is greater, an error is
-  # added to the :source_plates attribute.
-  #
-  # @return [void]
-  def number_of_pools_must_not_exceed_configured
-    # Don't add this error if there are already errors about invalid wells
-    return if locations_with_missing_donor_id.any? || locations_with_missing_cell_count.any?
-
-    return if pools.size <= number_of_pools
-
-    errors.add(:source_plates, format(NUMBER_OF_POOLS_MUST_NOT_EXCEED_CONFIGURED, pools.size, number_of_pools))
   end
 
   # Validates that all wells with aliquots must have a donor_id.

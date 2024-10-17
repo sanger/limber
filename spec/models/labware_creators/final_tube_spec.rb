@@ -13,44 +13,31 @@ RSpec.describe LabwareCreators::FinalTube do
   context 'on creation' do
     subject { LabwareCreators::FinalTube.new(api, form_attributes) }
 
-    before do
-      Settings.transfer_templates['Transfer from tube to tube by submission'] = transfer_template_uuid
-      stub_api_get(parent_uuid, body: tube_json)
-      stub_api_get(transfer_template_uuid, body: json(:transfer_template, uuid: transfer_template_uuid))
-    end
+    before { stub_api_get(parent_uuid, body: tube_json) }
 
     let(:controller) { TubeCreationController.new }
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }
     let(:user_uuid) { 'user-uuid' }
     let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube--uuid' }
-    let(:transfer_template_uuid) { 'transfer-template-uuid' }
+    let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
+    let(:transfer) { create :v2_transfer }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     context 'with a sibling-less parent tube' do
-      let(:transfer_request) do
-        stub_api_post(
-          transfer_template_uuid,
-          payload: {
-            transfer: {
-              user: user_uuid,
-              source: parent_uuid
-            }
-          },
-          body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
-        )
-      end
-
       let(:tube_json) { json(:tube_without_siblings, uuid: parent_uuid) }
-
-      before { transfer_request }
 
       describe '#save' do
         it 'should be vaild' do
+          expect_api_v2_posts(
+            'Transfer',
+            [{ user_uuid: user_uuid, source_uuid: parent_uuid, transfer_template_uuid: transfer_template_uuid }],
+            [transfer]
+          )
+
           expect(subject.save).to be true
-          expect(subject.redirection_target.to_param).to eq('multiplexed-library-tube--uuid')
-          expect(transfer_request).to have_been_made.once
+          expect(subject.redirection_target.to_param).to eq(transfer.destination_uuid)
         end
       end
     end
@@ -88,41 +75,20 @@ RSpec.describe LabwareCreators::FinalTube do
           end
 
           let(:sibling_uuid) { 'sibling-tube-0' }
-          let(:transfer_request) do
-            stub_api_post(
-              transfer_template_uuid,
-              payload: {
-                transfer: {
-                  user: user_uuid,
-                  source: parent_uuid
-                }
-              },
-              body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
-            )
-          end
-          let(:transfer_request_b) do
-            stub_api_post(
-              transfer_template_uuid,
-              payload: {
-                transfer: {
-                  user: user_uuid,
-                  source: sibling_uuid
-                }
-              },
-              body: json(:transfer_between_tubes_by_submission, destination: multiplexed_library_tube_uuid)
-            )
-          end
-
-          before do
-            transfer_request
-            transfer_request_b
-          end
+          let(:transfer_b) { create :v2_transfer }
 
           it 'should create transfers per sibling' do
+            expect_api_v2_posts(
+              'Transfer',
+              [
+                { user_uuid: user_uuid, source_uuid: parent_uuid, transfer_template_uuid: transfer_template_uuid },
+                { user_uuid: user_uuid, source_uuid: sibling_uuid, transfer_template_uuid: transfer_template_uuid }
+              ],
+              [transfer, transfer_b]
+            )
+
             expect(subject).to be_valid
             expect(subject.save).to be true
-            expect(transfer_request).to have_been_made.once
-            expect(transfer_request_b).to have_been_made.once
           end
         end
       end

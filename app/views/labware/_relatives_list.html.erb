@@ -1,14 +1,18 @@
 <%# locals: (presenter:) %>
+<%
+  valid_parents = presenter.labware.parents&.filter{ |parent| parent.purpose.present? } || []
+  valid_children = presenter.labware.children&.filter{ |child| child.purpose.present? } || []
+%>
 <div id="relatives-information" class="list-group list-group-flush">
 
   <div class="list-group-item">
     <strong>Parents</strong>
-    <%= content_tag :span, presenter.labware.parents.size, class: "badge badge-pill badge-secondary" if presenter.labware.parents&.any? %>
+    <%= content_tag :span, valid_parents.size, class: "badge badge-pill badge-secondary" %>
   </div>
 
   <div id="parents-list" class="border-bottom">
-    <% if presenter.labware.parents&.any? %>
-      <%= render partial: 'labware/parent_labware_item', collection: presenter.labware.parents, as: :labware %>
+    <% if valid_parents %>
+      <%= render partial: 'labware/parent_labware_item', collection: valid_parents, as: :labware %>
     <% else %>
       <div class="list-group-item text-muted">No parents found</div>
     <% end %>
@@ -16,12 +20,12 @@
 
   <div class="list-group-item">
     <strong>Children</strong>
-    <%= content_tag :span, presenter.labware.children.size, class: "badge badge-pill badge-secondary" if presenter.labware.children&.any? %>
+    <%= content_tag :span, valid_children.size, class: "badge badge-pill badge-secondary" %>
   </div>
 
   <div id="children-list" class="rounded-bottom">
-    <% if presenter.labware.children&.any? %>
-      <%= render partial: 'labware/child_labware_item', collection: presenter.labware.children, as: :labware, locals: { presenter: presenter, open_in_new_window: true } %>
+    <% if valid_children %>
+      <%= render partial: 'labware/child_labware_item', collection: valid_children, as: :labware, locals: { presenter: presenter, open_in_new_window: true } %>
     <% else %>
       <div class="list-group-item text-muted">No children found</div>
     <% end %>

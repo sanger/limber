@@ -5,6 +5,13 @@ on:
   pull_request:
     branches:
       - master
+    types:
+      # defaults
+      - opened
+      - synchronize
+      - reopened
+      # custom
+      - ready_for_review # required for Github-created PRs
 
 jobs:
   check:

@@ -47,18 +47,11 @@ module LabwareCreators
       wells.aliquots.study
       wells.aliquots.project
       wells.aliquots.request
+      wells.aliquots.request.request_metadata
       wells.aliquots.sample.sample_metadata
       wells.requests_as_source
       wells.qc_results
     ].freeze
-
-    # The default number of pools to be created if the count is not found in
-    # the lookup table.
-    #
-    # @return [Integer] The default number of pools.
-    def default_number_of_pools
-      purpose_config.dig(:creator_class, :args, :default_number_of_pools)
-    end
 
     # Returns the number of source plates from the purpose configuration.
     #
@@ -100,6 +93,31 @@ module LabwareCreators
       well_filter.filtered.map(&:first) # The first element is the well.
     end
 
+    # Returns the number of samples per pool set by the submission.
+    # Assumption for now is that it will be set the same for all requests in the source plates,
+    # and stored on request_metadata, so we can fetch it from the first sample in the first well.
+    def number_of_samples_per_pool
+      @number_of_samples_per_pool ||= fetch_number_of_samples_per_pool_from_request
+    end
+
+    # Raises an error if the number of samples per pool is not found.
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    def fetch_number_of_samples_per_pool_from_request
+      source_wells = source_wells_for_pooling
+      return if source_wells.blank?
+
+      number_of_samples_per_pool =
+        source_wells.first&.aliquots&.first&.request&.request_metadata&.number_of_samples_per_pool || nil
+
+      if number_of_samples_per_pool.nil?
+        raise StandardError, 'Error: request_metadata.number_of_samples_per_pool is nil'
+      end
+
+      number_of_samples_per_pool
+    end
+
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
     # Returns a hash mapping each source well to its source plate. The hash
     # contains all source wells independent of the filtering.
     #
@@ -131,9 +149,11 @@ module LabwareCreators
     # table.
     #
     # @return [Integer] The number of pools.
-    def number_of_pools
-      id = purpose_config.dig(:creator_class, :args, :pooling)
-      Settings.poolings[id][:number_of_pools][source_wells_for_pooling.count] || default_number_of_pools
+    def calculated_number_of_pools
+      return if source_wells_for_pooling.blank?
+
+      # div enforces integer division
+      source_wells_for_pooling.count.div(number_of_samples_per_pool)
     end
 
     # Creates transfer requests from source wells to the destination plate in
@@ -218,7 +238,7 @@ module LabwareCreators
     def build_pools
       groups = split_single_group_by_study_and_project(source_wells_for_pooling)
       groups = split_groups_by_unique_donor_ids(groups)
-      distribute_groups_across_pools(groups, number_of_pools)
+      distribute_groups_across_pools(groups, calculated_number_of_pools)
     end
   end
 end

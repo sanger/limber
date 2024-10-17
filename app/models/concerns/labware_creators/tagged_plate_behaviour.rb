@@ -17,11 +17,11 @@ module LabwareCreators::TaggedPlateBehaviour
   # @return [Sequencescape::Api::StateChange] The created state change
   #
   def flag_tag_plate_as_exhausted
-    api.state_change.create!(
-      user: user_uuid,
-      target: tag_plate.asset_uuid,
+    Sequencescape::Api::V2::StateChange.create!(
       reason: 'Used in Library creation',
-      target_state: 'exhausted'
+      target_state: 'exhausted',
+      target_uuid: tag_plate.asset_uuid,
+      user_uuid: user_uuid
     )
   end
 
@@ -30,7 +30,7 @@ module LabwareCreators::TaggedPlateBehaviour
   end
 
   def tag_plates
-    @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(api, labware, purpose_uuid)
+    @tag_plates ||= LabwareCreators::Tagging::TagCollection.new(labware, purpose_uuid)
   end
 
   #

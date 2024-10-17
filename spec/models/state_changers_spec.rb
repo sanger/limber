@@ -15,13 +15,19 @@ RSpec.describe StateChangers::DefaultStateChanger do
   subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
 
   describe '#move_to!' do
-    let!(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: expected_parameters
-        },
-        body: '{}' # We don't care
+    before do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: wells_to_pass,
+            customer_accepts_responsibility: customer_accepts_responsibility,
+            reason: reason,
+            target_state: target_state,
+            target_uuid: plate_uuid,
+            user_uuid: user_uuid
+          }
+        ]
       )
     end
 
@@ -29,17 +35,6 @@ RSpec.describe StateChangers::DefaultStateChanger do
       it 'generates a state change' do
         subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
-    end
-
-    let(:expected_parameters) do
-      {
-        target: plate_uuid,
-        user: user_uuid,
-        target_state: target_state,
-        reason: reason,
-        customer_accepts_responsibility: customer_accepts_responsibility,
-        contents: wells_to_pass
-      }
     end
 
     context 'on a fully pending plate' do
@@ -144,7 +139,5 @@ RSpec.describe StateChangers::DefaultStateChanger do
         end
       end
     end
-
-    after { expect(state_change_request).to have_been_made.once }
   end
 end

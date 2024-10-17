@@ -10,7 +10,7 @@ RSpec.describe TubesController, type: :controller do
   let(:tube_json) { json :tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
   let(:v2_tube) { create :v2_tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
   let(:tube_request) { stub_api_get tube_uuid, body: tube_json }
-  let(:barcode_printers_request) { stub_api_get('barcode_printers', body: json(:barcode_printer_collection)) }
+  let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
 
   describe '#show' do
@@ -34,24 +34,21 @@ RSpec.describe TubesController, type: :controller do
       tube_request
     end
 
-    let!(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          'state_change' => {
-            user: user_uuid,
-            target: tube_uuid,
-            target_state: 'cancelled',
-            reason: 'Because testing',
-            customer_accepts_responsibility: true,
-            contents: nil
-          }
-        },
-        body: '{}'
-      ) # We don't care about the response
-    end
-
     it 'transitions the tube' do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: nil,
+            customer_accepts_responsibility: true,
+            reason: 'Because testing',
+            target_state: 'cancelled',
+            target_uuid: tube_uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+
       put :update,
           params: {
             id: tube_uuid,
@@ -65,7 +62,7 @@ RSpec.describe TubesController, type: :controller do
           session: {
             user_uuid: user_uuid
           }
-      expect(state_change_request).to have_been_made
+
       expect(response).to redirect_to(search_path)
     end
   end

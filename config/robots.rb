@@ -1179,64 +1179,22 @@ ROBOT_CONFIG =
       }
     )
 
-    # WIP: Activate for ANOSPP release
     # GBS pipeline bed verification
     # Allows use of either GBS or ANOSPP 96-well source plates
     # GBS-96 Stock or LANS-96 Lysate to GBS PCR1
     # Transfers 4:1 (1-4 source 96-well plates of either type to 1 destination 384-well plate)
-    # custom_robot(
-    #   'mosquito-gbs-96-stock-to-gbs-pcr1',
-    #   name: 'Mosquito GBS-96 Stock or LANS-96 Lysate => GBS PCR1',
-    #   beds: {
-    #     bed(1).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 1'
-    #     },
-    #     bed(2).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 2'
-    #     },
-    #     bed(3).barcode => {
-    #       purpose: 'GBS PCR1',
-    #       states: %w[pending],
-    #       parents: [bed(1).barcode, bed(2).barcode, bed(4).barcode, bed(5).barcode],
-    #       target_state: 'passed',
-    #       label: 'Bed 3'
-    #     },
-    #     bed(4).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 4'
-    #     },
-    #     bed(5).barcode => {
-    #       purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
-    #       states: %w[passed qc_complete],
-    #       child: bed(3).barcode,
-    #       label: 'Bed 5'
-    #     }
-    #   },
-    #   destination_bed: bed(3).barcode,
-    #   class: 'Robots::QuadrantRobot'
-    # )
-
-    # WIP: Delete this version for ANOSPP release
     custom_robot(
       'mosquito-gbs-96-stock-to-gbs-pcr1',
-      name: 'Mosquito GBS-96 Stock => GBS PCR1',
+      name: 'Mosquito GBS-96 Stock or LANS-96 Lysate => GBS PCR1',
       beds: {
         bed(1).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 1'
         },
         bed(2).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 2'
@@ -1249,13 +1207,13 @@ ROBOT_CONFIG =
           label: 'Bed 3'
         },
         bed(4).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 4'
         },
         bed(5).barcode => {
-          purpose: 'GBS-96 Stock',
+          purpose: ['GBS-96 Stock', 'LANS-96 Lysate'],
           states: %w[passed qc_complete],
           child: bed(3).barcode,
           label: 'Bed 5'
@@ -3649,10 +3607,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 15'
         },
-        bed(14).barcode => {
+        bed(13).barcode => {
           purpose: 'LRC PBMC Pools',
           states: ['pending'],
-          label: 'Bed 14',
+          label: 'Bed 13',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
