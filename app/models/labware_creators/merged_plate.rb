@@ -51,10 +51,10 @@ module LabwareCreators
     private
 
     def create_plate_from_parent!
-      api.pooled_plate_creation.create!(
-        child_purpose: purpose_uuid,
-        user: user_uuid,
-        parents: source_plates.map(&:uuid)
+      Sequencescape::Api::V2::PooledPlateCreation.create!(
+        child_purpose_uuid: purpose_uuid,
+        parent_uuids: source_plates.map(&:uuid),
+        user_uuid: user_uuid
       )
     end
 

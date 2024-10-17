@@ -15,13 +15,12 @@ module LabwareCreators
     attr_accessor :spikedbuffer_tube_barcode
 
     def create_child_stock_tubes
-      api
-        .specific_tube_creation
+      Sequencescape::Api::V2::SpecificTubeCreation
         .create!(
-          user: user_uuid,
-          parents: parents,
-          child_purposes: [purpose_uuid] * pool_uuids.length,
-          tube_attributes: tube_attributes
+          child_purpose_uuids: [purpose_uuid] * pool_uuids.length,
+          parent_uuids: parents,
+          tube_attributes: tube_attributes,
+          user_uuid: user_uuid
         )
         .children
         .index_by(&:name)

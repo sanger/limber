@@ -51,54 +51,43 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
 
     let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: } }
 
-    let(:tube_creation_request_uuid) { SecureRandom.uuid }
+    let(:child_tube) { create :v2_tube }
+    let(:specific_tube_creation) do
+      response = double
+      allow(response).to receive(:children).and_return([child_tube])
 
-    let(:tube_creation_request) do
-      # TODO: In reality we want to link in all four parents.
-      stub_api_post(
-        'specific_tube_creations',
-        payload: {
-          specific_tube_creation: {
-            user: user_uuid,
-            parent: parent_uuid,
-            child_purposes: [purpose_uuid],
-            tube_attributes: [{ name: 'DN2+' }]
-          }
-        },
-        body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 1)
-      )
+      response
     end
 
-    # Find out what tubes we've just made!
-    let(:tube_creation_children_request) do
-      stub_api_get(tube_creation_request_uuid, 'children', body: json(:tube_collection, names: ['DN2+']))
-    end
-
-    # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
-    let(:stub_barcode_searches) { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
-
-    before do
-      stub_barcode_searches
-      tube_creation_children_request
-      tube_creation_request
-    end
+    before { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
 
     context 'with compatible plates' do
       it 'pools from all the plates' do
+        expect_api_v2_posts(
+          'SpecificTubeCreation',
+          [
+            {
+              child_purpose_uuids: [purpose_uuid],
+              parent_uuids: [parent_uuid],
+              tube_attributes: [{ name: 'DN2+' }],
+              user_uuid: user_uuid
+            }
+          ],
+          [specific_tube_creation]
+        )
         expect_api_v2_posts(
           'Transfer',
           [parent_uuid, parent2_uuid, parent3_uuid, parent4_uuid].map do |source_uuid|
             {
               user_uuid: user_uuid,
               source_uuid: source_uuid,
-              destination_uuid: 'tube-0',
+              destination_uuid: child_tube.uuid,
               transfer_template_uuid: 'whole-plate-to-tube'
             }
           end
         )
 
         expect(subject.save!).to be_truthy
-        expect(tube_creation_request).to have_been_made.once
       end
     end
   end
