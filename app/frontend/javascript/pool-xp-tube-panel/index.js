@@ -45,16 +45,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // a very basic vue component (essentially just an error message)
     // if userId is missing
 
-    
     if (userId) {
       new Vue({
         el: '#pool-xp-tube-submit-panel',
         render(h) {
-        
           let barcode = this.$el.dataset.barcode
 
           return h(PoolXPTubeSubmitPanel, {
-            props: { barcode, userId, sequencescapeApiUrl,tractionServiceUrl,tractionUIUrl },
+            props: { barcode, userId, sequencescapeApiUrl, tractionServiceUrl, tractionUIUrl },
           })
         },
       })

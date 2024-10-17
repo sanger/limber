@@ -246,7 +246,7 @@ describe('PoolXPTubeSubmitPanel', () => {
         Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ data: [{ id: '1' }] }),
-        })
+        }),
       )
 
       wrapper = createWrapper()
@@ -263,7 +263,7 @@ describe('PoolXPTubeSubmitPanel', () => {
         Promise.resolve({
           ok: false,
           json: () => Promise.resolve({ error: 'API call failed' }),
-        })
+        }),
       )
       wrapper = createWrapper()
       await flushPromises()
@@ -305,14 +305,14 @@ describe('PoolXPTubeSubmitPanel', () => {
         wrapper.setData({ state: stateValue })
         await wrapper.find('#pool_xp_tube_export_button').trigger('click')
         expect(spyWindowOpen).toHaveBeenCalledWith(wrapper.vm.tractionTubeOpenUrl, '_blank')
-      }
+      },
     )
     it('handles export tube success correctly', async () => {
       vi.spyOn(global, 'fetch').mockImplementation(() =>
         Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ data: [] }),
-        })
+        }),
       )
 
       const spyPollTractionForTube = spyMethod('pollTractionForTube')
@@ -336,7 +336,7 @@ describe('PoolXPTubeSubmitPanel', () => {
         Promise.resolve({
           ok: false,
           json: () => Promise.resolve({ error: 'API call failed' }),
-        })
+        }),
       )
       const spyPollTractionForTube = spyMethod('pollTractionForTube')
       wrapper = createWrapper()
@@ -353,7 +353,7 @@ describe('PoolXPTubeSubmitPanel', () => {
         Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ data: [{ id: '1' }] }),
-        })
+        }),
       )
       wrapper = createWrapper()
       await flushPromises()
@@ -370,19 +370,19 @@ describe('PoolXPTubeSubmitPanel', () => {
           Promise.resolve({
             ok: true,
             json: () => Promise.resolve({ data: [] }),
-          })
+          }),
         )
         .mockImplementationOnce(() =>
           Promise.resolve({
             ok: true,
             json: () => Promise.resolve({ data: [] }),
-          })
+          }),
         )
         .mockImplementation(() =>
           Promise.resolve({
             ok: false,
             json: () => Promise.resolve({ error: 'API call failed' }),
-          })
+          }),
         )
       wrapper = createWrapper()
       await flushPromises()
@@ -404,19 +404,19 @@ describe('PoolXPTubeSubmitPanel', () => {
         Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ data: [] }),
-        })
+        }),
       )
       .mockImplementationOnce(() =>
         Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ data: [] }),
-        })
+        }),
       )
       .mockImplementation(() =>
         Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ data: [{ id: '1' }] }),
-        })
+        }),
       )
     wrapper = createWrapper()
     await flushPromises()
