@@ -1,4 +1,4 @@
-# EMSeq plate purposes
+# LCM Triomics plate purposes
 ---
 LCMT Lysate:
   :asset_type: plate
@@ -92,6 +92,49 @@ LCMT EM Pool XP:
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
 LCMT EM Pool XP Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
+LCMT DNA Lib PCR:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+    - TS_pWGSA_UDI96v2
+    - TS_pWGSB_UDI96
+    - TS_pWGSC_UDI96
+    - TS_pWGSC_UDI_tag60_61_swap
+    - TS_pWGSD_UDI96
+    - TSISC_UDI96
+    - TSRNAhWGS_UDI96
+  :size: 96
+LCMT DNA PCR XP:
+  :asset_type: plate
+  :stock_plate: false
+  :cherrypickable_target: false
+  :input_plate: false
+  :file_links:
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+  :size: 96
+# Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
+# pooling so the flow is directly from PCR XP to Pool XP).
+LCMT DNA Pool XP:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LCMT DNA Pool XP Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
