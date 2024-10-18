@@ -18,10 +18,10 @@ module LabwareCreators
       {
         tag_plate: %i[asset_uuid template_uuid state],
         tag_layout: [
-          :user,
-          :plate,
-          :tag_group,
-          :tag2_group,
+          :user_uuid,
+          :plate_uuid,
+          :tag_group_uuid,
+          :tag2_group_uuid,
           :direction,
           :walking_by,
           :initial_tag,
@@ -47,14 +47,11 @@ module LabwareCreators
 
     def create_plate! # rubocop:todo Metrics/AbcSize
       @child =
-        api
-          .pooled_plate_creation
-          .create!(
-            child_purpose: purpose_uuid,
-            user: user_uuid,
-            parents: [parent_uuid, tag_plate.asset_uuid].compact_blank
-          )
-          .child
+        Sequencescape::Api::V2::PooledPlateCreation.create!(
+          child_purpose_uuid: purpose_uuid,
+          parent_uuids: [parent_uuid, tag_plate.asset_uuid].compact_blank,
+          user_uuid: user_uuid
+        ).child
 
       transfer_material_from_parent!(@child.uuid)
 
@@ -107,7 +104,7 @@ module LabwareCreators
 
     def create_labware!
       create_plate! do |plate_uuid|
-        api.tag_layout.create!(tag_layout_attributes.merge(plate: plate_uuid, user: user_uuid))
+        Sequencescape::Api::V2::TagLayout.create!(tag_layout_attributes.merge(plate_uuid:, user_uuid:))
       end
     end
   end

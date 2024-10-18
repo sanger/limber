@@ -41,13 +41,14 @@ module LabwareCreators
       create_and_build_submission
       return if errors.size.positive?
 
-      plate_creation =
-        api.pooled_plate_creation.create!(parents: parent_uuids, child_purpose: purpose_uuid, user: user_uuid)
+      @child =
+        Sequencescape::Api::V2::PooledPlateCreation.create!(
+          child_purpose_uuid: purpose_uuid,
+          parent_uuids: parent_uuids,
+          user_uuid: user_uuid
+        ).child
 
-      @child = plate_creation.child
-      child_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
-
-      transfer_material_from_parent!(child_v2)
+      transfer_material_from_parent!
 
       yield(@child) if block_given?
       true
@@ -87,15 +88,12 @@ module LabwareCreators
       Sequencescape::Api::V2::Tube.find_all(uuid: parent_uuids, includes: 'receptacle,aliquots,aliquots.study')
     end
 
-    def transfer_material_from_parent!(child_plate)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(child_plate)
-      )
+    def transfer_material_from_parent!
+      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
     end
 
-    def transfer_request_attributes(child_plate)
-      transfers.map { |transfer| request_hash(transfer, child_plate) }
+    def transfer_request_attributes
+      transfers.map { |transfer| request_hash(transfer) }
     end
 
     def source_tube_outer_request_uuid(tube)
@@ -108,13 +106,13 @@ module LabwareCreators
       pending_reqs.first.uuid || nil
     end
 
-    def request_hash(transfer, child_plate)
+    def request_hash(transfer)
       tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube])
 
       {
         'source_asset' => transfer[:source_asset],
         'target_asset' =>
-          child_plate.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
+          @child.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
         'outer_request' => source_tube_outer_request_uuid(tube)
       }
     end
