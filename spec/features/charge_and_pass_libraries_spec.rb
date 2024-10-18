@@ -10,7 +10,6 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
-  let(:default_tube_printer) { 'tube printer 1' }
   let(:work_completion_request) do
     { 'work_completion' => { target: labware_uuid, submissions: submissions, user: user_uuid } }
   end
@@ -21,7 +20,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
   background do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
   end
 
@@ -53,14 +52,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
   end
 
   context 'tube with submissions to be made' do
-    before do
-      create :passable_tube,
-             submission: {
-               request_options: request_options,
-               template_uuid: template_uuid
-             },
-             uuid: 'example-purpose-uuid'
-    end
+    before { create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid' }
     let(:submissions) { [] }
     let(:request_options) { { read_length: '150' } }
     let(:labware_barcode) { example_tube_v2.labware_barcode.machine }

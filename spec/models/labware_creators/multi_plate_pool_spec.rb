@@ -53,7 +53,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid: user_uuid)) }
+    subject { LabwareCreators::MultiPlatePool.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
     let(:plate_b_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
@@ -77,18 +77,13 @@ RSpec.describe LabwareCreators::MultiPlatePool do
       }
     end
 
-    let!(:pooled_plate_creation_request) do
-      stub_api_post(
-        'pooled_plate_creations',
-        payload: {
-          pooled_plate_creation: {
-            user: user_uuid,
-            child_purpose: child_purpose_uuid,
-            parents: [plate_uuid, plate_b_uuid]
-          }
-        },
-        body: json(:plate_creation, child_uuid: child_plate_uuid)
-      )
+    let(:child_plate) { create :v2_plate }
+
+    let(:pooled_plate_creation) do
+      response = double
+      allow(response).to receive(:child).and_return(child_plate)
+
+      response
     end
 
     let!(:bulk_transfer_request) do
@@ -101,38 +96,48 @@ RSpec.describe LabwareCreators::MultiPlatePool do
               {
                 'source_uuid' => plate_uuid,
                 'source_location' => 'A1',
-                'destination_uuid' => child_plate_uuid,
+                'destination_uuid' => child_plate.uuid,
                 'destination_location' => 'A1'
               },
               {
                 'source_uuid' => plate_uuid,
                 'source_location' => 'B1',
-                'destination_uuid' => child_plate_uuid,
+                'destination_uuid' => child_plate.uuid,
                 'destination_location' => 'A1'
               },
               {
                 'source_uuid' => plate_b_uuid,
                 'source_location' => 'A1',
-                'destination_uuid' => child_plate_uuid,
+                'destination_uuid' => child_plate.uuid,
                 'destination_location' => 'B1'
               },
               {
                 'source_uuid' => plate_b_uuid,
                 'source_location' => 'B1',
-                'destination_uuid' => child_plate_uuid,
+                'destination_uuid' => child_plate.uuid,
                 'destination_location' => 'B1'
               }
             ]
           }
         },
-        body: json(:plate_creation, child_uuid: child_plate_uuid)
+        body: json(:plate_creation, child_uuid: child_plate.uuid)
+      )
+    end
+
+    def expect_pooled_plate_creation
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [plate_uuid, plate_b_uuid], user_uuid: user_uuid }],
+        [pooled_plate_creation]
       )
     end
 
     context '#save!' do
       it 'creates a plate!' do
+        expect_pooled_plate_creation
+
         subject.save!
-        expect(pooled_plate_creation_request).to have_been_made.once
+
         expect(bulk_transfer_request).to have_been_made.once
       end
     end

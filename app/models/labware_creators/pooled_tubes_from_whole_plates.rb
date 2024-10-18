@@ -13,25 +13,22 @@ module LabwareCreators
 
     validate :parents_suitable
 
-    def create_labware! # rubocop:todo Metrics/AbcSize
+    def create_labware!
       # Create a single tube
-      # TODO: This should link to multiple parents in production
+      # TODO: {Y24-190} See if we can do all the transfers as part of the SpecificTubeCreation instead of separately.
       @child =
-        api
-          .specific_tube_creation
+        Sequencescape::Api::V2::SpecificTubeCreation
           .create!(
-            user: user_uuid,
-            parent: parents.first.uuid,
-            child_purposes: [purpose_uuid],
-            tube_attributes: [{ name: "#{stock_plate_barcode}+" }]
+            child_purpose_uuids: [purpose_uuid],
+            parent_uuids: [parents.first.uuid],
+            tube_attributes: [{ name: "#{stock_plate_barcode}+" }],
+            user_uuid: user_uuid
           )
           .children
           .first
 
       # Transfer EVERYTHING into it
-      parents.each do |parent_plate|
-        transfer_template.create!(user: user_uuid, source: parent_plate.uuid, destination: @child.uuid)
-      end
+      parents.each { |parent_plate| transfer!(source_uuid: parent_plate.uuid, destination_uuid: @child.uuid) }
     end
 
     def barcodes=(input)
@@ -40,6 +37,10 @@ module LabwareCreators
 
     def stock_plate_barcode
       "#{parents.first.stock_plate.barcode.prefix}#{parents.first.stock_plate.barcode.number}"
+    end
+
+    def redirection_target
+      TubeProxy.new(@child.uuid)
     end
 
     # TODO: This should probably be asynchronous

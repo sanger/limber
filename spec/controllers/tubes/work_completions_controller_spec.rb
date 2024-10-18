@@ -19,7 +19,7 @@ RSpec.describe Tubes::WorkCompletionsController, type: :controller do
     end
 
     it 'creates work_completion' do
-      post :create, params: { limber_tube_id: tube_uuid }, session: { user_uuid: user_uuid }
+      post :create, params: { limber_tube_id: tube_uuid }, session: { user_uuid: }
       expect(response).to redirect_to(limber_tube_path(tube_uuid))
       expect(tube_get).to have_been_made
       expect(work_completion_creation).to have_been_made.once

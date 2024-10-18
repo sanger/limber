@@ -105,7 +105,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     # We get the actual plate
     2.times { stub_v2_plate(example_plate) }
     stub_v2_plate(child_plate, stub_search: false)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'basic plate creation' do
@@ -125,9 +125,9 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
       allow(child_plate).to receive(:stock_plate).and_return(stock_plates.last)
       allow(child_plate).to receive(:ancestors).and_return(ancestors_scope)
-      allow(ancestors_scope).to receive(:where)
-        .with(purpose_name: alternative_purpose_name)
-        .and_return([alternative_plate])
+      allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_purpose_name).and_return(
+        [alternative_plate]
+      )
 
       allow(job).to receive(:save).and_return(true)
       allow(PMB::PrintJob).to receive(:new) do |args|

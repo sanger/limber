@@ -80,7 +80,7 @@ FactoryBot.define do
     factory :stock_tube do
       purpose_name { 'Limber Cherrypicked' }
       purpose_uuid { 'stock-plate-purpose-uuid' }
-      stock_plate { { barcode: barcode, uuid: uuid } }
+      stock_plate { { barcode:, uuid: } }
 
       factory :stock_tube_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
@@ -112,14 +112,15 @@ FactoryBot.define do
       request_factory { :library_request }
       aliquot_count { 2 }
       aliquot_factory { :v2_tagged_aliquot }
-      aliquots do
-        create_list aliquot_factory, aliquot_count, library_state: library_state, outer_request: outer_request
-      end
+      aliquots { create_list aliquot_factory, aliquot_count, library_state:, outer_request: }
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+
+      # The CustomMetadatumCollection will be cached as a relationship in the after(:build) block.
+      custom_metadatum_collection { nil }
     end
 
-    # Mock the relationships. Should probably handle this all a bit differently
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |asset, evaluator|
       asset._cached_relationship(:purpose) { evaluator.purpose }
       ancestors_scope = JsonApiClient::Query::Builder.new(Sequencescape::Api::V2::Asset)
@@ -133,15 +134,23 @@ FactoryBot.define do
       asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
       asset._cached_relationship(:parents) { evaluator.parents }
       asset._cached_relationship(:receptacle) { evaluator.receptacle }
+
+      if evaluator.custom_metadatum_collection
+        asset._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
+      end
     end
 
     factory :v2_tube_with_metadata do
-      with_belongs_to_associations 'custom_metadatum_collection'
+      transient { custom_metadatum_collection { create :custom_metadatum_collection } }
     end
 
     factory :v2_stock_tube do
       ancestors { nil }
       outer_request { nil }
+
+      factory :v2_stock_tube_with_metadata do
+        transient { custom_metadatum_collection { create :custom_metadatum_collection } }
+      end
     end
   end
 

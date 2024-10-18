@@ -19,8 +19,8 @@ module LabwareCreators
     validate :all_parents_and_only_parents?, if: :barcodes_provided?
     validate :custom_input_expected, unless: :no_pooling_required?
 
-    def each_sibling(&block)
-      siblings.each(&block)
+    def each_sibling(&)
+      siblings.each(&)
     end
 
     def all_ready?
@@ -28,8 +28,7 @@ module LabwareCreators
     end
 
     def create_labware!
-      @all_tube_transfers =
-        parents.map { |this_parent_uuid| transfer_template.create!(user: user_uuid, source: this_parent_uuid) }
+      @all_tube_transfers = parents.map { |this_parent_uuid| transfer!(source_uuid: this_parent_uuid) }
       true
     end
 
@@ -42,7 +41,7 @@ module LabwareCreators
     def redirection_target
       return :contents_not_transfered_to_mx_tube if all_tube_transfers.nil?
 
-      destination_uuids = all_tube_transfers.map { |tt| tt.destination.uuid }.uniq
+      destination_uuids = all_tube_transfers.map(&:destination_uuid).uniq
 
       # The client_api returns a 'barcoded asset' here, rather than a tube.
       # We know that its a tube though, so wrap it in this useful tool

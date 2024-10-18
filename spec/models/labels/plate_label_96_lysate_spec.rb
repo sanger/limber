@@ -9,8 +9,8 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
     # current partner ids have the format ABCD_123 i.e. 4 characters, an underscore, and 3 numbers
     let(:partner_id) { 'ABCD_123' }
     let(:sample_metadata) { create :v2_sample_metadata, sample_description: partner_id }
-    let(:sample) { create(:v2_sample, sample_metadata: sample_metadata) }
-    let(:aliquot) { create :v2_aliquot, sample: sample }
+    let(:sample) { create(:v2_sample, sample_metadata:) }
+    let(:aliquot) { create :v2_aliquot, sample: }
     let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: [aliquot]) }
     let(:labware) { create :v2_plate, wells: [well_c6] }
 

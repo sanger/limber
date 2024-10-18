@@ -80,11 +80,11 @@ LRC PBMC Bank:
   :qc_thresholds:
     viability:
       units: '%'
-      default_threshold: 50
-    live_cell_count:
-      name: Cell count
+      default_threshold: 85
+    total_cell_count:
+      name: Total cell count
       units: 'cells/ml'
-      default_threshold: 400000
+      default_threshold: 650000
       decimal_places: 0
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Seq:

@@ -4,9 +4,7 @@ require 'spec_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::SubmissionPlatePresenter do
-  has_a_working_api
-
-  subject(:presenter) { described_class.new(api: api, labware: labware) }
+  subject(:presenter) { described_class.new(labware:) }
 
   let(:submission_options) do
     {
@@ -222,7 +220,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
              direct_submissions: submissions,
              state: state
     end
-    let(:submissions) { create_list :v2_submission, 1, state: state }
+    let(:submissions) { create_list :v2_submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
@@ -264,7 +262,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
              direct_submissions: submissions,
              state: state
     end
-    let(:submissions) { create_list :v2_submission, 1, state: state }
+    let(:submissions) { create_list :v2_submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }

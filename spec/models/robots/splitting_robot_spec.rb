@@ -27,7 +27,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
   let(:metadata_uuid) { SecureRandom.uuid }
   let(:custom_metadatum_collection) { create :custom_metdatum_collection, uuid: metadata_uuid }
 
-  let(:robot) { Robots::SplittingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::SplittingRobot.new(robot_spec.merge(api:, user_uuid:)) }
 
   describe '#verify' do
     subject { robot.verify(bed_labwares: scanned_layout) }
@@ -143,23 +143,6 @@ RSpec.describe Robots::SplittingRobot, robots: true do
       }
     end
 
-    let(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            target_state: 'passed',
-            reason: 'Robot bravo LB End Prep started',
-            customer_accepts_responsibility: false,
-            target: plate.uuid,
-            user: user_uuid,
-            contents: nil
-          }
-        },
-        body: json(:state_change, target_state: 'passed')
-      )
-    end
-
     let(:plate) do
       create :v2_plate,
              barcode_number: '123',
@@ -170,13 +153,25 @@ RSpec.describe Robots::SplittingRobot, robots: true do
 
     before do
       create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
-      state_change_request
       bed_plate_lookup(plate, [:purpose, { wells: :downstream_plates }])
     end
 
     it 'performs transfer from started to passed' do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: nil,
+            customer_accepts_responsibility: false,
+            reason: 'Robot bravo LB End Prep started',
+            target_state: 'passed',
+            target_uuid: plate.uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+
       robot.perform_transfer('580000014851' => [plate.human_barcode])
-      expect(state_change_request).to have_been_requested
     end
   end
 end

@@ -51,7 +51,7 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
           parents: [parent_uuid, parent2_uuid]
         }
       },
-      body: json(:plate_creation, child_uuid: child_uuid)
+      body: json(:plate_creation, child_uuid:)
     )
   end
 
@@ -96,7 +96,7 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
   let(:parent1_plate_old_api) { json(:plate, barcode_number: '2', state: 'passed', uuid: parent_uuid) }
 
   background do
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     create :purpose_config, name: 'Primer Panel example', uuid: parent_purpose_uuid
     create :purpose_config,
            creator_class: 'LabwareCreators::QuadrantStampPrimerPanel',

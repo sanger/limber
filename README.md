@@ -28,19 +28,19 @@ You must have Docker Desktop installed on your machine. Then the only command
 you should need to run is:
 
 ```shell
-docker-compose up
+docker compose up
 ```
 
 Variations on this command include:
 
-- `docker-compose up -d` which starts the container as a background task
-  (freeing up the terminal). You can then use `docker-compose down` to turn it
+- `docker compose up -d` which starts the container as a background task
+  (freeing up the terminal). You can then use `docker compose down` to turn it
   off again.
-- `GENERATE_CONFIG=false docker-compose up` which will avoid running the
+- `GENERATE_CONFIG=false docker compose up` which will avoid running the
   `config:generate` rake task as Limber is started.
-- `PRECOMPILE_ASSETS=false docker-compose up` which will avoid precompiling the
+- `PRECOMPILE_ASSETS=false docker compose up` which will avoid precompiling the
   assets as Limber is started.
-- `docker-compose up --build` which forces a rebuild of the Docker image if your
+- `docker compose up --build` which forces a rebuild of the Docker image if your
   changes to the Dockerfile or related scripts don't seem to be taking effect.
 
 Limber should be accessible via [http://localhost:3001](http://localhost:3001).
@@ -158,7 +158,7 @@ Alternatively, run `./compile_build.sh` to compile the build files or run `yarn 
 If during development changes do not seem to be taking effect, try:
 
 - Restart the application:
-- Destroy and recreate the Docker container `docker-compose down && GENERATE_CONFIG=false docker-compose up -d`
+- Destroy and recreate the Docker container `docker compose down && GENERATE_CONFIG=false docker compose up -d`
 - Rebuild the Docker image, particularly useful for changing dependencies
 - Clobber local resources `rails assets:clobber`
 
@@ -167,7 +167,7 @@ If during development changes do not seem to be taking effect, try:
 The rest of the sections shown here were written for and apply to the native
 installation, but can also be used in the Docker container if required. In order
 to use Docker, it's probably best to create a shell in the running container.
-Assuming you started the container via `docker-compose` you can access the shell
+Assuming you started the container via `docker compose` you can access the shell
 using:
 
 ```shell
@@ -228,11 +228,67 @@ There are a few tools available to assist with writing specs:
 
 - Helpers: `with_has_many_associations` and `with_belongs_to_associations` can be used in factories to set up the relevant json. They won't actually mock up the relevant requests, but ensure that things like actions are defined so that the api knows where to find them.
 
-#### Request stubbing
+#### Request stubbing for the Sequencescape v1 API
 
 Request stubs are provided by webmock. Two helper methods will assist with the majority of mocking requests to the api, `stub_api_get` and `stub_api_post`. See `spec/support/api_url_helper.rb` for details.
 
 **Note**: Due to the way the api functions, the factories don't yet support nested associations.
+
+#### Request stubbing for the Sequencescape v2 API
+
+The V2 API uses `JsonApiClient::Resource` sub-classes to represent the records in memory.
+Generally these are quite dynamic so you don't need to explicitly specify every property the API will respond with.
+The base class also provides us with methods that are familiar to Rails for finding one or more records that match criteria.
+So to stub the API, the easiest thing to do is to get FactoryBot to make up resources using the specific resource sub-class for the V2 API, and then mock the calls to those lookup methods.
+Many of these have already been done for you in `spec/support/api_url_helper.rb` such as `stub_v2_study` and `stub_v2_tag_layout_templates` which sets up the `find` method for studies by name and the `all` method for tag layout templates, respectively.
+However there's also `stub_api_v2_post`, `stub_api_v2_patch` and `stub_api_v2_save` which ensures that any calls to the `create`, `update` and the `save` method for resources of a particular type are expected and give a return value.
+If none of the existing method suit your needs, you should add new ones.
+
+##### FactoryBot is not mocking my related resources correctly
+
+Nested relationships, such as Wells inside a Plate, the resource should indicate this with keywords like `has_one`, `has_many`, `belongs_to`, etc.
+See the [json_api_client repository](https://github.com/JsonApiClient/json_api_client) for this topic and more.
+However, FactoryBot does not get on well with some of these relationship methods and will not mock them properly using standard FactoryBot definitions.
+
+If you find that FactoryBot is not giving you the expected resource for a related record, you can inject the related resource directly into the `JsonApiClient::Resource`'s cache of relationships.
+To do that, define the related resource as a `transient` variable and use an `after(:build)` block to assign the resource to the `_cached_relationship` method.
+For example, where the Resource might be defined as the following class:
+
+```ruby
+class Sequencescape::Api::V2::RootRecord < JsonApiClient::Resource
+  has_one :related_thing
+end
+```
+
+You might expect to be able to use FactoryBot in the following way:
+
+```ruby
+FactoryBot.define do
+  factory :root_record, class: Sequencescape::Api::V2::RootRecord do
+    skip_create
+
+    related_thing { create :related_thing }
+  end
+end
+```
+
+But the related thing will not be the one you defined to be generated by another factory.
+It appears the `has_one` method in the resource over-rides the mocked value and you get an empty record back instead.
+So, instead, you should create the `related_thing` record as a transient and assign it to the `root_record` in an `after(:build)` block as shown here.
+
+```ruby
+FactoryBot.define do
+  factory :root_record, class: Sequencescape::Api::V2::RootRecord do
+    skip_create
+
+    transient { related_thing { create :v2_tag_group_with_tags } }
+
+    after(:build) do |record, factory|
+      record._cached_relationship(:related_thing) { factory.related_thing } if evaluator.related_thing
+    end
+  end
+end
+```
 
 #### Feature debugging
 

@@ -22,38 +22,20 @@ RSpec.describe TubeCreationController, type: :controller do
     end
 
     describe '#new' do
-      context 'from a tube parent' do
-        it 'creates a tube' do
-          get :new,
-              params: {
-                limber_tube_id: parent_uuid,
-                purpose_uuid: child_purpose_uuid
-              },
-              session: {
-                user_uuid: user_uuid
-              }
-          expect(response).to render_template('new')
-          expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
-          expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
-          expect(assigns(:labware_creator).purpose_uuid).to eq(child_purpose_uuid)
-        end
+      it 'creates a tube from a tube parent' do
+        get :new, params: { limber_tube_id: parent_uuid, purpose_uuid: child_purpose_uuid }, session: { user_uuid: }
+        expect(response).to render_template('new')
+        expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
+        expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
+        expect(assigns(:labware_creator).purpose_uuid).to eq(child_purpose_uuid)
       end
 
-      context 'from a plate parent' do
-        it 'creates a tube' do
-          get :new,
-              params: {
-                limber_plate_id: parent_uuid,
-                purpose_uuid: child_purpose_uuid
-              },
-              session: {
-                user_uuid: user_uuid
-              }
-          expect(response).to render_template('new')
-          expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
-          expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
-          expect(assigns(:labware_creator).purpose_uuid).to eq(child_purpose_uuid)
-        end
+      it 'creates a tube from a plate parent' do
+        get :new, params: { limber_plate_id: parent_uuid, purpose_uuid: child_purpose_uuid }, session: { user_uuid: }
+        expect(response).to render_template('new')
+        expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
+        expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
+        expect(assigns(:labware_creator).purpose_uuid).to eq(child_purpose_uuid)
       end
     end
 
@@ -75,7 +57,7 @@ RSpec.describe TubeCreationController, type: :controller do
                  }
                },
                session: {
-                 user_uuid: user_uuid
+                 user_uuid:
                }
           expect(response).to redirect_to("#{limber_tube_path(child_uuid)}#relatives_tab")
           expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
@@ -94,7 +76,7 @@ RSpec.describe TubeCreationController, type: :controller do
                  }
                },
                session: {
-                 user_uuid: user_uuid
+                 user_uuid:
                }
           expect(response).to redirect_to("#{limber_tube_path(child_uuid)}#relatives_tab")
           expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)

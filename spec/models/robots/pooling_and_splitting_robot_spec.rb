@@ -73,7 +73,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
   end
   let(:target_plate_2) { create :v2_plate, target_plate_2_attributes }
 
-  let(:robot) { Robots::PoolingAndSplittingRobot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::PoolingAndSplittingRobot.new(robot_spec.merge(api:, user_uuid:)) }
 
   let(:robot_spec) do
     {
@@ -354,40 +354,6 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
   end
 
   describe '#perform_transfer' do
-    let(:state_change_target_1_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            target_state: 'passed',
-            reason: 'Robot Pooling And Splitting Robot started',
-            customer_accepts_responsibility: false,
-            target: target_plate_1_uuid,
-            user: user_uuid,
-            contents: nil
-          }
-        },
-        body: json(:state_change, target_state: 'passed')
-      )
-    end
-
-    let(:state_change_target_2_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            target_state: 'passed',
-            reason: 'Robot Pooling And Splitting Robot started',
-            customer_accepts_responsibility: false,
-            target: target_plate_2_uuid,
-            user: user_uuid,
-            contents: nil
-          }
-        },
-        body: json(:state_change, target_state: 'passed')
-      )
-    end
-
     let(:scanned_layout) do
       {
         'bed1_barcode' => [source_1_barcode],
@@ -396,15 +362,30 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
       }
     end
 
-    before do
-      state_change_target_1_request
-      state_change_target_2_request
-    end
-
     it 'performs transfers from started to passed for all destination plates' do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: nil,
+            customer_accepts_responsibility: false,
+            reason: 'Robot Pooling And Splitting Robot started',
+            target_state: 'passed',
+            target_uuid: target_plate_1_uuid,
+            user_uuid: user_uuid
+          },
+          {
+            contents: nil,
+            customer_accepts_responsibility: false,
+            reason: 'Robot Pooling And Splitting Robot started',
+            target_state: 'passed',
+            target_uuid: target_plate_2_uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+
       robot.perform_transfer(scanned_layout)
-      expect(state_change_target_1_request).to have_been_requested
-      expect(state_change_target_2_request).to have_been_requested
     end
   end
 end

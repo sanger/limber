@@ -35,7 +35,7 @@ class PrintJobsController < ApplicationController
   def find_printer_from_name
     # there's bound to be a better way of doing this, so we don't have to
     # requery all the printers here to find the right one
-    printers = api.barcode_printer.all
+    printers = Sequencescape::Api::V2::BarcodePrinter.all
     printers.find { |p| p.name == print_job_params[:printer_name] }
   end
 end

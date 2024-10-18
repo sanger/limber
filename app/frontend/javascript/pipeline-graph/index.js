@@ -204,7 +204,7 @@ const applyMouseEvents = function () {
             <div class="graph-tooltip-inner">
               ${content}
             </div>
-          </div>`
+          </div>`,
         )
         return document.querySelector('.graph-tooltip')
       },
@@ -226,6 +226,8 @@ const applyMouseEvents = function () {
   // when an edge is clicked, filter the graph to show only that pipeline
   core.on('click', 'edge', (event) => {
     const pipeline = event.target.data('pipeline')
-    applyFilter(pipeline)
+    const group = event.target.data('group')
+    const pipelineOrGroup = pipeline || group
+    applyFilter(pipelineOrGroup)
   })
 }

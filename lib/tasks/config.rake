@@ -2,7 +2,6 @@
 
 require_relative '../purpose_config'
 require_relative '../config_loader/purposes_loader'
-require_relative '../config_loader/poolings_loader'
 
 namespace :config do
   desc 'Generates a configuration file for the current Rails environment'
@@ -48,8 +47,10 @@ namespace :config do
         # TODO: Y24-190 - Remove this once we have moved everything else over to V2;
         #                 also the config entries for :searches
         puts 'Preparing searches ...'
-        configuration[:searches] =
-          api.search.all.each_with_object({}) { |search, searches| searches[search.name] = search.uuid }
+        configuration[:searches] = api
+          .search
+          .all
+          .each_with_object({}) { |search, searches| searches[search.name] = search.uuid }
 
         puts 'Preparing transfer templates ...'
         query = Sequencescape::Api::V2::TransferTemplate.select(:uuid, :name).paginate(per_page: 100)
@@ -65,14 +66,14 @@ namespace :config do
           default_count: 2
         }
 
-        configuration[:purposes] =
-          {}.tap do |labware_purposes|
-            puts 'Preparing purpose configs...'
-            purpose_config.each { |purpose| labware_purposes[purpose.uuid] = purpose.config }
-          end
+        configuration[:purposes] = {}.tap do |labware_purposes|
+          puts 'Preparing purpose configs...'
+          purpose_config.each { |purpose| labware_purposes[purpose.uuid] = purpose.config }
+        end
 
-        configuration[:purpose_uuids] =
-          tracked_purposes.each_with_object({}) { |purpose, store| store[purpose.name] = purpose.uuid }
+        configuration[:purpose_uuids] = tracked_purposes.each_with_object({}) do |purpose, store|
+          store[purpose.name] = purpose.uuid
+        end
 
         configuration[:robots] = ROBOT_CONFIG
 
@@ -83,12 +84,6 @@ namespace :config do
         end
 
         configuration[:submission_templates] = submission_templates
-
-        # Load pooling configurations from config/poolings directory.
-        # After running the config:generate task, they will be available in the
-        # code, for example Settings.poolings['scrna_core_donor_pooling']
-        puts 'Preparing pooling configurations ...'
-        configuration[:poolings] = ConfigLoader::PoolingsLoader.new.config
       end
 
     # Write out the current environment configuration file

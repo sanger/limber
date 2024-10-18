@@ -313,21 +313,19 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
     end
 
     let(:stub_upload_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-        .with(
-          body: file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="targeted_nano_seq_customer_file.csv"'
-          }
-        )
-        .to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'targeted_nano_seq_dil_file.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
+      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+        body: file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="targeted_nano_seq_customer_file.csv"'
+        }
+      ).to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'targeted_nano_seq_dil_file.csv'),
+        headers: {
+          'content-type' => 'application/json'
+        }
+      )
     end
 
     let(:stub_parent_request) { stub_api_get(parent_uuid, body: parent_plate_v1) }
@@ -382,10 +380,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           body: json(:plate_creation)
         )
       end
-
-      let!(:api_v2_post) { stub_api_v2_post('Well') }
-
-      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
 
       let(:transfer_requests) do
         [
@@ -487,6 +481,11 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           },
           body: '{}'
         )
+      end
+
+      before do
+        stub_api_v2_patch('Well')
+        stub_api_v2_save('PolyMetadatum')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -1565,9 +1564,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:api_v2_post) { allow(pm_pcr_cycles).to receive(:update).and_return(true) }
-
       before do
+        allow(pm_pcr_cycles).to receive(:update).and_return(true)
+
         stub_v2_polymetadata(pm_original_plate_barcode, loop_2_request.id)
         stub_v2_polymetadata(pm_original_well_id, loop_2_request.id)
         stub_v2_polymetadata(pm_concentration_nm, loop_2_request.id)

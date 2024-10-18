@@ -5,8 +5,6 @@ require 'presenters/plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::PlatePresenter do
-  has_a_working_api
-
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -40,7 +38,7 @@ RSpec.describe Presenters::PlatePresenter do
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
-  subject(:presenter) { Presenters::PlatePresenter.new(api: api, labware: labware) }
+  subject(:presenter) { Presenters::PlatePresenter.new(labware:) }
 
   describe '#custom_metadata_fields' do
     context 'with custom_metadata_fields' do

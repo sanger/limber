@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
   let(:parent_uuid) { SecureRandom.uuid }
   let(:parent) { json :plate, uuid: parent_uuid, pool_sizes: [3, 3] }
 
-  let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+  let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
   context '#save!' do
     has_a_working_api
@@ -24,64 +24,45 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
     let!(:parent_request) { stub_api_get(parent_uuid, body: parent) }
 
-    # The API needs to pull back the transfer template to know what actions it can perform
-    let!(:transfer_template_request) do
-      stub_api_get('transfer-to-mx-tubes-on-submission', body: json(:transfer_wells_to_mx_library_tubes_by_submission))
-    end
+    let(:destination_tubes) { create_list :v2_tube, 2 }
+    let(:transfer) { create :v2_transfer_to_tubes_by_submission, tubes: destination_tubes }
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer-to-mx-tubes-on-submission',
-        payload: {
-          transfer: {
-            source: parent_uuid,
-            user: user_uuid
-          }
-        },
-        body: json(:transfer_to_mx_tubes_by_submission)
-      )
-    end
-
-    let!(:tube_state_change_request_0) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          'state_change' => {
-            user: user_uuid,
-            target: 'child-tube-0',
-            target_state: 'passed'
-          }
-        },
-        body: '{}' # We don't care about the response
-      )
-    end
-    let!(:tube_state_change_request_1) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          'state_change' => {
-            user: user_uuid,
-            target: 'child-tube-1',
-            target_state: 'passed'
-          }
-        },
-        body: '{}' # We don't care about the response
-      )
+    before do
+      stub_api_v2_post('Transfer', transfer)
+      stub_api_v2_post('StateChange')
     end
 
     it 'pools by submission' do
+      expect_api_v2_posts(
+        'Transfer',
+        [
+          {
+            user_uuid: user_uuid,
+            source_uuid: parent_uuid,
+            transfer_template_uuid: 'transfer-to-mx-tubes-on-submission'
+          }
+        ],
+        [transfer]
+      )
+
       expect(subject.save!).to be_truthy
-      expect(transfer_creation_request).to have_been_made.once
     end
 
     it 'passes the tubes automatically' do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          { target_state: 'passed', target_uuid: destination_tubes[0].uuid, user_uuid: user_uuid },
+          { target_state: 'passed', target_uuid: destination_tubes[1].uuid, user_uuid: user_uuid }
+        ]
+      )
+
       subject.save!
-      expect(tube_state_change_request_0).to have_been_made.once
-      expect(tube_state_change_request_1).to have_been_made.once
     end
 
     it 'redirects to the parent plate' do
       subject.save!
+
       expect(subject.redirection_target.uuid).to eq(parent_uuid)
     end
   end

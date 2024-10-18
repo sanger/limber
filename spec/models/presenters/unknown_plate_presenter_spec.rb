@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::UnknownPlatePresenter do
-  has_a_working_api
-
   let(:labware) { create :v2_plate, purpose_name: 'Other plate' }
 
-  subject { described_class.new(api: api, labware: labware) }
+  subject { described_class.new(labware:) }
 
   it 'prevents state change' do
     expect { |b| subject.default_state_change(&b) }.not_to yield_control

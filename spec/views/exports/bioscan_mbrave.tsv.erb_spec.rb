@@ -57,7 +57,7 @@ RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
         tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_24_v2'))
       )
     ]
-    create(:v2_tube, aliquots: aliquots)
+    create(:v2_tube, aliquots:)
   end
 
   before { assign(:tube, labware) }

@@ -6,14 +6,12 @@ require 'rails_helper'
 # state. We use StandardPresenter to test this because it is the default
 # presenter for plates and it includes a state machine to handle the state.
 RSpec.describe Presenters::StandardPresenter do
-  has_a_working_api
-
   before { create :banking_plate_purpose_config }
 
   let(:purpose_name) { 'banking-plate-purpose' }
   let(:purpose) { create :v2_purpose, name: purpose_name }
-  let(:labware) { create :v2_plate, purpose: purpose }
-  let(:presenter) { described_class.new(api: api, labware: labware) }
+  let(:labware) { create :v2_plate, purpose: }
+  let(:presenter) { described_class.new(labware:) }
 
   describe '#csv_file_links' do
     let(:download_in_passed_state_name) { 'Download PBMC Bank Tubes Content Report' }

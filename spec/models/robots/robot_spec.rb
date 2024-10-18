@@ -36,10 +36,10 @@ RSpec.describe Robots::Robot, robots: true do
   end
   let(:target_plate_parents) { [source_plate] }
   let(:target_tube_parents) { [source_plate] }
-  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: metadata }
+  let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: }
   let(:metadata) { { 'other_key' => 'value' } }
 
-  let(:robot) { Robots::Robot.new(robot_spec.merge(api: api, user_uuid: user_uuid)) }
+  let(:robot) { Robots::Robot.new(robot_spec.merge(api:, user_uuid:)) }
 
   shared_examples 'a robot' do
     context 'with an unknown plate' do
@@ -714,23 +714,6 @@ RSpec.describe Robots::Robot, robots: true do
     end
     let(:target_plate_state) { 'started' }
 
-    let(:state_change_request) do
-      stub_api_post(
-        'state_changes',
-        payload: {
-          state_change: {
-            target_state: 'passed',
-            reason: 'Robot bravo LB End Prep started',
-            customer_accepts_responsibility: false,
-            target: plate.uuid,
-            user: user_uuid,
-            contents: nil
-          }
-        },
-        body: json(:state_change, target_state: 'passed')
-      )
-    end
-
     let(:plate) do
       create :v2_plate,
              barcode_number: '123',
@@ -741,13 +724,25 @@ RSpec.describe Robots::Robot, robots: true do
 
     before do
       create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
-      state_change_request
       bed_labware_lookup(plate)
     end
 
     it 'performs transfer from started to passed' do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: nil,
+            customer_accepts_responsibility: false,
+            reason: 'Robot bravo LB End Prep started',
+            target_state: 'passed',
+            target_uuid: plate.uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+
       robot.perform_transfer('580000014851' => [plate.human_barcode])
-      expect(state_change_request).to have_been_requested
     end
 
     context 'if the bed is unexpectedly invalid' do

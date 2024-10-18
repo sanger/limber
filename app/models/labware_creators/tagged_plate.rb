@@ -30,7 +30,7 @@ module LabwareCreators
       @tag_plate = QcableObject.new(params[:asset_uuid], params[:template_uuid])
     end
 
-    def initialize(*args, &block)
+    def initialize(*args, &)
       super
       parent.populate_wells_with_pool
     end
@@ -79,6 +79,10 @@ module LabwareCreators
 
     def create_labware!
       create_plate! do |plate_uuid|
+        # TODO: {Y24-190} Work out a way to call the `create!` method on TagLayoutTemplate model in Sequencescape
+        #       using the V2 API. I think either we need to misuse the PATCH method with some kind of
+        #       attributes telling Sequencescape to run the `create!` method, or we need to create a new
+        #       endpoint associated with a TagLayoutTemplate that will run the `create!` method.
         api
           .tag_layout_template
           .find(tag_plate.template_uuid)

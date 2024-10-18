@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe PrintJob do
   has_a_working_api
 
-  let(:printer_pmb) { build :barcode_printer }
-  let(:printer_sprint) { build :barcode_printer, print_service: 'SPrint' }
-  let(:printer_unknown) { build :barcode_printer, print_service: 'UNKNOWN' }
+  let(:printer_pmb) { build :v2_barcode_printer }
+  let(:printer_sprint) { build :v2_barcode_printer, print_service: 'SPrint' }
+  let(:printer_unknown) { build :v2_barcode_printer, print_service: 'UNKNOWN' }
 
   let(:label_template_id) { 1 }
   let(:label_template_name_pmb) { 'sqsc_96plate_label_template' }
@@ -157,17 +157,32 @@ RSpec.describe PrintJob do
     end
 
     it 'should not execute if pmb is down' do
-      stub_request(:get, "http://localhost:3002#{label_template_url}").to_raise(JsonApiClient::Errors::ConnectionError)
-      stub_request(:post, 'http://localhost:3002/v1/print_jobs').to_raise(JsonApiClient::Errors::ConnectionError)
-
       pj =
         PrintJob.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
+          label_templates_by_service: label_templates_by_service,
           labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
           number_of_copies: 1
         )
+      allow(PMB::LabelTemplate).to receive(:where).and_raise(JsonApiClient::Errors::ConnectionError.new('error'))
       expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq('Pmb PrintMyBarcode service is down')
+    end
+
+    it 'should not execute if the pmb label template cannot be found' do
+      pj =
+        PrintJob.new(
+          printer_name: printer_pmb.name,
+          printer: printer_pmb,
+          label_templates_by_service: label_templates_by_service,
+          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
+          number_of_copies: 1
+        )
+
+      allow(PMB::LabelTemplate).to receive(:where).and_return([])
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq("Pmb Unable to find label template: #{label_template_name_pmb}")
     end
   end
 

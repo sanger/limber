@@ -35,9 +35,9 @@ module LabwareCreators
     # We pull out the api as the first argument as it ensures
     # we'll always have it available, even during assignment of
     # other attributes. Otherwise we end up relying on hash order.
-    def initialize(api, *args)
+    def initialize(api, *)
       @api = api
-      super(*args)
+      super(*)
     end
 
     def plate_to_walk
@@ -70,7 +70,7 @@ module LabwareCreators
 
     #
     # The uuid of the transfer template to be used.
-    # Extracted from the transfer template cache base on the name
+    # Extracted from the transfer template cache based on the name
     #
     # @return [String] UUID
     #
@@ -103,13 +103,6 @@ module LabwareCreators
 
     private
 
-    # rubocop:todo Naming/MemoizedInstanceVariableName
-    def transfer_template
-      @template ||= api.transfer_template.find(transfer_template_uuid)
-    end
-
-    # rubocop:enable Naming/MemoizedInstanceVariableName
-
     def create_plate_with_standard_transfer!
       plate_creation = create_plate_from_parent!
       @child = plate_creation.child
@@ -123,8 +116,12 @@ module LabwareCreators
       api.plate_creation.create!(parent: parent_uuid, child_purpose: purpose_uuid, user: user_uuid)
     end
 
+    def transfer!(attributes)
+      Sequencescape::Api::V2::Transfer.create!(attributes.merge(transfer_template_uuid:, user_uuid:))
+    end
+
     def transfer_material_from_parent!(child_uuid)
-      transfer_template.create!(source: parent_uuid, destination: child_uuid, user: user_uuid, transfers: transfer_hash)
+      transfer!(source_uuid: parent_uuid, destination_uuid: child_uuid, transfers: transfer_hash)
     end
 
     # Override in classes with custom transfers

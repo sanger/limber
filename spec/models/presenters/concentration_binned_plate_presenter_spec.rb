@@ -5,8 +5,6 @@ require 'presenters/concentration_binned_plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
-  has_a_working_api
-
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -58,7 +56,7 @@ RSpec.describe Presenters::ConcentrationBinnedPlatePresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::ConcentrationBinnedPlatePresenter.new(api: api, labware: labware) }
+  subject(:presenter) { Presenters::ConcentrationBinnedPlatePresenter.new(labware:) }
 
   context 'when binning configuration is missing' do
     it 'throws an exception' do

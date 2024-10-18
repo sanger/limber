@@ -116,6 +116,9 @@ FactoryBot.define do
       # Array of states for individual wells, used to overide plate state for, eg. failed wells
       well_states { [state] * size }
       is_stock { false }
+
+      # The CustomMetadatumCollection will be cached as a relationship in the after(:build) block.
+      custom_metadatum_collection { nil }
     end
 
     sequence(:id) { |i| i }
@@ -132,19 +135,8 @@ FactoryBot.define do
     state { 'pending' }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
-    custom_metadatum_collection { nil }
 
-    # Set up the relationships.
-    # json_client_api handles assigning of relationship information in a frustrating manner
-    # which isn't amenable to setting up objects for testing. Instead it tends to strip
-    # the attributes off the associated records, leaving just a type and an id. This is not
-    # useful if you want to use this data later.
-    # Even more frustratingly is that if you attempt to bypass this and set the attribute directly
-    # the getter attempts to fetch the object via a cache instead.
-    # Here we populate the cache directly with the objects we want. This is *MUCH* faster
-    # than achieving the same through mocks.
-    # We could probably avoid needing to do anything sneaky at all if we instead generated
-    # json-api data and generated the objects from that.
+    # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |plate, evaluator|
       Sequencescape::Api::V2::Plate.associations.each do |association|
         plate._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
@@ -160,6 +152,15 @@ FactoryBot.define do
       end
       RSpec::Mocks.allow_message(plate, :ancestors).and_return(ancestors_scope)
       plate._cached_relationship(:parents) { evaluator.parents }
+
+      if evaluator.custom_metadatum_collection
+        plate._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
+      end
+    end
+
+    # Set up a plate with a default custom_metadatum_collection.
+    factory :v2_plate_with_metadata do
+      transient { custom_metadatum_collection { create :custom_metadatum_collection } }
     end
 
     # Set up a stock plate. Changed behaviour relative to standard plate:
@@ -169,7 +170,6 @@ FactoryBot.define do
     # - Sets is_stock to true, which ensures the stock_plate matches itself
     factory :v2_stock_plate do
       transient do
-        barcode_number { 2 }
         well_factory { :v2_stock_well }
         purpose_name { 'Limber Cherrypicked' }
         purpose_uuid { 'stock-plate-purpose-uuid' }
@@ -178,6 +178,10 @@ FactoryBot.define do
       end
 
       state { 'passed' }
+
+      factory :v2_stock_plate_with_metadata do
+        transient { custom_metadatum_collection { create :custom_metadatum_collection } }
+      end
     end
 
     # Sets up a plate of GBS requests with configured primer panels
@@ -331,7 +335,7 @@ FactoryBot.define do
     factory :stock_plate do
       purpose_name { 'Limber Cherrypicked' }
       purpose_uuid { 'stock-plate-purpose-uuid' }
-      stock_plate { { barcode: barcode, uuid: uuid } }
+      stock_plate { { barcode:, uuid: } }
 
       factory :stock_plate_with_metadata do
         with_belongs_to_associations 'custom_metadatum_collection'
@@ -351,21 +355,20 @@ FactoryBot.define do
       pooled_wells = wells.reject { |w| empty_wells.include?(w) }
       pool_hash = {}
       pool_sizes.each_with_index do |pool_size, index|
-        pool_hash["pool-#{index + 1}-uuid"] =
-          {
-            'wells' => pooled_wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
-            'insert_size' => {
-              from: 100,
-              to: 300
-            },
-            'library_type' => {
-              name: library_type
-            },
-            'request_type' => request_type,
-            'pcr_cycles' => pool_prc_cycles[index],
-            'for_multiplexing' => pool_for_multiplexing[index],
-            'pool_complete' => pool_complete
-          }.merge(extra_pool_info)
+        pool_hash["pool-#{index + 1}-uuid"] = {
+          'wells' => pooled_wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+          'insert_size' => {
+            from: 100,
+            to: 300
+          },
+          'library_type' => {
+            name: library_type
+          },
+          'request_type' => request_type,
+          'pcr_cycles' => pool_prc_cycles[index],
+          'for_multiplexing' => pool_for_multiplexing[index],
+          'pool_complete' => pool_complete
+        }.merge(extra_pool_info)
       end
       pool_hash
     end

@@ -86,7 +86,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
           child_purpose: purpose_uuid
         }
       },
-      body: json(:tube_creation, child_uuid: child_uuid)
+      body: json(:tube_creation, child_uuid:)
     )
   end
 
@@ -145,22 +145,25 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   end
 
   before do
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(
-        include_used: false,
-        purpose_name: ['example-purpose'],
-        includes: 'purpose',
-        paginate: {
-          size: 30,
-          number: 1
-        }
-      )
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      include_used: false,
+      purpose_name: ['example-purpose'],
+      includes: 'purpose',
+      paginate: {
+        size: 30,
+        number: 1
+      }
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Parent lookup
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      barcode: [tube_barcode_1, tube_barcode_2],
+      includes: []
+    ).and_return([example_v2_tube, example_v2_tube2])
+
+    # Allow parent plates to be found in API v2
+    stub_v2_plate(parent_1, stub_search: false)
+    stub_v2_plate(parent_2, stub_search: false)
   end
 
   background do
@@ -182,22 +185,21 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     stub_v2_tube(example_v2_tube2)
 
     # Available tubes search
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(
-        include_used: false,
-        purpose_name: ['example-purpose'],
-        includes: 'purpose',
-        paginate: {
-          size: 30,
-          number: 1
-        }
-      )
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      include_used: false,
+      purpose_name: ['example-purpose'],
+      includes: 'purpose',
+      paginate: {
+        size: 30,
+        number: 1
+      }
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Parent lookup
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all)
-      .with(barcode: [tube_barcode_1, tube_barcode_2], includes: [])
-      .and_return([example_v2_tube, example_v2_tube2])
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
+      barcode: [tube_barcode_1, tube_barcode_2],
+      includes: []
+    ).and_return([example_v2_tube, example_v2_tube2])
 
     # Old API still used when loading parent
     stub_api_get(tube_uuid, body: example_tube)
@@ -205,7 +207,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     # Used in the redirect. This is call is probably unnecessary
     stub_api_get(child_uuid, body: child_tube)
     stub_v2_tube(child_tube_v2)
-    stub_api_get('barcode_printers', body: json(:barcode_printer_collection))
+    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
 
     allow(SearchHelper).to receive(:stock_plate_names).and_return([stock_plate_purpose_name])
     stub_get_labware_metadata(parent_1.barcode.machine, parent_1_v1)

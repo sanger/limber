@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::StandardPresenter do
-  has_a_working_api
-
   let(:purpose_name) { 'Example purpose' }
   let(:aliquot_type) { :v2_aliquot }
   let(:state) { 'pending' }
@@ -41,7 +39,7 @@ RSpec.describe Presenters::StandardPresenter do
   end
   let(:suggest_passes) { nil }
 
-  subject { Presenters::StandardPresenter.new(api: api, labware: labware) }
+  subject { Presenters::StandardPresenter.new(labware:) }
 
   it 'returns the priority' do
     expect(subject.priority).to eq(2)
