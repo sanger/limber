@@ -24,7 +24,7 @@ module LabwareCreators
           user_uuid: user_uuid
         ).child
 
-      api.bulk_transfer.create!(user: user_uuid, well_transfers: well_transfers)
+      Sequencescape::Api::V2::BulkTransfer.create!(user_uuid:, well_transfers:)
 
       yield(@child) if block_given?
       true
