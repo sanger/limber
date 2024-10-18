@@ -4045,12 +4045,12 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'bravo-lrnaf-cherrypick-to-lrnaf-frag',
-      name: 'Bravo LRNAF Cherrypick => LRNAF Frag',
+      'bravo-lbr-cherrypick-to-lrnaf-frag',
+      name: 'Bravo LBR Cherrypick => LRNAF Frag',
       require_robot: true,
       beds: {
         bed(8).barcode => {
-          purpose: 'LRNAF Cherrypick',
+          purpose: 'LBR Cherrypick',
           states: ['passed'],
           label: 'Bed 8'
         },

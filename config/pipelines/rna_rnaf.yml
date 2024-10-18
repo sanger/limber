@@ -6,7 +6,7 @@ RNA FFPE:
     library_type: RNA FFPE
   library_pass: LB Lib PCR-XP
   relationships:
-    LRNAF Cherrypick: LRNAF Frag
+    LBR Cherrypick: LRNAF Frag
     LRNAF Frag: LB cDNA
     LB cDNA: LB cDNA XP
     LB cDNA XP: LB End Prep
