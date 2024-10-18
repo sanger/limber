@@ -25,12 +25,13 @@ module LabwareCreators
     end
 
     def bait_library_layout_preview
-      @bait_library_layout_preview ||= api.bait_library_layout.preview!(plate: parent_uuid, user: user_uuid).layout
+      @bait_library_layout_preview ||=
+        Sequencescape::Api::V2::BaitLibraryLayout.preview(plate_uuid: parent_uuid, user_uuid: user_uuid).first.layout
     end
 
     def create_labware!
       create_plate_with_standard_transfer! do |child|
-        api.bait_library_layout.create!(plate: child.uuid, user: user_uuid)
+        Sequencescape::Api::V2::BaitLibraryLayout.create!(plate_uuid: child.uuid, user_uuid: user_uuid)
       end
     end
 
