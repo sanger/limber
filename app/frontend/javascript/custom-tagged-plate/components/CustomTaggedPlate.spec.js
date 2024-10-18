@@ -833,8 +833,8 @@ describe('CustomTaggedPlate', () => {
           purpose_uuid: 'purpose-uuid',
           parent_uuid: 'parent-plate-uuid',
           tag_layout: {
-            tag_group: 'tag-1-group-uuid',
-            tag2_group: 'tag-2-group-uuid',
+            tag_group_uuid: 'tag-1-group-uuid',
+            tag2_group_uuid: 'tag-2-group-uuid',
             direction: 'column',
             walking_by: 'manual by plate',
             initial_tag: 1,

@@ -317,7 +317,7 @@ module LabwareCreators
     def locate_ancestor_tubes
       purpose_name = purpose_config[:ancestor_stock_tube_purpose_name]
 
-      ancestor_results = parent.ancestors.where(purpose_name: purpose_name)
+      ancestor_results = parent.ancestors.where(purpose_name:)
       return {} if ancestor_results.blank?
 
       ancestor_results.each_with_object({}) do |ancestor_result, tube_list|
@@ -408,13 +408,12 @@ module LabwareCreators
     # @param tube_attributes [Hash] A hash of attributes to use for the created tubes.
     # @return [Hash<String, Tube>] A hash of the created tubes indexed by name.
     def create_tubes(tube_purpose_uuid, number_of_tubes, tube_attributes)
-      api
-        .specific_tube_creation
+      Sequencescape::Api::V2::SpecificTubeCreation
         .create!(
-          user: user_uuid,
-          parent: parent_uuid,
-          child_purposes: [tube_purpose_uuid] * number_of_tubes,
-          tube_attributes: tube_attributes
+          child_purpose_uuids: [tube_purpose_uuid] * number_of_tubes,
+          parent_uuids: [parent_uuid],
+          tube_attributes: tube_attributes,
+          user_uuid: user_uuid
         )
         .children
         .index_by(&:name)
@@ -580,7 +579,7 @@ module LabwareCreators
     # @param dest_tube_posn [String] The position of the destination tube.
     # @return [Hash] A hash of details to use for generating a tube name.
     def name_for_details_hash(prefix, stock_tube_bc, dest_tube_posn)
-      { prefix: prefix, stock_tube_bc: stock_tube_bc, dest_tube_posn: dest_tube_posn }
+      { prefix:, stock_tube_bc:, dest_tube_posn: }
     end
 
     # Generates a human-readable name for a tube based on the given details hash.
@@ -654,9 +653,10 @@ module LabwareCreators
     # @param tube_details [Hash] The tube details hash from the tube rack scan file.
     # @return [void]
     def add_tube_metadata(child_tube, tube_posn, tube_details)
-      LabwareMetadata
-        .new(user_uuid: user_uuid, barcode: child_tube.barcode.machine)
-        .update!(tube_rack_barcode: tube_details['tube_rack_barcode'], tube_rack_position: tube_posn)
+      LabwareMetadata.new(user_uuid: user_uuid, barcode: child_tube.barcode.machine).update!(
+        tube_rack_barcode: tube_details['tube_rack_barcode'],
+        tube_rack_position: tube_posn
+      )
     end
 
     # Generates a transfer request hash for the given source well UUID, target tube UUID, and additional parameters.

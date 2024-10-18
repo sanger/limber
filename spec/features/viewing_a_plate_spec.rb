@@ -109,7 +109,7 @@ RSpec.feature 'Viewing a plate', js: true do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Libraries on this plate have already been completed. ' \
+        'Submission (active) is not present for this labware. ' \
           'Any further work conducted from this plate may run into issues at the end of the pipeline.'
       )
     end

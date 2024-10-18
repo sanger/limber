@@ -47,13 +47,12 @@ module LabwareCreators
     # Have we made this class so cardinal-specific (e.g. lookup of ancestor vac tubes) that it cannot be re-used?
 
     def create_child_stock_tubes
-      api
-        .specific_tube_creation
+      Sequencescape::Api::V2::SpecificTubeCreation
         .create!(
-          user: user_uuid,
-          parent: parent_uuid,
-          child_purposes: [purpose_uuid] * pool_uuids.length,
-          tube_attributes: tube_attributes
+          child_purpose_uuids: [purpose_uuid] * pool_uuids.length,
+          parent_uuids: [parent_uuid],
+          tube_attributes: tube_attributes,
+          user_uuid: user_uuid
         )
         .children
         .index_by(&:name)
@@ -69,12 +68,11 @@ module LabwareCreators
     def transfer_request_attributes
       pools.each_with_object([]) do |(pool_identifier, pool), transfer_requests|
         pool.each do |location|
-          transfer_requests <<
-            request_hash(
-              well_locations.fetch(location).uuid,
-              child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
-              pool_identifier
-            )
+          transfer_requests << request_hash(
+            well_locations.fetch(location).uuid,
+            child_stock_tubes.fetch(name_for(name_for_details(pool_identifier))).uuid,
+            pool_identifier
+          )
         end
       end
     end
@@ -186,7 +184,7 @@ module LabwareCreators
     def locate_ancestor_tubes
       purpose_name = purpose_config[:ancestor_stock_tube_purpose_name]
 
-      ancestor_results = parent.ancestors.where(purpose_name: purpose_name)
+      ancestor_results = parent.ancestors.where(purpose_name:)
       return {} if ancestor_results.blank?
 
       ancestor_results.each_with_object({}) do |ancestor_result, tube_list|

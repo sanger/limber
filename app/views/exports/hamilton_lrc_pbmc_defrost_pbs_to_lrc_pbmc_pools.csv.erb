@@ -24,6 +24,7 @@
   study_required_number_of_cells_key = args[:study_required_number_of_cells_key]
 
   maximum_sample_volume = 60.0  # microlitres
+  minimum_sample_volume = 5.0  # microlitres
   resuspension_volume_per_sample = 2.2  # microlitres
   minimum_resuspension_volume = 10.0  # microlitres
   millilitres_to_microlitres = 1_000.0
@@ -52,14 +53,14 @@
 
     # Calculate the sample volume required for the number of cells
 
-    required_volume = [millilitres_to_microlitres * required_number_of_cells / cell_count.value.to_i, maximum_sample_volume].min
+    required_volume = (millilitres_to_microlitres * required_number_of_cells / cell_count.value.to_f).clamp(minimum_sample_volume, maximum_sample_volume)
 
     transfer_request_data << [
       src_barcode,
       src_location,
       @plate.labware_barcode.human,
       dest_well.location,
-      '%0.2f' % required_volume,
+      '%0.1f' % required_volume,
       # We pass in the required number of cells so that we can calculate the resuspension volume later
       required_number_of_cells
     ]
@@ -74,7 +75,7 @@
     required_number_of_cells = data[5]
     resuspension_volume = [(samples_in_pool * required_number_of_cells * wastage_accountment) / desired_chip_loading_concentration, minimum_resuspension_volume].max
     # Replace required number of cells with resuspension volume
-    data[5] = '%0.2f' % resuspension_volume
+    data[5] = '%0.1f' % resuspension_volume
     data
   end
 %>

@@ -25,7 +25,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   let(:parent_uuid) { SecureRandom.uuid }
   let(:parent) { json :plate, uuid: parent_uuid, stock_plate_barcode: 5, qc_files_actions: %w[read create] }
   let(:v2_plate) { create(:v2_plate, uuid: parent_uuid) }
-  let(:form_attributes) { { purpose_uuid: purpose_uuid, parent_uuid: parent_uuid } }
+  let(:form_attributes) { { purpose_uuid:, parent_uuid: } }
 
   let(:wells_json) { json :well_collection, size: 16, default_state: 'passed' }
 
@@ -53,49 +53,46 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
       content
     end
 
-    let(:form_attributes) { { user_uuid: user_uuid, purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, file: file } }
+    let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, file: } }
 
     let(:stub_qc_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files'))
-        .with(
-          body: file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="robot_pooling_file.csv"'
-          }
-        )
-        .to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'pooling_file.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
-    end
-
-    let(:tube_creation_request_uuid) { SecureRandom.uuid }
-
-    let(:tube_creation_request) do
-      stub_api_post(
-        'specific_tube_creations',
-        payload: {
-          specific_tube_creation: {
-            user: user_uuid,
-            parent: parent_uuid,
-            child_purposes: [purpose_uuid, purpose_uuid],
-            tube_attributes: [{ name: 'DN5 A1:B2' }, { name: 'DN5 C1:G2' }]
-          }
-        },
-        body: json(:specific_tube_creation, uuid: tube_creation_request_uuid, children_count: 2)
+      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+        body: file_content,
+        headers: {
+          'Content-Type' => 'sequencescape/qc_file',
+          'Content-Disposition' => 'form-data; filename="robot_pooling_file.csv"'
+        }
+      ).to_return(
+        status: 201,
+        body: json(:qc_file, filename: 'pooling_file.csv'),
+        headers: {
+          'content-type' => 'application/json'
+        }
       )
     end
 
-    # Find out what tubes we've just made!
-    let(:tube_creation_children_request) do
-      stub_api_get(
-        tube_creation_request_uuid,
-        'children',
-        body: json(:tube_collection, names: ['DN5 A1:B2', 'DN5 C1:G2'])
+    def expect_specific_tube_creation
+      child_tubes = [
+        create(:v2_tube, name: 'DN5 A1:B2', uuid: 'tube-0'),
+        create(:v2_tube, name: 'DN5 C1:G2', uuid: 'tube-1')
+      ]
+
+      # Create a mock for the specific tube creation.
+      specific_tube_creation = double
+      allow(specific_tube_creation).to receive(:children).and_return(child_tubes)
+
+      # Expect the post request and return the mock.
+      expect_api_v2_posts(
+        'SpecificTubeCreation',
+        [
+          {
+            child_purpose_uuids: [purpose_uuid, purpose_uuid],
+            parent_uuids: [parent_uuid],
+            tube_attributes: child_tubes.map { |tube| { name: tube.name } },
+            user_uuid: user_uuid
+          }
+        ],
+        [specific_tube_creation]
       )
     end
 
@@ -138,8 +135,6 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
     before do
       stub_parent_request
       stub_qc_file_creation
-      tube_creation_children_request
-      tube_creation_request
       transfer_creation_request
     end
 
@@ -149,9 +144,10 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
       end
 
       it 'pools according to the file' do
+        expect_specific_tube_creation
+
         expect(subject.save).to be_truthy
         expect(stub_qc_file_creation).to have_been_made.once
-        expect(tube_creation_request).to have_been_made.once
         expect(transfer_creation_request).to have_been_made.once
       end
     end
