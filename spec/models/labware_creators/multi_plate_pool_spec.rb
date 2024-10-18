@@ -79,55 +79,50 @@ RSpec.describe LabwareCreators::MultiPlatePool do
 
     let(:child_plate) { create :v2_plate }
 
+    let(:bulk_transfer_attributes) do
+      [
+        {
+          user_uuid: user_uuid,
+          well_transfers: [
+            {
+              'source_uuid' => plate_uuid,
+              'source_location' => 'A1',
+              'destination_uuid' => child_plate.uuid,
+              'destination_location' => 'A1'
+            },
+            {
+              'source_uuid' => plate_uuid,
+              'source_location' => 'B1',
+              'destination_uuid' => child_plate.uuid,
+              'destination_location' => 'A1'
+            },
+            {
+              'source_uuid' => plate_b_uuid,
+              'source_location' => 'A1',
+              'destination_uuid' => child_plate.uuid,
+              'destination_location' => 'B1'
+            },
+            {
+              'source_uuid' => plate_b_uuid,
+              'source_location' => 'B1',
+              'destination_uuid' => child_plate.uuid,
+              'destination_location' => 'B1'
+            }
+          ]
+        }
+      ]
+    end
+
     let(:pooled_plates_attributes) do
       [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [plate_uuid, plate_b_uuid], user_uuid: user_uuid }]
     end
 
-    let!(:bulk_transfer_request) do
-      stub_api_post(
-        'bulk_transfers',
-        payload: {
-          bulk_transfer: {
-            user: user_uuid,
-            well_transfers: [
-              {
-                'source_uuid' => plate_uuid,
-                'source_location' => 'A1',
-                'destination_uuid' => child_plate.uuid,
-                'destination_location' => 'A1'
-              },
-              {
-                'source_uuid' => plate_uuid,
-                'source_location' => 'B1',
-                'destination_uuid' => child_plate.uuid,
-                'destination_location' => 'A1'
-              },
-              {
-                'source_uuid' => plate_b_uuid,
-                'source_location' => 'A1',
-                'destination_uuid' => child_plate.uuid,
-                'destination_location' => 'B1'
-              },
-              {
-                'source_uuid' => plate_b_uuid,
-                'source_location' => 'B1',
-                'destination_uuid' => child_plate.uuid,
-                'destination_location' => 'B1'
-              }
-            ]
-          }
-        },
-        body: json(:plate_creation, child_uuid: child_plate.uuid)
-      )
-    end
-
     context '#save!' do
       it 'creates a plate!' do
+        expect_bulk_transfer_creation
         expect_pooled_plate_creation
 
         subject.save!
-
-        expect(bulk_transfer_request).to have_been_made.once
       end
     end
   end
