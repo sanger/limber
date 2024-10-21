@@ -88,5 +88,6 @@ Bespoke PCR MX:
     request_type_key:
       - limber_multiplexing
   relationships:
-    LBB Lib PCR-XP: LBB Lib Pool Stock
+    LBB Lib PCR-XP: LBB Lib PCR-XP Norm
+    LBB Lib PCR-XP Norm: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm
