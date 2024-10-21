@@ -125,7 +125,7 @@ Bespoke PCR MX HiC:
       - Hi-C - Dovetail
       - Hi-C - OmniC
       - Hi-C - Qiagen
-relationships:
-  LBB Lib PCR-XP: LBB Lib PCR-XP Norm
-  LBB Lib PCR-XP Norm: LBB Lib Pool Stock
-  LBB Lib Pool Stock: LB Lib Pool Norm
+  relationships:
+    LBB Lib PCR-XP: LBB Lib PCR-XP Norm
+    LBB Lib PCR-XP Norm: LBB Lib Pool Stock
+    LBB Lib Pool Stock: LB Lib Pool Norm
