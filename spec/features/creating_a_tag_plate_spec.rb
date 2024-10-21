@@ -29,6 +29,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
          pool_sizes: [8, 8],
          submission_pools_count: pools
   end
+
   let(:tag_plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid) { 'tag-plate-uuid' }
@@ -47,6 +48,10 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         }
       }
     ]
+  end
+
+  let(:plate_conversions_attributes) do
+    [{ parent_uuid: plate_uuid, purpose_uuid: child_purpose_uuid, target_uuid: tag_plate_uuid, user_uuid: user_uuid }]
   end
 
   let(:tag_template_uuid) { 'tag-layout-template-0' }
@@ -102,6 +107,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     end
 
     scenario 'creation with the plate' do
+      expect_plate_conversion_creation
+
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       plate_title = find('#plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')

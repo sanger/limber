@@ -1,21 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.shared_context 'a tag plate creator' do
-  let!(:plate_conversion_request) do
-    stub_api_post(
-      'plate_conversions',
-      payload: {
-        plate_conversion: {
-          user: user_uuid,
-          target: tag_plate_uuid,
-          purpose: child_purpose_uuid,
-          parent: plate_uuid
-        }
-      },
-      body: '{}' # We don't care
-    )
-  end
-
   let(:tag_layout_template) { json(:tag_layout_template, uuid: tag_template_uuid) }
   let(:enforce_uniqueness) { true }
 
