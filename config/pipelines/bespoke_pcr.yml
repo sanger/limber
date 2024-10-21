@@ -102,6 +102,9 @@ Bespoke PCR MX HiC:
       - Hi-C - OmniC
       - Hi-C - Qiagen
 relationships:
+  LBB Cherrypick: LBB Ligation
+  LBC Cherrypick: LBB Ligation
+  LBB Ligation: LBB Lib PCR-XP
   LBB Lib PCR-XP: LBB Lib PCR-XP Norm
   LBB Lib PCR-XP Norm: LBB Lib Pool Stock
   LBB Lib Pool Stock: LB Lib Pool Norm
