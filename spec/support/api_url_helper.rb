@@ -97,6 +97,14 @@ module ApiUrlHelper
       expect_api_v2_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
     end
 
+    def expect_plate_creation
+      expect_api_v2_posts(
+        'PlateCreation',
+        plate_creations_attributes,
+        [double(child: child_plate)] * plate_creations_attributes.size
+      )
+    end
+
     def expect_pooled_plate_creation
       expect_api_v2_posts(
         'PooledPlateCreation',
