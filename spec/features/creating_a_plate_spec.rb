@@ -54,18 +54,8 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     create :v2_plate, uuid: 'child-uuid', barcode_number: 7, state: 'passed', purpose_name: child_purpose_name
   end
 
-  let!(:plate_creation_request) do
-    stub_api_post(
-      'plate_creations',
-      payload: {
-        plate_creation: {
-          parent: plate_uuid,
-          child_purpose: child_purpose_uuid,
-          user: user_uuid
-        }
-      },
-      body: json(:plate_creation)
-    )
+  let(:plate_creations_attributes) do
+    [{ child_purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid, user_uuid: user_uuid }]
   end
 
   let(:filters) { {} }
@@ -93,6 +83,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   scenario 'basic plate creation' do
+    expect_plate_creation
     expect_transfer_request_collection_creation
 
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -109,6 +100,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     let(:ancestors_scope) { double('ancestors_scope') }
 
     before do
+      expect_plate_creation
       expect_transfer_request_collection_creation
 
       allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
@@ -233,6 +225,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
 
     scenario 'basic plate creation' do
+      expect_plate_creation
       expect_transfer_request_collection_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -276,6 +269,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     end
 
     scenario 'basic plate creation' do
+      expect_plate_creation
       expect_transfer_request_collection_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode

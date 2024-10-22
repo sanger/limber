@@ -42,13 +42,6 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     create(:purpose_config, uuid: child_purpose_uuid, name: child_purpose_name, size: 8)
 
     allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(parent)
-
-    allow(api).to receive_message_chain(:plate_creation, :create!).with(
-      parent: parent_uuid,
-      child_purpose: child_purpose_uuid,
-      user: user_uuid
-    ).and_return(double(child: child_plate))
-
     allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child_plate)
   end
 
@@ -74,6 +67,9 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
   end
 
   describe '#save!' do
+    # Expected plate creation attributes
+    let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
+
     # Expected transferred source wells
     let(:transferred_wells) { parent_wells }
 
@@ -93,6 +89,7 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
     context 'with all source wells' do
       it 'creates transfer requests by ordering columns to rows' do
         # A1 -> A1, B1 -> A2, C1 -> A3, D1 -> A4, E1 -> A5, F1 -> A6, G1 -> A7, H1 -> A8
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         subject.save!
@@ -109,6 +106,7 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
 
       it 'compresses the wells in the child plate' do
         # B1 -> A1, C1 -> A2, D1 -> A3, F1 -> A4, G1 -> A5
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         subject.save!

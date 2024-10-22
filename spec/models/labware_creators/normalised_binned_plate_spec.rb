@@ -139,6 +139,7 @@ RSpec.describe LabwareCreators::NormalisedBinnedPlate do
         { volume: '20.0', source_asset: well_d1.uuid, target_asset: '3-well-C2', outer_request: requests[3].uuid }
       ]
     end
+
     let(:dest_well_qc_attributes) do
       [
         { 'well_name' => 'A1', 'conc' => '1.0' },

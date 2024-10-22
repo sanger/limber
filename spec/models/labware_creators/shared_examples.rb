@@ -237,29 +237,16 @@ end
 
 RSpec.shared_examples 'a QC assaying plate creator' do
   describe '#save!' do
-    let!(:plate_creation_request) do
-      stub_api_post(
-        'plate_creations',
-        payload: {
-          plate_creation: {
-            parent: parent_uuid,
-            child_purpose: child_purpose_uuid,
-            user: user_uuid
-          }
-        },
-        body: json(:plate_creation)
-      )
-    end
+    let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
     it 'makes the expected requests' do
       # NB. QcAssay and TransferRequestCollection creations are using API v2;
       #     PlateCreation post is using API v1
       expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
+      expect_plate_creation
       expect_transfer_request_collection_creation
 
       expect(subject.save!).to eq true
-
-      expect(plate_creation_request).to have_been_made
     end
   end
 end
