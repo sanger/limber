@@ -16,12 +16,6 @@ Bespoke PCR:
       - Manual Chromium single cell 5 prime HT v2
       - emSEQ
       - Haplotagging
-      - Hi-C
-      - Hi-C - Arima v1
-      - Hi-C - Arima v2
-      - Hi-C - Dovetail
-      - Hi-C - OmniC
-      - Hi-C - Qiagen
       - Manual Standard WGS (Plate)
       - Ribozero RNA depletion
       - Ribozero RNA-seq (Bacterial)
@@ -89,4 +83,22 @@ Bespoke PCR MX:
       - limber_multiplexing
   relationships:
     LBB Lib PCR-XP: LBB Lib Pool Stock
+    LBB Lib Pool Stock: LB Lib Pool Norm
+Bespoke PCR HiC MX:
+  pipeline_group: Bespoke PCR
+  filters:
+    request_type_key: limber_pcr_hic_bespoke
+    library_type:
+      - Hi-C
+      - Hi-C - Arima v1
+      - Hi-C - Arima v2
+      - Hi-C - Dovetail
+      - Hi-C - OmniC
+      - Hi-C - Qiagen
+  relationships:
+    LBB Cherrypick: LBB Ligation
+    LBC Cherrypick: LBB Ligation
+    LBB Ligation: LBB Lib PCR-XP
+    LBB Lib PCR-XP: LBB Lib PCR-XP Norm
+    LBB Lib PCR-XP Norm: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm
