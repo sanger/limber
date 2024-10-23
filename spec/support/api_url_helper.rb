@@ -97,6 +97,10 @@ module ApiUrlHelper
       expect_api_v2_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
     end
 
+    def expect_bulk_transfer_creation
+      expect_api_v2_posts('BulkTransfer', bulk_transfer_attributes)
+    end
+
     def expect_plate_conversion_creation
       expect_api_v2_posts(
         'PlateConversion',
