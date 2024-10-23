@@ -16,8 +16,8 @@ RSpec.describe LabwareCreators::BaitedPlate do
   let(:requests) do
     Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
-  let(:parent) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
-  let(:child) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
+  let(:parent_plate) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
+  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
@@ -38,23 +38,13 @@ RSpec.describe LabwareCreators::BaitedPlate do
   context 'create plate' do
     has_a_working_api
 
-    let!(:plate_creation_request) do
-      stub_api_post(
-        'plate_creations',
-        payload: {
-          plate_creation: {
-            parent: parent_uuid,
-            child_purpose: purpose_uuid,
-            user: user_uuid
-          }
-        },
-        body: json(:plate_creation)
-      )
+    let(:plate_creations_attributes) do
+      [{ child_purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }]
     end
 
     before do
-      stub_v2_plate(parent, stub_search: false)
-      stub_v2_plate(child, stub_search: false)
+      stub_v2_plate(parent_plate, stub_search: false)
+      stub_v2_plate(child_plate, stub_search: false)
 
       stub_api_v2_post('BaitLibraryLayout')
       stub_api_v2_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
@@ -71,7 +61,9 @@ RSpec.describe LabwareCreators::BaitedPlate do
     end
 
     it 'should create objects' do
+      expect_plate_creation
       expect_transfer_request_collection_creation
+
       expect(subject.create_labware!).to eq true
     end
   end

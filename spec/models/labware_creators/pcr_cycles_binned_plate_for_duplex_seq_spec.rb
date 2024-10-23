@@ -331,19 +331,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         fixture_file_upload('spec/fixtures/files/duplex_seq/duplex_seq_dil_file.csv', 'sequencescape/qc_file')
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
+      let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
       let(:transfer_requests_attributes) do
         [
@@ -437,11 +425,10 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
       before { stub_api_v2_patch('Well') }
 
       it 'makes the expected transfer requests to bin the wells' do
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         expect(subject.save!).to eq true
-
-        expect(plate_creation_request).to have_been_made
       end
     end
   end

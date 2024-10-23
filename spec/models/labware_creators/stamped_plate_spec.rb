@@ -45,25 +45,13 @@ RSpec.describe LabwareCreators::StampedPlate do
 
   shared_examples 'a stamped plate creator' do
     describe '#save!' do
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
+      let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
       it 'makes the expected requests' do
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
       end
     end
   end

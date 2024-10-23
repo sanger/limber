@@ -27,15 +27,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
   let(:stock_purpose_name) { 'Merger Plate Purpose' }
   let(:stock_plate_barcode) { 1 }
 
-  let(:stock_plate_v1) do
-    json(
-      :stock_plate_with_metadata,
-      purpose_name: stock_purpose_name,
-      barcode_number: stock_plate_barcode,
-      uuid: stock_plate_uuid
-    )
-  end
-  let(:stock_plate_v2) do
+  let(:stock_plate) do
     create(
       :v2_stock_plate_for_plate,
       purpose_name: stock_purpose_name,
@@ -64,7 +56,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
     create(
       :v2_plate,
       uuid: parent_uuid,
-      stock_plate: stock_plate_v2,
+      stock_plate: stock_plate,
       barcode_number: '2',
       size: parent_plate_size,
       outer_requests: requests
@@ -123,11 +115,6 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
     { user_id: user.id, asset_id: child_plate_d.id, metadata: { stock_barcode: "* #{child_plate_d.barcode.machine}" } }
   end
 
-  let(:child_plate_a_v1) { json(:plate_with_metadata, uuid: 'child-a-uuid', barcode_number: '3') }
-  let(:child_plate_b_v1) { json(:plate_with_metadata, uuid: 'child-b-uuid', barcode_number: '4') }
-  let(:child_plate_c_v1) { json(:plate_with_metadata, uuid: 'child-c-uuid', barcode_number: '5') }
-  let(:child_plate_d_v1) { json(:plate_with_metadata, uuid: 'child-d-uuid', barcode_number: '6') }
-
   before do
     create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
     allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
@@ -153,31 +140,14 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
         [child_plate_a_create_args, child_plate_b_create_args, child_plate_c_create_args, child_plate_d_create_args]
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: [
-            json(:plate_creation, child_uuid: 'child-a-uuid'),
-            json(:plate_creation, child_uuid: 'child-b-uuid'),
-            json(:plate_creation, child_uuid: 'child-c-uuid'),
-            json(:plate_creation, child_uuid: 'child-d-uuid')
-          ]
-        )
-      end
+      let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] * 4 }
 
       before do
         allow(SearchHelper).to receive(:merger_plate_names).and_return(stock_purpose_name)
 
         stub_v2_user(user)
 
-        stub_v2_labware(stock_plate_v2)
+        stub_v2_labware(stock_plate)
         stub_v2_labware(child_plate_a)
         stub_v2_labware(child_plate_b)
         stub_v2_labware(child_plate_c)
@@ -186,11 +156,11 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
       it 'makes the expected requests' do
         expect_custom_metadatum_collection_creation
+        expect_plate_creation([child_plate_a, child_plate_b, child_plate_c, child_plate_d])
         expect_transfer_request_collection_creation
 
         expect(subject.save!).to eq true
 
-        expect(plate_creation_request).to have_been_made.times(4)
         expect(subject.redirection_target).to eq(plate)
       end
     end

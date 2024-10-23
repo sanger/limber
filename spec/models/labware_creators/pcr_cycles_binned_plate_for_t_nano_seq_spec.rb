@@ -289,6 +289,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
   let(:user_uuid) { 'user-uuid' }
 
+  let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
+
   context 'on new' do
     has_a_working_api
 
@@ -364,20 +366,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         fixture_file_upload(
           'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file.csv',
           'sequencescape/qc_file'
-        )
-      end
-
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
         )
       end
 
@@ -476,6 +464,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
@@ -485,8 +474,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         expect(subject).to receive(:create_or_update_request_metadata).exactly(14).times
 
         expect(subject.save!).to eq true
-
-        expect(plate_creation_request).to have_been_made
       end
     end
 
@@ -683,20 +670,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
       # Create child wells in order of the requests they originated from.
       # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
       # Just done like this to make it easier to match up the requests to the wells.
@@ -823,6 +796,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
@@ -832,8 +806,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
 
         expect(subject.save!).to eq true
-
-        expect(plate_creation_request).to have_been_made
       end
     end
 
@@ -1029,20 +1001,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
       # Create child wells in order of the requests they originated from.
       # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
       # Just done like this to make it easier to match up the requests to the wells.
@@ -1169,6 +1127,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
@@ -1178,8 +1137,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
 
         expect(subject.save!).to eq true
-
-        expect(plate_creation_request).to have_been_made
       end
     end
 
@@ -1507,20 +1464,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
       before do
         allow(pm_pcr_cycles).to receive(:update).and_return(true)
 
@@ -1536,13 +1479,12 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the correct method was triggered.
         expect(subject.save!).to eq true
-
-        expect(plate_creation_request).to have_been_made
       end
 
       # Check that we cannot create the child plate whilst there are active requests on the parent plate
@@ -1551,14 +1493,14 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         let(:loop_1_request) { create :isc_prep_request, state: 'pending', uuid: 'request-1' }
 
         it 'does not create the child plate' do
+          expect(Sequencescape::Api::V2::PlateCreation).not_to receive(:create!)
+
           # WellFilter catches that there are 2 active submissions on the well and throws an exception
           expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
           expect(subject.errors.messages[:well_filter].count).to eq(1)
           expect(subject.errors.messages[:well_filter][0]).to eq(
             'found 2 eligible requests for A1, possible overlapping submissions'
           )
-
-          expect(plate_creation_request).to_not have_been_made
         end
       end
 
@@ -1566,14 +1508,14 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         let(:loop_2_request) { create :library_request, state: 'pending', uuid: 'request-2' }
 
         it 'does not create the child plate' do
+          expect(Sequencescape::Api::V2::PlateCreation).not_to receive(:create!)
+
           expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
           expect(subject.errors.messages[:base].count).to eq(1)
           expect(subject.errors.messages[:base][0]).to eq(
             'Parent plate should only contain active requests of type (limber_targeted_nanoseq_isc_prep), ' \
               'found unexpected types (limber_wgs)'
           )
-
-          expect(plate_creation_request).to_not have_been_made
         end
       end
     end

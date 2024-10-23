@@ -109,6 +109,12 @@ module ApiUrlHelper
       )
     end
 
+    def expect_plate_creation(child_plates = nil)
+      child_plates ||= [child_plate] * plate_creations_attributes.size
+      return_values = child_plates.map { |child_plate| double(child: child_plate) }
+      expect_api_v2_posts('PlateCreation', plate_creations_attributes, return_values)
+    end
+
     def expect_pooled_plate_creation
       expect_api_v2_posts(
         'PooledPlateCreation',

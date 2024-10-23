@@ -22,14 +22,14 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
       create :gbs_library_request, state: 'started', uuid: "request-#{i}", submission_id: '2'
     end
   end
-  let(:parent) do
+  let(:parent_plate) do
     create :v2_plate_with_primer_panels,
            barcode_number: '2',
            uuid: parent_uuid,
            size: plate_size,
            outer_requests: requests
   end
-  let(:child) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
+  let(:child_plate) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
@@ -42,23 +42,13 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   # Essentially plate creation behaves as standard. The primer panel information
   # is solely for the user's benefit!
   context 'create plate' do
-    let!(:plate_request) do
-      stub_v2_plate(parent, stub_search: false)
-      stub_v2_plate(child, stub_search: false)
+    let(:plate_creations_attributes) do
+      [{ child_purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }]
     end
 
-    let!(:plate_creation_request) do
-      stub_api_post(
-        'plate_creations',
-        payload: {
-          plate_creation: {
-            parent: parent_uuid,
-            child_purpose: purpose_uuid,
-            user: user_uuid
-          }
-        },
-        body: json(:plate_creation)
-      )
+    before do
+      stub_v2_plate(parent_plate, stub_search: false)
+      stub_v2_plate(child_plate, stub_search: false)
     end
 
     describe '#panel_name' do
@@ -88,6 +78,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
 
     it 'should create objects' do
+      expect_plate_creation
       expect_transfer_request_collection_creation
 
       expect(subject.save!).to eq true
