@@ -13,8 +13,6 @@ LBB Lib PCR-XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-LBB Lib PCR-XP Norm:
-  :asset_type: plate
 LBB Ligation Tagged:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
