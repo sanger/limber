@@ -20,6 +20,7 @@ class PipelineList
   # plate meet the filter criteria.
   # If a pipeline has no filter criteria, it will also be considered 'active' for the labware.
   def active_pipelines_for(labware)
+    binding.pry if labware.purpose.name == "LBB Lib PCR-XP"
     @list.select { |pipeline| pipeline.active_for?(labware) }
   end
 
