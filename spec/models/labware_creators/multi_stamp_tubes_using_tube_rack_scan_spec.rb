@@ -84,30 +84,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     [:purpose, 'receptacle.aliquots.request.request_type', 'receptacle.requests_as_source.request_type']
   end
 
-  # child aliquots
-  let(:child_aliquot1) { create :v2_aliquot }
-  let(:child_aliquot2) { create :v2_aliquot }
-
-  # child wells
-  let(:child_well1) { create :v2_well, location: 'A1', uuid: '5-well-A1', aliquots: [child_aliquot1] }
-  let(:child_well2) { create :v2_well, location: 'B1', uuid: '5-well-B1', aliquots: [child_aliquot2] }
-
   # child plate
-  let(:child_plate_uuid) { 'child-uuid' }
   let(:child_plate_purpose_uuid) { 'child-purpose' }
   let(:child_plate_purpose_name) { 'Child Purpose' }
-  let(:child_plate_v2) do
-    create :v2_plate,
-           uuid: child_plate_uuid,
-           purpose_name: child_plate_purpose_name,
-           barcode_number: '5',
-           size: 96,
-           wells: [child_well1, child_well2]
-  end
-
-  let(:child_plate_v2) do
-    create :v2_plate, uuid: child_plate_uuid, purpose_name: child_plate_purpose_name, barcode_number: '5', size: 96
-  end
+  let(:child_plate) { create :v2_plate, purpose_name: child_plate_purpose_name, barcode_number: '5', size: 96 }
 
   let(:user_uuid) { 'user-uuid' }
   let(:user) { json :v1_user, uuid: user_uuid }
@@ -132,7 +112,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   let(:stub_upload_file_creation) do
-    stub_request(:post, api_url_for(child_plate_uuid, 'qc_files')).with(
+    stub_request(:post, api_url_for(child_plate.uuid, 'qc_files')).with(
       body: file_content,
       headers: {
         'Content-Type' => 'sequencescape/qc_file',
@@ -149,7 +129,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   let(:child_plate_v1) do
     # qc_files are created through the API V1. The actions attribute for qcfiles is required by the API V1.
-    json :plate, uuid: child_plate_uuid, purpose_uuid: child_plate_purpose_uuid, qc_files_actions: %w[read create]
+    json :plate, uuid: child_plate.uuid, purpose_uuid: child_plate_purpose_uuid, qc_files_actions: %w[read create]
   end
 
   before do
@@ -162,9 +142,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       includes: tube_includes
     ).and_return(parent_tube_2)
 
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
-
-    stub_api_get(child_plate_uuid, body: child_plate_v1)
+    stub_api_get(child_plate.uuid, body: child_plate_v1)
 
     stub_upload_file_creation
 
@@ -194,20 +172,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
-    let!(:ms_plate_creation_request) do
-      stub_api_post(
-        'pooled_plate_creations',
-        payload: {
-          pooled_plate_creation: {
-            user: user_uuid,
-            child_purpose: child_plate_purpose_uuid,
-            parents: [parent_tube_1_uuid, parent_tube_2_uuid]
-          }
-        },
-        body: json(:plate_creation, child_plate_uuid:)
-      )
-    end
-
     let(:transfer_requests) do
       [
         { source_asset: 'tube-1-uuid', target_asset: '5-well-A1', outer_request: 'request-1' },
@@ -228,6 +192,27 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       )
     end
 
+    let(:pooled_plate_creation) do
+      response = double
+      allow(response).to receive(:child).and_return(child_plate)
+
+      response
+    end
+
+    def expect_pooled_plate_creation
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        [
+          {
+            child_purpose_uuid: child_plate_purpose_uuid,
+            parent_uuids: [parent_tube_1_uuid, parent_tube_2_uuid],
+            user_uuid: user_uuid
+          }
+        ],
+        [pooled_plate_creation]
+      )
+    end
+
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     it 'creates a plate!' do
@@ -235,10 +220,11 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       subject.labware.barcode.machine = 'AB10000001'
       subject.labware.barcode.ean13 = nil
 
-      subject.save
-      expect(subject.errors.full_messages).to be_empty
+      expect_pooled_plate_creation
 
-      expect(ms_plate_creation_request).to have_been_made.once
+      subject.save
+
+      expect(subject.errors.full_messages).to be_empty
       expect(transfer_creation_request).to have_been_made.once
     end
   end
