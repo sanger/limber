@@ -30,3 +30,6 @@ LB cDNA:
 LB cDNA XP:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
+LRNAF Frag:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
