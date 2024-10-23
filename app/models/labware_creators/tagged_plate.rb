@@ -42,8 +42,8 @@ module LabwareCreators
 
       flag_tag_plate_as_exhausted
 
-      # Convert plate instead of creating it
-      # Target returns the newly converted tag plate
+      # Convert plate instead of creating it.
+      # Target returns the newly converted tag plate.
       @child = convert_tag_plate_to_new_purpose.target
 
       true
@@ -64,16 +64,16 @@ module LabwareCreators
     private
 
     #
-    # Convert the tag plate to the new purpose
+    # Convert the tag plate to the new purpose.
     #
-    # @return [Sequencescape::Api::PlateConversion] The conversion action
+    # @return [Sequencescape::Api::V2::PlateConversion] The result of the conversion.
     #
     def convert_tag_plate_to_new_purpose
-      api.plate_conversion.create!(
-        target: tag_plate.asset_uuid,
-        purpose: purpose_uuid,
-        user: user_uuid,
-        parent: parent_uuid
+      Sequencescape::Api::V2::PlateConversion.create!(
+        parent_uuid: parent_uuid,
+        purpose_uuid: purpose_uuid,
+        target_uuid: tag_plate.asset_uuid,
+        user_uuid: user_uuid
       )
     end
 

@@ -101,6 +101,14 @@ module ApiUrlHelper
       expect_api_v2_posts('BulkTransfer', bulk_transfer_attributes)
     end
 
+    def expect_plate_conversion_creation
+      expect_api_v2_posts(
+        'PlateConversion',
+        plate_conversions_attributes,
+        plate_conversions_attributes.map { |e| double(target: double(uuid: e[:target_uuid])) }
+      )
+    end
+
     def expect_pooled_plate_creation
       expect_api_v2_posts(
         'PooledPlateCreation',
