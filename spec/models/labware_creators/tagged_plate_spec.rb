@@ -182,6 +182,10 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:tag2_tube_uuid) { 'tag2-tube' }
     let(:tag2_template_uuid) { 'tag2-layout-template' }
 
+    let(:plate_conversions_attributes) do
+      [{ parent_uuid: plate_uuid, purpose_uuid: child_purpose_uuid, target_uuid: tag_plate_uuid, user_uuid: user_uuid }]
+    end
+
     let(:state_changes_attributes) do
       [
         {
@@ -227,23 +231,24 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         }
       end
 
+      it_behaves_like 'it has a custom page', 'tagged_plate'
+
       it 'can be created' do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it_behaves_like 'it has a custom page', 'tagged_plate'
-
       context 'on save' do
         it 'creates a tag plate' do
+          expect_plate_conversion_creation
           expect_state_change_creation
           expect_transfer_creation
 
           expect(subject.save).to be true
-          expect(plate_conversion_request).to have_been_made.once
           expect(tag_layout_creation_request).to have_been_made.once
         end
 
         it 'has the correct child (and uuid)' do
+          expect_plate_conversion_creation
           stub_api_v2_post('Transfer')
           stub_api_v2_post('StateChange')
 
