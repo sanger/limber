@@ -54,15 +54,6 @@ RSpec.describe LabwareCreators::MergedPlate do
            creator_class: 'LabwareCreators::MergedPlate'
   end
 
-  let(:child_plate) do
-    create :v2_plate,
-           uuid: 'child-uuid',
-           barcode_number: '4',
-           size: plate_size,
-           outer_requests: requests,
-           purpose: child_purpose
-  end
-
   let(:requests) do
     Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 1 }
   end
@@ -70,7 +61,6 @@ RSpec.describe LabwareCreators::MergedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    stub_v2_plate(child_plate, stub_search: false)
     stub_v2_plate(source_plate_1, stub_search: false)
     stub_v2_plate(source_plate_2, stub_search: false)
   end
@@ -81,27 +71,13 @@ RSpec.describe LabwareCreators::MergedPlate do
     describe '#save!' do
       before do
         allow(Sequencescape::Api::V2::Plate).to(
-          receive(:find_all)
-            .with(
-              { barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] },
-              includes: plate_includes
-            )
-            .and_return([source_plate_1, source_plate_2])
+          receive(:find_all).with(
+            { barcode: [source_plate_1.barcode.machine, source_plate_2.barcode.machine] },
+            includes: plate_includes
+          ).and_return([source_plate_1, source_plate_2])
         )
-      end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'pooled_plate_creations',
-          payload: {
-            pooled_plate_creation: {
-              user: user_uuid,
-              child_purpose: child_purpose_uuid,
-              parents: [source_plate_1.uuid, source_plate_2.uuid]
-            }
-          },
-          body: json(:plate_creation, child_uuid: child_plate.uuid)
-        )
+        stub_v2_plate(child_plate, stub_search: false)
       end
 
       let!(:transfer_creation_request) do
@@ -117,10 +93,42 @@ RSpec.describe LabwareCreators::MergedPlate do
         )
       end
 
+      let(:child_plate) do
+        create :v2_plate,
+               uuid: 'child-uuid',
+               barcode_number: '4',
+               size: plate_size,
+               outer_requests: requests,
+               purpose: child_purpose
+      end
+
+      let(:pooled_plate_creation) do
+        response = double
+        allow(response).to receive(:child).and_return(child_plate)
+
+        response
+      end
+
+      def expect_pooled_plate_creation
+        expect_api_v2_posts(
+          'PooledPlateCreation',
+          [
+            {
+              child_purpose_uuid: child_purpose_uuid,
+              parent_uuids: [source_plate_1.uuid, source_plate_2.uuid],
+              user_uuid: user_uuid
+            }
+          ],
+          [pooled_plate_creation]
+        )
+      end
+
       it 'makes the expected requests' do
+        expect_pooled_plate_creation
+
         expect(subject).to be_valid
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
+
         expect(transfer_creation_request).to have_been_made
       end
     end
@@ -209,9 +217,10 @@ RSpec.describe LabwareCreators::MergedPlate do
       )
       stub_v2_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_3])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_3])
       )
     end
 
@@ -251,9 +260,10 @@ RSpec.describe LabwareCreators::MergedPlate do
       )
       stub_v2_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_3])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_3])
       )
     end
 
@@ -279,9 +289,9 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1])
+        receive(:find_all).with({ barcode: [source_plate_1.barcode.machine] }, includes: plate_includes).and_return(
+          [source_plate_1]
+        )
       )
     end
 
@@ -309,9 +319,10 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_1.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_1.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1])
       )
     end
 
@@ -349,9 +360,10 @@ RSpec.describe LabwareCreators::MergedPlate do
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
       allow(Sequencescape::Api::V2::Plate).to(
-        receive(:find_all)
-          .with({ barcode: [source_plate_1.barcode.machine, source_plate_4.barcode.machine] }, includes: plate_includes)
-          .and_return([source_plate_1, source_plate_4])
+        receive(:find_all).with(
+          { barcode: [source_plate_1.barcode.machine, source_plate_4.barcode.machine] },
+          includes: plate_includes
+        ).and_return([source_plate_1, source_plate_4])
       )
     end
 
