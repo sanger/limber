@@ -15,13 +15,13 @@ Bespoke PCR:
       - Manual Chromium single cell 5 prime v2
       - Manual Chromium single cell 5 prime HT v2
       - emSEQ
+      - Haplotagging
       - Hi-C
       - Hi-C - Arima v1
       - Hi-C - Arima v2
       - Hi-C - Dovetail
       - Hi-C - OmniC
       - Hi-C - Qiagen
-      - Haplotagging
       - Manual Standard WGS (Plate)
       - Ribozero RNA depletion
       - Ribozero RNA-seq (Bacterial)
