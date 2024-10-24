@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@hotwired/turbo": "^8.0.12",
     "axios": "^0.28.1",
     "bootstrap-vue": "^2.23.1",
     "cytoscape": "^3.30.2",
