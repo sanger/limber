@@ -261,6 +261,7 @@ nav.robots-list {
 .robots-button,
 .create-plate-button,
 .create-tube-button,
+.create-tube_rack-button,
 .csv-link,
 .create-submission-button {
   @extend .btn;
@@ -272,6 +273,7 @@ nav.robots-list {
 .other-actions {
   .work-completion-button,
   .create-plate-button,
+  .create-tube_rack-button,
   .create-tube-button {
     @extend .btn-secondary;
   }
@@ -280,6 +282,7 @@ nav.robots-list {
   .work-completion-button,
   .create-plate-button,
   .create-tube-button,
+  .create-tube_rack-button,
   .create-submission-button {
     @extend .btn-success;
   }

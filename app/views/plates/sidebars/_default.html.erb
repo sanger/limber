@@ -52,6 +52,7 @@
     <% presenter.control_additional_creation do %>
       <%= render 'creation_dropdown', resource_type: 'plates', resources: presenter.compatible_plate_purposes %>
       <%= render 'creation_dropdown', resource_type: 'tubes', resources: presenter.compatible_tube_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tube_racks', resources: presenter.compatible_tube_rack_purposes %>
     <% end %>
 
     <% presenter.control_library_passing do %>

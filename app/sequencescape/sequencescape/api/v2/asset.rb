@@ -21,6 +21,10 @@ class Sequencescape::Api::V2::Asset < Sequencescape::Api::V2::Base
     type == 'tubes'
   end
 
+  def tube_rack?
+    type == 'tube_racks'
+  end
+
   def barcode
     labware_barcode
   end

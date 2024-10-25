@@ -8,9 +8,3 @@ TR Stock 48:
 Heron Lysed Tube Rack:
   :asset_type: tube_rack
   :size: 96
-TR LRC Bank Seq:
-  :asset_type: tube_rack
-  :size: 96
-TR LRC Bank Spare:
-  :asset_type: tube_rack
-  :size: 96

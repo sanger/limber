@@ -86,11 +86,12 @@ LRC PBMC Bank:
       units: 'cells/ml'
       default_threshold: 650000
       decimal_places: 0
-# FluidX tube for freezing and output of cell banking protocol
-LRC Bank Seq:
-  :asset_type: tube
-  :target: SampleTube
-  :type: Tube::Purpose
+# Tube rack for storing LRC Bank Seq tubes
+TR LRC Bank Seq:
+  :asset_type: tube_rack
+  :target: TubeRack
+  :size: 96
+  :type: TubeRack::Purpose
   :creator_class:
     name: LabwareCreators::PlateSplitToTubeRacks
     args: &fluidx_tube_creation_config
@@ -101,22 +102,36 @@ LRC Bank Seq:
       child_spare_tube_name_prefix: SPR
       child_spare_tube_rack_purpose_name: TR LRC Bank Spare
       child_tube_rack_metadata_key: 'tube_rack_barcode'
-  :ancestor_stock_tube_purpose_name: LRC Blood Vac
-  :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+      ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :presenter_class: Presenters::TubeRackPresenter
+  :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
+# Tube rack for storing LRC Bank Spare tubes
+TR LRC Bank Spare:
+  :asset_type: tube_rack
+  :target: TubeRack
+  :size: 96
+  :type: TubeRack::Purpose
+  :creator_class:
+    name: LabwareCreators::PlateSplitToTubeRacks
+    args: *fluidx_tube_creation_config
+  :presenter_class: Presenters::TubeRackPresenter
+  :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
+  :work_completion_request_type: 'limber_scrna_core_cell_extraction'
+# FluidX tube for freezing and output of cell banking protocol
+LRC Bank Seq:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::Uncreatable
+  :presenter_class: Presenters::SimpleTubePresenter
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Spare:
   :asset_type: tube
   :target: SampleTube
   :type: Tube::Purpose
-  :creator_class:
-    name: LabwareCreators::PlateSplitToTubeRacks
-    args: *fluidx_tube_creation_config
-  :ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :creator_class: LabwareCreators::Uncreatable
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::AutomaticTubeStateChanger
-  :work_completion_request_type: 'limber_scrna_core_cell_extraction'
 # FluidX tube frozen input from faculty tube, created by manifest
 LRC Bank Input:
   :asset_type: tube

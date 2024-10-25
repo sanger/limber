@@ -58,6 +58,23 @@ module StateChangers
     details[:state_changer_class].constantize
   end
 
+  # The tube rack state changer is used by TubeRacks.
+  # It contains tubes.
+  class TubeRackStateChanger < DefaultStateChanger
+    # TubeRacks contain tubes
+    def contents_for(_target_state)
+      return nil unless FILTER_FAILS_ON.include?(target_state)
+
+      # determine list of tubes requiring the state change
+      tubes_locations_filtered = labware.tubes.reject { |t| t.state == 'failed' }.map(&:racked_tube.coordinate)
+
+      # if no tubes are in failed state then no need to send the contents subset
+      return nil if tubes_locations_filtered.length == labware.tubes.count
+
+      tubes_locations_filtered
+    end
+  end
+
   # The tube state changer is used by Tubes. It works the same way as the default
   # state changer but does not need to handle a subset of wells like the plate.
   class TubeStateChanger < DefaultStateChanger
@@ -123,6 +140,17 @@ module StateChangers
   class AutomaticTubeStateChanger < AutomaticLabwareStateChanger
     def v2_labware
       @v2_labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
+    end
+
+    def labware
+      @labware ||= v2_labware
+    end
+  end
+
+  # This version of the AutomaticLabwareStateChanger is used by TubeRacks.
+  class AutomaticTubeRackStateChanger < AutomaticLabwareStateChanger
+    def v2_labware
+      @v2_labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
 
     def labware

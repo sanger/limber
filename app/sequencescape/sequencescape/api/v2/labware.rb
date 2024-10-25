@@ -17,9 +17,6 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   has_many :state_changes
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
 
-  # Other relationships
-  # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
-
   def self.find_all(options, includes: DEFAULT_INCLUDES)
     Sequencescape::Api::V2::Labware.includes(*includes).where(options).all
   end
@@ -27,7 +24,7 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   #
   # Plates and tubes are handled by different URLs. This allows us to redirect
   # to the expected endpoint.
-  # @return [ActiveModel::Name] The resource behaves like a Limber::Tube/Limber::Plate
+  # @return [ActiveModel::Name] The resource behaves like a Limber::Tube/Limber::Plate/Limber::TubeRack
   #
   def model_name
     case type
@@ -36,7 +33,7 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
     when 'plates'
       ::ActiveModel::Name.new(Limber::Plate, false)
     when 'tube_racks'
-      ::ActiveModel::Name.new(Sequencescape::Api::V2::TubeRack, false, 'Limber::TubeRack')
+      ::ActiveModel::Name.new(Limber::TubeRack, false)
     else
       raise "Can't view #{type} in limber"
     end
@@ -53,6 +50,10 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
 
   def tube?
     type == 'tubes'
+  end
+
+  def tube_rack?
+    type == 'tube_racks'
   end
 
   # ===== stock plate / input plate barcode ======
