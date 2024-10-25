@@ -164,9 +164,10 @@ module LabwareCreators
       api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
     end
 
-    # We will create multiple child tube racks, redirect to the sequencing rack
+    # We will create multiple child tube racks, redirect back to the parent plate
     def redirection_target
-      child_tube_racks[SEQ_TUBE_RACK_NAME]
+      # NB. if we want to change this to the first tube rack use: child_tube_racks[SEQ_TUBE_RACK_NAME]
+      parent
     end
 
     # We will want to see the list of tubes in the rack
