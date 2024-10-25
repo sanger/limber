@@ -5,6 +5,10 @@ require_dependency 'labware_barcode'
 # Takes labware barcodes from the API and wraps them
 class LabwareBarcodeCaster
   def self.cast(value, _default)
+    return nil if value.nil?
+    return value if value.is_a?(LabwareBarcode)
+    return value if value.is_a?(String) && value.blank?
+
     LabwareBarcode.new(
       human: value['human_barcode'],
       machine: (value['machine_barcode'] || value['ean13_barcode']).to_s,
