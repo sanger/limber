@@ -13,7 +13,7 @@ RSpec.describe Presenters::PcrPoolXpPresenter do
 
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
-  let(:state) { 'pending' }
+  let(:state) { 'passed' }
   let(:summary_tab) do
     [
       ['Barcode', 'NT6T <em>3980000006844</em>'],
@@ -31,5 +31,10 @@ RSpec.describe Presenters::PcrPoolXpPresenter do
 
   it 'has export_to_traction option' do
     expect(subject.export_to_traction).to be_truthy
+  end
+
+  it 'has no export_to_traction option' do
+    labware.state = 'pending'
+    expect(subject.export_to_traction).to be_falsey
   end
 end
