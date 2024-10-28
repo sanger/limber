@@ -2,7 +2,7 @@
 
 # Tube racks can be barcoded, and contain racked tubes at defined locations.
 class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
-  include WellHelpers::Extensions
+  include Sequencescape::Api::V2::Shared::HasRequests
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
   include Sequencescape::Api::V2::Shared::HasPolyMetadata
@@ -38,5 +38,37 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   def stock_plate
     nil
+  end
+
+  private
+
+  # This method iterates over all racked tubes in the tube rack and retrieves the
+  # aliquots for each associated tube. It flattens the resulting arrays into a single
+  # array and removes any nil values.
+  # Used to determine the active requests for the tube rack. See HasRequests for more details.
+  #
+  # @return [Array<Aliquot>] An array of aliquots for the tubes in the rack.
+  #
+  # Example:
+  #   aliquots = tube_rack.aliquots
+  #   # => [<Aliquot id: 1, ...>, <Aliquot id: 2, ...>, ...]
+  #
+  def aliquots
+    racked_tubes.flat_map { |racked_tube| racked_tube.tube.aliquots }&.compact
+  end
+
+  # This method iterates over all racked tubes in the tube rack and retrieves the
+  # requests_as_source for each associated tube. It flattens the resulting
+  # arrays into a single array and removes any nil values.
+  # Used to determine the active requests for the tube rack. See HasRequests for more details.
+  #
+  # @return [Array<Request>] An array of requests_as_source for the tubes in the rack.
+  #
+  # Example:
+  #   requests = tube_rack.requests_as_source_for_tubes
+  #   # => [<Request id: 1, ...>, <Request id: 2, ...>, ...]
+  #
+  def requests_as_source
+    racked_tubes.flat_map { |racked_tube| racked_tube.tube.requests_as_source }&.compact
   end
 end
