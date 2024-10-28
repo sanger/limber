@@ -6,9 +6,14 @@ module Presenters
   # It inherits from FinalTubePresenter and provides methods
   # to export data to Traction.
   class PcrPoolXpPresenter < FinalTubePresenter
-    # Enables the export of the PCR Pool XP tube to Traction.
+    # Enables the export of the PCR Pool XP tube to Traction if tube is in passed state.
     def export_to_traction
-      true
+      if self.state == 'passed'
+        # Add the logic for exporting to Traction here
+        true
+      else
+        false
+      end
     end
   end
 end
