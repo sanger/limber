@@ -290,7 +290,7 @@ export default {
      * Validate the props
      */
     validateProps() {
-      if (!(this.barcode && this.userId && this.sequencescapeApiUrl && this.tractionServiceUrl)) {
+      if (!(this.barcode && this.userId && this.sequencescapeApiUrl && this.tractionServiceUrl && this.tractionUIUrl)) {
         this.state = StateEnum.INVALID_PROPS
         return
       }
