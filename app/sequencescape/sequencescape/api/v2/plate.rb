@@ -20,12 +20,32 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :direct_submissions, class_name: 'Sequencescape::Api::V2::Submission'
   has_many :state_changes
   has_one :custom_metadatum_collection
+  has_many :submission_pools
 
   # Other relationships
   # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
 
   property :created_at, type: :time
   property :updated_at, type: :time
+
+  # Assigns pools to wells of the plate. This method is available on V1 Plate
+  # model but not on V2 Plate model. It is called in the initialize method of
+  # the TaggedPlate labware creator on the parent plate. In order to subclass
+  # the labware creator, for adding a WellFilter, we need to use the V2 Plate
+  # model. It is added here to allow calling the initialize method of the
+  # superclass because it expects the method to be available on the plate.
+  # Note that the V1 method is different from the V2 method; the former assumes
+  # that pools has a wells entry, however there is no such entry in the pools
+  # hash of V2 Plate.
+  # See Sequencescape::Plate::Pooling module in sequencescape-client-api gem.
+  # @return [void]
+  def populate_wells_with_pool
+    wells.each do |well|
+      well_pool =
+        pools.detect { |pool| pool.subpools.any? { |subpool| subpool.well_locations.include?(well.location) } }
+      well.pool = well_pool if well_pool
+    end
+  end
 
   def self.find_by(options)
     Sequencescape::Api::V2.plate_for_presenter(**options)
