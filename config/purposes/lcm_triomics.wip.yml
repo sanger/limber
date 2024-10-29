@@ -104,7 +104,7 @@ LCMT DNA Lib PCR:
   :cherrypickable_target: false
   :input_plate: false
   :presenter_class: Presenters::PcrPresenter
-  :creator_class: LabwareCreators::TaggedPlate
+  :creator_class: LabwareCreators::WellFilteredTaggedPlateCreator
   :tag_layout_templates:
     - TS_pWGSA_UDI96v2
     - TS_pWGSB_UDI96
