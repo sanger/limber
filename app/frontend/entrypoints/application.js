@@ -29,6 +29,15 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 
 // ^^^ Template from Vite. Below is custom code for Limber ^^^
 
+// Import Rails UJS as in Sequencescape
+import Rails from '@rails/ujs'
+
+try {
+  Rails.start()
+} catch {
+  // Nothing
+}
+
 // Import Libraries
 import 'bootstrap'
 import 'popper.js'
