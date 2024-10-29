@@ -79,9 +79,6 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       end
 
       it 'returns all requests associated with the tube rack' do
-        # allow(tube_rack).to receive(:requests_as_source_for_tubes).and_return([request1])
-        # allow(tube_rack).to receive(:requests_in_progress).and_return([request2])
-
         expect(tube_rack.all_requests.map(&:id)).to match_array([request1.id, request2.id])
       end
     end
