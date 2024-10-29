@@ -23,6 +23,8 @@ RSpec.describe LabwareCreators::BaitedPlate do
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
+  let(:bait_library_layout) { create :bait_library_layout }
+
   let(:transfer_requests) do
     WellHelpers.column_order(96)[0, 6].map do |well_name|
       { 'source_asset' => "2-well-#{well_name}", 'target_asset' => "3-well-#{well_name}", 'submission_id' => '2' }
@@ -35,32 +37,6 @@ RSpec.describe LabwareCreators::BaitedPlate do
 
   context 'create plate' do
     has_a_working_api
-
-    let!(:bait_library_layout_preview_request) do
-      stub_api_post(
-        'bait_library_layouts/preview',
-        payload: {
-          bait_library_layout: {
-            plate: parent_uuid,
-            user: user_uuid
-          }
-        },
-        body: json(:bait_library_layout)
-      )
-    end
-
-    let!(:bait_library_layout_request) do
-      stub_api_post(
-        'bait_library_layouts',
-        payload: {
-          bait_library_layout: {
-            plate: 'child-uuid',
-            user: user_uuid
-          }
-        },
-        body: json(:bait_library_layout)
-      )
-    end
 
     let!(:plate_creation_request) do
       stub_api_post(
@@ -79,6 +55,9 @@ RSpec.describe LabwareCreators::BaitedPlate do
     before do
       stub_v2_plate(parent, stub_search: false)
       stub_v2_plate(child, stub_search: false)
+
+      stub_api_v2_post('BaitLibraryLayout')
+      stub_api_v2_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
     end
 
     let!(:transfer_creation_request) do

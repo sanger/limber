@@ -59,9 +59,12 @@ let limberPlateView = function (defaultTab) {
   control.find('a[href="' + defaultTab + '"]').tab('show')
 
   plateElement.on('click', '.aliquot', function (event) {
+    control.find('a[data-plate-view="pools-view"]').tab('show')
+
     let pool = $(event.currentTarget).data('pool')
 
-    control.find('a[data-plate-view="pools-view"]').tab('show')
+    // Handle cases where pool is not defined to prevent errors
+    if (pool === undefined || pool === '') return
 
     plateElement
       .find('.aliquot[data-pool!=' + pool + ']')
