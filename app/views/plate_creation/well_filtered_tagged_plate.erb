@@ -1,0 +1,43 @@
+<%= page(:'tag-creation-page', prevent_row: true) do -%>
+  <%= vite_javascript_tag 'entrypoints/pages/tagged-plate.js', defer: true %>
+
+  <div id="labware-creator-config"
+      data-tag-plates-list="<%= @labware_creator.tag_plates_list.to_json %>"
+      data-dual-required="<%= @labware_creator.requires_tag2? %>"
+      data-enforce-same-template-within-pool="<%= @labware_creator.enforce_same_template_within_pool? %>">
+  </div>
+
+  <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
+    <%= content do %>
+      <%= card without_block: true, id: 'main-content' do %>
+        <div id="labware-summary-div">
+          <%= render partial: 'plates/plate', locals: { plate_presenter: @labware_creator, id: 'tagging-plate' } %>
+        </div>
+        <%= render partial: 'tag_information_panel', locals: { panel_type: 'tag plate', form: f, required: true } %>
+      <% end %>
+    <%- end -%>
+
+    <%= sidebar do %>
+      <%= card title: 'Tag plate addition', id: 'tag-help' do %>
+        <%= t("#{@labware_creator.help}_html", scope: [:tagged_plate, :help]) %>
+      <% end %>
+
+      <%= card title:'Set up tags' do %>
+        <%= f.hidden_field :purpose_uuid %>
+        <%= f.hidden_field :parent_uuid %>
+        <%= f.label :tag_plate_barcode %>
+        <%= f.text_field :tag_plate_barcode,
+                         data: {
+                           'info-panel'=>'tag-plate-info',
+                           'qcable-type'=>'tag plate',
+                           'approved-list'=>'tag_plates_list',
+                           'requires-dual-indexing' => @labware_creator.requires_tag2?
+                         },
+                         class: 'form-control', required: true %>
+        <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
+        <% @labware_creator.pipeline_filters %>
+        <small id="submit-summary" class="form-text text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>
+      <%- end -%>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
