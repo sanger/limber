@@ -260,7 +260,7 @@ export default {
     },
     tractionTubeOpenUrl() {
       if (!this.barcode || !this.tractionUIUrl) return ''
-      return `${this.tractionUIUrl}/pacbio/libraries?filter_value=source_identifier&filter_input=${this.barcode}`
+      return `${this.tractionUIUrl}/#/pacbio/libraries?filter_value=source_identifier&filter_input=${this.barcode}`
     },
     submitPayload() {
       return {
