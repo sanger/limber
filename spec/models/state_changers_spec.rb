@@ -9,10 +9,19 @@ RSpec.describe StateChangers::DefaultStateChanger do
   let(:plate) { json :plate, uuid: plate_uuid, state: plate_state }
   let(:well_collection) { json :well_collection, default_state: plate_state, custom_state: failed_wells }
   let(:failed_wells) { {} }
+
+  let(:tube_state) { 'passed' }
+  let(:target_state) { 'qc_complete' }
+  let(:tube_uuid) { SecureRandom.uuid }
+  let(:tube) { json :tube, uuid: tube_uuid, state: tube_state }
+
   let(:user_uuid) { SecureRandom.uuid }
   let(:reason) { 'Because I want to' }
   let(:customer_accepts_responsibility) { false }
-  subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
+
+  let(:labware_uuid) { plate_uuid } # default to plate, but can be overriddden for tube
+  let(:default_state_changer_for_plate) { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
+  let(:default_state_changer_for_tube) { StateChangers::DefaultStateChanger.new(api, tube_uuid, user_uuid) }
 
   describe '#move_to!' do
     before do
@@ -24,16 +33,22 @@ RSpec.describe StateChangers::DefaultStateChanger do
             customer_accepts_responsibility: customer_accepts_responsibility,
             reason: reason,
             target_state: target_state,
-            target_uuid: plate_uuid,
+            target_uuid: labware_uuid,
             user_uuid: user_uuid
           }
         ]
       )
     end
 
-    shared_examples 'a state changer' do
+    shared_examples 'a plate state changer' do
       it 'generates a state change' do
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        default_state_changer_for_plate.move_to!(target_state, reason, customer_accepts_responsibility)
+      end
+    end
+
+    shared_examples 'a tube state changer' do
+      it 'generates a state change' do
+        default_state_changer_for_tube.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
 
@@ -41,7 +56,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
       let(:plate_state) { 'pending' }
       let(:target_state) { 'passed' }
       let(:wells_to_pass) { nil }
-      it_behaves_like 'a state changer'
+      it_behaves_like 'a plate state changer'
     end
 
     context 'on a fully passed plate' do
@@ -57,7 +72,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
 
       let(:plate_state) { 'passed' }
       let(:target_state) { 'qc_complete' }
-      it_behaves_like 'a state changer'
+      it_behaves_like 'a plate state changer'
     end
 
     context 'on a partially failed plate' do
@@ -75,7 +90,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
         stub_api_get(plate_uuid, 'wells', body: well_collection)
       end
 
-      it_behaves_like 'a state changer'
+      it_behaves_like 'a plate state changer'
     end
 
     context 'on use of an automated plate state changer' do
