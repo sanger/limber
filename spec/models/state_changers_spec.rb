@@ -10,6 +10,9 @@ RSpec.describe StateChangers do
   let(:well_collection) { json :well_collection, default_state: plate_state, custom_state: failed_wells }
   let(:failed_wells) { {} }
 
+  let(:tube_uuid) { SecureRandom.uuid }
+  let(:tube) { json :tube, uuid: tube_uuid, state: tube_state }
+
   let(:user_uuid) { SecureRandom.uuid }
   let(:reason) { 'Because I want to' }
   let(:customer_accepts_responsibility) { false }
@@ -76,6 +79,40 @@ RSpec.describe StateChangers do
           stub_api_get(plate_uuid, 'wells', body: well_collection)
         end
 
+        it_behaves_like 'a state changer'
+      end
+    end
+  end
+
+  shared_examples 'a tube state changer' do
+    describe '#move_to!' do
+      before do
+        expect_api_v2_posts(
+          'StateChange',
+          [
+            {
+              contents: wells_to_pass,
+              customer_accepts_responsibility: customer_accepts_responsibility,
+              reason: reason,
+              target_state: target_state,
+              target_uuid: tube_uuid,
+              user_uuid: user_uuid
+            }
+          ]
+        )
+      end
+
+      context 'on a pending tube' do
+        let(:tube_state) { 'pending' }
+        let(:target_state) { 'passed' }
+        let(:wells_to_pass) { nil } # tubes don't have wells
+        it_behaves_like 'a state changer'
+      end
+
+      context 'on a passed tube' do
+        let(:tube_state) { 'passed' }
+        let(:target_state) { 'qc_complete' }
+        let(:wells_to_pass) { nil } # tubes don't have wells
         it_behaves_like 'a state changer'
       end
     end
@@ -164,5 +201,10 @@ RSpec.describe StateChangers do
   describe StateChangers::AutomaticPlateStateChanger do
     subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
     it_behaves_like 'an automated plate state changer'
+  end
+
+  describe StateChangers::TubeStateChanger do
+    subject { StateChangers::TubeStateChanger.new(api, tube_uuid, user_uuid) }
+    it_behaves_like 'a tube state changer'
   end
 end
