@@ -253,21 +253,26 @@ FactoryBot.define do
 
     # Configuration for a plate split to tube racks purpose
     factory :plate_split_to_tube_racks_purpose_config do
+      asset_type { 'tube_rack' }
+      target { 'TubeRack' }
+      size { 96 }
+      type { 'TubeRack::Purpose' }
       creator_class do
         {
           name: 'LabwareCreators::PlateSplitToTubeRacks',
           args: {
-            child_seq_tube_purpose_name: 'Seq Child Purpose',
+            child_seq_tube_purpose_name: 'SEQ Tube Purpose',
             child_seq_tube_name_prefix: 'SEQ',
-            child_seq_tube_rack_purpose_name: 'Seq Child TubeRack Purpose',
-            child_spare_tube_purpose_name: 'Spare Child Purpose',
+            child_seq_tube_rack_purpose_name: 'SEQ TubeRack Purpose',
+            child_spare_tube_purpose_name: 'SPR Tube Purpose',
             child_spare_tube_name_prefix: 'SPR',
-            child_spare_tube_rack_purpose_name: 'Spare Child TubeRack Purpose',
-            child_tube_rack_metadata_key: 'tube_rack_barcode'
+            child_spare_tube_rack_purpose_name: 'SPR TubeRack Purpose',
+            child_tube_rack_metadata_key: 'tube_rack_barcode',
+            ancestor_stock_tube_purpose_name: 'Ancestor Tube Purpose'
           }
         }
       end
-      ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
+      presenter_class { 'Presenters::TubeRackPresenter' }
     end
 
     # Configuration to set number_of_source_wells argument

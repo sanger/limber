@@ -176,6 +176,16 @@ module ApiUrlHelper
       stub_v2_labware(tube)
     end
 
+    def stub_v2_tube_rack_purpose(tube_rack_purpose)
+      arguments = [{ name: tube_rack_purpose[:name] }]
+      allow(Sequencescape::Api::V2::TubeRackPurpose).to receive(:find).with(*arguments).and_return([tube_rack_purpose])
+    end
+
+    def stub_v2_racked_tube(racked_tube)
+      arguments = [{ tube_rack: racked_tube.tube_rack.id, tube: racked_tube.tube.id }]
+      allow(Sequencescape::Api::V2::RackedTube).to receive(:find).with(*arguments).and_return(racked_tube)
+    end
+
     def stub_v2_user(user, swipecard = nil)
       # Find by UUID
       uuid_args = [{ uuid: user.uuid }]
