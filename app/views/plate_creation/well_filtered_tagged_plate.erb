@@ -21,10 +21,19 @@
       <%= card title: 'Tag plate addition', id: 'tag-help' do %>
         <%= t("#{@labware_creator.help}_html", scope: [:tagged_plate, :help]) %>
       <% end %>
-
       <%= card title:'Set up tags' do %>
         <%= f.hidden_field :purpose_uuid %>
         <%= f.hidden_field :parent_uuid %>
+        <%# Add filters to the form for the labware creator in create action. %>
+        <%= f.fields_for(:filters) do |filter| %>
+          <% @labware_creator.filters.each do |filter_key, filter_values| %>
+            <%= filter.fields_for filter_key do |request_types_form|%>
+              <% filter_values.each do |filter_value| %>
+                <%= request_types_form.hidden_field nil, value: filter_value  %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
         <%= f.label :tag_plate_barcode %>
         <%= f.text_field :tag_plate_barcode,
                          data: {
@@ -35,7 +44,6 @@
                          },
                          class: 'form-control', required: true %>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
-        <% @labware_creator.pipeline_filters %>
         <small id="submit-summary" class="form-text text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>
       <%- end -%>
     <%- end -%>
