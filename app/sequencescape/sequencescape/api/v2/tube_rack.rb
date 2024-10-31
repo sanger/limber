@@ -2,6 +2,7 @@
 
 # Tube racks can be barcoded, and contain racked tubes at defined locations.
 class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
+  include WellHelpers::Extensions # obviously tube racks do not have wells, refactor the helper?
   include Sequencescape::Api::V2::Shared::HasRequests
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
@@ -25,7 +26,7 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   end
 
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'
-  has_many :parents, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+  has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
 
   property :name
   property :size
