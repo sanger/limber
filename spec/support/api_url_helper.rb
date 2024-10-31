@@ -146,6 +146,24 @@ module ApiUrlHelper
       stub_v2_labware(plate)
     end
 
+    # Builds the basic v2 tube finding query.
+    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: false) # rubocop:todo Metrics/AbcSize
+      stub_barcode_search(tube.barcode.machine, tube) if stub_search
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube)
+      elsif custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+          custom_includes,
+          { uuid: tube.uuid }
+        ).and_return(tube)
+      else
+        allow(Sequencescape::Api::V2).to receive(:tube_for_presenter).with(uuid: tube.uuid).and_return(tube)
+      end
+
+      stub_v2_labware(tube)
+    end
+
     def stub_v2_polymetadata(polymetadata, metadatable_id)
       arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
       allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
@@ -165,15 +183,6 @@ module ApiUrlHelper
       query = double('tag_layout_template_query')
       allow(Sequencescape::Api::V2::TagLayoutTemplate).to receive(:paginate).and_return(query)
       allow(Sequencescape::Api::V2).to receive(:merge_page_results).with(query).and_return(templates)
-    end
-
-    # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
-      stub_barcode_search(tube.barcode.machine, tube) if stub_search
-      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
-
-      stub_v2_labware(tube)
     end
 
     def stub_v2_user(user, swipecard = nil)
