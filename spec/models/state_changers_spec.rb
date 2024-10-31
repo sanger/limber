@@ -225,7 +225,7 @@ RSpec.describe StateChangers do
     before { stub_v2_tube(v2_tube, stub_search: false, custom_query: [:tube_for_completion, tube_uuid]) }
 
     context 'when config request type matches in progress submissions' do
-      before { create :aggregation_purpose_config, uuid: v2_tube.purpose.uuid, name: tube_purpose_name }
+      before { create :automatic_state_changer_tube, uuid: v2_tube.purpose.uuid, name: tube_purpose_name }
 
       it 'changes tube state and triggers a work completion' do
         subject.move_to!(target_state, reason, customer_accepts_responsibility)
@@ -236,7 +236,7 @@ RSpec.describe StateChangers do
 
     context 'when config request type does not match in progress submissions' do
       before do
-        create :aggregation_purpose_config,
+        create :automatic_state_changer_tube,
                uuid: v2_tube.purpose.uuid,
                name: tube_purpose_name,
                work_completion_request_type: 'not_matching_type'
@@ -254,7 +254,7 @@ RSpec.describe StateChangers do
     # so I haven't tested a tube with a mix of request types.
     context 'when one of the multiple config request types matches the in progress submissions' do
       before do
-        create :aggregation_purpose_config,
+        create :automatic_state_changer_tube,
                uuid: v2_tube.purpose.uuid,
                name: tube_purpose_name,
                work_completion_request_type: %w[limber_bespoke_aggregation another_request_type]

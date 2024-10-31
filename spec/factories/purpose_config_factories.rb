@@ -333,6 +333,13 @@ FactoryBot.define do
         name { 'Pool tube' }
         creator_class { 'LabwareCreators::PooledTubesFromWholeTubes' }
       end
+
+      # Configuration for an state change tube
+      factory :automatic_state_changer_tube do
+        state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
+        creator_class { 'LabwareCreators::TenStamp' } # The wrong sort of creator for a tube
+        work_completion_request_type { 'limber_bespoke_aggregation' } # The wrong sort of request type for a tube
+      end
     end
   end
 
