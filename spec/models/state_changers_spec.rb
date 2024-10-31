@@ -193,6 +193,81 @@ RSpec.describe StateChangers do
     end
   end
 
+  shared_examples 'an automated tube state changer' do
+    let(:tube_state) { 'pending' }
+    let!(:tube) { create :v2_tube_for_aggregation, uuid: tube_uuid, state: tube_state }
+    let(:target_state) { 'passed' }
+    let(:wells_to_pass) { nil }
+    let(:tube_purpose_name) { 'Limber Bespoke Aggregation' }
+    let(:work_completion_request) do
+      { 'work_completion' => { target: tube_uuid, submissions: %w[pool-1-uuid pool-2-uuid], user: user_uuid } }
+    end
+    let(:work_completion) { json :work_completion }
+    let!(:work_completion_creation) do
+      stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
+    end
+
+    before do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: wells_to_pass,
+            customer_accepts_responsibility: customer_accepts_responsibility,
+            reason: reason,
+            target_state: target_state,
+            target_uuid: tube_uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+    end
+    before { stub_v2_tube(tube, stub_search: false, custom_query: [:tube_for_completion, tube_uuid]) }
+
+    context 'when config request type matches in progress submissions' do
+      before { create :aggregation_purpose_config, uuid: tube.purpose.uuid, name: tube_purpose_name }
+
+      it 'changes tube state and triggers a work completion' do
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+
+        expect(work_completion_creation).to have_been_made.once
+      end
+    end
+
+    context 'when config request type does not match in progress submissions' do
+      before do
+        create :aggregation_purpose_config,
+               uuid: tube.purpose.uuid,
+               name: tube_purpose_name,
+               work_completion_request_type: 'not_matching_type'
+      end
+
+      it 'changes tube state but does not trigger a work completion' do
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+
+        expect(work_completion_creation).to_not have_been_made
+      end
+    end
+
+    # The ability to have multiple request types in the config was added for scRNA Core pipeline.
+    # The expectation was that any one tube would only have one of the request types on it,
+    # so I haven't tested a tube with a mix of request types.
+    context 'when one of the multiple config request types matches the in progress submissions' do
+      before do
+        create :aggregation_purpose_config,
+               uuid: tube.purpose.uuid,
+               name: tube_purpose_name,
+               work_completion_request_type: %w[limber_bespoke_aggregation another_request_type]
+      end
+
+      it 'changes tube state and triggers a work completion' do
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+
+        expect(work_completion_creation).to have_been_made.once
+      end
+    end
+  end
+
   describe StateChangers::PlateStateChanger do
     subject { StateChangers::PlateStateChanger.new(api, plate_uuid, user_uuid) }
     it_behaves_like 'a plate state changer'
@@ -206,5 +281,10 @@ RSpec.describe StateChangers do
   describe StateChangers::TubeStateChanger do
     subject { StateChangers::TubeStateChanger.new(api, tube_uuid, user_uuid) }
     it_behaves_like 'a tube state changer'
+  end
+
+  describe StateChangers::AutomaticTubeStateChanger do
+    subject { StateChangers::AutomaticTubeStateChanger.new(api, tube_uuid, user_uuid) }
+    it_behaves_like 'an automated tube state changer'
   end
 end
