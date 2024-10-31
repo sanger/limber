@@ -2,6 +2,17 @@
   <%= render partial: 'tube_printing' %>
   <%= render(partial: 'labware/qc_data_upload') %>
 
+ <% if presenter.try(:export_to_traction)%>
+  <%= card title: 'Export to Traction' do %>
+        <div id="pool-xp-tube-submit-panel"
+          data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+          data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+          data-traction-service-url="<%= Limber::Application.config.traction_service_uri %>" 
+          data-traction-ui-url="<%= Limber::Application.config.traction_ui_uri %>" 
+          data-barcode="<%= presenter.labware.barcode %>">
+        </div>
+  <%end%>
+<%end%>
   <%= card title: 'QC Information' do %>
     <div id="qc-information"
          data-asset-uuid="<%= @presenter.uuid %>"
@@ -31,7 +42,9 @@
     <% else %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>
+   
   <% end %>
+
 
   <%= card title: 'Adding a Comment' do %>
     <div id="asset-comments-add-form" data-comment-title="<%= presenter.comment_title %>"></div>
