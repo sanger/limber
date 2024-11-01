@@ -91,6 +91,7 @@ FactoryBot.define do
   # API v2 tube
   factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded_v2] do
     skip_create
+
     sequence(:id, &:to_s)
     uuid
     name { 'My tube' }
@@ -133,6 +134,8 @@ FactoryBot.define do
       # The CustomMetadatumCollection will be cached as a relationship in the after(:build) block.
       custom_metadatum_collection { nil }
     end
+
+    to_create { |instance, _evaluator| instance.mark_as_persisted! }
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |asset, evaluator|
