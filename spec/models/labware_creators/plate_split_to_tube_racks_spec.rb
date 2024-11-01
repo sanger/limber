@@ -122,6 +122,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
+  let(:plate_includes) do
+    'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
+      'wells.downstream_tubes.custom_metadatum_collection'
+  end
+
   # parent plate v1 api
   let(:parent_v1) { json :plate_with_metadata, uuid: parent_uuid, barcode_number: 6, qc_files_actions: %w[read create] }
 
@@ -363,6 +368,114 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
+  describe '#create_labware' do
+    context 'when child_tube_racks is blank' do
+      before { allow(subject).to receive(:create_child_tubes_and_racks).and_return([]) }
+
+      it 'adds an error and returns false' do
+        result = subject.create_labware!
+
+        expect(result).to be_falsey
+        expect(subject.errors[:base]).to include(
+          'Failed to create child tube racks and tubes, nothing returned from API creation call'
+        )
+      end
+    end
+  end
+
+  describe '#redirection_target' do
+    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
+
+    it 'returns the parent object' do
+      expect(subject.redirection_target).to eq(parent_plate)
+    end
+  end
+
+  describe '#anchor' do
+    it 'returns the string "relatives_tab"' do
+      expect(subject.anchor).to eq('relatives_tab')
+    end
+  end
+
+  describe '#tube_rack_metadata_key' do
+    context 'when child_tube_rack_metadata_key is missing' do
+      before { allow(subject).to receive(:tube_rack_metadata_key_from_config).and_return(nil) }
+
+      it 'raises an error' do
+        expect { subject.send(:tube_rack_metadata_key) }.to raise_error(
+          RuntimeError,
+          "Missing purpose configuration argument 'child_tube_rack_metadata_key'"
+        )
+      end
+    end
+  end
+
+  describe '#generate_tube_uuids_by_barcode' do
+    let(:tube1) { double('Tube', barcode: double('Barcode', human: 'barcode1'), uuid: 'uuid1') }
+    let(:tube2) { double('Tube', barcode: double('Barcode', human: 'barcode2'), uuid: 'uuid2') }
+    let(:racked_tube1) { double('RackedTube', tube: tube1) }
+    let(:racked_tube2) { double('RackedTube', tube: tube2) }
+    let(:tube_rack) { double('TubeRack', racked_tubes: [racked_tube1, racked_tube2]) }
+    let(:child_tube_racks) { { 'rack1' => tube_rack } }
+
+    before { allow(subject).to receive(:child_tube_racks).and_return(child_tube_racks) }
+
+    it 'generates a hash mapping tube barcodes to their UUIDs' do
+      result = subject.send(:generate_tube_uuids_by_barcode)
+
+      expected_result = { 'barcode1' => 'uuid1', 'barcode2' => 'uuid2' }
+
+      expect(result).to eq(expected_result)
+    end
+  end
+
+  describe '#validate_tube_barcodes_for_well!' do
+    let(:well) { double('Well', position: { name: 'A1' }) }
+
+    context 'when tube_barcodes_for_well is present' do
+      it 'does not raise an error' do
+        tube_barcodes_for_well = %w[barcode1 barcode2]
+        expect { subject.validate_tube_barcodes_for_well!(tube_barcodes_for_well, well) }.not_to raise_error
+      end
+    end
+
+    context 'when tube_barcodes_for_well is not present' do
+      it 'raises an error' do
+        tube_barcodes_for_well = nil
+        expect { subject.validate_tube_barcodes_for_well!(tube_barcodes_for_well, well) }.to raise_error(
+          RuntimeError,
+          "Unable to identify the child tube barcodes for parent well 'A1'"
+        )
+      end
+    end
+  end
+
+  describe '#fetch_tube_uuid_for_barcode' do
+    let(:well) { double('Well', position: { name: 'A1' }) }
+
+    before do
+      allow(subject).to receive(:tube_uuids_by_barcode).and_return({ 'barcode1' => 'uuid1', 'barcode2' => 'uuid2' })
+    end
+
+    context 'when the tube UUID is found' do
+      it 'returns the tube UUID' do
+        tube_barcode_for_well = 'barcode1'
+        result = subject.send(:fetch_tube_uuid_for_barcode, tube_barcode_for_well, well)
+        expect(result).to eq('uuid1')
+      end
+    end
+
+    context 'when the tube UUID is not found' do
+      it 'raises an error' do
+        tube_barcode_for_well = 'unknown_barcode'
+        expect { subject.send(:fetch_tube_uuid_for_barcode, tube_barcode_for_well, well) }.to raise_error(
+          RuntimeError,
+          "Unable to identify the newly created child tube for parent well 'A1'"
+        )
+      end
+    end
+  end
+
   context '#must_have_correct_number_of_tubes_in_rack_files' do
     let(:num_parent_wells) { 96 }
     let(:num_parent_unique_samples) { 48 }
@@ -370,13 +483,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     let(:num_contingency_tubes) { 48 }
 
     before do
-      stub_v2_plate(
-        parent_plate,
-        stub_search: false,
-        custom_includes:
-          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
-      )
+      stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes)
       allow(subject).to receive(:num_sequencing_tubes).and_return(num_sequencing_tubes)
       allow(subject).to receive(:num_contingency_tubes).and_return(num_contingency_tubes)
       allow(subject).to receive(:num_parent_wells).and_return(num_parent_wells)
@@ -493,15 +600,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   context '#check_tube_rack_barcodes_differ_between_files' do
-    before do
-      stub_v2_plate(
-        parent_plate,
-        stub_search: false,
-        custom_includes:
-          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
-      )
-    end
+    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'when files are not present' do
       before { subject.validate }
@@ -611,15 +710,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   context '#check_tube_barcodes_differ_between_files' do
-    before do
-      stub_v2_plate(
-        parent_plate,
-        stub_search: false,
-        custom_includes:
-          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
-      )
-    end
+    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'when files are not present' do
       before { subject.validate }
@@ -807,13 +898,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
 
     before do
-      stub_v2_plate(
-        parent_plate,
-        stub_search: false,
-        custom_includes:
-          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
-      )
+      stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes)
       stub_api_get(parent_uuid, body: parent_v1)
     end
 
