@@ -195,10 +195,12 @@ RSpec.describe StateChangers do
 
   shared_examples 'an automated tube state changer' do
     let(:tube_state) { 'pending' }
-    let!(:v2_tube) { create :v2_tube, uuid: tube_uuid, state: tube_state }
+    let(:tube_purpose_name) { 'example-purpose' }
+    let!(:v2_tube) do
+      create :v2_tube_with_submissions_and_requests, uuid: tube_uuid, state: tube_state, purpose_name: tube_purpose_name
+    end
     let(:target_state) { 'passed' }
     let(:wells_to_pass) { nil }
-    let(:tube_purpose_name) { 'Limber Bespoke Aggregation' }
     let(:work_completion_request) do
       { 'work_completion' => { target: tube_uuid, submissions: %w[pool-1-uuid pool-2-uuid], user: user_uuid } }
     end
@@ -225,7 +227,7 @@ RSpec.describe StateChangers do
     before { stub_v2_tube(v2_tube, stub_search: false, custom_query: [:tube_for_completion, tube_uuid]) }
 
     context 'when config request type matches in progress submissions' do
-      before { create :automatic_state_changer_tube, uuid: v2_tube.purpose.uuid, name: tube_purpose_name }
+      before { create :aggregation_tube_purpose_config, uuid: v2_tube.purpose.uuid, name: tube_purpose_name }
 
       it 'changes tube state and triggers a work completion' do
         subject.move_to!(target_state, reason, customer_accepts_responsibility)
@@ -236,7 +238,7 @@ RSpec.describe StateChangers do
 
     context 'when config request type does not match in progress submissions' do
       before do
-        create :automatic_state_changer_tube,
+        create :aggregation_tube_purpose_config,
                uuid: v2_tube.purpose.uuid,
                name: tube_purpose_name,
                work_completion_request_type: 'not_matching_type'
@@ -254,7 +256,7 @@ RSpec.describe StateChangers do
     # so I haven't tested a tube with a mix of request types.
     context 'when one of the multiple config request types matches the in progress submissions' do
       before do
-        create :automatic_state_changer_tube,
+        create :aggregation_tube_purpose_config,
                uuid: v2_tube.purpose.uuid,
                name: tube_purpose_name,
                work_completion_request_type: %w[limber_bespoke_aggregation another_request_type]
