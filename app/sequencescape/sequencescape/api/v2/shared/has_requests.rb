@@ -58,7 +58,7 @@ module Sequencescape::Api::V2::Shared
 
     # Finding in progress requests (set directly on aliquots on transfer into a new labware)
     def requests_in_progress(request_types_to_complete: nil)
-      requests = aliquots&.flat_map(&:request)&.compact
+      requests = aliquots&.map(&:request).compact
       return [] if requests.blank?
 
       if request_types_to_complete.present?
@@ -70,7 +70,7 @@ module Sequencescape::Api::V2::Shared
 
     # Based on in_progress requests
     def in_progress_submission_uuids(request_types_to_complete: nil)
-      requests_in_progress(request_types_to_complete:).flat_map(&:submission_uuid).uniq
+      requests_in_progress(request_types_to_complete:).map(&:submission_uuid).uniq
     end
 
     def all_requests
