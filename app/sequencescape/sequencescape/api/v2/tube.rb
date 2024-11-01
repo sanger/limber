@@ -52,7 +52,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   delegate :requests_as_source, to: :receptacle
 
   # Mocked out for the time being
-  def in_progress_submission_uuids
+  def in_progress_submission_uuids(request_types_to_complete: nil)
     []
   end
 
