@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency 'well_helpers'
+
 # Tube racks can be barcoded, and contain racked tubes at defined locations.
 class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   include WellHelpers::Extensions # obviously tube racks do not have wells, refactor the helper?
@@ -32,7 +34,6 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   property :size
   property :number_or_rows
   property :number_of_columns
-  property :tuberack_barcode
 
   property :created_at, type: :time
   property :updated_at, type: :time
