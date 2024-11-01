@@ -45,11 +45,11 @@ module StateChangers
     # rubocop:enable Style/OptionalBooleanParameter
 
     def complete_outstanding_requests
-      in_prog_submissions =
+      in_progress_submission_uuids =
         v2_labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
-      return if in_prog_submissions.blank?
+      return if in_progress_submission_uuids.blank?
 
-      api.work_completion.create!(submissions: in_prog_submissions, target: v2_labware.uuid, user: user_uuid)
+      api.work_completion.create!(submissions: in_progress_submission_uuids, target: v2_labware.uuid, user: user_uuid)
     end
   end
 
