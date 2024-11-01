@@ -158,7 +158,7 @@ module ApiUrlHelper
           { uuid: tube.uuid }
         ).and_return(tube)
       else
-        allow(Sequencescape::Api::V2).to receive(:tube_for_presenter).with(uuid: tube.uuid).and_return(tube)
+        allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with({ uuid: tube.uuid }).and_return(tube)
       end
 
       stub_v2_labware(tube)

@@ -10,6 +10,11 @@
 #      - AutomaticTubeStateChanger [includes AutomaticBehaviour]
 #
 module StateChangers
+  def self.lookup_for(purpose_uuid)
+    (details = Settings.purposes[purpose_uuid]) || raise("Unknown purpose UUID: #{purpose_uuid}")
+    details[:state_changer_class].constantize
+  end
+
   # Plate state changer to automatically complete specified work requests.
   # This is the abstract behaviour.
   # #
@@ -82,11 +87,6 @@ module StateChangers
 
     def labware
       raise 'Must be implemented on subclass'
-    end
-
-    def self.lookup_for(purpose_uuid)
-      (details = Settings.purposes[purpose_uuid]) || raise("Unknown purpose UUID: #{purpose_uuid}")
-      details[:state_changer_class].constantize
     end
   end
 
