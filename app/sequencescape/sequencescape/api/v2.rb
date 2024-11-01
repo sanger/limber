@@ -22,7 +22,7 @@ module Sequencescape::Api::V2
     }
   ].freeze
 
-  # NB. a receptale can have many aliquots, and aliquot.request is an array (for some reason)
+  # NB. a receptacle can have many aliquots, and aliquot.request is an array (for some reason)
   # Sequencescape::Api::V2::TubeRack.last.racked_tubes.first.tube.receptacle.aliquots.first.request.first.request_type
   TUBE_RACK_PRESENTER_INCLUDES = [
     :purpose,
