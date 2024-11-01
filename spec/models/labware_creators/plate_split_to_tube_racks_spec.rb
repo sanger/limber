@@ -435,14 +435,14 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'when tube_barcodes_for_well is present' do
       it 'does not raise an error' do
         tube_barcodes_for_well = %w[barcode1 barcode2]
-        expect { subject.validate_tube_barcodes_for_well!(tube_barcodes_for_well, well) }.not_to raise_error
+        expect { subject.send(:validate_tube_barcodes_for_well!, tube_barcodes_for_well, well) }.not_to raise_error
       end
     end
 
     context 'when tube_barcodes_for_well is not present' do
       it 'raises an error' do
         tube_barcodes_for_well = nil
-        expect { subject.validate_tube_barcodes_for_well!(tube_barcodes_for_well, well) }.to raise_error(
+        expect { subject.send(:validate_tube_barcodes_for_well!, tube_barcodes_for_well, well) }.to raise_error(
           RuntimeError,
           "Unable to identify the child tube barcodes for parent well 'A1'"
         )
