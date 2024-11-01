@@ -99,6 +99,7 @@ FactoryBot.define do
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
     receptacle { create(:v2_receptacle, qc_results: [], aliquots: aliquots) }
+    sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + siblings }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 
@@ -115,6 +116,19 @@ FactoryBot.define do
       aliquots { create_list aliquot_factory, aliquot_count, library_state:, outer_request: }
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+
+      siblings_count { 0 }
+      sibling_default_state { 'passed' }
+      siblings do
+        Array.new(siblings_count) do |i|
+          {
+            name: "Sibling #{i + 1}",
+            ean13_barcode: (1_234_567_890_123 + i).to_s,
+            state: sibling_default_state,
+            uuid: "sibling-tube-#{i}"
+          }
+        end
+      end
 
       # The CustomMetadatumCollection will be cached as a relationship in the after(:build) block.
       custom_metadatum_collection { nil }
