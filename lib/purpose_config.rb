@@ -11,7 +11,7 @@ class PurposeConfig
 
   class_attribute :default_state_changer, :default_options
 
-  self.default_state_changer = 'StateChangers::DefaultStateChanger'
+  self.default_state_changer = 'StateChangers::PlateStateChanger'
 
   def self.load(name, options, store, submission_templates, label_template_config)
     case options.fetch(:asset_type)
