@@ -63,7 +63,6 @@ import '@/javascript/multi-stamp/index.js'
 import '@/javascript/qc-information/index.js'
 import '@/javascript/tubes-to-rack/index.js'
 import '@/javascript/validate-paired-tubes/index.js'
-import '@/javascript/pool-xp-tube-panel/index.js'
 
 // Load simple javascript files
 import '@/javascript/plain-javascript/page-reloader.js'

@@ -158,7 +158,7 @@ LBSN-9216 Lib PCR Pool XP:
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
-  :presenter_class: Presenters::PcrPoolXpPresenter
+  :presenter_class: Presenters::FinalTubePresenter
   :file_links:
     - name: 'Download MBrave UMI file'
       id: 'bioscan_mbrave'
