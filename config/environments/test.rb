@@ -73,6 +73,4 @@ Rails.application.configure do
   config.disable_animations = true
 
   config.sprint_uri = 'http://example_sprint.com/graphql'
-  config.traction_ui_uri = 'http://localhost:5173/#'
-  config.traction_service_uri = 'http://localhost:3100/v1'
 end
