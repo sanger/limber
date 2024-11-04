@@ -5,6 +5,7 @@ RVI Bait Capture Library: # Top of the pipeline (Library Prep)
   filters:
     request_type_key:
       - limber_bait_capture_library_prep
+      - limber_reisc # Typically this should occur on RVI Lib PCR XP
     library_type:
       - RVI-BCL
   library_pass:
