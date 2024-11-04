@@ -76,6 +76,7 @@ module ApiUrlHelper
     end
   end
 
+  # rubocop:disable Metrics/ModuleLength
   module V2Helpers
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
@@ -176,6 +177,29 @@ module ApiUrlHelper
       stub_v2_labware(tube)
     end
 
+    # rubocop:disable Metrics/AbcSize
+    def stub_v2_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
+      stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube_rack)
+      elsif custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+          custom_includes,
+          { uuid: tube_rack.uuid }
+        ).and_return(tube_rack)
+      else
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_for_presenter).with(uuid: tube_rack.uuid).and_return(
+          tube_rack
+        )
+      end
+
+      arguments = [{ uuid: labware.uuid }]
+      allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([labware])
+    end
+
+    # rubocop:enable Metrics/AbcSize
+
     def stub_v2_tube_rack_purpose(tube_rack_purpose)
       arguments = [{ name: tube_rack_purpose[:name] }]
       allow(Sequencescape::Api::V2::TubeRackPurpose).to receive(:find).with(*arguments).and_return([tube_rack_purpose])
@@ -198,6 +222,8 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
     end
   end
+
+  # rubocop:enable Metrics/ModuleLength
 end
 
 RSpec.configure do |config|
