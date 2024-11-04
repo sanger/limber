@@ -21,7 +21,7 @@ FactoryBot.define do
     # For example:
     # { 'A1' => 'Human all exon 50MB', 'B1' => 'Human all exon 50MB',
     #   'C1' => 'Mouse all exon', 'D1' => 'Mouse all exon'}
-    layout do
+    well_layout do
       wells = WellHelpers.column_order.dup
       pools.each_with_object({}) { |pool, hash| wells.shift(pool[:size]).each { |well| hash[well] = pool[:bait] } }
     end

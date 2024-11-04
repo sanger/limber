@@ -80,6 +80,8 @@ Rails.application.configure do
   config.request_options = { 'read_length' => 11 }
   config.pmb_uri = ENV.fetch('PMB_URI', rewrite_localhost('http://localhost:3002/v1/'))
   config.sprint_uri = 'http://sprint.psd.sanger.ac.uk/graphql'
+  config.traction_ui_uri = 'http://localhost:5173/#'
+  config.traction_service_uri = 'http://localhost:3100/v1'
 
   # Enable 'work in progress' pipelines by default in development mode, to save having to rename files.
   # Configured for other environments in the deployment project.
