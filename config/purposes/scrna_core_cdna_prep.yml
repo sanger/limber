@@ -80,7 +80,7 @@ LRC PBMC Pools:
       id: 'hamilton_lrc_pbmc_pools_to_cellaca_count'
 # Plate containing pooled PBMCs from different donors.
 # This plate has come from faculty and is entering the SeqOps pipeline for the first time here.
-LRC PBMC Pools Input:
+LRC GEM-X 5p GEMs Input:
   :asset_type: plate
   # stock_plate has to be true so that it appears in the 'Purpose' list when generating a sample manifest in Sequencescape
   :stock_plate: true
