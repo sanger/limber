@@ -118,6 +118,8 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   let(:dest_plate) { create(:v2_plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 3) }
 
+  # NB. This expected content will change if you modify the value of constants in
+  # the config/initializers/scrna_config.rb file
   let(:expected_content) do
     [
       ['Workflow', workflow],
@@ -130,41 +132,30 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
         'Sample Volume (µL)',
         'Resuspension Volume (µL)'
       ],
-      %w[DN1S A1 DN3U A1 50.0 11.9],
-      %w[DN1S B1 DN3U B1 25.0 11.9],
-      %w[DN1S A2 DN3U A1 10.0 11.9],
-      %w[DN1S B2 DN3U B1 8.3 11.9],
-      %w[DN1S A3 DN3U A1 5.6 11.9],
-      %w[DN1S B3 DN3U B1 5.0 11.9],
-      %w[DN2T C1 DN3U A1 16.7 11.9],
-      %w[DN2T D1 DN3U B1 12.5 11.9],
-      %w[DN2T C2 DN3U A1 7.1 11.9],
-      %w[DN2T D2 DN3U B1 6.2 11.9],
-      %w[DN2T C3 DN3U A1 5.0 11.9],
-      %w[DN2T D3 DN3U B1 5.0 11.9]
+      %w[DN1S A1 DN3U A1 60.0 71.4],
+      %w[DN1S B1 DN3U B1 60.0 71.4],
+      %w[DN1S A2 DN3U A1 60.0 71.4],
+      %w[DN1S B2 DN3U B1 50.0 71.4],
+      %w[DN1S A3 DN3U A1 33.3 71.4],
+      %w[DN1S B3 DN3U B1 30.0 71.4],
+      %w[DN2T C1 DN3U A1 60.0 71.4],
+      %w[DN2T D1 DN3U B1 60.0 71.4],
+      %w[DN2T C2 DN3U A1 42.9 71.4],
+      %w[DN2T D2 DN3U B1 37.5 71.4],
+      %w[DN2T C3 DN3U A1 27.3 71.4],
+      %w[DN2T D3 DN3U B1 25.0 71.4]
     ]
   end
 
-  let!(:study) { create(:study_with_poly_metadata, poly_metadata: []) } # empty poly_metadata
-
-  let(:cell_count_key) { 'scrna_core_pbmc_donor_pooling_required_number_of_cells' }
-  let(:default_cell_count) { 5000 }
+  # create a study with empty poly_metadata, so no override for required cell count
+  let!(:study) { create(:study_with_poly_metadata, poly_metadata: []) }
 
   before do
     assign(:ancestor_plate_list, [source_plate1, source_plate2])
     assign(:workflow, workflow)
     assign(:plate, dest_plate)
     all_source_wells.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study) }
-    Settings.purposes = {
-      dest_plate.purpose.uuid => {
-        presenter_class: {
-          args: {
-            default_required_number_of_cells: default_cell_count,
-            study_required_number_of_cells_key: cell_count_key
-          }
-        }
-      }
-    }
+    Settings.purposes = { dest_plate.purpose.uuid => { presenter_class: {} } }
   end
 
   context 'without study-specific cell count option' do
@@ -174,9 +165,13 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
   end
 
   context 'with study-specific cell count option' do
+    # Constant from config/initializers/scrna_config.rb
+    let(:cell_count_key) { Rails.application.config.scrna_config[:study_required_number_of_cells_key] }
+
     let!(:study) do
+      # create a study including poly_metadata to override the required cell count
       poly_metadatum = create(:poly_metadatum, key: cell_count_key, value: '6000')
-      create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
+      create(:study_with_poly_metadata, poly_metadata: [poly_metadatum])
     end
 
     let(:expected_content) do

@@ -33,15 +33,13 @@ module Validators
     def validate(presenter)
       return unless presenter.labware.state == 'pending'
 
-      studies = source_studies_without_config(presenter, study_required_number_of_cells_key(presenter))
+      study_required_number_of_cells_key = Rails.application.config.scrna_config[:study_required_number_of_cells_key]
+      required_number_of_cells = Rails.application.config.scrna_config[:required_number_of_cells]
+
+      studies = source_studies_without_config(presenter, study_required_number_of_cells_key)
       return if studies.empty?
 
-      formatted_string =
-        format(
-          STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS,
-          default_required_number_of_cells(presenter),
-          studies.join(', ')
-        )
+      formatted_string = format(STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS, required_number_of_cells, studies.join(', '))
       presenter.errors.add(:required_number_of_cells, formatted_string)
     end
 
@@ -64,22 +62,6 @@ module Validators
         .select { |study| study.poly_metadatum_by_key(key).blank? }
         .map(&:name)
         .uniq
-    end
-
-    # Retrieves the default required number of cells from the purpose config.
-    #
-    # @return [Integer] the default required number of cells
-    # :reek:UtilityFunction { public_methods_only: true }
-    def default_required_number_of_cells(presenter)
-      Settings.purposes[presenter.labware.purpose.uuid][:presenter_class][:args][:default_required_number_of_cells]
-    end
-
-    # Retrieves the poly_metadatum key for the study-specific required number of cells.
-    #
-    # @return [String] the poly_metadatum key
-    # :reek:UtilityFunction { public_methods_only: true }
-    def study_required_number_of_cells_key(presenter)
-      Settings.purposes[presenter.labware.purpose.uuid][:presenter_class][:args][:study_required_number_of_cells_key]
     end
   end
 end

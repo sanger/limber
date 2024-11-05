@@ -34,23 +34,14 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
     create(:v2_plate, wells:)
   end
 
-  let(:required_number_of_cells) { 30_000 }
-  let(:wastage_factor) { 0.95238 }
-  let(:desired_chip_loading_concentration) { 2_400 }
+  # Constants from config/initializers/scrna_config.rb
+  let(:scrna_config) { Rails.application.config.scrna_config }
 
-  before do
-    Settings.purposes = {
-      plate.purpose.uuid => {
-        presenter_class: {
-          args: {
-            required_number_of_cells:,
-            wastage_factor:,
-            desired_chip_loading_concentration:
-          }
-        }
-      }
-    }
-  end
+  let(:required_number_of_cells) { scrna_config[:required_number_of_cells] }
+  let(:wastage_factor) { scrna_config[:wastage_factor] }
+  let(:desired_chip_loading_concentration) { scrna_config[:desired_chip_loading_concentration] }
+
+  before { Settings.purposes = { plate.purpose.uuid => { presenter_class: {} } } }
 
   let(:workflow) { 'scRNA Core LRC PBMC Pools Cell Count' }
 

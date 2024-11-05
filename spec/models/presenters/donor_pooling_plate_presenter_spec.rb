@@ -71,22 +71,16 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
 
   let(:warning_template) { Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS }
 
-  let(:option_key) { 'scrna_core_pbmc_donor_pooling_required_number_of_cells' }
-  let(:default_cell_count) { 5000 }
+  # Constants from config/initializers/scrna_config.rb
+  let(:scrna_config) { Rails.application.config.scrna_config }
+
+  let(:option_key) { scrna_config[:study_required_number_of_cells_key] }
+  let(:default_cell_count) { scrna_config[:required_number_of_cells] }
 
   subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
 
   before do
-    Settings.purposes = {
-      labware.purpose.uuid => {
-        presenter_class: {
-          args: {
-            default_required_number_of_cells: default_cell_count,
-            study_required_number_of_cells_key: option_key
-          }
-        }
-      }
-    }
+    Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }
     source_wells_to_a1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_a1) }
     source_wells_to_b1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_b1) }
   end
