@@ -26,7 +26,10 @@ module LabwareCreators
 
     def bait_library_layout_preview
       @bait_library_layout_preview ||=
-        Sequencescape::Api::V2::BaitLibraryLayout.preview(plate_uuid: parent_uuid, user_uuid: user_uuid).first.layout
+        Sequencescape::Api::V2::BaitLibraryLayout
+          .preview(plate_uuid: parent_uuid, user_uuid: user_uuid)
+          .first
+          .well_layout
     end
 
     def create_labware!
