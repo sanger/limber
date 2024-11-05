@@ -321,8 +321,7 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.10)
       io-console (~> 0.5)
-    rexml (3.3.6)
-      strscan
+    rexml (3.3.9)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -392,7 +391,6 @@ GEM
     sprint_client (0.1.0)
     state_machines (0.6.0)
     stringio (3.1.1)
-    strscan (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-haml (4.0.3)
