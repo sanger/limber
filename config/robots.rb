@@ -3626,16 +3626,16 @@ ROBOT_CONFIG =
       name: 'Hamilton LRC PBMC Pools (or Input) => LRC GEM-X 5p Chip',
       require_robot: true,
       beds: {
-        bed(8).barcode => {
+        bed(5).barcode => {
           purpose: ['LRC PBMC Pools', 'LRC PBMC Pools Input'],
           states: ['passed'],
-          label: 'Bed 8'
+          label: 'Bed 5'
         },
         bed(15).barcode => {
           purpose: 'LRC GEM-X 5p Chip',
           states: ['pending'],
           label: 'Bed 15',
-          parent: bed(8).barcode,
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }
@@ -3655,10 +3655,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 15'
         },
-        bed(5).barcode => {
+        bed(4).barcode => {
           purpose: 'LRC GEM-X 5p GEMs',
           states: ['pending'],
-          label: 'Bed 5',
+          label: 'Bed 4',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
