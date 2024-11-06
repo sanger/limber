@@ -2,6 +2,7 @@
 
 # This module can be included to labware creators to add well filtering behaviour.
 # It builds transfers as direct stamp, which should be overridden if necessary.
+# It also allows accessing the pipeline filters on the labware creator.
 module LabwareCreators::WellFilterBehaviour
   extend ActiveSupport::Concern
 
