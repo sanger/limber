@@ -4043,4 +4043,50 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    custom_robot(
+      'bravo-lbr-cherrypick-to-lrnaf-frag',
+      name: 'Bravo LBR Cherrypick => LRNAF Frag',
+      require_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LBR Cherrypick',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('2,3').barcode => {
+          purpose: 'LRNAF Frag',
+          states: ['pending'],
+          label: 'Carousel 2,3',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-lrnaf-frag-to-lb-cdna',
+      name: 'Bravo LRNAF Frag => LB cDNA',
+      require_robot: true,
+      beds: {
+        bed('8').barcode => {
+          purpose: 'LRNAF Frag',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('3,4').barcode => {
+          purpose: 'LB cDNA',
+          states: ['pending'],
+          label: 'Carousel 3,4',
+          parent: bed(8).barcode,
+          target_state: 'started'
+        },
+        car('4,3').barcode => {
+          purpose: 'LB cDNA XP',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: car('3,4').barcode
+        }
+      }
+    )
   end
