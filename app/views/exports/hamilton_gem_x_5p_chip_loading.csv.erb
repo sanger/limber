@@ -22,7 +22,11 @@
   # Constants from config/initializers/scrna_config.rb
   scrna_config = Rails.application.config.scrna_config
 
-  required_number_of_cells = scrna_config[:required_number_of_cells]
+   # fetch default value for required_number_of_cells_per_sample_in_pool
+   required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
+   # and we will override it with the value from the study using this key if present (see further down)
+   study_required_number_of_cells_per_sample_in_pool_key = scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
+
   wastage_factor = scrna_config[:wastage_factor]
   desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
   desired_sample_volume = scrna_config[:desired_sample_volume]
@@ -45,8 +49,16 @@
   ancestral_plate_wells = @ancestor_plate.wells.index_by(&:location)
   rows_array = []
   each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
-    number_of_samples =  ancestral_plate_wells[src_location].aliquots.length
-    resuspension_volume = (number_of_samples * required_number_of_cells * wastage_factor).to_f / desired_chip_loading_concentration
+    src_well = ancestral_plate_wells[src_location]
+    number_of_samples =  src_well.aliquots.length
+
+    # Use the study's required number of cells if available, otherwise use the default
+    # NB. assumption that all aliquots in a well are from the same study
+    poly_metadatum = src_well.aliquots.first.study.poly_metadatum_by_key(study_required_number_of_cells_per_sample_in_pool_key)
+    study_required_number_of_cells_per_sample_in_pool = poly_metadatum&.value.to_i.nonzero?
+    required_number_of_cells_per_sample_in_pool = study_required_number_of_cells_per_sample_in_pool || required_number_of_cells_per_sample_in_pool
+
+    resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor).to_f / desired_chip_loading_concentration
     source_well_volume = resuspension_volume - volume_taken_for_cell_counting
     sample_volume = desired_number_of_cells_per_chip_well.to_f/desired_chip_loading_concentration
     pbs_volume = desired_sample_volume - sample_volume

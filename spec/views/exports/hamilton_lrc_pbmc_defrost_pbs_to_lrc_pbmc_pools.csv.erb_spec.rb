@@ -166,10 +166,12 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   context 'with study-specific cell count option' do
     # Constant from config/initializers/scrna_config.rb
-    let(:cell_count_key) { Rails.application.config.scrna_config[:study_required_number_of_cells_key] }
+    let(:cell_count_key) do
+      Rails.application.config.scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
+    end
 
     let!(:study) do
-      # create a study including poly_metadata to override the required cell count
+      # create a study including poly_metadata to override the default required number of cells per sample value
       poly_metadatum = create(:poly_metadatum, key: cell_count_key, value: '6000')
       create(:study_with_poly_metadata, poly_metadata: [poly_metadatum])
     end

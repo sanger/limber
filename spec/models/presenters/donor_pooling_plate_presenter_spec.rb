@@ -69,13 +69,15 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:study_to_a1) { create(:study_with_poly_metadata, name: 'First Study', poly_metadata: []) } # empty poly_metadata
   let(:study_to_b1) { create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: []) } # empty poly_metadata
 
-  let(:warning_template) { Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS }
+  let(:warning_template) do
+    Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS_PER_SAMPLE_PER_POOL
+  end
 
   # Constants from config/initializers/scrna_config.rb
   let(:scrna_config) { Rails.application.config.scrna_config }
 
-  let(:option_key) { scrna_config[:study_required_number_of_cells_key] }
-  let(:default_cell_count) { scrna_config[:required_number_of_cells] }
+  let(:option_key) { scrna_config[:study_required_number_of_cells_per_sample_in_pool_key] }
+  let(:default_cell_count) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
 
   subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
 
@@ -91,7 +93,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
         expect(subject).not_to be_valid # There are warnings in the errors collection.
         study_names = [study_to_a1, study_to_b1].map(&:name).join(', ')
         formatted_string = format(warning_template, default_cell_count, study_names)
-        expect(subject.errors[:required_number_of_cells]).to include(formatted_string)
+        expect(subject.errors[:required_number_of_cells_per_sample_in_pool]).to include(formatted_string)
       end
     end
 
@@ -106,7 +108,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
         expect(subject).not_to be_valid # There are warnings in the errors collection.
         study_names = [study_to_a1].map(&:name).join(', ')
         formatted_string = format(warning_template, default_cell_count, study_names)
-        expect(subject.errors[:required_number_of_cells]).to include(formatted_string)
+        expect(subject.errors[:required_number_of_cells_per_sample_in_pool]).to include(formatted_string)
       end
     end
 

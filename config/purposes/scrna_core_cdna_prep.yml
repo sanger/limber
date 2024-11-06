@@ -56,10 +56,6 @@ LRC PBMC Pools:
       decimal_places: 0
   :presenter_class:
     name: Presenters::DonorPoolingPlatePresenter
-    args:
-      # Constants used to calculate source well volumes.
-      # required_number_of_cells: <%= Rails.application.config.scrna_config[:required_number_of_cells] %>
-      # desired_chip_loading_concentration: <%= Rails.application.config.scrna_config[:desired_chip_loading_concentration] %>
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:

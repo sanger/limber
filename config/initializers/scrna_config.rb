@@ -11,7 +11,7 @@ Rails.application.config.scrna_config = {
   # Conversion factor from millilitres to microlitres
   millilitres_to_microlitres: 1_000.0,
   # Number of cells required for each sample going into the pool
-  required_number_of_cells: 30_000,
+  required_number_of_cells_per_sample_in_pool: 30_000,
   # Factor accounting for wastage of material when transferring between labware
   wastage_factor: 0.95238,
   # Desired concentration of cells per microlitre for chip loading
@@ -23,7 +23,7 @@ Rails.application.config.scrna_config = {
   # Volume taken for cell counting in microlitres
   volume_taken_for_cell_counting: 10.0,
   # Key for the required number of cells metadata stored on Study (in poly_metadata)
-  study_required_number_of_cells_key: 'scrna_core_pbmc_donor_pooling_required_number_of_cells',
+  study_required_number_of_cells_per_sample_in_pool_key: 'scrna_core_pbmc_donor_pooling_required_number_of_cells',
   # Default viability threshold for samples in percent
   viability_default_threshold: 65,
   # Default total cell count for samples

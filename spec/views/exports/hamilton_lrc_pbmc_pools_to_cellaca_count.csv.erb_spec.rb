@@ -36,12 +36,8 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
 
   # Constants from config/initializers/scrna_config.rb
   let(:scrna_config) { Rails.application.config.scrna_config }
-
-  let(:required_number_of_cells) { scrna_config[:required_number_of_cells] }
   let(:wastage_factor) { scrna_config[:wastage_factor] }
   let(:desired_chip_loading_concentration) { scrna_config[:desired_chip_loading_concentration] }
-
-  before { Settings.purposes = { plate.purpose.uuid => { presenter_class: {} } } }
 
   let(:workflow) { 'scRNA Core LRC PBMC Pools Cell Count' }
 
@@ -57,7 +53,10 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
           well.name,
           format(
             '%0.1f',
-            ((well.aliquots.size * required_number_of_cells * wastage_factor) / desired_chip_loading_concentration)
+            (
+              (well.aliquots.size * required_number_of_cells_per_sample_in_pool * wastage_factor) /
+                desired_chip_loading_concentration
+            )
           )
         ]
       end
@@ -65,15 +64,46 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
   end
 
   before do
+    Settings.purposes = { plate.purpose.uuid => { presenter_class: {} } }
     assign(:plate, plate)
     assign(:workflow, workflow)
   end
 
-  it 'renders the expected content' do
-    rows = CSV.parse(render)
+  context 'when the study does not override the number of cells per sample in pool' do
+    let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
 
-    # Only 4 wells (out of 8; the rest are either emtpy or failed) used
-    expect(rows.size).to eq(7) # 4 body + 3 header rows
-    expect(rows).to eq(expected_content)
+    it 'renders the expected content' do
+      rows = CSV.parse(render)
+
+      # Only 4 wells (out of 8; the rest are either emtpy or failed) used
+      expect(rows.size).to eq(7) # 4 body + 3 header rows
+      expect(rows).to eq(expected_content)
+    end
+  end
+
+  context 'when the study overrides the number of cells per sample in pool' do
+    # Constant from config/initializers/scrna_config.rb
+    let(:cell_count_key) do
+      Rails.application.config.scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
+    end
+
+    let(:required_number_of_cells_per_sample_in_pool) { 6000 }
+
+    let!(:study) do
+      # create a study including poly_metadata to override the default required number of cells per sample value
+      poly_metadatum =
+        create(:poly_metadatum, key: cell_count_key, value: required_number_of_cells_per_sample_in_pool.to_s)
+      create(:study_with_poly_metadata, poly_metadata: [poly_metadatum])
+    end
+
+    before { wells.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study) } }
+
+    it 'renders the expected content' do
+      rows = CSV.parse(render)
+
+      # Only 4 wells (out of 8; the rest are either emtpy or failed) used
+      expect(rows.size).to eq(7) # 4 body + 3 header rows
+      expect(rows).to eq(expected_content)
+    end
   end
 end
