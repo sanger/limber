@@ -19,24 +19,13 @@
 
   # Constants from config/initializers/scrna_config.rb
   scrna_config = Rails.application.config.scrna_config
-
-  # fetch default value for required_number_of_cells_per_sample_in_pool
   required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
-  # and we will override it with the value from the study using this key if present (see further down)
-  study_required_number_of_cells_per_sample_in_pool_key = scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
-
   wastage_factor = scrna_config[:wastage_factor]
   desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
 
   filtered_wells = @plate.wells_in_columns.reject { |well| well.empty? || well.failed? }
   filtered_wells.each do | src_well |
     samples_in_pool = src_well.aliquots.size
-
-    # Use the study's required number of cells if available, otherwise use the default
-    # NB. assumption that all aliquots in a well are from the same study
-    poly_metadatum = src_well.aliquots.first.study.poly_metadatum_by_key(study_required_number_of_cells_per_sample_in_pool_key)
-    study_required_number_of_cells_per_sample_in_pool = poly_metadatum&.value.to_i.nonzero?
-    required_number_of_cells_per_sample_in_pool = study_required_number_of_cells_per_sample_in_pool || required_number_of_cells_per_sample_in_pool
 
     source_well_volume = (samples_in_pool * required_number_of_cells_per_sample_in_pool * wastage_factor) / desired_chip_loading_concentration
     row = [

@@ -69,41 +69,13 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
     assign(:workflow, workflow)
   end
 
-  context 'when the study does not override the number of cells per sample in pool' do
-    let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
+  let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
 
-    it 'renders the expected content' do
-      rows = CSV.parse(render)
+  it 'renders the expected content' do
+    rows = CSV.parse(render)
 
-      # Only 4 wells (out of 8; the rest are either emtpy or failed) used
-      expect(rows.size).to eq(7) # 4 body + 3 header rows
-      expect(rows).to eq(expected_content)
-    end
-  end
-
-  context 'when the study overrides the number of cells per sample in pool' do
-    # Constant from config/initializers/scrna_config.rb
-    let(:cell_count_key) do
-      Rails.application.config.scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
-    end
-
-    let(:required_number_of_cells_per_sample_in_pool) { 6000 }
-
-    let!(:study) do
-      # create a study including poly_metadata to override the default required number of cells per sample value
-      poly_metadatum =
-        create(:poly_metadatum, key: cell_count_key, value: required_number_of_cells_per_sample_in_pool.to_s)
-      create(:study_with_poly_metadata, poly_metadata: [poly_metadatum])
-    end
-
-    before { wells.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study) } }
-
-    it 'renders the expected content' do
-      rows = CSV.parse(render)
-
-      # Only 4 wells (out of 8; the rest are either emtpy or failed) used
-      expect(rows.size).to eq(7) # 4 body + 3 header rows
-      expect(rows).to eq(expected_content)
-    end
+    # Only 4 wells (out of 8; the rest are either emtpy or failed) used
+    expect(rows.size).to eq(7) # 4 body + 3 header rows
+    expect(rows).to eq(expected_content)
   end
 end

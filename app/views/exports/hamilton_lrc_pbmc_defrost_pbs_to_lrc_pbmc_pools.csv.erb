@@ -19,12 +19,7 @@
 <%
   # Constants from config/initializers/scrna_config.rb
   scrna_config = Rails.application.config.scrna_config
-
-  # fetch default value for required_number_of_cells_per_sample_in_pool
   required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
-  # and we will override it with the value from the study using this key if present (see further down)
-  study_required_number_of_cells_per_sample_in_pool_key = scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
-
   maximum_sample_volume = scrna_config[:maximum_sample_volume]
   minimum_sample_volume = scrna_config[:minimum_sample_volume]
   minimum_resuspension_volume = scrna_config[:minimum_resuspension_volume]
@@ -45,12 +40,6 @@
     src_well = ancestor_plates_wells[src_barcode][src_location]
     cell_count = src_well.latest_total_cell_count  # cells / millilitres
     next if cell_count.nil?
-
-    # Use the study's required number of cells if available, otherwise use the default
-    # NB. assumption that all aliquots in a well are from the same study
-    poly_metadatum = src_well.aliquots.first.study.poly_metadatum_by_key(study_required_number_of_cells_per_sample_in_pool_key)
-    study_required_number_of_cells_per_sample_in_pool = poly_metadatum&.value.to_i.nonzero?
-    required_number_of_cells_per_sample_in_pool = study_required_number_of_cells_per_sample_in_pool || required_number_of_cells_per_sample_in_pool
 
     # Calculate the sample volume required for the number of cells
     required_volume = (millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f).clamp(minimum_sample_volume, maximum_sample_volume)

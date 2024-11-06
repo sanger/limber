@@ -79,12 +79,77 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
     assign(:ancestor_plate, source_plate) # parent plate
   end
 
-  it 'renders the expected content' do
-    rows = CSV.parse(render)
-    expect(rows[0]).to eq(workflow_row)
-    expect(rows[1]).to eq(empty_row)
-    expect(rows[2]).to eq(header_row)
-    expect(rows[3]).to eq(row_source_a1)
-    expect(rows[4]).to eq(row_source_b1)
+  context 'when using default values' do
+    it 'renders the expected content' do
+      rows = CSV.parse(render)
+      expect(rows[0]).to eq(workflow_row)
+      expect(rows[1]).to eq(empty_row)
+      expect(rows[2]).to eq(header_row)
+      expect(rows[3]).to eq(row_source_a1)
+      expect(rows[4]).to eq(row_source_b1)
+    end
+  end
+
+  context 'when the pool well has metadata for number_of_cells_per_chip_well' do
+    let(:number_of_cells_per_chip_well_key) do
+      Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key]
+    end
+
+    let(:well_a1_number_of_cells_per_chip_well) { 75_000 }
+    let(:well_b1_number_of_cells_per_chip_well) { 85_000 }
+
+    let(:source_well_a1) do
+      poly_metadatum =
+        create(
+          :poly_metadatum,
+          key: number_of_cells_per_chip_well_key,
+          value: well_a1_number_of_cells_per_chip_well.to_s
+        )
+      create(:v2_well_with_polymetadata, location: 'A1', aliquots: aliquots_a1, poly_metadata: [poly_metadatum])
+    end
+
+    let(:source_well_b1) do
+      poly_metadatum =
+        create(
+          :poly_metadatum,
+          key: number_of_cells_per_chip_well_key,
+          value: well_b1_number_of_cells_per_chip_well.to_s
+        )
+      create(:v2_well_with_polymetadata, location: 'B1', aliquots: aliquots_b1, poly_metadata: [poly_metadatum])
+    end
+
+    let(:row_source_a1) do
+      [
+        source_plate.barcode.human,
+        source_well_a1.location,
+        dest_plate.barcode.human,
+        mapping[dest_well_a1.location],
+        '13.8',
+        '31.2',
+        '6.2'
+      ]
+    end
+
+    # The number of samples is 10, so the sample volume is 109.05 µL ((10*30000*0.95238)/2400 -10.0)
+    let(:row_source_b1) do
+      [
+        source_plate.barcode.human,
+        source_well_b1.location,
+        dest_plate.barcode.human,
+        mapping[dest_well_a2.location],
+        '109.0',
+        '35.4',
+        '2.1'
+      ]
+    end
+
+    it 'renders the expected content' do
+      rows = CSV.parse(render)
+      expect(rows[0]).to eq(workflow_row)
+      expect(rows[1]).to eq(empty_row)
+      expect(rows[2]).to eq(header_row)
+      expect(rows[3]).to eq(row_source_a1)
+      expect(rows[4]).to eq(row_source_b1)
+    end
   end
 end

@@ -158,52 +158,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
     Settings.purposes = { dest_plate.purpose.uuid => { presenter_class: {} } }
   end
 
-  context 'without study-specific cell count option' do
-    it 'renders the csv' do
-      expect(CSV.parse(render)).to eq(expected_content)
-    end
-  end
-
-  context 'with study-specific cell count option' do
-    # Constant from config/initializers/scrna_config.rb
-    let(:cell_count_key) do
-      Rails.application.config.scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
-    end
-
-    let!(:study) do
-      # create a study including poly_metadata to override the default required number of cells per sample value
-      poly_metadatum = create(:poly_metadatum, key: cell_count_key, value: '6000')
-      create(:study_with_poly_metadata, poly_metadata: [poly_metadatum])
-    end
-
-    let(:expected_content) do
-      [
-        ['Workflow', workflow],
-        [],
-        [
-          'Source Plate',
-          'Source Well',
-          'Destination Plate',
-          'Destination Well',
-          'Sample Volume (µL)',
-          'Resuspension Volume (µL)'
-        ],
-        %w[DN1S A1 DN3U A1 60.0 14.3],
-        %w[DN1S B1 DN3U B1 30.0 14.3],
-        %w[DN1S A2 DN3U A1 12.0 14.3],
-        %w[DN1S B2 DN3U B1 10.0 14.3],
-        %w[DN1S A3 DN3U A1 6.7 14.3],
-        %w[DN1S B3 DN3U B1 6.0 14.3],
-        %w[DN2T C1 DN3U A1 20.0 14.3],
-        %w[DN2T D1 DN3U B1 15.0 14.3],
-        %w[DN2T C2 DN3U A1 8.6 14.3],
-        %w[DN2T D2 DN3U B1 7.5 14.3],
-        %w[DN2T C3 DN3U A1 5.5 14.3],
-        %w[DN2T D3 DN3U B1 5.0 14.3]
-      ]
-    end
-    it 'renders the csv' do
-      expect(CSV.parse(render)).to eq(expected_content)
-    end
+  it 'renders the csv' do
+    expect(CSV.parse(render)).to eq(expected_content)
   end
 end

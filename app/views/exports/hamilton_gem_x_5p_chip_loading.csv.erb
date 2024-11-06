@@ -22,24 +22,13 @@
   # Constants from config/initializers/scrna_config.rb
   scrna_config = Rails.application.config.scrna_config
 
-   # fetch default value for required_number_of_cells_per_sample_in_pool
-   required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
-   # and we will override it with the value from the study using this key if present (see further down)
-   study_required_number_of_cells_per_sample_in_pool_key = scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
-
+  required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
   wastage_factor = scrna_config[:wastage_factor]
   desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
   desired_sample_volume = scrna_config[:desired_sample_volume]
   volume_taken_for_cell_counting = scrna_config[:volume_taken_for_cell_counting]
 
-  # a variable for number_of_cells to be calculated per chip well and stored in polymetadata (either on well or request)
-  # TODO: needs a polymetadata key from the constants config
-  # number_of_cells_in_chip_well_key = Rails.application.config.scrna_config[:number_of_cells_in_chip_well_key] }
-  # TODO: then needs to fetch the value from the chip well or request polymetadata
-  # TODO: Q. would we default to the value in the constants config if a specific value is not present?
-  # if not can we remove that constant?
-  # TODO: Q. what will the value be used for other than in this file calculation to determine sample volume?
-
+  number_of_cells_per_chip_well_key = scrna_config[:number_of_cells_per_chip_well_key]
   desired_number_of_cells_per_chip_well = scrna_config[:desired_number_of_cells_per_chip_well]
 
   # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
@@ -52,16 +41,19 @@
     src_well = ancestral_plate_wells[src_location]
     number_of_samples =  src_well.aliquots.length
 
-    # Use the study's required number of cells if available, otherwise use the default
-    # NB. assumption that all aliquots in a well are from the same study
-    poly_metadatum = src_well.aliquots.first.study.poly_metadatum_by_key(study_required_number_of_cells_per_sample_in_pool_key)
-    study_required_number_of_cells_per_sample_in_pool = poly_metadatum&.value.to_i.nonzero?
-    required_number_of_cells_per_sample_in_pool = study_required_number_of_cells_per_sample_in_pool || required_number_of_cells_per_sample_in_pool
+    # Use the pool wells number_of_cells_per_chip_well if available, otherwise use the default.
+    # Value to be calculated per chip well and stored on the pool well (in polymetadata)
+    well_poly_metadatum = src_well.poly_metadatum_by_key(number_of_cells_per_chip_well_key)
+    number_of_cells_per_chip_well = well_poly_metadatum&.value.to_i.nonzero?
+    desired_number_of_cells_per_chip_well = number_of_cells_per_chip_well || desired_number_of_cells_per_chip_well
 
+    # calculations
     resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor).to_f / desired_chip_loading_concentration
     source_well_volume = resuspension_volume - volume_taken_for_cell_counting
     sample_volume = desired_number_of_cells_per_chip_well.to_f/desired_chip_loading_concentration
     pbs_volume = desired_sample_volume - sample_volume
+
+    # add row to csv
     rows_array << [
       src_barcode,
       src_location,
