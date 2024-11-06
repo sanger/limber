@@ -31,7 +31,7 @@ module LabwareCreators
     # is set to false, it will not call the populate_wells_with_pool method on
     # the parent plate.
 
-    class_attribute :populate_wells_with_pool
+    class_attribute :should_populate_wells_with_pool
     self.should_populate_wells_with_pool = true # parent is a V1 plate
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
