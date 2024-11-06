@@ -205,10 +205,6 @@ export default {
       type: String,
       required: true,
     },
-    userId: {
-      type: String,
-      required: true,
-    },
     sequencescapeApiUrl: {
       type: String,
       required: true,
@@ -281,6 +277,7 @@ export default {
    */
   async mounted() {
     // Validate the props
+    debugger
     this.validateProps()
     if (this.state === StateEnum.INVALID_PROPS) return
     this.initialiseStartState()
@@ -290,7 +287,7 @@ export default {
      * Validate the props
      */
     validateProps() {
-      if (!(this.barcode && this.userId && this.sequencescapeApiUrl && this.tractionServiceUrl && this.tractionUIUrl)) {
+      if (!(this.barcode && this.sequencescapeApiUrl && this.tractionServiceUrl && this.tractionUIUrl)) {
         this.state = StateEnum.INVALID_PROPS
         return
       }
