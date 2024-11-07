@@ -146,7 +146,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
     stub_upload_file_creation
 
-    stub_api_get(parent_tube_1_uuid, body: json(:tube))
+    stub_v2_tube(parent_tube_1)
   end
 
   context '#new' do
@@ -193,8 +193,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
     it 'creates a plate!' do
       # barcode from multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv
-      subject.labware.barcode.machine = 'AB10000001'
-      subject.labware.barcode.ean13 = nil
+      subject.labware.labware_barcode = { 'human_barcode' => 'AB10000001', 'machine_barcode' => 'AB10000001' }
 
       expect_pooled_plate_creation
       expect_transfer_request_collection_creation

@@ -198,15 +198,11 @@ module ApiUrlHelper
     end
 
     def stub_find_by(klass, record, custom_includes: nil)
-      # Find by Barcode
-      barcode_args = { barcode: record.barcode.machine }
-      barcode_args[:includes] = custom_includes if custom_includes
-      allow(klass).to receive(:find_by).with(barcode_args).and_return(record)
-
-      # Find by UUID
-      uuid_args = { uuid: record.uuid }
-      uuid_args[:includes] = custom_includes if custom_includes
-      allow(klass).to receive(:find_by).with(uuid_args).and_return(record)
+      # Set up find_by stubs for both barcode and uuid.
+      [{ barcode: record.barcode.machine }, { uuid: record.uuid }].each do |query|
+        query[:includes] = custom_includes if custom_includes
+        allow(klass).to receive(:find_by).with(query).and_return(record)
+      end
     end
 
     # Stubs a request for all barcode printers
@@ -260,8 +256,12 @@ module ApiUrlHelper
     end
 
     # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
+    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: nil)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube)
+      end
 
       stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes:)
       stub_v2_labware(tube)
