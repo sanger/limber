@@ -135,7 +135,12 @@ FactoryBot.define do
       custom_metadatum_collection { nil }
     end
 
-    to_create { |instance, _evaluator| instance.mark_as_persisted! }
+    to_create do |instance, _evaluator|
+      # JSON API client resources are not persisted in the database, but we need Limber to treat them as if they are.
+      # This ensures the `url_for` method will use their UUIDs in URLs via the `to_param` method on the resource.
+      # Otherwise it just redirects to the root URL for the resource type.
+      instance.mark_as_persisted!
+    end
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) do |asset, evaluator|
