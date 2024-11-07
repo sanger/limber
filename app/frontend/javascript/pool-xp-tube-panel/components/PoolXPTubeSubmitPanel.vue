@@ -277,7 +277,6 @@ export default {
    */
   async mounted() {
     // Validate the props
-    debugger
     this.validateProps()
     if (this.state === StateEnum.INVALID_PROPS) return
     this.initialiseStartState()
