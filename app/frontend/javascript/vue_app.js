@@ -23,7 +23,6 @@ import QcInformation from '@/javascript/qc-information/components/QcInformation.
 import TubesToRack from '@/javascript/tubes-to-rack/components/TubesToRack.vue'
 import ValidatePairedTubes from '@/javascript/validate-paired-tubes/components/ValidatePairedTubes.vue'
 
-
 import MainContent from '@/javascript/shared/components/MainContent.vue'
 import Page from '@/javascript/shared/components/Page.vue'
 import Sidebar from '@/javascript/shared/components/Sidebar.vue'
@@ -36,24 +35,33 @@ Vue.component('LbSidebar', Sidebar)
 
 // Helper function to initialize Vue components
 const renderVueComponent = (selector, component, props = {}, data = {}, userIdRequired = false) => {
+  const missingUserIdError = `
+    Unfortunately Limber can't find your user id, which is required to add custom metadata.
+    Click log out and swipe in again to resolve this.
+    If this problem occurs repeatedly, let us know.`
+
   const selector_val = `#${selector}`
   const element = document.querySelector(selector_val)
   const userId = cookieJar(document.cookie).user_id
-
-  if (element) {
-    if (userIdRequired && !userId) {
-      new Vue({
-        el: `#${elementId}`,
-        render: (h) => h('div', missingUserIdError),
-      })
-    } else {
-      new Vue({
-        el: selector_val,
-        data: () => data,
-        render: (h) => h(component, { props }),
-      })
-    }
+  if (!element) {
+    console.error(`Element with selector ${selector_val} not found.`)
+    return
   }
+
+  let app
+  if (userIdRequired && !userId) {
+    app = new Vue({
+      el: `#${selector_val}`,
+      render: (h) => h('div', missingUserIdError),
+    })
+  } else {
+    app = new Vue({
+      el: selector_val,
+      data: () => data,
+      render: (h) => h(component, { props }),
+    })
+  }
+  return app
 }
 
 const elements = [
@@ -103,7 +111,7 @@ const elements = [
   {
     id: 'validate-paired-tubes',
     component: ValidatePairedTubes,
-  }
+  },
 ]
 
 const setAxiosHeaderToken = () => {
@@ -140,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderVueComponent('asset-comments-counter', AssetCommentsCounter, {}, commentStore)
         renderVueComponent('asset-comments-add-form', component, assetElem.dataset, commentStore, userIdRequired)
         commentStore.refreshComments()
+        break
       }
       case 'pool-xp-tube-submit-panel': {
         if (
@@ -164,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       }
       case 'file-list': {
-        renderVueComponent(id, component, {}, {})
+        const app = renderVueComponent(id, component, {}, {})
         document.getElementById(id).addEventListener('click', function () {
           app.$children[0].fetchData()
         })
@@ -189,9 +198,9 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'multi-stamp-page':
       case 'multi-stamp-library-splitter-page':
       case 'multi-stamp-tubes-page':
-      case 'custom-tagged-plate-page': 
+      case 'custom-tagged-plate-page':
       case 'tubes-to-rack':
-        case 'validate-paired-tubes': {
+      case 'validate-paired-tubes': {
         setAxiosHeaderToken()
         renderVueComponent(id, component, assetElem.dataset, {})
         break
