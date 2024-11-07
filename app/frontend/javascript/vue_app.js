@@ -14,6 +14,16 @@ import AssetComments from '@/javascript/asset-comments/components/AssetComments.
 import AssetCommentsCounter from '@/javascript/asset-comments/components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from '@/javascript/asset-comments/components/AssetCommentsAddForm.vue'
 import CustomTaggedPlate from '@/javascript/custom-tagged-plate/components/CustomTaggedPlate.vue'
+import FileList from '@/javascript/file-list/components/FileList.vue'
+import LabwareCustomMetadataAddForm from '@/javascript/labware-custom-metadata/components/LabwareCustomMetadataAddForm.vue'
+import MultiStamp from '@/javascript/multi-stamp/components/MultiStamp.vue'
+import MultiStampLibrarySpliter from '@/javascript/multi-stamp/components/MultiStampLibrarySplitter.js'
+import MultiStampTubes from '@/javascript/multi-stamp-tubes/components/MultiStampTubes.vue'
+import QcInformation from '@/javascript/qc-information/components/QcInformation.vue'
+import TubesToRack from '@/javascript/tubes-to-rack/components/TubesToRack.vue'
+import ValidatePairedTubes from '@/javascript/validate-paired-tubes/components/ValidatePairedTubes.vue'
+
+
 import MainContent from '@/javascript/shared/components/MainContent.vue'
 import Page from '@/javascript/shared/components/Page.vue'
 import Sidebar from '@/javascript/shared/components/Sidebar.vue'
@@ -29,17 +39,14 @@ const renderVueComponent = (selector, component, props = {}, data = {}, userIdRe
   const selector_val = `#${selector}`
   const element = document.querySelector(selector_val)
   const userId = cookieJar(document.cookie).user_id
-  
 
   if (element) {
     if (userIdRequired && !userId) {
-      debugger
       new Vue({
         el: `#${elementId}`,
         render: (h) => h('div', missingUserIdError),
       })
     } else {
-      debugger
       new Vue({
         el: selector_val,
         data: () => data,
@@ -64,7 +71,47 @@ const elements = [
     id: 'custom-tagged-plate-page',
     component: CustomTaggedPlate,
   },
+  {
+    id: 'file-list',
+    component: FileList,
+  },
+  {
+    id: 'labware-custom-metadata-add-form',
+    component: LabwareCustomMetadataAddForm,
+    userIdRequired: true,
+  },
+  {
+    id: 'multi-stamp-page',
+    component: MultiStamp,
+  },
+  {
+    id: 'multi-stamp-library-splitter-page',
+    component: MultiStampLibrarySpliter,
+  },
+  {
+    id: 'multi-stamp-tubes-page',
+    component: MultiStampTubes,
+  },
+  {
+    id: 'qc-information',
+    component: QcInformation,
+  },
+  {
+    id: 'tubes-to-rack',
+    component: TubesToRack,
+  },
+  {
+    id: 'validate-paired-tubes',
+    component: ValidatePairedTubes,
+  }
 ]
+
+const setAxiosHeaderToken = () => {
+  axios.defaults.headers.common['X-CSRF-Token'] = document
+    .querySelector('meta[name="csrf-token"]')
+    .getAttribute('content')
+  Vue.prototype.$axios = axios
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   for (const { id, component, userIdRequired } of elements) {
@@ -95,14 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
         commentStore.refreshComments()
       }
       case 'pool-xp-tube-submit-panel': {
-        debugger
         if (
           assetElem.dataset.barcode &&
           assetElem.dataset.sequencescapeApi &&
           assetElem.dataset.tractionServiceUrl &&
           assetElem.dataset.tractionUiUrl
         ) {
-          debugger
           renderVueComponent(
             id,
             component,
@@ -118,11 +163,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         break
       }
-      case 'custom-tagged-plate-page': {
-        axios.defaults.headers.common['X-CSRF-Token'] = document
-          .querySelector('meta[name="csrf-token"]')
-          .getAttribute('content')
-        Vue.prototype.$axios = axios
+      case 'file-list': {
+        renderVueComponent(id, component, {}, {})
+        document.getElementById(id).addEventListener('click', function () {
+          app.$children[0].fetchData()
+        })
+        break
+      }
+      case 'labware-custom-metadata-add-form': {
+        renderVueComponent(
+          id,
+          component,
+          {
+            labwareId: assetElem.dataset.labwareId,
+            sequencescapeApiUrl: assetElem.dataset.sequencescapeApi,
+            sequencescapeUrl: assetElem.dataset.sequencescapeUrl,
+            tractionUIUrl: assetElem.dataset.tractionUiUrl,
+            customMetadataFields: assetElem.dataset.customMetadataFields,
+          },
+          {},
+          userIdRequired,
+        )
+        break
+      }
+      case 'multi-stamp-page':
+      case 'multi-stamp-library-splitter-page':
+      case 'multi-stamp-tubes-page':
+      case 'custom-tagged-plate-page': 
+      case 'tubes-to-rack':
+        case 'validate-paired-tubes': {
+        setAxiosHeaderToken()
+        renderVueComponent(id, component, assetElem.dataset, {})
+        break
+      }
+      case 'qc-information': {
         renderVueComponent(id, component, assetElem.dataset, {})
         break
       }
