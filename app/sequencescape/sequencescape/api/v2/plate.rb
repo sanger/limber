@@ -19,6 +19,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :direct_submissions, class_name: 'Sequencescape::Api::V2::Submission'
   has_many :state_changes
+  has_many :submission_pools, class_name: 'Sequencescape::Api::V2::SubmissionPool'
   has_one :custom_metadatum_collection
 
   # Other relationships
