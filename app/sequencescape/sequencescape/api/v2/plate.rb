@@ -132,6 +132,16 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     wells.each { |well| well.aliquots.each { |aliquot| yield well, aliquot } }
   end
 
+  def assign_pools_to_wells
+    pool_locations = pools.pools.flat_map { |p| p.subpools.map(&:well_locations) }
+    wells.each do |well|
+      pool = pool_locations.find { |pl| pl.include?(well.location) }
+      next if pool.nil?
+
+      well.pool = pool
+    end
+  end
+
   private
 
   def aliquots

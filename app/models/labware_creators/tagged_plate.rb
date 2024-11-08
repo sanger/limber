@@ -32,7 +32,7 @@ module LabwareCreators
 
     def initialize(*args, &)
       super
-      parent.populate_wells_with_pool
+      parent.assign_pools_to_wells
     end
 
     def create_plate!
