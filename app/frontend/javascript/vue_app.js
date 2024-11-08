@@ -33,13 +33,23 @@ Vue.component('LbMainContent', MainContent)
 Vue.component('LbPage', Page)
 Vue.component('LbSidebar', Sidebar)
 
-// Helper function to initialize Vue components
-const renderVueComponent = (selector, component, props = {}, data = {}, userIdRequired = false) => {
-  const missingUserIdError = `
+export const missingUserIdError = `
     Unfortunately Limber can't find your user id, which is required to add custom metadata.
     Click log out and swipe in again to resolve this.
     If this problem occurs repeatedly, let us know.`
 
+ /**
+ * Helper function to initialize and render a Vue component.
+ *
+ * @param {string} selector - The CSS selector of the DOM element to mount the Vue instance on.
+ * @param {Object} component - The Vue component to render.
+ * @param {Object} [props={}] - The props to pass to the Vue component.
+ * @param {Object} [data={}] - The data to pass to the Vue instance.
+ * @param {boolean} [userIdRequired=false] - Whether a user ID is required to render the component.
+ * @returns {Vue} The Vue instance.
+ */
+
+export const renderVueComponent = (selector, component, props = {}, data = {}, userIdRequired = false) => {
   const selector_val = `#${selector}`
   const element = document.querySelector(selector_val)
   const userId = cookieJar(document.cookie).user_id
@@ -50,10 +60,12 @@ const renderVueComponent = (selector, component, props = {}, data = {}, userIdRe
 
   let app
   if (userIdRequired && !userId) {
+    console.error('User id is required to render this component.')
     app = new Vue({
-      el: `#${selector_val}`,
+      el: selector_val,
       render: (h) => h('div', missingUserIdError),
     })
+   
   } else {
     app = new Vue({
       el: selector_val,
@@ -64,6 +76,10 @@ const renderVueComponent = (selector, component, props = {}, data = {}, userIdRe
   return app
 }
 
+/**
+ * List of elements to initialize as Vue components.
+ * Each element should have an id, a Vue component, and an optional flag indicating whether a user ID is required.
+ */
 const elements = [
   {
     id: 'asset-comments',
@@ -114,6 +130,9 @@ const elements = [
   },
 ]
 
+/**
+ * Set the CSRF token in the Axios header.
+ */
 const setAxiosHeaderToken = () => {
   axios.defaults.headers.common['X-CSRF-Token'] = document
     .querySelector('meta[name="csrf-token"]')
@@ -121,6 +140,14 @@ const setAxiosHeaderToken = () => {
   Vue.prototype.$axios = axios
 }
 
+/**
+ * Initialize Vue components when the DOM content is loaded.
+ * For each element in the elements list, check if the element exists in the DOM.
+ * If the element exists, render the Vue component with the specified props and data.
+ * If a user ID is required and the user ID is missing, render an error message.
+ * If the element does not exist, log a warning message.
+ * The initialization logic for each element is specific to the element's id.
+ */
 document.addEventListener('DOMContentLoaded', () => {
   for (const { id, component, userIdRequired } of elements) {
     const assetElem = document.getElementById(id)
