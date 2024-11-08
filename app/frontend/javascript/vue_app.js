@@ -38,7 +38,7 @@ export const missingUserIdError = `
     Click log out and swipe in again to resolve this.
     If this problem occurs repeatedly, let us know.`
 
- /**
+/**
  * Helper function to initialize and render a Vue component.
  *
  * @param {string} selector - The CSS selector of the DOM element to mount the Vue instance on.
@@ -65,7 +65,6 @@ export const renderVueComponent = (selector, component, props = {}, data = {}, u
       el: selector_val,
       render: (h) => h('div', missingUserIdError),
     })
-   
   } else {
     app = new Vue({
       el: selector_val,
