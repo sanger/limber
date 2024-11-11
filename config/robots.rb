@@ -3731,8 +3731,8 @@ ROBOT_CONFIG =
     # LCM Triomics WGS and EMSeq bed verification
     # Verify initial setup
     custom_robot(
-      'bravo-verify-initial-setup',
-      name: 'Bravo Verify Initial Setup',
+      'bravo-lcmt-emseq-verify-initial-setup',
+      name: 'Bravo LCMT EMSeq Verify Initial Setup',
       require_robot: true, # Robot barcode must be scanned in.
       verify_robot: false, # First robot step; no previous robot.
       beds: {
