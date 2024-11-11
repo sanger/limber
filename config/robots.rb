@@ -3837,23 +3837,6 @@ ROBOT_CONFIG =
     )
 
     # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT DNA Adp Lig Verification
-    custom_robot(
-      'bravo-lcmt-dna-adp-lig-verification',
-      name: 'Bravo LCMT DNA Adp Lig Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT DNA Adp Lig',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
     # Bravo LCMT EM TET2 Ox Verification
     custom_robot(
       'bravo-lcmt-em-tet2-ox-verification',
