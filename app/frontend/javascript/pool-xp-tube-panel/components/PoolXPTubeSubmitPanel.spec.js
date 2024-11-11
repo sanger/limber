@@ -16,9 +16,9 @@ localVue.use(BootstrapVue)
 const defaultProps = {
   barcode: '12345',
   userId: 'user123',
-  sequencescapeApiUrl: 'http://example.com/api',
+  sequencescapeApi: 'http://example.com/api',
   tractionServiceUrl: 'http://traction.example.com',
-  tractionUIUrl: 'http://traction-ui.example.com',
+  tractionUiUrl: 'http://traction-ui.example.com',
 }
 
 // Helper function to create the wrapper with the given state and props
@@ -407,9 +407,9 @@ describe('PoolXPTubeSubmitPanel', () => {
       wrapper = createWrapper('checking_tube_status', {
         barcode: '',
         userId: '',
-        sequencescapeApiUrl: '',
+        sequencescapeApi: '',
         tractionServiceUrl: '',
-        tractionUIUrl: 'http://traction-ui.example.com',
+        tractionUiUrl: 'http://traction-ui.example.com',
       })
       await flushPromises()
       expect(wrapper.vm.state).toBe('invalid_props')
