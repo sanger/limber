@@ -3901,23 +3901,6 @@ ROBOT_CONFIG =
     )
 
     # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT EM APOBEC Deam Verification
-    custom_robot(
-      'bravo-lcmt-em-apobec-deam-verification',
-      name: 'Bravo LCMT EM APOBEC Deam Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT EM APOBEC Deam',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
     # Bravo LCMT EM APOBEC Deam => LCMT EM Lib PCR
     custom_robot(
       'bravo-lcmt-em-apobec-deam-to-lcmt-em-lib-pcr',
