@@ -3854,23 +3854,6 @@ ROBOT_CONFIG =
     )
 
     # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT EM TET2 Stop Verification
-    custom_robot(
-      'bravo-lcmt-em-tet2-stop-verification',
-      name: 'Bravo LCMT EM TET2 Stop Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT EM TET2 Stop',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
     # Bravo LCMT EM TET2 Stop to Denat and Deam Setup
     custom_robot(
       'bravo-lcmt-em-tet2-stop-to-denat-and-deam-setup',
