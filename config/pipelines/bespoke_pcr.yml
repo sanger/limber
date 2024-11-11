@@ -95,7 +95,6 @@ Bespoke PCR MX:
   filters:
     request_type_key:
       - limber_multiplexing
-      - limber_hic # Have to move this into a the new pipeline config when HiC pipeline is implemented.
   relationships:
     LBB Lib PCR-XP: LBB Lib Pool Stock
     LBB Lib Pool Stock: LB Lib Pool Norm
