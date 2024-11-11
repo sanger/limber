@@ -12,86 +12,108 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
 
   let(:user_uuid) { 'user-uuid' }
 
-  # We want to get the first request to get through the filters: filters1_config below
-  # Use it on the well because of the new submission
+  # We want the first request type to get through the filters.
+
+  # Use it on the well because of the new submission.
   let(:request_type1) { create(:request_type, key: 'request-type-1') }
-  # Use it on the aliquout because of an earlier submission
-  let(:request_type2) { create(:request_type, key: 'request-type-2') }
   let(:library_type1) { 'library-type-1' }
+
+  # Use it on the aliquout because of an earlier submission.
+  let(:request_type2) { create(:request_type, key: 'request-type-2') }
   let(:library_type2) { 'library-type-2' }
 
-  let(:requests1) do
-    create(:request, request_type: request_type1, library_type: library_type1, state: 'pending')
-    create(:request, request_type: request_type1, library_type: library_type1, state: 'pending')
-    create(:request, request_type: request_type1, library_type: library_type1, state: 'pending')
+  let(:new_submission) { create(:v2_submission) }
+
+  # Requests on the wells because of the new submission.
+  let(:new_requests) do
+    [
+      create(
+        :request,
+        :uuid,
+        request_type: request_type1,
+        library_type: library_type1,
+        state: 'pending',
+        submission: new_submission
+      ),
+      create(
+        :request,
+        :uuid,
+        request_type: request_type1,
+        library_type: library_type1,
+        state: 'pending',
+        submission: new_submission
+      ),
+      create(
+        :request,
+        :uuid,
+        request_type: request_type1,
+        library_type: library_type1,
+        state: 'pending',
+        submission: new_submission
+      )
+    ]
   end
 
-  let(:requests2) do
-    create(:request, request_type: request_type2, library_type: library_type2, state: 'pending')
-    create(:request, request_type: request_type2, library_type: library_type2, state: 'pending')
-    create(:request, request_type: request_type2, library_type: library_type2, state: 'pending')
+  # Requests on aliquots because of an earlier submission.
+  let(:old_requests) do
+    [
+      create(:request, :uuid, request_type: request_type2, library_type: library_type2, state: 'pending'),
+      create(:request, :uuid, request_type: request_type2, library_type: library_type2, state: 'pending'),
+      create(:request, :uuid, request_type: request_type2, library_type: library_type2, state: 'pending')
+    ]
   end
 
   let(:number_of_wells) { 3 }
 
   let(:aliquots) do
     [
-      create(:v2_aliquot, request: [requests2[0]]),
-      create(:v2_aliquot, request: [requests2[1]]),
-      create(:v2_aliquot, request: [requests2[2]])
+      create(:v2_aliquot, request: [old_requests[0]]),
+      create(:v2_aliquot, request: [old_requests[1]]),
+      create(:v2_aliquot, request: [old_requests[2]])
     ]
   end
 
   let(:wells) do
     [
-      create(:v2_well, requests_as_source: [requests1[0]], aliquots: [aliquots[0]]),
-      create(:v2_well, requests_as_source: [requests1[1]], aliquots: [aliquots[1]]),
-      create(:v2_well, requests_as_source: [requests1[2]], aliquots: [aliquots[2]])
+      create(:v2_well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1'),
+      create(:v2_well, requests_as_source: [new_requests[1]], aliquots: [aliquots[1]], location: 'B1'),
+      create(:v2_well, requests_as_source: [new_requests[2]], aliquots: [aliquots[2]], location: 'C1')
     ]
   end
 
-  let(:parent1_purpose_name) { 'Parent Purpose 1' }
-  let(:parent1_purpose_uuid) { 'parent1-purpose-uuid' }
-  let(:parent1_uuid) { 'parent1-uuid' }
-  let(:parent1) { create(:v2_plate, purpose: parent1_purpose_name, uuid: parent1_uuid, wells: wells) }
+  let(:parent_purpose_name) { 'Parent Purpose 1' }
+  let(:parent_purpose_uuid) { 'parent-purpose-uuid' }
+  let(:parent_uuid) { 'parent-uuid' }
+  let(:parent) do
+    create(
+      :v2_plate,
+      purpose: parent_purpose_name,
+      uuid: parent_uuid,
+      wells: wells,
+      submission_pools: create_list(:v2_submission_pool, 1)
+    )
+  end
 
-  let(:child1_purpose_name) { 'Child Purpose 1' }
-  let(:child1_purpose_uuid) { 'child1-purpose-uuid' }
-
-  # same as above; the same relationship is used for the second pipeline
-  let(:parent2_purpose_name) { parent1_purpose_name }
-  let(:child2_purpose_name) { child1_purpose_name }
-
-  let(:parent3_purpose_name) { 'Parent Purpose 3' }
-  let(:child3_purpose_name) { 'Child Purpose 3' }
+  let(:child_purpose_name) { 'Child Purpose 1' }
+  let(:child_purpose_uuid) { 'child-purpose-uuid' }
 
   let(:filters1_config) { { request_type_key: 'request-type-1', library_type: 'library-type-1' } }
   let(:filters2_config) { { request_type_key: ['request-type-2'], library_type: 'library-type-2' } }
-  let(:filters3_config) { { request_type_key: ['request-type-3'] } }
 
-  let(:relationships1_config) { { parent1_purpose_name: child1_purpose_name } }
-  let(:relationships2_config) { { parent2_purpose_name: child2_purpose_name } }
-  let(:relationships3_config) { { parent3_purpose_name: child3_purpose_name } }
+  let(:relationships_config) { { parent_purpose_name: child_purpose_name } }
 
-  let(:pipeline1_config) { { filters: filters1_config, relationships: relationships1_config } }
-  let(:pipeline2_config) { { filters: filters2_config, relationships: relationships2_config } }
-  let(:pipeline3_config) { { filters: filters3_config, relationships: relationships3_config } }
+  let(:pipeline1_config) { { filters: filters1_config, relationships: relationships_config } }
+  let(:pipeline2_config) { { filters: filters2_config, relationships: relationships_config } }
 
   before do
-    create(:purpose_config, name: parent1_purpose_name, uuid: parent1_purpose_uuid)
-    create(:purpose_config, name: child1_purpose_name, uuid: child1_purpose_uuid)
-
-    create(:purpose_config, name: parent2_purpose_name)
-    create(:purpose_config, name: child2_purpose_name)
-
-    create(:purpose_config, name: parent3_purpose_name)
-    create(:purpose_config, name: child3_purpose_name)
+    create(:purpose_config, name: parent_purpose_name, uuid: parent_purpose_uuid)
+    create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
 
     create(:pipeline, **pipeline1_config)
     create(:pipeline, **pipeline2_config)
-    create(:pipeline, **pipeline3_config)
 
-    allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent1_uuid).and_return(parent1)
+    # It will receive the parent plate.
+    allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(parent)
   end
 
   subject { described_class.new(api, form_attributes) }
@@ -100,15 +122,15 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
     # Test that the labware creator in new action is initialised with the
     # purpose, parent and filters correctly.
     let(:form_attributes) do
-      { purpose_uuid: child1_purpose_uuid, parent_uuid: parent1_uuid, filters: filters1_config, user_uuid: user_uuid }
+      { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, filters: filters1_config, user_uuid: user_uuid }
     end
 
     it 'assigns purpose_uuid' do
-      expect(subject.purpose_uuid).to eq(child1_purpose_uuid)
+      expect(subject.purpose_uuid).to eq(child_purpose_uuid)
     end
 
     it 'assigns parent_uuid' do
-      expect(subject.parent_uuid).to eq(parent1_uuid)
+      expect(subject.parent_uuid).to eq(parent_uuid)
     end
 
     it 'assigns filters' do
@@ -123,19 +145,18 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
   context 'on create' do
     # Test that the labware creator in create action after form submit uses the
     # right request type and library type in setting up the transfer requests.
-    let(:child1_uuid) { 'child1-uuid' }
-    # Use the following as the converted tag plate
-    let(:child1) { create(:v2_plate, purpose: child1_purpose_name, uuid: child1_uuid) }
 
-    before { allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child1_uuid).and_return(child1) }
+    # Use the following as the tag plate.
+    let(:child_uuid) { 'child-uuid' }
+    let(:child) { create(:v2_plate, purpose: child_purpose_name, uuid: child_uuid) }
 
-    let(:tag_plate_barcode) { child1.barcode.human }
-    let(:tag_plate_uuid) { child1_uuid }
+    let(:tag_plate_barcode) { child.barcode.human }
+    let(:tag_plate_uuid) { child_uuid }
     let(:tag_template_uuid) { 'tag-template-uuid' }
     let(:form_attributes) do
       {
-        purpose_uuid: child1_purpose_uuid,
-        parent_uuid: parent1_uuid,
+        purpose_uuid: child_purpose_uuid,
+        parent_uuid: parent_uuid,
         filters: filters1_config,
         tag_plate_barcode: tag_plate_barcode,
         user_uuid: user_uuid,
@@ -146,20 +167,74 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
       }
     end
 
+    before do
+      # It will receive the child plate, which is an existing tag plate.
+      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child)
+
+      # It will create the tag layout.
+      tag_layout_template = double('TagLayoutTemplate')
+      allow(api).to receive_message_chain(:tag_layout_template, :find).with(tag_template_uuid).and_return(
+        tag_layout_template
+      )
+      allow(tag_layout_template).to receive(:create!).with(
+        plate: tag_plate_uuid,
+        user: user_uuid,
+        enforce_uniqueness: false
+      )
+
+      # It will change the state of the tag plate to exhausted.
+      state_change_attributes = {
+        reason: 'Used in Library creation',
+        target_state: 'exhausted',
+        target_uuid: tag_plate_uuid,
+        user_uuid: user_uuid
+      }
+      allow(Sequencescape::Api::V2::StateChange).to receive(:create!).with(**state_change_attributes)
+
+      # It will convert the purpose of the tag plate.
+      plate_conversion_attributes = {
+        target: child_uuid,
+        purpose: child_purpose_uuid,
+        user: user_uuid,
+        parent: parent_uuid
+      }
+      plate_conversion = double('PlateConversion', target: child) # target is the converted tag plate.
+      allow(api).to receive_message_chain(:plate_conversion, :create!).with(**plate_conversion_attributes).and_return(
+        plate_conversion
+      )
+    end
+
+    # The additional parameter outer_request is set to the uuid of the correct
+    # request matching the filters. This is because the well filter can pick the
+    # right requests using the pipeline filters sent using the custom form.
     let(:transfer_requests) do
       [
-        { source_asset: wells[0].uuid, destination_asset: child1.wells[0].uuid, outer_request: requests1[0].uuid },
-        { source_asset: wells[1].uuid, destination_asset: child1.wells[1].uuid, outer_request: requests1[1].uuid },
-        { source_asset: wells[2].uuid, destination_asset: child1.wells[2].uuid, outer_request: requests1[2].uuid }
+        {
+          'source_asset' => wells[0].uuid,
+          'target_asset' => child.wells[0].uuid,
+          'outer_request' => new_requests[0].uuid
+        },
+        {
+          'source_asset' => wells[1].uuid,
+          'target_asset' => child.wells[1].uuid,
+          'outer_request' => new_requests[1].uuid
+        },
+        {
+          'source_asset' => wells[2].uuid,
+          'target_asset' => child.wells[2].uuid,
+          'outer_request' => new_requests[2].uuid
+        }
       ]
     end
 
-    it 'filters the right requests' do
-      expect(subject).to receive_message_chain(:api, :transfer_request_collection, :create!).with(
+    it_behaves_like 'it has a custom page', 'well_filtered_tagged_plate'
+
+    it 'creates a tag plate with the right requests' do
+      expect(api).to receive_message_chain(:transfer_request_collection, :create!).with(
         user: user_uuid,
         transfer_requests: transfer_requests
       )
-      expect(subject.save).to be_truthy
+      expect(subject.save).to be true
     end
   end
 end
