@@ -66,6 +66,7 @@ export const renderVueComponent = (selector, component, props = {}, data = {}, u
       render: (h) => h('div', missingUserIdError),
     })
   } else {
+    props.userId = userId
     app = new Vue({
       el: selector_val,
       data: () => data,
@@ -148,11 +149,11 @@ const setAxiosHeaderToken = () => {
  * The initialization logic for each element is specific to the element's id.
  */
 document.addEventListener('DOMContentLoaded', () => {
-  for (const { id, component, userIdRequired } of elements) {
+  for (const { id, component, userIdRequired = false } of elements) {
     const assetElem = document.getElementById(id)
     if (!assetElem) continue
-    switch (id) {
-      case 'asset-comments': {
+    if (id) {
+      if (id === 'asset-comments') {
         const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
         const sequencescapeApiKey = assetElem.dataset.sequencescapeApiKey
         const axiosInstance = axios.create({
@@ -175,68 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
         renderVueComponent('asset-comments-add-form', component, assetElem.dataset, commentStore, userIdRequired)
         commentStore.refreshComments()
         break
-      }
-      case 'pool-xp-tube-submit-panel': {
-        if (
-          assetElem.dataset.barcode &&
-          assetElem.dataset.sequencescapeApi &&
-          assetElem.dataset.tractionServiceUrl &&
-          assetElem.dataset.tractionUiUrl
-        ) {
-          renderVueComponent(
-            id,
-            component,
-            {
-              barcode: assetElem.dataset.barcode,
-              sequencescapeApiUrl: assetElem.dataset.sequencescapeApi,
-              tractionServiceUrl: assetElem.dataset.tractionServiceUrl,
-              tractionUIUrl: assetElem.dataset.tractionUiUrl,
-            },
-            {},
-            userIdRequired,
-          )
-        }
-        break
-      }
-      case 'file-list': {
-        const app = renderVueComponent(id, component, {}, {})
-        document.getElementById(id).addEventListener('click', function () {
-          app.$children[0].fetchData()
-        })
-        break
-      }
-      case 'labware-custom-metadata-add-form': {
-        renderVueComponent(
-          id,
-          component,
-          {
-            labwareId: assetElem.dataset.labwareId,
-            sequencescapeApiUrl: assetElem.dataset.sequencescapeApi,
-            sequencescapeUrl: assetElem.dataset.sequencescapeUrl,
-            tractionUIUrl: assetElem.dataset.tractionUiUrl,
-            customMetadataFields: assetElem.dataset.customMetadataFields,
-          },
-          {},
-          userIdRequired,
-        )
-        break
-      }
-      case 'multi-stamp-page':
-      case 'multi-stamp-library-splitter-page':
-      case 'multi-stamp-tubes-page':
-      case 'custom-tagged-plate-page':
-      case 'tubes-to-rack':
-      case 'validate-paired-tubes': {
+      } else {
         setAxiosHeaderToken()
-        renderVueComponent(id, component, assetElem.dataset, {})
+        renderVueComponent(id, component, assetElem.dataset, {}, userIdRequired)
         break
       }
-      case 'qc-information': {
-        renderVueComponent(id, component, assetElem.dataset, {})
-        break
-      }
-      default:
-        console.warn(`No initialization logic defined for element with id: ${id}`)
+    } else {
+      console.warn(`No initialization logic defined for element with id: ${id}`)
     }
   }
 })
