@@ -3821,16 +3821,16 @@ ROBOT_CONFIG =
       require_robot: true,
       verify_robot: true,
       beds: {
-        bed(6).barcode => {
+        bed(7).barcode => {
           purpose: 'LCMT DNA Adp Lig',
           states: ['passed'],
-          label: 'Bed 6'
+          label: 'Bed 7'
         },
-        bed(7).barcode => {
+        bed(6).barcode => {
           purpose: 'LCMT DNA Lib PCR',
           states: ['pending'],
-          label: 'Bed 7',
-          parent: bed(6).barcode,
+          label: 'Bed 6',
+          parent: bed(7).barcode,
           target_state: 'passed'
         }
       }
