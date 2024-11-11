@@ -29,5 +29,5 @@ Rails.application.config.scrna_config = {
   # Default total cell count for samples
   total_cell_count_default_threshold: 50_000,
   # Key for the number of cells per chip well metadata stored on pool wells (in poly_metadata)
-  number_of_cells_per_chip_well_key: 'scrna_core_pbmc_donor_pooling_number_of_cells_per_chip_well_key'
+  number_of_cells_per_chip_well_key: 'scrna_core_pbmc_donor_pooling_number_of_cells_per_chip_well'
 }.freeze
