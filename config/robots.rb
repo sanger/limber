@@ -3873,10 +3873,10 @@ ROBOT_CONFIG =
           parent: bed(4).barcode,
           target_state: 'started'
         },
-        car('3,4').barcode => {
+        car('4,3').barcode => {
           purpose: 'LCMT EM APOBEC Deam',
           states: ['pending'],
-          label: 'Carousel 3,4',
+          label: 'Carousel 4,3',
           parent: car('3,3').barcode,
           target_state: 'started'
         }
