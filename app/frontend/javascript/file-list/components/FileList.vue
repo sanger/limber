@@ -1,5 +1,5 @@
 <template>
-  <div class="list-group list-group-flush">
+  <div class="list-group list-group-flush"  @click="handleClick">
     <div v-if="loading" class="spinner-dark">Updating...</div>
     <a v-for="qc_file in qc_files" :key="qc_file.uuid" class="list-group-item" :href="'/qc_files/' + qc_file.uuid">
       {{ qc_file.filename }} - {{ qc_file.created }}
@@ -35,6 +35,9 @@ export default {
       }
       xhr.send()
     },
+    handleClick() {
+      this.fetchData()
+    }
   },
 }
 </script>
