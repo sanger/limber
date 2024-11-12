@@ -13,7 +13,7 @@ Rails.application.config.scrna_config = {
   # Number of cells required for each sample going into the pool
   required_number_of_cells_per_sample_in_pool: 30_000,
   # Factor accounting for wastage of material when transferring between labware
-  wastage_factor: 0.95238,
+  wastage_factor: 0.95,
   # Desired concentration of cells per microlitre for chip loading
   desired_chip_loading_concentration: 2400,
   # Desired volume of the sample in microlitres
