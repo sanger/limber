@@ -2,7 +2,7 @@ import { renderVueComponent, missingUserIdError } from './vue_app.js'
 import * as cookieJarLib from '@/javascript/shared/cookieJar.js'
 
 describe('renderVueComponent', () => {
-  let component, props, data, selector, element, userIdRequired
+  let component, props, selector, element, userIdRequired
 
   beforeEach(() => {
     component = {
@@ -12,7 +12,6 @@ describe('renderVueComponent', () => {
       },
     }
     props = { propA: 'valueA' }
-    data = { dataA: 'valueA' }
     selector = 'test-selector'
     element = document.createElement('div')
     element.id = selector
@@ -26,31 +25,35 @@ describe('renderVueComponent', () => {
   })
 
   it('renders the Vue component when element is found', () => {
-    const app = renderVueComponent(selector, component, props, data, userIdRequired)
+    const app = renderVueComponent(selector, component, props, userIdRequired)
     expect(app).toBeDefined()
     expect(app.$el.innerHTML).toContain('Test string')
   })
 
   it('does not render the Vue component when element is not found', () => {
     document.body.innerHTML = ''
-    const app = renderVueComponent(selector, component, props, data, userIdRequired)
+    const app = renderVueComponent(selector, component, props, userIdRequired)
     expect(app).toBeUndefined()
   })
   it('renders the Vue component when userId is required and found', () => {
     userIdRequired = true
     vi.spyOn(cookieJarLib, 'default').mockReturnValue({ user_id: 'mocked_user_id' })
-    renderVueComponent(selector, component, props, data, userIdRequired)
+    renderVueComponent(selector, component, props, userIdRequired)
     expect(document.body.innerHTML).toContain('Test string')
   })
   it('renders missingUserIdError when userId is required but not found', () => {
     vi.spyOn(cookieJarLib, 'default').mockReturnValue({ user_id: null })
     userIdRequired = true
-    const app = renderVueComponent(selector, component, props, data, userIdRequired)
+    const app = renderVueComponent(selector, component, props, userIdRequired)
     expect(app.$el.innerHTML).toContain(missingUserIdError)
   })
   it('renders the Vue component when userId is not required and not found', () => {
     vi.spyOn(cookieJarLib, 'default').mockReturnValue({ user_id: null })
-    const app = renderVueComponent(selector, component, props, data, userIdRequired)
+    const app = renderVueComponent(selector, component, props, userIdRequired)
     expect(app.$el.innerHTML).toContain('Test string')
+  })
+  it('sets the data property of the Vue instance', () => {
+    const app = renderVueComponent(selector, component, props, userIdRequired, () => ({ dataA: 'valueA' }))
+    expect(app.$data.dataA).toBe('valueA')
   })
 })

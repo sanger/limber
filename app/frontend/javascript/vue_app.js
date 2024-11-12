@@ -49,7 +49,7 @@ export const missingUserIdError = `
  * @returns {Vue} The Vue instance.
  */
 
-export const renderVueComponent = (selector, component, props = {}, data = {}, userIdRequired = false) => {
+export const renderVueComponent = (selector, component, props = {}, userIdRequired = false, setData = () => ({})) => {
   const selector_val = `#${selector}`
   const element = document.querySelector(selector_val)
   const userId = cookieJar(document.cookie).user_id
@@ -67,6 +67,7 @@ export const renderVueComponent = (selector, component, props = {}, data = {}, u
     })
   } else {
     props.userId = userId
+    const data = setData(props)
     app = new Vue({
       el: selector_val,
       data: () => data,
@@ -78,13 +79,26 @@ export const renderVueComponent = (selector, component, props = {}, data = {}, u
 
 /**
  * List of elements to initialize as Vue components.
- * Each element should have an id, a Vue component, and an optional flag indicating whether a user ID is required.
+ * Each element should have an id, a Vue component, an optional flag indicating whether a user ID is required and a setData method.
  */
 const elements = [
   {
     id: 'asset-comments',
+    component: AssetComments,
+    userIdRequired: true,
+    setData: (props) => initialiseCommentFactory(props),
+  },
+  {
+    id: 'asset-comments-counter',
+    component: AssetCommentsCounter,
+    userIdRequired: true,
+    setData: (props) => initialiseCommentFactory(props),
+  },
+  {
+    id: 'asset-comments-add-form',
     component: AssetCommentsAddForm,
     userIdRequired: true,
+    setData: (props) => initialiseCommentFactory(props),
   },
   {
     id: 'pool-xp-tube-submit-panel',
@@ -141,6 +155,26 @@ const setAxiosHeaderToken = () => {
 }
 
 /**
+ * Initialize the comment factory.
+ *
+ */
+const initialiseCommentFactory = (props) => {
+  const sequencescapeApiUrl = props.sequencescapeApi
+  const sequencescapeApiKey = props.sequencescapeApiKey
+  const axiosInstance = axios.create({
+    baseURL: sequencescapeApiUrl,
+    timeout: 10000,
+    headers: {
+      Accept: 'application/vnd.api+json',
+      'Content-Type': 'application/vnd.api+json',
+    },
+  })
+  const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources, sequencescapeApiKey)
+  const commentFactory = commentStoreFactory(axiosInstance, api, props.assetId, props.user_id)
+  return commentFactory
+}
+
+/**
  * Initialize Vue components when the DOM content is loaded.
  * For each element in the elements list, check if the element exists in the DOM.
  * If the element exists, render the Vue component with the specified props and data.
@@ -149,38 +183,12 @@ const setAxiosHeaderToken = () => {
  * The initialization logic for each element is specific to the element's id.
  */
 document.addEventListener('DOMContentLoaded', () => {
-  for (const { id, component, userIdRequired = false } of elements) {
+  for (const { id, component, userIdRequired = false, setData = () => ({}) } of elements) {
     const assetElem = document.getElementById(id)
     if (!assetElem) continue
     if (id) {
-      if (id === 'asset-comments') {
-        const sequencescapeApiUrl = assetElem.dataset.sequencescapeApi
-        const sequencescapeApiKey = assetElem.dataset.sequencescapeApiKey
-        const axiosInstance = axios.create({
-          baseURL: sequencescapeApiUrl,
-          timeout: 10000,
-          headers: {
-            Accept: 'application/vnd.api+json',
-            'Content-Type': 'application/vnd.api+json',
-          },
-        })
-        const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources, sequencescapeApiKey)
-        const commentStore = commentStoreFactory(
-          axiosInstance,
-          api,
-          assetElem.dataset.assetId,
-          cookieJar(document.cookie).user_id,
-        )
-        renderVueComponent('asset-comments', AssetComments, {}, commentStore)
-        renderVueComponent('asset-comments-counter', AssetCommentsCounter, {}, commentStore)
-        renderVueComponent('asset-comments-add-form', component, assetElem.dataset, commentStore, userIdRequired)
-        commentStore.refreshComments()
-        break
-      } else {
-        setAxiosHeaderToken()
-        renderVueComponent(id, component, assetElem.dataset, {}, userIdRequired)
-        break
-      }
+      setAxiosHeaderToken()
+      renderVueComponent(id, component, assetElem.dataset, userIdRequired, setData)
     } else {
       console.warn(`No initialization logic defined for element with id: ${id}`)
     }
