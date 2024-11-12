@@ -16,8 +16,6 @@ Rails.application.config.scrna_config = {
   wastage_factor: 0.95238,
   # Desired concentration of cells per microlitre for chip loading
   desired_chip_loading_concentration: 2400,
-  # Desired number of cells per well in the chip
-  desired_number_of_cells_per_chip_well: 90_000,
   # Desired volume of the sample in microlitres
   desired_sample_volume: 37.5,
   # Volume taken for cell counting in microlitres

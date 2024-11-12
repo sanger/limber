@@ -79,14 +79,12 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
     assign(:ancestor_plate, source_plate) # parent plate
   end
 
-  context 'when using default values' do
-    it 'renders the expected content' do
-      rows = CSV.parse(render)
-      expect(rows[0]).to eq(workflow_row)
-      expect(rows[1]).to eq(empty_row)
-      expect(rows[2]).to eq(header_row)
-      expect(rows[3]).to eq(row_source_a1)
-      expect(rows[4]).to eq(row_source_b1)
+  context 'when the pool well is missing metadata for number_of_cells_per_chip_well' do
+    it 'raises an exception' do
+      expect { render }.to raise_error(
+        StandardError,
+        'Missing poly metadata for number of cells per chip well for DN1S A1, cannot generate driver file'
+      )
     end
   end
 

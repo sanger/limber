@@ -29,7 +29,6 @@
   volume_taken_for_cell_counting = scrna_config[:volume_taken_for_cell_counting]
 
   number_of_cells_per_chip_well_key = scrna_config[:number_of_cells_per_chip_well_key]
-  desired_number_of_cells_per_chip_well = scrna_config[:desired_number_of_cells_per_chip_well]
 
   # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
   mapping = (1..8).each_with_object({}) { |i, hash| hash["A#{i}"] = (16 + i).to_s }
@@ -41,16 +40,21 @@
     src_well = ancestral_plate_wells[src_location]
     number_of_samples =  src_well.aliquots.length
 
-    # Use the pool wells number_of_cells_per_chip_well if available, otherwise use the default.
-    # Value to be calculated per chip well and stored on the pool well (in polymetadata)
+    # Use the pool wells number_of_cells_per_chip_well if available, otherwise error.
+    # Value should have been calculated and stored on the pool well polymetadata.
     well_poly_metadatum = src_well.poly_metadatum_by_key(number_of_cells_per_chip_well_key)
-    number_of_cells_per_chip_well = well_poly_metadatum&.value.to_i.nonzero?
-    desired_number_of_cells_per_chip_well = number_of_cells_per_chip_well || desired_number_of_cells_per_chip_well
+
+    # raise error if polymetadata is missing
+    raise "Missing poly metadata for number of cells per chip well for #{src_barcode} #{src_location}, " \
+            'cannot generate driver file' unless well_poly_metadatum
+
+    # extract value from the polymetadata
+    number_of_cells_per_chip_well = well_poly_metadatum&.value.to_f.nonzero?
 
     # calculations
     resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor).to_f / desired_chip_loading_concentration
     source_well_volume = resuspension_volume - volume_taken_for_cell_counting
-    sample_volume = desired_number_of_cells_per_chip_well.to_f/desired_chip_loading_concentration
+    sample_volume = number_of_cells_per_chip_well/desired_chip_loading_concentration
     pbs_volume = desired_sample_volume - sample_volume
 
     # add row to csv
