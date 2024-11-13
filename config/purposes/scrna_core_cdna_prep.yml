@@ -106,7 +106,7 @@ LRC GEM-X 5p Chip:
   # ChromiumChipPresenter has been added to disable the incompatible pooling tab.
   :presenter_class: Presenters::ChromiumChipPresenter
   :file_links:
-    - name: 'Download Hamilton LRC PBMC Pools (or Input) to LRC GEM-X 5p Chip CSV'
+    - name: 'Download Hamilton LRC PBMC Pools to LRC GEM-X 5p Chip CSV'
       id: hamilton_gem_x_5p_chip_loading
 # GEMs plate, containing wells from the above in duplicate.
 LRC GEM-X 5p GEMs:
