@@ -4,7 +4,7 @@
 Rails.application.config.scrna_config = {
   # Maximum volume to take into the pools plate for each sample (in microlitres)
   maximum_sample_volume: 60.0,
-  # Minimum volume of a sample in microlitres
+  # Minimum volume to take into the pools plate for each sample (in microlitres)
   minimum_sample_volume: 5.0,
   # Minimum volume required for resuspension in microlitres
   minimum_resuspension_volume: 10.0,
