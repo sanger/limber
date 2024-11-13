@@ -52,12 +52,18 @@
     number_of_cells_per_chip_well = well_poly_metadatum&.value.to_f.nonzero?
 
     # calculations
+
+    # calculate volume we believe is remaining in the source well
     resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor).to_f / desired_chip_loading_concentration
     source_well_volume = resuspension_volume - volume_taken_for_cell_counting
+
+    # calculate volume of the source sample well to take to load onto the chip
     sample_volume = number_of_cells_per_chip_well/desired_chip_loading_concentration
+
+    # calculate pbs buffer volume with which to top up the chip loading volume
     pbs_volume = desired_chip_loading_volume - sample_volume
 
-    # add row to csv
+    # add row to driver file output csv
     rows_array << [
       src_barcode,
       src_location,
