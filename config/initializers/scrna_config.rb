@@ -22,7 +22,7 @@ Rails.application.config.scrna_config = {
   volume_taken_for_cell_counting: 10.0,
   # Key for the required number of cells metadata stored on Study (in poly_metadata)
   study_required_number_of_cells_per_sample_in_pool_key: 'scrna_core_pbmc_donor_pooling_required_number_of_cells',
-  # Default viability threshold for samples in percent
+  # Default viability threshold when passing/failing samples (in percent)
   viability_default_threshold: 65,
   # Default total cell count for samples
   total_cell_count_default_threshold: 50_000,
