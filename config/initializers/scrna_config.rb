@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This hash is used to store constants used in pooling and chip loading calculations for samples in the scRNA pipeline.
+# This hash is used to store constants used in pooling and chip loading calculations for samples in the scRNA Core pipeline.
 Rails.application.config.scrna_config = {
   # Maximum volume of a sample in microlitres
   maximum_sample_volume: 60.0,
