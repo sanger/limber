@@ -22,12 +22,12 @@
   # Constants from config/initializers/scrna_config.rb
   scrna_config = Rails.application.config.scrna_config
 
+  # fetch constants from scrna_config for use in calculations on source wells below
   required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
   wastage_factor = scrna_config[:wastage_factor]
   desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
-  desired_sample_volume = scrna_config[:desired_sample_volume]
+  desired_chip_loading_volume = scrna_config[:desired_chip_loading_volume]
   volume_taken_for_cell_counting = scrna_config[:volume_taken_for_cell_counting]
-
   number_of_cells_per_chip_well_key = scrna_config[:number_of_cells_per_chip_well_key]
 
   # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
@@ -55,7 +55,7 @@
     resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor).to_f / desired_chip_loading_concentration
     source_well_volume = resuspension_volume - volume_taken_for_cell_counting
     sample_volume = number_of_cells_per_chip_well/desired_chip_loading_concentration
-    pbs_volume = desired_sample_volume - sample_volume
+    pbs_volume = desired_chip_loading_volume - sample_volume
 
     # add row to csv
     rows_array << [
