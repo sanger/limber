@@ -2,7 +2,7 @@
 
 # This hash is used to store constants used in pooling and chip loading calculations for samples in the scRNA Core pipeline.
 Rails.application.config.scrna_config = {
-  # Maximum volume of a sample in microlitres
+  # Maximum volume to take into the pools plate for each sample (in microlitres)
   maximum_sample_volume: 60.0,
   # Minimum volume of a sample in microlitres
   minimum_sample_volume: 5.0,
