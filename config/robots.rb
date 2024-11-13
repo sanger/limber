@@ -3626,16 +3626,16 @@ ROBOT_CONFIG =
       name: 'Hamilton LRC PBMC Pools => LRC GEM-X 5p Chip',
       require_robot: true,
       beds: {
-        bed(8).barcode => {
+        bed(5).barcode => {
           purpose: 'LRC PBMC Pools',
           states: ['passed'],
-          label: 'Bed 8'
+          label: 'Bed 5'
         },
         bed(15).barcode => {
           purpose: 'LRC GEM-X 5p Chip',
           states: ['pending'],
           label: 'Bed 15',
-          parent: bed(8).barcode,
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }
@@ -3655,10 +3655,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 15'
         },
-        bed(5).barcode => {
+        bed(4).barcode => {
           purpose: 'LRC GEM-X 5p GEMs',
           states: ['pending'],
-          label: 'Bed 5',
+          label: 'Bed 4',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
@@ -4040,6 +4040,52 @@ ROBOT_CONFIG =
           label: 'Bed 14',
           parent: bed(12).barcode,
           target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-lbr-cherrypick-to-lrnaf-frag',
+      name: 'Bravo LBR Cherrypick => LRNAF Frag',
+      require_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LBR Cherrypick',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('2,3').barcode => {
+          purpose: 'LRNAF Frag',
+          states: ['pending'],
+          label: 'Carousel 2,3',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-lrnaf-frag-to-lb-cdna',
+      name: 'Bravo LRNAF Frag => LB cDNA',
+      require_robot: true,
+      beds: {
+        bed('8').barcode => {
+          purpose: 'LRNAF Frag',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('3,4').barcode => {
+          purpose: 'LB cDNA',
+          states: ['pending'],
+          label: 'Carousel 3,4',
+          parent: bed(8).barcode,
+          target_state: 'started'
+        },
+        car('4,3').barcode => {
+          purpose: 'LB cDNA XP',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: car('3,4').barcode
         }
       }
     )
