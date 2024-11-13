@@ -60,14 +60,14 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
     ]
   end
 
-  # The number of samples is 10, so the sample volume is 109.05 µL ((10*30000*0.95238)/2400 -10.0)
+  # The number of samples is 10, so the sample volume is 108.8 µL (((10*30000*0.95)/2400) -10.0)
   let(:row_source_b1) do
     [
       source_plate.barcode.human,
       source_well_b1.location,
       dest_plate.barcode.human,
       mapping[dest_well_a2.location],
-      '109.0',
+      '108.8',
       '37.5',
       '0.0'
     ]
@@ -128,14 +128,14 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
       ]
     end
 
-    # The number of samples is 10, so the sample volume is 109.05 µL ((10*30000*0.95238)/2400 -10.0)
+    # The number of samples is 10, so the sample volume is 108.8 µL ((10*30000*0.95238)/2400 -10.0)
     let(:row_source_b1) do
       [
         source_plate.barcode.human,
         source_well_b1.location,
         dest_plate.barcode.human,
         mapping[dest_well_a2.location],
-        '109.0',
+        '108.8',
         '35.4',
         '2.1'
       ]
