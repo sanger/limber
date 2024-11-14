@@ -23,6 +23,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :direct_submissions, class_name: 'Sequencescape::Api::V2::Submission'
   has_many :state_changes
   has_many :submission_pools, class_name: 'Sequencescape::Api::V2::SubmissionPool'
+  has_many :transfers_as_destination, class_name: 'Sequencescape::Api::V2::Transfer'
   has_one :custom_metadatum_collection
 
   # Other relationships
