@@ -46,6 +46,6 @@ class LabwareBarcode
   end
 
   def extracted
-    /\A(?<prefix>[a-zA-Z]*)-(?<number>\d+)/.match(human)
+    /\A(?<prefix>[a-zA-Z]*)-?(?<number>\d+)/.match(human)
   end
 end
