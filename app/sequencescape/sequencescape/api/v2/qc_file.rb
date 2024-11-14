@@ -4,6 +4,8 @@
 class Sequencescape::Api::V2::QcFile < Sequencescape::Api::V2::Base
   has_one :labware
 
+  property :created_at, type: :time
+
   # The endpoint requires that the labware relationship is of a Labware type.
   # Since we create for plates and tubes, not the more generic labware type, we will declare the relationship manually.
   def self.create_for_labware!(labware:, contents:, filename:)
