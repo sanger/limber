@@ -21,7 +21,11 @@ class QcFilesController < ApplicationController
   end
 
   def create
-    asset.qc_files.create_from_file!(params['qc_file'], params['qc_file'].original_filename)
+    Sequencescape::Api::V2::QcFile.create_for_labware!(
+      contents: params['qc_file'].read,
+      filename: params['qc_file'].original_filename,
+      labware: asset
+    )
     redirect_to(
       asset_path,
       notice: 'Your file has been uploaded and is available from the file tab' # rubocop:todo Rails/I18nLocaleTexts
