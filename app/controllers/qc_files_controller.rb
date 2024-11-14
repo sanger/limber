@@ -15,9 +15,8 @@ class QcFilesController < ApplicationController
   end
 
   def show
-    response = api.qc_file.find(params[:id]).retrieve
-    filename = /filename="([^"]*)"/.match(response['Content-Disposition'])[1] || 'unnamed_file'
-    send_data(response.body, filename: filename, type: 'sequencescape/qc_file')
+    qc_file = Sequencescape::Api::V2::QcFile.find(uuid: params[:id]).first
+    send_data(qc_file.contents, filename: qc_file.filename, type: 'sequencescape/qc_file')
   end
 
   def create
