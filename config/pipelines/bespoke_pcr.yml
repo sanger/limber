@@ -2,8 +2,7 @@
 Bespoke PCR:
   pipeline_group: Bespoke PCR
   filters:
-    request_type_key:
-      - limber_pcr_bespoke
+    request_type_key: limber_pcr_bespoke
     library_type:
       - ChIP-Seq Auto
       - Chromium single cell HTO
