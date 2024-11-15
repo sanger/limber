@@ -3620,22 +3620,22 @@ ROBOT_CONFIG =
     # scRNA pipeline
     # Hamilton STARlet bed verification
     # Transfers 1:1
-    # LRC PBMC Pools or LRC PBMC Pools Input to LRC GEM-X 5p Chip
+    # LRC PBMC Pools to LRC GEM-X 5p Chip
     custom_robot(
       'hamilton-lrc-pbmc-pools-or-input-to-lrc-gem-x-5p-chip',
-      name: 'Hamilton LRC PBMC Pools (or Input) => LRC GEM-X 5p Chip',
+      name: 'Hamilton LRC PBMC Pools => LRC GEM-X 5p Chip',
       require_robot: true,
       beds: {
-        bed(8).barcode => {
-          purpose: ['LRC PBMC Pools', 'LRC PBMC Pools Input'],
+        bed(5).barcode => {
+          purpose: 'LRC PBMC Pools',
           states: ['passed'],
-          label: 'Bed 8'
+          label: 'Bed 5'
         },
         bed(15).barcode => {
           purpose: 'LRC GEM-X 5p Chip',
           states: ['pending'],
           label: 'Bed 15',
-          parent: bed(8).barcode,
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }
@@ -3655,10 +3655,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 15'
         },
-        bed(5).barcode => {
+        bed(4).barcode => {
           purpose: 'LRC GEM-X 5p GEMs',
           states: ['pending'],
-          label: 'Bed 5',
+          label: 'Bed 4',
           parent: bed(15).barcode,
           target_state: 'passed'
         }
@@ -3667,14 +3667,14 @@ ROBOT_CONFIG =
 
     # scRNA pipeline
     # Hamilton bed verification
-    # LRC GEM-X 5p GEMs to LRC GEM-X 5p cDNA PCR
+    # LRC GEM-X 5p GEMs or LRC GEM-X 5p GEMs Input to LRC GEM-X 5p cDNA PCR
     # Transfers 1:1
     custom_robot(
       'hamilton-lrc-gem-x-5p-gems-to-lrc-gem-x-5p-cdna-pcr',
-      name: 'Hamilton LRC GEM-X 5p GEMs => LRC GEM-X 5p cDNA PCR',
+      name: 'Hamilton LRC GEM-X 5p GEMs(or Input) => LRC GEM-X 5p cDNA PCR',
       beds: {
         bed(15).barcode => {
-          purpose: 'LRC GEM-X 5p GEMs',
+          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input'],
           states: ['passed'],
           label: 'Bed 15'
         },
@@ -3731,8 +3731,8 @@ ROBOT_CONFIG =
     # LCM Triomics WGS and EMSeq bed verification
     # Verify initial setup
     custom_robot(
-      'bravo-verify-initial-setup',
-      name: 'Bravo Verify Initial Setup',
+      'bravo-lcmt-emseq-verify-initial-setup',
+      name: 'Bravo LCMT EMSeq Verify Initial Setup',
       require_robot: true, # Robot barcode must be scanned in.
       verify_robot: false, # First robot step; no previous robot.
       beds: {
@@ -3821,33 +3821,16 @@ ROBOT_CONFIG =
       require_robot: true,
       verify_robot: true,
       beds: {
-        bed(6).barcode => {
+        bed(7).barcode => {
           purpose: 'LCMT DNA Adp Lig',
           states: ['passed'],
-          label: 'Bed 6'
+          label: 'Bed 7'
         },
-        bed(7).barcode => {
+        bed(6).barcode => {
           purpose: 'LCMT DNA Lib PCR',
           states: ['pending'],
-          label: 'Bed 7',
-          parent: bed(6).barcode,
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT DNA Adp Lig Verification
-    custom_robot(
-      'bravo-lcmt-dna-adp-lig-verification',
-      name: 'Bravo LCMT DNA Adp Lig Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT DNA Adp Lig',
-          states: ['started'],
-          label: 'Bed 5',
+          label: 'Bed 6',
+          parent: bed(7).barcode,
           target_state: 'passed'
         }
       }
@@ -3863,23 +3846,6 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Ox',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT EM TET2 Stop Verification
-    custom_robot(
-      'bravo-lcmt-em-tet2-stop-verification',
-      name: 'Bravo LCMT EM TET2 Stop Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT EM TET2 Stop',
           states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
@@ -3907,10 +3873,10 @@ ROBOT_CONFIG =
           parent: bed(4).barcode,
           target_state: 'started'
         },
-        car('3,4').barcode => {
+        car('4,3').barcode => {
           purpose: 'LCMT EM APOBEC Deam',
           states: ['pending'],
-          label: 'Carousel 3,4',
+          label: 'Carousel 4,3',
           parent: car('3,3').barcode,
           target_state: 'started'
         }
@@ -3927,23 +3893,6 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM NaOH Denat',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT EM APOBEC Deam Verification
-    custom_robot(
-      'bravo-lcmt-em-apobec-deam-verification',
-      name: 'Bravo LCMT EM APOBEC Deam Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT EM APOBEC Deam',
           states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
@@ -4040,6 +3989,52 @@ ROBOT_CONFIG =
           label: 'Bed 14',
           parent: bed(12).barcode,
           target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-lbr-cherrypick-to-lrnaf-frag',
+      name: 'Bravo LBR Cherrypick => LRNAF Frag',
+      require_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LBR Cherrypick',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('2,3').barcode => {
+          purpose: 'LRNAF Frag',
+          states: ['pending'],
+          label: 'Carousel 2,3',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-lrnaf-frag-to-lb-cdna',
+      name: 'Bravo LRNAF Frag => LB cDNA',
+      require_robot: true,
+      beds: {
+        bed('8').barcode => {
+          purpose: 'LRNAF Frag',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        car('3,4').barcode => {
+          purpose: 'LB cDNA',
+          states: ['pending'],
+          label: 'Carousel 3,4',
+          parent: bed(8).barcode,
+          target_state: 'started'
+        },
+        car('4,3').barcode => {
+          purpose: 'LB cDNA XP',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: car('3,4').barcode
         }
       }
     )

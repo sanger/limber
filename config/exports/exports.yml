@@ -248,4 +248,4 @@ hamilton_gem_x_5p_chip_loading:
       prepend: true
   ancestor_purpose:
     - LRC PBMC Pools
-    - LRC PBMC Pools Input
+    - LRC GEM-X 5p GEMs Input
