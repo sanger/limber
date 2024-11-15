@@ -138,9 +138,9 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def assign_pools_to_wells
-    pool_locations = pools.pools.flat_map { |p| p.subpools.map(&:well_locations) }
+    pooled_wells = pooling_metadata.values.map { |pool| pool['wells'] }
     wells.each do |well|
-      pool = pool_locations.find { |pl| pl.include?(well.location) }
+      pool = pooled_wells.find { |wells| wells.include?(well.location) }
       next if pool.nil?
 
       well.pool = pool
