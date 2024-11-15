@@ -138,7 +138,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def assign_pools_to_wells
-    pooled_wells = pooling_metadata.values.map { |pool| pool['wells'] }
+    pooled_wells = pooling_metadata.values.pluck('wells')
     wells.each do |well|
       pool = pooled_wells.find { |wells| wells.include?(well.location) }
       next if pool.nil?
