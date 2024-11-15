@@ -64,4 +64,14 @@ FactoryBot.define do
       end
     end
   end
+
+  # The following factory is used for setting up a submission_pools collection
+  # for a v2 plate.
+  factory :v2_submission_pool, class: Sequencescape::Api::V2::SubmissionPool do
+    skip_create
+
+    plates_in_submission { 1 }
+    used_tag2_layout_templates { [] }
+    used_tag_layout_templates { [] }
+  end
 end

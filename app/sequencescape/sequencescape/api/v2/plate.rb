@@ -25,6 +25,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :submission_pools, class_name: 'Sequencescape::Api::V2::SubmissionPool'
   has_many :transfers_as_destination, class_name: 'Sequencescape::Api::V2::Transfer'
   has_one :custom_metadatum_collection
+  has_many :submission_pools
 
   # Other relationships
   # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
