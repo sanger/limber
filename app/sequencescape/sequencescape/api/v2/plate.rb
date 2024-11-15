@@ -11,8 +11,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
   include Sequencescape::Api::V2::Shared::HasQcFiles
 
-  custom_endpoint :create_qc_file, on: :member, request_method: :post
-
   self.plate = true
   has_many :wells
   has_many :samples
