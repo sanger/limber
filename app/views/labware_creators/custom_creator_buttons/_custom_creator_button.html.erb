@@ -1,4 +1,21 @@
+<%
+    # If labware creation requires additional input, the button is created as
+    # a link to a custom page. In order to pass all the necessary information
+    # to the custom page, query parameters such as pipeline filters are added
+    # to the link. They are used to initialise the labware creator of the new
+    # action of the controller and it is available in the custom page. The form
+    # in the custom page sends these parameters together with the additional
+    # input to the labware creator of the create action.
+
+    options = {} # Query parameters
+    options[:purpose_uuid] = custom_creator_button.purpose_uuid
+    options[:parent_uuid] = custom_creator_button.parent_uuid
+    custom_creator_button.filters.map do |filter_key, filter_values|
+        filter_values.each do |filter_value|
+            options["filters[#{filter_key}][]"] = filter_value
+        end
+    end
+%>
 <%= link_to "Add an empty #{custom_creator_button.name} #{custom_creator_button.type}",
-    new_polymorphic_path([custom_creator_button.parent, custom_creator_button],
-    purpose_uuid: custom_creator_button.purpose_uuid),
+    new_polymorphic_path([custom_creator_button.parent, custom_creator_button], options),
     class:  "create-#{custom_creator_button.type}-button logged_in_only" %>
