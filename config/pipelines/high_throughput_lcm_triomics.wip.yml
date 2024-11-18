@@ -33,3 +33,22 @@ LCM Triomics WGS:
     library_type: LCM Triomics WGS
   relationships:
     LCMT DNA Adp Lig: LCMT DNA Lib PCR
+
+# Pipeline configuration for WGS
+LCM Triomics WGS:
+  pipeline_group: LCM Triomics WGS and EMSeq
+  filters:
+    request_type_key: limber_lcm_triomics_wgs
+    library_type: LCM Triomics WGS
+  library_pass: LCMT DNA PCR XP
+  relationships:
+    LCMT DNA Adp Lig: LCMT DNA Lib PCR
+    LCMT DNA Lib PCR: LCMT DNA PCR XP
+LCM Triomics WGS Custom Pooling:
+  pipeline_group: LCM Triomics WGS and EMSeq
+  filters:
+    request_type_key: limber_lcm_triomics_wgs
+    state: passed
+  relationships:
+    LCMT DNA PCR XP: LCMT DNA Pool XP
+    LCMT DNA Pool XP: LCMT DNA Pool XP Norm

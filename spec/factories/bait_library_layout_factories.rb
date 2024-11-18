@@ -3,11 +3,9 @@
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
-  # Generates a BaitLibraryLayout (API V1)
-  factory :bait_library_layout, class: Sequencescape::BaitLibraryLayout, traits: [:api_object] do
-    json_root { 'bait_library_layout' }
-
-    with_belongs_to_associations 'plate'
+  # Generates an incomplete, but sufficient for testing, V2 BaitLibraryLayout
+  factory :bait_library_layout, class: Sequencescape::Api::V2::BaitLibraryLayout do
+    skip_create
 
     transient do
       # Provide an array of pools, describing the number of wells in each
@@ -23,7 +21,7 @@ FactoryBot.define do
     # For example:
     # { 'A1' => 'Human all exon 50MB', 'B1' => 'Human all exon 50MB',
     #   'C1' => 'Mouse all exon', 'D1' => 'Mouse all exon'}
-    layout do
+    well_layout do
       wells = WellHelpers.column_order.dup
       pools.each_with_object({}) { |pool, hash| wells.shift(pool[:size]).each { |well| hash[well] = pool[:bait] } }
     end

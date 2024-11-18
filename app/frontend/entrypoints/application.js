@@ -29,6 +29,15 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 
 // ^^^ Template from Vite. Below is custom code for Limber ^^^
 
+// Import Rails UJS as in Sequencescape
+import Rails from '@rails/ujs'
+
+try {
+  Rails.start()
+} catch {
+  // Nothing
+}
+
 // Import Libraries
 import 'bootstrap'
 import 'popper.js'
@@ -54,6 +63,7 @@ import '@/javascript/multi-stamp/index.js'
 import '@/javascript/qc-information/index.js'
 import '@/javascript/tubes-to-rack/index.js'
 import '@/javascript/validate-paired-tubes/index.js'
+import '@/javascript/pool-xp-tube-panel/index.js'
 
 // Load simple javascript files
 import '@/javascript/plain-javascript/page-reloader.js'
