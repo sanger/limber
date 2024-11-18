@@ -109,6 +109,8 @@ LCMT EM Pool XP Norm:
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
+
+# WGS branch
 LCMT DNA Lib PCR:
   :asset_type: plate
   :stock_plate: false
@@ -152,21 +154,3 @@ LCMT DNA Pool XP Norm:
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
-
-# WGS branch
-LCMT DNA Lib PCR:
-  :asset_type: plate
-  :stock_plate: false
-  :cherrypickable_target: false
-  :input_plate: false
-  :presenter_class: Presenters::PcrPresenter
-  :creator_class: LabwareCreators::TaggedPlate
-  :tag_layout_templates:
-    - TS_pWGSA_UDI96v2
-    - TS_pWGSB_UDI96
-    - TS_pWGSC_UDI96
-    - TS_pWGSC_UDI_tag60_61_swap
-    - TS_pWGSD_UDI96
-    - TSISC_UDI96
-    - TSRNAhWGS_UDI96
-  :size: 96
