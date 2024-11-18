@@ -33,7 +33,7 @@ LCMT DNA Adp Lig:
       template_name: 'Limber-Htp - LCM Triomics WGS'
       allowed_extra_barcodes: false
       request_options:
-        # TODO: replace with the correct request options
+        # TODO: {Y24-460} replace with the correct request options
         library_type: 'LCM Triomics WGS'
         fragment_size_required_from: '200'
         fragment_size_required_to: '800'
