@@ -159,4 +159,30 @@ module LabwareCreators::DonorPoolingCalculator
     end
     groups
   end
+
+  private
+
+  # This method retrieves the number of cells per chip well from the request metadata
+  # of the first aliquot in the first source well of the provided pool.
+  # If the cells per chip well value is not present, it raises a StandardError.
+  #
+  # @param pool [Array<SourceWell>] an array of source wells from the v2 API
+  # @return [Integer] the number of cells per chip well
+  # @raise [StandardError] if the cells per chip well value is not found in the request metadata
+  def number_of_cells_per_chip_well_from_request(pool)
+    # pool is an array of v2 api source_wells, fetch the first well
+    source_well = pool.first
+
+    # fetch request metadata for number of cells per chip well from first aliquot in the source well
+    # (it should be the same value for all the aliquots in all the source wells in the pool)
+    cells_per_chip_well = source_well&.aliquots&.first&.request&.request_metadata&.cells_per_chip_well
+
+    if cells_per_chip_well.blank?
+      raise StandardError,
+            "No request found for source well at #{source_well.location}, cannot fetch cells per chip " \
+              'well metadata for full allowance calculations'
+    end
+
+    cells_per_chip_well
+  end
 end
