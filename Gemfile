@@ -45,7 +45,7 @@ group :test do
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'
-  gem 'rspec-rails', '6.1.3'
+  gem 'rspec-rails'
   gem 'selenium-webdriver', '~> 4.1', require: false
   gem 'simplecov', require: false
   gem 'simplecov-lcov', require: false
