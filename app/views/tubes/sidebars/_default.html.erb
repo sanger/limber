@@ -7,8 +7,8 @@
         <div id="pool-xp-tube-submit-panel"
           data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
           data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
-          data-traction-service-url="<%= Limber::Application.config.traction_service_uri %>" 
-          data-traction-ui-url="<%= Limber::Application.config.traction_ui_uri %>" 
+          data-traction-service-url="<%= Limber::Application.config.traction_service_uri %>"
+          data-traction-ui-url="<%= Limber::Application.config.traction_ui_uri %>"
           data-barcode="<%= presenter.labware.barcode %>">
         </div>
   <%end%>
@@ -22,7 +22,7 @@
   <% end %>
 
 
-  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+  <%= card title:'Suggested Actions', css_class: 'suggested-actions primary-actions' do %>
     <% presenter.control_suggested_library_passing do %>
       <%= render partial: 'work_completion_form', locals:  { presenter: presenter } %>
     <% end %>
@@ -42,7 +42,7 @@
     <% else %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>
-   
+
   <% end %>
 
 

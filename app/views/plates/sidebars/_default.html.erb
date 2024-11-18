@@ -5,7 +5,7 @@
 
 <%= render 'labware/qc_data_upload' %>
 
-<%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+<%= card title:'Suggested Actions', css_class: 'suggested-actions primary-actions' do %>
   <% presenter.control_suggested_library_passing do %>
     <%= render 'work_completion_form', presenter: presenter %>
   <% end %>
