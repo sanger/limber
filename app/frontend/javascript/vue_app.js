@@ -49,7 +49,7 @@ export const missingUserIdError = `
  * @returns {Vue} The Vue instance.
  */
 
-export const renderVueComponent = (selector, component, props = {}, userIdRequired = false, setData = () => ({})) => {
+export const renderVueComponent = (selector, component, props = {}, userIdRequired = false, data) => {
   const selector_val = `#${selector}`
   const element = document.querySelector(selector_val)
   const userId = cookieJar(document.cookie).user_id
@@ -67,10 +67,9 @@ export const renderVueComponent = (selector, component, props = {}, userIdRequir
     })
   } else {
     props.userId = userId
-    const data = setData(props)
     app = new Vue({
       el: selector_val,
-      data: () => data,
+      data: data,
       render: (h) => h(component, { props }),
     })
   }
@@ -86,19 +85,6 @@ const elements = [
     id: 'asset-comments',
     component: AssetComments,
     userIdRequired: true,
-    setData: (props) => initialiseCommentFactory(props),
-  },
-  {
-    id: 'asset-comments-counter',
-    component: AssetCommentsCounter,
-    userIdRequired: true,
-    setData: (props) => initialiseCommentFactory(props),
-  },
-  {
-    id: 'asset-comments-add-form',
-    component: AssetCommentsAddForm,
-    userIdRequired: true,
-    setData: (props) => initialiseCommentFactory(props),
   },
   {
     id: 'pool-xp-tube-submit-panel',
@@ -183,12 +169,32 @@ const initialiseCommentFactory = (props) => {
  * The initialization logic for each element is specific to the element's id.
  */
 document.addEventListener('DOMContentLoaded', () => {
-  for (const { id, component, userIdRequired = false, setData = () => ({}) } of elements) {
+  for (const { id, component, userIdRequired = false } of elements) {
     const assetElem = document.getElementById(id)
     if (!assetElem) continue
     if (id) {
-      setAxiosHeaderToken()
-      renderVueComponent(id, component, assetElem.dataset, userIdRequired, setData)
+      if (id === 'asset-comments') {
+        const commentFactory = initialiseCommentFactory(assetElem.dataset)
+        renderVueComponent(id, component, assetElem.dataset, userIdRequired, commentFactory)
+        renderVueComponent(
+          'asset-comments-counter',
+          AssetCommentsCounter,
+          assetElem.dataset,
+          userIdRequired,
+          commentFactory,
+        )
+        renderVueComponent(
+          'asset-comments-add-form',
+          AssetCommentsAddForm,
+          assetElem.dataset,
+          userIdRequired,
+          commentFactory,
+        )
+        commentFactory.refreshComments()
+      } else {
+        setAxiosHeaderToken()
+        renderVueComponent(id, component, assetElem.dataset, userIdRequired)
+      }
     } else {
       console.warn(`No initialization logic defined for element with id: ${id}`)
     }
