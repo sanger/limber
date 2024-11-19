@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import eventBus from '@/javascript/shared/eventBus.js'
+
 export default {
   name: 'AssetCommentAddForm',
   props: {
@@ -37,6 +39,7 @@ export default {
       assetComment: '',
       state: 'pending',
       previous_success: null,
+      commentFactory: null,
     }
   },
   computed: {
@@ -68,13 +71,24 @@ export default {
       return this.assetComment.trim()
     },
   },
+  created() {
+    // Listen for the event
+    eventBus.$on('update-comment', (commentFactory) => {
+      console.log('State updated with data:');
+      this.commentFactory = commentFactory;
+    });
+  },
+  beforeDestroy() {
+    // Clean up the event listener
+    eventBus.$off('update-comment');
+  },
   methods: {
     async submit() {
       if (this.isCommentInvalid()) {
         return
       }
       this.state = 'busy'
-      const successful = await this.$root.$data.addComment(this.commentTitle, this.assetCommentTrimmed)
+      const successful = await this.commentFactory?.addComment(this.commentTitle, this.assetCommentTrimmed)
       if (successful) {
         this.state = 'success'
         this.assetComment = ''

@@ -3,8 +3,16 @@
 </template>
 
 <script>
+
+import eventBus from '@/javascript/shared/eventBus.js'
+
 export default {
   name: 'AssetComments',
+  data: function () {
+    return {
+      comments: null,
+    }
+  },
   computed: {
     commentCount() {
       if (this.comments) {
@@ -20,9 +28,19 @@ export default {
         return 'badge-secondary'
       }
     },
-    comments() {
-      return this.$root.$data.comments
-    },
+    // comments() {
+    //   return this.$root.$data.comments
+    // },
+  },
+  created() {
+    // Listen for the event
+    eventBus.$on('update-comment', (commentFactory) => {
+      this.comments = commentFactory.comments;
+    });
+  },
+  beforeDestroy() {
+    // Clean up the event listener
+    eventBus.$off('update-comment');
   },
 }
 </script>
