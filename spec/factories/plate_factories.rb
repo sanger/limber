@@ -46,7 +46,7 @@ FactoryBot.define do
         pool_sizes.each_with_index.flat_map do |pool_size, index|
           Array.new(pool_size) do
             create request_factory,
-                   pcr_cycles: pool_prc_cycles[index],
+                   pcr_cycles: pool_pcr_cycles[index],
                    state: library_state[index],
                    submission_id: index,
                    include_submissions: include_submissions,
@@ -101,7 +101,7 @@ FactoryBot.define do
       descendants { [] }
 
       # Array of pcr_cycles set up for each pool
-      pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+      pool_pcr_cycles { Array.new(pool_sizes.length, 10) }
 
       # The state of the library request for each pool
       library_state { ['pending'] * pool_sizes.length }
@@ -297,7 +297,7 @@ FactoryBot.define do
       library_type { 'Standard' }
       request_type { 'Limber Library Creation' }
       stock_plate_barcode { 2 }
-      pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+      pool_pcr_cycles { Array.new(pool_sizes.length, 10) }
       for_multiplexing { false }
       pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
       pool_complete { false }
@@ -365,7 +365,7 @@ FactoryBot.define do
             name: library_type
           },
           'request_type' => request_type,
-          'pcr_cycles' => pool_prc_cycles[index],
+          'pcr_cycles' => pool_pcr_cycles[index],
           'for_multiplexing' => pool_for_multiplexing[index],
           'pool_complete' => pool_complete
         }.merge(extra_pool_info)
