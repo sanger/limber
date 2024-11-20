@@ -228,7 +228,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   #     :tube_rack_name=>"Seq Tube Rack",
   #     :tube_rack_barcode=>"TR00000001",
   #     :tube_rack_purpose_uuid=>"0ab4c9cc-4dad-11ef-8ca3-82c61098d1a1",
-  #     :tube_rack_metadata_key=>"tube_rack_barcode",
   #     :racked_tubes=>[
   #       {
   #         :tube_barcode=>"SQ45303801",
@@ -257,7 +256,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         tube_rack_name: child_sequencing_tube_rack_name,
         tube_rack_barcode: sequencing_tube_rack.labware_barcode.human,
         tube_rack_purpose_uuid: child_sequencing_tube_rack_purpose_uuid,
-        tube_rack_metadata_key: 'tube_rack_barcode',
         racked_tubes:
           params[:sequencing_tubes].each_with_index.map do |tube, tube_index|
             {
@@ -276,7 +274,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         tube_rack_name: child_contingency_tube_rack_name,
         tube_rack_barcode: contingency_tube_rack.labware_barcode.human,
         tube_rack_purpose_uuid: child_contingency_tube_rack_purpose_uuid,
-        tube_rack_metadata_key: 'tube_rack_barcode',
         racked_tubes:
           params[:contingency_tubes].each_with_index.map do |tube, tube_index|
             {
@@ -394,19 +391,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   describe '#anchor' do
     it 'returns the string "relatives_tab"' do
       expect(subject.anchor).to eq('relatives_tab')
-    end
-  end
-
-  describe '#tube_rack_metadata_key' do
-    context 'when child_tube_rack_metadata_key is missing' do
-      before { allow(subject).to receive(:tube_rack_metadata_key_from_config).and_return(nil) }
-
-      it 'raises an error' do
-        expect { subject.send(:tube_rack_metadata_key) }.to raise_error(
-          RuntimeError,
-          "Missing purpose configuration argument 'child_tube_rack_metadata_key'"
-        )
-      end
     end
   end
 

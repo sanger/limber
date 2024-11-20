@@ -267,7 +267,6 @@ FactoryBot.define do
             child_spare_tube_purpose_name: 'SPR Tube Purpose',
             child_spare_tube_name_prefix: 'SPR',
             child_spare_tube_rack_purpose_name: 'SPR TubeRack Purpose',
-            child_tube_rack_metadata_key: 'tube_rack_barcode',
             ancestor_stock_tube_purpose_name: 'Ancestor Tube Purpose'
           }
         }

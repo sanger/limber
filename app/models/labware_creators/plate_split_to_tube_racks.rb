@@ -127,7 +127,6 @@ module LabwareCreators
     #     :tube_rack_name=>"Seq Tube Rack",
     #     :tube_rack_barcode=>"TR00000001",
     #     :tube_rack_purpose_uuid=>"0ab4c9cc-4dad-11ef-8ca3-82c61098d1a1",
-    #     :tube_rack_metadata_key=>"tube_rack_barcode",
     #     :racked_tubes=>[
     #       {
     #         :tube_barcode=>"SQ45303801",
@@ -550,18 +549,6 @@ module LabwareCreators
       @contingency_tube_rack_purpose_uuid ||= contingency_tube_rack_purpose.uuid
     end
 
-    def tube_rack_metadata_key_from_config
-      @tube_rack_metadata_key_from_config ||= purpose_config.dig(:creator_class, :args, :child_tube_rack_metadata_key)
-    end
-
-    def tube_rack_metadata_key
-      unless tube_rack_metadata_key_from_config
-        raise "Missing purpose configuration argument 'child_tube_rack_metadata_key'"
-      end
-
-      tube_rack_metadata_key_from_config
-    end
-
     # Returns the human-readable barcode of the ancestor (supplier) source tube for the given sample UUID.
     #
     # @param sample_uuid [String] The UUID of the sample to find the ancestor tube for.
@@ -584,7 +571,6 @@ module LabwareCreators
         tube_rack_name: SEQ_TUBE_RACK_NAME,
         tube_rack_barcode: sequencing_tube_rack_barcode,
         tube_rack_purpose_uuid: sequencing_tube_rack_purpose_uuid,
-        tube_rack_metadata_key: tube_rack_metadata_key,
         racked_tubes:
           generate_tube_attributes(
             'sequencing',
@@ -603,7 +589,6 @@ module LabwareCreators
         tube_rack_name: SPR_TUBE_RACK_NAME,
         tube_rack_barcode: contingency_tube_rack_barcode,
         tube_rack_purpose_uuid: contingency_tube_rack_purpose_uuid,
-        tube_rack_metadata_key: tube_rack_metadata_key,
         racked_tubes:
           generate_tube_attributes(
             'contingency',

@@ -101,7 +101,6 @@ TR LRC Bank Seq:
       child_spare_tube_purpose_name: LRC Bank Spare
       child_spare_tube_name_prefix: SPR
       child_spare_tube_rack_purpose_name: TR LRC Bank Spare
-      child_tube_rack_metadata_key: 'tube_rack_barcode'
       ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::TubeRackPresenter
   :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
