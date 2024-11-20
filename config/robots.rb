@@ -3731,8 +3731,8 @@ ROBOT_CONFIG =
     # LCM Triomics WGS and EMSeq bed verification
     # Verify initial setup
     custom_robot(
-      'bravo-verify-initial-setup',
-      name: 'Bravo Verify Initial Setup',
+      'bravo-lcmt-emseq-verify-initial-setup',
+      name: 'Bravo LCMT EMSeq Verify Initial Setup',
       require_robot: true, # Robot barcode must be scanned in.
       verify_robot: false, # First robot step; no previous robot.
       beds: {
@@ -3821,33 +3821,16 @@ ROBOT_CONFIG =
       require_robot: true,
       verify_robot: true,
       beds: {
-        bed(6).barcode => {
+        bed(7).barcode => {
           purpose: 'LCMT DNA Adp Lig',
           states: ['passed'],
-          label: 'Bed 6'
+          label: 'Bed 7'
         },
-        bed(7).barcode => {
+        bed(6).barcode => {
           purpose: 'LCMT DNA Lib PCR',
           states: ['pending'],
-          label: 'Bed 7',
-          parent: bed(6).barcode,
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT DNA Adp Lig Verification
-    custom_robot(
-      'bravo-lcmt-dna-adp-lig-verification',
-      name: 'Bravo LCMT DNA Adp Lig Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT DNA Adp Lig',
-          states: ['started'],
-          label: 'Bed 5',
+          label: 'Bed 6',
+          parent: bed(7).barcode,
           target_state: 'passed'
         }
       }
@@ -3863,23 +3846,6 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Ox',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT EM TET2 Stop Verification
-    custom_robot(
-      'bravo-lcmt-em-tet2-stop-verification',
-      name: 'Bravo LCMT EM TET2 Stop Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT EM TET2 Stop',
           states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
@@ -3907,10 +3873,10 @@ ROBOT_CONFIG =
           parent: bed(4).barcode,
           target_state: 'started'
         },
-        car('3,4').barcode => {
+        car('4,3').barcode => {
           purpose: 'LCMT EM APOBEC Deam',
           states: ['pending'],
-          label: 'Carousel 3,4',
+          label: 'Carousel 4,3',
           parent: car('3,3').barcode,
           target_state: 'started'
         }
@@ -3927,23 +3893,6 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM NaOH Denat',
-          states: ['started'],
-          label: 'Bed 5',
-          target_state: 'passed'
-        }
-      }
-    )
-
-    # LCM Triomics WGS and EMSeq bed verification
-    # Bravo LCMT EM APOBEC Deam Verification
-    custom_robot(
-      'bravo-lcmt-em-apobec-deam-verification',
-      name: 'Bravo LCMT EM APOBEC Deam Verification',
-      require_robot: true,
-      verify_robot: true,
-      beds: {
-        bed(5).barcode => {
-          purpose: 'LCMT EM APOBEC Deam',
           states: ['started'],
           label: 'Bed 5',
           target_state: 'passed'
