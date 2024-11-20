@@ -188,15 +188,13 @@ RSpec.describe PrintJob do
 
   describe 'print_to_sprint' do
     let(:labels_sprint) do
-      {
-        'sprint' => {
+       [{
           'right_text' => 'DN9000003B',
           'left_text' => 'DN9000003B',
           'barcode' => 'DN9000003B',
           'extra_right_text' => 'DN9000003B  LTHR-384 RT',
           'extra_left_text' => '10-NOV-2020'
-        }
-      }
+       }]
     end
 
     it 'will send a print request to SPrintClient' do
@@ -215,7 +213,7 @@ RSpec.describe PrintJob do
       expect(SPrintClient).to receive(:send_print_request).with(
         printer_sprint.name,
         label_template_name_sprint,
-        labels_sprint.values
+        labels_sprint
       )
       expect(pj.print_to_sprint).to eq(true)
     end
