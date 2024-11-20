@@ -162,23 +162,20 @@ module LabwareCreators
     # @param dest_uuid [String] The UUID of the destination plate.
     # @return [Boolean] Returns true if no exception is raised.
     def transfer_material_from_parent!(dest_uuid)
-      dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(dest_plate)
-      )
+      @dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
+      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      determine_if_pools_have_full_allowance
       true
     end
 
     # Generates the attributes for transfer requests from the source wells to the
     # destination plate.
     #
-    # @param dest_plate [Sequencescape::Api::V2::Plate] The destination plate.
     # @return [Array<Hash>] An array of hashes, each representing the attributes
     #   for a transfer request.
-    def transfer_request_attributes(dest_plate)
+    def transfer_request_attributes
       well_filter.filtered.filter_map do |source_well, additional_parameters|
-        request_hash(source_well, dest_plate, additional_parameters)
+        request_hash(source_well, additional_parameters)
       end
     end
 
@@ -191,11 +188,11 @@ module LabwareCreators
     # @param dest_plate [Sequencescape::Api::V2::Plate] The destination plate.
     # @param additional_parameters [Hash] Additional parameters to include.
     # @return [Hash] A hash representing a transfer request.
-    def request_hash(source_well, dest_plate, additional_parameters)
+    def request_hash(source_well, additional_parameters)
       dest_location = transfer_hash[source_well][:dest_locn]
       {
         'source_asset' => source_well.uuid,
-        'target_asset' => dest_plate.well_at_location(dest_location)&.uuid,
+        'target_asset' => @dest_plate.well_at_location(dest_location)&.uuid,
         :aliquot_attributes => {
           'tag_depth' => tag_depth_hash[source_well]
         }
@@ -239,6 +236,24 @@ module LabwareCreators
       groups = split_single_group_by_study_and_project(source_wells_for_pooling)
       groups = split_groups_by_unique_donor_ids(groups)
       distribute_groups_across_pools(groups, calculated_number_of_pools)
+    end
+
+    # This method determines if the pools have full allowance.
+    # It iterates over each pool, retrieves the destination well location from the transfer hash,
+    # and checks each pool for full allowance by calling the check_pool_for_full_allowance method
+    # in the donor pooling calculator class.
+    # That method then writes the number of cells per chip well to the poly_metadata of the pool wells.
+    #
+    # @return [void]
+    def determine_if_pools_have_full_allowance
+      # a pool is array of v2 wells
+      pools.each do |pool|
+        # destination location is the same for all wells in the pool, so fetch from first source wells
+        dest_well_location = transfer_hash[pool.first][:dest_locn]
+
+        # check this pool for full allowance
+        check_pool_for_full_allowance(pool, @dest_plate, dest_well_location)
+      end
     end
   end
 end

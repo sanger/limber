@@ -545,8 +545,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
+    before do
+      # set instance variable used in transfer_request_attributes method
+      subject.instance_variable_set(:@dest_plate, child_plate)
+    end
+
     it 'returns the transfer request attributes into destination plate' do
-      attributes = subject.transfer_request_attributes(child_plate)
+      attributes = subject.transfer_request_attributes
       expect(attributes.size).to eq(2)
 
       expect(attributes[0]['source_asset']).to eq(wells[0].uuid)
@@ -572,14 +577,19 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
+    before do
+      # set instance variable used in transfer_request_attributes method
+      subject.instance_variable_set(:@dest_plate, child_plate)
+    end
+
     it 'returns the request hash' do
-      hash = subject.request_hash(wells[0], child_plate, { 'submission_id' => '1' })
+      hash = subject.request_hash(wells[0], { 'submission_id' => '1' })
       expect(hash['source_asset']).to eq(wells[0].uuid)
       expect(hash['target_asset']).to eq(child_plate.wells[0].uuid)
       expect(hash[:aliquot_attributes]).to eq({ 'tag_depth' => '1' })
       expect(hash['submission_id']).to eq('1')
 
-      hash = subject.request_hash(wells[1], child_plate, { 'submission_id' => '1' })
+      hash = subject.request_hash(wells[1], { 'submission_id' => '1' })
       expect(hash['source_asset']).to eq(wells[1].uuid)
       expect(hash['target_asset']).to eq(child_plate.wells[0].uuid)
       expect(hash[:aliquot_attributes]).to eq({ 'tag_depth' => '2' })
@@ -656,6 +666,16 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#transfer_material_from_parent!' do
+    let(:cells_per_chip_well) { 90_000 }
+    let(:number_of_samples_per_pool) { 10 }
+
+    let(:request_metadata1) { create :v2_request_metadata, number_of_samples_per_pool:, cells_per_chip_well: }
+    let(:request_metadata2) { create :v2_request_metadata, number_of_samples_per_pool:, cells_per_chip_well: }
+
+    let(:request1) { create :scrna_customer_request, request_metadata: request_metadata1 }
+    let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
+    let(:requests) { [request1, request2] }
+
     let!(:wells) do # eager!
       wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
       wells.each_with_index do |well, index|
@@ -663,22 +683,32 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         well.aliquots.first.study = study_1 # same study
         well.aliquots.first.project = project_1 # same project
         well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+        well.aliquots.first.request = requests[index]
       end
     end
 
     let!(:stub_transfer_material_request) do # eager!
+      # stub plate lookup
       allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_plate.uuid).and_return(child_plate)
+
+      # set instance variable used in transfer_request_attributes method
+      subject.instance_variable_set(:@dest_plate, child_plate)
+
+      # stub transfer request creation
       stub_api_post(
         'transfer_request_collections',
         payload: {
           transfer_request_collection: {
             user: user_uuid,
-            transfer_requests: subject.transfer_request_attributes(child_plate)
+            transfer_requests: subject.transfer_request_attributes
           }
         },
         body: '{}'
       )
     end
+
+    let!(:stub_metadata_creation) { stub_api_v2_save('PolyMetadatum') }
+
     it 'posts transfer requests to Sequencescape' do
       subject.transfer_material_from_parent!(child_plate.uuid)
       expect(stub_transfer_material_request).to have_been_made
