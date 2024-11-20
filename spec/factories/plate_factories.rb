@@ -136,7 +136,11 @@ FactoryBot.define do
       parents { [] }
       children { [] }
       descendants { [] }
-      submission_pools { [] }
+
+      # Set up submission pools on the plate
+      submission_pools_count { 0 }
+      plates_in_submission { 2 }
+      submission_pools { submission_pools_count.times.map { create :v2_submission_pool, plates_in_submission: } }
 
       # Array of pcr_cycles set up for each pool
       pool_pcr_cycles { Array.new(pool_sizes.length, 10) }

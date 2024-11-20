@@ -14,8 +14,16 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:pools) { 0 }
-  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8], submission_pools_count: pools }
-  let(:wells) { json :well_collection, size: 16 }
+  let(:plate) do
+    create(
+      :v2_plate,
+      :has_pooling_metadata,
+      uuid: plate_uuid,
+      barcode_number: 2,
+      pool_sizes: [8, 8],
+      submission_pools_count: pools
+    )
+  end
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
@@ -25,8 +33,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let(:plate_request) { stub_api_get(plate_uuid, body: plate) }
-  let(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
   let(:disable_cross_plate_pool_detection) { false }
 
   before do
@@ -36,8 +42,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       uuid: child_purpose_uuid,
       disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
     )
-    plate_request
-    wells_request
+    stub_v2_plate(plate)
   end
 
   subject { LabwareCreators::TaggedPlate.new(api, form_attributes) }

@@ -70,7 +70,7 @@ FactoryBot.define do
   factory :v2_submission_pool, class: Sequencescape::Api::V2::SubmissionPool do
     skip_create
 
-    plates_in_submission { 1 }
+    plates_in_submission { 2 }
     used_tag2_layout_templates { [] }
     used_tag_layout_templates { [] }
   end
