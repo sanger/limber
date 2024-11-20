@@ -4,6 +4,43 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+  # Adds pooling_metadata equivalent to the v1 pools hash.
+  # This data has been marked as "mostly legacy" since 2020, but still seems to be used.
+  trait :has_pooling_metadata do
+    transient do
+      extra_pool_info { {} }
+      empty_wells { [] }
+      library_type { 'Standard' }
+      request_type { 'Limber Library Creation' }
+      for_multiplexing { false }
+      pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
+      pool_complete { false }
+    end
+
+    pooling_metadata do
+      wells = WellHelpers.column_order(size).dup
+      pooled_wells = wells.reject { |w| empty_wells.include?(w) }
+      pooling_metadata = {}
+      pool_sizes.each_with_index do |pool_size, index|
+        pooling_metadata["pool-#{index + 1}-uuid"] = {
+          'wells' => pooled_wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+          'insert_size' => {
+            from: 100,
+            to: 300
+          },
+          'library_type' => {
+            name: library_type
+          },
+          'request_type' => request_type,
+          'pcr_cycles' => pool_pcr_cycles[index],
+          'for_multiplexing' => pool_for_multiplexing[index],
+          'pool_complete' => pool_complete
+        }.merge(extra_pool_info)
+      end
+      pooling_metadata
+    end
+  end
+
   factory :unmocked_v2_plate, class: Sequencescape::Api::V2::Plate do
     skip_create
   end
@@ -99,6 +136,7 @@ FactoryBot.define do
       parents { [] }
       children { [] }
       descendants { [] }
+      submission_pools { [] }
 
       # Array of pcr_cycles set up for each pool
       pool_pcr_cycles { Array.new(pool_sizes.length, 10) }
