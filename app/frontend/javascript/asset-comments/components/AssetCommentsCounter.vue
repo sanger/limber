@@ -3,11 +3,29 @@
 </template>
 
 <script>
-
 import eventBus from '@/javascript/shared/eventBus.js'
+import { createCommentFactory, removeCommentFactory } from '@/javascript/asset-comments/comment-store-helpers.js'
 
 export default {
   name: 'AssetComments',
+  props: {
+    sequencescapeApi: {
+      type: String,
+      required: true,
+    },
+    assetId: {
+      type: String,
+      required: true,
+    },
+    sequencescapeApiKey: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
+  },
   data: function () {
     return {
       comments: null,
@@ -22,25 +40,35 @@ export default {
       }
     },
     badgeClass() {
-      if (this.comments && this.comments.length > 0) {
+      if (this.comments?.length > 0) {
         return 'badge-success'
       } else {
         return 'badge-secondary'
       }
     },
-    // comments() {
-    //   return this.$root.$data.comments
-    // },
+  },
+  async mounted() {
+    this.commentFactory = createCommentFactory({
+      sequencescapeApi: this.sequencescapeApi,
+      assetId: this.assetId,
+      sequencescapeApiKey: this.sequencescapeApiKey,
+      userId: this.userId,
+    })
+    await this.commentFactory.refreshComments()
+    this.comments = this.commentFactory.comments
+  },
+  beforeDestroy() {
+    removeCommentFactory(this.assetId)
+    eventBus.$off('update-comments')
   },
   created() {
     // Listen for the event
-    eventBus.$on('update-comment', (commentFactory) => {
-      this.comments = commentFactory.comments;
-    });
-  },
-  beforeDestroy() {
-    // Clean up the event listener
-    eventBus.$off('update-comment');
+    eventBus.$on('update-comments', (data) => {
+      if (data.assetId !== this.assetId) {
+        return
+      }
+      this.comments = data.comments
+    })
   },
 }
 </script>

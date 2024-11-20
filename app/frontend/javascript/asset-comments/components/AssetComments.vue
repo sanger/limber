@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import createCommentFactory from '@/javascript/asset-comments/commentHelpers.js'
+import { createCommentFactory, removeCommentFactory } from '@/javascript/asset-comments/comment-store-helpers.js'
 import eventBus from '@/javascript/shared/eventBus.js'
 
 const dateOptions = {
@@ -70,9 +70,6 @@ export default {
     inProgress() {
       return !this.comments
     },
-    // comments() {
-    //   return this.$root.$data.comments
-    // },
     sortedComments() {
       if (this.comments) {
         // Sort mutates the array, so we do a shallow copy before sorting
@@ -93,7 +90,20 @@ export default {
     })
     await commentFactory.refreshComments()
     this.comments = commentFactory.comments
-    eventBus.$emit('update-comment', commentFactory);
+  },
+  beforeDestroy() {
+    removeCommentFactory(this.assetId)
+    eventBus.$off('update-comments')
+  },
+
+  created() {
+    // Listen for the event
+    eventBus.$on('update-comments', (data) => {
+      if (data.assetId !== this.assetId) {
+        return
+      }
+      this.comments = data.comments
+    })
   },
 }
 </script>

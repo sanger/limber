@@ -27,12 +27,28 @@
 </template>
 
 <script>
-import eventBus from '@/javascript/shared/eventBus.js'
+import { createCommentFactory, removeCommentFactory } from '@/javascript/asset-comments/comment-store-helpers.js'
 
 export default {
   name: 'AssetCommentAddForm',
   props: {
     commentTitle: { type: String, required: true },
+    sequencescapeApi: {
+      type: String,
+      required: true,
+    },
+    assetId: {
+      type: String,
+      required: true,
+    },
+    sequencescapeApiKey: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
   data: function () {
     return {
@@ -71,16 +87,17 @@ export default {
       return this.assetComment.trim()
     },
   },
-  created() {
-    // Listen for the event
-    eventBus.$on('update-comment', (commentFactory) => {
-      console.log('State updated with data:');
-      this.commentFactory = commentFactory;
-    });
+  async mounted() {
+    const commentFactory = createCommentFactory({
+      sequencescapeApi: this.sequencescapeApi,
+      assetId: this.assetId,
+      sequencescapeApiKey: this.sequencescapeApiKey,
+      userId: this.userId,
+    })
+    this.commentFactory = commentFactory
   },
   beforeDestroy() {
-    // Clean up the event listener
-    eventBus.$off('update-comment');
+    removeCommentFactory(this.assetId)
   },
   methods: {
     async submit() {
