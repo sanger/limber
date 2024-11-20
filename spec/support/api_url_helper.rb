@@ -123,6 +123,10 @@ module ApiUrlHelper
       )
     end
 
+    def expect_qc_file_creation
+      expect_api_v2_posts('QcFile', qc_files_attributes)
+    end
+
     def expect_specific_tube_creation
       # Prepare the expected arguments and return values.
       arguments =
