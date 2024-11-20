@@ -6,9 +6,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import cookieJar from '@/javascript/shared/cookieJar.js'
-import devourApi from '@/javascript/shared/devourApi.js'
-import resources from '@/javascript/shared/resources.js'
-import commentStoreFactory from '@/javascript/asset-comments/comment-store.js'
 import PoolXPTubeSubmitPanel from '@/javascript/pool-xp-tube-panel/components/PoolXPTubeSubmitPanel.vue'
 import AssetComments from '@/javascript/asset-comments/components/AssetComments.vue'
 import AssetCommentsCounter from '@/javascript/asset-comments/components/AssetCommentsCounter.vue'
@@ -149,7 +146,6 @@ const setAxiosHeaderToken = () => {
   Vue.prototype.$axios = axios
 }
 
-
 /**
  * Initialize Vue components when the DOM content is loaded.
  * For each element in the elements list, check if the element exists in the DOM.
@@ -163,8 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const assetElem = document.getElementById(id)
     if (!assetElem) continue
     if (id) {
-        setAxiosHeaderToken()
-        renderVueComponent(id, component, assetElem.dataset, userIdRequired)
+      setAxiosHeaderToken()
+      renderVueComponent(id, component, assetElem.dataset, userIdRequired)
     } else {
       console.warn(`No initialization logic defined for element with id: ${id}`)
     }
