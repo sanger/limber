@@ -160,6 +160,38 @@ module LabwareCreators::DonorPoolingCalculator
     groups
   end
 
+  # This method checks the pool for full allowance and adjusts the number of
+  # cells per chip well value if needed.
+  # It then stores the number of cells per chip well as metadata on the destination well.
+  #
+  # @param pool [Array<SourceWell>] an array of source wells from the v2 API
+  # @param dest_plate [Object] the destination plate
+  # @param dest_well_location [String] the location of the destination well
+  def check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+    # count sum of samples in all source wells in the pool (typically will be one sample per source well)
+    # for each source well, number of samples = well.aliquots.size
+    count_of_samples_in_pool = pool.sum { |source_well| source_well.aliquots.size }
+
+    # fetch number of cells per chip well from the request metadata of the first aliquot in the first source well
+    number_of_cells_per_chip_well = number_of_cells_per_chip_well_from_request(pool)
+
+    # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 8
+    if count_of_samples_in_pool >= 5 && count_of_samples_in_pool <= 8
+      # check and adjust number of cells per chip well if needed
+      number_of_cells_per_chip_well =
+        adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well)
+    end
+
+    # store number of cells per chip well in destination pool well poly metadata
+    dest_well = dest_plate.well_at_location(dest_well_location)
+
+    create_new_well_metadata(
+      Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key],
+      number_of_cells_per_chip_well,
+      dest_well
+    )
+  end
+
   private
 
   # This method retrieves the number of cells per chip well from the request metadata
@@ -170,7 +202,7 @@ module LabwareCreators::DonorPoolingCalculator
   # @return [Integer] the number of cells per chip well
   # @raise [StandardError] if the cells per chip well value is not found in the request metadata
   def number_of_cells_per_chip_well_from_request(pool)
-    # pool is an array of v2 api source_wells, fetch the first well
+    # pool is an array of v2 api source wells, fetch the first well from the pool
     source_well = pool.first
 
     # fetch request metadata for number of cells per chip well from first aliquot in the source well
@@ -184,5 +216,92 @@ module LabwareCreators::DonorPoolingCalculator
     end
 
     cells_per_chip_well
+  end
+
+  # This method adjusts the number of cells per chip well based on the count of samples in the pool.
+  # If the final suspension volume is greater than or equal to the full allowance, the existing value is retained.
+  # Otherwise, the number of cells per chip well is adjusted according to the full allowance table.
+  #
+  # @param count_of_samples_in_pool [Integer] the number of samples in the pool
+  # @param number_of_cells_per_chip_well [Integer] the initial number of cells per chip well
+  # @return [Integer] the adjusted number of cells per chip well
+  def adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well)
+    # calculate total cells in 300ul for the pool
+    total_cells_in_300ul = calculate_total_cells_in_300ul(count_of_samples_in_pool)
+
+    # calculate final suspension volume
+    final_suspension_volume =
+      total_cells_in_300ul / Rails.application.config.scrna_config[:desired_chip_loading_concentration]
+
+    # calculate chip loading volume
+    chip_loading_volume = calculate_chip_loading_volume(number_of_cells_per_chip_well)
+
+    # calculate full allowance
+    full_allowance = calculate_full_allowance(chip_loading_volume)
+
+    # do not adjust existing value if we have enough volume
+    return number_of_cells_per_chip_well if final_suspension_volume >= full_allowance
+
+    # we need to adjust the number of cells per chip well according to the number of samples
+    Rails.application.config.scrna_config[:full_allowance_table][count_of_samples_in_pool]
+  end
+
+  # This method calculates the total cells in 300ul for a given pool of samples.
+  # It uses the configuration values from the scrna_config to determine the required
+  # number of cells per sample in the pool and the wastage factor.
+  #
+  # @param count_of_samples_in_pool [Integer] the number of samples in the pool
+  # @return [Float] the total cells in 300ul
+  def calculate_total_cells_in_300ul(count_of_samples_in_pool)
+    scrna_config = Rails.application.config.scrna_config
+
+    (count_of_samples_in_pool * scrna_config[:required_number_of_cells_per_sample_in_pool]) *
+      scrna_config[:wastage_factor]
+  end
+
+  # This method calculates the chip loading volume for a given pool of samples.
+  # It retrieves the number of cells per chip well from the request metadata
+  # and uses the desired chip loading concentration from the scrna_config.
+  #
+  # @param num_cells_per_chip_well [Integer] the number of cells per chip well from the request metadata
+  # @return [Float] the chip loading volume
+  def calculate_chip_loading_volume(num_cells_per_chip_well)
+    chip_loading_conc = Rails.application.config.scrna_config[:desired_chip_loading_concentration]
+
+    num_cells_per_chip_well / chip_loading_conc
+  end
+
+  # This method calculates the full allowance volume for a given chip loading volume.
+  # It uses configuration values from the scrna_config for the desired
+  # number of runs, the volume taken for cell counting, and the wastage volume.
+  #
+  # @param chip_loading_volume [Float] the chip loading volume
+  # @return [Float] the full allowance volume
+  def calculate_full_allowance(chip_loading_volume)
+    scrna_config = Rails.application.config.scrna_config
+
+    (chip_loading_volume * scrna_config[:desired_number_of_runs]) +
+      (scrna_config[:desired_number_of_runs] * scrna_config[:volume_taken_for_cell_counting]) +
+      scrna_config[:wastage_volume]
+  end
+
+  # This method creates a new well metadata entry for a given destination well.
+  # It initializes a new PolyMetadatum object with the provided metadata key and value,
+  # associates it with the destination well, and attempts to save it.
+  # If the save operation fails, it raises a StandardError with a descriptive message.
+  #
+  # @param metadata_key [String] the key for the metadata
+  # @param metadata_value [String] the value for the metadata
+  # @param dest_well [Object] the destination well to associate the metadata with
+  # @raise [StandardError] if the metadata entry fails to save
+  def create_new_well_metadata(metadata_key, metadata_value, dest_well)
+    pm_v2 = Sequencescape::Api::V2::PolyMetadatum.new(key: metadata_key, value: metadata_value)
+    pm_v2.relationships.metadatable = dest_well
+
+    return if pm_v2.save
+
+    raise StandardError,
+          "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
+            "did not save on destination well at location #{dest_well.location}"
   end
 end
