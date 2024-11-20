@@ -1,23 +1,19 @@
-// Import the component being tested
-import { shallowMount } from '@vue/test-utils'
-
 import AssetComments from './AssetComments.vue'
+import {
+  mountWithCommentFactory,
+  testCommentFactoryInitAndDestroy,
+} from '@/javascript/asset-comments/components/component-test-utils.spec.js'
+import eventBus from '@/javascript/shared/eventBus.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('AssetComments', () => {
-  const wrapperFactory = function (comments) {
-    const parent = {
-      data() {
-        return { comments }
-      },
-    }
+  testCommentFactoryInitAndDestroy(AssetComments, [
+    { id: 1, text: 'Test comment', user: { login: 'js1', first_name: 'John', last_name: 'Smith' } },
+  ])
 
-    return shallowMount(AssetComments, { parentComponent: parent })
-  }
-
-  it('renders a list of comments', () => {
-    const wrapper = wrapperFactory([
+  it('renders a list of comments', async () => {
+    const mockComments = [
       {
         id: '1234',
         title: null,
@@ -44,7 +40,9 @@ describe('AssetComments', () => {
           last_name: 'Smythe',
         },
       },
-    ])
+    ]
+    const { wrapper } = mountWithCommentFactory(AssetComments, mockComments)
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').findAll('li').length).toBe(2)
@@ -57,9 +55,9 @@ describe('AssetComments', () => {
     expect(wrapper.find('.comments-list').findAll('li').wrappers[1].text()).toContain('31 August 2017 at 11:18')
   })
 
-  it('renders a message when there are no comments', () => {
-    const wrapper = wrapperFactory([])
-
+  it('renders a message when there are no comments', async () => {
+    const { wrapper } = mountWithCommentFactory(AssetComments, [])
+    await wrapper.vm.$nextTick()
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').findAll('li').length).toBe(1)
     expect(wrapper.find('.comments-list').findAll('li.no-comment').length).toBe(1)
@@ -67,9 +65,58 @@ describe('AssetComments', () => {
   })
 
   it('renders a spinner when comments are not loaded', () => {
-    const wrapper = shallowMount(AssetComments)
+    const { wrapper } = mountWithCommentFactory(AssetComments, null)
 
     expect(wrapper.find('.comments-list').exists()).toBe(true)
     expect(wrapper.find('.comments-list').find('.spinner-dark').exists()).toBe(true)
+  })
+
+  it('updates comments when eventBus emits update-comments', async () => {
+    const { wrapper } = mountWithCommentFactory(AssetComments, [])
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.comments-list').find('li').text()).toContain('No comments available')
+    eventBus.$emit('update-comments', {
+      assetId: '123',
+      comments: [
+        {
+          id: '12345',
+          title: null,
+          description: 'This is also a comment',
+          created_at: '2017-09-30T12:18:16+01:00',
+          updated_at: '2017-09-30T12:18:16+01:00',
+          user: {
+            id: '13',
+            login: 'js2',
+            first_name: 'Jane',
+            last_name: 'Smythe',
+          },
+        },
+      ],
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.comments-list').findAll('li').length).toBe(1)
+    expect(wrapper.find('.comments-list').find('li').text()).toContain('Jane Smythe (js2)')
+  })
+  it('does not update comments when eventBus emits update-comments for a different assetId', async () => {
+    const { wrapper } = mountWithCommentFactory(AssetComments, [])
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.comments-list').find('li').text()).toContain('No comments available')
+    eventBus.$emit('update-comments', {
+      assetId: '345',
+      comments: [
+        {
+          id: 1,
+          text: 'Test comment',
+          user: {
+            id: '13',
+            login: 'js2',
+            first_name: 'Jane',
+            last_name: 'Smythe',
+          },
+        },
+      ],
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.comments-list').find('li').text()).toContain('No comments available')
   })
 })
