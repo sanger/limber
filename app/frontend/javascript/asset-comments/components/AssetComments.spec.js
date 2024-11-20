@@ -2,7 +2,7 @@ import AssetComments from './AssetComments.vue'
 import {
   mountWithCommentFactory,
   testCommentFactoryInitAndDestroy,
-} from '@/javascript/asset-comments/components/component-test-utils.spec.js'
+} from '@/javascript/asset-comments/components/component-test-utils.js'
 import eventBus from '@/javascript/shared/eventBus.js'
 
 // Here are some Jasmine 2.0 tests, though you can

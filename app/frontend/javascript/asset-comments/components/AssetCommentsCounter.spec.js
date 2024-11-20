@@ -4,7 +4,7 @@ import eventBus from '@/javascript/shared/eventBus.js'
 import {
   mountWithCommentFactory,
   testCommentFactoryInitAndDestroy,
-} from '@/javascript/asset-comments/components/component-test-utils.spec.js'
+} from '@/javascript/asset-comments/components/component-test-utils.js'
 
 describe('AssetCommentsCounter', () => {
   testCommentFactoryInitAndDestroy(AssetCommentsCounter, [{ id: 1, text: 'Test comment' }])

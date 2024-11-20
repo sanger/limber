@@ -1,7 +1,7 @@
 // Import the component being tested
 
 import AssetCommentsAddForm from './AssetCommentsAddForm.vue'
-import { mountWithCommentFactory } from '@/javascript/asset-comments/components/component-test-utils.spec.js'
+import { mountWithCommentFactory } from '@/javascript/asset-comments/components/component-test-utils.js'
 
 describe('AssetCommentsAddForm', () => {
   it('correctly sets the state to pending when created', () => {

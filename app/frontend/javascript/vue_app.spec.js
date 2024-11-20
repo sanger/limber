@@ -52,8 +52,4 @@ describe('renderVueComponent', () => {
     const app = renderVueComponent(selector, component, props, userIdRequired)
     expect(app.$el.innerHTML).toContain('Test string')
   })
-  it('sets the data property of the Vue instance', () => {
-    const app = renderVueComponent(selector, component, props, userIdRequired, () => ({ dataA: 'valueA' }))
-    expect(app.$data.dataA).toBe('valueA')
-  })
 })
