@@ -3695,6 +3695,7 @@ ROBOT_CONFIG =
     custom_robot(
       'hamilton-lrc-gem-x-cdna-pcr-to-lrc-gem-x-5p-cdna-pcr-xp',
       name: 'Hamilton LRC GEM-X 5p cDNA PCR => LRC GEM-X 5p cDNA PCR XP',
+      require_robot: true,
       beds: {
         bed(13).barcode => {
           purpose: 'LRC GEM-X 5p cDNA PCR',
