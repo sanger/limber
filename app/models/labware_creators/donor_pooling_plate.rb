@@ -145,15 +145,11 @@ module LabwareCreators
       @minimal_barcodes = barcodes.compact_blank.map(&:strip)
     end
 
-    # Returns the number of pools based on the sample count from the lookup
-    # table.
+    # Returns the number of pools, pulled from request metadata.
     #
     # @return [Integer] The number of pools.
-    def calculated_number_of_pools
-      return if source_wells_for_pooling.blank?
-
-      # div enfoces integer division
-      source_wells_for_pooling.count.div(number_of_samples_per_pool)
+    def number_of_pools(group)
+      group[0].aliquots.first.request.request_metadata.number_of_pools
     end
 
     # Creates transfer requests from source wells to the destination plate in
