@@ -224,14 +224,16 @@ module LabwareCreators
     end
 
     # Builds the pools for the destination plate. The wells are first grouped
-    # by study and project, then split by donor_ids, and finally distributed
-    # across pools.
+    # by study and project, then passed along to be allocated to pools.
     #
     # @return [Array<Array<Well>>] An array of well groups distributed across pools.
     def build_pools
-      groups = split_single_group_by_study_and_project(source_wells_for_pooling)
-      groups = split_groups_by_unique_donor_ids(groups)
-      distribute_groups_across_pools(groups, calculated_number_of_pools)
+      study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling) 
+      
+      built_pools = study_project_groups.map do |group|
+        allocate_wells_to_pools(group, number_of_pools(group))   
+      end
+      built_pools.flatten(1)
     end
 
     # This method determines if the pools have full allowance.
