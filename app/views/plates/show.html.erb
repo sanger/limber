@@ -16,5 +16,5 @@
     <% end %>
   <% end %>
 
-  <%= render "plates/sidebars/container", presenter: @presenter %>
+  <%= render "plates/sidebars/#{@presenter.sidebar_partial}", presenter: @presenter %>
 <% end %>

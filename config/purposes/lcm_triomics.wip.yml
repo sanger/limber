@@ -27,19 +27,8 @@ LCMT DNA Adp Lig:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
-  :submission_options:
-    WGS Branch - Automated Submission:
-      template_name: 'Limber-Htp - LCM Triomics WGS'
-      allowed_extra_barcodes: false
-      request_options:
-        # TODO: {Y24-460} replace with the correct request options
-        library_type: 'LCM Triomics WGS'
-        fragment_size_required_from: '200'
-        fragment_size_required_to: '800'
+  :presenter_class: Presenters::PermissivePresenter
   :size: 96
-
-# EM Branch
 LCMT EM TET2 Ox:
   :asset_type: plate
   :stock_plate: false
@@ -109,8 +98,6 @@ LCMT EM Pool XP Norm:
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
-
-# WGS branch
 LCMT DNA Lib PCR:
   :asset_type: plate
   :stock_plate: false
