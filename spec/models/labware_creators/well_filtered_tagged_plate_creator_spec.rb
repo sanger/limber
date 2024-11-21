@@ -91,8 +91,7 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
       purpose: parent_purpose_name,
       uuid: parent_uuid,
       wells: wells,
-      submission_pools_count: 1,
-      plates_in_submission: 1
+      submission_pools_count: 1
     )
   end
 
