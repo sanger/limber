@@ -9,7 +9,6 @@ RSpec.describe TubesController, type: :controller do
   let(:tube_uuid) { 'example-tube-uuid' }
   let(:tube_json) { json :tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
   let(:v2_tube) { create :v2_tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
-  let(:tube_request) { stub_api_get tube_uuid, body: tube_json }
   let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
 
@@ -42,10 +41,7 @@ RSpec.describe TubesController, type: :controller do
       ]
     end
 
-    before do
-      create :tube_config, uuid: 'stock-tube-purpose-uuid'
-      tube_request
-    end
+    before { create :tube_config, uuid: 'stock-tube-purpose-uuid' }
 
     it 'transitions the tube' do
       expect_state_change_creation
