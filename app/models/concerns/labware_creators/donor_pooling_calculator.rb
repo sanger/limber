@@ -130,34 +130,45 @@ module LabwareCreators::DonorPoolingCalculator
     group.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq
   end
 
-  # Distributes samples across pools based on group sizes. It sorts the groups
-  # by size and splits the largest group into two until the number of groups
-  # equals the number of pools or until all groups have a size of 1. The input
-  # groups are the result of applying conditions, hence they cannot be mixed.
+  # Validates the number of pools requested by the user. The number of pools must
+  # be between 1 and 8, inclusive. The total number of wells must be divisible by
+  # the number of pools, with a difference of at most 1 well.
   #
-  # If the request number of pools is 6 and the input groups are
-  # [[1, 2, 3], [4, 5], [6, 7, 8, 9]] where the numbers denote wells,
-  #
-  # the result will be:
-  # [[3], [1], [2], [4, 5], [6, 7], [8, 9]]
-  #
-  # for which the steps are:
-  # [[1, 2, 3], [4, 5], [6, 7, 8, 9]] -> 3 pools (input)
-  # [[4, 5], [6, 7], [8, 9], [1, 2, 3]] -> 4 pools
-  # [[3], [4, 5], [6, 7], [8, 9], [1, 2]] -> 5 pools
-  # [[3], [1], [2], [4, 5], [6, 7], [8, 9]] -> 6 pools (output)
-  #
-  # @param groups [Array<Array<Well>>] Array of well groups to be distributed.
-  # @return [Array<Array<Well>>] Array of distributed groups.
-  def distribute_groups_across_pools(groups, number_of_pools)
-    groups = groups.dup
-    groups.sort_by!(&:size)
-    while groups.any? && groups.last.size > 1 && groups.size < number_of_pools
-      largest = groups.pop # last
-      splits = largest.each_slice((largest.size / 2.0).ceil).to_a
-      groups.concat(splits).sort_by!(&:size)
+  def validate_number_of_pools(wells, number_of_pools)
+    total_wells = wells.size
+    unless (1..8).cover?(number_of_pools)
+      raise "Invalid requested number of pools: must be between 1 and 8. Provided: #{number_of_pools}."
     end
-    groups
+
+    if total_wells < number_of_pools ||
+      total_wells > number_of_pools * ((total_wells / number_of_pools) + 1)
+     raise "Cannot distribute #{total_wells} wells into #{number_of_pools} pools such that the difference is at most 1."
+    end
+  end
+
+  def allocate_wells_to_pools(wells, number_of_pools)
+
+    validate_number_of_pools(wells, number_of_pools)
+
+    # Initialize pools
+    pools = Array.new(number_of_pools) { [] }
+  
+    grouped_by_id = split_single_group_by_unique_donor_ids(wells)
+  
+    # Flatten grouped wells to distribute them sequentially
+    flat_wells = grouped_by_id.flatten
+  
+    # Assign wells to pools
+    flat_wells.each_with_index do |well, index|
+      # Pools with an index less than `extra_wells` get one extra well
+      pool_index = index % number_of_pools
+      pools[pool_index] << well
+    end
+    
+    if pools.any? { |pool| pool.size < 5 || pool.size > 25 }
+      raise "Invalid distribution: Each pool must have between 5 and 25 wells."
+    end
+    pools
   end
 
   # This method checks the pool for full allowance and adjusts the number of
