@@ -44,7 +44,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   end
 
   context '#save' do
-    let(:contents) do
+    let(:file_contents) do
       contents = file.read
       file.rewind
       contents
@@ -55,7 +55,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
     let(:qc_files_attributes) do
       [
         {
-          contents: contents,
+          contents: file_contents,
           filename: 'robot_pooling_file.csv',
           relationships: {
             labware: {

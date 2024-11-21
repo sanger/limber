@@ -140,7 +140,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
-    let(:contents) do
+    let(:file_contents) do
       content = file.read
       file.rewind
       content
@@ -149,7 +149,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     let(:qc_files_attributes) do
       [
         {
-          contents: contents,
+          contents: file_contents,
           filename: 'tube_rack_scan.csv',
           relationships: {
             labware: {
