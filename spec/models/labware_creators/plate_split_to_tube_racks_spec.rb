@@ -108,9 +108,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
-  # parent plate v1 api
-  let(:parent_v1) { json :plate_with_metadata, uuid: parent_uuid, barcode_number: 6, qc_files_actions: %w[read create] }
-
   # form attributes - required parameters for the labware creator
   let(:form_attributes) do
     { user_uuid: user_uuid, purpose_uuid: child_sequencing_tube_purpose_uuid, parent_uuid: parent_uuid }
@@ -591,27 +588,46 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   context '#save' do
     # body for stubbing the contingency file upload
-    let(:contingency_file_content) do
+    let(:contingency_file_contents) do
       content = contingency_file.read
       contingency_file.rewind
       content
     end
 
-    # stub the contingency file upload
-    let!(:stub_contingency_file_upload) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-        body: contingency_file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
+    # body for stubbing the sequencing file upload
+    let(:sequencing_file_contents) do
+      content = sequencing_file.read
+      sequencing_file.rewind
+      content
+    end
+
+    let(:qc_files_attributes) do
+      [
+        {
+          contents: contingency_file_contents,
+          filename: 'scrna_core_contingency_tube_rack_scan.csv',
+          relationships: {
+            labware: {
+              data: {
+                id: parent_plate.id,
+                type: 'labware'
+              }
+            }
+          }
+        },
+        {
+          contents: sequencing_file_contents,
+          filename: 'scrna_core_sequencing_tube_rack_scan.csv',
+          relationships: {
+            labware: {
+              data: {
+                id: parent_plate.id,
+                type: 'labware'
+              }
+            }
+          }
         }
-      ).to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
+      ]
     end
 
     let(:contingency_tubes) do
@@ -635,7 +651,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
             'wells.downstream_tubes.custom_metadatum_collection'
       )
-      stub_api_get(parent_uuid, body: parent_v1)
     end
 
     context 'with both sequencing and contingency files' do
@@ -649,37 +664,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      # body for stubbing the contingency file upload
-      let(:contingency_file_content) do
-        content = contingency_file.read
-        contingency_file.rewind
-        content
-      end
-
-      # stub the contingency file upload
-      let!(:stub_contingency_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-          body: contingency_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
-          }
-        ).to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
-      end
-
-      # body for stubbing the sequencing file upload
-      let(:sequencing_file_content) do
-        content = sequencing_file.read
-        sequencing_file.rewind
-        content
-      end
-
       let(:sequencing_tubes) do
         prepare_created_child_tubes(
           [
@@ -688,23 +672,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
             # sample 2 in well B1 to seq tube 2 in B1
             { name: 'SEQ:NT2P:B1', foreign_barcode: 'FX00000002' }
           ]
-        )
-      end
-
-      # stub the sequencing file upload
-      let!(:stub_sequencing_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-          body: sequencing_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
-          }
-        ).to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
         )
       end
 
@@ -742,14 +709,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       it 'creates the child tubes' do
         expect_custom_metadatum_collection_creation
+        expect_qc_file_creation
         expect_specific_tube_creation
         expect_transfer_request_collection_creation
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
-
-        expect(stub_sequencing_file_upload).to have_been_made.once
-        expect(stub_contingency_file_upload).to have_been_made.once
       end
 
       context 'when a well has been failed' do
@@ -805,13 +770,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
         it 'does not create a tube for the failed well' do
           expect_custom_metadatum_collection_creation
+          expect_qc_file_creation
           expect_specific_tube_creation
           expect_transfer_request_collection_creation
 
           expect(subject.valid?).to be_truthy
           expect(subject.save).to be_truthy
-          expect(stub_sequencing_file_upload).to have_been_made.once
-          expect(stub_contingency_file_upload).to have_been_made.once
         end
       end
     end
@@ -826,32 +790,26 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      # body for stubbing the sequencing file upload
-      let(:sequencing_file_content) do
-        content = sequencing_file.read
-        sequencing_file.rewind
-        content
-      end
-
-      # stub the sequencing file upload
-      let!(:stub_sequencing_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-          body: sequencing_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
-          }
-        ).to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
-      end
-
       let(:custom_metadatum_collections_attributes) do
         create_custom_metadatum_collection_attributes('TR00000001' => sequencing_tubes)
+      end
+
+      # Only the sequencing file expected this time.
+      let(:qc_files_attributes) do
+        [
+          {
+            contents: sequencing_file_contents,
+            filename: 'scrna_core_sequencing_tube_rack_scan.csv',
+            relationships: {
+              labware: {
+                data: {
+                  id: parent_plate.id,
+                  type: 'labware'
+                }
+              }
+            }
+          }
+        ]
       end
 
       let(:sequencing_tubes) do
@@ -880,12 +838,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       it 'creates the child tubes' do
         # Contingency tubes creation
         expect_custom_metadatum_collection_creation
+        expect_qc_file_creation
         expect_specific_tube_creation
         expect_transfer_request_collection_creation
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
-        expect(stub_sequencing_file_upload).to have_been_made.once
       end
     end
   end
