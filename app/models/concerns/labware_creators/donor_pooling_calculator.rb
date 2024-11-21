@@ -146,8 +146,24 @@ module LabwareCreators::DonorPoolingCalculator
     end
   end
 
+  # Allocates wells to pools. The wells will have grouped by study and project, and now
+  # they will be grouped by unique donor_ids. The wells will be distributed sequentially
+  # to the pools, ensuring that each pool has between 5 and 25 wells.
+  #
+  # If the number of wells is 96 and the number of pools is 8, then
+  # each pool will have 12 wells
+  #
+  # If the number of wells is 96 and the number of pools is 7, then
+  # the first 5 pools will have 14 wells and the last 2 pools will have 13 wells
+  #
+  # If the number of wells is 24 and the number of pools is 5, then
+  # an error will be raised because each pool must have at least 5 wells
+  #
+  # @param wells [Array<Well>] The wells to be allocated to pools.
+  # @param number_of_pools [Integer] The number of pools to distribute the wells into.
+  # @return [Array<Array<Well>>] An array of pools, between 1 and 8, each containing between 5 and 25 wells.
+  #
   def allocate_wells_to_pools(wells, number_of_pools)
-
     validate_number_of_pools(wells, number_of_pools)
 
     # Initialize pools
