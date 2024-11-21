@@ -152,9 +152,12 @@ module LabwareCreators::DonorPoolingCalculator
   #
   # If the number of wells is 96 and the number of pools is 8, then
   # each pool will have 12 wells
+  # [[12], [12], [12], [12], [12], [12], [12], [12]]
+  #
   #
   # If the number of wells is 96 and the number of pools is 7, then
   # the first 5 pools will have 14 wells and the last 2 pools will have 13 wells
+  # [[14], [14], [14], [14], [14], [13], [13]]
   #
   # If the number of wells is 24 and the number of pools is 5, then
   # an error will be raised because each pool must have at least 5 wells
