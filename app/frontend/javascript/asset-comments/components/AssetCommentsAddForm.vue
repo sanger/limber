@@ -87,7 +87,7 @@ export default {
       return this.assetComment.trim()
     },
   },
-  async mounted() {
+  mounted() {
     const commentFactory = createCommentFactory({
       sequencescapeApi: this.sequencescapeApi,
       assetId: this.assetId,
