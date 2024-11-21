@@ -151,6 +151,12 @@ FactoryBot.define do
       ancestors { [stock_plate] }
       transfer_targets { {} }
 
+      # Define QC Files for the plate
+      qc_files_count { 0 }
+      qc_files do
+        Array.new(qc_files_count) { |i| create(:qc_file, filename: "file#{i}.txt", uuid: "example-file-uuid-#{i}") }
+      end
+
       # Sets the plate size
       size { 96 }
       include_submissions { false }
