@@ -5,7 +5,9 @@ FactoryBot.define do
     skip_create
 
     uuid
+
     sequence(:name) { |index| "TagLayoutTemplate#{index}" }
+
     direction { 'column' }
     walking_by { 'wells of plate' }
     transient do
