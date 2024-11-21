@@ -13,8 +13,6 @@ LBB Lib PCR-XP:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
   :creator_class: LabwareCreators::CustomTaggedPlate
-LBB Lib PCR-XP Norm:
-  :asset_type: plate
 LBB Ligation Tagged:
   :asset_type: plate
   :presenter_class: Presenters::PcrPresenter
@@ -45,3 +43,8 @@ LBB Enriched TCR:
 LBB Enriched TCR HT:
   :asset_type: plate
   :creator_class: LabwareCreators::PartialStampedPlateWithoutDilution
+Stock Plate:
+  :asset_type: plate
+  :stock_plate: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
