@@ -7,7 +7,7 @@ class TestPoolingClass
 end
 
 RSpec.describe LabwareCreators::DonorPoolingCalculator do
-  let(:test_pooling_class) { TestPoolingClass.new }
+  let(:instance_of_test_pooling_class) { TestPoolingClass.new }
   let(:pool) { [source_well1] }
   let(:source_well1) { create :v2_well, aliquots: [aliquot1] }
   let(:aliquot1) { create :v2_aliquot, request: request1 }
@@ -21,7 +21,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
       it 'returns nil' do
         expect do
-          test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)
+          instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)
         end.to raise_error StandardError,
                     'No request found for source well at A1, cannot fetch ' \
                       'cells per chip well metadata for full allowance calculations'
@@ -30,7 +30,9 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
     context 'when there is a single source well with request_metadata' do
       it 'returns the number of cells per chip well' do
-        expect(test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(cells_per_chip_well)
+        expect(instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(
+          cells_per_chip_well
+        )
       end
     end
 
@@ -42,7 +44,9 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       let(:pool) { [source_well1, source_well2] }
 
       it 'returns the number of cells per chip well from the first source well' do
-        expect(test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(cells_per_chip_well)
+        expect(instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(
+          cells_per_chip_well
+        )
       end
     end
 
@@ -53,7 +57,9 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       let(:source_well) { create :v2_well, aliquots: [aliquot1, aliquot2] }
 
       it 'returns the number of cells per chip well from the first aliquot' do
-        expect(test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(cells_per_chip_well)
+        expect(instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(
+          cells_per_chip_well
+        )
       end
     end
   end
@@ -65,7 +71,9 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     let(:expected_volume) { (count_of_samples_in_pool * num_cells_per_sample) * wastage_factor }
 
     it 'calculates the value correctly' do
-      expect(test_pooling_class.send(:calculate_total_cells_in_300ul, count_of_samples_in_pool)).to eq(expected_volume)
+      expect(instance_of_test_pooling_class.send(:calculate_total_cells_in_300ul, count_of_samples_in_pool)).to eq(
+        expected_volume
+      )
     end
   end
 
@@ -76,7 +84,9 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       end
 
       it 'calculates the chip loading volume' do
-        expect(test_pooling_class.send(:calculate_chip_loading_volume, cells_per_chip_well)).to eq(expected_volume)
+        expect(instance_of_test_pooling_class.send(:calculate_chip_loading_volume, cells_per_chip_well)).to eq(
+          expected_volume
+        )
       end
     end
   end
@@ -93,7 +103,9 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       end
 
       it 'calculates the full allowance volume' do
-        expect(test_pooling_class.send(:calculate_full_allowance, chip_loading_volume)).to eq(expected_volume)
+        expect(instance_of_test_pooling_class.send(:calculate_full_allowance, chip_loading_volume)).to eq(
+          expected_volume
+        )
       end
     end
   end
@@ -115,13 +127,13 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
     context 'when the count of samples in pool is outside the range 5 to 8' do
       it 'stores the number of cells per chip well taken from the request on the destination well' do
-        expect(test_pooling_class).to receive(:create_new_well_metadata).with(
+        expect(instance_of_test_pooling_class).to receive(:create_new_well_metadata).with(
           Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key],
           cells_per_chip_well,
           dest_well
         )
 
-        test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+        instance_of_test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
       end
     end
 
@@ -155,27 +167,27 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
       context 'when there is not enough resuspension volume for full allowance' do
         it 'stores the modified number of cells per chip well on the destination well' do
-          expect(test_pooling_class).to receive(:create_new_well_metadata).with(
+          expect(instance_of_test_pooling_class).to receive(:create_new_well_metadata).with(
             Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key],
             Rails.application.config.scrna_config[:full_allowance_table][6],
             dest_well
           )
 
-          test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+          instance_of_test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
         end
       end
 
       context 'when there is enough resuspension volume for full allowance' do
-        before { allow(test_pooling_class).to receive(:calculate_full_allowance).and_return(60.0) }
+        before { allow(instance_of_test_pooling_class).to receive(:calculate_full_allowance).and_return(60.0) }
 
         it 'stores the request number of cells per chip well on the destination well' do
-          expect(test_pooling_class).to receive(:create_new_well_metadata).with(
+          expect(instance_of_test_pooling_class).to receive(:create_new_well_metadata).with(
             Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key],
             cells_per_chip_well,
             dest_well
           )
 
-          test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+          instance_of_test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
         end
       end
     end
