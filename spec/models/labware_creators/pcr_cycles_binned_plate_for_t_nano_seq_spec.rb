@@ -209,8 +209,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
            outer_requests: isc_prep_requests
   end
 
-  let(:parent_plate_v1) { json :plate, uuid: parent_uuid, stock_plate_barcode: 2, qc_files_actions: %w[read create] }
-
   # Create child wells in order of the requests they originated from.
   # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
   # Just done like this to make it easier to match up the requests to the wells.
@@ -304,37 +302,34 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   context '#save' do
     has_a_working_api
 
-    let(:file_content) do
+    let(:form_attributes) do
+      { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
+    end
+
+    let(:file_contents) do
       content = file.read
       file.rewind
       content
     end
 
-    let(:form_attributes) do
-      { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
-    end
-
-    let(:stub_upload_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-        body: file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="targeted_nano_seq_customer_file.csv"'
+    let(:qc_files_attributes) do
+      [
+        {
+          contents: file_contents,
+          filename: 'targeted_nano_seq_customer_file.csv',
+          relationships: {
+            labware: {
+              data: {
+                id: parent_plate.id,
+                type: 'labware'
+              }
+            }
+          }
         }
-      ).to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'targeted_nano_seq_dil_file.csv'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
+      ]
     end
-
-    let(:stub_parent_request) { stub_api_get(parent_uuid, body: parent_plate_v1) }
 
     before do
-      stub_parent_request
-
       create :targeted_nano_seq_customer_csv_file_upload_purpose_config,
              uuid: child_purpose_uuid,
              name: child_purpose_name
@@ -346,10 +341,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
       )
 
+      # Some requests are made with standard includes, and others with the custom includes shown.
       stub_v2_plate(child_plate, stub_search: false)
       stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
-
-      stub_upload_file_creation
     end
 
     context 'with an invalid file' do
@@ -465,6 +459,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
       it 'makes the expected method calls when creating the child plate' do
         expect_plate_creation
+        expect_qc_file_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
@@ -797,6 +792,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
       it 'makes the expected method calls when creating the child plate' do
         expect_plate_creation
+        expect_qc_file_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
@@ -1128,6 +1124,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
       it 'makes the expected method calls when creating the child plate' do
         expect_plate_creation
+        expect_qc_file_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
@@ -1480,6 +1477,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
       it 'makes the expected method calls when creating the child plate' do
         expect_plate_creation
+        expect_qc_file_creation
         expect_transfer_request_collection_creation
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
