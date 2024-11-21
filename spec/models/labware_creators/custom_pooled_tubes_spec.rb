@@ -22,7 +22,6 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:parent_uuid) { SecureRandom.uuid }
-  let(:parent) { json :plate, uuid: parent_uuid, stock_plate_barcode: 5, qc_files_actions: %w[read create] }
   let(:pool_size) { 16 }
   let(:stock_plate) { create(:v2_stock_plate_for_plate, barcode_number: 5) }
   let(:parent_plate) do

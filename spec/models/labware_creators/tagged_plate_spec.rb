@@ -50,16 +50,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   context 'on new' do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
 
-    # These values all describe the returned json.
-    # They are used to prevent magic numbers from appearing in the specs
-    let(:plate_size) { 96 }
-    let(:occupied_wells) { 30 }
-    let(:pool_size) { 15 }
-    let(:largest_tag_group) { 120 }
-
-    let(:maximum_tag_offset) { largest_tag_group - occupied_wells }
-    let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
-
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::TaggedPlate
     end
@@ -114,37 +104,19 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     context 'when a submission is split over multiple plates' do
       let(:pools) { 1 }
 
-      before { stub_api_get(plate_uuid, 'submission_pools', body: pool_json) }
-
       context 'and nothing has been used' do
-        let(:pool_json) { json(:dual_submission_pool_collection) }
-
         it 'requires tag2' do
           expect(subject.requires_tag2?).to be true
         end
       end
 
       context 'and dual index plates have been used' do
-        let(:pool_json) do
-          json(
-            :dual_submission_pool_collection,
-            used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]
-          )
-        end
-
         it 'requires tag2' do
           expect(subject.requires_tag2?).to be true
         end
       end
 
       context 'and detection has been disabled' do
-        let(:pool_json) do
-          json(
-            :dual_submission_pool_collection,
-            used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]
-          )
-        end
-
         let(:disable_cross_plate_pool_detection) { true }
 
         it 'requires tag2' do
@@ -154,26 +126,12 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     end
 
     context 'when a submission is not split over multiple plates' do
-      before { stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection)) }
-
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
       end
     end
 
     context 'when a submission is not split over multiple plates but a plate has been recorded' do
-      before do
-        stub_api_get(
-          plate_uuid,
-          'submission_pools',
-          body:
-            json(
-              :submission_pool_collection,
-              used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]
-            )
-        )
-      end
-
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
       end
@@ -219,8 +177,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     include_context 'a tag plate creator' do
       let(:enforce_uniqueness) { false }
     end
-
-    before { stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection)) }
 
     context 'With a tag plate' do
       let(:form_attributes) do
