@@ -439,7 +439,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:donor_ids) { (1..80).to_a }
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 8 }
-      let(:num_samples_per_pool) { 10 }
+      let(:number_of_pools) { 8 }
 
       before do
         wells.each_with_index do |well, index|
@@ -448,7 +448,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.project = project
           well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
           well.aliquots.first.request = requests[index]
-          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
         end
       end
 
