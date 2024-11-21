@@ -22,15 +22,12 @@ RSpec.feature 'Cancelling a whole plate', js: true do
   let(:example_plate) do
     create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid', state: 'passed', wells: wells
   end
-  let(:old_api_example_plate) do
-    json :plate, barcode_number: example_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
-  end
 
   let(:state_changes_attributes) do
     [
       {
-        contents: WellHelpers.column_order - %w[B2],
-        customer_accepts_responsibility: nil, # Remove the failed well
+        contents: %w[A1 B1 A2 A3], # Well B2 was already failed and won't be changed to cancelled
+        customer_accepts_responsibility: nil,
         reason: 'Not required',
         target_state: 'cancelled',
         target_uuid: plate_uuid,
@@ -48,16 +45,8 @@ RSpec.feature 'Cancelling a whole plate', js: true do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
 
-    # We get the actual plate
-
-    # We get the plate several times, for both the initial find, and the redirect post state change (api 1 and 2)
+    # We get the plate several times, for both the initial find, and the redirect post state change.
     stub_v2_plate(example_plate)
-    stub_api_get(plate_uuid, body: old_api_example_plate)
-    stub_api_get(
-      plate_uuid,
-      'wells',
-      body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' })
-    )
 
     # We get the printers
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
