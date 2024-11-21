@@ -65,9 +65,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     let(:expected_volume) { (count_of_samples_in_pool * num_cells_per_sample) * wastage_factor }
 
     it 'calculates the value correctly' do
-      expect(test_pooling_class.send(:calculate_total_cells_in_300ul, pool, count_of_samples_in_pool)).to eq(
-        expected_volume
-      )
+      expect(test_pooling_class.send(:calculate_total_cells_in_300ul, count_of_samples_in_pool)).to eq(expected_volume)
     end
   end
 
@@ -78,9 +76,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       end
 
       it 'calculates the chip loading volume' do
-        expect(test_pooling_class.send(:calculate_chip_loading_volume, pool, cells_per_chip_well)).to eq(
-          expected_volume
-        )
+        expect(test_pooling_class.send(:calculate_chip_loading_volume, cells_per_chip_well)).to eq(expected_volume)
       end
     end
   end
