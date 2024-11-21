@@ -269,6 +269,12 @@ nav.robots-list {
   @extend .mb-2;
 }
 
+.choose-workflow {
+  .create-submission-button {
+    @extend .btn-success;
+  }
+}
+
 .other-actions {
   .work-completion-button,
   .create-plate-button,
@@ -279,8 +285,7 @@ nav.robots-list {
 .suggested-actions {
   .work-completion-button,
   .create-plate-button,
-  .create-tube-button,
-  .create-submission-button {
+  .create-tube-button {
     @extend .btn-success;
   }
 }
