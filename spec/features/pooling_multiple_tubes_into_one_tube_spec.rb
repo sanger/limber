@@ -78,9 +78,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       barcode: [tube_barcode_1, tube_barcode_2],
       includes: []
     ).and_return([example_tube, example_tube_2])
-
-    # Old API still used when loading parent
-    stub_api_get(tube_uuid, body: example_tube_v1)
   end
 
   background do

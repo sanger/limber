@@ -15,10 +15,6 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   let(:child_uuid) { 'child-uuid' }
   let(:child_plate) { create :v2_plate, uuid: child_uuid, purpose_uuid: child_purpose_uuid }
   let(:parent_uuid) { 'example-plate-uuid' }
-  let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:plate) { json :plate, uuid: parent_uuid, barcode_number: '2', pool_sizes: [8, 8] }
-  let(:wells) { json :well_collection, size: 16 }
-  let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-transfer-template' } # Defined in spec_helper.rb
 
   let(:transfers_attributes) do
@@ -35,15 +31,10 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   end
 
   let(:child_purpose_uuid) { 'child-purpose' }
-  let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
 
-  before do
-    create(:templated_transfer_config, name: child_purpose_name, uuid: child_purpose_uuid)
-    stub_api_get(parent_uuid, body: plate)
-    stub_api_get(parent_uuid, 'wells', body: wells)
-  end
+  before { create(:templated_transfer_config, uuid: child_purpose_uuid) }
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
@@ -57,7 +48,6 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
 
   describe '#save!' do
     let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
-    let!(:plate_request) { stub_api_get(parent_uuid, body: plate) }
 
     it 'makes the expected requests' do
       expect_plate_creation

@@ -110,19 +110,6 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
     create :purpose_config, uuid: target_purpose_uuid, name: target_purpose_name
 
-    stub_api_get(
-      target_plate_uuid,
-      'creation_transfers',
-      body:
-        json(
-          :creation_transfer_collection,
-          destination: associated(:plate, target_plate_attributes),
-          sources: transfer_source_plates,
-          associated_on: 'creation_transfers',
-          transfer_factory: :creation_transfer
-        )
-    )
-
     bed_plate_lookup(source_plate, [:purpose, { wells: :upstream_plates }])
     bed_plate_lookup(target_plate, [:purpose, { wells: :upstream_plates }])
   end
