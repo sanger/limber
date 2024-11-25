@@ -14,7 +14,7 @@ jobs:
     if: (github.repository_owner == 'sanger') # On the sanger fork only
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         env:
