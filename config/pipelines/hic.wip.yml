@@ -1,0 +1,42 @@
+---
+Bespoke PCR HiC:
+  pipeline_group: Bespoke PCR HiC
+  filters:
+    request_type_key:
+      - limber_hic # Have to move this into a the new pipeline config when HiC pipeline is implemented (Y24-335).
+    library_type:
+      - ChIP-Seq Auto
+      - Chromium single cell HTO
+      - Chromium single cell surface protein
+      - Chromium single cell surface protein HT
+      - Chromium Visium
+      - Chromium Visium FFPE
+      - Manual Chromium single cell 3 prime v3
+      - Manual Chromium single cell 3 prime HT v3
+      - Manual Chromium single cell 5 prime v2
+      - Manual Chromium single cell 5 prime HT v2
+      - emSEQ
+      - Haplotagging
+      - Hi-C
+      - Hi-C - Arima v1
+      - Hi-C - Arima v2
+      - Hi-C - Dovetail
+      - Hi-C - OmniC
+      - Hi-C - Qiagen
+      - Manual Standard WGS (Plate)
+      - Ribozero RNA depletion
+      - Ribozero RNA-seq (Bacterial)
+      - Ribozero RNA-seq (HMR)
+      - RNA-seq dUTP eukaryotic
+      - RNA-seq dUTP prokaryotic
+      - Small RNA (miRNA)
+      - Standard
+      - TraDIS
+      - TruSeq mRNA (RNA Seq)
+      - SGE Library v0.2
+  library_pass: LBB Lib PCR-XP
+  relationships:
+    Stock Plate: LBB Ligation
+    LBB Cherrypick: LBB Ligation
+    LBC Cherrypick: LBB Ligation
+    LBB Ligation: LBB Lib PCR-XP
