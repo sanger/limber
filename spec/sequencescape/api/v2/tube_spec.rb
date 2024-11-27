@@ -19,6 +19,7 @@ RSpec.describe Sequencescape::Api::V2::Tube do
 
   it { is_expected.to_not be_plate }
   it { is_expected.to be_tube }
+  it { is_expected.to_not be_tube_rack }
 
   describe '#stock plate' do
     let(:stock_plates) { create_list(:v2_stock_plate, 4) }

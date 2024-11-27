@@ -22,9 +22,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_one :custom_metadatum_collection
   has_many :submission_pools
 
-  # Other relationships
-  # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
-
   property :created_at, type: :time
   property :updated_at, type: :time
 
