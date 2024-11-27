@@ -23,16 +23,7 @@ module Presenters
     # Returns an augmented state of the tube rack.
     # All states take precedence over canceled and failed (in that order or priority)
     # however if we still have a mixed state after that, we display it as such.
-    def state
-      states = all_tubes.pluck(:state).uniq
-      return states.first if states.one?
-
-      %w[cancelled failed].each do |filter|
-        states.delete(filter)
-        return states.first if states.one?
-      end
-      'mixed'
-    end
+    delegate :state, to: :labware
 
     def priority
       all_tubes.map(&:priority).max

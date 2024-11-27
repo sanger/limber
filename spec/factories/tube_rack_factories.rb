@@ -43,17 +43,15 @@ FactoryBot.define do
   end
 
   factory :racked_tube, class: Sequencescape::Api::V2::RackedTube do
+    # skips normal create and uses the after(:build) block to set up the relationships
     skip_create
 
     initialize_with { Sequencescape::Api::V2::RackedTube.load(attributes) }
 
     id
     coordinate { 'A1' }
-
-    transient do
-      tube_rack { create :tube_rack }
-      tube { create :v2_tube }
-    end
+    tube_rack { create :tube_rack }
+    tube { create :v2_tube }
 
     after(:build) do |racked_tube, evaluator|
       Sequencescape::Api::V2::RackedTube.associations.each do |association|

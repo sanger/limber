@@ -113,4 +113,69 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       expect(model_name.singular_route_key).to eq('limber_tube_rack')
     end
   end
+
+  describe '#state' do
+    let(:tube1) { create :v2_tube, uuid: 'tube1_uuid', state: state_for_tube1, barcode_number: 1 }
+    let(:tube2) { create :v2_tube, uuid: 'tube2_uuid', state: state_for_tube2, barcode_number: 2 }
+    let(:tube3) { create :v2_tube, uuid: 'tube3_uuid', state: state_for_tube3, barcode_number: 3 }
+
+    let(:tubes) { { 'A1' => tube1, 'B1' => tube2, 'C1' => tube3 } }
+
+    let!(:test_tube_rack) { build :tube_rack, barcode_number: 5, tubes: tubes }
+
+    context 'when all racked tubes have the same state' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'pending' }
+      let(:state_for_tube3) { 'pending' }
+
+      it 'returns the state of the racked tubes' do
+        expect(test_tube_rack.state).to eq('pending')
+      end
+    end
+
+    context 'when racked tubes have mixed states' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'passed' }
+      let(:state_for_tube3) { 'pending' }
+
+      it 'returns "mixed"' do
+        expect(test_tube_rack.state).to eq('mixed')
+      end
+    end
+
+    context 'when racked tubes have mixed states including cancelled and failed' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'cancelled' }
+      let(:state_for_tube3) { 'failed' }
+
+      it 'returns the remaining state after filtering out cancelled and failed' do
+        expect(test_tube_rack.state).to eq('pending')
+      end
+    end
+
+    context 'when racked tubes have only cancelled and failed states' do
+      let(:state_for_tube1) { 'failed' }
+      let(:state_for_tube2) { 'cancelled' }
+      let(:state_for_tube3) { 'failed' }
+
+      it 'returns "failed" as we first filter the cancelled one out' do
+        expect(test_tube_rack.state).to eq('failed')
+      end
+    end
+
+    context 'when there are still mixed states after filtering out cancelled and failed' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'passed' }
+      let(:state_for_tube3) { 'failed' }
+      let(:state_for_tube4) { 'cancelled' }
+
+      let(:tube4) { create :v2_tube, uuid: 'tube3_uuid', state: state_for_tube4, barcode_number: 4 }
+
+      let(:tubes) { { 'A1' => tube1, 'B1' => tube2, 'C1' => tube3, 'D1' => tube4 } }
+
+      it 'returns "mixed"' do
+        expect(test_tube_rack.state).to eq('mixed')
+      end
+    end
+  end
 end

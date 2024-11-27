@@ -29,6 +29,9 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_one :custom_metadatum_collection
   has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
 
+  has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'
+  has_many :tube_racks, through: :racked_tubes, class_name: 'Sequencescape::Api::V2::TubeRack'
+
   property :created_at, type: :time
   property :updated_at, type: :time
 

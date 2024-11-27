@@ -12,6 +12,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   self.tube_rack = true
 
+  STATES_TO_FILTER_OUT = %w[cancelled failed].freeze
+
   # This is needed in order for the URL helpers to work correctly
   def to_param
     uuid
@@ -28,6 +30,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   end
 
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'
+  has_many :tubes, through: :racked_tubes, class_name: 'Sequencescape::Api::V2::Tube'
+
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
 
   property :name
@@ -40,6 +44,33 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   def stock_plate
     nil
+  end
+
+  # This method determines the state of the tube rack based on the states of the racked tubes.
+  # It returns a single state if all racked tubes have the same state.
+  # If there are multiple states, it filters out first 'cancelled' and then 'failed' states and
+  # returns the remaining state if only one remains.
+  # If there are still multiple states after filtering, it returns 'mixed'.
+  # i.e. if all tubes are pending, the state will be pending
+  # i.e. if all tubes are failed, the state will be failed
+  # i.e. if we have a mix of cancelled and failed tubes, the state will be failed as we filter out
+  # the cancelled tubes first
+  # i.e. if we have a mix of cancelled, failed and pending tubes, the state will be pending
+  # i.e. if we have a mix of cancelled, failed, pending and passed tubes, the state will be mixed
+  #
+  # @return [String] the state of the tube rack
+  def state
+    states = racked_tubes.map { |racked_tube| racked_tube.tube.state }.uniq
+    return states.first if states.one?
+
+    # filter out cancelled tubes first, and then if still a mix filter out the failed tubes
+    STATES_TO_FILTER_OUT.each do |filter|
+      states.delete(filter)
+      return states.first if states.one?
+    end
+
+    # if we still have a mixed state after that, we display it as such
+    'mixed'
   end
 
   private
