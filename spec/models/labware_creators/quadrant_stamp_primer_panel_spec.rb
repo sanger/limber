@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # Up to four 96 well plates are transferred onto a single 384 well plate.
