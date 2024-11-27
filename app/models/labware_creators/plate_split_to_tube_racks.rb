@@ -85,14 +85,9 @@ module LabwareCreators
       super && upload_tube_rack_files && true
     end
 
-    # v2 api is used to select the parent plate
+    # The parent plate via the V2 API.
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
-    end
-
-    # v1 api is used to upload the tube rack scan files and create the tubes
-    def parent_v1
-      @parent_v1 ||= api.plate.find(parent_uuid)
     end
 
     # Returns the list of wells of the parent labware.
@@ -351,14 +346,23 @@ module LabwareCreators
       @num_contingency_tubes ||= contingency_csv_file&.position_details&.length || 0
     end
 
-    # Uploads the sequencing and contingency tube rack scan CSV files to the parent plate using api v1.
+    # Uploads the sequencing and contingency tube rack scan CSV files for the parent plate.
     #
-    # @return [void]
+    # @return [Void]
     def upload_tube_rack_files
       unless require_sequencing_tubes_only?
-        parent_v1.qc_files.create_from_file!(contingency_file, 'scrna_core_contingency_tube_rack_scan.csv')
+        Sequencescape::Api::V2::QcFile.create_for_labware!(
+          contents: contingency_file.read,
+          filename: 'scrna_core_contingency_tube_rack_scan.csv',
+          labware: parent
+        )
       end
-      parent_v1.qc_files.create_from_file!(sequencing_file, 'scrna_core_sequencing_tube_rack_scan.csv')
+
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: sequencing_file.read,
+        filename: 'scrna_core_sequencing_tube_rack_scan.csv',
+        labware: parent
+      )
     end
 
     # Returns true if only contingency tubes are required for the parent plate, false otherwise.

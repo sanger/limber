@@ -49,7 +49,11 @@ module LabwareCreators
     # Upload the csv file onto the plate
     #
     def upload_file
-      parent.qc_files.create_from_file!(file, 'robot_pooling_file.csv')
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: file.read,
+        filename: 'robot_pooling_file.csv',
+        labware: parent
+      )
     end
 
     def csv_file

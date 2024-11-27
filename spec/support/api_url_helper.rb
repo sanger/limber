@@ -123,6 +123,10 @@ module ApiUrlHelper
       )
     end
 
+    def expect_qc_file_creation
+      expect_api_v2_posts('QcFile', qc_files_attributes)
+    end
+
     def expect_specific_tube_creation
       # Prepare the expected arguments and return values.
       arguments =
@@ -211,8 +215,9 @@ module ApiUrlHelper
     end
 
     def stub_v2_labware(labware)
-      arguments = [{ barcode: labware.barcode.machine }]
-      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(*arguments).and_return([labware])
+      [{ barcode: labware.barcode.machine }, { uuid: labware.uuid }].each do |query|
+        allow(Sequencescape::Api::V2::Labware).to receive(:find).with(query).and_return([labware])
+      end
     end
 
     # Builds the basic v2 plate finding query.
@@ -242,6 +247,11 @@ module ApiUrlHelper
     def stub_v2_project(project)
       arguments = [{ name: project.name }]
       allow(Sequencescape::Api::V2::Project).to receive(:find).with(*arguments).and_return([project])
+    end
+
+    def stub_v2_qc_file(qc_file)
+      arguments = [{ uuid: qc_file.uuid }]
+      allow(Sequencescape::Api::V2::QcFile).to receive(:find).with(*arguments).and_return([qc_file])
     end
 
     def stub_v2_study(study)

@@ -7,16 +7,15 @@ RSpec.describe PlatesController, type: :controller do
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:v2_plate) { create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
-  let(:wells_json) { json :well_collection }
-  let(:plate_wells_request) { stub_api_get plate_uuid, 'wells', body: wells_json }
+  let(:plate) { create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
   let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
+
+  before { stub_v2_plate(plate, stub_search: false) }
 
   describe '#show' do
     before do
       create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
-      stub_v2_plate(v2_plate, stub_search: false)
       barcode_printers_request
     end
 
@@ -37,15 +36,7 @@ RSpec.describe PlatesController, type: :controller do
   end
 
   describe '#update' do
-    before do
-      create :stock_plate_config, uuid: 'stock-plate-purpose-uuid'
-      stub_api_get(plate_uuid, body: old_api_example_plate)
-      stub_api_get(plate_uuid, 'wells', body: wells_json)
-    end
-
-    let(:old_api_example_plate) do
-      json :plate, barcode_number: v2_plate.labware_barcode.number, uuid: plate_uuid, state: 'passed'
-    end
+    before { create :stock_plate_config, uuid: 'stock-plate-purpose-uuid' }
 
     let(:state_changes_attributes) do
       [

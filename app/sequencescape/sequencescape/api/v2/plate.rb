@@ -9,6 +9,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
+  include Sequencescape::Api::V2::Shared::HasQcFiles
 
   self.plate = true
   has_many :wells
@@ -19,8 +20,9 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :direct_submissions, class_name: 'Sequencescape::Api::V2::Submission'
   has_many :state_changes
+  has_many :submission_pools, class_name: 'Sequencescape::Api::V2::SubmissionPool'
+  has_many :transfers_as_destination, class_name: 'Sequencescape::Api::V2::Transfer'
   has_one :custom_metadatum_collection
-  has_many :submission_pools
 
   # Other relationships
   # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
@@ -131,6 +133,16 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   def each_well_and_aliquot
     wells.each { |well| well.aliquots.each { |aliquot| yield well, aliquot } }
+  end
+
+  def assign_pools_to_wells
+    pooled_wells = pooling_metadata.values.pluck('wells')
+    wells.each do |well|
+      pool = pooled_wells.find { |wells| wells.include?(well.location) }
+      next if pool.nil?
+
+      well.pool = pool
+    end
   end
 
   private

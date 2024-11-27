@@ -13,22 +13,19 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:pools) { 0 }
-  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8], submission_pools_count: pools }
-  let(:wells) { json :well_collection, size: 16 }
+  let(:plate) { create(:v2_plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
 
-  let!(:plate_request) { stub_api_get(plate_uuid, body: plate) }
-  let!(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
-
-  before { create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name }
+  before do
+    create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
+    stub_v2_plate(plate)
+  end
 
   subject { LabwareCreators::CustomTaggedPlate.new(api, form_attributes) }
 

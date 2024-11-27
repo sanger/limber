@@ -207,13 +207,13 @@ module LabwareCreators
       parent_tubes.values.pluck(:uuid).uniq
     end
 
-    def child_v1
-      @child_v1 ||= api.plate.find(@child.uuid)
-    end
-
-    # Uploads the tube rack scan CSV file to the child plate using api v1.
+    # Uploads the tube rack scan CSV file for the child plate.
     def upload_tube_rack_file
-      child_v1.qc_files.create_from_file!(file, filename_for_tube_rack_scan)
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: file.read,
+        filename: filename_for_tube_rack_scan,
+        labware: child
+      )
     end
 
     # Returns an array of active requests of the expected type for the given tube.

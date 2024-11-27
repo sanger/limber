@@ -8,8 +8,6 @@ module LabwareCreators
   class PooledTubesBase < Base
     include SupportParent::TaggedPlateOnly
 
-    include LabwareCreators::SupportV2SourcePlate
-
     attr_reader :tube_transfer, :child_stock_tubes
     attr_writer :metadata_stock_barcode
 
@@ -97,11 +95,7 @@ module LabwareCreators
     end
 
     def parent_metadata
-      if source_plate
-        LabwareMetadata.new(labware: source_plate).metadata
-      else
-        LabwareMetadata.new(barcode: parent.barcode.machine).metadata
-      end || {}
+      LabwareMetadata.new(labware: parent).metadata || {}
     end
 
     # Maps well locations to the corresponding uuid
