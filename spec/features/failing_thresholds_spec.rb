@@ -63,11 +63,6 @@ RSpec.feature 'Failing thresholds', js: true do
       stub_v2_plate(example_plate)
     end
 
-    stub_api_get(
-      plate_uuid,
-      'wells',
-      body: json(:well_collection, default_state: 'passed', custom_state: { 'B2' => 'failed' })
-    )
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 

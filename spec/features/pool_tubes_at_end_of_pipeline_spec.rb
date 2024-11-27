@@ -62,7 +62,6 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
     stub_v2_tube(tube)
     stub_v2_tube(create(:v2_tube, uuid: multiplexed_library_tube_uuid))
 
-    stub_api_get('transfer-template-uuid', body: json(:transfer_template, uuid: 'transfer-template-uuid'))
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 

@@ -58,35 +58,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     [{ child_purpose_uuid: purpose_uuid, parent_uuid: tube_uuid, user_uuid: user_uuid }]
   end
 
-  let!(:order_requests) do
-    stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
-    stub_api_post(
-      template_uuid,
-      'orders',
-      payload: {
-        order: {
-          assets: [child_uuid],
-          request_options: {
-            read_length: 150
-          },
-          user: user_uuid
-        }
-      },
-      body: '{"order":{"uuid":"order-uuid"}}'
-    )
-    stub_api_post(
-      'submissions',
-      payload: {
-        submission: {
-          orders: ['order-uuid'],
-          user: user_uuid
-        }
-      },
-      body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
-    )
-    stub_api_post('sub-uuid', 'submit')
-  end
-
   let(:transfer_requests_attributes) do
     [tube_uuid, tube_uuid_2].map { |source_uuid| { source_asset: source_uuid, target_asset: child_uuid } }
   end
@@ -107,9 +78,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       barcode: [tube_barcode_1, tube_barcode_2],
       includes: []
     ).and_return([example_tube, example_tube_2])
-
-    # Old API still used when loading parent
-    stub_api_get(tube_uuid, body: example_tube_v1)
   end
 
   background do

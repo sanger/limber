@@ -471,20 +471,6 @@ RSpec.describe LabwareCreators::MultiStamp do
       }
     end
 
-    let!(:pooled_plate_creation_request) do
-      stub_api_post(
-        'pooled_plate_creations',
-        payload: {
-          pooled_plate_creation: {
-            user: user_uuid,
-            child_purpose: child_purpose_uuid,
-            parents: [parent1_uuid, parent2_uuid]
-          }
-        },
-        body: json(:plate_creation, child_uuid: child_plate.uuid)
-      )
-    end
-
     let(:transfer_requests_attributes) do
       [
         { source_asset: '3-well-A1', outer_request: 'request-p1-1', target_asset: '5-well-A1' },

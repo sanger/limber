@@ -720,10 +720,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
                ]
       end
 
-      let!(:api_v2_post) { stub_api_v2_post('Well') }
-
-      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
-
       # Not expecting transfer requests for ignored wells E1, A2, C2, G2
       let(:transfer_requests_attributes) do
         [
@@ -788,6 +784,11 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
             outer_request: isc_prep_requests[9].uuid
           }
         ]
+      end
+
+      before do
+        stub_api_v2_save('PolyMetadatum')
+        stub_api_v2_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -1052,10 +1053,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
                ]
       end
 
-      let!(:api_v2_post) { stub_api_v2_post('Well') }
-
-      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
-
       # Not expecting transfer requests for ignored wells E1, A2, C2, G2
       let(:transfer_requests_attributes) do
         [
@@ -1120,6 +1117,11 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
             outer_request: isc_prep_requests[9].uuid
           }
         ]
+      end
+
+      before do
+        stub_api_v2_save('PolyMetadatum')
+        stub_api_v2_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do

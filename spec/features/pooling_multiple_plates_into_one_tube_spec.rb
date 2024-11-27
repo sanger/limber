@@ -12,8 +12,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
   let(:plate_barcode_1) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).human_barcode }
   let(:plate_uuid) { 'plate-1' }
   let(:example_plate_args) { [:plate, { barcode_number: 1, state: 'passed', uuid: plate_uuid }] }
-  let(:example_plate) { json(*example_plate_args) }
-  let(:example_plate_new_api) do
+  let(:example_plate) do
     create(
       :v2_plate,
       barcode_number: 1,
@@ -51,7 +50,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       barcode_number: 3,
       state: 'passed',
       uuid: plate_uuid_3,
-      wells: example_plate_new_api.wells,
+      wells: example_plate.wells,
       pool_sizes: [96]
     )
   end
@@ -109,13 +108,8 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       [example_plate_listed, example_plate_2_listed]
     )
 
-    stub_v2_plate(example_plate_new_api)
-
-    stub_api_get(plate_uuid, body: example_plate)
-    stub_api_get(plate_uuid, 'wells', body: well_set_a)
-
+    stub_v2_plate(example_plate)
     stub_v2_tube(child_tube)
-
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
