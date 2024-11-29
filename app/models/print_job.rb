@@ -90,7 +90,7 @@ class PrintJob # rubocop:todo Style/Documentation
 
     label_template = get_label_template_by_service('SPrint')
 
-    label_array = labels_sprint.values
+    label_array = labels_sprint.values.flatten
 
     # label_array:
     # [{
