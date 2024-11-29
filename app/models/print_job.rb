@@ -90,6 +90,8 @@ class PrintJob # rubocop:todo Style/Documentation
 
     label_template = get_label_template_by_service('SPrint')
 
+    label_array = labels_sprint.values.flatten
+
     # label_array:
     # [{
     #   "right_text"=>"DN9000003B",
@@ -99,7 +101,7 @@ class PrintJob # rubocop:todo Style/Documentation
     #   "extra_left_text"=>"10-NOV-2020"
     # }]
 
-    merge_fields_list = labels_sprint * number_of_copies
+    merge_fields_list = label_array * number_of_copies
 
     # assumes all labels use the same label template
     SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
