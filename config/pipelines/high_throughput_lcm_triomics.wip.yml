@@ -4,7 +4,7 @@ LCM Triomics EMSeq:
   pipeline_group: LCM Triomics WGS and EMSeq
   filters:
     request_type_key: limber_lcm_triomics_emseq
-    library_type: LCM Triomics EMSeq
+    library_type: emSEQ
   library_pass: LCMT EM PCR XP
   relationships:
     LCMT Lysate: LCMT DNA Frag
