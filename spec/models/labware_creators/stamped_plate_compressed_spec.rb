@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
-require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::StampedPlateCompressed do

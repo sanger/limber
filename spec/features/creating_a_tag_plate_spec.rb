@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_relative '../support/shared_tagging_examples'
 
 RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   has_a_working_api
@@ -26,8 +25,33 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid) { 'tag-plate-uuid' }
   let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid, lot_uuid: 'lot-uuid' }
+  let(:tag_template_uuid) { 'tag-layout-template-0' }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
+  let(:enforce_uniqueness) { true }
+
+  let(:plate_conversions_attributes) do
+    [
+      {
+        parent_uuid: parent_plate.uuid,
+        purpose_uuid: child_purpose_uuid,
+        target_uuid: tag_plate_uuid,
+        user_uuid: user_uuid
+      }
+    ]
+  end
+
+  let(:tag_layouts_attributes) do
+    [
+      {
+        enforce_uniqueness: enforce_uniqueness,
+        plate_uuid: tag_plate_uuid,
+        tag_layout_template_uuid: tag_template_uuid,
+        user_uuid: user_uuid
+      }
+    ]
+  end
+
   let(:transfers_attributes) do
     [
       {
@@ -42,25 +66,10 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     ]
   end
 
-  let(:plate_conversions_attributes) do
-    [
-      {
-        parent_uuid: parent_plate.uuid,
-        purpose_uuid: child_purpose_uuid,
-        target_uuid: tag_plate_uuid,
-        user_uuid: user_uuid
-      }
-    ]
-  end
-
-  let(:tag_template_uuid) { 'tag-layout-template-0' }
-
   let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
 
   let(:tag_lot_number) { 'tag_lot_number' }
   let(:enforce_same_template_within_pool) { false }
-
-  include_context 'a tag plate creator'
 
   # Setup stubs
   background do
@@ -96,6 +105,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     let(:help_text) { "Click 'Create plate'" }
 
     before do
+      expect_tag_layout_creation
       expect_transfer_creation
 
       stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
@@ -177,7 +187,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       let(:template_factory) { :v2_dual_index_tag_layout_template }
 
       context 'when nothing has been done' do
-        #let(:submission_pools) { json(:dual_submission_pool_collection) }
+        let(:enforce_uniqueness) { false }
         let(:submission_pools) { create_list(:v2_submission_pool, 1) }
         let(:help_text) { 'This plate is part of a larger pool and must be indexed with UDI plates.' }
         it_behaves_like 'it supports the plate'
@@ -207,7 +217,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         # set purposes config to enforce_same_template_within_pool
         let(:enforce_same_template_within_pool) { true }
 
-        # this is used in shared_tagging_examples when stubbing the tag_layout_creation_request
+        # Used for the expectations on tag layout creations above.
         let(:enforce_uniqueness) { false }
 
         # don't use dual_submission_pool_collection - we only want 1 source plate in our submission

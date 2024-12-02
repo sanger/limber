@@ -149,6 +149,10 @@ module ApiUrlHelper
       expect_api_v2_posts('StateChange', state_changes_attributes)
     end
 
+    def expect_tag_layout_creation
+      expect_api_v2_posts('TagLayout', tag_layouts_attributes)
+    end
+
     def expect_transfer_creation
       expect_api_v2_posts(
         'Transfer',

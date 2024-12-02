@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
-require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
@@ -160,6 +159,17 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       ]
     end
 
+    let(:tag_layouts_attributes) do
+      [
+        {
+          enforce_uniqueness: false,
+          plate_uuid: tag_plate_uuid,
+          tag_layout_template_uuid: tag_template_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     let(:transfers_attributes) do
       [
         {
@@ -172,10 +182,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
           }
         }
       ]
-    end
-
-    include_context 'a tag plate creator' do
-      let(:enforce_uniqueness) { false }
     end
 
     context 'With a tag plate' do
@@ -202,16 +208,17 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         it 'creates a tag plate' do
           expect_plate_conversion_creation
           expect_state_change_creation
+          expect_tag_layout_creation
           expect_transfer_creation
 
           expect(subject.save).to be true
-          expect(tag_layout_creation_request).to have_been_made.once
         end
 
         it 'has the correct child (and uuid)' do
-          expect_plate_conversion_creation
-          stub_api_v2_post('Transfer')
+          expect_plate_conversion_creation # We need the return value and this expectation mocks it for us.
           stub_api_v2_post('StateChange')
+          stub_api_v2_post('TagLayout')
+          stub_api_v2_post('Transfer')
 
           expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)

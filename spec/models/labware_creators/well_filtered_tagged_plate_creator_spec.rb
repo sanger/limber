@@ -171,30 +171,25 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
     before do
       # It will receive the child plate, which is an existing tag plate.
       allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child)
-
-      # It will create the tag layout.
-      tag_layout_template = double('TagLayoutTemplate')
-      allow(api).to receive_message_chain(:tag_layout_template, :find).with(tag_template_uuid).and_return(
-        tag_layout_template
-      )
-      allow(tag_layout_template).to receive(:create!).with(
-        plate: tag_plate_uuid,
-        user: user_uuid,
-        enforce_uniqueness: false
-      )
-
-      # It will change the state of the tag plate to exhausted.
-      state_change_attributes = {
-        reason: 'Used in Library creation',
-        target_state: 'exhausted',
-        target_uuid: tag_plate_uuid,
-        user_uuid: user_uuid
-      }
-      allow(Sequencescape::Api::V2::StateChange).to receive(:create!).with(**state_change_attributes)
     end
 
     let(:plate_conversions_attributes) do
       [{ parent_uuid: parent_uuid, purpose_uuid: child_purpose_uuid, target_uuid: child_uuid, user_uuid: user_uuid }]
+    end
+
+    let(:state_changes_attributes) do
+      [{ reason: 'Used in Library creation', target_state: 'exhausted', target_uuid: child_uuid, user_uuid: user_uuid }]
+    end
+
+    let(:tag_layouts_attributes) do
+      [
+        {
+          enforce_uniqueness: false,
+          plate_uuid: child_uuid,
+          tag_layout_template_uuid: tag_template_uuid,
+          user_uuid: user_uuid
+        }
+      ]
     end
 
     let(:transfer_requests_attributes) do
@@ -209,6 +204,8 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
 
     it 'creates a tag plate with the right requests' do
       expect_plate_conversion_creation
+      expect_state_change_creation
+      expect_tag_layout_creation
       expect_transfer_request_collection_creation
 
       expect(subject.save).to be true
