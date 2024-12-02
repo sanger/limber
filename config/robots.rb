@@ -3688,6 +3688,30 @@ ROBOT_CONFIG =
       }
     )
 
+    # scRNA pipeline
+    # Hamilton bed verification
+    # LRC GEM-X 5p cDNA PCR to LRC GEM-X 5p cDNA PCR XP
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-gem-x-cdna-pcr-to-lrc-gem-x-5p-cdna-pcr-xp',
+      name: 'Hamilton LRC GEM-X 5p cDNA PCR => LRC GEM-X 5p cDNA PCR XP',
+      require_robot: true,
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p cDNA PCR',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
     # ANOSPP Beckman bed verification
     # LANS-96 Stock ethanol removal step
     custom_robot(
