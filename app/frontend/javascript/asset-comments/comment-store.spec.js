@@ -5,8 +5,13 @@ import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import mockApi from '@/javascript/test_support/mock_api.js'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
+import eventBus from '@/javascript/shared/eventBus.js'
 
 describe('commentStore', () => {
+  let mockEmit
+  beforeEach(() => {
+    mockEmit = vi.spyOn(eventBus, '$emit')
+  })
   const noComments = { data: [] }
   const comments = jsonCollectionFactory('comment', [
     {
@@ -77,6 +82,7 @@ describe('commentStore', () => {
     await flushPromises()
 
     expect(commentStore.comments.length).toEqual(2)
+    expect(mockEmit).toHaveBeenCalledWith('update-comments', { comments: commentStore.comments, assetId: '123' })
   })
 
   it('posts comments to the sequencescape api', async () => {
