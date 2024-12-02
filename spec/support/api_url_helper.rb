@@ -164,8 +164,8 @@ module ApiUrlHelper
 
       stub_v2_labware(tube)
     end
-    
-      # rubocop:disable Metrics/AbcSize
+
+    # rubocop:disable Metrics/AbcSize
     def stub_v2_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
       stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
 
