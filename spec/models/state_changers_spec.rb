@@ -204,4 +204,54 @@ RSpec.describe StateChangers do
       end
     end
   end
+
+  describe StateChangers::TubeStateChanger do
+    has_a_working_api
+
+    let(:tube) { json :tube, uuid: labware_uuid, state: tube_state }
+    let(:well_collection) { json :well_collection, default_state: tube_state, custom_state: failed_wells }
+    let(:failed_wells) { {} }
+    subject { StateChangers::TubeStateChanger.new(api, labware_uuid, user_uuid) }
+
+    context 'on a fully pending tube' do
+      let(:tube_state) { 'pending' }
+      let(:target_state) { 'passed' }
+      let(:coordinates_to_pass) { nil } # tubes don't have wells
+      it_behaves_like 'a state changer'
+    end
+
+    context 'on a fully passed tube' do
+      # Ideally we wouldn't need this query here, but we don't know that
+      # until we perform it.
+      before do
+        stub_api_get(labware_uuid, body: tube)
+        stub_api_get(labware_uuid, 'wells', body: well_collection)
+      end
+
+      # if no wells are failed we leave contents blank and state changer assumes full tube
+      let(:coordinates_to_pass) { nil }
+
+      let(:tube_state) { 'passed' }
+      let(:target_state) { 'qc_complete' }
+      it_behaves_like 'a state changer'
+    end
+
+    context 'on a partially failed tube' do
+      let(:tube_state) { 'passed' }
+
+      # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
+      let(:target_state) { 'qc_complete' }
+
+      # when some wells are failed we filter those out of the contents
+      let(:failed_wells) { { 'A1' => 'failed', 'D1' => 'failed' } }
+      let(:coordinates_to_pass) { nil } # tubes don't have wells
+
+      before do
+        stub_api_get(labware_uuid, body: tube)
+        stub_api_get(labware_uuid, 'wells', body: well_collection)
+      end
+
+      it_behaves_like 'a state changer'
+    end
+  end
 end
