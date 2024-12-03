@@ -28,6 +28,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   end
 
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'
+  has_many :tubes, through: :racked_tubes, class_name: 'Sequencescape::Api::V2::Tube'
+
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
 
   property :name
@@ -40,6 +42,25 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   def stock_plate
     nil
+  end
+
+  def self.find_by(params)
+    options = params.dup
+    includes = options.delete(:includes) || DEFAULT_INCLUDES
+    Sequencescape::Api::V2::TubeRack.includes(*includes).find(**options).first
+  end
+
+  # This method sorts the racked tubes by their coordinate, taking into account both row and column parts.
+  # Sorts by column first and then by row.
+  #
+  # NB. Assumption that the coordinate is in the format [A-Z][0-9]+ e.g. A1, B12, C3, etc.
+  # Where the first character is the row and the remaining digits are the column.
+  # Deals with both single digit coordinates (e.g. A1, C2, D12) and zero filled digit coordinates
+  # e.g. A01, C02, D12 etc.
+  # @return [Array<RackedTube>] An array of racked tubes sorted by their coordinate.
+  def racked_tubes_in_columns
+    @racked_tubes_in_columns ||=
+      racked_tubes.sort_by { |racked_tube| [racked_tube.coordinate[1..].to_i, racked_tube.coordinate[0]] }
   end
 
   private

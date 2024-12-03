@@ -2,6 +2,9 @@
 concentrations_ngul:
   csv: concentrations_ngul
   plate_includes: wells.qc_results
+tube_rack_concentrations_ngul:
+  csv: tube_rack_concentrations_ngul
+  tube_rack_includes: racked_tubes.tube.receptacle.qc_results
 concentrations_nm:
   csv: concentrations_nm
   plate_includes: wells.qc_results
