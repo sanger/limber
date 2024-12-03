@@ -186,6 +186,7 @@ module ApiUrlHelper
       elsif custom_includes
         allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
           custom_includes,
+          nil,
           { uuid: tube_rack.uuid }
         ).and_return(tube_rack)
       else
