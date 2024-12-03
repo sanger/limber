@@ -1,5 +1,6 @@
 // Shared object for retrieval of comments from SequenceScape API
 
+import eventBus from '@/javascript/shared/eventBus.js'
 const commentStoreFactory = function (axiosInstance, devourApi, assetId, userId) {
   return {
     comments: undefined,
@@ -64,7 +65,7 @@ const commentStoreFactory = function (axiosInstance, devourApi, assetId, userId)
         })
 
       await this.refreshComments()
-
+      eventBus.$emit('update-comments', { comments: this.comments, assetId: assetId })
       return true
     },
   }
