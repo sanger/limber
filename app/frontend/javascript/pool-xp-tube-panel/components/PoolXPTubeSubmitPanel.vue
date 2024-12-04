@@ -29,9 +29,9 @@
  * @module components/PoolXPTubeSubmitPanel
  * @property {String} barcode - The barcode of the tube to be exported
  * @property {String} userId - The id of the user exporting the tube
- * @property {String} sequencescapeApiUrl - The URL of the Sequencescape API
+ * @property {String} sequencescapeApi - The URL of the Sequencescape API
  * @property {String} tractionServiceUrl - The URL of the Traction service
- * @property {String} tractionUIUrl - The URL of the Traction UI
+ * @property {String} tractionUiUrl - The URL of the Traction UI
  *
  * This component exports a tube to Traction and polls Traction to check if the tube is exported successfully.
  * This is performed in two steps:
@@ -205,11 +205,7 @@ export default {
       type: String,
       required: true,
     },
-    userId: {
-      type: String,
-      required: true,
-    },
-    sequencescapeApiUrl: {
+    sequencescapeApi: {
       type: String,
       required: true,
     },
@@ -217,7 +213,7 @@ export default {
       type: String,
       required: true,
     },
-    tractionUIUrl: {
+    tractionUiUrl: {
       type: String,
       required: true,
     },
@@ -252,15 +248,15 @@ export default {
       return this.state === StateEnum.EXPORTING_TUBE || this.state === StateEnum.CHECKING_TUBE_STATUS
     },
     sequencescapeApiExportUrl() {
-      return `${this.sequencescapeApiUrl}/bioscan/export_pool_xp_to_traction`
+      return `${this.sequencescapeApi}/bioscan/export_pool_xp_to_traction`
     },
     tractionTubeCheckUrl() {
       if (!this.barcode || !this.tractionServiceUrl) return ''
       return `${this.tractionServiceUrl}/pacbio/tubes?filter[barcode]=${this.barcode}`
     },
     tractionTubeOpenUrl() {
-      if (!this.barcode || !this.tractionUIUrl) return ''
-      return `${this.tractionUIUrl}/#/pacbio/libraries?filter_value=source_identifier&filter_input=${this.barcode}`
+      if (!this.barcode || !this.tractionUiUrl) return ''
+      return `${this.tractionUiUrl}/#/pacbio/libraries?filter_value=source_identifier&filter_input=${this.barcode}`
     },
     submitPayload() {
       return {
@@ -290,7 +286,7 @@ export default {
      * Validate the props
      */
     validateProps() {
-      if (!(this.barcode && this.userId && this.sequencescapeApiUrl && this.tractionServiceUrl && this.tractionUIUrl)) {
+      if (!(this.barcode && this.sequencescapeApi && this.tractionServiceUrl && this.tractionUiUrl)) {
         this.state = StateEnum.INVALID_PROPS
         return
       }
