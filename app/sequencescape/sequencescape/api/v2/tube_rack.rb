@@ -44,6 +44,10 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
 
+  # makes use of the StringInquirer class returned by the state method to provide a more readable way to
+  # check the state of the tube rack e.g. tube_rack.state.passed? instead of tube_rack.state == 'passed'
+  delegate :pending?, :started?, :passed?, :failed?, :cancelled?, :mixed?, :empty?, to: :state
+
   def stock_plate
     nil
   end
@@ -80,25 +84,28 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   # i.e. if we have a mix of cancelled, failed, pending and passed tubes, the state will be 'mixed'
   # i.e. if the tube rack is empty, the state will be 'empty'
   #
-  # @return [String] the state of the tube rack
+  # @return [StringInquirer] the state of the tube rack wrapped in a StringInquirer object
+  # rubocop:disable Metrics/AbcSize
   def state
     # check if rack is empty
-    return STATE_EMPTY if racked_tubes.empty?
+    return STATE_EMPTY.inquiry if racked_tubes.empty?
 
     # fetch states from all tubes in the rack and see if we have a single state
     states = racked_tubes.map { |racked_tube| racked_tube.tube.state }.uniq
-    return states.first if states.one?
+    return states.first.inquiry if states.one?
 
     # we have a mix of states, filter out cancelled tubes first, and then if we still have
     # a mix, filter out the failed tubes and see if we have a single state after that
     STATES_TO_FILTER_OUT.each do |filter|
       states.delete(filter)
-      return states.first if states.one?
+      return states.first.inquiry if states.one?
     end
 
     # if we still have a mixed state, we display it as such
-    STATE_MIXED
+    STATE_MIXED.inquiry
   end
+
+  # rubocop:enable Metrics/AbcSize
 
   private
 
