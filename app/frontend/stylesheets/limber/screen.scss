@@ -410,6 +410,12 @@ dl#samples-information {
 .state-badge.failed {
   @extend .list-group-item-danger;
 }
+.state-badge.mixed {
+  @extend.badge-secondary;
+}
+.state-badge.empty {
+  @extend.badge-dark;
+}
 
 .flash {
   @extend .row;
