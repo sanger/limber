@@ -155,9 +155,8 @@ class SequencescapeSubmission
     if extra_barcodes_trimmed.include? labware_barcode
       errors.add(
         :submission,
-        # rubocop:todo Layout/LineLength
-        'Any scanned additional barcodes should not include the barcode of the current plate - that will automatically be included'
-        # rubocop:enable Layout/LineLength
+        'Any scanned additional barcodes should not include the barcode of the current plate - ' \
+          'that will automatically be included'
       )
     end
   end
