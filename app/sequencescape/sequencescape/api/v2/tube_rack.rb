@@ -13,6 +13,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   self.tube_rack = true
 
   STATES_TO_FILTER_OUT = %w[cancelled failed].freeze
+  STATE_EMPTY = 'empty'
+  STATE_MIXED = 'mixed'
 
   # This is needed in order for the URL helpers to work correctly
   def to_param
@@ -51,26 +53,32 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   # If there are multiple states, it filters out first 'cancelled' and then 'failed' states and
   # returns the remaining state if only one remains.
   # If there are still multiple states after filtering, it returns 'mixed'.
-  # i.e. if all tubes are pending, the state will be pending
-  # i.e. if all tubes are failed, the state will be failed
-  # i.e. if we have a mix of cancelled and failed tubes, the state will be failed as we filter out
+  # i.e. if all tubes are pending, the state will be 'pending'
+  # i.e. if all tubes are failed, the state will be 'failed'
+  # i.e. if we have a mix of 'cancelled' and 'failed' tubes, the state will be 'failed' as we filter out
   # the cancelled tubes first
-  # i.e. if we have a mix of cancelled, failed and pending tubes, the state will be pending
-  # i.e. if we have a mix of cancelled, failed, pending and passed tubes, the state will be mixed
+  # i.e. if we have a mix of cancelled, failed and pending tubes, the state will be 'pending'
+  # i.e. if we have a mix of cancelled, failed, pending and passed tubes, the state will be 'mixed'
+  # i.e. if the tube rack is empty, the state will be 'empty'
   #
   # @return [String] the state of the tube rack
   def state
+    # check if rack is empty
+    return STATE_EMPTY if racked_tubes.empty?
+
+    # fetch states from all tubes in the rack and see if we have a single state
     states = racked_tubes.map { |racked_tube| racked_tube.tube.state }.uniq
     return states.first if states.one?
 
-    # filter out cancelled tubes first, and then if still a mix filter out the failed tubes
+    # we have a mix of states, filter out cancelled tubes first, and then if we still have
+    # a mix, filter out the failed tubes and see if we have a single state after that
     STATES_TO_FILTER_OUT.each do |filter|
       states.delete(filter)
       return states.first if states.one?
     end
 
-    # if we still have a mixed state after that, we display it as such
-    'mixed'
+    # if we still have a mixed state, we display it as such
+    STATE_MIXED
   end
 
   private

@@ -133,6 +133,14 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       end
     end
 
+    context 'when the tube rack is empty' do
+      let(:tubes) { {} }
+
+      it 'returns "empty"' do
+        expect(test_tube_rack.state).to eq('empty')
+      end
+    end
+
     context 'when racked tubes have mixed states' do
       let(:state_for_tube1) { 'pending' }
       let(:state_for_tube2) { 'passed' }
