@@ -46,7 +46,7 @@ module LabwareCreators::Tagging
       @used ||=
         @plate
           .submission_pools
-          .each_with_object(Set.new) { |pool, set| pool.used_tag_layout_templates.each { |used| set << used['uuid'] } }
+          .each_with_object(Set.new) { |pool, set| pool.tag_layout_templates.each { |tlt| set << tlt.uuid } }
     end
 
     # Have any tag layout templates already been used on other plates in the relevant submission pools?

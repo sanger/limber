@@ -11,6 +11,6 @@ module LabwareCreators::GenerateQcResults
   end
 
   def after_transfer!
-    Sequencescape::Api::V2::QcAssay.create(qc_results: dest_well_qc_attributes)
+    Sequencescape::Api::V2::QcAssay.create!(qc_results: dest_well_qc_attributes)
   end
 end

@@ -34,55 +34,38 @@ RSpec.feature 'Multi plate pooling', js: true do
            purpose_uuid: 'stock-plate-purpose-uuid'
   end
 
-  let!(:bulk_transfer_request) do
-    stub_api_post(
-      'bulk_transfers',
-      payload: {
-        bulk_transfer: {
-          user: user_uuid,
-          well_transfers: [
-            {
-              'source_uuid' => plate_uuid,
-              'source_location' => 'A1',
-              'destination_uuid' => child_plate.uuid,
-              'destination_location' => 'A1'
-            },
-            {
-              'source_uuid' => plate_uuid_2,
-              'source_location' => 'A1',
-              'destination_uuid' => child_plate.uuid,
-              'destination_location' => 'B1'
-            },
-            {
-              'source_uuid' => plate_uuid_2,
-              'source_location' => 'B1',
-              'destination_uuid' => child_plate.uuid,
-              'destination_location' => 'B1'
-            }
-          ]
-        }
-      },
-      body: json(:plate_creation, child_uuid: child_plate.uuid)
-    )
-  end
-
   let(:child_plate) { create :v2_plate, purpose_name: 'Pool Plate', barcode_number: 3 }
 
-  let(:pooled_plate_creation) do
-    response = double
-    allow(response).to receive(:child).and_return(child_plate)
-
-    response
+  let(:bulk_transfer_attributes) do
+    [
+      {
+        user_uuid: user_uuid,
+        well_transfers: [
+          {
+            'source_uuid' => plate_uuid,
+            'source_location' => 'A1',
+            'destination_uuid' => child_plate.uuid,
+            'destination_location' => 'A1'
+          },
+          {
+            'source_uuid' => plate_uuid_2,
+            'source_location' => 'A1',
+            'destination_uuid' => child_plate.uuid,
+            'destination_location' => 'B1'
+          },
+          {
+            'source_uuid' => plate_uuid_2,
+            'source_location' => 'B1',
+            'destination_uuid' => child_plate.uuid,
+            'destination_location' => 'B1'
+          }
+        ]
+      }
+    ]
   end
 
-  def expect_pooled_plate_creation
-    expect_api_v2_posts(
-      'PooledPlateCreation',
-      [
-        { child_purpose_uuid: child_plate.purpose.uuid, parent_uuids: [plate_uuid, plate_uuid_2], user_uuid: user_uuid }
-      ],
-      [pooled_plate_creation]
-    )
+  let(:pooled_plates_attributes) do
+    [{ child_purpose_uuid: child_plate.purpose.uuid, parent_uuids: [plate_uuid, plate_uuid_2], user_uuid: user_uuid }]
   end
 
   background do
@@ -104,6 +87,7 @@ RSpec.feature 'Multi plate pooling', js: true do
   end
 
   scenario 'creates multiple plates' do
+    expect_bulk_transfer_creation
     expect_pooled_plate_creation
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
@@ -117,7 +101,6 @@ RSpec.feature 'Multi plate pooling', js: true do
     expect(page).to have_content('DN2: A1, B1')
     click_on('Make Pre-Cap pool Plate')
     expect(page).to have_text('New empty labware added to the system')
-    expect(bulk_transfer_request).to have_been_made
     expect(page).to have_text('Pool Plate')
   end
 end

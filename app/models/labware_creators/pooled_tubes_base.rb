@@ -8,8 +8,6 @@ module LabwareCreators
   class PooledTubesBase < Base
     include SupportParent::TaggedPlateOnly
 
-    include LabwareCreators::SupportV2SourcePlate
-
     attr_reader :tube_transfer, :child_stock_tubes
     attr_writer :metadata_stock_barcode
 
@@ -32,7 +30,10 @@ module LabwareCreators
     end
 
     def perform_transfers
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     def transfer_request_attributes
@@ -50,7 +51,7 @@ module LabwareCreators
     end
 
     def request_hash(source, target, submission)
-      { 'source_asset' => source, 'target_asset' => target, 'submission' => submission }
+      { source_asset: source, target_asset: target, submission: submission }
     end
 
     def pool_uuids
@@ -94,11 +95,7 @@ module LabwareCreators
     end
 
     def parent_metadata
-      if source_plate
-        LabwareMetadata.new(labware: source_plate).metadata
-      else
-        LabwareMetadata.new(barcode: parent.barcode.machine).metadata
-      end || {}
+      LabwareMetadata.new(labware: parent).metadata || {}
     end
 
     # Maps well locations to the corresponding uuid

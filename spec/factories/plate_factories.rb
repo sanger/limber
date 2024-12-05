@@ -4,6 +4,43 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
+  # Adds pooling_metadata equivalent to the v1 pools hash.
+  # This data has been marked as "mostly legacy" since 2020, but still seems to be used.
+  trait :has_pooling_metadata do
+    transient do
+      extra_pool_info { {} }
+      empty_wells { [] }
+      library_type { 'Standard' }
+      request_type { 'Limber Library Creation' }
+      for_multiplexing { false }
+      pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
+      pool_complete { false }
+    end
+
+    pooling_metadata do
+      wells = WellHelpers.column_order(size).dup
+      pooled_wells = wells.reject { |w| empty_wells.include?(w) }
+      pooling_metadata = {}
+      pool_sizes.each_with_index do |pool_size, index|
+        pooling_metadata["pool-#{index + 1}-uuid"] = {
+          'wells' => pooled_wells.shift(pool_size).sort_by { |well| WellHelpers.row_order(size).index(well) },
+          'insert_size' => {
+            from: 100,
+            to: 300
+          },
+          'library_type' => {
+            name: library_type
+          },
+          'request_type' => request_type,
+          'pcr_cycles' => pool_pcr_cycles[index],
+          'for_multiplexing' => pool_for_multiplexing[index],
+          'pool_complete' => pool_complete
+        }.merge(extra_pool_info)
+      end
+      pooling_metadata
+    end
+  end
+
   factory :unmocked_v2_plate, class: Sequencescape::Api::V2::Plate do
     skip_create
   end
@@ -46,7 +83,7 @@ FactoryBot.define do
         pool_sizes.each_with_index.flat_map do |pool_size, index|
           Array.new(pool_size) do
             create request_factory,
-                   pcr_cycles: pool_prc_cycles[index],
+                   pcr_cycles: pool_pcr_cycles[index],
                    state: library_state[index],
                    submission_id: index,
                    include_submissions: include_submissions,
@@ -100,14 +137,25 @@ FactoryBot.define do
       children { [] }
       descendants { [] }
 
+      # Set up submission pools on the plate
+      submission_pools_count { 0 }
+      plates_in_submission { 2 }
+      submission_pools { Array.new(submission_pools_count) { create :v2_submission_pool, plates_in_submission: } }
+
       # Array of pcr_cycles set up for each pool
-      pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+      pool_pcr_cycles { Array.new(pool_sizes.length, 10) }
 
       # The state of the library request for each pool
       library_state { ['pending'] * pool_sizes.length }
       stock_plate { create :v2_stock_plate_for_plate, barcode_number: is_stock ? barcode_number : 2 }
       ancestors { [stock_plate] }
       transfer_targets { {} }
+
+      # Define QC Files for the plate
+      qc_files_count { 0 }
+      qc_files do
+        Array.new(qc_files_count) { |i| create(:qc_file, filename: "file#{i}.txt", uuid: "example-file-uuid-#{i}") }
+      end
 
       # Sets the plate size
       size { 96 }
@@ -297,7 +345,7 @@ FactoryBot.define do
       library_type { 'Standard' }
       request_type { 'Limber Library Creation' }
       stock_plate_barcode { 2 }
-      pool_prc_cycles { Array.new(pool_sizes.length, 10) }
+      pool_pcr_cycles { Array.new(pool_sizes.length, 10) }
       for_multiplexing { false }
       pool_for_multiplexing { [for_multiplexing] * pool_sizes.length }
       pool_complete { false }
@@ -365,7 +413,7 @@ FactoryBot.define do
             name: library_type
           },
           'request_type' => request_type,
-          'pcr_cycles' => pool_prc_cycles[index],
+          'pcr_cycles' => pool_pcr_cycles[index],
           'for_multiplexing' => pool_for_multiplexing[index],
           'pool_complete' => pool_complete
         }.merge(extra_pool_info)
