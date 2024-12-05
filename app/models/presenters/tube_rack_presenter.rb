@@ -6,6 +6,7 @@ module Presenters
   # rack presenters based on the tubes within.
   class TubeRackPresenter
     include Presenters::Presenter
+    include Presenters::RobotControlled
     include TubeRackWalking
 
     self.summary_partial = 'tube_racks/summaries/default'
