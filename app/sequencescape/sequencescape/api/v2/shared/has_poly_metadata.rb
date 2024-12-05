@@ -15,6 +15,9 @@ module Sequencescape::Api::V2::Shared
     # @param key [String] the key of the PolyMetadatum to find
     # @return [PolyMetadatum, nil] the found PolyMetadatum object, or nil if no match is found
     def poly_metadatum_by_key(key)
+      # if no poly_metadata exist for this model instance, or no key value is passed, return nil
+      return nil if poly_metadata.blank? || key.blank?
+
       poly_metadata.find { |pm| pm.key == key }
     end
   end

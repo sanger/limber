@@ -17,19 +17,15 @@
   row_sep: ''
 %>
 <%
-  # Configuration specific to this export
-
-  args = Settings.purposes[@plate.purpose.uuid][:presenter_class][:args]
-  default_required_number_of_cells = args[:default_required_number_of_cells]
-  study_required_number_of_cells_key = args[:study_required_number_of_cells_key]
-
-  maximum_sample_volume = 60.0  # microlitres
-  minimum_sample_volume = 5.0  # microlitres
-  resuspension_volume_per_sample = 2.2  # microlitres
-  minimum_resuspension_volume = 10.0  # microlitres
-  millilitres_to_microlitres = 1_000.0
-  wastage_accountment = 0.95238 # Accounting for wastage of material during transfer between labware
-  desired_chip_loading_concentration = 2400
+  # Constants from config/initializers/scrna_config.rb
+  scrna_config = Rails.application.config.scrna_config
+  required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
+  maximum_sample_volume = scrna_config[:maximum_sample_volume]
+  minimum_sample_volume = scrna_config[:minimum_sample_volume]
+  minimum_resuspension_volume = scrna_config[:minimum_resuspension_volume]
+  millilitres_to_microlitres = scrna_config[:millilitres_to_microlitres]
+  wastage_factor = scrna_config[:wastage_factor]
+  desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
 
   # Make a mapping { src_barcode => { src_location => src_well } }
 
@@ -45,15 +41,8 @@
     cell_count = src_well.latest_total_cell_count  # cells / millilitres
     next if cell_count.nil?
 
-    # Use the study's required number of cells if available, otherwise use the default
-
-    poly_metadatum = src_well.aliquots.first.study.poly_metadatum_by_key(study_required_number_of_cells_key)
-    study_required_number_of_cells = poly_metadatum&.value.to_i.nonzero?
-    required_number_of_cells = study_required_number_of_cells || default_required_number_of_cells
-
     # Calculate the sample volume required for the number of cells
-
-    required_volume = (millilitres_to_microlitres * required_number_of_cells / cell_count.value.to_f).clamp(minimum_sample_volume, maximum_sample_volume)
+    required_volume = (millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f).clamp(minimum_sample_volume, maximum_sample_volume)
 
     transfer_request_data << [
       src_barcode,
@@ -62,7 +51,7 @@
       dest_well.location,
       '%0.1f' % required_volume,
       # We pass in the required number of cells so that we can calculate the resuspension volume later
-      required_number_of_cells
+      required_number_of_cells_per_sample_in_pool
     ]
   end
 
@@ -72,8 +61,8 @@
 
   rows_array = transfer_request_data.map do |data|
     samples_in_pool = samples_by_dest_well[data[3]].count
-    required_number_of_cells = data[5]
-    resuspension_volume = [(samples_in_pool * required_number_of_cells * wastage_accountment) / desired_chip_loading_concentration, minimum_resuspension_volume].max
+    required_number_of_cells_per_sample_in_pool = data[5]
+    resuspension_volume = [(samples_in_pool * required_number_of_cells_per_sample_in_pool * wastage_factor) / desired_chip_loading_concentration, minimum_resuspension_volume].max
     # Replace required number of cells with resuspension volume
     data[5] = '%0.1f' % resuspension_volume
     data
