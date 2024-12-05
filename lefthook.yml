@@ -10,7 +10,7 @@ pre-commit:
       run: bundle exec rubocop --display-style-guide --extra-details --force-exclusion --parallel {staged_files} || (echo 'Run `lefthook run fix` to run autocorrect on staged files only'; exit 1)
     eslint:
       glob: 'app/frontend/**/*.{vue,js}'
-      run: yarn lintOnly {staged_files} || (echo 'Run `lefthook run fix` to run autocorrect on staged files only'; exit 1)
+      run: yarn lintOnly --format compact {staged_files} || (echo 'Run `lefthook run fix` to run autocorrect on staged files only'; exit 1)
     prettier:
       run: yarn prettier --check {staged_files} --ignore-unknown
 
@@ -22,7 +22,7 @@ fix:
       run: bundle exec rubocop --display-style-guide --extra-details --auto-correct --force-exclusion {staged_files}
     eslint:
       glob: 'app/frontend/**/*.{vue,js}'
-      run: yarn lintOnly {staged_files} --fix
+      run: yarn lintOnly --format compact {staged_files} --fix
     prettier:
       run: yarn prettier --write {staged_files} --ignore-unknown
 # EXAMPLE USAGE
