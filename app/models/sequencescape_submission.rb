@@ -104,7 +104,12 @@ class SequencescapeSubmission
   #   uuids, indicating an asset group. Keys are ignored.
   #
   def asset_groups=(asset_groups)
-    @asset_groups = asset_groups.respond_to?(:values) ? asset_groups.values : asset_groups
+    groups = asset_groups.respond_to?(:values) ? asset_groups.values : asset_groups
+    @asset_groups =
+      groups.map do |group|
+        group[:asset_uuids] = group[:assets] if group[:assets]
+        group.except(:assets)
+      end
   end
 
   def asset_groups_for_orders_creation
