@@ -59,8 +59,8 @@ Rails.application.routes.draw do
   resources :limber_tube_racks, controller: :tube_racks do
     resources :children, controller: :plate_creation
     resources :qc_files, controller: :qc_files
-    # TODO: do we need to add exports and work completion code for tube racks?
-    # resources :tube_rack_exports, only: :show
+    resources :tube_racks_exports, only: :show, module: :tube_racks
+    # TODO: need to add work completion code for tube racks
     # resources :tube_rack_work_completions, only: :create, module: :tube_racks
   end
 

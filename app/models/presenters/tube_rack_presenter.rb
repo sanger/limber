@@ -50,7 +50,7 @@ module Presenters
         .fetch(:file_links, [])
         .select { |link| can_be_enabled?(link&.states) }
         .map do |link|
-          [link.name, [:limber_tube_rack, :export, { id: link.id, limber_tube_rack_id: human_barcode, format: :csv }]]
+          [link.name, [:limber_tube_rack, :tube_racks_export, { id: link.id, limber_tube_rack_id: uuid, format: :csv }]]
         end
     end
 
