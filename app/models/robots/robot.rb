@@ -9,7 +9,8 @@ module Robots
     include Form
 
     attr_reader :beds
-    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode, :require_robot
+    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class,
+                  :robot_barcode, :require_robot, :start_button_text
 
     alias verify_robot? verify_robot
     alias require_robot? require_robot
@@ -49,6 +50,15 @@ module Robots
 
     def bed_labwares=(bed_labwares)
       bed_labwares.each { |bed_barcode, labware_barcodes| beds[bed_barcode.strip].load(labware_barcodes) }
+    end
+
+    # Returns the message to be displayed on the start button.
+    # If `start_button_text` is present, it returns that text.
+    # Otherwise, it returns a default message "Start the #{name}".
+    #
+    # @return [String] the message to be displayed on the start button
+    def start_button_message
+      start_button_text || "Start the #{name}"
     end
 
     private
