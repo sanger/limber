@@ -3810,7 +3810,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT DNA Frag Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: "Finish Bravo LCMT DNA Frag Verification",
+      start_button_text: 'Finish Bravo LCMT DNA Frag Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA Frag',
@@ -3828,7 +3828,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT DNA End Prep Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: "Finish Bravo LCMT DNA End Prep Verification",
+      start_button_text: 'Finish Bravo LCMT DNA End Prep Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA End Prep',
@@ -3869,7 +3869,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT EM TET2 Ox Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: "Finish LCMT EM TET2 Ox Verification",
+      start_button_text: 'Finish LCMT EM TET2 Ox Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Ox',
@@ -3917,7 +3917,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT EM NaOH Denat Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: "Finish LCMT EM NaOH Denat Verification",
+      start_button_text: 'Finish LCMT EM NaOH Denat Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM NaOH Denat',

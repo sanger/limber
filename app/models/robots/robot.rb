@@ -9,8 +9,16 @@ module Robots
     include Form
 
     attr_reader :beds
-    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class,
-                  :robot_barcode, :require_robot, :start_button_text
+    attr_accessor :api,
+                  :user_uuid,
+                  :layout,
+                  :name,
+                  :id,
+                  :verify_robot,
+                  :class,
+                  :robot_barcode,
+                  :require_robot,
+                  :start_button_text
 
     alias verify_robot? verify_robot
     alias require_robot? require_robot

@@ -763,7 +763,7 @@ RSpec.describe Robots::Robot, robots: true do
             'purpose' => 'Limber Cherrypicked',
             'states' => ['passed'],
             'label' => 'Bed 1'
-          },
+          }
         }
       }
     end
@@ -775,7 +775,7 @@ RSpec.describe Robots::Robot, robots: true do
 
     it 'returns the robots start_button_text when present' do
       robot = Robots::Robot.new(robot_spec.merge(start_button_text: 'Be different'))
-      expect(robot.start_button_message).to eq("Be different")
+      expect(robot.start_button_message).to eq('Be different')
     end
   end
 end
