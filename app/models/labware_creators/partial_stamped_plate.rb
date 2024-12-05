@@ -39,10 +39,9 @@ module LabwareCreators
       return if transfer_hash.present?
 
       msg =
-        # rubocop:todo Layout/LineLength
-        'No wells in the parent plate have pending library preparation requests with the expected library type. Check your Submission.'
+        'No wells in the parent plate have pending library preparation requests with the expected library type. ' \
+          'Check your Submission.'
 
-      # rubocop:enable Layout/LineLength
       errors.add(:parent, msg)
     end
 
@@ -57,13 +56,13 @@ module LabwareCreators
     # Override this method in sub-class if required.
     def request_hash(source_well, child_plate, additional_parameters)
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' =>
+        source_asset: source_well.uuid,
+        target_asset:
           child_plate
             .wells
             .detect { |child_well| child_well.location == transfer_hash[source_well.location]['dest_locn'] }
             &.uuid,
-        'volume' => dilutions_calculator.source_volume.to_s
+        volume: dilutions_calculator.source_volume.to_s
       }.merge(additional_parameters)
     end
 

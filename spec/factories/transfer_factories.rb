@@ -11,7 +11,8 @@ FactoryBot.define do
       destination { create :v2_plate }
     end
 
-    uuid { SecureRandom.uuid }
+    uuid
+
     user_uuid { user.uuid }
     source_uuid { source.uuid }
     destination_uuid { destination.uuid }

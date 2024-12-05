@@ -38,7 +38,7 @@ class LabwareCreators::WellFilter
     filtered_requests_by_lt = filter_by_library_type(filtered_requests_by_rt)
 
     if filtered_requests_by_lt.count == 1
-      { 'outer_request' => filtered_requests_by_lt.first.uuid }
+      { outer_request: filtered_requests_by_lt.first.uuid }
     else
       errors.add(:base, "found #{filtered_requests_by_lt.count} eligible requests for #{well.location}")
     end
@@ -47,7 +47,7 @@ class LabwareCreators::WellFilter
   def extract_submission(well)
     # had a situation where request was an array rather than a single request, so added Array().first syntax
     submission_ids = well.aliquots.map { |aliquot| Array(aliquot.request).first.submission_id }.uniq
-    submission_ids.one? ? { 'submission_id' => submission_ids.first } : {}
+    submission_ids.one? ? { submission_id: submission_ids.first } : {}
   end
 
   def filter_by_request_type(requests)

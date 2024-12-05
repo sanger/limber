@@ -70,7 +70,7 @@ module Sequencescape::Api::V2::Shared
 
     # Based on in_progress requests
     def in_progress_submission_uuids(request_types_to_complete: nil)
-      requests_in_progress(request_types_to_complete:).flat_map(&:submission_uuid).uniq
+      requests_in_progress(request_types_to_complete:).map(&:submission_uuid).uniq
     end
 
     def all_requests

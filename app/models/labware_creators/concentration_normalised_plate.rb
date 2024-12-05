@@ -24,13 +24,13 @@ module LabwareCreators
 
     def request_hash(source_well, child_plate, additional_parameters)
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' =>
+        source_asset: source_well.uuid,
+        target_asset:
           child_plate
             .wells
             .detect { |child_well| child_well.location == transfer_hash[source_well.location]['dest_locn'] }
             &.uuid,
-        'volume' => transfer_hash[source_well.location]['volume'].to_s
+        volume: transfer_hash[source_well.location]['volume'].to_s
       }.merge(additional_parameters)
     end
 

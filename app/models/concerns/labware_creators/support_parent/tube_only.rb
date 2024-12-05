@@ -12,7 +12,7 @@ module LabwareCreators::SupportParent
     end
 
     def parent
-      @parent ||= api.tube.find(parent_uuid)
+      @parent ||= Sequencescape::Api::V2::Tube.find_by(uuid: parent_uuid)
     end
   end
 end

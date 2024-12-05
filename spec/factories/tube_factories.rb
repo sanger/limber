@@ -91,6 +91,7 @@ FactoryBot.define do
   # API v2 tube
   factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded_v2] do
     skip_create
+
     sequence(:id, &:to_s)
     uuid
     name { 'My tube' }
@@ -99,6 +100,7 @@ FactoryBot.define do
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
     receptacle { create(:v2_receptacle, qc_results: [], aliquots: aliquots) }
+    sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + siblings }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 
@@ -116,8 +118,28 @@ FactoryBot.define do
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
 
+      siblings_count { 0 }
+      sibling_default_state { 'passed' }
+      siblings do
+        Array.new(siblings_count) do |i|
+          {
+            name: "Sibling #{i + 1}",
+            ean13_barcode: (1_234_567_890_123 + i).to_s,
+            state: sibling_default_state,
+            uuid: "sibling-tube-#{i}"
+          }
+        end
+      end
+
       # The CustomMetadatumCollection will be cached as a relationship in the after(:build) block.
       custom_metadatum_collection { nil }
+    end
+
+    to_create do |instance, _evaluator|
+      # JSON API client resources are not persisted in the database, but we need Limber to treat them as if they are.
+      # This ensures the `url_for` method will use their UUIDs in URLs via the `to_param` method on the resource.
+      # Otherwise it just redirects to the root URL for the resource type.
+      instance.mark_as_persisted!
     end
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"

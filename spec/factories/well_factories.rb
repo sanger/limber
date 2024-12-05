@@ -91,10 +91,11 @@ FactoryBot.define do
       plate_barcode { 'DN1S' }
     end
 
+    uuid
+
     name { "#{plate_barcode}:#{location}" }
     position { { 'name' => location } }
     state { 'passed' }
-    uuid { SecureRandom.uuid }
     diluent_volume { nil }
     pcr_cycles { nil }
     submit_for_sequencing { nil }

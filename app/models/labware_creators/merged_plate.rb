@@ -70,7 +70,7 @@ module LabwareCreators
     # source_well to the same location on child_plate
     # Unlike request_hash on StampedPlate sets the merge_equivalent_aliquots to true
     def request_hash(source_well, child_plate, additional_parameters)
-      super.merge('merge_equivalent_aliquots' => true)
+      super.merge(merge_equivalent_aliquots: true)
     end
 
     # validation to check the number of barcodes scanned matches the number of expected purposes from the configuration

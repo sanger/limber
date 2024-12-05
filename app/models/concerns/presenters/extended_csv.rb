@@ -5,8 +5,6 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   included do
     class_attribute :bed_prefix
     self.bed_prefix = 'PCRXP'
-
-    attr_accessor :api
   end
 
   # Yields information for the show_extended.csv
@@ -46,19 +44,15 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
     [match[2].to_i, match[1]] # Order by column first
   end
 
-  def legacy_labware
-    api.plate.find(labware.uuid)
-  end
-
   def transfers_for_csv # rubocop:todo Metrics/AbcSize
-    legacy_labware.creation_transfers.map do |ct|
-      source_ean = ct.source.barcode.machine
-      source_barcode = ct.source.barcode.machine
-      source_stock = ct.source.stock_plate.barcode.machine
-      destination_ean = ct.destination.barcode.machine
-      destination_barcode = ct.destination.barcode.machine
+    labware.transfers_as_destination.map do |tad|
+      source_ean = tad.source.barcode.machine
+      source_barcode = tad.source.barcode.machine
+      source_stock = tad.source.stock_plate.barcode.machine
+      destination_ean = tad.destination.barcode.machine
+      destination_barcode = tad.destination.barcode.machine
       transfers =
-        ct.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
+        tad.transfers.reverse_merge(all_wells).sort { |a, b| split_location(a.first) <=> split_location(b.first) }
       { source_ean:, source_barcode:, source_stock:, destination_ean:, destination_barcode:, transfers: }
     end
   end
