@@ -147,32 +147,20 @@ module ApiUrlHelper
       stub_v2_labware(plate)
     end
 
-    def stub_v2_polymetadata(polymetadata, metadatable_id)
-      arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
-      allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
-    end
-
-    def stub_v2_project(project)
-      arguments = [{ name: project.name }]
-      allow(Sequencescape::Api::V2::Project).to receive(:find).with(*arguments).and_return([project])
-    end
-
-    def stub_v2_study(study)
-      arguments = [{ name: study.name }]
-      allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
-    end
-
-    def stub_v2_tag_layout_templates(templates)
-      query = double('tag_layout_template_query')
-      allow(Sequencescape::Api::V2::TagLayoutTemplate).to receive(:paginate).and_return(query)
-      allow(Sequencescape::Api::V2).to receive(:merge_page_results).with(query).and_return(templates)
-    end
-
     # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
+    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: false) # rubocop:todo Metrics/AbcSize
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
-      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube)
+      elsif custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+          custom_includes,
+          { uuid: tube.uuid }
+        ).and_return(tube)
+      else
+        allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with({ uuid: tube.uuid }).and_return(tube)
+      end
 
       stub_v2_labware(tube)
     end
@@ -208,6 +196,27 @@ module ApiUrlHelper
     def stub_v2_racked_tube(racked_tube)
       arguments = [{ tube_rack: racked_tube.tube_rack.id, tube: racked_tube.tube.id }]
       allow(Sequencescape::Api::V2::RackedTube).to receive(:find).with(*arguments).and_return(racked_tube)
+    end
+
+    def stub_v2_polymetadata(polymetadata, metadatable_id)
+      arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
+      allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
+    end
+
+    def stub_v2_project(project)
+      arguments = [{ name: project.name }]
+      allow(Sequencescape::Api::V2::Project).to receive(:find).with(*arguments).and_return([project])
+    end
+
+    def stub_v2_study(study)
+      arguments = [{ name: study.name }]
+      allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
+    end
+
+    def stub_v2_tag_layout_templates(templates)
+      query = double('tag_layout_template_query')
+      allow(Sequencescape::Api::V2::TagLayoutTemplate).to receive(:paginate).and_return(query)
+      allow(Sequencescape::Api::V2).to receive(:merge_page_results).with(query).and_return(templates)
     end
 
     def stub_v2_user(user, swipecard = nil)

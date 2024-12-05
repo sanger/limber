@@ -723,7 +723,7 @@ RSpec.describe Robots::Robot, robots: true do
     end
 
     before do
-      create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
+      create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
       bed_labware_lookup(plate)
     end
 
