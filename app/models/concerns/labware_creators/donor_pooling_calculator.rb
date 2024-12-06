@@ -136,13 +136,32 @@ module LabwareCreators::DonorPoolingCalculator
   #
   def validate_number_of_pools(wells, number_of_pools)
     total_wells = wells.size
-    unless (1..8).cover?(number_of_pools)
-      raise "Invalid requested number of pools: must be between 1 and 8. Provided: #{number_of_pools}."
-    end
 
     if total_wells < number_of_pools ||
       total_wells > number_of_pools * ((total_wells / number_of_pools) + 1)
      raise "Cannot distribute #{total_wells} wells into #{number_of_pools} pools such that the difference is at most 1."
+    end
+  end
+
+  # Recursive function to assign wells to pools
+  def assign_well_to_pool(well, pools, used_donor_ids, pool_index, number_of_pools, depth)
+    donor_id = well.aliquots.first.sample.sample_metadata.donor_id
+    # Check if the donor ID has been used in the current pool
+    if used_donor_ids[pool_index].include?(donor_id)
+      # If used, increment depth and try the next pool recursively
+      depth += 1
+      
+      if depth == number_of_pools
+        # If we've checked all pools and didn't find a suitable one, raise an error
+        raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor."
+      else
+        next_pool_index = (pool_index + 1) % number_of_pools
+        assign_well_to_pool(well, pools, used_donor_ids, next_pool_index, number_of_pools, depth)
+      end
+    else
+      # If donor ID hasn't been used, add the well to the pool and mark it as used
+      used_donor_ids[pool_index] << donor_id
+      pools[pool_index] << well
     end
   end
 
@@ -167,26 +186,21 @@ module LabwareCreators::DonorPoolingCalculator
   # @return [Array<Array<Well>>] An array of pools, between 1 and 8, each containing between 5 and 25 wells.
   #
   def allocate_wells_to_pools(wells, number_of_pools)
-    validate_number_of_pools(wells, number_of_pools)
-
-    # Initialize pools
     pools = Array.new(number_of_pools) { [] }
-  
-    grouped_by_id = split_single_group_by_unique_donor_ids(wells)
-  
-    # Flatten grouped wells to distribute them sequentially
-    flat_wells = grouped_by_id.flatten
-  
+    used_donor_ids = Array.new(number_of_pools) { [] }
+    
+    validate_number_of_pools(wells, number_of_pools)
+    depth = 0
+    
     # Assign wells to pools
-    flat_wells.each_with_index do |well, index|
-      # Pools with an index less than `extra_wells` get one extra well
-      pool_index = index % number_of_pools
-      pools[pool_index] << well
+    wells.each_with_index do |well, index|
+      # Start assigning wells starting from the pool corresponding to the well's index
+      assign_well_to_pool(well, pools, used_donor_ids, index % number_of_pools, number_of_pools, depth)
     end
     
     if pools.any? { |pool| pool.size < 5 || pool.size > 25 }
       raise "Invalid distribution: Each pool must have between 5 and 25 wells."
-    end
+    end  
     pools
   end
 
