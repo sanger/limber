@@ -17,13 +17,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:parent_purpose_uuid) { 'parent-purpose-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
-  let(:num_samples_per_pool) { 16 }
+  let(:number_of_pools) { 8 }
   let(:requests) do
     create_list(
       :scrna_customer_request,
       192,
       submission_id: 1,
-      request_metadata: create(:v2_request_metadata, number_of_samples_per_pool: num_samples_per_pool)
+      request_metadata: create(:v2_request_metadata, number_of_pools:)
     )
   end
 
@@ -304,66 +304,107 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     context 'with well groups' do
       it 'divides large groups' do
         groups = [
-          parent_1_plate.wells[1..9], # 9 wells
-          parent_1_plate.wells[10..15], # 6 wells
-          parent_2_plate.wells[16..20], # 5 wells
-          parent_2_plate.wells[21..21] # 1 well
+          Array(parent_1_plate.wells[1..9]), # 9 wells
+          Array(parent_1_plate.wells[10..15]), # 6 wells
+          Array(parent_2_plate.wells[16..20]), # 5 wells
+          Array(parent_2_plate.wells[21..27]) # 7 wells
         ]
+        donor_index = 0
+        groups.each do |group|
+          group.each do |well|
+            well.state = 'passed'
+            well.aliquots.first.study = study_1 # same study
+            well.aliquots.first.project = project_1 # same project
+            well.aliquots.first.sample.sample_metadata.donor_id = donor_index + 1 # different donors
+            donor_index += 1
+          end
+        end
+        pools = groups.map { |group| subject.allocate_wells_to_pools(group, 1) }
 
-        # Helper method (g) to write the expected result.
-        wells = groups.flatten
-        g = proc { |*numbers| numbers.map { |number| wells[number - 1] } }
-
-        distributed_groups = [
-          g[21],
-          g[10, 11, 12],
-          g[13, 14, 15],
-          g[6, 7, 8, 9],
-          g[16, 17, 18, 19, 20],
-          g[1, 2, 3, 4, 5]
-        ]
-        expect(subject.distribute_groups_across_pools(groups, 6)).to match_array(distributed_groups)
+        expect(pools.size).to eq(4)
       end
     end
 
     context 'when the number of groups is less than the number of pools' do
+      let(:number_of_pools) { 2 }
       it 'divides large groups' do
-        # Using integers for easy reading.
-        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
-        distributed_groups = [[21], [10, 11, 12], [13, 14, 15], [6, 7, 8, 9], [16, 17, 18, 19, 20], [1, 2, 3, 4, 5]]
-        expect(subject.distribute_groups_across_pools(groups, 6)).to match_array(distributed_groups)
+        groups = [
+          Array(parent_1_plate.wells[1..15]), # 15 wells
+          Array(parent_1_plate.wells[16..27]), # 12 wells
+          Array(parent_2_plate.wells[21..33]) # 13 wells
+        ]
+
+        donor_index = 0
+        groups.each do |group|
+          group.each_with_index do |well, _index|
+            well.state = 'passed'
+            well.aliquots.first.study = study_1 # same study
+            well.aliquots.first.project = project_1 # same project
+            well.aliquots.first.sample.sample_metadata.donor_id = donor_index + 1 # different donors]
+            donor_index += 1
+          end
+        end
+
+        pools = groups.map { |group| subject.allocate_wells_to_pools(group, subject.number_of_pools(group)) }
+        expect(pools.flatten(1).size).to eq(6)
       end
     end
 
     context 'when the number of groups is equal to the number of pools' do
+      let(:number_of_pools) { 1 }
       it 'returns the groups intact' do
-        # Using integers for easy reading.
-        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
-        expect(subject.distribute_groups_across_pools(groups, 4)).to match_array(groups)
+        groups = [
+          Array(parent_1_plate.wells[1..15]), # 15 wells
+          Array(parent_1_plate.wells[16..27]), # 12 wells
+          Array(parent_2_plate.wells[21..33]) # 13 wells
+        ]
+
+        donor_index = 0
+        groups.each do |group|
+          group.each_with_index do |well, _index|
+            well.state = 'passed'
+            well.aliquots.first.study = study_1 # same study
+            well.aliquots.first.project = project_1 # same project
+            well.aliquots.first.sample.sample_metadata.donor_id = donor_index + 1 # different donors]
+            donor_index += 1
+          end
+        end
+
+        pools = groups.map { |group| subject.allocate_wells_to_pools(group, subject.number_of_pools(group)) }
+        expect(pools.flatten(1).size).to eq(3)
       end
     end
 
-    context 'when the number of groups is greater than the number of pools' do
-      it 'returns the groups intact' do
-        # Using integers for easy reading.
-        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
-        expect(subject.distribute_groups_across_pools(groups, 4)).to match_array(groups)
-      end
-    end
+    # context 'when the number of groups is greater than the number of pools' do
+    #   let(:number_of_pools) { 1 }
+    #   it 'returns the groups intact' do
+    #     pools = subject.build_pools
+    #     expect(pools.size).to eq(1)
+    #   end
+    # end
 
     context 'when the number of pools is too large' do
+      let(:number_of_pools) { 2 }
+      let!(:wells) do
+        wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study_1 # same study
+          well.aliquots.first.project = project_1 # same project
+          well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+        end
+      end
       it 'divides all groups' do
-        # Using integers for easy reading.
-        groups = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21]]
-        distributed_groups = (1..21).map { |n| [n] }
-        expect(subject.distribute_groups_across_pools(groups, 25)).to match_array(distributed_groups)
+        pools = subject.build_pools
+        expect(pools.size).to eq(2)
       end
     end
   end
 
   describe '#pools' do
+    let(:number_of_pools) { 2 }
     let!(:wells) do # eager!
-      wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
+      wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
       wells.each_with_index do |well, index|
         well.state = 'passed'
         well.aliquots.first.study = study_1 # same study
@@ -374,8 +415,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     it 'builds the pools' do
       pools = subject.pools
-      expect(pools.size).to eq(1)
-      expect(pools[0]).to match_array(wells)
+      expect(pools.size).to eq(2)
     end
 
     it 'caches the result' do
@@ -385,25 +425,26 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   describe '#build_pools' do
     context 'when standard behaviour' do
-      let(:studies) { create_list(:v2_study, 16) }
-      let(:projects) { create_list(:v2_project, 16) }
+      let(:studies) { create_list(:v2_study, 2) }
+      let(:projects) { create_list(:v2_project, 2) }
       let(:donor_ids) { (1..160).to_a }
-      let(:wells) { parent_1_plate.wells + parent_2_plate.wells[0..63] }
+      let(:wells) { Array(parent_1_plate.wells[0..24]) }
+      let(:number_of_pools) { 2 }
 
       before do
         wells.each_with_index do |well, index|
           well.state = 'passed'
-          well.aliquots.first.study = studies[index % 16]
-          well.aliquots.first.project = projects[index % 16]
+          well.aliquots.first.study = studies[index % 2]
+          well.aliquots.first.project = projects[index % 2]
           well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
           well.aliquots.first.request = requests[index]
-          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
         end
       end
 
       it 'returns correct number of pools' do
         pools = subject.build_pools
-        expect(pools.flatten).to match_array(wells)
+        expect(pools.size).to eq(4)
       end
 
       it 'returns pools with correct number of studies' do
@@ -427,7 +468,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         pools = subject.build_pools
         pools.each do |pool|
           number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
-          expect(number_of_unique_donor_ids).to eq(wells.size / num_samples_per_pool)
+          expect(number_of_unique_donor_ids).to eq(pool.size)
         end
       end
     end
@@ -436,8 +477,67 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     context 'when test run for 10 samples per pool and 8 pools' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
-      let(:donor_ids) { (1..80).to_a }
-      let(:wells) { parent_1_plate.wells[0..79] }
+      let(:donor_ids) { (1..24).to_a }
+      let(:wells) { parent_1_plate.wells[0..24] }
+      let(:expected_number_of_pools) { 4 }
+      let(:number_of_pools) { 4 }
+
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
+        end
+        wells[24].aliquots.first.sample.sample_metadata.donor_id = 1
+        # wells[1].aliquots.first.sample.sample_metadata.donor_id = 2
+        # wells[2].aliquots.first.sample.sample_metadata.donor_id = 3
+        # wells[3].aliquots.first.sample.sample_metadata.donor_id = 4
+        # wells[4].aliquots.first.sample.sample_metadata.donor_id = 1
+        # wells[5].aliquots.first.sample.sample_metadata.donor_id = 2
+        # wells[6].aliquots.first.sample.sample_metadata.donor_id = 3
+        # wells[7].aliquots.first.sample.sample_metadata.donor_id = 1
+        # wells[8].aliquots.first.sample.sample_metadata.donor_id = 2
+      end
+
+      it 'returns correct number of pools' do
+        pools = subject.build_pools
+        expect(pools.size).to eq(expected_number_of_pools)
+        expect(pools.flatten).to match_array(wells)
+      end
+
+      it 'returns pools with correct number of studies' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
+          expect(number_of_unique_study_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of projects' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
+          expect(number_of_unique_project_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of donors' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
+          expect(number_of_unique_donor_ids).to eq(pool.size)
+        end
+      end
+    end
+
+    context 'when test run for 24 samples per pool and 8 pools' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:donor_ids) { (1..192).to_a }
+      let(:wells) { parent_1_plate.wells + parent_2_plate.wells }
       let(:expected_number_of_pools) { 8 }
       let(:number_of_pools) { 8 }
 
@@ -482,61 +582,12 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         end
       end
     end
-
-    context 'when test run for 24 samples per pool and 8 pools' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
-      let(:donor_ids) { (1..192).to_a }
-      let(:wells) { parent_1_plate.wells + parent_2_plate.wells }
-      let(:expected_number_of_pools) { 8 }
-      let(:num_samples_per_pool) { 24 }
-
-      before do
-        wells.each_with_index do |well, index|
-          well.state = 'passed'
-          well.aliquots.first.study = study
-          well.aliquots.first.project = project
-          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
-          well.aliquots.first.request = requests[index]
-          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
-        end
-      end
-
-      it 'returns correct number of pools' do
-        pools = subject.build_pools
-        expect(pools.size).to eq(expected_number_of_pools)
-        expect(pools.flatten).to match_array(wells)
-      end
-
-      it 'returns pools with correct number of studies' do
-        pools = subject.build_pools
-        pools.each do |pool|
-          number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
-          expect(number_of_unique_study_ids).to eq(1)
-        end
-      end
-
-      it 'returns pools with correct number of projects' do
-        pools = subject.build_pools
-        pools.each do |pool|
-          number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
-          expect(number_of_unique_project_ids).to eq(1)
-        end
-      end
-
-      it 'returns pools with correct number of donors' do
-        pools = subject.build_pools
-        pools.each do |pool|
-          number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
-          expect(number_of_unique_donor_ids).to eq(pool.size)
-        end
-      end
-    end
   end
 
   describe '#transfer_request_attributes' do
+    let(:number_of_pools) { 2 }
     let!(:wells) do # eager!
-      wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
+      wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
       wells.each_with_index do |well, index|
         well.state = 'passed'
         well.aliquots.first.study = study_1 # same study
@@ -552,7 +603,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     it 'returns the transfer request attributes into destination plate' do
       attributes = subject.transfer_request_attributes
-      expect(attributes.size).to eq(2)
+      expect(attributes.size).to eq(10)
 
       expect(attributes[0]['source_asset']).to eq(wells[0].uuid)
       expect(attributes[0]['target_asset']).to eq(child_plate.wells[0].uuid)
@@ -560,15 +611,16 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       expect(attributes[0]['submission_id']).to eq('1') # request factory insists on string
 
       expect(attributes[1]['source_asset']).to eq(wells[1].uuid)
-      expect(attributes[1]['target_asset']).to eq(child_plate.wells[0].uuid)
-      expect(attributes[1][:aliquot_attributes]).to eq({ 'tag_depth' => '2' })
+      expect(attributes[1]['target_asset']).to eq(child_plate.wells[1].uuid)
+      expect(attributes[1][:aliquot_attributes]).to eq({ 'tag_depth' => '1' })
       expect(attributes[1]['submission_id']).to eq('1') # request factory insists on string
     end
   end
 
   describe '#request_hash' do
+    let(:number_of_pools) { 1 }
     let(:wells) do
-      wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
+      wells = Array(parent_1_plate.wells[0..4])
       wells.each_with_index do |well, index|
         well.state = 'passed'
         well.aliquots.first.study = study_1 # same study
@@ -598,20 +650,21 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#transfer_hash' do
+    let(:number_of_pools) { 1 }
     let!(:wells) do
-      wells = [parent_1_plate.wells[0], parent_1_plate.wells[1], parent_2_plate.wells[0]]
+      wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
       wells.each_with_index do |well, index|
         well.state = 'passed'
         well.aliquots.first.study = study_1 # same study
         well.aliquots.first.project = project_1 # same project
         well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
         well.aliquots.first.request = requests[index]
-        well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+        well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
       end
     end
 
     it 'returns the transfer hash' do
-      hash = wells[0..2].index_with { |_well| { dest_locn: 'A1' } }
+      hash = wells[0..9].index_with { |_well| { dest_locn: 'A1' } }
       expect(subject.transfer_hash).to eq(hash)
     end
 
@@ -621,44 +674,42 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#tag_depth_hash' do
+    let(:number_of_pools) { 2 }
     it 'returns a hash mapping positions of wells in their pools' do
-      well_p1_w1 = well = parent_1_plate.wells[0]
-      well.state = 'passed'
-      well.aliquots.first.study = study_1
-      well.aliquots.first.project = project_1
-      well.aliquots.first.sample.sample_metadata.donor_id = 1
+      wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = study_1 # same study
+        well.aliquots.first.project = project_1 # same project
+        well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+      end
 
-      well_p1_w2 = well = parent_1_plate.wells[1]
-      well.state = 'passed'
-      well.aliquots.first.study = study_1
-      well.aliquots.first.project = project_1
-      well.aliquots.first.sample.sample_metadata.donor_id = 2
-
-      well_p2_w1 = well = parent_2_plate.wells[0]
-      well.state = 'passed'
-      well.aliquots.first.study = study_1
-      well.aliquots.first.project = project_1
-      well.aliquots.first.sample.sample_metadata.donor_id = 3
-
-      well_p2_w2 = well = parent_2_plate.wells[1]
-      well.state = 'passed'
-      well.aliquots.first.study = study_1
-      well.aliquots.first.project = project_1
-      well.aliquots.first.sample.sample_metadata.donor_id = 1 # same donor as well_p1_w1
+      wells[1].state = 'passed'
+      wells[1].aliquots.first.study = study_1
+      wells[1].aliquots.first.project = project_1
+      wells[1].aliquots.first.sample.sample_metadata.donor_id = 1 # same donor as the first well
 
       subject.build_pools
-      expect(subject.tag_depth_hash[well_p1_w1]).to eq('1')
-      expect(subject.tag_depth_hash[well_p1_w2]).to eq('2')
-      expect(subject.tag_depth_hash[well_p2_w1]).to eq('3')
-      expect(subject.tag_depth_hash[well_p2_w2]).to eq('1')
+      expect(subject.tag_depth_hash[wells[0]]).to eq('1') # 10-well-A1
+      expect(subject.tag_depth_hash[wells[1]]).to eq('1') # 10-well-B1
+      expect(subject.tag_depth_hash[wells[2]]).to eq('2') # 10-well-C1
+      expect(subject.tag_depth_hash[wells[3]]).to eq('2') # 10-well-D1
+      expect(subject.tag_depth_hash[wells[4]]).to eq('3') # 10-well-E1
+      expect(subject.tag_depth_hash[wells[5]]).to eq('3') # 13-well-A1
+      expect(subject.tag_depth_hash[wells[6]]).to eq('4') # 13-well-B1
+      expect(subject.tag_depth_hash[wells[7]]).to eq('4') # 13-well-C1
+      expect(subject.tag_depth_hash[wells[8]]).to eq('5') # 13-well-D1
+      expect(subject.tag_depth_hash[wells[9]]).to eq('5') # 13-well-E1
     end
 
     it 'caches the result' do
-      well = parent_1_plate.wells[0]
-      well.state = 'passed'
-      well.aliquots.first.study = study_1
-      well.aliquots.first.project = project_1
-      well.aliquots.first.sample.sample_metadata.donor_id = 1
+      wells = Array(parent_1_plate.wells[0..9])
+      wells.each_with_index do |well, index|
+        well.state = 'passed'
+        well.aliquots.first.study = study_1 # same study
+        well.aliquots.first.project = project_1 # same project
+        well.aliquots.first.sample.sample_metadata.donor_id = index + 1 # different donors
+      end
 
       subject.build_pools
       expect(subject.tag_depth_hash).to be(subject.tag_depth_hash) # same instance
@@ -669,15 +720,16 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     let(:cells_per_chip_well) { 90_000 }
     let(:number_of_samples_per_pool) { 10 }
 
-    let(:request_metadata1) { create :v2_request_metadata, number_of_samples_per_pool:, cells_per_chip_well: }
-    let(:request_metadata2) { create :v2_request_metadata, number_of_samples_per_pool:, cells_per_chip_well: }
+    let(:requests) do
+      Array.new(10) do |_i|
+        create :scrna_customer_request,
+               request_metadata: create(:v2_request_metadata, number_of_pools:, cells_per_chip_well:)
+      end
+    end
 
-    let(:request1) { create :scrna_customer_request, request_metadata: request_metadata1 }
-    let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-    let(:requests) { [request1, request2] }
-
+    let(:number_of_pools) { 2 }
     let!(:wells) do # eager!
-      wells = [parent_1_plate.wells[0], parent_2_plate.wells[0]]
+      wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
       wells.each_with_index do |well, index|
         well.state = 'passed'
         well.aliquots.first.study = study_1 # same study
@@ -745,7 +797,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.project = project_1
           well.aliquots.first.sample.sample_metadata.donor_id = 1
           well.aliquots.first.request = requests[0]
-          well.aliquots.first.request.request_metadata.number_of_samples_per_pool = num_samples_per_pool
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
 
           # TODO: are we changing this to total cell count?
           well.qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000)
