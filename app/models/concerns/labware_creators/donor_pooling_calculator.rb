@@ -137,32 +137,55 @@ module LabwareCreators::DonorPoolingCalculator
   def validate_number_of_pools(wells, number_of_pools)
     total_wells = wells.size
 
-    if total_wells < number_of_pools ||
-      total_wells > number_of_pools * ((total_wells / number_of_pools) + 1)
-     raise "Cannot distribute #{total_wells} wells into #{number_of_pools} pools such that the difference is at most 1."
-    end
+    return unless total_wells < number_of_pools || total_wells > number_of_pools * ((total_wells / number_of_pools) + 1)
+    raise "Cannot distribute #{total_wells} wells into #{number_of_pools} pools such that the difference is at most 1."
+  end
+
+  def handle_non_unique_donor_id(depth, number_of_pools, donor_id)
+    return unless depth == number_of_pools
+    raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor."
   end
 
   # Recursive function to assign wells to pools
-  def assign_well_to_pool(well, pools, used_donor_ids, pool_index, number_of_pools, depth)
+  def assign_well_to_pool(args)
+    well, pools, used_donor_ids, pool_index, number_of_pools, depth =
+      args.values_at(:well, :pools, :used_donor_ids, :pool_index, :number_of_pools, :depth)
+
     donor_id = well.aliquots.first.sample.sample_metadata.donor_id
-    # Check if the donor ID has been used in the current pool
-    if used_donor_ids[pool_index].include?(donor_id)
-      # If used, increment depth and try the next pool recursively
-      depth += 1
-      
-      if depth == number_of_pools
-        # If we've checked all pools and didn't find a suitable one, raise an error
-        raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor."
-      else
-        next_pool_index = (pool_index + 1) % number_of_pools
-        assign_well_to_pool(well, pools, used_donor_ids, next_pool_index, number_of_pools, depth)
-      end
+
+    if donor_already_used?(donor_id, used_donor_ids, pool_index)
+      handle_conflict_donor_ids(donor_id, args, depth, number_of_pools, pool_index)
     else
-      # If donor ID hasn't been used, add the well to the pool and mark it as used
-      used_donor_ids[pool_index] << donor_id
-      pools[pool_index] << well
+      add_to_pool(donor_id, used_donor_ids, pool_index, pools, well)
     end
+  end
+
+  def donor_already_used?(donor_id, used_donor_ids, pool_index)
+    used_donor_ids[pool_index].include?(donor_id)
+  end
+
+  def handle_conflict_donor_ids(donor_id, args, depth, number_of_pools, pool_index)
+    increment_depth!(args)
+    check_all_pools_visited!(depth, number_of_pools, donor_id)
+    reassign_to_next_pool(args, pool_index, number_of_pools)
+  end
+
+  def increment_depth!(args)
+    args[:depth] += 1
+  end
+
+  def check_all_pools_visited!(depth, number_of_pools, donor_id)
+    raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor." if depth == number_of_pools
+  end
+
+  def reassign_to_next_pool(args, pool_index, number_of_pools)
+    args[:pool_index] = (pool_index + 1) % number_of_pools
+    assign_well_to_pool(args)
+  end
+
+  def add_to_pool(donor_id, used_donor_ids, pool_index, pools, well)
+    used_donor_ids[pool_index] << donor_id
+    pools[pool_index] << well
   end
 
   # Allocates wells to pools. The wells will have grouped by study and project, and now
@@ -188,19 +211,28 @@ module LabwareCreators::DonorPoolingCalculator
   def allocate_wells_to_pools(wells, number_of_pools)
     pools = Array.new(number_of_pools) { [] }
     used_donor_ids = Array.new(number_of_pools) { [] }
-    
+
     validate_number_of_pools(wells, number_of_pools)
     depth = 0
-    
+
     # Assign wells to pools
     wells.each_with_index do |well, index|
       # Start assigning wells starting from the pool corresponding to the well's index
-      assign_well_to_pool(well, pools, used_donor_ids, index % number_of_pools, number_of_pools, depth)
+      assign_well_to_pool(
+        {
+          well: well,
+          pools: pools,
+          used_donor_ids: used_donor_ids,
+          pool_index: index % number_of_pools,
+          number_of_pools: number_of_pools,
+          depth: depth
+        }
+      )
     end
-    
+
     if pools.any? { |pool| pool.size < 5 || pool.size > 25 }
-      raise "Invalid distribution: Each pool must have between 5 and 25 wells."
-    end  
+      raise 'Invalid distribution: Each pool must have between 5 and 25 wells.'
+    end
     pools
   end
 
