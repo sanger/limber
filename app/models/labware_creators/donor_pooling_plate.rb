@@ -145,15 +145,11 @@ module LabwareCreators
       @minimal_barcodes = barcodes.compact_blank.map(&:strip)
     end
 
-    # Returns the number of pools based on the sample count from the lookup
-    # table.
+    # Returns the number of pools, pulled from request metadata.
     #
     # @return [Integer] The number of pools.
-    def calculated_number_of_pools
-      return if source_wells_for_pooling.blank?
-
-      # div enfoces integer division
-      source_wells_for_pooling.count.div(number_of_samples_per_pool)
+    def number_of_pools(group)
+      group[0].aliquots.first.request.request_metadata.number_of_pools
     end
 
     # Creates transfer requests from source wells to the destination plate in
@@ -228,14 +224,19 @@ module LabwareCreators
     end
 
     # Builds the pools for the destination plate. The wells are first grouped
-    # by study and project, then split by donor_ids, and finally distributed
-    # across pools.
+    # by study and project, then passed along to be allocated to pools.
     #
     # @return [Array<Array<Well>>] An array of well groups distributed across pools.
     def build_pools
-      groups = split_single_group_by_study_and_project(source_wells_for_pooling)
-      groups = split_groups_by_unique_donor_ids(groups)
-      distribute_groups_across_pools(groups, calculated_number_of_pools)
+      study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling)
+
+      built_pools = study_project_groups.map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
+
+      unless (1..8).cover?(built_pools.size)
+        raise "Invalid requested number of pools: must be between 1 and 8. Provided: #{number_of_pools}."
+      end
+
+      built_pools.flatten(1)
     end
 
     # This method determines if the pools have full allowance.
