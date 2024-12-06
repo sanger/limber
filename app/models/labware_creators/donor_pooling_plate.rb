@@ -228,17 +228,15 @@ module LabwareCreators
     #
     # @return [Array<Array<Well>>] An array of well groups distributed across pools.
     def build_pools
-      study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling) 
-      
-      built_pools = study_project_groups.map do |group|
-        allocate_wells_to_pools(group, number_of_pools(group))   
-      end
+      study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling)
+
+      built_pools = study_project_groups.map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
 
       unless (1..8).cover?(built_pools.size)
         raise "Invalid requested number of pools: must be between 1 and 8. Provided: #{number_of_pools}."
       end
-      
-      built_pools.flatten(1)  
+
+      built_pools.flatten(1)
     end
 
     # This method determines if the pools have full allowance.
