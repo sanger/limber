@@ -233,7 +233,12 @@ module LabwareCreators
       built_pools = study_project_groups.map do |group|
         allocate_wells_to_pools(group, number_of_pools(group))   
       end
-      built_pools.flatten(1)
+
+      unless (1..8).cover?(built_pools.size)
+        raise "Invalid requested number of pools: must be between 1 and 8. Provided: #{number_of_pools}."
+      end
+      
+      built_pools.flatten(1)  
     end
 
     # This method determines if the pools have full allowance.
