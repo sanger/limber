@@ -540,7 +540,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:wells) { parent_1_plate.wells[0..31] }
       let(:expected_number_of_pools) { 8 }
       let(:number_of_pools) { 8 }
-      
+
       before do
         wells.each_with_index do |well, index|
           well.state = 'passed'
@@ -552,9 +552,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         end
       end
 
-      it 'fails due to pool sizing constraints (5 to 25)' do  
-        expected_message = "Invalid distribution: Each pool must have between " \
-        "5 and 25 wells."
+      it 'fails due to pool sizing constraints (5 to 25)' do
+        expected_message =
+          'Invalid distribution: Each pool must have between ' \
+            '5 and 25 wells.'
 
         expect { subject.build_pools }.to raise_error(expected_message)
       end
@@ -566,7 +567,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:donor_ids) { (1..80).to_a }
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:number_of_pools) { 9 }
-      
+
       before do
         wells.each_with_index do |well, index|
           well.state = 'passed'
@@ -579,7 +580,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
 
       it 'fails due to number of pool constraints (1 to 8)' do
-        expected_message = "Invalid requested number of pools: must be between 1 and 8. Provided: 9."
+        expected_message = 'Invalid requested number of pools: must be between 1 and 8. Provided: 9.'
 
         expect { subject.build_pools }.to raise_error(expected_message)
       end

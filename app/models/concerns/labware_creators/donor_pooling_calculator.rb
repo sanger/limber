@@ -263,8 +263,8 @@ module LabwareCreators::DonorPoolingCalculator
     end
 
     if pools.any? { |pool| !VALID_POOL_SIZE_RANGE.cover?(pool.size) }
-      raise "Invalid distribution: Each pool must have " \
-      "between #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
+      raise 'Invalid distribution: Each pool must have ' \
+              "between #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
     end
     pools
   end
