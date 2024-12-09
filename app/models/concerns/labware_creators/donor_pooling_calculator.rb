@@ -234,25 +234,29 @@ module LabwareCreators::DonorPoolingCalculator
 
     depth = 0
 
+    # Calculate the minimum and maximum allowed pool sizes
+    min_pool_size = wells.size / number_of_pools
+    max_pool_size = min_pool_size + ((wells.size % number_of_pools).zero? ? 0 : 1)
+
     # Assign wells to pools
     wells.each_with_index do |well, index|
-      # Start assigning wells starting from the pool corresponding to the well's index
-      assign_well_to_pool(
-        {
-          well: well,
-          pools: pools,
-          used_donor_ids: used_donor_ids,
-          pool_index: index % number_of_pools,
-          number_of_pools: number_of_pools,
-          depth: depth
-        }
-      )
+      pool_index = index % number_of_pools
+      loop do
+        # Check if assigning the well to this pool would exceed max_pool_size
+        if pools[pool_index].size < max_pool_size
+          assign_well_to_pool({ well:, pools:, used_donor_ids:, pool_index:, number_of_pools:, depth: })
+          break
+        else
+          # Move to the next pool
+          pool_index = (pool_index + 1) % number_of_pools
+        end
+      end
     end
 
-    if pools.any? { |pool| !VALID_POOL_SIZE_RANGE.cover?(pool.size) }
-      raise 'Invalid distribution: Each pool must have ' \
-              "between #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
-    end
+    # Validate final pool sizes
+    pool_sizes = pools.map(&:size)
+    raise 'Invalid distribution: Pool sizes differ by more than one.' if pool_sizes.max - pool_sizes.min > 1
+
     pools
   end
 
