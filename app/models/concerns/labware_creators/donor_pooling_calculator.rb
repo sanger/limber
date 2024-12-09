@@ -130,10 +130,12 @@ module LabwareCreators::DonorPoolingCalculator
     group.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq
   end
 
-  # Validates the number of pools requested by the user. The number of pools must
-  # be between 1 and 8, inclusive. The total number of wells must be divisible by
-  # the number of pools, with a difference of at most 1 well.
+  # Validates the number of pools based on the given wells.
   #
+  # @param wells [Array] an array representing the wells.
+  # @param number_of_pools [Integer] the number of pools to distribute the wells into.
+  # @raise [RuntimeError] if the total number of wells cannot be distributed into the specified number of pools
+  #   such that the difference in the number of wells per pool is at most 1.
   def validate_number_of_pools(wells, number_of_pools)
     total_wells = wells.size
 
@@ -147,6 +149,18 @@ module LabwareCreators::DonorPoolingCalculator
   end
 
   # Recursive function to assign wells to pools
+  # Assigns a well to a pool based on the provided arguments.
+  #
+  # @param [Hash] args The arguments for assigning the well to a pool.
+  # @option args [Object] :well The well to be assigned.
+  # @option args [Array] :pools The array of pools.
+  # @option args [Array] :used_donor_ids The array of used donor IDs.
+  # @option args [Integer] :pool_index The index of the current pool.
+  # @option args [Integer] :number_of_pools The total number of pools.
+  # @option args [Integer] :depth The depth of the current operation.
+  #
+  # @return [void]
+  #
   def assign_well_to_pool(args)
     well, pools, used_donor_ids, pool_index, number_of_pools, depth =
       args.values_at(:well, :pools, :used_donor_ids, :pool_index, :number_of_pools, :depth)
@@ -178,11 +192,27 @@ module LabwareCreators::DonorPoolingCalculator
     raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor." if depth == number_of_pools
   end
 
+  # Reassigns the given well to the next pool in a round-robin fashion.
+  #
+  # @param args [Hash] The arguments hash containing details about the well.
+  # @param pool_index [Integer] The current index of the pool.
+  # @param number_of_pools [Integer] The total number of pools.
+  #
+  # @return [void]
   def reassign_to_next_pool(args, pool_index, number_of_pools)
     args[:pool_index] = (pool_index + 1) % number_of_pools
     assign_well_to_pool(args)
   end
 
+  # Adds a donor to a specified pool and associates it with a well.
+  #
+  # @param donor_id [Integer] the ID of the donor to be added to the pool
+  # @param used_donor_ids [Array<Array<Integer>>] a nested array where each sub-array contains donor IDs
+  #   for a specific pool
+  # @param pool_index [Integer] the index of the pool to which the donor should be added
+  # @param pools [Array<Array<Well>>] a nested array where each sub-array contains wells for a specific pool
+  # @param well [Well] the well to be associated with the donor in the specified pool
+  # @return [void]
   def add_to_pool(donor_id, used_donor_ids, pool_index, pools, well)
     used_donor_ids[pool_index] << donor_id
     pools[pool_index] << well
