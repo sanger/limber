@@ -107,11 +107,11 @@ module StateChangers
     # @param target_state [String] the state to check against the FILTER_FAILS_ON list
     # @return [Array<String>, nil] an array of well locations requiring the state change, or nil if no change is needed
     def contents_for(_target_state)
-      raise 'Must be implemented on subclass'
+      raise 'Must be implemented on subclass' # pragma: no cover
     end
 
     def labware
-      raise 'Must be implemented on subclass'
+      raise 'Must be implemented on subclass' # pragma: no cover
     end
   end
 
