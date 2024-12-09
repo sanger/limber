@@ -492,14 +492,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
         end
         wells[24].aliquots.first.sample.sample_metadata.donor_id = 1
-        # wells[1].aliquots.first.sample.sample_metadata.donor_id = 2
-        # wells[2].aliquots.first.sample.sample_metadata.donor_id = 3
-        # wells[3].aliquots.first.sample.sample_metadata.donor_id = 4
-        # wells[4].aliquots.first.sample.sample_metadata.donor_id = 1
-        # wells[5].aliquots.first.sample.sample_metadata.donor_id = 2
-        # wells[6].aliquots.first.sample.sample_metadata.donor_id = 3
-        # wells[7].aliquots.first.sample.sample_metadata.donor_id = 1
-        # wells[8].aliquots.first.sample.sample_metadata.donor_id = 2
       end
 
       it 'returns correct number of pools' do
@@ -743,16 +735,17 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       wells[1].aliquots.first.sample.sample_metadata.donor_id = 1 # same donor as the first well
 
       subject.build_pools
-      expect(subject.tag_depth_hash[wells[0]]).to eq('1') # 10-well-A1
-      expect(subject.tag_depth_hash[wells[1]]).to eq('1') # 10-well-B1
-      expect(subject.tag_depth_hash[wells[2]]).to eq('2') # 10-well-C1
-      expect(subject.tag_depth_hash[wells[3]]).to eq('2') # 10-well-D1
-      expect(subject.tag_depth_hash[wells[4]]).to eq('3') # 10-well-E1
-      expect(subject.tag_depth_hash[wells[5]]).to eq('3') # 13-well-A1
-      expect(subject.tag_depth_hash[wells[6]]).to eq('4') # 13-well-B1
-      expect(subject.tag_depth_hash[wells[7]]).to eq('4') # 13-well-C1
-      expect(subject.tag_depth_hash[wells[8]]).to eq('5') # 13-well-D1
-      expect(subject.tag_depth_hash[wells[9]]).to eq('5') # 13-well-E1
+      expect(subject.tag_depth_hash[wells[0]]).to eq('1') # 10-well-A1, Pool 1
+      expect(subject.tag_depth_hash[wells[2]]).to eq('2') # 10-well-C1, Pool 1
+      expect(subject.tag_depth_hash[wells[4]]).to eq('3') # 10-well-E1, Pool 1
+      expect(subject.tag_depth_hash[wells[6]]).to eq('4') # 13-well-B1, Pool 1
+      expect(subject.tag_depth_hash[wells[8]]).to eq('5') # 13-well-D1, Pool 1
+
+      expect(subject.tag_depth_hash[wells[1]]).to eq('1') # 10-well-B1, Pool 2
+      expect(subject.tag_depth_hash[wells[3]]).to eq('2') # 10-well-D1, Pool 2
+      expect(subject.tag_depth_hash[wells[5]]).to eq('3') # 13-well-A1, Pool 2
+      expect(subject.tag_depth_hash[wells[7]]).to eq('4') # 13-well-C1, Pool 2
+      expect(subject.tag_depth_hash[wells[9]]).to eq('5') # 13-well-E1, Pool 2
     end
 
     it 'caches the result' do
