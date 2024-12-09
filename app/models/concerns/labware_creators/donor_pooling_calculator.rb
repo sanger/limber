@@ -133,19 +133,6 @@ module LabwareCreators::DonorPoolingCalculator
     group.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq
   end
 
-  # Validates the number of pools based on the given wells.
-  #
-  # @param wells [Array] an array representing the wells.
-  # @param number_of_pools [Integer] the number of pools to distribute the wells into.
-  # @raise [RuntimeError] if the total number of wells cannot be distributed into the specified number of pools
-  #   such that the difference in the number of wells per pool is at most 1.
-  def validate_number_of_pools(wells, number_of_pools)
-    total_wells = wells.size
-
-    return unless total_wells < number_of_pools || total_wells > number_of_pools * ((total_wells / number_of_pools) + 1)
-    raise "Cannot distribute #{total_wells} wells into #{number_of_pools} pools such that the difference is at most 1."
-  end
-
   def handle_non_unique_donor_id(depth, number_of_pools, donor_id)
     return unless depth == number_of_pools
     raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor."
@@ -245,7 +232,6 @@ module LabwareCreators::DonorPoolingCalculator
     pools = Array.new(number_of_pools) { [] }
     used_donor_ids = Array.new(number_of_pools) { [] }
 
-    validate_number_of_pools(wells, number_of_pools)
     depth = 0
 
     # Assign wells to pools
