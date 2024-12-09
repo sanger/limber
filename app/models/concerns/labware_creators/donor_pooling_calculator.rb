@@ -133,11 +133,6 @@ module LabwareCreators::DonorPoolingCalculator
     group.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq
   end
 
-  def handle_non_unique_donor_id(depth, number_of_pools, donor_id)
-    return unless depth == number_of_pools
-    raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor."
-  end
-
   # Recursive function to assign wells to pools
   # Assigns a well to a pool based on the provided arguments.
   #
