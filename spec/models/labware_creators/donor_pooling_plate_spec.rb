@@ -639,6 +639,33 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
+    context 'when the test run can split wells by donor IDs but the pools will not be equal' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:donor_ids) { (1..40).to_a * 2 }
+      let(:wells) { parent_1_plate.wells[0..72] }
+      let(:expected_number_of_pools) { 4 }
+      let(:number_of_pools) { 4 }
+
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
+        end
+        wells[10].aliquots.first.sample.sample_metadata.donor_id = 1
+      end
+
+      it 'fails to distribute and raises an error' do
+        expected_message = 'Invalid distribution: Pool sizes differ by more than one.'
+
+        expect { subject.build_pools }.to raise_error(expected_message)
+      end
+    end
+
     context 'when test run for 24 samples per pool and 8 pools' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
