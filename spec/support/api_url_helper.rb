@@ -5,7 +5,8 @@ module ApiUrlHelper
 
   def self.included(base)
     base.extend(V1Helpers)
-    base.extend(V2Helpers)
+    base.extend(V2Expectations)
+    base.extend(V2Stubs)
   end
 
   module V1Helpers
@@ -76,7 +77,106 @@ module ApiUrlHelper
     end
   end
 
-  module V2Helpers
+  # Expectations for the V2 API.
+  # All methods here generate an expectation that the endpoint will be called with the correct arguments.
+  module V2Expectations
+    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+      # Expects the specified `method` for any class beginning with
+      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
+      # If return_values is empty, it will return true.
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      args_list
+        .zip(return_values)
+        .each do |args, ret|
+          ret ||= true
+          expect(receiving_class).to receive(method).with(args).and_return(ret)
+        end
+    end
+
+    def expect_custom_metadatum_collection_creation
+      expect_api_v2_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
+    end
+
+    def expect_bulk_transfer_creation
+      expect_api_v2_posts('BulkTransfer', bulk_transfer_attributes)
+    end
+
+    def expect_plate_conversion_creation
+      expect_api_v2_posts(
+        'PlateConversion',
+        plate_conversions_attributes,
+        plate_conversions_attributes.map { |e| double(target: double(uuid: e[:target_uuid])) }
+      )
+    end
+
+    def expect_plate_creation(child_plates = nil)
+      child_plates ||= [child_plate] * plate_creations_attributes.size
+      return_values = child_plates.map { |child_plate| double(child: child_plate) }
+      expect_api_v2_posts('PlateCreation', plate_creations_attributes, return_values)
+    end
+
+    def expect_pooled_plate_creation
+      expect_api_v2_posts(
+        'PooledPlateCreation',
+        pooled_plates_attributes,
+        [double(child: child_plate)] * pooled_plates_attributes.size
+      )
+    end
+
+    def expect_qc_file_creation
+      expect_api_v2_posts('QcFile', qc_files_attributes)
+    end
+
+    def expect_specific_tube_creation
+      # Prepare the expected arguments and return values.
+      arguments =
+        specific_tubes_attributes.map do |attrs|
+          {
+            child_purpose_uuids: [attrs[:uuid]] * attrs[:child_tubes].size,
+            parent_uuids: [parent_uuid],
+            tube_attributes: attrs[:tube_attributes],
+            user_uuid: user_uuid
+          }
+        end
+
+      specific_tube_creations = specific_tubes_attributes.map { |attrs| double(children: attrs[:child_tubes]) }
+
+      # Create the expectation.
+      expect_api_v2_posts('SpecificTubeCreation', arguments, specific_tube_creations)
+    end
+
+    def expect_state_change_creation
+      expect_api_v2_posts('StateChange', state_changes_attributes)
+    end
+
+    def expect_tag_layout_creation
+      expect_api_v2_posts('TagLayout', tag_layouts_attributes)
+    end
+
+    def expect_transfer_creation
+      expect_api_v2_posts(
+        'Transfer',
+        transfers_attributes.pluck(:arguments),
+        transfers_attributes.pluck(:response) # Missing responses become nil which will trigger a default value.
+      )
+    end
+
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts('TransferRequestCollection', [{ transfer_requests_attributes:, user_uuid: }])
+    end
+
+    def expect_tube_from_tube_creation
+      expect_api_v2_posts(
+        'TubeFromTubeCreation',
+        tube_from_tubes_attributes,
+        [double(child: child_tube)] * tube_from_tubes_attributes.size
+      )
+    end
+  end
+
+  # Stubs for the V2 API.
+  # None of the methods here generate an expectation that the endpoint will be called.
+  module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true.
@@ -100,22 +200,17 @@ module ApiUrlHelper
       allow(receiving_class).to receive(method).and_return(return_value)
     end
 
-    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
-      # Expects the specified `method` for any class beginning with
-      # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
-      # If return_values is empty, it will return true.
-      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
-      args_list
-        .zip(return_values)
-        .each do |args, ret|
-          ret ||= true
-          expect(receiving_class).to receive(method).with(args).and_return(ret)
-        end
-    end
-
     def stub_barcode_search(barcode, labware)
       labware_result = create :labware, type: labware.type, uuid: labware.uuid, id: labware.id
       allow(Sequencescape::Api::V2).to receive(:minimal_labware_by_barcode).with(barcode).and_return(labware_result)
+    end
+
+    def stub_find_by(klass, record, custom_includes: nil)
+      # Set up find_by stubs for both barcode and uuid.
+      [{ barcode: record.barcode.machine }, { uuid: record.uuid }].each do |query|
+        query[:includes] = custom_includes if custom_includes
+        allow(klass).to receive(:find_by).with(query).and_return(record)
+      end
     end
 
     # Stubs a request for all barcode printers
@@ -124,8 +219,9 @@ module ApiUrlHelper
     end
 
     def stub_v2_labware(labware)
-      arguments = [{ barcode: labware.barcode.machine }]
-      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(*arguments).and_return([labware])
+      [{ barcode: labware.barcode.machine }, { uuid: labware.uuid }].each do |query|
+        allow(Sequencescape::Api::V2::Labware).to receive(:find).with(query).and_return([labware])
+      end
     end
 
     # Builds the basic v2 plate finding query.
@@ -143,6 +239,7 @@ module ApiUrlHelper
         allow(Sequencescape::Api::V2).to receive(:plate_for_presenter).with(uuid: plate.uuid).and_return(plate)
       end
 
+      stub_find_by(Sequencescape::Api::V2::Plate, plate, custom_includes:)
       stub_v2_labware(plate)
     end
 
@@ -154,6 +251,11 @@ module ApiUrlHelper
     def stub_v2_project(project)
       arguments = [{ name: project.name }]
       allow(Sequencescape::Api::V2::Project).to receive(:find).with(*arguments).and_return([project])
+    end
+
+    def stub_v2_qc_file(qc_file)
+      arguments = [{ uuid: qc_file.uuid }]
+      allow(Sequencescape::Api::V2::QcFile).to receive(:find).with(*arguments).and_return([qc_file])
     end
 
     def stub_v2_study(study)
@@ -168,11 +270,14 @@ module ApiUrlHelper
     end
 
     # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_includes: false)
+    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: nil)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
-      arguments = custom_includes ? [{ uuid: tube.uuid }, { includes: custom_includes }] : [{ uuid: tube.uuid }]
-      allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(*arguments).and_return(tube)
 
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube)
+      end
+
+      stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes:)
       stub_v2_labware(tube)
     end
 
@@ -187,11 +292,20 @@ module ApiUrlHelper
       swipecard_args = [{ user_code: swipecard }]
       allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
     end
+
+    def stub_v2_pooled_plate_creation
+      # Stubs the creation of a pooled plate by returning a double with a child attribute.
+      pooled_plate_creation = double
+      allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
+
+      stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+    end
   end
 end
 
 RSpec.configure do |config|
   config.include ApiUrlHelper
   config.include ApiUrlHelper::V1Helpers
-  config.include ApiUrlHelper::V2Helpers
+  config.include ApiUrlHelper::V2Expectations
+  config.include ApiUrlHelper::V2Stubs
 end

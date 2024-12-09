@@ -284,7 +284,7 @@ FactoryBot.define do
     transient { related_thing { create :v2_tag_group_with_tags } }
 
     after(:build) do |record, factory|
-      record._cached_relationship(:related_thing) { factory.related_thing } if evaluator.related_thing
+      record._cached_relationship(:related_thing) { factory.related_thing } if factory.related_thing
     end
   end
 end

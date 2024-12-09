@@ -11,13 +11,13 @@ module LabwareCreators::RequireWellsWithCollectedBy
     return if invalid_well_locations.empty?
 
     msg = 'wells missing collected_by sample metadata:'
-    errors.add(:source_plate, "#{msg} #{invalid_well_locations.join(', ')}")
+    errors.add(:parent, "#{msg} #{invalid_well_locations.join(', ')}")
   end
 
   private
 
   def wells_with_missing_collected_by
-    source_plate
+    parent
       .wells
       .each_with_object([]) do |well, invalid_locations|
         next if well.aliquots.blank?
