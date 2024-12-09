@@ -216,7 +216,7 @@ module LabwareCreators::DonorPoolingCalculator
 
   def calculate_pool_size_range(total_wells, number_of_pools)
     min_pool_size = total_wells / number_of_pools
-    max_pool_size = min_pool_size + (total_wells % number_of_pools).zero? ? 0 : 1
+    max_pool_size = min_pool_size + ((total_wells % number_of_pools).zero? ? 0 : 1)
     [min_pool_size, max_pool_size]
   end
 
