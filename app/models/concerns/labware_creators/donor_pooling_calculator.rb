@@ -1,8 +1,11 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ModuleLength
 
 # This module contains algorithms to allocate source wells into a target number of pools.
 module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
+
+  VALID_POOL_SIZE_RANGE = (5..25)
 
   # Splits wells into groups by study and project. Wells are grouped based on the
   # study and project of the first aliquot in each well (only one aliquot is
@@ -130,34 +133,139 @@ module LabwareCreators::DonorPoolingCalculator
     group.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq
   end
 
-  # Distributes samples across pools based on group sizes. It sorts the groups
-  # by size and splits the largest group into two until the number of groups
-  # equals the number of pools or until all groups have a size of 1. The input
-  # groups are the result of applying conditions, hence they cannot be mixed.
+  # Recursive function to assign wells to pools
+  # Assigns a well to a pool based on the provided arguments.
   #
-  # If the request number of pools is 6 and the input groups are
-  # [[1, 2, 3], [4, 5], [6, 7, 8, 9]] where the numbers denote wells,
+  # @param [Hash] args The arguments for assigning the well to a pool.
+  # @option args [Object] :well The well to be assigned.
+  # @option args [Array] :pools The array of pools.
+  # @option args [Array] :used_donor_ids The array of used donor IDs.
+  # @option args [Integer] :pool_index The index of the current pool.
+  # @option args [Integer] :number_of_pools The total number of pools.
+  # @option args [Integer] :depth The depth of the current operation.
   #
-  # the result will be:
-  # [[3], [1], [2], [4, 5], [6, 7], [8, 9]]
+  # @return [void]
   #
-  # for which the steps are:
-  # [[1, 2, 3], [4, 5], [6, 7, 8, 9]] -> 3 pools (input)
-  # [[4, 5], [6, 7], [8, 9], [1, 2, 3]] -> 4 pools
-  # [[3], [4, 5], [6, 7], [8, 9], [1, 2]] -> 5 pools
-  # [[3], [1], [2], [4, 5], [6, 7], [8, 9]] -> 6 pools (output)
-  #
-  # @param groups [Array<Array<Well>>] Array of well groups to be distributed.
-  # @return [Array<Array<Well>>] Array of distributed groups.
-  def distribute_groups_across_pools(groups, number_of_pools)
-    groups = groups.dup
-    groups.sort_by!(&:size)
-    while groups.any? && groups.last.size > 1 && groups.size < number_of_pools
-      largest = groups.pop # last
-      splits = largest.each_slice((largest.size / 2.0).ceil).to_a
-      groups.concat(splits).sort_by!(&:size)
+  def assign_well_to_pool(args)
+    well, pools, used_donor_ids, pool_index, number_of_pools, depth =
+      args.values_at(:well, :pools, :used_donor_ids, :pool_index, :number_of_pools, :depth)
+
+    donor_id = well.aliquots.first.sample.sample_metadata.donor_id
+
+    if donor_already_used?(donor_id, used_donor_ids, pool_index)
+      handle_conflict_donor_ids(donor_id, args, depth, number_of_pools, pool_index)
+    else
+      add_to_pool(donor_id, used_donor_ids, pool_index, pools, well)
     end
-    groups
+  end
+
+  def donor_already_used?(donor_id, used_donor_ids, pool_index)
+    used_donor_ids[pool_index].include?(donor_id)
+  end
+
+  def handle_conflict_donor_ids(donor_id, args, depth, number_of_pools, pool_index)
+    increment_depth!(args)
+    check_all_pools_visited!(depth, number_of_pools, donor_id)
+    reassign_to_next_pool(args, pool_index, number_of_pools)
+  end
+
+  def increment_depth!(args)
+    args[:depth] += 1
+  end
+
+  def check_all_pools_visited!(depth, number_of_pools, donor_id)
+    raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor." if depth == number_of_pools
+  end
+
+  # Reassigns the given well to the next pool in a round-robin fashion.
+  #
+  # @param args [Hash] The arguments hash containing details about the well.
+  # @param pool_index [Integer] The current index of the pool.
+  # @param number_of_pools [Integer] The total number of pools.
+  #
+  # @return [void]
+  def reassign_to_next_pool(args, pool_index, number_of_pools)
+    args[:pool_index] = (pool_index + 1) % number_of_pools
+    assign_well_to_pool(args)
+  end
+
+  # Adds a donor to a specified pool and associates it with a well.
+  #
+  # @param donor_id [Integer] the ID of the donor to be added to the pool
+  # @param used_donor_ids [Array<Array<Integer>>] a nested array where each sub-array contains donor IDs
+  #   for a specific pool
+  # @param pool_index [Integer] the index of the pool to which the donor should be added
+  # @param pools [Array<Array<Well>>] a nested array where each sub-array contains wells for a specific pool
+  # @param well [Well] the well to be associated with the donor in the specified pool
+  # @return [void]
+  def add_to_pool(donor_id, used_donor_ids, pool_index, pools, well)
+    used_donor_ids[pool_index] << donor_id
+    pools[pool_index] << well
+  end
+
+  def validate_pool_sizes!(pools)
+    if pools.any? { |pool| !VALID_POOL_SIZE_RANGE.cover?(pool.size) }
+      raise 'Invalid distribution: Each pool must have ' \
+              "between #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
+    end
+
+    pool_sizes = pools.map(&:size)
+    return unless pool_sizes.max - pool_sizes.min > 1
+    raise 'Invalid distribution: Pool sizes differ by more than one.'
+  end
+
+  def calculate_pool_size_range(total_wells, number_of_pools)
+    min_pool_size = total_wells / number_of_pools
+    max_pool_size = min_pool_size + ((total_wells % number_of_pools).zero? ? 0 : 1)
+    [min_pool_size, max_pool_size]
+  end
+
+  # Allocates wells to pools. The wells will have grouped by study and project, and now
+  # they will be grouped by unique donor_ids. The wells will be distributed sequentially
+  # to the pools, ensuring that each pool has between 5 and 25 wells.
+  #
+  # If the number of wells is 96 and the number of pools is 8, then
+  # each pool will have 12 wells
+  # [[12], [12], [12], [12], [12], [12], [12], [12]]
+  #
+  #
+  # If the number of wells is 96 and the number of pools is 7, then
+  # the first 5 pools will have 14 wells and the last 2 pools will have 13 wells
+  # [[14], [14], [14], [14], [14], [13], [13]]
+  #
+  # If the number of wells is 24 and the number of pools is 5, then
+  # an error will be raised because each pool must have at least 5 wells
+  #
+  # @param wells [Array<Well>] The wells to be allocated to pools.
+  # @param number_of_pools [Integer] The number of pools to distribute the wells into.
+  # @return [Array<Array<Well>>] An array of pools, between 1 and 8, each containing between 5 and 25 wells.
+  #
+  def allocate_wells_to_pools(wells, number_of_pools)
+    pools = Array.new(number_of_pools) { [] }
+    used_donor_ids = Array.new(number_of_pools) { [] }
+
+    depth = 0
+
+    # Calculate the minimum and maximum allowed pool sizes
+    _, max_pool_size = calculate_pool_size_range(wells.size, number_of_pools)
+
+    # Assign wells to pools
+    wells.each_with_index do |well, index|
+      pool_index = index % number_of_pools
+      loop do
+        # Check if assigning the well to this pool would exceed max_pool_size
+        if pools[pool_index].size < max_pool_size
+          assign_well_to_pool({ well:, pools:, used_donor_ids:, pool_index:, number_of_pools:, depth: })
+          break
+        else
+          # Move to the next pool
+          pool_index = (pool_index + 1) % number_of_pools
+        end
+      end
+    end
+
+    validate_pool_sizes!(pools)
+    pools
   end
 
   # This method checks the pool for full allowance and adjusts the number of
@@ -305,3 +413,5 @@ module LabwareCreators::DonorPoolingCalculator
             "did not save on destination well at location #{dest_well.location}"
   end
 end
+
+# rubocop:enable Metrics/ModuleLength
