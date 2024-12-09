@@ -35,6 +35,7 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   has_many :tubes, through: :racked_tubes, class_name: 'Sequencescape::Api::V2::Tube'
 
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
+  has_many :children, class_name: 'Sequencescape::Api::V2::Asset'
 
   property :name
   property :size
