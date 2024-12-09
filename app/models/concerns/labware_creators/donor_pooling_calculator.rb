@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ModuleLength
 
 # This module contains algorithms to allocate source wells into a target number of pools.
 module LabwareCreators::DonorPoolingCalculator
@@ -414,3 +415,5 @@ module LabwareCreators::DonorPoolingCalculator
             "did not save on destination well at location #{dest_well.location}"
   end
 end
+
+# rubocop:enable Metrics/ModuleLength
