@@ -87,8 +87,8 @@ module Sequencescape::Api::V2
     Tube.includes(include_params).select(select_params).find(search_params).first
   end
 
-  def self.tube_rack_with_custom_includes(include_params, search_params)
-    TubeRack.includes(include_params).find(search_params).first
+  def self.tube_rack_with_custom_includes(include_params, select_params, search_params)
+    TubeRack.includes(include_params).select(select_params).find(search_params).first
   end
 
   # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page

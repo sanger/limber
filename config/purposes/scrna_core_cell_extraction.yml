@@ -105,6 +105,9 @@ TR LRC Bank Seq:
   :presenter_class: Presenters::TubeRackPresenter
   :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
+  :file_links:
+    - name: Download Tube Rack Concentrations (ng/ul) CSV
+      id: tube_rack_concentrations_ngul
 # Tube rack for storing LRC Bank Spare tubes
 TR LRC Bank Spare:
   :asset_type: tube_rack
@@ -117,6 +120,9 @@ TR LRC Bank Spare:
   :presenter_class: Presenters::TubeRackPresenter
   :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
+  :file_links:
+    - name: Download Tube Rack Concentrations (ng/ul) CSV
+      id: tube_rack_concentrations_ngul
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Seq:
   :asset_type: tube
