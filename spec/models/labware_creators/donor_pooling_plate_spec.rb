@@ -560,6 +560,31 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
+    context 'when the test run has 80 wells and 9 pools per study/project group' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:donor_ids) { (1..80).to_a }
+      let(:wells) { parent_1_plate.wells[0..79] }
+      let(:number_of_pools) { 9 }
+      
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
+        end
+      end
+
+      it 'fails due to number of pool constraints (1 to 8)' do
+        expected_message = "Invalid requested number of pools: must be between 1 and 8. Provided: 9."
+
+        expect { subject.build_pools }.to raise_error(expected_message)
+      end
+    end
+
     context 'when test run for 24 samples per pool and 8 pools' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
