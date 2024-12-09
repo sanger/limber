@@ -577,10 +577,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    context 'when the test run has wells with one duplicate donor ID' do
+    context 'when the test run has wells with multiple duplicate IDs' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
-      let(:donor_ids) { (1..80).to_a }
+      let(:donor_ids) { (1..40).to_a * 2 } # Repeats 1-40 twice, creating 80 donor IDs
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
       let(:number_of_pools) { 4 }
