@@ -477,8 +477,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     context 'when test run for 10 samples per pool and 8 pools' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
-      let(:donor_ids) { (1..24).to_a }
-      let(:wells) { parent_1_plate.wells[0..24] }
+      let(:donor_ids) { (1..80).to_a }
+      let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
       let(:number_of_pools) { 4 }
 
@@ -491,7 +491,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
           well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
         end
-        wells[24].aliquots.first.sample.sample_metadata.donor_id = 1
       end
 
       it 'returns correct number of pools' do
