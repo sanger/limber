@@ -14,7 +14,7 @@ module Validators
   # for the user to configure the option after seeing the warning and download
   # the driver file again to use the correct value.
   class RequiredNumberOfCellsValidator < ActiveModel::Validator
-    STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS =
+    STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS_PER_SAMPLE_PER_POOL =
       'The required number of cells is not configured for all studies ' \
         'going into pooling on this plate. If not provided, the default ' \
         'value %s will be used for the samples of the following studies: ' \
@@ -33,16 +33,16 @@ module Validators
     def validate(presenter)
       return unless presenter.labware.state == 'pending'
 
-      studies = source_studies_without_config(presenter, study_required_number_of_cells_key(presenter))
+      study_required_number_of_cells_per_sample_in_pool_key =
+        Rails.application.config.scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
+      default_value = Rails.application.config.scrna_config[:required_number_of_cells_per_sample_in_pool]
+
+      studies = source_studies_without_config(presenter, study_required_number_of_cells_per_sample_in_pool_key)
       return if studies.empty?
 
       formatted_string =
-        format(
-          STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS,
-          default_required_number_of_cells(presenter),
-          studies.join(', ')
-        )
-      presenter.errors.add(:required_number_of_cells, formatted_string)
+        format(STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS_PER_SAMPLE_PER_POOL, default_value, studies.join(', '))
+      presenter.errors.add(:required_number_of_cells_per_sample_in_pool, formatted_string)
     end
 
     private
@@ -64,22 +64,6 @@ module Validators
         .select { |study| study.poly_metadatum_by_key(key).blank? }
         .map(&:name)
         .uniq
-    end
-
-    # Retrieves the default required number of cells from the purpose config.
-    #
-    # @return [Integer] the default required number of cells
-    # :reek:UtilityFunction { public_methods_only: true }
-    def default_required_number_of_cells(presenter)
-      Settings.purposes[presenter.labware.purpose.uuid][:presenter_class][:args][:default_required_number_of_cells]
-    end
-
-    # Retrieves the poly_metadatum key for the study-specific required number of cells.
-    #
-    # @return [String] the poly_metadatum key
-    # :reek:UtilityFunction { public_methods_only: true }
-    def study_required_number_of_cells_key(presenter)
-      Settings.purposes[presenter.labware.purpose.uuid][:presenter_class][:args][:study_required_number_of_cells_key]
     end
   end
 end
