@@ -16,7 +16,7 @@ FactoryBot.define do
     name { 'Plate Purpose' }
     creator_class { 'LabwareCreators::StampedPlate' }
     presenter_class { 'Presenters::StandardPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     default_printer_type { :plate_a }
     asset_type { 'plate' }
     label_class { 'Labels::PlateLabel' }
@@ -340,6 +340,13 @@ FactoryBot.define do
         name { 'Pool tube' }
         creator_class { 'LabwareCreators::PooledTubesFromWholeTubes' }
       end
+
+      # Configuration for an aggregation tube (this is _not_ a thing)
+      factory :aggregation_tube_purpose_config do
+        state_changer_class { 'StateChangers::AutomaticTubeStateChanger' }
+        creator_class { 'LabwareCreators::TenStamp' } # The wrong sort of creator for a tube
+        work_completion_request_type { 'limber_bespoke_aggregation' } # The wrong sort of request type for a tube
+      end
     end
   end
 
@@ -357,7 +364,7 @@ FactoryBot.define do
     asset_type { 'tube_rack' }
     default_printer_type { :tube_rack }
     presenter_class { 'Presenters::TubeRackPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     submission { {} }
     label_class { nil }
     printer_type { '96 Well Plate' }
