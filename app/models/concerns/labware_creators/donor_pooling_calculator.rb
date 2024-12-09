@@ -209,6 +209,11 @@ module LabwareCreators::DonorPoolingCalculator
   end
 
   def validate_pool_sizes!(pools)
+    if pools.any? { |pool| !VALID_POOL_SIZE_RANGE.cover?(pool.size) }
+      raise 'Invalid distribution: Each pool must have ' \
+              "between #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
+    end
+
     pool_sizes = pools.map(&:size)
     return unless pool_sizes.max - pool_sizes.min > 1
     raise 'Invalid distribution: Pool sizes differ by more than one.'
