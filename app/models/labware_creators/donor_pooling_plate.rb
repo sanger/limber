@@ -235,13 +235,14 @@ module LabwareCreators
       study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling)
 
       built_pools = study_project_groups.map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
+      built_pools.flatten!(1)
 
       unless VALID_POOL_COUNT_RANGE.cover?(built_pools.size)
         raise "Invalid requested number of pools: must be between #{VALID_POOL_COUNT_RANGE.min} " \
         "and #{VALID_POOL_COUNT_RANGE.max}. Provided: #{built_pools.size}."
       end
 
-      built_pools.flatten(1)
+      built_pools
     end
 
     # This method determines if the pools have full allowance.
