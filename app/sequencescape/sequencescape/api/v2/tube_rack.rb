@@ -36,6 +36,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
 
+  has_many :state_changes
+
   property :name
   property :size
   property :number_or_rows
