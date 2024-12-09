@@ -53,6 +53,8 @@ module LabwareCreators
       wells.qc_results
     ].freeze
 
+    VALID_POOL_COUNT_RANGE = (1..8)
+
     # Returns the number of source plates from the purpose configuration.
     #
     # @return [Integer] The number of source plates.
@@ -234,8 +236,9 @@ module LabwareCreators
 
       built_pools = study_project_groups.map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
 
-      unless (1..8).cover?(built_pools.size)
-        raise "Invalid requested number of pools: must be between 1 and 8. Provided: #{number_of_pools}."
+      unless VALID_POOL_COUNT_RANGE.cover?(built_pools.size)
+        raise "Invalid requested number of pools: must be between #{VALID_POOL_COUNT_RANGE.min} \
+          and #{VALID_POOL_COUNT_RANGE.max}. Provided: #{built_pools.size}."
       end
 
       built_pools.flatten(1)

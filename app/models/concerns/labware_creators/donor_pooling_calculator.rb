@@ -4,6 +4,8 @@
 module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
 
+  VALID_POOL_SIZE_RANGE = (5..25)
+
   # Splits wells into groups by study and project. Wells are grouped based on the
   # study and project of the first aliquot in each well (only one aliquot is
   # expected per well). Returns an array of groups, where each group is an array
@@ -260,8 +262,9 @@ module LabwareCreators::DonorPoolingCalculator
       )
     end
 
-    if pools.any? { |pool| pool.size < 5 || pool.size > 25 }
-      raise 'Invalid distribution: Each pool must have between 5 and 25 wells.'
+    if pools.any? { |pool| !VALID_POOL_SIZE_RANGE.cover?(pool.size) }
+      raise "Invalid distribution: Each pool must have between \
+        #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
     end
     pools
   end
