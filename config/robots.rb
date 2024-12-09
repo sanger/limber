@@ -3252,35 +3252,36 @@ ROBOT_CONFIG =
       }
     )
 
-    # LRC Hamilton Star bed verification
-    # LRC PBMC Bank to LRC Bank Seq and LRC Bank Spare
-    custom_robot(
-      'hamilton-lrc-pbmc-bank-to-lrc-bank-seq-and-lrc-bank-spare',
-      name: 'Hamilton LRC PBMC Bank => LRC Bank Seq and LRC Bank Spare',
-      beds: {
-        bed(12).barcode => {
-          purpose: 'LRC PBMC Bank',
-          states: ['passed'],
-          label: 'Bed 12'
-        },
-        bed(15).barcode => {
-          purpose: 'LRC Bank Seq',
-          states: ['pending'],
-          label: 'Bed 15',
-          target_state: 'passed'
-        },
-        bed(14).barcode => {
-          purpose: 'LRC Bank Spare',
-          states: ['pending'],
-          label: 'Bed 14',
-          target_state: 'passed'
-        }
-      },
-      class: 'Robots::PlateToTubeRacksRobot',
-      relationships: [
-        { 'options' => { 'parent' => bed(12).barcode, 'children' => [bed(15).barcode, bed(14).barcode] } }
-      ]
-    )
+    # # LRC Hamilton Star bed verification
+    # # LRC PBMC Bank to TR LRC Bank Seq and TR LRC Bank Spare tube racks
+    # # Transfers 1:2 (2nd rack optional)
+    # custom_robot(
+    #   'hamilton-lrc-pbmc-bank-to-lrc-bank-seq-and-lrc-bank-spare-tube-racks',
+    #   name: 'Hamilton LRC PBMC Bank => TR LRC Bank Seq and LRC Bank Spare Tube Racks',
+    #   beds: {
+    #     bed(12).barcode => {
+    #       purpose: 'LRC PBMC Bank',
+    #       states: ['passed'],
+    #       label: 'Bed 12'
+    #     },
+    #     bed(15).barcode => {
+    #       purpose: 'TR LRC Bank Seq',
+    #       states: ['pending'],
+    #       label: 'Bed 15',
+    #       target_state: 'passed'
+    #     },
+    #     bed(14).barcode => {
+    #       purpose: 'TR LRC Bank Spare',
+    #       states: ['pending'],
+    #       label: 'Bed 14',
+    #       target_state: 'passed'
+    #     }
+    #   },
+    #   class: 'Robots::PlateToTubeRacksRobot',
+    #   relationships: [
+    #     { 'options' => { 'parent' => bed(12).barcode, 'children' => [bed(15).barcode, bed(14).barcode] } }
+    #   ]
+    # )
 
     # RVI Bait Capture Library prep pipeline bed verifications
     custom_robot(
