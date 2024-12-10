@@ -639,7 +639,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    context 'when the test run can split wells by donor IDs but the pools will not be equal' do
+    context 'when the test run can split wells by donor IDs but the pools need to be redistributed' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
       let(:donor_ids) { (1..40).to_a * 2 }
@@ -659,10 +659,34 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         wells[10].aliquots.first.sample.sample_metadata.donor_id = 1
       end
 
-      it 'fails to distribute and raises an error' do
-        expected_message = 'Invalid distribution: Pool sizes differ by more than one.'
+      it 'returns correct number of pools' do
+        pools = subject.build_pools
+        expect(pools.size).to eq(expected_number_of_pools)
+        expect(pools.flatten).to match_array(wells)
+      end
 
-        expect { subject.build_pools }.to raise_error(expected_message)
+      it 'returns pools with correct number of studies' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_study_ids = pool.map { |well| well.aliquots.first.study.id }.uniq.size
+          expect(number_of_unique_study_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of projects' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_project_ids = pool.map { |well| well.aliquots.first.project.id }.uniq.size
+          expect(number_of_unique_project_ids).to eq(1)
+        end
+      end
+
+      it 'returns pools with correct number of donors' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
+          expect(number_of_unique_donor_ids).to eq(pool.size)
+        end
       end
     end
 
