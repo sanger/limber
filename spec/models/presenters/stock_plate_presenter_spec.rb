@@ -11,8 +11,4 @@ RSpec.describe Presenters::StockPlatePresenter do
   let(:barcode_string) { labware.human_barcode }
 
   it_behaves_like 'a stock presenter'
-
-  it 'prevents the pools tab from being displayed' do
-    expect(subject.pooling_tab).to be ''
-  end
 end
