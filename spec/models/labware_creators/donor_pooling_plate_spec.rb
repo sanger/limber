@@ -615,7 +615,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     context 'when the test run cannot distribute wells with duplicate IDs' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
-      let(:donor_ids) { (1..10).to_a }
+      let(:donor_ids) { (1..10).to_a * 8 }
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
       let(:number_of_pools) { 4 }
@@ -633,7 +633,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
 
       it 'fails to distribute and raises an error' do
-        expected_message = 'Unable to allocate well with donor ID . All pools contain this donor.'
+        expected_message = 'Unable to allocate well with donor ID 1. All pools contain this donor.'
 
         expect { subject.build_pools }.to raise_error(expected_message)
       end
