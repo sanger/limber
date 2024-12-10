@@ -263,10 +263,47 @@ module LabwareCreators::DonorPoolingCalculator
         end
       end
     end
-
+    rebalance_pools!(pools, used_donor_ids)
     validate_pool_sizes!(pools)
     pools
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # Rebalance the pools if their sizes differ by more than one.
+  # Tries to move wells from the largest to the smallest pool, respecting constraints.
+  #
+  # @param pools [Array<Array<Well>>] The current pools.
+  # @param used_donor_ids [Array<Array<Integer>>] Donor IDs assigned to each pool.
+  #
+  # @return [void]
+  def rebalance_pools!(pools, used_donor_ids)
+    loop do
+      max_size = pools.map(&:size).max
+      min_size = pools.map(&:size).min
+
+      break if max_size - min_size <= 1
+
+      # Find the largest and smallest pools
+      largest_pool_index = pools.index { |pool| pool.size == max_size }
+      smallest_pool_index = pools.index { |pool| pool.size == min_size }
+
+      # Attempt to move a well from the largest to the smallest pool
+      well_to_move =
+        pools[largest_pool_index].find do |well|
+          donor_id = well.aliquots.first.sample.sample_metadata.donor_id
+          used_donor_ids[smallest_pool_index].exclude?(donor_id)
+        end
+
+      break unless well_to_move
+      # Move the well
+      donor_id = well_to_move.aliquots.first.sample.sample_metadata.donor_id
+      pools[largest_pool_index].delete(well_to_move)
+      pools[smallest_pool_index] << well_to_move
+      used_donor_ids[largest_pool_index].delete(donor_id)
+      used_donor_ids[smallest_pool_index] << donor_id
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
 
   # This method checks the pool for full allowance and adjusts the number of
   # cells per chip well value if needed.
