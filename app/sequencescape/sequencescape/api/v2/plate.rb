@@ -106,13 +106,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def stock_plates(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plates ||= stock_plate? ? [self] : ancestors.where(purpose_name: purpose_names)
+    @stock_plates ||= stock_plate? ? [self] : ancestors.select { |a| purpose_names.include?(a.purpose_name) }
   end
 
   def stock_plate
     return self if stock_plate?
 
-    stock_plates.order(id: :asc).last
+    stock_plates.sort_by(&:id).last
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)
