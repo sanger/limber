@@ -214,12 +214,6 @@ module LabwareCreators::DonorPoolingCalculator
     raise 'Invalid distribution: Pool sizes differ by more than one.'
   end
 
-  def calculate_pool_size_range(total_wells, number_of_pools)
-    min_pool_size = total_wells / number_of_pools
-    max_pool_size = min_pool_size + ((total_wells % number_of_pools).zero? ? 0 : 1)
-    [min_pool_size, max_pool_size]
-  end
-
   # rubocop:disable Metrics/AbcSize
   # Allocates wells to pools. The wells will have grouped by study and project, and now
   # they will be grouped by unique donor_ids. The wells will be distributed sequentially
@@ -245,9 +239,6 @@ module LabwareCreators::DonorPoolingCalculator
     used_donor_ids = Array.new(number_of_pools) { [] }
 
     depth = 0
-
-    # Calculate the minimum and maximum allowed pool sizes
-    calculate_pool_size_range(wells.size, number_of_pools)
 
     # Calculate ideal pool sizes based on the number of wells and pools
     ideal_pool_size, remainder = wells.size.divmod(number_of_pools)
