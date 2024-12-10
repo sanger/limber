@@ -220,6 +220,7 @@ module LabwareCreators::DonorPoolingCalculator
     [min_pool_size, max_pool_size]
   end
 
+  # rubocop:disable Metrics/AbcSize
   # Allocates wells to pools. The wells will have grouped by study and project, and now
   # they will be grouped by unique donor_ids. The wells will be distributed sequentially
   # to the pools, ensuring that each pool has between 5 and 25 wells.
@@ -263,12 +264,13 @@ module LabwareCreators::DonorPoolingCalculator
         end
       end
     end
+
     rebalance_pools!(pools, used_donor_ids)
     validate_pool_sizes!(pools)
+    validate_unique_donor_ids!(pools)
     pools
   end
 
-  # rubocop:disable Metrics/AbcSize
   # Rebalance the pools if their sizes differ by more than one.
   # Tries to move wells from the largest to the smallest pool, respecting constraints.
   #
@@ -304,6 +306,19 @@ module LabwareCreators::DonorPoolingCalculator
     end
   end
   # rubocop:enable Metrics/AbcSize
+
+  # Ensure that each pool contains unique donor IDs.
+  #
+  # @param pools [Array<Array<Well>>] The current pools.
+  #
+  # @return [void]
+  def validate_unique_donor_ids!(pools)
+    pools.each_with_index do |pool, index|
+      donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }
+      next unless donor_ids.uniq.size != donor_ids.size
+      raise "Pool #{index + 1} contains duplicate donor IDs: #{donor_ids.tally.select { |_id, count| count > 1 }.keys}"
+    end
+  end
 
   # This method checks the pool for full allowance and adjusts the number of
   # cells per chip well value if needed.
