@@ -20,7 +20,7 @@ ISC:
     LB Post Shear: LB End Prep
     LB End Prep: LB Lib PCR
     LB Lib PCR: LB Lib PCR-XP
-    Library Stock Plate: LB Lib PrePool  #new plate purpose for multiplexed sequencing submissions, to avoid FC
+    Library Stock Plate: LB Lib PrePool #new plate purpose for multiplexed sequencing submissions, to avoid FC
     LB Lib PCR-XP: LB Lib PrePool
     LTN Lib PCR XP: LB Lib PrePool # for Targeted NanoSeq ReISC
     LB Lib PrePool: LB Hyb
