@@ -849,14 +849,14 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       subject.build_pools
       expect(subject.tag_depth_hash[wells[0]]).to eq('1') # 10-well-A1, Pool 1
       expect(subject.tag_depth_hash[wells[2]]).to eq('2') # 10-well-C1, Pool 1
-      expect(subject.tag_depth_hash[wells[4]]).to eq('3') # 10-well-E1, Pool 1
-      expect(subject.tag_depth_hash[wells[6]]).to eq('4') # 13-well-B1, Pool 1
-      expect(subject.tag_depth_hash[wells[8]]).to eq('5') # 13-well-D1, Pool 1
+      expect(subject.tag_depth_hash[wells[3]]).to eq('3') # 10-well-D1, Pool 2
+      expect(subject.tag_depth_hash[wells[4]]).to eq('4') # 10-well-E1, Pool 1
+      expect(subject.tag_depth_hash[wells[5]]).to eq('5') # 13-well-A1, Pool 2
 
       expect(subject.tag_depth_hash[wells[1]]).to eq('1') # 10-well-B1, Pool 2
-      expect(subject.tag_depth_hash[wells[3]]).to eq('2') # 10-well-D1, Pool 2
-      expect(subject.tag_depth_hash[wells[5]]).to eq('3') # 13-well-A1, Pool 2
-      expect(subject.tag_depth_hash[wells[7]]).to eq('4') # 13-well-C1, Pool 2
+      expect(subject.tag_depth_hash[wells[6]]).to eq('2') # 13-well-B1, Pool 1
+      expect(subject.tag_depth_hash[wells[7]]).to eq('3') # 13-well-C1, Pool 2
+      expect(subject.tag_depth_hash[wells[8]]).to eq('4') # 13-well-D1, Pool 1
       expect(subject.tag_depth_hash[wells[9]]).to eq('5') # 13-well-E1, Pool 2
     end
 
