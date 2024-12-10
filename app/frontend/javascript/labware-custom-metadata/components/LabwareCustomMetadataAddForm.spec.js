@@ -7,7 +7,7 @@ describe('LabwareCustomMetadataAddForm', () => {
   let customMetadataFields = '[]'
   let labwareId = '123'
   let userId = '456'
-  let sequencescapeApiUrl = 'http://example.com/v2'
+  let sequencescapeApi = 'http://example.com/v2'
   let sequencescapeUrl = 'http://example.com'
   let customMetadata = {}
   let customMetadatumCollectionsId
@@ -48,7 +48,7 @@ describe('LabwareCustomMetadataAddForm', () => {
         customMetadataFields,
         labwareId,
         userId,
-        sequencescapeApiUrl,
+        sequencescapeApi,
         sequencescapeUrl,
       },
       // b-icon is unknown to the component so we stub it
@@ -91,7 +91,7 @@ describe('LabwareCustomMetadataAddForm', () => {
       let wrapper = wrapperFactory({})
       expect(wrapper.vm.customMetadataFields).toEqual(customMetadataFields)
       expect(wrapper.vm.labwareId).toEqual(labwareId)
-      expect(wrapper.vm.sequencescapeApiUrl).toEqual(sequencescapeApiUrl)
+      expect(wrapper.vm.sequencescapeApi).toEqual(sequencescapeApi)
       expect(wrapper.vm.userId).toEqual(userId)
     })
   })

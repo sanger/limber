@@ -20,6 +20,9 @@
 </template>
 
 <script>
+import { createCommentFactory, removeCommentFactory } from '@/javascript/asset-comments/comment-store-helpers.js'
+import eventBus from '@/javascript/shared/eventBus.js'
+
 const dateOptions = {
   year: 'numeric',
   month: 'long',
@@ -37,15 +40,35 @@ export default {
   filters: {
     formatDate: formatDate,
   },
+  props: {
+    sequencescapeApi: {
+      type: String,
+      required: true,
+    },
+    assetId: {
+      type: String,
+      required: true,
+    },
+    sequencescapeApiKey: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
+  },
+  data: function () {
+    return {
+      comments: null,
+    }
+  },
   computed: {
     noComments() {
       return this.comments && this.comments.length === 0
     },
     inProgress() {
       return !this.comments
-    },
-    comments() {
-      return this.$root.$data.comments
     },
     sortedComments() {
       if (this.comments) {
@@ -57,6 +80,30 @@ export default {
         return []
       }
     },
+  },
+  async mounted() {
+    const commentFactory = createCommentFactory({
+      sequencescapeApi: this.sequencescapeApi,
+      assetId: this.assetId,
+      sequencescapeApiKey: this.sequencescapeApiKey,
+      userId: this.userId,
+    })
+    await commentFactory.refreshComments()
+    this.comments = commentFactory.comments
+  },
+  beforeDestroy() {
+    removeCommentFactory(this.assetId)
+    eventBus.$off('update-comments')
+  },
+
+  created() {
+    // Listen for the event
+    eventBus.$on('update-comments', (data) => {
+      if (data.assetId !== this.assetId) {
+        return
+      }
+      this.comments = data.comments
+    })
   },
 }
 </script>
