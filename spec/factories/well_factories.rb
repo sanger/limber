@@ -164,6 +164,24 @@ FactoryBot.define do
         well._cached_relationship(:transfer_requests_as_target) { evaluator.transfer_requests_as_target || [] }
       end
     end
+
+    factory :v2_well_with_polymetadata do
+      transient { poly_metadata { [] } }
+
+      after(:build) do |well, evaluator|
+        # initialise the poly_metadata array
+        well.poly_metadata = []
+
+        # add each polymetadatum to the well
+        evaluator.poly_metadata.each do |pm|
+          # set the relationship between the polymetadatum and the well
+          pm.relationships.metadatable = well
+
+          # link the polymetadatum to the well
+          well.poly_metadata.push(pm)
+        end
+      end
+    end
   end
 
   # API V1 collection of wells, used mainly for setting up the well association on v1 plates
