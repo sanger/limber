@@ -27,7 +27,9 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
 
   # Child plate assumed to be created
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
+
   subject { described_class.new(api, form_attributes) }
+
   before do
     # Create a purpose config for the plate (number_of_source_wells is 2)
     create(:pooled_wells_by_sample_in_groups_purpose_config, uuid: child_purpose_uuid)
@@ -41,6 +43,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       # Use a different purpose config for this test (number_of_source_wells is 3)
       create(:pooled_wells_by_sample_in_groups_purpose_config, uuid: child_purpose_uuid, number_of_source_wells: 3)
     end
+
     it 'returns the number of source wells from the purpose_config' do
       expect(subject.number_of_source_wells).to eq(3)
     end
@@ -76,12 +79,14 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         parent_plate.wells[8].state = 'passed'
         parent_plate.wells[0], parent_plate.wells[8] = parent_plate.wells[8], parent_plate.wells[0]
       end
+
       it 'returns passed source wells in correct order' do
         wells = subject.parent_wells_for_pooling
         expect(wells[0].location).to eq('A1')
         expect(wells[1].location).to eq('A2')
       end
     end
+
     context 'when filtering source wells by state' do
       before do
         parent_plate.wells[0..3].map { |well| well.state = 'failed' }
@@ -118,6 +123,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         sample_5_uuid
       ]
     end
+
     before do
       parent_plate.wells[0..(sample_uuids.size - 1)].each_with_index do |well, index|
         well.aliquots.first.sample.uuid = sample_uuids[index]
@@ -198,16 +204,17 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       parent_plate.wells.map { |well| well.state = 'failed' }
       source_well.state = 'passed'
     end
+
     it 'returns request hash' do
       submission_id = source_well.aliquots.first.request.submission_id
-      additional_parameters = { 'submission_id' => submission_id }
+      additional_parameters = { submission_id: }
       request = subject.request_hash(source_well, child_plate, additional_parameters)
 
       # Assume A1 to A1 transfer
-      expect(request['source_asset']).to eq(source_well.uuid)
-      expect(request['target_asset']).to eq(child_plate.wells.first.uuid)
-      expect(request['merge_equivalent_aliquots']).to eq(true)
-      expect(request['submission_id']).to eq(submission_id)
+      expect(request[:source_asset]).to eq(source_well.uuid)
+      expect(request[:target_asset]).to eq(child_plate.wells.first.uuid)
+      expect(request[:merge_equivalent_aliquots]).to eq(true)
+      expect(request[:submission_id]).to eq(submission_id)
     end
   end
 
@@ -218,6 +225,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         expect(subject.transfer_request_attributes(child_plate)).to eq([])
       end
     end
+
     context 'when there are passed source wells' do
       before do
         parent_plate.wells.map { |well| well.state = 'failed' }
@@ -227,51 +235,42 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
           parent_plate.wells[index].aliquots.first.sample.uuid = sample_uuid
         end
       end
+
       it 'returns list of transfer request attributes' do
         requests = subject.transfer_request_attributes(child_plate)
         expect(requests.size).to eq(4)
 
         # Source wells: A1, B1, C1, D1
         requests.each_with_index do |request, index|
-          expect(request['source_asset']).to eq(parent_plate.wells[index].uuid)
-          expect(request['merge_equivalent_aliquots']).to eq(true)
+          expect(request[:source_asset]).to eq(parent_plate.wells[index].uuid)
+          expect(request[:merge_equivalent_aliquots]).to eq(true)
         end
 
         # Destination wells: A1, A1, B1, C1
         child_uuids = child_plate.wells.values_at(0, 0, 1, 2).map(&:uuid)
         requests.each_with_index do |request, index|
           target_uuid = child_uuids[index]
-          expect(request['target_asset']).to eq(target_uuid)
+          expect(request[:target_asset]).to eq(target_uuid)
         end
       end
     end
   end
 
   describe '#transfer_material_from_parent!' do
-    let(:stub_transfer_material_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: subject.transfer_request_attributes(child_plate)
-          }
-        },
-        body: '{}'
-      )
-    end
+    let(:transfer_requests_attributes) { subject.transfer_request_attributes(child_plate) }
+
     before do
       parent_plate.wells.map { |well| well.state = 'failed' }
       parent_plate.wells[0..2].map { |well| well.state = 'passed' }
       parent_plate.wells[0].aliquots.first.sample.uuid = 'sample_1_uuid'
       parent_plate.wells[1].aliquots.first.sample.uuid = 'sample_1_uuid'
       parent_plate.wells[2].aliquots.first.sample.uuid = 'sample_2_uuid'
-      stub_transfer_material_request # stub the request before test
     end
 
     it 'posts transfer requests to SS' do
+      expect_transfer_request_collection_creation
+
       subject.transfer_material_from_parent!(child_plate.uuid)
-      expect(stub_transfer_material_request).to have_been_made
     end
   end
 end

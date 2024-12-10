@@ -48,8 +48,7 @@ RSpec.configure do |config|
 
   # In a few places we have models that receive a file from an uploader
   # fixture_file_upload() ensures that the tests mimic the live behaviour.
-  # This include make sit available to us. Including it globally causes
-  # issues eleswhere
+  # This includes make it available to us. Including it globally causes issues elsewhere.
   config.include ActionDispatch::TestProcess, with: :uploader
 
   config.before(:suite) { `bin/vite build` }

@@ -151,10 +151,9 @@ module Robots
 
       # We have scanned a labware, but weren't expecting one (invalid)
       msg =
-        # rubocop:todo Layout/LineLength
-        'Either the labware scanned into this bed should not be here, or the related labware(s) have not been scanned into their beds.'
+        'Either the labware scanned into this bed should not be here, or the related labware(s) have not been ' \
+          'scanned into their beds.'
 
-      # rubocop:enable Layout/LineLength
       error(beds[position], msg)
       false
     end
@@ -169,19 +168,16 @@ module Robots
         # We were unable to recognize any parent of this plate that matches the
         # labware purpose of the beds in the configuration, so this labware has
         # unexpected parents for this pipeline bed verification
-        # rubocop:todo Layout/LineLength
-        "Was expected to contain a labware of purpose #{beds[position].purpose} but the scanned child labware does not have a parent with that purpose."
-        # rubocop:enable Layout/LineLength
+        "Was expected to contain a labware of purpose #{beds[position].purpose} but the scanned child labware does " \
+          'not have a parent with that purpose.'
       elsif beds[position].labware.nil?
         # We expected a labware but none was scanned
-        # rubocop:todo Layout/LineLength
-        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty)."
-        # rubocop:enable Layout/LineLength
+        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was " \
+          'scanned (empty).'
       else
         # We have scanned an unexpected labware
-        # rubocop:todo Layout/LineLength
-        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware."
-        # rubocop:enable Layout/LineLength
+        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a " \
+          'different labware.'
       end
     end
 

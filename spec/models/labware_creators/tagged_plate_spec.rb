@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
-require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
@@ -14,8 +13,16 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:pools) { 0 }
-  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8], submission_pools_count: pools }
-  let(:wells) { json :well_collection, size: 16 }
+  let(:plate) do
+    create(
+      :v2_plate,
+      :has_pooling_metadata,
+      uuid: plate_uuid,
+      barcode_number: 2,
+      pool_sizes: [8, 8],
+      submission_pools_count: pools
+    )
+  end
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
@@ -25,8 +32,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let(:plate_request) { stub_api_get(plate_uuid, body: plate) }
-  let(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
   let(:disable_cross_plate_pool_detection) { false }
 
   before do
@@ -36,24 +41,13 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       uuid: child_purpose_uuid,
       disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
     )
-    plate_request
-    wells_request
+    stub_v2_plate(plate)
   end
 
   subject { LabwareCreators::TaggedPlate.new(api, form_attributes) }
 
   context 'on new' do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
-
-    # These values all describe the returned json.
-    # They are used to prevent magic numbers from appearing in the specs
-    let(:plate_size) { 96 }
-    let(:occupied_wells) { 30 }
-    let(:pool_size) { 15 }
-    let(:largest_tag_group) { 120 }
-
-    let(:maximum_tag_offset) { largest_tag_group - occupied_wells }
-    let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::TaggedPlate
@@ -109,37 +103,19 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     context 'when a submission is split over multiple plates' do
       let(:pools) { 1 }
 
-      before { stub_api_get(plate_uuid, 'submission_pools', body: pool_json) }
-
       context 'and nothing has been used' do
-        let(:pool_json) { json(:dual_submission_pool_collection) }
-
         it 'requires tag2' do
           expect(subject.requires_tag2?).to be true
         end
       end
 
       context 'and dual index plates have been used' do
-        let(:pool_json) do
-          json(
-            :dual_submission_pool_collection,
-            used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]
-          )
-        end
-
         it 'requires tag2' do
           expect(subject.requires_tag2?).to be true
         end
       end
 
       context 'and detection has been disabled' do
-        let(:pool_json) do
-          json(
-            :dual_submission_pool_collection,
-            used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]
-          )
-        end
-
         let(:disable_cross_plate_pool_detection) { true }
 
         it 'requires tag2' do
@@ -149,26 +125,12 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     end
 
     context 'when a submission is not split over multiple plates' do
-      before { stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection)) }
-
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
       end
     end
 
     context 'when a submission is not split over multiple plates but a plate has been recorded' do
-      before do
-        stub_api_get(
-          plate_uuid,
-          'submission_pools',
-          body:
-            json(
-              :submission_pool_collection,
-              used_tag_templates: [{ uuid: 'tag-layout-template-0', name: 'Used template' }]
-            )
-        )
-      end
-
       it 'does not require tag2' do
         expect(subject.requires_tag2?).to be false
       end
@@ -182,11 +144,45 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:tag2_tube_uuid) { 'tag2-tube' }
     let(:tag2_template_uuid) { 'tag2-layout-template' }
 
-    include_context 'a tag plate creator' do
-      let(:enforce_uniqueness) { false }
+    let(:plate_conversions_attributes) do
+      [{ parent_uuid: plate_uuid, purpose_uuid: child_purpose_uuid, target_uuid: tag_plate_uuid, user_uuid: user_uuid }]
     end
 
-    before { stub_api_get(plate_uuid, 'submission_pools', body: json(:submission_pool_collection)) }
+    let(:state_changes_attributes) do
+      [
+        {
+          reason: 'Used in Library creation',
+          target_state: 'exhausted',
+          target_uuid: tag_plate_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
+    let(:tag_layouts_attributes) do
+      [
+        {
+          enforce_uniqueness: false,
+          plate_uuid: tag_plate_uuid,
+          tag_layout_template_uuid: tag_template_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
+    let(:transfers_attributes) do
+      [
+        {
+          arguments: {
+            user_uuid: user_uuid,
+            source_uuid: plate_uuid,
+            destination_uuid: tag_plate_uuid,
+            transfer_template_uuid: transfer_template_uuid,
+            transfers: expected_transfers
+          }
+        }
+      ]
+    end
 
     context 'With a tag plate' do
       let(:form_attributes) do
@@ -202,47 +198,27 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
         }
       end
 
+      it_behaves_like 'it has a custom page', 'tagged_plate'
+
       it 'can be created' do
         expect(subject).to be_a LabwareCreators::TaggedPlate
       end
 
-      it_behaves_like 'it has a custom page', 'tagged_plate'
-
       context 'on save' do
         it 'creates a tag plate' do
-          expect_api_v2_posts(
-            'Transfer',
-            [
-              {
-                user_uuid: user_uuid,
-                source_uuid: plate_uuid,
-                destination_uuid: tag_plate_uuid,
-                transfer_template_uuid: transfer_template_uuid,
-                transfers: expected_transfers
-              }
-            ]
-          )
-
-          expect_api_v2_posts(
-            'StateChange',
-            [
-              {
-                reason: 'Used in Library creation',
-                target_state: 'exhausted',
-                target_uuid: tag_plate_uuid,
-                user_uuid: user_uuid
-              }
-            ]
-          )
+          expect_plate_conversion_creation
+          expect_state_change_creation
+          expect_tag_layout_creation
+          expect_transfer_creation
 
           expect(subject.save).to be true
-          expect(plate_conversion_request).to have_been_made.once
-          expect(tag_layout_creation_request).to have_been_made.once
         end
 
         it 'has the correct child (and uuid)' do
-          stub_api_v2_post('Transfer')
+          expect_plate_conversion_creation # We need the return value and this expectation mocks it for us.
           stub_api_v2_post('StateChange')
+          stub_api_v2_post('TagLayout')
+          stub_api_v2_post('Transfer')
 
           expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)

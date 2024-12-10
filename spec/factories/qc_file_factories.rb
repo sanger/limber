@@ -1,8 +1,21 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  factory :qc_file, class: Sequencescape::Api::V2::QcFile do
+    skip_create
+
+    uuid
+
+    content_type { 'text/csv' }
+    contents { 'example,file,content' }
+    created_at { Time.new('2017-06-29T09:31:59.000+01:00') }
+    filename { 'file.csv' }
+    labware { build(:plate) }
+    size { 123 }
+  end
+
   # API V1 JSON description of QC file
-  factory :qc_file, class: Sequencescape::QcFile, traits: [:api_object] do
+  factory :v1_qc_file, class: Sequencescape::QcFile, traits: [:api_object] do
     json_root { 'qc_file' }
     filename { 'file.txt' }
     created_at { '2017-06-29T09:31:59.000+01:00' }
@@ -10,7 +23,7 @@ FactoryBot.define do
   end
 
   # A list of QC files on a plate
-  factory :qc_files_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
+  factory :v1_qc_files_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
     size { 3 }
 
     transient do

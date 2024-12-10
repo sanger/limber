@@ -195,8 +195,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
            outer_requests: requests
   end
 
-  let(:parent_plate_v1) { json :plate, uuid: parent_uuid, stock_plate_barcode: 2, qc_files_actions: %w[read create] }
-
   # Create child wells in order of the requests they originated from.
   # Which is to do with how the binning algorithm lays them out based on the value of PCR cycles.
   let(:child_well_A2) { create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: requests[0]) }
@@ -266,37 +264,11 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   context '#save' do
     has_a_working_api
 
-    let(:file_content) do
-      content = file.read
-      file.rewind
-      content
-    end
-
     let(:form_attributes) do
       { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
     end
 
-    let(:stub_upload_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-        body: file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="duplex_seq_customer_file.csv"'
-        }
-      ).to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'duplex_seq_dil_file.csv'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
-    end
-
-    let(:stub_parent_request) { stub_api_get(parent_uuid, body: parent_plate_v1) }
-
     before do
-      stub_parent_request
-
       create(
         :duplex_seq_customer_csv_file_upload_purpose_config,
         uuid: child_purpose_uuid,
@@ -311,11 +283,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
           'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
       )
 
+      # Some requests are made with standard includes, and others with the custom includes shown.
       stub_v2_plate(child_plate, stub_search: false)
-
       stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
-
-      stub_upload_file_creation
     end
 
     context 'with an invalid file' do
@@ -331,128 +301,128 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         fixture_file_upload('spec/fixtures/files/duplex_seq/duplex_seq_dil_file.csv', 'sequencescape/qc_file')
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
+      let(:file_contents) do
+        content = file.read
+        file.rewind
+        content
       end
 
-      let(:transfer_requests) do
+      let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
+
+      let(:qc_files_attributes) do
         [
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_a1.uuid,
-            'target_asset' => child_well_A2.uuid,
-            'outer_request' => requests[0].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b1.uuid,
-            'target_asset' => child_well_B2.uuid,
-            'outer_request' => requests[1].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d1.uuid,
-            'target_asset' => child_well_A1.uuid,
-            'outer_request' => requests[2].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e1.uuid,
-            'target_asset' => child_well_A3.uuid,
-            'outer_request' => requests[3].uuid
-          },
-          {
-            'volume' => '4.0',
-            'source_asset' => parent_well_f1.uuid,
-            'target_asset' => child_well_B3.uuid,
-            'outer_request' => requests[4].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_h1.uuid,
-            'target_asset' => child_well_C3.uuid,
-            'outer_request' => requests[5].uuid
-          },
-          {
-            'volume' => '3.2',
-            'source_asset' => parent_well_a2.uuid,
-            'target_asset' => child_well_D3.uuid,
-            'outer_request' => requests[6].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b2.uuid,
-            'target_asset' => child_well_E3.uuid,
-            'outer_request' => requests[7].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_c2.uuid,
-            'target_asset' => child_well_F3.uuid,
-            'outer_request' => requests[8].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d2.uuid,
-            'target_asset' => child_well_G3.uuid,
-            'outer_request' => requests[9].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e2.uuid,
-            'target_asset' => child_well_C2.uuid,
-            'outer_request' => requests[10].uuid
-          },
-          {
-            'volume' => '30.0',
-            'source_asset' => parent_well_f2.uuid,
-            'target_asset' => child_well_B1.uuid,
-            'outer_request' => requests[11].uuid
-          },
-          {
-            'volume' => '5.0',
-            'source_asset' => parent_well_g2.uuid,
-            'target_asset' => child_well_D2.uuid,
-            'outer_request' => requests[12].uuid
-          },
-          {
-            'volume' => '3.621',
-            'source_asset' => parent_well_h2.uuid,
-            'target_asset' => child_well_C1.uuid,
-            'outer_request' => requests[13].uuid
+            contents: file_contents,
+            filename: 'duplex_seq_customer_file.csv',
+            relationships: {
+              labware: {
+                data: {
+                  id: parent_plate.id,
+                  type: 'labware'
+                }
+              }
+            }
           }
         ]
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
+      let(:transfer_requests_attributes) do
+        [
+          {
+            volume: '5.0',
+            source_asset: parent_well_a1.uuid,
+            target_asset: child_well_A2.uuid,
+            outer_request: requests[0].uuid
           },
-          body: '{}'
-        )
+          {
+            volume: '5.0',
+            source_asset: parent_well_b1.uuid,
+            target_asset: child_well_B2.uuid,
+            outer_request: requests[1].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_d1.uuid,
+            target_asset: child_well_A1.uuid,
+            outer_request: requests[2].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_e1.uuid,
+            target_asset: child_well_A3.uuid,
+            outer_request: requests[3].uuid
+          },
+          {
+            volume: '4.0',
+            source_asset: parent_well_f1.uuid,
+            target_asset: child_well_B3.uuid,
+            outer_request: requests[4].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_h1.uuid,
+            target_asset: child_well_C3.uuid,
+            outer_request: requests[5].uuid
+          },
+          {
+            volume: '3.2',
+            source_asset: parent_well_a2.uuid,
+            target_asset: child_well_D3.uuid,
+            outer_request: requests[6].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_b2.uuid,
+            target_asset: child_well_E3.uuid,
+            outer_request: requests[7].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_c2.uuid,
+            target_asset: child_well_F3.uuid,
+            outer_request: requests[8].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_d2.uuid,
+            target_asset: child_well_G3.uuid,
+            outer_request: requests[9].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_e2.uuid,
+            target_asset: child_well_C2.uuid,
+            outer_request: requests[10].uuid
+          },
+          {
+            volume: '30.0',
+            source_asset: parent_well_f2.uuid,
+            target_asset: child_well_B1.uuid,
+            outer_request: requests[11].uuid
+          },
+          {
+            volume: '5.0',
+            source_asset: parent_well_g2.uuid,
+            target_asset: child_well_D2.uuid,
+            outer_request: requests[12].uuid
+          },
+          {
+            volume: '3.621',
+            source_asset: parent_well_h2.uuid,
+            target_asset: child_well_C1.uuid,
+            outer_request: requests[13].uuid
+          }
+        ]
       end
 
       before { stub_api_v2_patch('Well') }
 
       it 'makes the expected transfer requests to bin the wells' do
+        expect_plate_creation
+        expect_qc_file_creation
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
   end

@@ -46,7 +46,7 @@ module LabwareCreators
 
     def initialize(*args, &)
       super
-      parent.populate_wells_with_pool if should_populate_wells_with_pool
+      parent.assign_pools_to_wells
     end
 
     def create_plate!
@@ -56,8 +56,8 @@ module LabwareCreators
 
       flag_tag_plate_as_exhausted
 
-      # Convert plate instead of creating it
-      # Target returns the newly converted tag plate
+      # Convert plate instead of creating it.
+      # Target returns the newly converted tag plate.
       @child = convert_tag_plate_to_new_purpose.target
 
       true
@@ -78,29 +78,27 @@ module LabwareCreators
     private
 
     #
-    # Convert the tag plate to the new purpose
+    # Convert the tag plate to the new purpose.
     #
-    # @return [Sequencescape::Api::PlateConversion] The conversion action
+    # @return [Sequencescape::Api::V2::PlateConversion] The result of the conversion.
     #
     def convert_tag_plate_to_new_purpose
-      api.plate_conversion.create!(
-        target: tag_plate.asset_uuid,
-        purpose: purpose_uuid,
-        user: user_uuid,
-        parent: parent_uuid
+      Sequencescape::Api::V2::PlateConversion.create!(
+        parent_uuid: parent_uuid,
+        purpose_uuid: purpose_uuid,
+        target_uuid: tag_plate.asset_uuid,
+        user_uuid: user_uuid
       )
     end
 
     def create_labware!
       create_plate! do |plate_uuid|
-        # TODO: {Y24-190} Work out a way to call the `create!` method on TagLayoutTemplate model in Sequencescape
-        #       using the V2 API. I think either we need to misuse the PATCH method with some kind of
-        #       attributes telling Sequencescape to run the `create!` method, or we need to create a new
-        #       endpoint associated with a TagLayoutTemplate that will run the `create!` method.
-        api
-          .tag_layout_template
-          .find(tag_plate.template_uuid)
-          .create!(plate: plate_uuid, user: user_uuid, enforce_uniqueness: requires_tag2?)
+        Sequencescape::Api::V2::TagLayout.create!(
+          enforce_uniqueness: requires_tag2?,
+          plate_uuid: plate_uuid,
+          tag_layout_template_uuid: tag_plate.template_uuid,
+          user_uuid: user_uuid
+        )
       end
     end
   end

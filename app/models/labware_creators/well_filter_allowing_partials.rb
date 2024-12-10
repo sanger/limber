@@ -28,7 +28,7 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
       nil
     elsif num_requests == 1
       #  valid, one matching request found
-      { 'outer_request' => filtered_requests_by_state.first.uuid }
+      { outer_request: filtered_requests_by_state.first.uuid }
     else
       # too many matching requests, cannot disentangle
       errors.add(
