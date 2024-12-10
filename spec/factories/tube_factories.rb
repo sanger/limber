@@ -152,17 +152,6 @@ FactoryBot.define do
         transient { custom_metadatum_collection { create :custom_metadatum_collection } }
       end
     end
-
-    # Sets up a tube at the beginning of the pipeline process
-    # with two submissions of two requests each
-    factory :v2_tube_with_submissions_and_requests do
-      transient do
-        purpose_name { 'Limber Bespoke Aggregation' }
-        request_factory { :aggregation_request }
-        include_submissions { true }
-        pool_sizes { [2, 2] }
-      end
-    end
   end
 
   factory :tube_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
