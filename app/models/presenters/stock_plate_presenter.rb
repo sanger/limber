@@ -13,6 +13,7 @@ module Presenters
     include Presenters::Statemachine::Standard
     include Presenters::StockBehaviour
 
+    self.pooling_tab = ''
     self.allow_well_failure_in_states = []
 
     # Stock style class causes well state to inherit from plate state.
