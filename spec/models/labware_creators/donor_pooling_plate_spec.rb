@@ -768,8 +768,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       expect(attributes[0]['submission_id']).to eq('1') # request factory insists on string
 
       expect(attributes[1]['source_asset']).to eq(wells[1].uuid)
-      expect(attributes[1]['target_asset']).to eq(child_plate.wells[1].uuid)
-      expect(attributes[1][:aliquot_attributes]).to eq({ 'tag_depth' => '1' })
+      expect(attributes[1]['target_asset']).to eq(child_plate.wells[0].uuid)
+      expect(attributes[1][:aliquot_attributes]).to eq({ 'tag_depth' => '2' })
       expect(attributes[1]['submission_id']).to eq('1') # request factory insists on string
     end
   end
