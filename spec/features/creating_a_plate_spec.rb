@@ -102,7 +102,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       expect_plate_creation
       expect_transfer_request_collection_creation
 
-      allow(child_plate).to receive(:stock_plates).and_return(stock_plates)
+      allow(child_plate).to receive(:fetch_stock_plate_ancestors).and_return(stock_plates)
       allow(child_plate).to receive(:stock_plate).and_return(stock_plates.last)
       allow(child_plate).to receive(:ancestors).and_return(ancestors_scope)
       allow(ancestors_scope).to receive(:where).with(purpose_name: alternative_purpose_name).and_return(

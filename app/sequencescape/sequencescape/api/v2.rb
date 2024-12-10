@@ -7,7 +7,6 @@ module Sequencescape::Api::V2
   # transfer_request_as_target.source_asset is added to the includes to make
   # the source receptacles available in presenters.
   PLATE_PRESENTER_INCLUDES = [
-    :ancestors,
     :purpose,
     { child_plates: :purpose },
     {
