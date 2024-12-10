@@ -240,7 +240,6 @@ module LabwareCreators::DonorPoolingCalculator
   # @param wells [Array<Well>] The wells to be allocated to pools.
   # @param number_of_pools [Integer] The number of pools to distribute the wells into.
   # @return [Array<Array<Well>>] An array of pools, between 1 and 8, each containing between 5 and 25 wells.
-  #
   def allocate_wells_to_pools(wells, number_of_pools)
     pools = Array.new(number_of_pools) { [] }
     used_donor_ids = Array.new(number_of_pools) { [] }
@@ -248,63 +247,33 @@ module LabwareCreators::DonorPoolingCalculator
     depth = 0
 
     # Calculate the minimum and maximum allowed pool sizes
-    _, max_pool_size = calculate_pool_size_range(wells.size, number_of_pools)
+    calculate_pool_size_range(wells.size, number_of_pools)
+
+    # Calculate ideal pool sizes based on the number of wells and pools
+    ideal_pool_size, remainder = wells.size.divmod(number_of_pools)
+
+    # If there's a remainder, some pools will have one more well than others
+    pool_sizes = Array.new(number_of_pools, ideal_pool_size)
+    remainder.times { |i| pool_sizes[i] += 1 }
 
     # Assign wells to pools
-    wells.each_with_index do |well, index|
-      pool_index = index % number_of_pools
-      loop do
-        # Check if assigning the well to this pool would exceed max_pool_size
-        if pools[pool_index].size < max_pool_size
-          assign_well_to_pool({ well:, pools:, used_donor_ids:, pool_index:, number_of_pools:, depth: })
-          break
-        else
-          # Move to the next pool
-          pool_index = (pool_index + 1) % number_of_pools
-        end
+    well_index = 0
+    pools.each_with_index do |pool, pool_index|
+      # Determine how many wells this pool should get based on pool_sizes
+      pool_size = pool_sizes[pool_index]
+
+      while pool.size < pool_size
+        well = wells[well_index]
+        assign_well_to_pool({ well:, pools:, used_donor_ids:, pool_index:, number_of_pools:, depth: })
+        well_index += 1
       end
     end
 
-    rebalance_pools!(pools, used_donor_ids)
     validate_pool_sizes!(pools)
     validate_unique_donor_ids!(pools)
     pools
   end
 
-  # Rebalance the pools if their sizes differ by more than one.
-  # Tries to move wells from the largest to the smallest pool, respecting constraints.
-  #
-  # @param pools [Array<Array<Well>>] The current pools.
-  # @param used_donor_ids [Array<Array<Integer>>] Donor IDs assigned to each pool.
-  #
-  # @return [void]
-  def rebalance_pools!(pools, used_donor_ids)
-    loop do
-      max_size = pools.map(&:size).max
-      min_size = pools.map(&:size).min
-
-      break if max_size - min_size <= 1
-
-      # Find the largest and smallest pools
-      largest_pool_index = pools.index { |pool| pool.size == max_size }
-      smallest_pool_index = pools.index { |pool| pool.size == min_size }
-
-      # Attempt to move a well from the largest to the smallest pool
-      well_to_move =
-        pools[largest_pool_index].find do |well|
-          donor_id = well.aliquots.first.sample.sample_metadata.donor_id
-          used_donor_ids[smallest_pool_index].exclude?(donor_id)
-        end
-
-      break unless well_to_move
-      # Move the well
-      donor_id = well_to_move.aliquots.first.sample.sample_metadata.donor_id
-      pools[largest_pool_index].delete(well_to_move)
-      pools[smallest_pool_index] << well_to_move
-      used_donor_ids[largest_pool_index].delete(donor_id)
-      used_donor_ids[smallest_pool_index] << donor_id
-    end
-  end
   # rubocop:enable Metrics/AbcSize
 
   # Ensure that each pool contains unique donor IDs.
