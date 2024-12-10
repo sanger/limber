@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
-require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # Uses a custom transfer template to transfer material into the new plate.
@@ -17,10 +16,10 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
-  let(:parent_plate_v2) do
+  let(:parent_plate) do
     create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
   end
-  let(:child_plate_v2) { create :v2_plate_empty, uuid: 'child-uuid', barcode_number: '3', size: plate_size }
+  let(:child_plate) { create :v2_plate_empty, uuid: 'child-uuid', barcode_number: '3', size: plate_size }
   let(:requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -76,8 +75,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
            sample_metadata: control_neg_sample_metadata
   end
 
-  let(:child_well_pos) { child_plate_v2.wells.find { |well| well.position['name'] == control_well_locations[0] } }
-  let(:child_well_neg) { child_plate_v2.wells.find { |well| well.position['name'] == control_well_locations[1] } }
+  let(:child_well_pos) { child_plate.wells.find { |well| well.position['name'] == control_well_locations[0] } }
+  let(:child_well_neg) { child_plate.wells.find { |well| well.position['name'] == control_well_locations[1] } }
 
   let(:control_aliquot_pos) do
     create :v2_aliquot,
@@ -102,8 +101,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       uuid: child_purpose_uuid,
       control_study_name: control_study_name
     )
-    stub_v2_plate(child_plate_v2, stub_search: false, custom_query: [:plate_with_wells, child_plate_v2.uuid])
-    stub_v2_plate(parent_plate_v2, stub_search: false, custom_includes: parent_plate_includes)
+    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
+    stub_v2_plate(parent_plate, stub_search: false, custom_includes: parent_plate_includes)
     stub_v2_study(control_study)
     stub_v2_project(control_project)
   end
@@ -120,32 +119,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   shared_examples 'a stamped plate adding randomised controls creator' do
     describe '#save!' do
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
-      end
+      let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
       before do
         stub_api_v2_patch('Sample')
@@ -154,9 +128,10 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       end
 
       it 'makes the expected requests' do
+        expect_plate_creation
+        expect_transfer_request_collection_creation
+
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
   end
@@ -164,7 +139,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   context '96 well plate' do
     let(:plate_size) { 96 }
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       control_locations = subject.generate_control_well_locations
 
       WellHelpers
@@ -173,9 +148,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
           {
-            'source_asset' => "2-well-#{well_name}",
-            'target_asset' => "3-well-#{well_name}",
-            'outer_request' => "request-#{index}"
+            source_asset: "2-well-#{well_name}",
+            target_asset: "3-well-#{well_name}",
+            outer_request: "request-#{index}"
           }
         end
     end
@@ -191,7 +166,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   context '384 well plate' do
     let(:plate_size) { 384 }
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       control_locations = subject.generate_control_well_locations
 
       WellHelpers
@@ -218,7 +193,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   context 'when generating control locations' do
     let(:plate_size) { 96 }
 
-    before { parent_plate_v2 }
+    before { parent_plate }
 
     context 'when the rule checks pass' do
       before { allow(subject).to receive(:validate_control_rules).and_return(true) }

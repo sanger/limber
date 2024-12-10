@@ -6,10 +6,9 @@ FactoryBot.define do
     skip_create
 
     id
+    uuid
 
     name { 'Test Study' }
-
-    uuid { SecureRandom.uuid }
 
     factory :study_with_poly_metadata do
       transient { poly_metadata { [] } }

@@ -41,20 +41,6 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let!(:pooled_plate_creation_request) do
-    stub_api_post(
-      'pooled_plate_creations',
-      payload: {
-        pooled_plate_creation: {
-          user: user_uuid,
-          child_purpose: child_purpose_uuid,
-          parents: [parent_uuid, parent2_uuid]
-        }
-      },
-      body: json(:plate_creation, child_uuid:)
-    )
-  end
-
   let(:transfer_requests) do
     [
       { source_asset: '2-well-A1', outer_request: 'request-0', target_asset: '4-well-A1' },
@@ -80,21 +66,6 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
     ]
   end
 
-  let!(:transfer_creation_request) do
-    stub_api_post(
-      'transfer_request_collections',
-      payload: {
-        transfer_request_collection: {
-          user: user_uuid,
-          transfer_requests: transfer_requests
-        }
-      },
-      body: '{}'
-    )
-  end
-
-  let(:parent1_plate_old_api) { json(:plate, barcode_number: '2', state: 'passed', uuid: parent_uuid) }
-
   background do
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     create :purpose_config, name: 'Primer Panel example', uuid: parent_purpose_uuid
@@ -107,7 +78,6 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
     stub_v2_plate(parent)
     stub_v2_plate(parent2)
     stub_v2_plate(child_plate)
-    stub_api_get(parent.uuid, body: parent1_plate_old_api)
   end
 
   scenario 'creates multiple plates' do

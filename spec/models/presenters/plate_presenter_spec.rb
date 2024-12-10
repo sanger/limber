@@ -210,7 +210,7 @@ RSpec.describe Presenters::PlatePresenter do
   it_behaves_like 'a labware presenter'
 
   describe '#pools' do
-    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6] }
+    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
     it 'returns a pool per submission' do
       expect(presenter.pools).to be_a Sequencescape::Api::V2::Plate::Pools
       expect(presenter.pools.number_of_pools).to eq(2)
@@ -219,7 +219,7 @@ RSpec.describe Presenters::PlatePresenter do
   end
 
   context 'a plate with conflicting pools' do
-    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6] }
+    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
 
     it 'reports as invalid' do
       expect(presenter).to_not be_valid
