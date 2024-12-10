@@ -4,5 +4,6 @@ Custom Pool:
     request_type_key: limber_lcmb
     state: passed
   relationships:
+    Library Stock Plate: LB Custom Pool #new plate purpose for multiplexed sequencing submissions, to avoid FC
     LB Lib PCR-XP: LB Custom Pool
     LB Custom Pool: LB Custom Pool Norm

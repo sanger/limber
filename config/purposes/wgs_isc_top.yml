@@ -43,6 +43,11 @@ LB Lib PCR-XP:
       id: concentrations_nm
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
+Library Stock Plate: #new plate purpose for multiplexed sequencing submissions, to avoid FC
+  :asset_type: plate
+  :stock_plate: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenter
 LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

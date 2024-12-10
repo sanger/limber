@@ -19,5 +19,6 @@ WGS MX: # Bottom of the pipeline (Pooling and normalization)
     request_type_key:
       - limber_multiplexing
   relationships:
+    Library Stock Plate: LB Lib Pool #new plate purpose for multiplexed sequencing submissions, to avoid FC
     LB Lib PCR-XP: LB Lib Pool
     LB Lib Pool: LB Lib Pool Norm
