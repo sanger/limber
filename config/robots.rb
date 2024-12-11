@@ -3869,7 +3869,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT EM TET2 Ox Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: 'Finish LCMT EM TET2 Ox Verification',
+      start_button_text: 'Finish Bravo LCMT EM TET2 Ox Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Ox',
@@ -3917,7 +3917,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT EM NaOH Denat Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: 'Finish LCMT EM NaOH Denat Verification',
+      start_button_text: 'Finish Bravo LCMT EM NaOH Denat Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM NaOH Denat',
