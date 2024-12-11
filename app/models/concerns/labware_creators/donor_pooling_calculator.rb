@@ -148,7 +148,7 @@ module LabwareCreators::DonorPoolingCalculator
   #
   def assign_well_to_pool(args)
     well, pools, used_donor_ids, pool_index, number_of_pools, depth =
-      args.values_at(:well, :pools, :used_donor_ids, :pool_index, :number_of_pools, :depth)
+      args.values_at(:well, :pools, :used_donor_ids, :pool_index, :number_of_pools, :depth, :conflict_depth)
 
     donor_id = well.aliquots.first.sample.sample_metadata.donor_id
 
@@ -186,7 +186,7 @@ module LabwareCreators::DonorPoolingCalculator
   # @return [void]
   def reassign_to_next_pool(args, pool_index, number_of_pools)
     args[:pool_index] = (pool_index + 1) % number_of_pools
-    assign_well_to_pool(args)
+    assign_well_to_pool(args.merge(conflict_depth: args[:conflict_depth] + 1))
   end
 
   # Adds a donor to a specified pool and associates it with a well.
@@ -252,10 +252,11 @@ module LabwareCreators::DonorPoolingCalculator
     pools.each_with_index do |pool, pool_index|
       # Determine how many wells this pool should get based on pool_sizes
       pool_size = pool_sizes[pool_index]
+      conflict_depth = 0
 
       while pool.size < pool_size
         well = wells[well_index]
-        assign_well_to_pool({ well:, pools:, used_donor_ids:, pool_index:, number_of_pools:, depth: })
+        assign_well_to_pool({ well:, pools:, used_donor_ids:, pool_index:, number_of_pools:, depth:, conflict_depth: })
         well_index += 1
       end
     end
