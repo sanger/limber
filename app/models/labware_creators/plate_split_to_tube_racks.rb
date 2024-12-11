@@ -85,14 +85,9 @@ module LabwareCreators
       super && upload_tube_rack_files && true
     end
 
-    # v2 api is used to select the parent plate
+    # The parent plate via the V2 API.
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
-    end
-
-    # v1 api is used to upload the tube rack scan files and create the tubes
-    def parent_v1
-      @parent_v1 ||= api.plate.find(parent_uuid)
     end
 
     # Returns the list of wells of the parent labware.
@@ -135,7 +130,10 @@ module LabwareCreators
     #
     # @return [void]
     def perform_transfers
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     # We will create multiple child tubes, so redirect to the parent plate
@@ -348,14 +346,23 @@ module LabwareCreators
       @num_contingency_tubes ||= contingency_csv_file&.position_details&.length || 0
     end
 
-    # Uploads the sequencing and contingency tube rack scan CSV files to the parent plate using api v1.
+    # Uploads the sequencing and contingency tube rack scan CSV files for the parent plate.
     #
-    # @return [void]
+    # @return [Void]
     def upload_tube_rack_files
       unless require_sequencing_tubes_only?
-        parent_v1.qc_files.create_from_file!(contingency_file, 'scrna_core_contingency_tube_rack_scan.csv')
+        Sequencescape::Api::V2::QcFile.create_for_labware!(
+          contents: contingency_file.read,
+          filename: 'scrna_core_contingency_tube_rack_scan.csv',
+          labware: parent
+        )
       end
-      parent_v1.qc_files.create_from_file!(sequencing_file, 'scrna_core_sequencing_tube_rack_scan.csv')
+
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: sequencing_file.read,
+        filename: 'scrna_core_sequencing_tube_rack_scan.csv',
+        labware: parent
+      )
     end
 
     # Returns true if only contingency tubes are required for the parent plate, false otherwise.
@@ -666,7 +673,7 @@ module LabwareCreators
     # @param additional_parameters [Hash] Additional parameters to include in the transfer request hash.
     # @return [Hash] A transfer request hash.
     def request_hash(source_well_uuid, target_tube_uuid, additional_parameters)
-      { 'source_asset' => source_well_uuid, 'target_asset' => target_tube_uuid }.merge(additional_parameters)
+      { source_asset: source_well_uuid, target_asset: target_tube_uuid }.merge(additional_parameters)
     end
   end
   # rubocop:enable Metrics/ClassLength

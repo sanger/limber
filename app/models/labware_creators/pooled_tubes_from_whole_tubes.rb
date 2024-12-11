@@ -20,12 +20,18 @@ module LabwareCreators
     def create_labware!
       # Create a single tube
       # TODO: This should link to multiple parents in production
-      tc = api.tube_from_tube_creation.create!(user: user_uuid, parent: parent_uuid, child_purpose: purpose_uuid)
-
-      @child = tc.child
+      @child =
+        Sequencescape::Api::V2::TubeFromTubeCreation.create!(
+          child_purpose_uuid: purpose_uuid,
+          parent_uuid: parent_uuid,
+          user_uuid: user_uuid
+        ).child
 
       # Transfer EVERYTHING into it
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     def barcodes=(input)
@@ -57,6 +63,10 @@ module LabwareCreators
     def number_of_parent_labwares
       # default to 4 if value not found in config
       purpose_config.fetch(:number_of_parent_labwares, 4)
+    end
+
+    def redirection_target
+      TubeProxy.new(@child.uuid)
     end
 
     private
