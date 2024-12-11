@@ -52,13 +52,14 @@ RSpec.describe TubeRacks::TubeRacksExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
-    #   context 'where csv id requested is concentrations_nM.csv' do
-    #     let(:includes) { well_qc_includes }
-    #     let(:csv_id) { 'concentrations_nm' }
-    #     let(:expected_template) { 'concentrations_nm' }
+    context 'where csv id requested is tube_rack_concentrations_nm.csv' do
+      let(:includes) { tube_rack_qc_includes }
+      let(:selects) { nil }
+      let(:csv_id) { 'tube_rack_concentrations_nm' }
+      let(:expected_template) { 'tube_rack_concentrations_nm' }
 
-    #     it_behaves_like 'a csv view'
-    #   end
+      it_behaves_like 'a csv view'
+    end
   end
 
   context 'where default' do

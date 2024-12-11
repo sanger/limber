@@ -2,9 +2,15 @@
 concentrations_ngul:
   csv: concentrations_ngul
   plate_includes: wells.qc_results
+tube_rack_concentrations_ngul:
+  csv: tube_rack_concentrations_ngul
+  tube_rack_includes: racked_tubes.tube.receptacle.qc_results
 concentrations_nm:
   csv: concentrations_nm
   plate_includes: wells.qc_results
+tube_rack_concentrations_nm:
+  csv: tube_rack_concentrations_nm
+  tube_rack_includes: racked_tubes.tube.receptacle.qc_results
 duplex_seq_al_lib_concentrations_for_customer:
   csv: duplex_seq_al_lib_concentrations_for_customer
   plate_includes: wells.qc_results,wells.aliquots.sample.sample_metadata
