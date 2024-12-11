@@ -6,6 +6,9 @@ module Presenters
   # rack presenters based on the tubes within.
   class TubeRackPresenter
     include Presenters::Presenter
+    include Presenters::RobotControlled
+    include Presenters::Statemachine::Standard
+    include Presenters::CreationBehaviour
     include TubeRackWalking
 
     self.summary_partial = 'tube_racks/summaries/default'
@@ -20,10 +23,8 @@ module Presenters
 
     delegate_missing_to :labware
 
-    # Returns an augmented state of the tube rack.
-    # All states take precedence over canceled and failed (in that order or priority)
-    # however if we still have a mixed state after that, we display it as such.
-    delegate :state, to: :labware
+    # Purpose, state and barcode are delegated to the tube rack.
+    delegate :purpose, :state, :human_barcode, to: :labware
 
     def priority
       all_tubes.map(&:priority).max
