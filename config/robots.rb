@@ -3253,11 +3253,11 @@ ROBOT_CONFIG =
     )
 
     # LRC Hamilton Star bed verification
-    # LRC PBMC Bank to TR LRC Bank Seq and TR LRC Bank Spare tube racks
+    # LRC PBMC Bank to LRC TR Bank Seq and LRC TR Bank Spare tube racks
     # Transfers 1:2 (2nd rack optional)
     custom_robot(
       'hamilton-lrc-pbmc-bank-to-lrc-bank-seq-and-lrc-bank-spare-tube-racks',
-      name: 'Hamilton LRC PBMC Bank => TR LRC Bank Seq and LRC Bank Spare Tube Racks',
+      name: 'Hamilton LRC PBMC Bank => LRC TR Bank Seq and LRC Bank Spare Tube Racks',
       beds: {
         bed(12).barcode => {
           purpose: 'LRC PBMC Bank',
@@ -3265,13 +3265,13 @@ ROBOT_CONFIG =
           label: 'Bed 12'
         },
         bed(15).barcode => {
-          purpose: 'TR LRC Bank Seq',
+          purpose: 'LRC TR Bank Seq',
           states: ['pending'],
           label: 'Bed 15',
           target_state: 'passed'
         },
         bed(14).barcode => {
-          purpose: 'TR LRC Bank Spare',
+          purpose: 'LRC TR Bank Spare',
           states: ['pending'],
           label: 'Bed 14',
           target_state: 'passed'

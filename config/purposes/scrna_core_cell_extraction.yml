@@ -87,7 +87,7 @@ LRC PBMC Bank:
       default_threshold: 650000
       decimal_places: 0
 # Tube rack for storing LRC Bank Seq tubes
-TR LRC Bank Seq:
+LRC TR Bank Seq:
   :asset_type: tube_rack
   :target: TubeRack
   :size: 96
@@ -97,10 +97,10 @@ TR LRC Bank Seq:
     args: &fluidx_tube_creation_config
       child_seq_tube_purpose_name: LRC Bank Seq
       child_seq_tube_name_prefix: SEQ
-      child_seq_tube_rack_purpose_name: TR LRC Bank Seq
+      child_seq_tube_rack_purpose_name: LRC TR Bank Seq
       child_spare_tube_purpose_name: LRC Bank Spare
       child_spare_tube_name_prefix: SPR
-      child_spare_tube_rack_purpose_name: TR LRC Bank Spare
+      child_spare_tube_rack_purpose_name: LRC TR Bank Spare
       ancestor_stock_tube_purpose_name: LRC Blood Vac
   :presenter_class: Presenters::TubeRackPresenter
   :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
@@ -111,7 +111,7 @@ TR LRC Bank Seq:
     - name: Download Racked Tube Concentrations (nM) CSV
       id: tube_rack_concentrations_nm
 # Tube rack for storing LRC Bank Spare tubes
-TR LRC Bank Spare:
+LRC TR Bank Spare:
   :asset_type: tube_rack
   :target: TubeRack
   :size: 96
