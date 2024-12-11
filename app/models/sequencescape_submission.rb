@@ -125,15 +125,18 @@ class SequencescapeSubmission
   # rubocop:disable Metrics/AbcSize
   def generate_submissions
     orders = generate_orders
-    submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
-    @submission_uuid = submission.uuid
-    submission.submit!
+    @submission_uuid =
+      Sequencescape::Api::V2::Submission.create!(
+        and_submit: true,
+        order_uuids: orders.map(&:uuid),
+        user_uuid: user
+      ).uuid
     true
-  rescue Sequencescape::Api::ConnectionFactory::Actions::ServerError => e
-    errors.add(:sequencescape_connection, /.+\[([^\]]+)\]/.match(e.message)[1])
+  rescue JsonApiClient::Errors::ConnectionError => e
+    errors.add(:sequencescape_connection, e.message)
     false
-  rescue Sequencescape::Api::ResourceInvalid => e
-    errors.add(:submission, e.resource.errors.full_messages.join('; '))
+  rescue JsonApiClient::Errors::RecordNotSaved => e
+    errors.add(:submission, e.record.errors.full_messages.join('; '))
     false
   end
 
