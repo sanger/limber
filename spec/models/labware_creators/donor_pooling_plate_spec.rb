@@ -577,7 +577,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    context 'when the test run has wells with multiple duplicate IDs' do
+    context 'when the test run has wells with multiple duplicate donor IDs' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
       let(:donor_ids) { (1..40).to_a * 2 } # Repeats 1-40 twice, creating 80 donor IDs
@@ -595,6 +595,40 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
         end
         wells[10].aliquots.first.sample.sample_metadata.donor_id = 1
+      end
+
+      it 'returns correct number of pools' do
+        pools = subject.build_pools
+        expect(pools.size).to eq(expected_number_of_pools)
+        expect(pools.flatten).to match_array(wells)
+      end
+
+      it 'returns pools with correct number of donors' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
+          expect(number_of_unique_donor_ids).to eq(pool.size)
+        end
+      end
+    end
+
+    context 'when the test run has wells with multiple duplicate IDs (shuffled)' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:donor_ids) { (1..20).to_a.shuffle * 4 } # Repeats 1-40 twice, creating 80 donor IDs
+      let(:wells) { parent_1_plate.wells[0..79] }
+      let(:expected_number_of_pools) { 4 }
+      let(:number_of_pools) { 4 }
+
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.sample.sample_metadata.donor_id = donor_ids[index]
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
+        end
       end
 
       it 'returns correct number of pools' do
