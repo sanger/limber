@@ -90,7 +90,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   let(:child_plate) { create :v2_plate, purpose_name: child_plate_purpose_name, barcode_number: '5', size: 96 }
 
   let(:user_uuid) { 'user-uuid' }
-  let(:user) { json :v1_user, uuid: user_uuid }
 
   let!(:purpose_config) do
     create :multi_stamp_tubes_using_tube_rack_scan_purpose_config,
@@ -105,33 +104,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     )
   end
 
-  let(:file_content) do
-    content = file.read
-    file.rewind
-    content
-  end
-
-  let(:stub_upload_file_creation) do
-    stub_request(:post, api_url_for(child_plate.uuid, 'qc_files')).with(
-      body: file_content,
-      headers: {
-        'Content-Type' => 'sequencescape/qc_file',
-        'Content-Disposition' => 'form-data; filename="tube_rack_scan.csv"'
-      }
-    ).to_return(
-      status: 201,
-      body: json(:qc_file, filename: 'tube_rack_scan.csv'),
-      headers: {
-        'content-type' => 'application/json'
-      }
-    )
-  end
-
-  let(:child_plate_v1) do
-    # qc_files are created through the API V1. The actions attribute for qcfiles is required by the API V1.
-    json :plate, uuid: child_plate.uuid, purpose_uuid: child_plate_purpose_uuid, qc_files_actions: %w[read create]
-  end
-
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(
       barcode: 'AB10000001',
@@ -142,11 +114,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       includes: tube_includes
     ).and_return(parent_tube_2)
 
-    stub_api_get(child_plate.uuid, body: child_plate_v1)
-
-    stub_upload_file_creation
-
-    stub_api_get(parent_tube_1_uuid, body: json(:tube))
+    stub_v2_tube(parent_tube_1)
   end
 
   context '#new' do
@@ -172,60 +140,59 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
-    let(:transfer_requests) do
+    let(:file_contents) do
+      content = file.read
+      file.rewind
+      content
+    end
+
+    let(:qc_files_attributes) do
+      [
+        {
+          contents: file_contents,
+          filename: 'tube_rack_scan.csv',
+          relationships: {
+            labware: {
+              data: {
+                id: child_plate.id,
+                type: 'labware'
+              }
+            }
+          }
+        }
+      ]
+    end
+
+    let(:pooled_plates_attributes) do
+      [
+        {
+          child_purpose_uuid: child_plate_purpose_uuid,
+          parent_uuids: [parent_tube_1_uuid, parent_tube_2_uuid],
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
+    let(:transfer_requests_attributes) do
       [
         { source_asset: 'tube-1-uuid', target_asset: '5-well-A1', outer_request: 'request-1' },
         { source_asset: 'tube-2-uuid', target_asset: '5-well-B1', outer_request: 'request-2' }
       ]
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
-      )
-    end
-
-    let(:pooled_plate_creation) do
-      response = double
-      allow(response).to receive(:child).and_return(child_plate)
-
-      response
-    end
-
-    def expect_pooled_plate_creation
-      expect_api_v2_posts(
-        'PooledPlateCreation',
-        [
-          {
-            child_purpose_uuid: child_plate_purpose_uuid,
-            parent_uuids: [parent_tube_1_uuid, parent_tube_2_uuid],
-            user_uuid: user_uuid
-          }
-        ],
-        [pooled_plate_creation]
-      )
-    end
-
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     it 'creates a plate!' do
       # barcode from multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv
-      subject.labware.barcode.machine = 'AB10000001'
-      subject.labware.barcode.ean13 = nil
+      subject.labware.labware_barcode = { 'human_barcode' => 'AB10000001', 'machine_barcode' => 'AB10000001' }
 
       expect_pooled_plate_creation
+      expect_qc_file_creation
+      expect_transfer_request_collection_creation
 
       subject.save
 
       expect(subject.errors.full_messages).to be_empty
-      expect(transfer_creation_request).to have_been_made.once
     end
   end
 
