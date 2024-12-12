@@ -166,6 +166,7 @@ module LabwareCreators::DonorPoolingCalculator
   def handle_conflict_donor_ids(donor_id, args, depth, number_of_pools, pool_index)
     increment_depth!(args)
     check_all_pools_visited!(depth, number_of_pools, donor_id)
+    check_all_pools_visited!(args[:conflict_depth], number_of_pools, donor_id)
     reassign_to_next_pool(args, pool_index, number_of_pools)
   end
 
