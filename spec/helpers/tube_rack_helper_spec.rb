@@ -10,7 +10,9 @@ RSpec.describe TubeRackHelper do
     let(:location) { 'A1' }
 
     it 'returns the location and tube name and barcode' do
-      expect(racked_tube_tooltip(tube, location)).to eq("A1: tube-name&#010;#{tube.labware_barcode.human}")
+      expect(racked_tube_tooltip(tube, location)).to eq(
+        "A1: example-purpose #{tube.name} #{tube.labware_barcode.human}"
+      )
     end
 
     it 'returns the location if tube is nil' do

@@ -5,7 +5,6 @@ module TubeRackHelper
   def racked_tube_tooltip(tube, location)
     return location if tube.nil?
 
-    new_line = '&#010;'
-    "#{location}: #{tube.name}#{new_line}#{tube.labware_barcode.human}"
+    "#{location}: #{tube.purpose_name} #{tube.name} #{tube.labware_barcode.human}"
   end
 end
