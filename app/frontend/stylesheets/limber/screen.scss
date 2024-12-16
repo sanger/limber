@@ -531,6 +531,12 @@ form + .btn-block {
   }
 }
 
+.pool-tab-description {
+  @extend .list-group-item;
+  @extend .list-group-item-light;
+  @extend .small;
+}
+
 #ongoing_plate_purposes,
 #ongoing_tube_purposes {
   height: 33vh;

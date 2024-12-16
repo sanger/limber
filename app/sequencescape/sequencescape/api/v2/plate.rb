@@ -105,14 +105,16 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     number_of_rows * number_of_columns
   end
 
-  def stock_plates(purpose_names: SearchHelper.stock_plate_names)
-    @stock_plates ||= stock_plate? ? [self] : ancestors.where(purpose_name: purpose_names)
+  def fetch_stock_plate_ancestors(purpose_names: SearchHelper.stock_plate_names)
+    ancestors.where(purpose_name: purpose_names)
   end
 
   def stock_plate
     return self if stock_plate?
 
-    stock_plates.order(id: :asc).last
+    # Note that it's only when we call last that we get an actual object to cache.
+    # If we cache the query to the API, then it will still be made every time we call stock_plate.
+    @stock_plate ||= fetch_stock_plate_ancestors.order(id: :asc).last
   end
 
   def stock_plate?(purpose_names: SearchHelper.stock_plate_names)
