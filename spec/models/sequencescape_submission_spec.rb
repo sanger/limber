@@ -242,8 +242,6 @@ RSpec.describe SequencescapeSubmission do
 
       let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
 
-      before { stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid)) }
-
       it 'generates a submission' do
         expect_order_creation
 

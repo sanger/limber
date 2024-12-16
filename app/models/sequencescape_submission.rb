@@ -144,10 +144,6 @@ class SequencescapeSubmission
   end
   # rubocop:enable Metrics/AbcSize
 
-  def submission_template
-    api.order_template.find(template_uuid)
-  end
-
   # I think rubocop's suggestions make it less readable
   # rubocop:disable Style/GuardClause
   def check_extra_barcodes

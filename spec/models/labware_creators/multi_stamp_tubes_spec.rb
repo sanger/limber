@@ -235,8 +235,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           create(:v2_submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
         end
 
-        before { stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid)) }
-
         it 'creates a plate!' do
           expect_order_creation
           expect_pooled_plate_creation

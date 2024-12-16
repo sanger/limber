@@ -64,8 +64,6 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
 
     let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
 
-    before { stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid)) }
-
     it 'creates a submission' do
       expect_order_creation
 
