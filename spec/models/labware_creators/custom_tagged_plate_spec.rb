@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
-require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
@@ -13,22 +12,19 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:pools) { 0 }
-  let(:plate) { json :plate, uuid: plate_uuid, barcode_number: '2', pool_sizes: [8, 8], submission_pools_count: pools }
-  let(:wells) { json :well_collection, size: 16 }
+  let(:plate) { create(:v2_plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
   let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
 
-  let!(:plate_request) { stub_api_get(plate_uuid, body: plate) }
-  let!(:wells_request) { stub_api_get(plate_uuid, 'wells', body: wells) }
-
-  before { create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name }
+  before do
+    create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
+    stub_v2_plate(plate)
+  end
 
   subject { LabwareCreators::CustomTaggedPlate.new(api, form_attributes) }
 
@@ -97,37 +93,35 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     let(:tag_template_uuid) { 'tag-layout-template' }
     let(:parents) { [plate_uuid, tag_plate_uuid] }
 
-    let(:expected_transfers) { WellHelpers.stamp_hash(96) }
-
     let(:child_plate) { create :v2_plate }
 
-    let(:pooled_plate_creation) do
-      response = double
-      allow(response).to receive(:child).and_return(child_plate)
-
-      response
+    let(:pooled_plates_attributes) do
+      [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }]
     end
 
-    def expect_pooled_plate_creation
-      expect_api_v2_posts(
-        'PooledPlateCreation',
-        [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }],
-        [pooled_plate_creation]
-      )
+    let(:state_changes_attributes) do
+      [
+        {
+          reason: 'Used in Library creation',
+          target_uuid: tag_plate_uuid,
+          target_state: 'exhausted',
+          user_uuid: user_uuid
+        }
+      ]
     end
 
-    def expect_state_change_creation
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            reason: 'Used in Library creation',
-            target_uuid: tag_plate_uuid,
-            target_state: 'exhausted',
-            user_uuid: user_uuid
+    let(:transfers_attributes) do
+      [
+        {
+          arguments: {
+            user_uuid: user_uuid,
+            source_uuid: plate_uuid,
+            destination_uuid: child_plate.uuid,
+            transfer_template_uuid: transfer_template_uuid,
+            transfers: WellHelpers.stamp_hash(96)
           }
-        ]
-      )
+        }
+      ]
     end
 
     def expect_tag_layout_creation
@@ -143,21 +137,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
             walking_by: 'manual by plate',
             initial_tag: '1',
             tags_per_well: 1
-          }
-        ]
-      )
-    end
-
-    def expect_transfer_creation
-      expect_api_v2_posts(
-        'Transfer',
-        [
-          {
-            user_uuid: user_uuid,
-            source_uuid: plate_uuid,
-            destination_uuid: child_plate.uuid,
-            transfer_template_uuid: transfer_template_uuid,
-            transfers: expected_transfers
           }
         ]
       )
@@ -210,7 +189,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+            stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
             stub_api_v2_post('Transfer')
             stub_api_v2_post('StateChange')
@@ -248,7 +227,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+            stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
             stub_api_v2_post('Transfer')
 
@@ -274,7 +253,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+            stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
             stub_api_v2_post('Transfer')
 

@@ -57,10 +57,6 @@ module LabwareCreators
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
     end
 
-    def parent_v1
-      @parent_v1 ||= api.plate.find(parent_uuid)
-    end
-
     # Configurations from the plate purpose.
     def csv_file_upload_config
       @csv_file_upload_config ||= purpose_config.fetch(:csv_file_upload)
@@ -99,11 +95,13 @@ module LabwareCreators
       well_filter.filtered.each_with_object([]) { |well_filter_details, wells| wells << well_filter_details[0] }
     end
 
-    #
-    # Upload the csv file onto the plate via api v1
-    #
+    # Upload the csv file for the plate.
     def upload_file
-      parent_v1.qc_files.create_from_file!(file, customer_filename)
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: file.read,
+        filename: customer_filename,
+        labware: parent
+      )
     end
 
     # filename for the customer file upload
@@ -119,13 +117,13 @@ module LabwareCreators
     # Override this method in sub-class if required.
     def request_hash(source_well, child_plate, additional_parameters)
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' =>
+        source_asset: source_well.uuid,
+        target_asset:
           child_plate
             .wells
             .detect { |child_well| child_well.location == transfer_hash[source_well.location]['dest_locn'] }
             &.uuid,
-        'volume' => transfer_hash[source_well.location]['volume'].to_s
+        volume: transfer_hash[source_well.location]['volume'].to_s
       }.merge(additional_parameters)
     end
 

@@ -51,7 +51,7 @@ RSpec.describe Presenters::MinimalPlatePresenter do
   it_behaves_like 'a labware presenter'
 
   context 'a plate with conflicting pools' do
-    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_prc_cycles: [10, 6] }
+    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
 
     it 'reports as invalid' do
       expect(subject).to_not be_valid

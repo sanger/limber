@@ -113,7 +113,11 @@ module LabwareCreators
     end
 
     def create_plate_from_parent!
-      api.plate_creation.create!(parent: parent_uuid, child_purpose: purpose_uuid, user: user_uuid)
+      Sequencescape::Api::V2::PlateCreation.create!(
+        child_purpose_uuid: purpose_uuid,
+        parent_uuid: parent_uuid,
+        user_uuid: user_uuid
+      )
     end
 
     def transfer!(attributes)

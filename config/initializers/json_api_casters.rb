@@ -7,8 +7,8 @@ class LabwareBarcodeCaster
   def self.cast(value, _default)
     LabwareBarcode.new(
       human: value['human_barcode'],
-      machine: (value['machine_barcode'] || value['ean13_barcode']).to_s,
-      ean13: value['ean13_barcode'].to_s
+      machine: (value['machine_barcode'] || value['ean13_barcode'])&.to_s,
+      ean13: value['ean13_barcode']&.to_s
     )
   end
 end
