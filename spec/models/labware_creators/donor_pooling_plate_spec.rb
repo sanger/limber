@@ -673,6 +673,84 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
+    context 'when the groups of donor ids are not ordered largest to smallest' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:wells) { parent_1_plate.wells[0..14] }
+      let(:number_of_pools) { 3 }
+
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
+        end
+
+        # 4 triplicates, 1 duplicate, 1 single
+        wells[0].aliquots.first.sample.sample_metadata.donor_id = 6
+        wells[1..2].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 5
+        end
+        wells[3..5].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 4
+        end
+        wells[6..8].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 3
+        end
+        wells[9..11].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 2
+        end
+        wells[12..14].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 1
+        end
+      end
+
+      it 'works' do
+        expect { subject.build_pools }.not_to raise_error
+      end
+    end
+
+    context 'when the groups of donor ids are ordered largest to smallest' do
+      let(:study) { create(:v2_study) }
+      let(:project) { create(:v2_project) }
+      let(:wells) { parent_1_plate.wells[0..14] }
+      let(:number_of_pools) { 3 }
+
+      before do
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study
+          well.aliquots.first.project = project
+          well.aliquots.first.request = requests[index]
+          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
+        end
+
+        # 4 triplicates, 1 duplicate, 1 single
+        wells[0..2].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 1
+        end
+        wells[3..5].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 2
+        end
+        wells[6..8].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 3
+        end
+        wells[9..11].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 4
+        end
+        wells[12..13].each_with_index do |well, index|
+          well.aliquots.first.sample.sample_metadata.donor_id = 5
+        end
+        wells[14].aliquots.first.sample.sample_metadata.donor_id = 6
+      end
+
+      it 'works' do
+        expect { subject.build_pools }.not_to raise_error
+      end
+    end
+
     context 'when the test run can split wells by donor IDs but the pools need to be redistributed' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
