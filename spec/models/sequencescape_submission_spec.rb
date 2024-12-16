@@ -202,9 +202,9 @@ RSpec.describe SequencescapeSubmission do
             attributes: {
               submission_template_uuid: template_uuid,
               submission_template_attributes: {
-                asset_uuids:,
-                request_options:,
-                user_uuid:,
+                asset_uuids: asset_uuids,
+                request_options: request_options,
+                user_uuid: user_uuid,
                 study: study1_uuid,
                 project: project1_uuid
               }
@@ -216,8 +216,8 @@ RSpec.describe SequencescapeSubmission do
               submission_template_uuid: template_uuid,
               submission_template_attributes: {
                 asset_uuids: asset_uuids2,
-                request_options:,
-                user_uuid:,
+                request_options: request_options,
+                user_uuid: user_uuid,
                 study: study2_uuid,
                 project: project2_uuid
               }
