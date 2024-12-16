@@ -93,9 +93,8 @@ module LabwareCreators
 
         errors.add(
           :base,
-          # rubocop:todo Layout/LineLength
-          "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
-          # rubocop:enable Layout/LineLength
+          "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been " \
+            'prevented from getting this far.'
         )
         valid = false
       end
@@ -103,9 +102,8 @@ module LabwareCreators
 
       errors.add(
         :base,
-        # rubocop:todo Layout/LineLength
-        "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
-        # rubocop:enable Layout/LineLength
+        "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have " \
+          'been prevented from getting this far.'
       )
       false
     end

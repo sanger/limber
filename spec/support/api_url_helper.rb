@@ -101,6 +101,14 @@ module ApiUrlHelper
       expect_api_v2_posts('BulkTransfer', bulk_transfer_attributes)
     end
 
+    def expect_order_creation
+      expect_api_v2_posts(
+        'Order',
+        orders_attributes.pluck(:attributes),
+        orders_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+      )
+    end
+
     def expect_plate_conversion_creation
       expect_api_v2_posts(
         'PlateConversion',

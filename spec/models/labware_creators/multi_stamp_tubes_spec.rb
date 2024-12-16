@@ -200,22 +200,22 @@ RSpec.describe LabwareCreators::MultiStampTubes do
                  aliquots: [aliquot2]
         end
 
-        let!(:order_request) do
-          stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
-          stub_api_post(
-            example_template_uuid,
-            'orders',
-            payload: {
-              order: {
-                assets: parent_receptacle_uuids,
-                request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
-                user: user_uuid,
-                autodetect_studies: false,
-                autodetect_projects: false
-              }
-            },
-            body: '{"order":{"uuid":"order-uuid"}}'
-          )
+        let(:orders_attributes) do
+          [
+            {
+              attributes: {
+                submission_template_uuid: example_template_uuid,
+                submission_template_attributes: {
+                  asset_uuids: parent_receptacle_uuids,
+                  request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
+                  user_uuid: user_uuid,
+                  autodetect_studies: false,
+                  autodetect_projects: false
+                }
+              },
+              uuid_out: 'order-uuid'
+            }
+          ]
         end
 
         let!(:submission_request) do
@@ -236,12 +236,12 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         end
 
         it 'creates a plate!' do
+          expect_order_creation
           expect_pooled_plate_creation
           expect_transfer_request_collection_creation
 
           subject.save!
 
-          expect(order_request).to have_been_made.once
           expect(submission_request).to have_been_made.once
           expect(submission_submit).to have_been_made.once
         end

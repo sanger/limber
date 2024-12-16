@@ -61,7 +61,7 @@ class SequencescapeSubmission
   # @param asset_uuids [Array<String>] Array of asset uuids to submit
   #
   def assets=(asset_uuids)
-    @asset_groups = [{ assets: asset_uuids }]
+    @asset_groups = [{ asset_uuids: }]
   end
 
   #
@@ -70,7 +70,7 @@ class SequencescapeSubmission
   # @return [Array<String>] Array of asset uuids to submit
   #
   def assets
-    @asset_groups.pluck(:assets).flatten
+    @asset_groups.pluck(:asset_uuids).flatten
   end
 
   def extra_barcodes_trimmed
@@ -104,28 +104,34 @@ class SequencescapeSubmission
   #   uuids, indicating an asset group. Keys are ignored.
   #
   def asset_groups=(asset_groups)
-    @asset_groups = asset_groups.respond_to?(:values) ? asset_groups.values : asset_groups
+    groups = asset_groups.respond_to?(:values) ? asset_groups.values : asset_groups
+    @asset_groups =
+      groups.map do |group|
+        group[:asset_uuids] = group[:assets] if group[:assets]
+        group.except(:assets)
+      end
   end
 
   def asset_groups_for_orders_creation
     return asset_groups unless (asset_groups.length == 1) && extra_barcodes
 
-    [{ assets: [assets, extra_assets].flatten.compact, autodetect_studies: true, autodetect_projects: true }]
+    [{ asset_uuids: [assets, extra_assets].flatten.compact, autodetect_studies: true, autodetect_projects: true }]
   end
 
   private
 
   def generate_orders
     asset_groups_for_orders_creation.map do |asset_group|
-      order_parameters = { request_options:, user: }.merge(asset_group)
-      submission_template.orders.create!(order_parameters)
+      Sequencescape::Api::V2::Order.create!(
+        submission_template_attributes: { request_options: request_options, user_uuid: user }.merge(asset_group),
+        submission_template_uuid: template_uuid
+      )
     end
   end
 
   # rubocop:disable Metrics/AbcSize
   def generate_submissions
-    orders = generate_orders
-    submission = api.submission.create!(orders: orders.map(&:uuid), user: user)
+    submission = api.submission.create!(orders: generate_orders.map(&:uuid), user: user)
     @submission_uuid = submission.uuid
     submission.submit!
     true
@@ -136,12 +142,7 @@ class SequencescapeSubmission
     errors.add(:submission, e.resource.errors.full_messages.join('; '))
     false
   end
-
   # rubocop:enable Metrics/AbcSize
-
-  def submission_template
-    api.order_template.find(template_uuid)
-  end
 
   # I think rubocop's suggestions make it less readable
   # rubocop:disable Style/GuardClause
@@ -155,9 +156,8 @@ class SequencescapeSubmission
     if extra_barcodes_trimmed.include? labware_barcode
       errors.add(
         :submission,
-        # rubocop:todo Layout/LineLength
-        'Any scanned additional barcodes should not include the barcode of the current plate - that will automatically be included'
-        # rubocop:enable Layout/LineLength
+        'Any scanned additional barcodes should not include the barcode of the current plate - ' \
+          'that will automatically be included'
       )
     end
   end
