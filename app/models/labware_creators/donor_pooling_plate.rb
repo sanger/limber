@@ -147,13 +147,13 @@ module LabwareCreators
       @minimal_barcodes = barcodes.compact_blank.map(&:strip)
     end
 
-    # Returns the number of pools, pulled from request metadata.
+    # Returns the number of pools that this group of wells should be split between, pulled from request metadata.
     #
-    # @param [Array] group The group of aliquots.
-    # @return [Integer] The number of pools.
+    # @param [Array<Well>] group A group of wells from the source plate.
+    # @return [Integer] The number of pools that they should be split into.
     # @raise [StandardError] If any required attribute is nil.
     def number_of_pools(group)
-      group[0].aliquots.first.request.request_metadata.number_of_pools || (raise 'Number of pools is missing or nil')
+      group[0]&.aliquots&.first&.request&.request_metadata&.number_of_pools || (raise 'Number of pools is missing or nil')
     end
 
     # Creates transfer requests from source wells to the destination plate in
@@ -234,6 +234,8 @@ module LabwareCreators
     def build_pools
       study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling)
 
+      # allocate_wells_to_pools returns an array of pools
+      # We get one of these for every study/project group, and then 'flatten' to get a single array of pools
       built_pools = study_project_groups.flat_map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
 
       unless VALID_POOL_COUNT_RANGE.cover?(built_pools.size)

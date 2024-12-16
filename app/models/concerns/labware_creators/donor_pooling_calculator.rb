@@ -7,10 +7,15 @@ module LabwareCreators::DonorPoolingCalculator
 
   VALID_POOL_SIZE_RANGE = (5..25)
 
-  # Splits wells into groups by study and project. Wells are grouped based on the
-  # study and project of the first aliquot in each well (only one aliquot is
-  # expected per well). Returns an array of groups, where each group is an array
-  # of wells with the same study and project.
+  # Splits wells into groups by study and project, because:
+  # a) no pool should contain samples from more than one study or project,
+  #    to limit the risk of data leakage between studies, and
+  # b) the requested number of pools is specified at the study/project level,
+  #    because different study/project groups could be from different customers.
+  #
+  # Wells are grouped based on the study and project of the first aliquot in each well
+  # (only one aliquot is expected per well). Returns an array of groups, where each group
+  # is an array of wells with the same study and project.
   #
   # If the input group is [w1, w2, w3, w4, w5, w6, w7, w8, w9]
   # where w1, w2, w3, w4, w5, w6, w7, w8, and w9 are wells with (study_id, project_id),
