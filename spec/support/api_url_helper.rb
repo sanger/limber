@@ -149,6 +149,14 @@ module ApiUrlHelper
       expect_api_v2_posts('StateChange', state_changes_attributes)
     end
 
+    def expect_submission_creation
+      expect_api_v2_posts(
+        'Submission',
+        submissions_attributes.pluck(:attributes),
+        submissions_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+      )
+    end
+
     def expect_tag_layout_creation
       expect_api_v2_posts('TagLayout', tag_layouts_attributes)
     end

@@ -76,22 +76,13 @@ RSpec.feature 'Charge and pass libraries', js: true do
 
     before { stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid]) }
 
-    let!(:submission_request) do
-      stub_api_post(
-        'submissions',
-        payload: {
-          submission: {
-            orders: ['order-uuid'],
-            user: user_uuid
-          }
-        },
-        body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
-      )
+    let(:submissions_attributes) do
+      [{ attributes: { and_submit: true, order_uuids: ['order-uuid'], user_uuid: user_uuid }, uuid_out: 'sub-uuid' }]
     end
 
-    let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
-
     scenario 'charge and pass libraries with submissions' do
+      expect_submission_creation
+
       fill_in_swipecard_and_barcode user_swipecard, tube_barcode
       expect(find('#tube-show-page')).to have_content('Passed')
       click_button('Charge and pass libraries')

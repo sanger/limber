@@ -134,26 +134,15 @@ RSpec.describe SequencescapeSubmission do
         )
       end
 
-      let!(:submission_request) do
-        stub_api_post(
-          'submissions',
-          payload: {
-            submission: {
-              orders: ['order-uuid'],
-              user: user_uuid
-            }
-          },
-          body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
-        )
+      let(:submissions_attributes) do
+        [{ attributes: { and_submit: true, order_uuids: ['order-uuid'], user_uuid: user_uuid }, uuid_out: 'sub-uuid' }]
       end
 
-      let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
-
       it 'generates a submission' do
+        expect_submission_creation
+
         expect(subject.save).to be_truthy
         expect(order_request).to have_been_made.once
-        expect(submission_request).to have_been_made.once
-        expect(submission_submit).to have_been_made.once
       end
     end
 
@@ -220,26 +209,24 @@ RSpec.describe SequencescapeSubmission do
         )
       end
 
-      let!(:submission_request) do
-        stub_api_post(
-          'submissions',
-          payload: {
-            submission: {
-              orders: %w[order-uuid order-2-uuid],
-              user: user_uuid
-            }
-          },
-          body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
-        )
+      let(:submissions_attributes) do
+        [
+          {
+            attributes: {
+              and_submit: true,
+              order_uuids: %w[order-uuid order-2-uuid],
+              user_uuid: user_uuid
+            },
+            uuid_out: 'sub-uuid'
+          }
+        ]
       end
 
-      let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
-
       it 'generates a submission' do
+        expect_submission_creation
+
         expect(subject.save).to be_truthy
         expect(order_request).to have_been_made.once
-        expect(submission_request).to have_been_made.once
-        expect(submission_submit).to have_been_made.once
       end
     end
   end
