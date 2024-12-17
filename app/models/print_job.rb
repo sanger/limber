@@ -106,10 +106,6 @@ class PrintJob # rubocop:todo Style/Documentation
     response = SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
 
     handle_sprint_response(response)
-
-    # TODO: DPL-865 [Limber] Handle sprint client response
-    #
-
   end
 
   # Handles the response from the SPrintClient and checks for success.
