@@ -160,8 +160,15 @@ class PrintJob # rubocop:todo Style/Documentation
   # @param response [Net::HTTPResponse] The response object from the SPrintClient.
   # @return [Boolean] True if the response is successful and contains a job ID, false otherwise.
   def handle_sprint_response(response)
-    # assumes all labels use the same label template
-    if response.is_a?(Net::HTTPSuccess) && response.body['jobId'].present?
+    # Non-200 errors are treated as failures
+    unless response.is_a?(Net::HTTPSuccess)
+      errors.add(
+        :sprint,
+        "An error occurred while sending the print request to SPrintClient: Response code: #{response.code}"
+      )
+      return false
+    end
+    if response.body.present? && response.body['jobId'].present?
       true
     else
       errors.add(:sprint, extract_error_message(response))
