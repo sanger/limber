@@ -75,12 +75,8 @@ RSpec.describe StateChangers::DefaultStateChanger do
       let(:target_state) { 'passed' }
       let(:wells_to_pass) { nil }
       let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
-      let(:work_completion_request) do
-        { 'work_completion' => { target: plate_uuid, submissions: %w[pool-1-uuid pool-2-uuid], user: user_uuid } }
-      end
-      let(:work_completion) { json :work_completion }
-      let!(:work_completion_creation) do
-        stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
+      let(:work_completions_attributes) do
+        [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
       end
 
       subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
@@ -91,9 +87,9 @@ RSpec.describe StateChangers::DefaultStateChanger do
         before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
 
         it 'changes plate state and triggers a work completion' do
-          subject.move_to!(target_state, reason, customer_accepts_responsibility)
+          expect_work_completion_creation
 
-          expect(work_completion_creation).to have_been_made.once
+          subject.move_to!(target_state, reason, customer_accepts_responsibility)
         end
       end
 
@@ -107,8 +103,6 @@ RSpec.describe StateChangers::DefaultStateChanger do
 
         it 'changes plate state but does not trigger a work completion' do
           subject.move_to!(target_state, reason, customer_accepts_responsibility)
-
-          expect(work_completion_creation).to_not have_been_made
         end
       end
 
@@ -124,9 +118,9 @@ RSpec.describe StateChangers::DefaultStateChanger do
         end
 
         it 'changes plate state and triggers a work completion' do
-          subject.move_to!(target_state, reason, customer_accepts_responsibility)
+          expect_work_completion_creation
 
-          expect(work_completion_creation).to have_been_made.once
+          subject.move_to!(target_state, reason, customer_accepts_responsibility)
         end
       end
     end
