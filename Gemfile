@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 group :default do
   gem 'bootsnap'
-  gem 'rails'
+  gem 'rails', '>= 7.1.5.1'
 
   gem 'exception_notification'
   gem 'rake'
