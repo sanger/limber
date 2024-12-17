@@ -108,6 +108,31 @@ class PrintJob # rubocop:todo Style/Documentation
     handle_sprint_response(response)
   end
 
+  def number_of_copies=(number)
+    @number_of_copies = number.to_i
+  end
+
+  private
+
+  def pmb_label_template_id
+    pmb_label_template = get_label_template_by_service('PMB')
+    template_id = PMB::LabelTemplate.where(name: pmb_label_template).first&.id
+    if template_id.nil?
+      errors.add(:pmb, "Unable to find label template: #{pmb_label_template}")
+      nil
+    else
+      template_id
+    end
+  rescue JsonApiClient::Errors::ConnectionError
+    errors.add(:pmb, 'PrintMyBarcode service is down')
+    nil
+  end
+
+  def get_label_template_by_service(print_service)
+    templates_by_service = JSON.parse(label_templates_by_service)
+    templates_by_service[print_service]
+  end
+
   # Handles the response from the SPrintClient and checks for success.
   # If the response is successful and contains a job ID, it returns true.
   # Otherwise, it adds an error message to the errors object and returns false.
@@ -139,34 +164,12 @@ class PrintJob # rubocop:todo Style/Documentation
     if response.is_a?(Net::HTTPSuccess) && response.body['jobId'].present?
       true
     else
-      error_message = response.body['errors']&.pluck('message')&.join(' - ') || 'Unknown error'
-      errors.add(:sprint, error_message)
+      errors.add(:sprint, extract_error_message(response))
       false
     end
   end
 
-  def number_of_copies=(number)
-    @number_of_copies = number.to_i
-  end
-
-  private
-
-  def pmb_label_template_id
-    pmb_label_template = get_label_template_by_service('PMB')
-    template_id = PMB::LabelTemplate.where(name: pmb_label_template).first&.id
-    if template_id.nil?
-      errors.add(:pmb, "Unable to find label template: #{pmb_label_template}")
-      nil
-    else
-      template_id
-    end
-  rescue JsonApiClient::Errors::ConnectionError
-    errors.add(:pmb, 'PrintMyBarcode service is down')
-    nil
-  end
-
-  def get_label_template_by_service(print_service)
-    templates_by_service = JSON.parse(label_templates_by_service)
-    templates_by_service[print_service]
+  def extract_error_message(response)
+    response.body.present? ? response.body['errors']&.pluck('message')&.join(' - ') || 'Unknown error' : 'Unknown error'
   end
 end
