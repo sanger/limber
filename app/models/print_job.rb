@@ -132,15 +132,15 @@ class PrintJob # rubocop:todo Style/Documentation
     true
   end
 
-  private
-
-  def prepare_merge_fields_list
-    label_array = labels_sprint.values.flatten
-    label_array * number_of_copies
-  end
-
+  # Handles the response from the SPrintClient and checks for success.
+  # If the response is successful and contains a job ID, it returns true.
+  # Otherwise, it adds an error message to the errors object and returns false.
+  #
+  # @param response [Net::HTTPResponse] The response object from the SPrintClient.
+  # @return [Boolean] True if the response is successful and contains a job ID, false otherwise.
   def handle_sprint_response(response)
-    if response.success? && response.body['job_id'].present?
+    # assumes all labels use the same label template
+    if response.is_a?(Net::HTTPSuccess) && response.body['jobId'].present?
       true
     else
       error_message = response.body['errors']&.pluck('message')&.join(' - ') || 'Unknown error'
@@ -152,6 +152,8 @@ class PrintJob # rubocop:todo Style/Documentation
   def number_of_copies=(number)
     @number_of_copies = number.to_i
   end
+
+  private
 
   def pmb_label_template_id
     pmb_label_template = get_label_template_by_service('PMB')

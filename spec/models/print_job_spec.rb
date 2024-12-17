@@ -211,7 +211,13 @@ RSpec.describe PrintJob do
         )
 
       allow(pj).to receive(:get_label_template_by_service).and_return(label_template_name_sprint)
-      allow(SPrintClient).to receive(:send_print_request).and_return('a response')
+      response = Net::HTTPSuccess.new(1.0, '200', 'OK')
+      response.instance_variable_set(:@read, true)
+      response.instance_variable_set(
+        :@body,
+        "{\"data\":{\"print\":{\"jobId\":\"psd-2:68b27056-11cf-41ff-9b22-bdf6121a95be\"}}}"
+      )
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(SPrintClient).to receive(:send_print_request).with(
         printer_sprint.name,
         label_template_name_sprint,
