@@ -172,6 +172,10 @@ module ApiUrlHelper
         [double(child: child_tube)] * tube_from_tubes_attributes.size
       )
     end
+
+    def expect_work_completion_creation
+      expect_api_v2_posts('WorkCompletion', work_completions_attributes)
+    end
   end
 
   # Stubs for the V2 API.

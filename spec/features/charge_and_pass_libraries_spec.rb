@@ -10,10 +10,16 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:user_swipecard) { 'abcdef' }
   let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
-  let(:work_completion_request) do
-    { 'work_completion' => { target: labware_uuid, submissions: submissions, user: user_uuid } }
+  let(:work_completions_attributes) do
+    [
+      {
+        target_uuid: labware_uuid,
+        user_uuid: user_uuid,
+        submission_uuids: submission_uuids
+      }
+    ]
+
   end
-  let(:work_completion) { json :work_completion }
   let(:template_uuid) { SecureRandom.uuid }
 
   # Setup stubs
@@ -21,14 +27,13 @@ RSpec.feature 'Charge and pass libraries', js: true do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
-    stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
   end
 
   context 'plate with no submissions to be made' do
     before { create :purpose_config, uuid: 'example-purpose-uuid' }
 
     let(:plate_barcode) { plate.labware_barcode.machine }
-    let(:submissions) { %w[pool-1-uuid pool-2-uuid] }
+    let(:submission_uuids) { %w[pool-1-uuid pool-2-uuid] }
     let(:plate) do
       create :v2_plate,
              uuid: labware_uuid,
@@ -44,6 +49,8 @@ RSpec.feature 'Charge and pass libraries', js: true do
     end
 
     scenario 'charge and pass libraries' do
+      expect_work_completion_creation
+
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('#plate-show-page')).to have_content('Passed')
       click_button('Charge and pass libraries')
@@ -53,7 +60,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
 
   context 'tube with submissions to be made' do
     before { create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid' }
-    let(:submissions) { [] }
+    let(:submission_uuids) { [] }
     let(:request_options) { { read_length: '150' } }
     let(:tube) { create :v2_tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
     let(:tube_barcode) { tube.labware_barcode.machine }
@@ -92,6 +99,8 @@ RSpec.feature 'Charge and pass libraries', js: true do
     let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
 
     scenario 'charge and pass libraries with submissions' do
+      expect_work_completion_creation
+
       fill_in_swipecard_and_barcode user_swipecard, tube_barcode
       expect(find('#tube-show-page')).to have_content('Passed')
       click_button('Charge and pass libraries')
