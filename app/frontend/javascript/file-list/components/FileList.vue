@@ -37,7 +37,7 @@ export default {
         self.loading = false
       }
       xhr.send()
-    }
+    },
   },
 }
 </script>
