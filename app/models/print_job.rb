@@ -178,8 +178,12 @@ class PrintJob # rubocop:todo Style/Documentation
 
   def extract_error_message(response)
     if response.body.present?
-      response_body = JSON.parse(response.body)
-      return response_body['errors'].pluck('message').join(' - ') if response_body['errors'].present?
+      begin
+        response_body = JSON.parse(response.body)
+        return response_body['errors'].pluck('message').join(' - ') if response_body['errors'].present?
+      rescue JSON::ParserError
+        return 'Failed to parse JSON response from SprintClient'
+      end
     end
     'Unknown error'
   end
