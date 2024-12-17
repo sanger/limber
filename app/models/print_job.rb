@@ -161,6 +161,7 @@ class PrintJob # rubocop:todo Style/Documentation
   # @return [Boolean] True if the response is successful and contains a job ID, false otherwise.
   def handle_sprint_response(response)
     # Non-200 errors are treated as failures
+    # Ref: https://ruby-doc.org/stdlib-2.7.0/libdoc/net/http/rdoc/Net/HTTP.html#class-Net::HTTP-label-GET+with+Dynamic+Parameters
     unless response.is_a?(Net::HTTPSuccess)
       errors.add(
         :sprint,

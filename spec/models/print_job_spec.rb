@@ -255,7 +255,7 @@ RSpec.describe PrintJob do
           labels_sprint: labels_sprint,
           number_of_copies: 1
         )
-      response = Net::HTTPSuccess.new(1.0, '502', nil)
+      response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
       # rubocop:disable Layout/LineLength
       response.instance_variable_set(
@@ -280,7 +280,7 @@ RSpec.describe PrintJob do
           labels_sprint: labels_sprint,
           number_of_copies: 1
         )
-      response = Net::HTTPSuccess.new(1.0, '502', nil)
+      response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
       # rubocop:disable Layout/LineLength
       response.instance_variable_set(
