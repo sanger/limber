@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 require 'labware_creators/base'
-require_relative '../../support/shared_tagging_examples'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::StampedPlateCompressed do
@@ -107,23 +106,23 @@ RSpec.describe LabwareCreators::StampedPlateCompressed do
   describe '#request_hash' do
     it 'returns the correct request hash for a given source well' do
       # From B1 to A1 for the request with library-type-1
-      param_b1 = { 'outer_request' => parent_well_b1.requests_as_source[0].uuid }
-      hash_b1 = { 'source_asset' => parent_well_b1.uuid, 'target_asset' => child_plate.wells[0].uuid }.merge(param_b1)
+      param_b1 = { outer_request: parent_well_b1.requests_as_source[0].uuid }
+      hash_b1 = { source_asset: parent_well_b1.uuid, target_asset: child_plate.wells[0].uuid }.merge(param_b1)
       expect(subject.request_hash(parent_well_b1, child_plate, param_b1)).to eq hash_b1
 
       # From D1 to B1 for the request with library-type-1
-      param_d1 = { 'outer_request' => parent_well_d1.requests_as_source[0].uuid }
-      hash_d1 = { 'source_asset' => parent_well_d1.uuid, 'target_asset' => child_plate.wells[1].uuid }.merge(param_d1)
+      param_d1 = { outer_request: parent_well_d1.requests_as_source[0].uuid }
+      hash_d1 = { source_asset: parent_well_d1.uuid, target_asset: child_plate.wells[1].uuid }.merge(param_d1)
       expect(subject.request_hash(parent_well_d1, child_plate, param_d1)).to eq hash_d1
 
       # From E1 to C1 for the request with library-type-1
-      param_e1 = { 'outer_request' => parent_well_e1.requests_as_source[0].uuid }
-      hash_e1 = { 'source_asset' => parent_well_e1.uuid, 'target_asset' => child_plate.wells[2].uuid }.merge(param_e1)
+      param_e1 = { outer_request: parent_well_e1.requests_as_source[0].uuid }
+      hash_e1 = { source_asset: parent_well_e1.uuid, target_asset: child_plate.wells[2].uuid }.merge(param_e1)
       expect(subject.request_hash(parent_well_e1, child_plate, param_e1)).to eq hash_e1
 
       # From B2 to D1 for the request with library-type-1
-      param_b2 = { 'outer_request' => parent_well_b2.requests_as_source[0].uuid }
-      hash_b2 = { 'source_asset' => parent_well_b2.uuid, 'target_asset' => child_plate.wells[3].uuid }.merge(param_b2)
+      param_b2 = { outer_request: parent_well_b2.requests_as_source[0].uuid }
+      hash_b2 = { source_asset: parent_well_b2.uuid, target_asset: child_plate.wells[3].uuid }.merge(param_b2)
       expect(subject.request_hash(parent_well_b2, child_plate, param_b2)).to eq hash_b2
     end
   end

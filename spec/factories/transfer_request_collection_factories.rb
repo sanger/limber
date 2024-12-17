@@ -27,10 +27,10 @@ FactoryBot.define do
       Array.new(transfer_count) do |i|
         target_number = ((number_of_targets / transfer_count.to_f) * i).floor + initial_target
         {
-          'source_asset' => {
+          source_asset: {
             uuid: "example-well-uuid-#{i + initial_well}"
           },
-          :target_asset => {
+          target_asset: {
             uuid: "target-#{target_number}-uuid"
           }
         }

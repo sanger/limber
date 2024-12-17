@@ -112,19 +112,6 @@ RSpec.describe Robots::PoolingRobot, robots: true do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
     create :purpose_config, uuid: target_purpose_uuid, name: target_purpose_name
 
-    stub_api_get(
-      target_plate_uuid,
-      'creation_transfers',
-      body:
-        json(
-          :creation_transfer_collection,
-          destination: associated(:plate, target_plate_attributes),
-          sources: transfer_source_plates,
-          associated_on: 'creation_transfers',
-          transfer_factory: :creation_transfer
-        )
-    )
-
     bed_plate_lookup(source_plate, [:purpose, { wells: :upstream_plates }])
     bed_plate_lookup(target_plate, [:purpose, { wells: :upstream_plates }])
   end
@@ -212,20 +199,21 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   end
 
   describe '#perform_transfer' do
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: nil,
+          customer_accepts_responsibility: false,
+          reason: 'Robot Pooling Robot started',
+          target_state: 'passed',
+          target_uuid: target_plate_uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     it 'performs transfer from started to passed' do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: nil,
-            customer_accepts_responsibility: false,
-            reason: 'Robot Pooling Robot started',
-            target_state: 'passed',
-            target_uuid: target_plate_uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
+      expect_state_change_creation
 
       robot.perform_transfer('bed1_barcode' => [source_barcode], 'bed5_barcode' => [target_barcode])
     end

@@ -4,6 +4,7 @@
 class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
+  include Sequencescape::Api::V2::Shared::HasQcFiles
 
   def self.table_name
     'labware'

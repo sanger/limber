@@ -47,10 +47,9 @@ module LabwareCreators
     #
     def request_hash(source_well, child_plate, additional_parameters)
       destination_location = get_destination_location(source_well)
-      {
-        'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.well_at_location(destination_location)&.uuid
-      }.merge(additional_parameters)
+      { source_asset: source_well.uuid, target_asset: child_plate.well_at_location(destination_location)&.uuid }.merge(
+        additional_parameters
+      )
     end
   end
 end

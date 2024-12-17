@@ -6,6 +6,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasPurpose
   include Sequencescape::Api::V2::Shared::HasBarcode
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
+  include Sequencescape::Api::V2::Shared::HasQcFiles
 
   DEFAULT_INCLUDES = [
     :purpose,
@@ -55,6 +56,11 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   end
 
   delegate :requests_as_source, to: :receptacle
+
+  # Mocked out for the time being
+  def in_progress_submission_uuids(*)
+    []
+  end
 
   #
   # Override the model used in form/URL helpers
