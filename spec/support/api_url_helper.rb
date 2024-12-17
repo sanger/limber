@@ -176,6 +176,7 @@ module ApiUrlHelper
 
   # Stubs for the V2 API.
   # None of the methods here generate an expectation that the endpoint will be called.
+  # rubocop:disable Metrics/ModuleLength
   module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
@@ -281,6 +282,40 @@ module ApiUrlHelper
       stub_v2_labware(tube)
     end
 
+    # rubocop:disable Metrics/AbcSize
+    def stub_v2_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
+      stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube_rack)
+      elsif custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+          custom_includes,
+          nil,
+          { uuid: tube_rack.uuid }
+        ).and_return(tube_rack)
+      else
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_for_presenter).with(uuid: tube_rack.uuid).and_return(
+          tube_rack
+        )
+      end
+
+      arguments = [{ uuid: labware.uuid }]
+      allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([labware])
+    end
+
+    # rubocop:enable Metrics/AbcSize
+
+    def stub_v2_tube_rack_purpose(tube_rack_purpose)
+      arguments = [{ name: tube_rack_purpose[:name] }]
+      allow(Sequencescape::Api::V2::TubeRackPurpose).to receive(:find).with(*arguments).and_return([tube_rack_purpose])
+    end
+
+    def stub_v2_racked_tube(racked_tube)
+      arguments = [{ tube_rack: racked_tube.tube_rack.id, tube: racked_tube.tube.id }]
+      allow(Sequencescape::Api::V2::RackedTube).to receive(:find).with(*arguments).and_return(racked_tube)
+    end
+
     def stub_v2_user(user, swipecard = nil)
       # Find by UUID
       uuid_args = [{ uuid: user.uuid }]
@@ -301,6 +336,8 @@ module ApiUrlHelper
       stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
     end
   end
+
+  # rubocop:enable Metrics/ModuleLength
 end
 
 RSpec.configure do |config|

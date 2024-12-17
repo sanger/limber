@@ -162,8 +162,8 @@ RSpec.describe Presenters::TubeRackPresenter do
             'Second type CSV',
             [
               :limber_tube_rack,
-              :export,
-              { format: :csv, id: 'second_csv_id', limber_tube_rack_id: labware.human_barcode }
+              :tube_racks_export,
+              { format: :csv, id: 'second_csv_id', limber_tube_rack_id: labware.uuid }
             ]
           ]
         )

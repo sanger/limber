@@ -29,13 +29,13 @@
 <% end %>
 
 <%= card title: 'Adding a Comment', css_class: 'logged_in_only' do %>
-    <div id="asset-comments-add-form" 
-      data-comment-title="<%= presenter.comment_title %>" 
-      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
-      data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
-      data-asset-id="<%= presenter.id %>">
-    </div>
+  <div id="asset-comments-add-form"
+    data-comment-title="<%= presenter.comment_title %>"
+    data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+    data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+    data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
+    data-asset-id="<%= presenter.id %>">
+  </div>
 <% end %>
 
 <%= card title: 'Adding Custom Metadata', css_class: 'logged_in_only' do %>
@@ -53,10 +53,11 @@
     <%= simple_state_change_form(presenter) %>
   <% end %>
 
-  <% presenter.control_additional_creation do %>
-    <%= render 'creation_dropdown', resource_type: 'plates', resources: presenter.compatible_plate_purposes %>
-    <%= render 'creation_dropdown', resource_type: 'tubes', resources: presenter.compatible_tube_purposes %>
-  <% end %>
+    <% presenter.control_additional_creation do %>
+      <%= render 'creation_dropdown', resource_type: 'plates', resources: presenter.compatible_plate_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tubes', resources: presenter.compatible_tube_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tube_racks', resources: presenter.compatible_tube_rack_purposes %>
+    <% end %>
 
   <% presenter.control_library_passing do %>
     <%= render 'work_completion_form', presenter: presenter %>
