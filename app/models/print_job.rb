@@ -103,8 +103,16 @@ class PrintJob # rubocop:todo Style/Documentation
 
     merge_fields_list = label_array * number_of_copies
 
+    response = SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
+
     # assumes all labels use the same label template
-    SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
+    if response.success? && response.body['job_id'].present?
+      true
+    else
+      error_message = response.body['errors']&.map { |e| e['message'] }&.join(' - ') || 'Unknown error'
+      errors.add(:sprint, error_message)
+      false
+    end
 
     # TODO: DPL-865 [Limber] Handle sprint client response
     #
