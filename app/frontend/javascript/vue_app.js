@@ -102,7 +102,7 @@ const elements = [
     component: CustomTaggedPlate,
   },
   {
-    id: 'file-list',
+    id: 'files-list',
     component: FileList,
   },
   {
