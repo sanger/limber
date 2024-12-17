@@ -128,8 +128,6 @@ class PrintJob # rubocop:todo Style/Documentation
     # A successful response has a job id in response body.
     #
     # Use errors.add to show proper feedback in the view.
-
-    true
   end
 
   # Handles the response from the SPrintClient and checks for success.
