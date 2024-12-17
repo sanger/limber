@@ -122,7 +122,6 @@ class SequencescapeSubmission
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   def generate_submissions
     orders = generate_orders
     @submission_uuid =
@@ -139,8 +138,6 @@ class SequencescapeSubmission
     errors.add(:submission, e.record.errors.full_messages.join('; '))
     false
   end
-
-  # rubocop:enable Metrics/AbcSize
 
   def submission_template
     api.order_template.find(template_uuid)
