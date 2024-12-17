@@ -177,6 +177,10 @@ class PrintJob # rubocop:todo Style/Documentation
   end
 
   def extract_error_message(response)
-    response.body.present? ? response.body['errors']&.pluck('message')&.join(' - ') || 'Unknown error' : 'Unknown error'
+    if response.body.present?
+      response_body = JSON.parse(response.body)
+      return response_body['errors'].pluck('message').join(' - ') if response_body['errors'].present?
+    end
+    'Unknown error'
   end
 end

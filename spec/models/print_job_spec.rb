@@ -225,5 +225,49 @@ RSpec.describe PrintJob do
       )
       expect(pj.print_to_sprint).to eq(true)
     end
+
+    it 'will not execute if the SPrintClient is down' do
+      pj =
+        PrintJob.new(
+          printer_name: printer_sprint.name,
+          printer: printer_sprint,
+          label_templates_by_service: label_templates_by_service,
+          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
+          labels_sprint: labels_sprint,
+          number_of_copies: 1
+        )
+      response = Net::HTTPBadGateway.new(1.0, '502', nil)
+      response.instance_variable_set(:@read, true)
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq(
+        'Sprint An error occurred while sending the print request to SPrintClient: Error code: 502'
+      )
+    end
+
+    it 'will not execute if the SPrintClient sends a valid error with code 200' do
+      pj =
+        PrintJob.new(
+          printer_name: printer_sprint.name,
+          printer: printer_sprint,
+          label_templates_by_service: label_templates_by_service,
+          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
+          labels_sprint: labels_sprint,
+          number_of_copies: 1
+        )
+      response = Net::HTTPSuccess.new(1.0, '502', nil)
+      response.instance_variable_set(:@read, true)
+      # rubocop:disable Layout/LineLength
+      response.instance_variable_set(
+        :@body,
+        "{\"errors\":[{\"message\":\"Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'.\",\"locations\":[{\"line\":1,\"column\":16}],\"extensions\":{\"classification\":\" ValidationError\"}}]}"
+      )
+      # rubocop:enable Layout/LineLength
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq(
+        "Sprint Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'."
+      )
+    end
   end
 end
