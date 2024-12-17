@@ -15,11 +15,11 @@ module WorkCompletionBehaviour
   # Work completions mark library creation requests as completed
   # and hook them up to the correct wells.
   def create
-    api.work_completion.create!(
+    Sequencescape::Api::V2::WorkCompletion.create!(
       # Our pools keys are our submission uuids.
-      submissions: labware.in_progress_submission_uuids,
-      target: labware.uuid,
-      user: current_user_uuid
+      submission_uuids: labware.in_progress_submission_uuids,
+      target_uuid: labware.uuid,
+      user_uuid: current_user_uuid
     )
 
     # We assign the message in an array as create_submission may wish to add
