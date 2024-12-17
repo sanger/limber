@@ -11,14 +11,7 @@ RSpec.feature 'Charge and pass libraries', js: true do
   let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
   let(:work_completions_attributes) do
-    [
-      {
-        target_uuid: labware_uuid,
-        user_uuid: user_uuid,
-        submission_uuids: submission_uuids
-      }
-    ]
-
+    [{ target_uuid: labware_uuid, user_uuid: user_uuid, submission_uuids: submission_uuids }]
   end
   let(:template_uuid) { SecureRandom.uuid }
 

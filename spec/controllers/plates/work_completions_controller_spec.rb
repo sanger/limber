@@ -10,13 +10,7 @@ RSpec.describe Plates::WorkCompletionsController, type: :controller do
     let(:user_uuid) { SecureRandom.uuid }
     let(:example_plate) { create :v2_plate, uuid: plate_uuid, pool_sizes: [8, 8], include_submissions: true }
     let(:work_completions_attributes) do
-      [
-        {
-          target_uuid: plate_uuid,
-          user_uuid: user_uuid,
-          submission_uuids: %w[pool-1-uuid pool-2-uuid]
-        }
-      ]
+      [{ target_uuid: plate_uuid, user_uuid: user_uuid, submission_uuids: %w[pool-1-uuid pool-2-uuid] }]
     end
 
     let!(:plate_get) do
