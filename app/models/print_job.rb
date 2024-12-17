@@ -105,14 +105,7 @@ class PrintJob # rubocop:todo Style/Documentation
 
     response = SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
 
-    # assumes all labels use the same label template
-    if response.success? && response.body['job_id'].present?
-      true
-    else
-      error_message = response.body['errors']&.map { |e| e['message'] }&.join(' - ') || 'Unknown error'
-      errors.add(:sprint, error_message)
-      false
-    end
+    handle_sprint_response(response)
 
     # TODO: DPL-865 [Limber] Handle sprint client response
     #
@@ -139,11 +132,26 @@ class PrintJob # rubocop:todo Style/Documentation
     true
   end
 
+  private
+
+  def prepare_merge_fields_list
+    label_array = labels_sprint.values.flatten
+    label_array * number_of_copies
+  end
+
+  def handle_sprint_response(response)
+    if response.success? && response.body['job_id'].present?
+      true
+    else
+      error_message = response.body['errors']&.pluck('message')&.join(' - ') || 'Unknown error'
+      errors.add(:sprint, error_message)
+      false
+    end
+  end
+
   def number_of_copies=(number)
     @number_of_copies = number.to_i
   end
-
-  private
 
   def pmb_label_template_id
     pmb_label_template = get_label_template_by_service('PMB')
