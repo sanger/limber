@@ -79,11 +79,14 @@ module LabwareCreators::DonorPoolingCalculator
     pool_sizes = Array.new(number_of_pools, ideal_pool_size)
     remainder.times { |i| pool_sizes[i] += 1 }
 
+    wells = reorder_wells_by_donor_id(wells)
+
     # Assign wells to pools
     # Loop through the wells, and then the pools, and break out when we successfully assign a well
     #
     wells.each do |well|
       assigned = false
+      # TODO: does this do a query each time or is it included in the orginal query?
       donor_id = well.aliquots.first.sample.sample_metadata.donor_id
 
       pools.each_with_index do |pool, pool_index|
@@ -108,6 +111,17 @@ module LabwareCreators::DonorPoolingCalculator
     validate_pool_sizes!(pools)
     validate_unique_donor_ids!(pools)
     pools
+  end
+
+  # Reorder wells so that the largest groups that share the same donor_id will be allocated to pools first.
+  def reorder_wells_by_donor_id(wells)
+    donor_id_to_wells = wells.group_by do |well|
+      well.aliquots.first.sample.sample_metadata.donor_id
+    end
+
+    donor_id_to_wells = donor_id_to_wells.sort_by { |_donor_id, wells_for_donor| -wells_for_donor.size }
+
+    donor_id_to_wells.pluck(1).flatten
   end
 
   # Ensure that each pool contains unique donor IDs.
