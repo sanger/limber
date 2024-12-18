@@ -5,7 +5,8 @@
 # The front end makes a decision regarding suitability
 class TagPlatesController < ApplicationController
   def show
-    qcable = Presenters::QcablePresenter.new(api.qcable.find(params[:id]))
-    respond_to { |format| format.json { render json: { 'qcable' => qcable } } }
+    qcable_resource = Sequencescape::Api::V2::Qcable.find_by(uuid: params[:id])
+    qcable_presenter = Presenters::QcablePresenter.new(qcable_resource)
+    respond_to { |format| format.json { render json: { 'qcable' => qcable_presenter } } }
   end
 end
