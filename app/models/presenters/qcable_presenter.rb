@@ -11,7 +11,7 @@ module Presenters
     end
 
     def init_qcable_attributes(qcable)
-      @asset_uuid = qcable.asset.uuid
+      @asset_uuid = qcable.labware.uuid
       @state = qcable.state
       @uuid = qcable.uuid
     end
