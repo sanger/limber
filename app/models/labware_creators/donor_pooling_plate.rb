@@ -53,6 +53,8 @@ module LabwareCreators
       wells.qc_results
     ].freeze
 
+    VALID_POOL_COUNT_RANGE = (1..8)
+
     # Returns the number of source plates from the purpose configuration.
     #
     # @return [Integer] The number of source plates.
@@ -145,15 +147,13 @@ module LabwareCreators
       @minimal_barcodes = barcodes.compact_blank.map(&:strip)
     end
 
-    # Returns the number of pools based on the sample count from the lookup
-    # table.
+    # Returns the number of pools that this group of wells should be split between, pulled from request metadata.
     #
-    # @return [Integer] The number of pools.
-    def calculated_number_of_pools
-      return if source_wells_for_pooling.blank?
-
-      # div enfoces integer division
-      source_wells_for_pooling.count.div(number_of_samples_per_pool)
+    # @param [Array<Well>] group A group of wells from the source plate.
+    # @return [Integer] The number of pools that they should be split into.
+    # @raise [StandardError] If any required attribute is nil.
+    def number_of_pools(group)
+      group[0]&.aliquots&.first&.request&.request_metadata&.number_of_pools || (raise 'Number of pools is missing or nil')
     end
 
     # Creates transfer requests from source wells to the destination plate in
@@ -228,14 +228,22 @@ module LabwareCreators
     end
 
     # Builds the pools for the destination plate. The wells are first grouped
-    # by study and project, then split by donor_ids, and finally distributed
-    # across pools.
+    # by study and project, then passed along to be allocated to pools.
     #
     # @return [Array<Array<Well>>] An array of well groups distributed across pools.
     def build_pools
-      groups = split_single_group_by_study_and_project(source_wells_for_pooling)
-      groups = split_groups_by_unique_donor_ids(groups)
-      distribute_groups_across_pools(groups, calculated_number_of_pools)
+      study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling)
+
+      # allocate_wells_to_pools returns an array of pools
+      # We get one of these for every study/project group, and then 'flatten' to get a single array of pools
+      built_pools = study_project_groups.flat_map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
+
+      unless VALID_POOL_COUNT_RANGE.cover?(built_pools.size)
+        raise "Invalid requested number of pools: must be between #{VALID_POOL_COUNT_RANGE.min} " \
+                "and #{VALID_POOL_COUNT_RANGE.max}. Provided: #{built_pools.size}."
+      end
+
+      built_pools
     end
 
     # This method determines if the pools have full allowance.
