@@ -564,7 +564,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
 
       it 'fails to distribute and raises an error' do
-        expected_message = 'Unable to allocate well with donor ID 1. All pools contain this donor.'
+        expected_message = 'Cannot find a pool to assign the well to.'
 
         expect { subject.build_pools }.to raise_error(expected_message)
       end

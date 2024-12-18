@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/ModuleLength
 
 # This module contains algorithms to allocate source wells into a target number of pools.
 module LabwareCreators::DonorPoolingCalculator
@@ -39,77 +38,6 @@ module LabwareCreators::DonorPoolingCalculator
     group.group_by { |well| [well.aliquots.first.study.id, well.aliquots.first.project.id] }.values
   end
 
-  # Recursive function to assign wells to pools
-  # Assigns a well to a pool based on the provided arguments.
-  #
-  # @param [Hash] args The arguments for assigning the well to a pool.
-  # @option args [Object] :well The well to be assigned.
-  # @option args [Array] :pools The array of pools.
-  # @option args [Array] :used_donor_ids The array of used donor IDs.
-  # @option args [Integer] :pool_index The index of the current pool.
-  # @option args [Integer] :number_of_pools The total number of pools.
-  # @option args [Integer] :depth The depth of the current operation.
-  #
-  # @return [void]
-  #
-  def assign_well_to_pool(args)
-    well, pools, used_donor_ids, pool_index, number_of_pools, depth =
-      args.values_at(:well, :pools, :used_donor_ids, :pool_index, :number_of_pools, :depth, :conflict_depth)
-
-    donor_id = well.aliquots.first.sample.sample_metadata.donor_id
-
-    if donor_already_used?(donor_id, used_donor_ids, pool_index)
-      handle_conflict_donor_ids(donor_id, args, depth, number_of_pools, pool_index)
-    else
-      add_to_pool(donor_id, used_donor_ids, pool_index, pools, well)
-    end
-  end
-
-  def donor_already_used?(donor_id, used_donor_ids, pool_index)
-    used_donor_ids[pool_index].include?(donor_id)
-  end
-
-  def handle_conflict_donor_ids(donor_id, args, depth, number_of_pools, pool_index)
-    increment_depth!(args)
-    check_all_pools_visited!(depth, number_of_pools, donor_id)
-    check_all_pools_visited!(args[:conflict_depth], number_of_pools, donor_id)
-    reassign_to_next_pool(args, pool_index, number_of_pools)
-  end
-
-  def increment_depth!(args)
-    args[:depth] += 1
-  end
-
-  def check_all_pools_visited!(depth, number_of_pools, donor_id)
-    raise "Unable to allocate well with donor ID #{donor_id}. All pools contain this donor." if depth == number_of_pools
-  end
-
-  # Reassigns the given well to the next pool in a round-robin fashion.
-  #
-  # @param args [Hash] The arguments hash containing details about the well.
-  # @param pool_index [Integer] The current index of the pool.
-  # @param number_of_pools [Integer] The total number of pools.
-  #
-  # @return [void]
-  def reassign_to_next_pool(args, pool_index, number_of_pools)
-    args[:pool_index] = (pool_index + 1) % number_of_pools
-    assign_well_to_pool(args.merge(conflict_depth: args[:conflict_depth] + 1))
-  end
-
-  # Adds a donor to a specified pool and associates it with a well.
-  #
-  # @param donor_id [Integer] the ID of the donor to be added to the pool
-  # @param used_donor_ids [Array<Array<Integer>>] a nested array where each sub-array contains donor IDs
-  #   for a specific pool
-  # @param pool_index [Integer] the index of the pool to which the donor should be added
-  # @param pools [Array<Array<Well>>] a nested array where each sub-array contains wells for a specific pool
-  # @param well [Well] the well to be associated with the donor in the specified pool
-  # @return [void]
-  def add_to_pool(donor_id, used_donor_ids, pool_index, pools, well)
-    used_donor_ids[pool_index] << donor_id
-    pools[pool_index] << well
-  end
-
   def validate_pool_sizes!(pools)
     if pools.any? { |pool| !VALID_POOL_SIZE_RANGE.cover?(pool.size) }
       raise 'Invalid distribution: Each pool must have ' \
@@ -121,7 +49,6 @@ module LabwareCreators::DonorPoolingCalculator
     raise 'Invalid distribution: Pool sizes differ by more than one.'
   end
 
-  # rubocop:disable Metrics/AbcSize
   # Allocates wells to pools. The wells will have grouped by study and project, and now
   # they will be grouped by unique donor_ids. The wells will be distributed sequentially
   # to the pools, ensuring that each pool has between 5 and 25 wells.
@@ -145,8 +72,6 @@ module LabwareCreators::DonorPoolingCalculator
     pools = Array.new(number_of_pools) { [] }
     used_donor_ids = Array.new(number_of_pools) { [] }
 
-    depth = 0
-
     # Calculate ideal pool sizes based on the number of wells and pools
     ideal_pool_size, remainder = wells.size.divmod(number_of_pools)
 
@@ -155,25 +80,35 @@ module LabwareCreators::DonorPoolingCalculator
     remainder.times { |i| pool_sizes[i] += 1 }
 
     # Assign wells to pools
-    well_index = 0
-    pools.each_with_index do |pool, pool_index|
-      # Determine how many wells this pool should get based on pool_sizes
-      pool_size = pool_sizes[pool_index]
-      conflict_depth = 0
+    # Loop through the wells, and then the pools, and break out when we successfully assign a well
+    #
+    wells.each do |well|
+      assigned = false
+      donor_id = well.aliquots.first.sample.sample_metadata.donor_id
 
-      while pool.size < pool_size
-        well = wells[well_index]
-        assign_well_to_pool({ well:, pools:, used_donor_ids:, pool_index:, number_of_pools:, depth:, conflict_depth: })
-        well_index += 1
+      pools.each_with_index do |pool, pool_index|
+        # if this pool is full, try the next pool
+        next if pool.size >= pool_sizes[pool_index]
+
+        # this pool already contains a sample with this donor_id, try the next pool
+        next if used_donor_ids[pool_index].include?(donor_id)
+
+        # add the well to the pool, and skip to the next well to allocate
+        pool << well
+        used_donor_ids[pool_index] << donor_id
+        assigned = true
+        break
       end
+
+      next if assigned
+
+      raise "Cannot find a pool to assign the well to."
     end
 
     validate_pool_sizes!(pools)
     validate_unique_donor_ids!(pools)
     pools
   end
-
-  # rubocop:enable Metrics/AbcSize
 
   # Ensure that each pool contains unique donor IDs.
   #
@@ -333,5 +268,3 @@ module LabwareCreators::DonorPoolingCalculator
             "did not save on destination well at location #{dest_well.location}"
   end
 end
-
-# rubocop:enable Metrics/ModuleLength
