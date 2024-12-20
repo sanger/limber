@@ -587,11 +587,11 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
         # 4 triplicates, 1 duplicate, 1 single
         wells[0].aliquots.first.sample.sample_metadata.donor_id = 6
-        wells[1..2].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 5 }
-        wells[3..5].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 4 }
-        wells[6..8].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 3 }
-        wells[9..11].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 2 }
-        wells[12..14].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 1 }
+        wells[1..2].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 5 }
+        wells[3..5].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 4 }
+        wells[6..8].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 3 }
+        wells[9..11].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 2 }
+        wells[12..14].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 1 }
       end
 
       it 'works' do
@@ -615,11 +615,11 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         end
 
         # 4 triplicates, 1 duplicate, 1 single
-        wells[0..2].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 1 }
-        wells[3..5].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 2 }
-        wells[6..8].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 3 }
-        wells[9..11].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 4 }
-        wells[12..13].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 5 }
+        wells[0..2].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 1 }
+        wells[3..5].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 2 }
+        wells[6..8].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 3 }
+        wells[9..11].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 4 }
+        wells[12..13].each_with_index { |well, _index| well.aliquots.first.sample.sample_metadata.donor_id = 5 }
         wells[14].aliquots.first.sample.sample_metadata.donor_id = 6
       end
 

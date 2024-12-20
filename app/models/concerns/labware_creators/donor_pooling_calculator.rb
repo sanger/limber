@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:todo Metrics/ModuleLength
 # This module contains algorithms to allocate source wells into a target number of pools.
 module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
@@ -49,6 +50,7 @@ module LabwareCreators::DonorPoolingCalculator
     raise 'Invalid distribution: Pool sizes differ by more than one.'
   end
 
+  # rubocop:todo Metrics/AbcSize
   # Allocates wells to pools. The wells will have grouped by study and project, and now
   # they will be grouped by unique donor_ids. The wells will be distributed sequentially
   # to the pools, ensuring that each pool has between 5 and 25 wells.
@@ -112,6 +114,7 @@ module LabwareCreators::DonorPoolingCalculator
     validate_unique_donor_ids!(pools)
     pools
   end
+  # rubocop:enable Metrics/AbcSize
 
   # Reorder wells so that the largest groups that share the same donor_id will be allocated to pools first.
   def reorder_wells_by_donor_id(wells)
@@ -123,7 +126,7 @@ module LabwareCreators::DonorPoolingCalculator
   end
 
   def stable_sort_hash_by_values_size_desc(the_hash)
-    the_hash.sort_by.with_index { |elem, idx| [-(elem[1].size), idx] }
+    the_hash.sort_by.with_index { |elem, idx| [-elem[1].size, idx] }
   end
 
   # Ensure that each pool contains unique donor IDs.
@@ -284,3 +287,4 @@ module LabwareCreators::DonorPoolingCalculator
             "did not save on destination well at location #{dest_well.location}"
   end
 end
+# rubocop:enable Metrics/ModuleLength
