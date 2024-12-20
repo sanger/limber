@@ -153,7 +153,8 @@ module LabwareCreators
     # @return [Integer] The number of pools that they should be split into.
     # @raise [StandardError] If any required attribute is nil.
     def number_of_pools(group)
-      group[0]&.aliquots&.first&.request&.request_metadata&.number_of_pools || (raise 'Number of pools is missing or nil')
+      group[0]&.aliquots&.first&.request&.request_metadata&.number_of_pools ||
+        (raise 'Number of pools is missing or nil')
     end
 
     # Creates transfer requests from source wells to the destination plate in

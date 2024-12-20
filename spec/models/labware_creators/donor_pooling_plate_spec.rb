@@ -587,21 +587,11 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
         # 4 triplicates, 1 duplicate, 1 single
         wells[0].aliquots.first.sample.sample_metadata.donor_id = 6
-        wells[1..2].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 5
-        end
-        wells[3..5].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 4
-        end
-        wells[6..8].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 3
-        end
-        wells[9..11].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 2
-        end
-        wells[12..14].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 1
-        end
+        wells[1..2].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 5 }
+        wells[3..5].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 4 }
+        wells[6..8].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 3 }
+        wells[9..11].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 2 }
+        wells[12..14].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 1 }
       end
 
       it 'works' do
@@ -625,21 +615,11 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         end
 
         # 4 triplicates, 1 duplicate, 1 single
-        wells[0..2].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 1
-        end
-        wells[3..5].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 2
-        end
-        wells[6..8].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 3
-        end
-        wells[9..11].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 4
-        end
-        wells[12..13].each_with_index do |well, index|
-          well.aliquots.first.sample.sample_metadata.donor_id = 5
-        end
+        wells[0..2].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 1 }
+        wells[3..5].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 2 }
+        wells[6..8].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 3 }
+        wells[9..11].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 4 }
+        wells[12..13].each_with_index { |well, index| well.aliquots.first.sample.sample_metadata.donor_id = 5 }
         wells[14].aliquots.first.sample.sample_metadata.donor_id = 6
       end
 
@@ -1078,11 +1058,11 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     context 'when the values are of differing sizes' do
       it 'orders by values size descending while retaining the order for values of equal size' do
-        the_hash = { 'a' => ['1'], 'b' => ['2', '5', '4'], 'c' => ['3'] }
+        the_hash = { 'a' => ['1'], 'b' => %w[2 5 4], 'c' => ['3'] }
 
         result = subject.stable_sort_hash_by_values_size_desc(the_hash)
 
-        sorted = [['b', ['2', '5', '4']], ['a', ['1']], ['c', ['3']]]
+        sorted = [['b', %w[2 5 4]], ['a', ['1']], ['c', ['3']]]
 
         expect(result).to eq(sorted)
       end

@@ -105,7 +105,7 @@ module LabwareCreators::DonorPoolingCalculator
 
       next if assigned
 
-      raise "Cannot find a pool to assign the well to."
+      raise 'Cannot find a pool to assign the well to.'
     end
 
     validate_pool_sizes!(pools)
@@ -115,9 +115,7 @@ module LabwareCreators::DonorPoolingCalculator
 
   # Reorder wells so that the largest groups that share the same donor_id will be allocated to pools first.
   def reorder_wells_by_donor_id(wells)
-    donor_id_to_wells = wells.group_by do |well|
-      well.aliquots.first.sample.sample_metadata.donor_id
-    end
+    donor_id_to_wells = wells.group_by { |well| well.aliquots.first.sample.sample_metadata.donor_id }
 
     donor_id_to_wells = stable_sort_hash_by_values_size_desc(donor_id_to_wells)
 
