@@ -119,9 +119,13 @@ module LabwareCreators::DonorPoolingCalculator
       well.aliquots.first.sample.sample_metadata.donor_id
     end
 
-    donor_id_to_wells = donor_id_to_wells.sort_by { |_donor_id, wells_for_donor| -wells_for_donor.size }
+    donor_id_to_wells = stable_sort_hash_by_values_size_desc(donor_id_to_wells)
 
     donor_id_to_wells.pluck(1).flatten
+  end
+
+  def stable_sort_hash_by_values_size_desc(the_hash)
+    the_hash.sort_by.with_index { |elem, idx| [-(elem[1].size), idx] }
   end
 
   # Ensure that each pool contains unique donor IDs.

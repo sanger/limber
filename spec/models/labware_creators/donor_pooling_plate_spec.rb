@@ -1060,4 +1060,32 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
   end
+
+  describe '#stable_sort_hash_by_values_size_desc' do
+    context 'when the values are all of the same size' do
+      it 'maintains the original order' do
+        the_hash = { 'a' => ['1'], 'b' => ['2'], 'c' => ['3'] }
+
+        # normal sort by actually maintained the order in this case,
+        # but the stable sorting was necessary for more realistic inputs
+        result = subject.stable_sort_hash_by_values_size_desc(the_hash)
+
+        sorted = [['a', ['1']], ['b', ['2']], ['c', ['3']]]
+
+        expect(result).to eq(sorted)
+      end
+    end
+
+    context 'when the values are of differing sizes' do
+      it 'orders by values size descending while retaining the order for values of equal size' do
+        the_hash = { 'a' => ['1'], 'b' => ['2', '5', '4'], 'c' => ['3'] }
+
+        result = subject.stable_sort_hash_by_values_size_desc(the_hash)
+
+        sorted = [['b', ['2', '5', '4']], ['a', ['1']], ['c', ['3']]]
+
+        expect(result).to eq(sorted)
+      end
+    end
+  end
 end
