@@ -173,25 +173,24 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     let(:request_metadata) { double('RequestMetadata') }
 
     before do
-      allow(subject).to receive(:source_wells_for_pooling).and_return([source_well])
       allow(source_well).to receive(:aliquots).and_return([aliquot])
       allow(aliquot).to receive(:request).and_return(request)
       allow(request).to receive(:request_metadata).and_return(request_metadata)
     end
 
     context 'when all dependencies are present' do
-      it 'returns the number of samples per pool' do
-        allow(request_metadata).to receive(:number_of_samples_per_pool).and_return(5)
-        expect(subject.fetch_number_of_samples_per_pool_from_request).to eq(5)
+      it 'returns the requested number of pools' do
+        allow(request_metadata).to receive(:number_of_pools).and_return(5)
+        expect(subject.number_of_pools([source_well])).to eq(5)
       end
     end
 
-    context 'when request_metadata.number_of_samples_per_pool is nil' do
+    context 'when request_metadata.number_of_pools is nil' do
       it 'raises an error' do
-        allow(request_metadata).to receive(:number_of_samples_per_pool).and_return(nil)
-        expect { subject.fetch_number_of_samples_per_pool_from_request }.to raise_error(
+        allow(request_metadata).to receive(:number_of_pools).and_return(nil)
+        expect { subject.number_of_pools([source_well])}.to raise_error(
           StandardError,
-          'Error: request_metadata.number_of_samples_per_pool is nil'
+          'Number of pools is missing or nil'
         )
       end
     end
@@ -865,7 +864,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   describe '#transfer_material_from_parent!' do
     let(:cells_per_chip_well) { 90_000 }
-    let(:number_of_samples_per_pool) { 10 }
 
     let(:requests) do
       Array.new(10) do |_i|

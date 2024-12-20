@@ -95,31 +95,6 @@ module LabwareCreators
       well_filter.filtered.map(&:first) # The first element is the well.
     end
 
-    # Returns the number of samples per pool set by the submission.
-    # Assumption for now is that it will be set the same for all requests in the source plates,
-    # and stored on request_metadata, so we can fetch it from the first sample in the first well.
-    def number_of_samples_per_pool
-      @number_of_samples_per_pool ||= fetch_number_of_samples_per_pool_from_request
-    end
-
-    # Raises an error if the number of samples per pool is not found.
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    def fetch_number_of_samples_per_pool_from_request
-      source_wells = source_wells_for_pooling
-      return if source_wells.blank?
-
-      number_of_samples_per_pool =
-        source_wells.first&.aliquots&.first&.request&.request_metadata&.number_of_samples_per_pool || nil
-
-      if number_of_samples_per_pool.nil?
-        raise StandardError, 'Error: request_metadata.number_of_samples_per_pool is nil'
-      end
-
-      number_of_samples_per_pool
-    end
-
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
     # Returns a hash mapping each source well to its source plate. The hash
     # contains all source wells independent of the filtering.
     #
