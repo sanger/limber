@@ -188,7 +188,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     context 'when request_metadata.number_of_pools is nil' do
       it 'raises an error' do
         allow(request_metadata).to receive(:number_of_pools).and_return(nil)
-        expect { subject.number_of_pools([source_well])}.to raise_error(
+        expect { subject.number_of_pools([source_well]) }.to raise_error(
           StandardError,
           'Number of pools is missing or nil'
         )
