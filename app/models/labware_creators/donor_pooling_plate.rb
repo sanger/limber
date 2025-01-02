@@ -53,7 +53,7 @@ module LabwareCreators
       wells.qc_results
     ].freeze
 
-    VALID_POOL_COUNT_RANGE = (1..8)
+    VALID_POOL_COUNT_RANGE = Rails.application.config.scrna_config[:valid_pool_count_range]
 
     # Returns the number of source plates from the purpose configuration.
     #

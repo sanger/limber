@@ -5,7 +5,7 @@
 module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
 
-  VALID_POOL_SIZE_RANGE = (5..25)
+  VALID_POOL_SIZE_RANGE = Rails.application.config.scrna_config[:valid_pool_size_range]
 
   # Splits wells into groups by study and project, because:
   # a) no pool should contain samples from more than one study or project,
