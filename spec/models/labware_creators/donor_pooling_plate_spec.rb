@@ -322,9 +322,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
       it 'returns pools of the expected size' do
         pools = subject.build_pools
-        pools.each do |pool|
-          expect(pool.size).to eq(expected_size_of_pools)
-        end
+        pools.each { |pool| expect(pool.size).to eq(expected_size_of_pools) }
       end
     end
 
@@ -418,9 +416,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
       it 'returns pools of the expected size' do
         pools = subject.build_pools
-        pools.each do |pool|
-          expect(pool.size).to eq(expected_size_of_pools)
-        end
+        pools.each { |pool| expect(pool.size).to eq(expected_size_of_pools) }
       end
     end
 
@@ -460,9 +456,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
       it 'returns pools of the expected size' do
         pools = subject.build_pools
-        pools.each do |pool|
-          expect(pool.size).to eq(expected_size_of_pools)
-        end
+        pools.each { |pool| expect(pool.size).to eq(expected_size_of_pools) }
       end
     end
 
@@ -663,9 +657,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
       it 'returns pools of the expected size' do
         pools = subject.build_pools
-        pools.each do |pool|
-          expect(pool.size).to eq(expected_size_of_pools)
-        end
+        pools.each { |pool| expect(pool.size).to eq(expected_size_of_pools) }
       end
     end
   end
