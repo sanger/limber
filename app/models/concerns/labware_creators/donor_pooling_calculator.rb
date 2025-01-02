@@ -88,7 +88,6 @@ module LabwareCreators::DonorPoolingCalculator
     #
     wells.each do |well|
       assigned = false
-      # TODO: does this do a query each time or is it included in the orginal query?
       donor_id = well.aliquots.first.sample.sample_metadata.donor_id
 
       pools.each_with_index do |pool, pool_index|
