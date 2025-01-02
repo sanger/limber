@@ -239,6 +239,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
       it 'returns correct number of pools' do
         pools = subject.build_pools
+        # 2 pools for each of the 2 study-project groups
         expect(pools.size).to eq(4)
       end
 
@@ -268,14 +269,15 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    # Checks for behaviour for test runs
+    # Checks for behaviour using the numbers used in a real lab test run
     context 'when test run for 10 samples per pool and 8 pools' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
       let(:donor_ids) { (1..80).to_a }
       let(:wells) { parent_1_plate.wells[0..79] }
-      let(:expected_number_of_pools) { 4 }
-      let(:number_of_pools) { 4 }
+      let(:expected_number_of_pools) { 8 }
+      let(:number_of_pools) { 8 }
+      let(:expected_size_of_pools) { 10 }
 
       before do
         wells.each_with_index do |well, index|
@@ -315,6 +317,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         pools.each do |pool|
           number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
           expect(number_of_unique_donor_ids).to eq(pool.size)
+        end
+      end
+
+      it 'returns pools of the expected size' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          expect(pool.size).to eq(expected_size_of_pools)
         end
       end
     end
@@ -379,6 +388,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
       let(:number_of_pools) { 4 }
+      let(:expected_size_of_pools) { 20 }
 
       before do
         wells.each_with_index do |well, index|
@@ -405,6 +415,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           expect(number_of_unique_donor_ids).to eq(pool.size)
         end
       end
+
+      it 'returns pools of the expected size' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          expect(pool.size).to eq(expected_size_of_pools)
+        end
+      end
     end
 
     context 'when the test run has wells with multiple duplicate IDs (shuffled)' do
@@ -414,6 +431,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
       let(:number_of_pools) { 4 }
+      let(:expected_size_of_pools) { 20 }
 
       before do
         wells.each_with_index do |well, index|
@@ -439,11 +457,19 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           expect(number_of_unique_donor_ids).to eq(pool.size)
         end
       end
+
+      it 'returns pools of the expected size' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          expect(pool.size).to eq(expected_size_of_pools)
+        end
+      end
     end
 
     context 'when the test run cannot distribute wells with duplicate IDs' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
+      # Only 10 unique donor ids, but 20 samples needed per pool - impossible to distribute correctly
       let(:donor_ids) { (1..10).to_a * 8 }
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
@@ -469,6 +495,9 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when the groups of donor ids are not ordered largest to smallest' do
+      # If don't deal with the largest group first, you might find some pools are full and there aren't
+      # enough pools left to split the large group between.
+      # This is solved by sorting the wells first, in `reorder_wells_by_donor_id`.
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
       let(:wells) { parent_1_plate.wells[0..14] }
@@ -526,7 +555,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    context 'when the test run can split wells by donor IDs but the pools need to be redistributed' do
+    context 'when the pools are not quite the same size' do
       let(:study) { create(:v2_study) }
       let(:project) { create(:v2_project) }
       let(:donor_ids) { (1..40).to_a * 2 }
@@ -575,6 +604,11 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           expect(number_of_unique_donor_ids).to eq(pool.size)
         end
       end
+
+      it 'returns pools of the expected size' do
+        pools = subject.build_pools
+        expect(pools.map(&:size).sort).to eql([18, 18, 18, 19])
+      end
     end
 
     context 'when test run for 24 samples per pool and 8 pools' do
@@ -584,6 +618,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:wells) { parent_1_plate.wells + parent_2_plate.wells }
       let(:expected_number_of_pools) { 8 }
       let(:number_of_pools) { 8 }
+      let(:expected_size_of_pools) { 24 }
 
       before do
         wells.each_with_index do |well, index|
@@ -623,6 +658,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         pools.each do |pool|
           number_of_unique_donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }.uniq.size
           expect(number_of_unique_donor_ids).to eq(pool.size)
+        end
+      end
+
+      it 'returns pools of the expected size' do
+        pools = subject.build_pools
+        pools.each do |pool|
+          expect(pool.size).to eq(expected_size_of_pools)
         end
       end
     end
