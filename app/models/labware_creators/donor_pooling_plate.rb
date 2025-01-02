@@ -123,8 +123,9 @@ module LabwareCreators
     end
 
     # Returns the number of pools that this group of wells should be split between, pulled from request metadata.
+    # The number of pools is specified for each group of wells that share the same Study and Project.
     #
-    # @param [Array<Well>] group A group of wells from the source plate.
+    # @param [Array<Well>] group A group of wells from the source plate(s).
     # @return [Integer] The number of pools that they should be split into.
     # @raise [StandardError] If any required attribute is nil.
     def number_of_pools(group)
