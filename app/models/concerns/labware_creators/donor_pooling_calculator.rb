@@ -115,15 +115,24 @@ module LabwareCreators::DonorPoolingCalculator
   end
   # rubocop:enable Metrics/AbcSize
 
-  # Reorder wells so that the largest groups that share the same donor_id will be allocated to pools first.
+  # Reorder wells before splitting them into pools,
+  # so that the largest groups that share the same donor_id will be allocated to pools first.
+  # This prevents us from getting in a situation where the first pools fill up, and then we don't have enough pools
+  # left to split up a large group of wells that share the same donor_id.
+  # See test 'when the groups of donor ids are not ordered largest to smallest' in donor_pooling_calculator_spec.rb
   def reorder_wells_by_donor_id(wells)
+    # { donor_id_1 => [wells], donor_id_2 => [wells], ... }
     donor_id_to_wells = wells.group_by { |well| well.aliquots.first.sample.sample_metadata.donor_id }
 
+    # { donor_id_1 => [wells], donor_id_2 => [wells], ... } sorted by number of wells in each group
     donor_id_to_wells = stable_sort_hash_by_values_size_desc(donor_id_to_wells)
 
+    # [well, well, ...] flattened back into a reordered array of wells
     donor_id_to_wells.pluck(1).flatten
   end
 
+  # 'Stable sort' means the original order is maintained wherever possible.
+  # Should make pooling results more intuitive.
   def stable_sort_hash_by_values_size_desc(the_hash)
     the_hash.sort_by.with_index { |elem, idx| [-elem[1].size, idx] }
   end
