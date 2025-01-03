@@ -27,7 +27,7 @@
   <% labels.each do |label| %>
     <!-- this includes main label and extra label in one -->
     <% label.sprint_attributes.each_with_index do |(k, v), index|%>
-      <%= hidden_field_tag "#{f.object_name}[labels_sprint][sprint][#{k}]", v %>
+      <%= hidden_field_tag "#{f.object_name}[labels_sprint][sprint][][#{k}]", v %>
     <%end%>
     <!-- additional labels (e.g. for additional labels on the same plate or for extra intermediate plates) -->
     <% label.additional_label_definitions.each_with_index do |additional_labels, index|%>

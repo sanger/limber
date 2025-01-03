@@ -54,16 +54,7 @@ import '@/javascript/lib/ajax_support.js'
 import '@/javascript/lib/array_fill_polyfill.js'
 
 // Currently setting up each component as its own mini vue app.
-import '@/javascript/asset-comments/index.js'
-import '@/javascript/custom-tagged-plate/index.js'
-import '@/javascript/file-list/index.js'
-import '@/javascript/labware-custom-metadata/index.js'
-import '@/javascript/multi-stamp-tubes/index.js'
-import '@/javascript/multi-stamp/index.js'
-import '@/javascript/qc-information/index.js'
-import '@/javascript/tubes-to-rack/index.js'
-import '@/javascript/validate-paired-tubes/index.js'
-import '@/javascript/pool-xp-tube-panel/index.js'
+import '@/javascript/vue_app.js'
 
 // Load simple javascript files
 import '@/javascript/plain-javascript/page-reloader.js'

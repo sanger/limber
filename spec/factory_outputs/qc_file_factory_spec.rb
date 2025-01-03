@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'qc file factory' do
-  subject { json(:qc_file, uuid: 'example-qc-file-uuid', filename: 'example_file.txt') }
+  subject { json(:v1_qc_file, uuid: 'example-qc-file-uuid', filename: 'example_file.txt') }
 
   let(:json_content) do
     '{

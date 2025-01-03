@@ -207,13 +207,13 @@ module LabwareCreators
       parent_tubes.values.pluck(:uuid).uniq
     end
 
-    def child_v1
-      @child_v1 ||= api.plate.find(@child.uuid)
-    end
-
-    # Uploads the tube rack scan CSV file to the child plate using api v1.
+    # Uploads the tube rack scan CSV file for the child plate.
     def upload_tube_rack_file
-      child_v1.qc_files.create_from_file!(file, filename_for_tube_rack_scan)
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: file.read,
+        filename: filename_for_tube_rack_scan,
+        labware: child
+      )
     end
 
     # Returns an array of active requests of the expected type for the given tube.
@@ -234,7 +234,10 @@ module LabwareCreators
 
     # Transfers material from the parent tubes to the given child plate.
     def transfer_material_from_parent!
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     # Returns an array of hashes representing the transfer requests for the given child plate.
@@ -260,7 +263,7 @@ module LabwareCreators
     # @param additional_parameters [Hash] Additional parameters to include in the transfer request hash.
     # @return [Hash] A transfer request hash.
     def request_hash(source_tube_uuid, target_plate_uuid, additional_parameters)
-      { 'source_asset' => source_tube_uuid, 'target_asset' => target_plate_uuid }.merge(additional_parameters)
+      { source_asset: source_tube_uuid, target_asset: target_plate_uuid }.merge(additional_parameters)
     end
 
     # Returns the UUID of the first active request of the expected type for the given tube.

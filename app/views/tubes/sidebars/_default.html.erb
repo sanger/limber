@@ -47,7 +47,13 @@
 
 
   <%= card title: 'Adding a Comment' do %>
-    <div id="asset-comments-add-form" data-comment-title="<%= presenter.comment_title %>"></div>
+   <div id="asset-comments-add-form" 
+      data-comment-title="<%= presenter.comment_title %>" 
+      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+      data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
+      data-asset-id="<%= presenter.id %>">
+    </div>
   <% end %>
 
   <%= card title: 'Adding Custom Metadata', css_class: 'logged_in_only' do %>

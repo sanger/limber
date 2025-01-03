@@ -355,6 +355,19 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
   end
 
   describe '#perform_transfer' do
+    let(:state_changes_attributes) do
+      tube_uuids.map do |tube_uuid|
+        {
+          contents: nil,
+          customer_accepts_responsibility: false,
+          reason: "Robot #{robot_name} started",
+          target_state: 'passed',
+          target_uuid: tube_uuid,
+          user_uuid: user_uuid
+        }
+      end
+    end
+
     before do
       # Create purpose configs in Settings for state changers.
       create(:purpose_config, uuid: plate_purpose_uuid, name: plate_purpose_name)
@@ -363,19 +376,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
     end
 
     it 'performs transfers for all tubes on the tube-racks' do
-      expect_api_v2_posts(
-        'StateChange',
-        tube_uuids.map do |tube_uuid|
-          {
-            contents: nil,
-            customer_accepts_responsibility: false,
-            reason: "Robot #{robot_name} started",
-            target_state: 'passed',
-            target_uuid: tube_uuid,
-            user_uuid: user_uuid
-          }
-        end
-      )
+      expect_state_change_creation
 
       robot.perform_transfer(scanned_layout)
     end

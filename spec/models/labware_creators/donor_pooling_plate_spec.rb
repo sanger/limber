@@ -680,18 +680,18 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     it 'returns the transfer request attributes into destination plate' do
-      attributes = subject.transfer_request_attributes
+      attributes = subject.transfer_request_attributes(child_plate)
       expect(attributes.size).to eq(10)
 
-      expect(attributes[0]['source_asset']).to eq(wells[0].uuid)
-      expect(attributes[0]['target_asset']).to eq(child_plate.wells[0].uuid)
-      expect(attributes[0][:aliquot_attributes]).to eq({ 'tag_depth' => '1' })
-      expect(attributes[0]['submission_id']).to eq('1') # request factory insists on string
+      expect(attributes[0][:source_asset]).to eq(wells[0].uuid)
+      expect(attributes[0][:target_asset]).to eq(child_plate.wells[0].uuid)
+      expect(attributes[0][:aliquot_attributes]).to eq({ tag_depth: '1' })
+      expect(attributes[0][:submission_id]).to eq('1') # request factory insists on string
 
-      expect(attributes[1]['source_asset']).to eq(wells[1].uuid)
-      expect(attributes[1]['target_asset']).to eq(child_plate.wells[0].uuid)
-      expect(attributes[1][:aliquot_attributes]).to eq({ 'tag_depth' => '2' })
-      expect(attributes[1]['submission_id']).to eq('1') # request factory insists on string
+      expect(attributes[1][:source_asset]).to eq(wells[1].uuid)
+      expect(attributes[1][:target_asset]).to eq(child_plate.wells[0].uuid)
+      expect(attributes[1][:aliquot_attributes]).to eq({ tag_depth: '2' })
+      expect(attributes[1][:submission_id]).to eq('1') # request factory insists on string
     end
   end
 
@@ -713,17 +713,17 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     it 'returns the request hash' do
-      hash = subject.request_hash(wells[0], { 'submission_id' => '1' })
-      expect(hash['source_asset']).to eq(wells[0].uuid)
-      expect(hash['target_asset']).to eq(child_plate.wells[0].uuid)
-      expect(hash[:aliquot_attributes]).to eq({ 'tag_depth' => '1' })
-      expect(hash['submission_id']).to eq('1')
+      hash = subject.request_hash(wells[0], child_plate, { submission_id: '1' })
+      expect(hash[:source_asset]).to eq(wells[0].uuid)
+      expect(hash[:target_asset]).to eq(child_plate.wells[0].uuid)
+      expect(hash[:aliquot_attributes]).to eq({ tag_depth: '1' })
+      expect(hash[:submission_id]).to eq('1')
 
-      hash = subject.request_hash(wells[1], { 'submission_id' => '1' })
-      expect(hash['source_asset']).to eq(wells[1].uuid)
-      expect(hash['target_asset']).to eq(child_plate.wells[0].uuid)
-      expect(hash[:aliquot_attributes]).to eq({ 'tag_depth' => '2' })
-      expect(hash['submission_id']).to eq('1')
+      hash = subject.request_hash(wells[1], child_plate, { submission_id: '1' })
+      expect(hash[:source_asset]).to eq(wells[1].uuid)
+      expect(hash[:target_asset]).to eq(child_plate.wells[0].uuid)
+      expect(hash[:aliquot_attributes]).to eq({ tag_depth: '2' })
+      expect(hash[:submission_id]).to eq('1')
     end
   end
 
@@ -817,31 +817,16 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
     end
 
-    let!(:stub_transfer_material_request) do # eager!
-      # stub plate lookup
-      allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_plate.uuid).and_return(child_plate)
+    let(:transfer_requests_attributes) { subject.transfer_request_attributes(child_plate) }
 
-      # set instance variable used in transfer_request_attributes method
-      subject.instance_variable_set(:@dest_plate, child_plate)
-
-      # stub transfer request creation
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: subject.transfer_request_attributes
-          }
-        },
-        body: '{}'
-      )
-    end
+    before { stub_v2_plate(child_plate) }
 
     let!(:stub_metadata_creation) { stub_api_v2_save('PolyMetadatum') }
 
     it 'posts transfer requests to Sequencescape' do
+      expect_transfer_request_collection_creation
+
       subject.transfer_material_from_parent!(child_plate.uuid)
-      expect(stub_transfer_material_request).to have_been_made
     end
   end
 

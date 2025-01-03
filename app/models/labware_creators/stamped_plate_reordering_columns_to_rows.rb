@@ -31,7 +31,7 @@ module LabwareCreators
     #
     # @return [Hash] the mapping between source well and destination well
     def request_hash(source_well, child_plate, additional_parameters)
-      { 'source_asset' => source_well.uuid, 'target_asset' => reordering(source_well, child_plate)&.uuid }.merge(
+      { source_asset: source_well.uuid, target_asset: reordering(source_well, child_plate)&.uuid }.merge(
         additional_parameters
       )
     end

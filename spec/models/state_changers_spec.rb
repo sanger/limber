@@ -6,29 +6,31 @@ RSpec.describe StateChangers::DefaultStateChanger do
   has_a_working_api
 
   let(:plate_uuid) { SecureRandom.uuid }
-  let(:plate) { json :plate, uuid: plate_uuid, state: plate_state }
-  let(:well_collection) { json :well_collection, default_state: plate_state, custom_state: failed_wells }
-  let(:failed_wells) { {} }
+  let(:plate) { create(:v2_plate, uuid: plate_uuid, state: plate_state) }
+  let(:failed_wells) { [] }
   let(:user_uuid) { SecureRandom.uuid }
   let(:reason) { 'Because I want to' }
   let(:customer_accepts_responsibility) { false }
+  let(:state_changes_attributes) do
+    [
+      {
+        contents: wells_to_pass,
+        customer_accepts_responsibility: customer_accepts_responsibility,
+        reason: reason,
+        target_state: target_state,
+        target_uuid: plate_uuid,
+        user_uuid: user_uuid
+      }
+    ]
+  end
+
   subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
 
   describe '#move_to!' do
     before do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: wells_to_pass,
-            customer_accepts_responsibility: customer_accepts_responsibility,
-            reason: reason,
-            target_state: target_state,
-            target_uuid: plate_uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
+      expect_state_change_creation
+      plate.wells.each { |well| well.state = 'failed' if failed_wells.include?(well.location) }
+      stub_v2_plate(plate, stub_search: false)
     end
 
     shared_examples 'a state changer' do
@@ -45,18 +47,12 @@ RSpec.describe StateChangers::DefaultStateChanger do
     end
 
     context 'on a fully passed plate' do
-      # Ideally we wouldn't need this query here, but we don't know that
-      # until we perform it.
-      before do
-        stub_api_get(plate_uuid, body: plate)
-        stub_api_get(plate_uuid, 'wells', body: well_collection)
-      end
-
       # if no wells are failed we leave contents blank and state changer assumes full plate
       let(:wells_to_pass) { nil }
 
       let(:plate_state) { 'passed' }
       let(:target_state) { 'qc_complete' }
+
       it_behaves_like 'a state changer'
     end
 
@@ -67,13 +63,8 @@ RSpec.describe StateChangers::DefaultStateChanger do
       let(:target_state) { 'qc_complete' }
 
       # when some wells are failed we filter those out of the contents
-      let(:failed_wells) { { 'A1' => 'failed', 'D1' => 'failed' } }
-      let(:wells_to_pass) { WellHelpers.column_order - failed_wells.keys }
-
-      before do
-        stub_api_get(plate_uuid, body: plate)
-        stub_api_get(plate_uuid, 'wells', body: well_collection)
-      end
+      let(:failed_wells) { %w[A1 D1] }
+      let(:wells_to_pass) { WellHelpers.column_order - failed_wells }
 
       it_behaves_like 'a state changer'
     end

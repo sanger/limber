@@ -27,16 +27,35 @@
 </template>
 
 <script>
+import { createCommentFactory, removeCommentFactory } from '@/javascript/asset-comments/comment-store-helpers.js'
+
 export default {
   name: 'AssetCommentAddForm',
   props: {
     commentTitle: { type: String, required: true },
+    sequencescapeApi: {
+      type: String,
+      required: true,
+    },
+    assetId: {
+      type: String,
+      required: true,
+    },
+    sequencescapeApiKey: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
   data: function () {
     return {
       assetComment: '',
       state: 'pending',
       previous_success: null,
+      commentFactory: null,
     }
   },
   computed: {
@@ -68,13 +87,25 @@ export default {
       return this.assetComment.trim()
     },
   },
+  mounted() {
+    const commentFactory = createCommentFactory({
+      sequencescapeApi: this.sequencescapeApi,
+      assetId: this.assetId,
+      sequencescapeApiKey: this.sequencescapeApiKey,
+      userId: this.userId,
+    })
+    this.commentFactory = commentFactory
+  },
+  beforeDestroy() {
+    removeCommentFactory(this.assetId)
+  },
   methods: {
     async submit() {
       if (this.isCommentInvalid()) {
         return
       }
       this.state = 'busy'
-      const successful = await this.$root.$data.addComment(this.commentTitle, this.assetCommentTrimmed)
+      const successful = await this.commentFactory?.addComment(this.commentTitle, this.assetCommentTrimmed)
       if (successful) {
         this.state = 'success'
         this.assetComment = ''

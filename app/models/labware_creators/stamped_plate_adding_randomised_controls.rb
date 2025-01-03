@@ -202,7 +202,10 @@ module LabwareCreators
     # this transfer collection stamps all the samples from the parent into the child plate,
     # except for those being displaced by controls (uses labware_wells method via well_filter)
     def transfer_material_from_parent!
-      api.transfer_request_collection.create!(user: user_uuid, transfer_requests: transfer_request_attributes)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes,
+        user_uuid: user_uuid
+      )
     end
 
     def transfer_request_attributes
