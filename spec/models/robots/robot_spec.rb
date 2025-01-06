@@ -754,4 +754,29 @@ RSpec.describe Robots::Robot, robots: true do
       end
     end
   end
+
+  describe '#start_button_message' do
+    let(:robot_spec) do
+      {
+        'name' => 'robot_name',
+        'beds' => {
+          'bed1_barcode' => {
+            'purpose' => 'Limber Cherrypicked',
+            'states' => ['passed'],
+            'label' => 'Bed 1'
+          }
+        }
+      }
+    end
+
+    it 'returns the correct message when the robot does not have a start_button_text' do
+      robot = Robots::Robot.new(robot_spec)
+      expect(robot.start_button_message).to eq("Start the #{robot.name}")
+    end
+
+    it 'returns the robots start_button_text when present' do
+      robot = Robots::Robot.new(robot_spec.merge(start_button_text: 'Be different'))
+      expect(robot.start_button_message).to eq('Be different')
+    end
+  end
 end
