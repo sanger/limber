@@ -9,8 +9,8 @@ module Sequencescape::Api::V2::Shared
 
     included { has_many :poly_metadata, class_name: 'Sequencescape::Api::V2::PolyMetadatum', as: :metadatable }
 
-    # Returns the PolyMetadatum object with a matching key from poly_metadata
-    # of this Study.
+    # Returns the first PolyMetadatum object from poly_metadata for the
+    # specified key.
     #
     # @param key [String] the key of the PolyMetadatum to find
     # @return [PolyMetadatum, nil] the found PolyMetadatum object, or nil if no match is found
@@ -18,7 +18,8 @@ module Sequencescape::Api::V2::Shared
       # if no poly_metadata exist for this model instance, or no key value is passed, return nil
       return nil if poly_metadata.blank? || key.blank?
 
-      poly_metadata.find { |pm| pm.key == key }
+      # Return the first PolyMetadatum object with a matching key
+      poly_metadata.detect { |pm| pm.key == key }
     end
   end
 end
