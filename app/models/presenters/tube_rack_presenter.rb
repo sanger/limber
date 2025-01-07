@@ -38,14 +38,6 @@ module Presenters
       false
     end
 
-    def label
-      Labels::TubeRackLabel.new(labware)
-    end
-
-    def tube_labels
-      all_tubes.map { |tube| Labels::TubeLabel.new(tube) }
-    end
-
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
