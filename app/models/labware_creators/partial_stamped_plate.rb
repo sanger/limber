@@ -39,10 +39,9 @@ module LabwareCreators
       return if transfer_hash.present?
 
       msg =
-        # rubocop:todo Layout/LineLength
-        'No wells in the parent plate have pending library preparation requests with the expected library type. Check your Submission.'
+        'No wells in the parent plate have pending library preparation requests with the expected library type. ' \
+          'Check your Submission.'
 
-      # rubocop:enable Layout/LineLength
       errors.add(:parent, msg)
     end
 
