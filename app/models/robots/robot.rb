@@ -9,7 +9,16 @@ module Robots
     include Form
 
     attr_reader :beds
-    attr_accessor :api, :user_uuid, :layout, :name, :id, :verify_robot, :class, :robot_barcode, :require_robot
+    attr_accessor :api,
+                  :user_uuid,
+                  :layout,
+                  :name,
+                  :id,
+                  :verify_robot,
+                  :class,
+                  :robot_barcode,
+                  :require_robot,
+                  :start_button_text
 
     alias verify_robot? verify_robot
     alias require_robot? require_robot
@@ -49,6 +58,15 @@ module Robots
 
     def bed_labwares=(bed_labwares)
       bed_labwares.each { |bed_barcode, labware_barcodes| beds[bed_barcode.strip].load(labware_barcodes) }
+    end
+
+    # Returns the message to be displayed on the start button.
+    # If `start_button_text` is present, it returns that text.
+    # Otherwise, it returns a default message "Start the #{name}".
+    #
+    # @return [String] the message to be displayed on the start button
+    def start_button_message
+      start_button_text || "Start the #{name}"
     end
 
     private
@@ -151,10 +169,9 @@ module Robots
 
       # We have scanned a labware, but weren't expecting one (invalid)
       msg =
-        # rubocop:todo Layout/LineLength
-        'Either the labware scanned into this bed should not be here, or the related labware(s) have not been scanned into their beds.'
+        'Either the labware scanned into this bed should not be here, or the related labware(s) have not been ' \
+          'scanned into their beds.'
 
-      # rubocop:enable Layout/LineLength
       error(beds[position], msg)
       false
     end
@@ -169,19 +186,16 @@ module Robots
         # We were unable to recognize any parent of this plate that matches the
         # labware purpose of the beds in the configuration, so this labware has
         # unexpected parents for this pipeline bed verification
-        # rubocop:todo Layout/LineLength
-        "Was expected to contain a labware of purpose #{beds[position].purpose} but the scanned child labware does not have a parent with that purpose."
-        # rubocop:enable Layout/LineLength
+        "Was expected to contain a labware of purpose #{beds[position].purpose} but the scanned child labware does " \
+          'not have a parent with that purpose.'
       elsif beds[position].labware.nil?
         # We expected a labware but none was scanned
-        # rubocop:todo Layout/LineLength
-        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was scanned (empty)."
-        # rubocop:enable Layout/LineLength
+        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but nothing was " \
+          'scanned (empty).'
       else
         # We have scanned an unexpected labware
-        # rubocop:todo Layout/LineLength
-        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a different labware."
-        # rubocop:enable Layout/LineLength
+        "Was expected to contain labware barcode #{expected_labwares.map(&:human_barcode).join(',')} but contains a " \
+          'different labware.'
       end
     end
 
