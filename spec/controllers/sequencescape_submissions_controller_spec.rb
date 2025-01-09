@@ -18,7 +18,7 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
       }
     end
     let(:template_uuid) { SecureRandom.uuid }
-    let(:assets) { %w[f5bba76c-2979-11eb-a652-acde48001122 f5bba91a-2979-11eb-a652-acde48001122] }
+    let(:asset_uuids) { %w[f5bba76c-2979-11eb-a652-acde48001122 f5bba91a-2979-11eb-a652-acde48001122] }
     let(:request_parameters) do
       {
         'sequencescape_submission' => {
@@ -26,27 +26,27 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
           'template_uuid' => template_uuid,
           'asset_groups' => {
             '0' => {
-              'assets' => assets
+              'assets' => asset_uuids
             }
           }
         }
       }
     end
 
-    let!(:order_request) do
-      stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
-      stub_api_post(
-        template_uuid,
-        'orders',
-        payload: {
-          order: {
-            assets: assets,
-            request_options: request_options,
-            user: user_uuid
-          }
-        },
-        body: '{"order":{"uuid":"order-uuid"}}'
-      )
+    let(:orders_attributes) do
+      [
+        {
+          attributes: {
+            submission_template_uuid: template_uuid,
+            submission_template_attributes: {
+              'asset_uuids' => asset_uuids,
+              :request_options => request_options,
+              :user_uuid => user_uuid
+            }
+          },
+          uuid_out: 'order-uuid'
+        }
+      ]
     end
 
     let(:submissions_attributes) do
@@ -54,10 +54,10 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
     end
 
     it 'creates a submission' do
+      expect_order_creation
       expect_submission_creation
 
       post :create, params: request_parameters, session: { user_uuid: }
-      expect(order_request).to have_been_made.once
       assert_equal ['Your submissions have been made and should be built shortly.'], flash.notice
     end
   end

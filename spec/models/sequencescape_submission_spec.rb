@@ -7,12 +7,12 @@ RSpec.describe SequencescapeSubmission do
 
   subject(:submission) { described_class.new(attributes) }
 
-  let(:assets) { ['asset-uuid'] }
+  let(:asset_uuids) { ['asset-uuid'] }
   let(:template_uuid) { 'template-uuid' }
   let(:request_options) { { read_length: 150 } }
   let(:user_uuid) { 'user-uuid' }
   let(:attributes) do
-    { api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+    { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
   end
 
   describe '#template_uuid' do
@@ -25,7 +25,13 @@ RSpec.describe SequencescapeSubmission do
     context 'when set via template_name' do
       let(:template_name) { 'Submission template' }
       let(:attributes) do
-        { api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+        {
+          api: api,
+          assets: asset_uuids,
+          template_uuid: template_uuid,
+          request_options: request_options,
+          user: user_uuid
+        }
       end
 
       before { Settings.submission_templates = { template_name => template_uuid } }
@@ -38,7 +44,7 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#extra_barcodes_trimmed' do
     let(:attributes) do
-      { api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     it 'removes any extra whitespaces' do
@@ -49,7 +55,7 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#extra_plates' do
     let(:attributes) do
-      { api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     let(:plate) { create :v2_plate }
@@ -66,7 +72,7 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#extra_assets' do
     let(:attributes) do
-      { api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     let(:plate) { create(:passed_plate) }
@@ -92,13 +98,14 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#asset_groups_for_orders_creation' do
     let(:attributes) do
-      { api: api, assets: assets, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     it 'returns normal asset groups when no extra barcodes provided' do
       obj = described_class.new(attributes)
       expect(obj.asset_groups_for_orders_creation).to eq(obj.asset_groups)
     end
+
     context 'when extra barcodes provided' do
       let(:plate) { create(:passed_plate) }
       let(:plate2) { create(:passed_plate) }
@@ -111,27 +118,27 @@ RSpec.describe SequencescapeSubmission do
 
       it 'returns the current assets plus the extra assets' do
         obj = described_class.new(attributes.merge(extra_barcodes: %w[1234 5678]))
-        expect(obj.asset_groups_for_orders_creation.first[:assets].count).to eq(obj.assets.count + 8)
+        expect(obj.asset_groups_for_orders_creation.first[:asset_uuids].count).to eq(obj.assets.count + 8)
       end
     end
   end
 
   describe '#save' do
     context 'with a single asset group' do
-      let!(:order_request) do
-        stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
-        stub_api_post(
-          template_uuid,
-          'orders',
-          payload: {
-            order: {
-              assets: assets,
-              request_options: request_options,
-              user: user_uuid
-            }
-          },
-          body: '{"order":{"uuid":"order-uuid"}}'
-        )
+      let(:orders_attributes) do
+        [
+          {
+            attributes: {
+              submission_template_uuid: template_uuid,
+              submission_template_attributes: {
+                asset_uuids:,
+                request_options:,
+                user_uuid:
+              }
+            },
+            uuid_out: 'order-uuid'
+          }
+        ]
       end
 
       let(:submissions_attributes) do
@@ -139,10 +146,10 @@ RSpec.describe SequencescapeSubmission do
       end
 
       it 'generates a submission' do
+        expect_order_creation
         expect_submission_creation
 
         expect(subject.save).to be_truthy
-        expect(order_request).to have_been_made.once
       end
     end
 
@@ -155,18 +162,18 @@ RSpec.describe SequencescapeSubmission do
       let(:project1_uuid) { SecureRandom.uuid }
       let(:project2_uuid) { SecureRandom.uuid }
 
-      let(:assets2) { ['asset-2-uuid'] }
+      let(:asset_uuids2) { ['asset-2-uuid'] }
       let(:attributes) do
         {
           api: api,
           asset_groups: {
             '1' => {
-              assets: assets,
+              assets: asset_uuids,
               study: study1_uuid,
               project: project1_uuid
             },
             '2' => {
-              assets: assets2,
+              assets: asset_uuids2,
               study: study2_uuid,
               project: project2_uuid
             }
@@ -177,36 +184,35 @@ RSpec.describe SequencescapeSubmission do
         }
       end
 
-      let!(:order_request) do
-        stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
-        stub_api_post(
-          template_uuid,
-          'orders',
-          payload: {
-            order: {
-              study: study1_uuid,
-              project: project1_uuid,
-              assets: assets,
-              request_options: request_options,
-              user: user_uuid
-            }
+      let(:orders_attributes) do
+        [
+          {
+            attributes: {
+              submission_template_uuid: template_uuid,
+              submission_template_attributes: {
+                asset_uuids: asset_uuids,
+                request_options: request_options,
+                user_uuid: user_uuid,
+                study: study1_uuid,
+                project: project1_uuid
+              }
+            },
+            uuid_out: 'order-uuid'
           },
-          body: '{"order":{"uuid":"order-uuid"}}'
-        )
-        stub_api_post(
-          template_uuid,
-          'orders',
-          payload: {
-            order: {
-              study: study2_uuid,
-              project: project2_uuid,
-              assets: assets2,
-              request_options: request_options,
-              user: user_uuid
-            }
-          },
-          body: '{"order":{"uuid":"order-2-uuid"}}'
-        )
+          {
+            attributes: {
+              submission_template_uuid: template_uuid,
+              submission_template_attributes: {
+                asset_uuids: asset_uuids2,
+                request_options: request_options,
+                user_uuid: user_uuid,
+                study: study2_uuid,
+                project: project2_uuid
+              }
+            },
+            uuid_out: 'order-2-uuid'
+          }
+        ]
       end
 
       let(:submissions_attributes) do
@@ -223,10 +229,10 @@ RSpec.describe SequencescapeSubmission do
       end
 
       it 'generates a submission' do
+        expect_order_creation
         expect_submission_creation
 
         expect(subject.save).to be_truthy
-        expect(order_request).to have_been_made.once
       end
     end
   end
