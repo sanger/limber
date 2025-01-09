@@ -172,8 +172,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent2).and_return('outer-request-2')
       end
 
-      let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
-
       context 'when sources are from multiple studies' do
         setup do
           expect('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).and_return(
@@ -218,17 +216,17 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           ]
         end
 
-        let!(:submission_request) do
-          stub_api_post(
-            'submissions',
-            payload: {
-              submission: {
-                orders: ['order-uuid'],
-                user: user_uuid
-              }
-            },
-            body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
-          )
+        let(:submissions_attributes) do
+          [
+            {
+              attributes: {
+                and_submit: true,
+                order_uuids: ['order-uuid'],
+                user_uuid: user_uuid
+              },
+              uuid_out: 'sub-uuid'
+            }
+          ]
         end
 
         let!(:multiple_study_submission) do
@@ -238,12 +236,10 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         it 'creates a plate!' do
           expect_order_creation
           expect_pooled_plate_creation
+          expect_submission_creation
           expect_transfer_request_collection_creation
 
           subject.save!
-
-          expect(submission_request).to have_been_made.once
-          expect(submission_submit).to have_been_made.once
         end
       end
     end
