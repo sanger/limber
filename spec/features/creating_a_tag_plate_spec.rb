@@ -20,6 +20,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       purpose_uuid: 'stock-plate-purpose-uuid'
     )
   end
+  let(:qcable) { create :v2_qcable }
 
   let(:tag_plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
@@ -91,10 +92,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_v2_tag_layout_templates(templates)
 
-    # API v1 UUID requests for a qcable via qcable_presenter.
-    stub_api_get(tag_plate_qcable_uuid, body: tag_plate_qcable)
-    stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: tag_lot_number, template_uuid: tag_template_uuid))
-    stub_api_get('tag-lot-type-uuid', body: json(:tag_lot_type))
+    # API v2 requests for the qcable
+    stub_v2_qcable(qcable)
   end
 
   shared_examples 'it supports the plate' do

@@ -258,6 +258,14 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::QcFile).to receive(:find).with(*arguments).and_return([qc_file])
     end
 
+    def stub_v2_qcable(qcable)
+      arguments = [{ uuid: qcable.uuid }]
+      query_builder = double
+
+      allow(query_builder).to receive(:find_by).with(*arguments).and_return(qcable)
+      allow(Sequencescape::Api::V2::Qcable).to receive(:includes).and_return(query_builder)
+    end
+
     def stub_v2_study(study)
       arguments = [{ name: study.name }]
       allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
