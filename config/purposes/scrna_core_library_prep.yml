@@ -49,26 +49,26 @@ LRC GEM-X 5p GE Dil:
     :source_volume: 10
     :diluent_volume: 25
     :bins:
-      - max: 25.0
+      - max: 50.0
         pcr_cycles: 15
         colour: 1
-      - min: 25.0
-        max: 150.0
+      - min: 50.0
+        max: 250.0
         pcr_cycles: 13
         colour: 2
-      - min: 150.0
-        max: 500.0
+      - min: 250.0
+        max: 600.0
         pcr_cycles: 11
         colour: 3
-      - min: 500.0
-        max: 1000.0
+      - min: 600.0
+        max: 1_100.0
         pcr_cycles: 9
         colour: 4
-      - min: 1000.0
-        max: 1500.0
+      - min: 1_100.0
+        max: 1_500.0
         pcr_cycles: 7
         colour: 5
-      - min: 1500.0
+      - min: 1_500.0
         pcr_cycles: 5
         colour: 12
   :file_links:
