@@ -20,14 +20,17 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       purpose_uuid: 'stock-plate-purpose-uuid'
     )
   end
-  let(:qcable) { create :v2_qcable }
-
-  let(:tag_plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid) { 'tag-plate-uuid' }
-  let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid, lot_uuid: 'lot-uuid' }
   let(:tag_template_uuid) { 'tag-layout-template-0' }
-  let(:transfer_template_uuid) { 'custom-pooling' }
+
+  let(:qcable_template) { create :v2_tag_layout_template, uuid: tag_template_uuid }
+  let(:qcable_lot) { create :v2_lot, template: qcable_template }
+  let(:qcable_labware) { create :v2_plate, uuid: tag_plate_uuid }
+  let(:qcable) { create :v2_qcable, lot: qcable_lot, labware: qcable_labware, uuid: tag_plate_qcable_uuid }
+
+  let(:tag_plate_barcode) { qcable_labware.labware_barcode.machine }
+  let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
   let(:enforce_uniqueness) { true }
 
@@ -60,7 +63,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
           user_uuid: user_uuid,
           source_uuid: parent_plate.uuid,
           destination_uuid: tag_plate_uuid,
-          transfer_template_uuid: transfer_template_uuid,
+          transfer_template_uuid: 'custom-pooling',
           transfers: expected_transfers
         }
       }
@@ -69,7 +72,6 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
   let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
 
-  let(:tag_lot_number) { 'tag_lot_number' }
   let(:enforce_same_template_within_pool) { false }
 
   # Setup stubs
@@ -105,6 +107,12 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
       stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
       stub_api_v2_post('StateChange')
+
+      stub_search_and_single_result(
+        'Find qcable by barcode',
+        { 'search' => { 'barcode' => tag_plate_barcode } },
+        tag_plate_qcable
+      )
     end
 
     scenario 'creation with the plate' do
@@ -116,13 +124,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')
       expect(find('#tag-help')).to have_content(help_text)
-      stub_search_and_single_result(
-        'Find qcable by barcode',
-        { 'search' => { 'barcode' => tag_plate_barcode } },
-        tag_plate_qcable
-      )
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
-      expect(page).to have_content(tag_lot_number)
+      expect(page).to have_content(qcable_lot.lot_number)
       expect(find('#well_A2')).to have_content(a2_tag)
       click_on('Create Plate')
       expect(page).to have_content('New empty labware added to the system.')
@@ -130,17 +133,20 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   end
 
   shared_examples 'it rejects the candidate plate' do
+    before do
+      stub_search_and_single_result(
+        'Find qcable by barcode',
+        { 'search' => { 'barcode' => tag_plate_barcode } },
+        tag_plate_qcable
+      )
+    end
+
     scenario 'rejects the candidate plate' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       plate_title = find('#plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')
-      stub_search_and_single_result(
-        'Find qcable by barcode',
-        { 'search' => { 'barcode' => tag_plate_barcode } },
-        tag_plate_qcable
-      )
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
       expect(page).to have_button('Create Plate', disabled: true)
       expect(page).to have_content(tag_error)
