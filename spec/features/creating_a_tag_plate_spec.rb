@@ -91,10 +91,6 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_v2_tag_layout_templates(templates)
 
-    # TODO: {Y24-190} Get rid of these v1 stubs after tag_layout_templates are moved to v2 in tagged_plate.rb
-    stub_api_get(tag_template_uuid, body: json(:tag_layout_template, uuid: tag_template_uuid))
-    stub_api_post(tag_template_uuid, body: json(:tag_layout_template, uuid: tag_template_uuid))
-
     # API v1 UUID requests for a qcable via qcable_presenter.
     stub_api_get(tag_plate_qcable_uuid, body: tag_plate_qcable)
     stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: tag_lot_number, template_uuid: tag_template_uuid))
