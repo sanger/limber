@@ -47,7 +47,7 @@ LRC GEM-X 5p GE Dil:
   :creator_class: LabwareCreators::ConcentrationBinnedPlate
   :dilutions:
     :source_volume: 10
-    :diluent_volume: 0
+    :diluent_volume: 25
     :bins:
       - max: 25.0
         pcr_cycles: 15
