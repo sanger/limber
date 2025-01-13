@@ -21,4 +21,11 @@ module RobotHelpers
       result
     )
   end
+
+  def bed_tube_rack_lookup_with_barcode(barcode, result, includes = %i[purpose parents])
+    allow(Sequencescape::Api::V2::TubeRack).to receive(:find_all).with(
+      { barcode: Array(barcode) },
+      includes:
+    ).and_return(result)
+  end
 end
