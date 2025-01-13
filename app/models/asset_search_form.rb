@@ -26,7 +26,7 @@ class AssetSearchForm
   end
 
   def purpose_names
-    @purpose_names || Settings.purposes.values_at(purpose_uuids).pluck(:name)
+    @purpose_names || Settings.purposes.values_at(*purpose_uuids).pluck(:name)
   end
 
   def page

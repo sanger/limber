@@ -11,6 +11,11 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
   include Sequencescape::Api::V2::Shared::HasQcFiles
 
+  DEFAULT_INCLUDES = [
+    :purpose,
+    wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]]
+  ].freeze
+
   self.plate = true
   has_many :wells
   has_many :samples
@@ -34,8 +39,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2.plate_for_presenter(**options)
   end
 
-  def self.find_all(options, includes: DEFAULT_INCLUDES)
-    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).all
+  def self.find_all(options, includes: DEFAULT_INCLUDES, paginate: {})
+    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).paginate(paginate).all
   end
 
   #
@@ -87,6 +92,31 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   #   well is found at that location.
   def well_at_location(well_location)
     wells.detect { |well| well.location == well_location }
+  end
+
+  def number_of_pools
+    pooling_metadata.length
+  end
+
+  def library_type_name
+    # TODO: {Y24-190} Find a way to get access to this value like it was in V1.
+    #       It doesn't appear to be in the pooling_metadata.
+    return nil
+    first_pool&.fetch('library_type_name')
+  end
+
+  def insert_size
+    # TODO: {Y24-190} Find a way to get access to this value like it was in V1.
+    #       It doesn't appear to be in the pooling_metadata.
+    return nil
+    first_pool&.fetch('insert_size')
+  end
+
+  # A number of attributes should be consistent across the plate.
+  # The example pool provides a source of this information.
+  # Note that if this assumption no longer holds true, this will need updating.
+  def first_pool
+    pooling_metadata.values.first
   end
 
   def tagged?
