@@ -4,19 +4,19 @@ module Robots::Bed
   # This bed hosts the parent plate or a tube-rack. It uses the robot to find
   # its labware and child labware. When it is used as a source bed, it should
   # host the Plate. When it is used as a destination bed, it should host a
-  # tube-rack wrapper.
+  # Tube Rack.
   #
   class PlateToTubeRacksBed < Robots::Bed::Base
     # Updates the metadata of the labware with the robot barcode.
     # This method is called inside the robot controller's start action for
-    # tube-rack wrappers and it sets the created_with_robot metadata field.
+    # Tube Racks and it sets the created_with_robot metadata field.
     #
     # @param robot_barcode [String] the robot barcode
     # @return [void]
     #
     def labware_created_with_robot(robot_barcode)
       # RobotController uses machine barcode for initialising LabwareMetadata
-      labware.tubes.each do |tube|
+      labware.racked_tubes.tubes.each do |tube|
         LabwareMetadata.new(user_uuid: user_uuid, barcode: tube.barcode.machine).update!(
           created_with_robot: robot_barcode
         )
@@ -25,7 +25,7 @@ module Robots::Bed
 
     # Returns an array of labware from the robot's labware store for barcodes.
     #
-    # @return [Array<TubeRackWrapper>] child tube-rack wrappers
+    # @return [Array<TubeRack>] child tube racks
     #
     def child_labware
       return [] if labware.blank?
@@ -51,7 +51,7 @@ module Robots::Bed
     def transition
       return if target_state.nil? || labware.nil? # We have nothing to do
 
-      labware.tubes.each { |tube| change_tube_state(tube) }
+      labware.racked_tubes.each { |racked_tube| change_tube_state(racked_tube.tube) }
     end
 
     # Changes the state of one tube to the target state. This method is called
