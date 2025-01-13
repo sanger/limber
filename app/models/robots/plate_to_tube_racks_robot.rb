@@ -27,16 +27,7 @@ module Robots
   class PlateToTubeRacksRobot < Robots::SplittingRobot
     attr_writer :relationships # Hash from robot config into @relationships
 
-    # Option for including downstream tubes and metadata in Plate API response.
-    PLATE_INCLUDES = 'purpose,wells,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
-
-    # Returns the well order for getting wells from the plate.
-    #
-    # @return [Symbol] the well order
-    #
-    def well_order
-      :coordinate
-    end
+    PLATE_INCLUDES = 'purpose'
 
     # Returns the bed class for this robot.
     #
@@ -74,20 +65,22 @@ module Robots
     # wrapper objects for tube racks.
     #
     # @param barcodes [Array<String>] array of barcodes
-    # @return [Array<Plate, TubeRackWrapper>]
+    # @return [Array<Plate, TubeRack>]
     #
     def find_bed_labware(barcodes)
       barcodes.filter_map { |barcode| labware_store[barcode] }
     end
 
-    # Returns an array of child labware from the robot's labware store for
+    # Returns an array of child tube racks from the robot's labware store for
     # the given Plate.
     #
     # @param plate [Plate] the parent plate
-    # @return [Array<TubeRackWrapper>] array of tube rack wrapper objects
+    # @return [Array<TubeRack>] array of tube rack wrapper objects
     #
     def child_labware(plate)
-      labware_store.values.select { |labware| labware.respond_to?(:parent) && labware.parent.uuid == plate.uuid }
+      labware_store.values.select do |labware|
+        labware.respond_to?(:parents) && labware.parents.first&.uuid == plate.uuid
+      end
     end
 
     private
@@ -103,6 +96,8 @@ module Robots
 
     # Prepares the labware store before handling robot actions. This method is
     # called before the robot's bed verification and perform transfer actions.
+    # NB. This is what labwares should be scanned, given the plate barcode scanned.
+    # i.e. the plate barcode is scanned, and the expected tube rack children are determined.
     #
     # @param bed_labwares [Hash] the hash from request parameters
     # @return [void]
@@ -133,10 +128,6 @@ module Robots
     # This method relies on the bed_labwares specified in request parameters,
     # that were already recorded by the prepare_labware_store method. We
     # override the bed configuration based on availability of labware here.
-    #
-    # NB. The child labware are tube-rack wrapper objects, not actual labware.
-    # The information about tube-racks are found using the metadata of the
-    # downstream tubes, included in the Sequencescape API response.
     #
     # @ return [void]
     #
@@ -193,7 +184,14 @@ module Robots
     # @return [void]
     #
     def add_tube_racks_to_labware_store(plate)
-      find_tube_racks(plate).each { |rack| labware_store[rack.barcode.human] = rack }
+      plate.children.each do |tube_rack|
+        # cycle beds, if tube rack matches purpose and state from config, add it
+        beds.each_value do |bed|
+          if bed.purpose == tube_rack.purpose.name && bed.states.include?(tube_rack.state)
+            labware_store[tube_rack.barcode.human] = tube_rack
+          end
+        end
+      end
     end
 
     # Returns the labware store. The hash is indexed by the labware barcode.
@@ -214,39 +212,6 @@ module Robots
     #
     def find_plate(barcode)
       Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: PLATE_INCLUDES).first
-    end
-
-    # Returns an array of tube rack wrapper objects that from the downstream tubes
-    # of the given plate.
-    #
-    # @param plate [Plate] the parent plate
-    # @return [Array<TubeRackWrapper>] array of tube rack wrapper objects
-    #
-    def find_tube_racks(plate)
-      plate
-        .wells
-        .sort_by(&well_order)
-        .each_with_object([]) do |well, racks|
-          next if well.downstream_tubes.blank?
-          well.downstream_tubes.each do |tube|
-            barcode = tube.custom_metadatum_collection.metadata[:tube_rack_barcode]
-            find_or_create_tube_rack_wrapper(racks, barcode, plate).push_tube(tube)
-          end
-        end
-    end
-
-    # Returns an existing or new tube rack wrapper object.
-    #
-    # @param racks [Array<TubeRackWrapper>] the tube racks found so far
-    # @param barcode[String] the barcode of the tube rack
-    # @param plate [Plate] the parent plate
-    # @return [TubeRackWrapper] the tube rack wrapper object
-    #
-    def find_or_create_tube_rack_wrapper(racks, barcode, plate)
-      rack = racks.detect { |tube_rack| tube_rack.barcode.human == barcode }
-      return rack if rack.present?
-      labware_barcode = LabwareBarcode.new(human: barcode, machine: barcode)
-      racks.push(TubeRackWrapper.new(labware_barcode, plate)).last
     end
   end
 end
