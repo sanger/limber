@@ -60,6 +60,10 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2::TubeRack.includes(*includes).find(**options).first
   end
 
+  def self.find_all(options, includes: DEFAULT_INCLUDES)
+    Sequencescape::Api::V2::TubeRack.includes(*includes).where(**options).all
+  end
+
   # This method sorts the racked tubes by their coordinate, taking into account both row and column parts.
   # Sorts by column first and then by row.
   #
