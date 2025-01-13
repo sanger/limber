@@ -43,15 +43,6 @@ LB Lib PCR-XP:
       id: concentrations_nm
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
-
-# A plate provided as ready-made libraries.
-# These used to be imported as Stock Plates and then 'fake cherrypicked' onto 'LB Lib PCR XP', which were allowed down the multiplexing pipelines.
-# Now, they can be imported and submitted as this more accurate plate purpose.
-Library Stock Plate:
-  :asset_type: plate
-  :stock_plate: true
-  :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
 LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
