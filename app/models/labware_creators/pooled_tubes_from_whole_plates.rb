@@ -50,8 +50,7 @@ module LabwareCreators
     end
 
     def parents
-      @parents ||=
-        api.search.find(Settings.searches['Find assets by barcode']).all(Limber::BarcodedAsset, barcode: barcodes)
+      @parents ||= Sequencescape::API::V2::Labware.find(barcode: barcodes).all
     end
 
     def parents_suitable
