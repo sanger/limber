@@ -11,6 +11,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
   include Sequencescape::Api::V2::Shared::HasQcFiles
 
+  UNKNOWN = 'Unknown'.freeze
+
   DEFAULT_INCLUDES = [
     :purpose,
     wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]]
@@ -99,17 +101,15 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   def library_type_name
-    # TODO: {Y24-190} Find a way to get access to this value like it was in V1.
-    #       It doesn't appear to be in the pooling_metadata.
-    return nil
-    first_pool&.fetch('library_type_name')
+    return UNKNOWN if first_pool.nil?
+
+    first_pool.dig('library_type', 'name') || UNKNOWN
   end
 
   def insert_size
-    # TODO: {Y24-190} Find a way to get access to this value like it was in V1.
-    #       It doesn't appear to be in the pooling_metadata.
-    return nil
-    first_pool&.fetch('insert_size')
+    return UNKNOWN if first_pool.nil?
+
+    first_pool.fetch('insert_size', [UNKNOWN]).to_a.join(' ')
   end
 
   # A number of attributes should be consistent across the plate.
