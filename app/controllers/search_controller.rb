@@ -11,12 +11,12 @@ class SearchController < ApplicationController
   end
 
   def ongoing_plates # rubocop:todo Metrics/AbcSize
-    plate_search = api.search.find(Settings.searches.fetch('Find plates'))
+    api.search.find(Settings.searches.fetch('Find plates'))
     @purpose_options = helpers.purpose_options('plate')
     @search_options = OngoingPlate.new(ongoing_plate_search_params.merge(page: params['page']&.to_i).compact)
     @search_results =
       Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
-    @search_options.total_results = @search_results.size
+    @search_options.total_results = @search_results.total_count
   end
 
   def ongoing_tubes # rubocop:todo Metrics/AbcSize

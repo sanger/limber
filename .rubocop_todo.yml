@@ -50,3 +50,7 @@ Metrics/MethodLength:
 Style/NumericPredicate:
   Exclude:
     - 'lib/deployed_version.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'app/sequencescape/sequencescape/api/v2/plate.rb'

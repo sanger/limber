@@ -33,6 +33,7 @@ class AssetSearchForm
     @page || 1
   end
 
+  # TODO: Y24-190 Could use .total_pages instead of total_results
   def total_pages
     @total_pages ||= (total_results || 0) / PER_PAGE
   end

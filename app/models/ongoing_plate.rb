@@ -15,7 +15,7 @@ class OngoingPlate < AssetSearchForm
   def pagination
     return {} if page.nil? # No pagination
 
-    { number: page, size: PER_PAGE }
+    { page: page, per_page: PER_PAGE }
   end
 
   def default_purposes

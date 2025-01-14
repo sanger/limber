@@ -40,6 +40,19 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
     end
   end
 
+  def stub_asset_v2_search(barcode, asset)
+    if asset.is_a?(Array)
+      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(
+        barcode:
+      ).and_return(asset)
+    else
+      # TODO: Y24-190 to test
+      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(
+        barcode:
+      ).and_return([asset])
+    end
+  end
+
   def stub_get_labware_metadata(barcode, labware_v1, metadata = nil)
     params = { uuid: 'custom_metadatum_collection-uuid' }
     params.merge!(metadata) unless metadata.nil?

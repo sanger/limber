@@ -11,11 +11,11 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
   include Sequencescape::Api::V2::Shared::HasQcFiles
 
-  UNKNOWN = 'Unknown'.freeze
+  UNKNOWN = 'Unknown'
 
   DEFAULT_INCLUDES = [
     :purpose,
-    wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]]
+    {wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]]}
   ].freeze
 
   self.plate = true
@@ -45,7 +45,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2::Plate.includes(*includes).where(**options).paginate(paginate).all
   end
 
-  #
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same
   #

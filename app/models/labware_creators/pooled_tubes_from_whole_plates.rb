@@ -46,11 +46,11 @@ module LabwareCreators
     # TODO: This should probably be asynchronous
     def available_plates
       @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
-      @search_results = plate_search.all(Limber::Plate, @search_options.search_parameters)
+      @search_results = Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters)
     end
 
     def parents
-      @parents ||= Sequencescape::API::V2::Labware.find(barcode: barcodes).all
+      @parents ||= Sequencescape::Api::V2::Labware.find(barcode: barcodes)
     end
 
     def parents_suitable
@@ -58,10 +58,6 @@ module LabwareCreators
       return if missing_barcodes.empty?
 
       errors.add(:barcodes, "could not be found: #{missing_barcodes}")
-    end
-
-    def plate_search
-      api.search.find(Settings.searches['Find plates'])
     end
 
     def number_of_parent_labwares
