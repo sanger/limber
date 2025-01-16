@@ -1,9 +1,9 @@
 <%# Driver file for Hamilton robot to transfer from LRC PBMC Pools (or Input) to LRC GEM x 5P chip %>
 <%= CSV.generate_line [
-    'Workflow', 
+    'Workflow',
     @workflow
-  ], 
-  row_sep: '' 
+  ],
+  row_sep: ''
 %>
 <%= CSV.generate_line [], row_sep: "" %>
 <%= CSV.generate_line [
@@ -19,14 +19,16 @@
                       row_sep: ""
 %>
 <%
-  # Configuration specific to this export
+  # Constants from config/initializers/scrna_config.rb
+  scrna_config = Rails.application.config.scrna_config
 
-  required_number_of_cells = 30000 
-  wastage_factor = 0.95238 # accounting for wastage of material when transferring between labware
-  chip_loading_concentration = 2400 
-  desired_number_of_cells_per_chip_well = 90000
-  desired_sample_volume = 37.5 # microlitres
-  volume_taken_for_cell_counting = 10.0 # microlitres
+  # fetch constants from scrna_config for use in calculations on source wells below
+  required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
+  wastage_factor = scrna_config[:wastage_factor]
+  desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
+  desired_chip_loading_volume = scrna_config[:desired_chip_loading_volume]
+  volume_taken_for_cell_counting = scrna_config[:volume_taken_for_cell_counting]
+  number_of_cells_per_chip_well_key = scrna_config[:number_of_cells_per_chip_well_key]
 
   # Destination wells are mapped to numbers: A1 -> 17, A2 -> 18, ..., A8 -> 24
   mapping = (1..8).each_with_object({}) { |i, hash| hash["A#{i}"] = (16 + i).to_s }
@@ -35,11 +37,33 @@
   ancestral_plate_wells = @ancestor_plate.wells.index_by(&:location)
   rows_array = []
   each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
-    number_of_samples =  ancestral_plate_wells[src_location].aliquots.length
-    resuspension_volume = (number_of_samples * required_number_of_cells * wastage_factor).to_f / chip_loading_concentration
+    src_well = ancestral_plate_wells[src_location]
+    number_of_samples =  src_well.aliquots.length
+
+    # Use the source well's number_of_cells_per_chip_well if available, otherwise error.
+    # Value should have been calculated and stored on the pool well polymetadata.
+    well_poly_metadatum = src_well.poly_metadatum_by_key(number_of_cells_per_chip_well_key)
+
+    # raise error if polymetadata is missing
+    raise "Missing poly metadata for number of cells per chip well for #{src_barcode} #{src_location}, " \
+            'cannot generate driver file' unless well_poly_metadatum
+
+    # extract value from the polymetadata
+    number_of_cells_per_chip_well = well_poly_metadatum&.value.to_f.nonzero?
+
+    # calculations
+
+    # calculate volume we believe is remaining in the source well
+    resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor).to_f / desired_chip_loading_concentration
     source_well_volume = resuspension_volume - volume_taken_for_cell_counting
-    sample_volume = desired_number_of_cells_per_chip_well.to_f/chip_loading_concentration 
-    pbs_volume = desired_sample_volume - sample_volume
+
+    # calculate volume of the source sample well to take to load onto the chip
+    sample_volume = number_of_cells_per_chip_well/desired_chip_loading_concentration
+
+    # calculate pbs buffer volume with which to top up the chip loading volume
+    pbs_volume = desired_chip_loading_volume - sample_volume
+
+    # add row to driver file output csv
     rows_array << [
       src_barcode,
       src_location,
