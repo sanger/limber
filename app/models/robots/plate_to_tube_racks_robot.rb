@@ -190,6 +190,7 @@ module Robots
     # @param plate [Plate] the parent plate
     # @return [void]
     #
+    # rubocop:disable Metrics/AbcSize
     def add_tube_racks_to_labware_store(plate)
       plate.children.each do |asset|
         # NB. children of plate are currently Assets, whereas we need TubeRack objects
@@ -208,6 +209,8 @@ module Robots
         end
       end
     end
+
+    # rubocop:enable Metrics/AbcSize
 
     # Returns the labware store. The hash is indexed by the labware barcode.
     # The values are either Plate objects or labware-like wrapper objects for

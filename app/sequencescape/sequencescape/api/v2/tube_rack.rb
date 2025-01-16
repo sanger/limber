@@ -12,11 +12,7 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   self.tube_rack = true
 
-  DEFAULT_TUBE_RACK_INCLUDES = [
-    :purpose,
-    'racked_tubes',
-    'racked_tubes.tube'
-  ].freeze
+  DEFAULT_TUBE_RACK_INCLUDES = [:purpose, 'racked_tubes', 'racked_tubes.tube'].freeze
   STATES_TO_FILTER_OUT = %w[cancelled failed].freeze
   STATE_EMPTY = 'empty'
   STATE_MIXED = 'mixed'
