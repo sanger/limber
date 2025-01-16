@@ -161,14 +161,11 @@ module LabwareCreators
       )
     end
 
-    # We will create multiple child tube racks, redirect back to the parent plate
+    # We create Redirect to the contingency tube rack
     def redirection_target
-      # NB. if we want to change this to the first tube rack use: child_tube_racks[SEQ_TUBE_RACK_NAME]
-      parent
+      child_tube_racks[SPR_TUBE_RACK_NAME]
     end
 
-    # We will want to see the list of tubes in the rack
-    # TODO: as these are racked_tubes and not child tubes, does the tube rack presenter have a relatives tab?
     def anchor
       'relatives_tab'
     end
