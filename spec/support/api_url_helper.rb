@@ -300,8 +300,8 @@ module ApiUrlHelper
         )
       end
 
-      arguments = [{ uuid: labware.uuid }]
-      allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([labware])
+      arguments = [{ uuid: tube_rack.uuid }]
+      allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([tube_rack])
     end
 
     # rubocop:enable Metrics/AbcSize
