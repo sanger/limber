@@ -79,7 +79,7 @@ module Robots
     #
     def child_labware(plate)
       labware_store.values.select do |labware|
-        labware.respond_to?(:parents) && labware.parents.first&.uuid == plate.uuid
+        labware.respond_to?(:parents) && labware.parents&.first&.uuid == plate.uuid
       end
     end
 
@@ -104,10 +104,17 @@ module Robots
     #
     def prepare_labware_store(bed_labwares)
       return if labware_store.present?
+
       stripped_barcodes(bed_labwares).each do |barcode|
         plate = find_plate(barcode)
+
+        # skip non plates
         next if plate.blank?
+
+        # add the parent plate to the labware store
         add_plate_to_labware_store(plate)
+
+        # determine the expected tube racks for this parent plate and add to the labware store
         add_tube_racks_to_labware_store(plate)
       end
     end
@@ -134,7 +141,7 @@ module Robots
     def prepare_beds
       @relationships.each do |relationship|
         relationship_children = relationship.dig('options', 'children')
-        labware_store_purposes = labware_store.values.map(&:purpose_name)
+        labware_store_purposes = labware_store.values.map { |labware| labware.purpose.name }
 
         bed_barcodes_to_remove =
           relationship_children.select { |barcode| labware_store_purposes.exclude?(beds[barcode].purpose) }
@@ -184,7 +191,15 @@ module Robots
     # @return [void]
     #
     def add_tube_racks_to_labware_store(plate)
-      plate.children.each do |tube_rack|
+      plate.children.each do |asset|
+        # NB. children of plate are currently Assets, whereas we need TubeRack objects
+
+        # skip when child is anything other than a tube rack
+        next unless asset.type == 'tube_racks'
+
+        # fetch tube rack from API
+        tube_rack = find_tube_rack(asset.id)
+
         # cycle beds, if tube rack matches purpose and state from config, add it
         beds.each_value do |bed|
           if bed.purpose == tube_rack.purpose.name && bed.states.include?(tube_rack.state)
@@ -212,6 +227,10 @@ module Robots
     #
     def find_plate(barcode)
       Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: PLATE_INCLUDES).first
+    end
+
+    def find_tube_rack(id)
+      Sequencescape::Api::V2::TubeRack.find_all({ id: [id] }).first
     end
   end
 end
