@@ -10,6 +10,7 @@ module LabwareCreators::DonorPoolingValidator
     validate :source_plates_must_exist
     validate :wells_with_aliquots_must_have_donor_id
     validate :wells_with_aliquots_must_have_cell_count
+    validate :validate_pools_can_be_built
   end
 
   SOURCE_BARCODES_MUST_BE_ENTERED = 'At least one source plate must be scanned.'
@@ -169,5 +170,26 @@ module LabwareCreators::DonorPoolingValidator
   # @return [String] a string representation of the invalid wells
   def formatted_invalid_wells_hash(invalid_wells_hash)
     invalid_wells_hash.map { |barcode, locations| "#{barcode}: #{locations.join(', ')}" }.join(' ')
+  end
+
+  # Validates that pools can be built. If any exceptions are raised during the
+  # calculation, they are caught and added to the errors collection, which
+  # makes the result of the save method false because of the valid? call. The
+  # creation controller will then add the error messages to the flash.
+  #
+  # The advantages of this approach are:
+  # - If the pools cannot be built, the create_labware! method will not be
+  # called at all and the exceptions will be converted to error messages.
+  # - If the pools can be built, the create_labware! method will use the cached
+  # result to generate the transfers.
+  #
+  # @return [void]
+  def validate_pools_can_be_built
+    begin
+      pools
+    rescue StandardError => e
+      errors.add(:pools, e.message)
+    end
+    nil
   end
 end
