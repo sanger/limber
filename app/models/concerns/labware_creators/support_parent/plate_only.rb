@@ -13,7 +13,7 @@ module LabwareCreators::SupportParent
     end
 
     def parent
-      @parent ||= api.plate.find(parent_uuid)
+      @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
     end
   end
 end

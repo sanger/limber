@@ -163,9 +163,9 @@ module LabwareCreators
     # @return [Boolean] Returns true if no exception is raised.
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(dest_plate)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes(dest_plate),
+        user_uuid: user_uuid
       )
       true
     end
@@ -194,10 +194,10 @@ module LabwareCreators
     def request_hash(source_well, dest_plate, additional_parameters)
       dest_location = transfer_hash[source_well][:dest_locn]
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' => dest_plate.well_at_location(dest_location)&.uuid,
-        :aliquot_attributes => {
-          'tag_depth' => tag_depth_hash[source_well]
+        source_asset: source_well.uuid,
+        target_asset: dest_plate.well_at_location(dest_location)&.uuid,
+        aliquot_attributes: {
+          tag_depth: tag_depth_hash[source_well]
         }
       }.merge(additional_parameters)
     end

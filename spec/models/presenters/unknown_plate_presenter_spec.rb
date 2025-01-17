@@ -18,8 +18,6 @@ RSpec.describe Presenters::UnknownPlatePresenter do
   end
 
   context 'with a well request' do
-    before { stub_api_get(labware.uuid, 'wells', body: json(:well_collection)) }
-
     it { is_expected.not_to be_valid }
 
     it 'warns the user' do

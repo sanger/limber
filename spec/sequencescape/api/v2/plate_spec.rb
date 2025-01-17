@@ -18,7 +18,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
     context 'when not a stock_plate' do
       before do
         ancestor_scope = instance_double('JsonApiClient::Query::Builder')
-        expect(plate).to receive(:stock_plates).and_return(ancestor_scope)
+        expect(plate).to receive(:fetch_stock_plate_ancestors).and_return(ancestor_scope)
         expect(ancestor_scope).to receive(:order).with(id: :asc).and_return(stock_plates)
         expect(plate).to receive(:stock_plate?).and_return(false)
       end
@@ -36,27 +36,19 @@ RSpec.describe Sequencescape::Api::V2::Plate do
     end
   end
 
-  describe '#stock_plates' do
+  describe '#fetch_stock_plate_ancestors' do
     let(:ancestors_scope) { double('ancestors_scope') }
-    context 'when it is a stock plate' do
-      it 'returns [self] if this plate is a stock plate already' do
-        allow(plate).to receive(:stock_plate?).and_return(true)
-        expect(plate.stock_plates).to eq([plate])
-      end
-    end
-    context 'when it is not a stock plate' do
-      let(:stock_plate_names) { ['Stock platey plate stock'] }
-      let(:stock_plates) { create_list :v2_plate, 2 }
-      before do
-        allow(plate).to receive(:ancestors).and_return(ancestors_scope)
-        allow(SearchHelper).to receive(:stock_plate_names).and_return(stock_plate_names)
-        allow(ancestors_scope).to receive(:where).with(purpose_name: stock_plate_names).and_return(stock_plates)
-      end
+    let(:stock_plate_names) { ['Stock platey plate stock'] }
+    let(:stock_plates) { create_list :v2_plate, 2 }
 
-      it 'returns the stock plates because that must be cool' do
-        allow(plate).to receive(:stock_plate?).and_return(false)
-        expect(plate.stock_plates).to eq(stock_plates)
-      end
+    before do
+      allow(plate).to receive(:ancestors).and_return(ancestors_scope)
+      allow(SearchHelper).to receive(:stock_plate_names).and_return(stock_plate_names)
+      allow(ancestors_scope).to receive(:where).with(purpose_name: stock_plate_names).and_return(stock_plates)
+    end
+
+    it 'returns the ancestral stock plates' do
+      expect(plate.fetch_stock_plate_ancestors).to eq(stock_plates)
     end
   end
 
@@ -120,6 +112,15 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
       # A1, A2, A3, ..., A12, B1, B2, ..., H10, H11, H12
       expect(plate.wells_in_rows.map(&:location)).to eq(locations_in_rows)
+    end
+  end
+
+  describe '#wells_in_columns' do
+    it 'returns wells sorted by column first and then rows' do
+      locations_in_columns = ('1'..'12').flat_map { |number| ('A'..'H').map { |letter| "#{letter}#{number}" } }
+
+      # A1, B1, C1, ..., H1, A2, B2, ..., H2, .. A12, B12, ..., H12
+      expect(plate.wells_in_columns.map(&:location)).to eq(locations_in_columns)
     end
   end
 end

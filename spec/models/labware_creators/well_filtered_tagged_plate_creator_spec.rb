@@ -87,6 +87,7 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
   let(:parent) do
     create(
       :v2_plate,
+      :has_pooling_metadata,
       purpose: parent_purpose_name,
       uuid: parent_uuid,
       wells: wells,
@@ -170,70 +171,43 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
     before do
       # It will receive the child plate, which is an existing tag plate.
       allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child)
-
-      # It will create the tag layout.
-      tag_layout_template = double('TagLayoutTemplate')
-      allow(api).to receive_message_chain(:tag_layout_template, :find).with(tag_template_uuid).and_return(
-        tag_layout_template
-      )
-      allow(tag_layout_template).to receive(:create!).with(
-        plate: tag_plate_uuid,
-        user: user_uuid,
-        enforce_uniqueness: false
-      )
-
-      # It will change the state of the tag plate to exhausted.
-      state_change_attributes = {
-        reason: 'Used in Library creation',
-        target_state: 'exhausted',
-        target_uuid: tag_plate_uuid,
-        user_uuid: user_uuid
-      }
-      allow(Sequencescape::Api::V2::StateChange).to receive(:create!).with(**state_change_attributes)
-
-      # It will convert the purpose of the tag plate.
-      plate_conversion_attributes = {
-        target: child_uuid,
-        purpose: child_purpose_uuid,
-        user: user_uuid,
-        parent: parent_uuid
-      }
-      plate_conversion = double('PlateConversion', target: child) # target is the converted tag plate.
-      allow(api).to receive_message_chain(:plate_conversion, :create!).with(**plate_conversion_attributes).and_return(
-        plate_conversion
-      )
     end
 
-    # The additional parameter outer_request is set to the uuid of the correct
-    # request matching the filters. This is because the well filter can pick the
-    # right requests using the pipeline filters sent using the custom form.
-    let(:transfer_requests) do
+    let(:plate_conversions_attributes) do
+      [{ parent_uuid: parent_uuid, purpose_uuid: child_purpose_uuid, target_uuid: child_uuid, user_uuid: user_uuid }]
+    end
+
+    let(:state_changes_attributes) do
+      [{ reason: 'Used in Library creation', target_state: 'exhausted', target_uuid: child_uuid, user_uuid: user_uuid }]
+    end
+
+    let(:tag_layouts_attributes) do
       [
         {
-          'source_asset' => wells[0].uuid,
-          'target_asset' => child.wells[0].uuid,
-          'outer_request' => new_requests[0].uuid
-        },
-        {
-          'source_asset' => wells[1].uuid,
-          'target_asset' => child.wells[1].uuid,
-          'outer_request' => new_requests[1].uuid
-        },
-        {
-          'source_asset' => wells[2].uuid,
-          'target_asset' => child.wells[2].uuid,
-          'outer_request' => new_requests[2].uuid
+          enforce_uniqueness: false,
+          plate_uuid: child_uuid,
+          tag_layout_template_uuid: tag_template_uuid,
+          user_uuid: user_uuid
         }
+      ]
+    end
+
+    let(:transfer_requests_attributes) do
+      [
+        { source_asset: wells[0].uuid, target_asset: child.wells[0].uuid, outer_request: new_requests[0].uuid },
+        { source_asset: wells[1].uuid, target_asset: child.wells[1].uuid, outer_request: new_requests[1].uuid },
+        { source_asset: wells[2].uuid, target_asset: child.wells[2].uuid, outer_request: new_requests[2].uuid }
       ]
     end
 
     it_behaves_like 'it has a custom page', 'well_filtered_tagged_plate'
 
     it 'creates a tag plate with the right requests' do
-      expect(api).to receive_message_chain(:transfer_request_collection, :create!).with(
-        user: user_uuid,
-        transfer_requests: transfer_requests
-      )
+      expect_plate_conversion_creation
+      expect_state_change_creation
+      expect_tag_layout_creation
+      expect_transfer_request_collection_creation
+
       expect(subject.save).to be true
     end
   end
