@@ -161,11 +161,12 @@ module LabwareCreators
       )
     end
 
-    # We create Redirect to the contingency tube rack
+    # We redirect to the contingency tube rack that we have just created.
     def redirection_target
       child_tube_racks[SPR_TUBE_RACK_NAME]
     end
 
+    # Display the relatives tab on the child tube rack page.
     def anchor
       'relatives_tab'
     end
