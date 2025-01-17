@@ -722,25 +722,26 @@ RSpec.describe Robots::Robot, robots: true do
              state: target_plate_state
     end
 
+    let(:state_changes_attributes) do
+      [
+        {
+          contents: nil,
+          customer_accepts_responsibility: false,
+          reason: 'Robot bravo LB End Prep started',
+          target_state: 'passed',
+          target_uuid: plate.uuid,
+          user_uuid: user_uuid
+        }
+      ]
+    end
+
     before do
       create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
       bed_labware_lookup(plate)
     end
 
     it 'performs transfer from started to passed' do
-      expect_api_v2_posts(
-        'StateChange',
-        [
-          {
-            contents: nil,
-            customer_accepts_responsibility: false,
-            reason: 'Robot bravo LB End Prep started',
-            target_state: 'passed',
-            target_uuid: plate.uuid,
-            user_uuid: user_uuid
-          }
-        ]
-      )
+      expect_state_change_creation
 
       robot.perform_transfer('580000014851' => [plate.human_barcode])
     end
@@ -751,6 +752,31 @@ RSpec.describe Robots::Robot, robots: true do
       it 'raises a bed error in the event of last-minute errors' do
         expect { robot.perform_transfer('580000014851' => [plate.human_barcode]) }.to raise_error(Robots::Bed::BedError)
       end
+    end
+  end
+
+  describe '#start_button_message' do
+    let(:robot_spec) do
+      {
+        'name' => 'robot_name',
+        'beds' => {
+          'bed1_barcode' => {
+            'purpose' => 'Limber Cherrypicked',
+            'states' => ['passed'],
+            'label' => 'Bed 1'
+          }
+        }
+      }
+    end
+
+    it 'returns the correct message when the robot does not have a start_button_text' do
+      robot = Robots::Robot.new(robot_spec)
+      expect(robot.start_button_message).to eq("Start the #{robot.name}")
+    end
+
+    it 'returns the robots start_button_text when present' do
+      robot = Robots::Robot.new(robot_spec.merge(start_button_text: 'Be different'))
+      expect(robot.start_button_message).to eq('Be different')
     end
   end
 end

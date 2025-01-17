@@ -64,7 +64,7 @@ export default {
       type: String,
       required: true,
     },
-    sequencescapeApiUrl: {
+    sequencescapeApi: {
       type: String,
       required: true,
     },
@@ -129,7 +129,7 @@ export default {
       this.populateForm(metadata)
     },
     async refreshCustomMetadata() {
-      let url = `${this.sequencescapeApiUrl}/labware/${this.labwareId}?include=custom_metadatum_collection`
+      let url = `${this.sequencescapeApi}/labware/${this.labwareId}?include=custom_metadatum_collection`
       let metadata = {}
 
       await fetch(url)
@@ -203,7 +203,7 @@ export default {
         ? `custom_metadatum_collections/${customMetadatumCollectionsId}`
         : 'custom_metadatum_collections'
 
-      return `${this.sequencescapeApiUrl}/${path}`
+      return `${this.sequencescapeApi}/${path}`
     },
     buildPayload(method, customMetadatumCollectionsId, metadata) {
       let patchPayload = {

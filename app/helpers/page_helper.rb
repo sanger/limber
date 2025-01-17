@@ -53,7 +53,6 @@ module PageHelper # rubocop:todo Style/Documentation
   # eg. state_badge('pending')
   # <span class="state-badge-pending">Pending</span>
   def state_badge(state, title: 'Labware State')
-    return if state.blank? # added as TubeRack has a nil state
     tag.span(state.titleize, class: "state-badge #{state}", title: title, data: { toggle: 'tooltip' })
   end
 
@@ -61,7 +60,7 @@ module PageHelper # rubocop:todo Style/Documentation
   # <span class="badge badge-secondary">0</span>
   # eg. count_badge(10)
   # <span class="badge badge-primary">10</span>
-  def count_badge(count, badge_id = nil)
+  def count_badge(count, badge_id = nil, data_attributes = {})
     state =
       case count
       when nil, 0
@@ -69,6 +68,6 @@ module PageHelper # rubocop:todo Style/Documentation
       else
         'primary'
       end
-    tag.span(count || '...', class: "badge badge-pill badge-#{state}", id: badge_id)
+    tag.span(count || '...', class: "badge badge-pill badge-#{state}", id: badge_id, data: data_attributes)
   end
 end

@@ -34,9 +34,9 @@ module LabwareCreators
 
     def transfer_material_from_parent!(child_uuid)
       child_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(child_plate)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes(child_plate),
+        user_uuid: user_uuid
       )
     end
 
@@ -46,8 +46,8 @@ module LabwareCreators
 
     def request_hash(source_well, child_plate, additional_parameters)
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' => child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid
+        source_asset: source_well.uuid,
+        target_asset: child_plate.wells.detect { |child_well| child_well.location == source_well.location }&.uuid
       }.merge(additional_parameters)
     end
   end

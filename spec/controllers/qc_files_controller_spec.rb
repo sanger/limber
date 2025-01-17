@@ -6,72 +6,59 @@ require './app/controllers/qc_files_controller'
 RSpec.describe QcFilesController, type: :controller do
   has_a_working_api
 
-  describe '#show' do
-    let(:file_uuid) { 'file-uuid' }
-    let(:filename) { 'my_holiday.jpg' }
+  let(:plate) { create(:v2_plate, uuid: 'plate-uuid', qc_files_count: 3) }
 
-    before do
-      stub_api_get(file_uuid, body: json(:qc_file, uuid: file_uuid, filename: filename))
-      stub_request(:get, api_url_for(file_uuid)).with(headers: { 'Accept' => 'sequencescape/qc_file' }).to_return(
-        body: 'example file content',
-        headers: {
-          'Content-Disposition' => "attachment; filename=\"#{filename}\""
-        }
-      )
-    end
+  before { stub_v2_plate(plate, stub_search: false) }
+
+  describe '#show' do
+    let(:qc_file) { create(:qc_file, uuid: 'file-uuid', filename: 'important_qc_data.csv') }
+
+    before { stub_v2_qc_file(qc_file) }
 
     it 'returns a file' do
-      get :show, params: { id: file_uuid, limber_plate_id: 'plate-uuid' }
-      expect(response.body).to eq('example file content')
-      expect(response.get_header('Content-Disposition')).to include(filename)
+      get :show, params: { id: qc_file.uuid, limber_plate_id: plate.uuid }
+
+      expect(response.body).to eq('example,file,content')
+      expect(response.get_header('Content-Disposition')).to include(qc_file.filename)
     end
   end
 
   describe '#create' do
     let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
-    let(:file_content) do
+
+    let(:file_contents) do
       content = file.read
       file.rewind
       content
     end
-    let(:plate_uuid) { 'plate-uuid' }
 
-    let(:stub_post) do
-      stub_request(:post, api_url_for(plate_uuid, 'qc_files')).with(
-        body: file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="test_file.txt"'
+    let(:qc_files_attributes) do
+      [
+        {
+          contents: file_contents,
+          filename: 'test_file.txt',
+          relationships: {
+            labware: {
+              data: {
+                id: plate.id,
+                type: 'labware'
+              }
+            }
+          }
         }
-      ).to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'test_file.txt'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
-    end
-
-    before do
-      stub_api_get('plate-uuid', body: json(:plate, uuid: plate_uuid, qc_files_actions: %w[read create]))
-      stub_post
+      ]
     end
 
     it 'posts the file to the appropriate labware' do
-      post :create, params: { qc_file: file, limber_plate_id: plate_uuid }
-      expect(stub_post).to have_been_made.once
+      expect_qc_file_creation
+
+      post :create, params: { qc_file: file, limber_plate_id: plate.uuid }
+
       expect(flash.notice).to eq('Your file has been uploaded and is available from the file tab')
     end
   end
 
   describe '#index' do
-    let(:plate_uuid) { 'plate-uuid' }
-
-    before do
-      stub_api_get(plate_uuid, body: json(:plate, uuid: plate_uuid, qc_files_count: 3))
-      stub_api_get(plate_uuid, 'qc_files', body: json(:qc_files_collection, size: 3))
-    end
-
     let(:expected_response) do
       {
         'qc_files' => [
@@ -98,7 +85,7 @@ RSpec.describe QcFilesController, type: :controller do
     end
 
     it 'returns the qc files as json' do
-      get :index, params: { limber_plate_id: plate_uuid }, format: 'json'
+      get :index, params: { limber_plate_id: plate.uuid }, format: 'json'
       expect(response.parsed_body).to eq(expected_response)
     end
   end

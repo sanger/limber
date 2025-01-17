@@ -7,13 +7,14 @@ FactoryBot.define do
   factory :v2_sample, class: Sequencescape::Api::V2::Sample do
     skip_create
 
+    uuid
+
     sequence(:sanger_sample_id) { |i| "sample #{i}" }
     sequence(:name) { |i| "sample_name #{i}" }
     sample_metadata { create(:v2_sample_metadata) }
     control { false }
     control_type { nil }
     sample_manifest { create(:v2_sample_manifest) }
-    uuid { SecureRandom.uuid }
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
     after(:build) { |sample, evaluator| sample._cached_relationship(:sample_metadata) { evaluator.sample_metadata } }

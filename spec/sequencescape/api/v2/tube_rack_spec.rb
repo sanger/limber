@@ -113,4 +113,144 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       expect(model_name.singular_route_key).to eq('limber_tube_rack')
     end
   end
+
+  describe '#racked_tubes_in_columns' do
+    let(:labware_uuid) { SecureRandom.uuid }
+
+    let(:tube1_uuid) { SecureRandom.uuid }
+    let(:tube2_uuid) { SecureRandom.uuid }
+    let(:tube3_uuid) { SecureRandom.uuid }
+    let(:tube4_uuid) { SecureRandom.uuid }
+    let(:tube5_uuid) { SecureRandom.uuid }
+    let(:tube6_uuid) { SecureRandom.uuid }
+
+    let!(:tube1) { create :v2_tube, uuid: tube1_uuid, barcode_number: 1 }
+    let!(:tube2) { create :v2_tube, uuid: tube2_uuid, barcode_number: 2 }
+    let!(:tube3) { create :v2_tube, uuid: tube3_uuid, barcode_number: 3 }
+    let!(:tube4) { create :v2_tube, uuid: tube4_uuid, barcode_number: 4 }
+    let!(:tube5) { create :v2_tube, uuid: tube5_uuid, barcode_number: 5 }
+    let!(:tube6) { create :v2_tube, uuid: tube6_uuid, barcode_number: 6 }
+
+    let(:tubes) { { 'B1' => tube1, 'A1' => tube2, 'C1' => tube3, 'D3' => tube4, 'A3' => tube5, 'C2' => tube6 } }
+
+    # NB. factory sets up the racked tubes given the tubes hash above
+    let!(:tube_rack1) { create :tube_rack, barcode_number: 7, uuid: labware_uuid, tubes: tubes }
+
+    let(:tube_rack_barcode) { tube_rack1.labware_barcode.human }
+
+    it 'returns racked tubes sorted by coordinate' do
+      sorted_racked_tubes = tube_rack1.racked_tubes_in_columns
+      expect(sorted_racked_tubes[0].tube).to eq(tube2)
+      expect(sorted_racked_tubes[1].tube).to eq(tube1)
+      expect(sorted_racked_tubes[2].tube).to eq(tube3)
+      expect(sorted_racked_tubes[3].tube).to eq(tube6)
+      expect(sorted_racked_tubes[4].tube).to eq(tube5)
+      expect(sorted_racked_tubes[5].tube).to eq(tube4)
+    end
+
+    it 'memoizes the sorted racked tubes' do
+      expect(tube_rack1.racked_tubes_in_columns).to equal(tube_rack1.racked_tubes_in_columns)
+    end
+
+    context 'when there are single digit coordinates' do
+      let(:tubes) { { 'C12' => tube1, 'A1' => tube2, 'C2' => tube3, 'D3' => tube4, 'A3' => tube5, 'C11' => tube6 } }
+
+      it 'returns racked tubes sorted by coordinate' do
+        sorted_racked_tubes = tube_rack1.racked_tubes_in_columns
+        expect(sorted_racked_tubes[0].tube).to eq(tube2)
+        expect(sorted_racked_tubes[1].tube).to eq(tube3)
+        expect(sorted_racked_tubes[2].tube).to eq(tube5)
+        expect(sorted_racked_tubes[3].tube).to eq(tube4)
+        expect(sorted_racked_tubes[4].tube).to eq(tube6)
+        expect(sorted_racked_tubes[5].tube).to eq(tube1)
+      end
+    end
+
+    context 'when there are zero filled coordinates' do
+      let(:tubes) { { 'C12' => tube1, 'A01' => tube2, 'C02' => tube3, 'D03' => tube4, 'A03' => tube5, 'C11' => tube6 } }
+
+      it 'returns racked tubes sorted by coordinate' do
+        sorted_racked_tubes = tube_rack1.racked_tubes_in_columns
+        expect(sorted_racked_tubes[0].tube).to eq(tube2)
+        expect(sorted_racked_tubes[1].tube).to eq(tube3)
+        expect(sorted_racked_tubes[2].tube).to eq(tube5)
+        expect(sorted_racked_tubes[3].tube).to eq(tube4)
+        expect(sorted_racked_tubes[4].tube).to eq(tube6)
+        expect(sorted_racked_tubes[5].tube).to eq(tube1)
+      end
+    end
+  end
+
+  describe '#state' do
+    let(:tube1) { create :v2_tube, uuid: 'tube1_uuid', state: state_for_tube1, barcode_number: 1 }
+    let(:tube2) { create :v2_tube, uuid: 'tube2_uuid', state: state_for_tube2, barcode_number: 2 }
+    let(:tube3) { create :v2_tube, uuid: 'tube3_uuid', state: state_for_tube3, barcode_number: 3 }
+
+    let(:tubes) { { 'A1' => tube1, 'B1' => tube2, 'C1' => tube3 } }
+
+    let!(:test_tube_rack) { build :tube_rack, barcode_number: 5, tubes: tubes }
+
+    context 'when all racked tubes have the same state' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'pending' }
+      let(:state_for_tube3) { 'pending' }
+
+      it 'returns the state of the racked tubes' do
+        expect(test_tube_rack.state).to eq('pending')
+      end
+    end
+
+    context 'when the tube rack is empty' do
+      let(:tubes) { {} }
+
+      it 'returns "empty"' do
+        expect(test_tube_rack.state).to eq('empty')
+      end
+    end
+
+    context 'when racked tubes have mixed states' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'passed' }
+      let(:state_for_tube3) { 'pending' }
+
+      it 'returns "mixed"' do
+        expect(test_tube_rack.state).to eq('mixed')
+      end
+    end
+
+    context 'when racked tubes have mixed states including cancelled and failed' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'cancelled' }
+      let(:state_for_tube3) { 'failed' }
+
+      it 'returns the remaining state after filtering out cancelled and failed' do
+        expect(test_tube_rack.state).to eq('pending')
+      end
+    end
+
+    context 'when racked tubes have only cancelled and failed states' do
+      let(:state_for_tube1) { 'failed' }
+      let(:state_for_tube2) { 'cancelled' }
+      let(:state_for_tube3) { 'failed' }
+
+      it 'returns "failed" as we first filter the cancelled one out' do
+        expect(test_tube_rack.state).to eq('failed')
+      end
+    end
+
+    context 'when there are still mixed states after filtering out cancelled and failed' do
+      let(:state_for_tube1) { 'pending' }
+      let(:state_for_tube2) { 'passed' }
+      let(:state_for_tube3) { 'failed' }
+      let(:state_for_tube4) { 'cancelled' }
+
+      let(:tube4) { create :v2_tube, uuid: 'tube3_uuid', state: state_for_tube4, barcode_number: 4 }
+
+      let(:tubes) { { 'A1' => tube1, 'B1' => tube2, 'C1' => tube3, 'D1' => tube4 } }
+
+      it 'returns "mixed"' do
+        expect(test_tube_rack.state).to eq('mixed')
+      end
+    end
+  end
 end

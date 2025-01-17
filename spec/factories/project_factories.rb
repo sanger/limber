@@ -6,9 +6,8 @@ FactoryBot.define do
     skip_create
 
     id
+    uuid
 
     name { 'Test Project' }
-
-    uuid { SecureRandom.uuid }
   end
 end

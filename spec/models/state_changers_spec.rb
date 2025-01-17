@@ -38,45 +38,41 @@ RSpec.describe StateChangers do
     let(:failed_wells) { {} }
     subject { StateChangers::PlateStateChanger.new(api, labware_uuid, user_uuid) }
 
-    context 'on a fully pending plate' do
-      let(:plate_state) { 'pending' }
-      let(:target_state) { 'passed' }
-      let(:coordinates_to_pass) { nil }
-      it_behaves_like 'a state changer'
-    end
-
-    context 'on a fully passed plate' do
-      # Ideally we wouldn't need this query here, but we don't know that
-      # until we perform it.
+    context 'when labware is a plate' do
       before do
-        stub_api_get(labware_uuid, body: plate)
-        stub_api_get(labware_uuid, 'wells', body: well_collection)
+        plate.wells.each { |well| well.state = 'failed' if failed_wells.include?(well.location) }
+        stub_v2_plate(plate, stub_search: false)
       end
 
-      # if no wells are failed we leave contents blank and state changer assumes full plate
-      let(:coordinates_to_pass) { nil }
-
-      let(:plate_state) { 'passed' }
-      let(:target_state) { 'qc_complete' }
-      it_behaves_like 'a state changer'
-    end
-
-    context 'on a partially failed plate' do
-      let(:plate_state) { 'passed' }
-
-      # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
-      let(:target_state) { 'qc_complete' }
-
-      # when some wells are failed we filter those out of the contents
-      let(:failed_wells) { { 'A1' => 'failed', 'D1' => 'failed' } }
-      let(:coordinates_to_pass) { WellHelpers.column_order - failed_wells.keys }
-
-      before do
-        stub_api_get(labware_uuid, body: plate)
-        stub_api_get(labware_uuid, 'wells', body: well_collection)
+      context 'on a fully pending plate' do
+        let(:plate_state) { 'pending' }
+        let(:target_state) { 'passed' }
+        let(:coordinates_to_pass) { nil }
+        it_behaves_like 'a state changer'
       end
 
-      it_behaves_like 'a state changer'
+      context 'on a fully passed plate' do
+        # if no wells are failed we leave contents blank and state changer assumes full plate
+        let(:coordinates_to_pass) { nil }
+
+        let(:plate_state) { 'passed' }
+        let(:target_state) { 'qc_complete' }
+
+        it_behaves_like 'a state changer'
+      end
+
+      context 'on a partially failed plate' do
+        let(:plate_state) { 'passed' }
+
+        # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
+        let(:target_state) { 'qc_complete' }
+
+        # when some wells are failed we filter those out of the contents
+        let(:failed_wells) { %w[A1 D1] }
+        let(:coordinates_to_pass) { WellHelpers.column_order - failed_wells }
+
+        it_behaves_like 'a state changer'
+      end
     end
   end
 

@@ -19,17 +19,17 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   let(:plate_size) { 384 }
   let(:requests) do
     Array.new(plate_size) do |i|
-      create :gbs_library_request, :state => 'started', :uuid => "request-#{i}", 'submission_id' => '2'
+      create :gbs_library_request, state: 'started', uuid: "request-#{i}", submission_id: '2'
     end
   end
-  let(:parent) do
+  let(:parent_plate) do
     create :v2_plate_with_primer_panels,
            barcode_number: '2',
            uuid: parent_uuid,
            size: plate_size,
            outer_requests: requests
   end
-  let(:child) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
+  let(:child_plate) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
@@ -42,23 +42,13 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   # Essentially plate creation behaves as standard. The primer panel information
   # is solely for the user's benefit!
   context 'create plate' do
-    let!(:plate_request) do
-      stub_v2_plate(parent, stub_search: false)
-      stub_v2_plate(child, stub_search: false)
+    let(:plate_creations_attributes) do
+      [{ child_purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }]
     end
 
-    let!(:plate_creation_request) do
-      stub_api_post(
-        'plate_creations',
-        payload: {
-          plate_creation: {
-            parent: parent_uuid,
-            child_purpose: purpose_uuid,
-            user: user_uuid
-          }
-        },
-        body: json(:plate_creation)
-      )
+    before do
+      stub_v2_plate(parent_plate, stub_search: false)
+      stub_v2_plate(child_plate, stub_search: false)
     end
 
     describe '#panel_name' do
@@ -79,30 +69,19 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
       end
     end
 
-    let(:transfer_requests) do
+    let(:transfer_requests_attributes) do
       WellHelpers
         .column_order(plate_size)
         .map do |well_name|
-          { 'source_asset' => "2-well-#{well_name}", 'target_asset' => "3-well-#{well_name}", 'submission_id' => '2' }
+          { source_asset: "2-well-#{well_name}", target_asset: "3-well-#{well_name}", submission_id: '2' }
         end
     end
 
-    let!(:transfer_creation_request) do
-      stub_api_post(
-        'transfer_request_collections',
-        payload: {
-          transfer_request_collection: {
-            user: user_uuid,
-            transfer_requests: transfer_requests
-          }
-        },
-        body: '{}'
-      )
-    end
-
     it 'should create objects' do
+      expect_plate_creation
+      expect_transfer_request_collection_creation
+
       expect(subject.save!).to eq true
-      expect(transfer_creation_request).to have_been_made
     end
   end
 end

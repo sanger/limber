@@ -34,9 +34,9 @@ LCMT DNA Adp Lig:
       allowed_extra_barcodes: false
       request_options:
         # TODO: {Y24-460} replace with the correct request options
-        library_type: 'LCM Triomics WGS'
-        fragment_size_required_from: '200'
-        fragment_size_required_to: '800'
+        library_type: 'LCMB'
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
   :size: 96
 
 # EM Branch

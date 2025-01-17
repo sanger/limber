@@ -209,8 +209,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
            outer_requests: isc_prep_requests
   end
 
-  let(:parent_plate_v1) { json :plate, uuid: parent_uuid, stock_plate_barcode: 2, qc_files_actions: %w[read create] }
-
   # Create child wells in order of the requests they originated from.
   # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
   # Just done like this to make it easier to match up the requests to the wells.
@@ -289,6 +287,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
   let(:user_uuid) { 'user-uuid' }
 
+  let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
+
   context 'on new' do
     has_a_working_api
 
@@ -302,37 +302,34 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   context '#save' do
     has_a_working_api
 
-    let(:file_content) do
+    let(:form_attributes) do
+      { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
+    end
+
+    let(:file_contents) do
       content = file.read
       file.rewind
       content
     end
 
-    let(:form_attributes) do
-      { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
-    end
-
-    let(:stub_upload_file_creation) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-        body: file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="targeted_nano_seq_customer_file.csv"'
+    let(:qc_files_attributes) do
+      [
+        {
+          contents: file_contents,
+          filename: 'targeted_nano_seq_customer_file.csv',
+          relationships: {
+            labware: {
+              data: {
+                id: parent_plate.id,
+                type: 'labware'
+              }
+            }
+          }
         }
-      ).to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'targeted_nano_seq_dil_file.csv'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
+      ]
     end
-
-    let(:stub_parent_request) { stub_api_get(parent_uuid, body: parent_plate_v1) }
 
     before do
-      stub_parent_request
-
       create :targeted_nano_seq_customer_csv_file_upload_purpose_config,
              uuid: child_purpose_uuid,
              name: child_purpose_name
@@ -344,10 +341,9 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
       )
 
+      # Some requests are made with standard includes, and others with the custom includes shown.
       stub_v2_plate(child_plate, stub_search: false)
       stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
-
-      stub_upload_file_creation
     end
 
     context 'with an invalid file' do
@@ -367,120 +363,93 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_a1.uuid,
-            'target_asset' => child_well_a2.uuid,
-            'outer_request' => isc_prep_requests[0].uuid
+            volume: '5.0',
+            source_asset: parent_well_a1.uuid,
+            target_asset: child_well_a2.uuid,
+            outer_request: isc_prep_requests[0].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b1.uuid,
-            'target_asset' => child_well_b2.uuid,
-            'outer_request' => isc_prep_requests[1].uuid
+            volume: '5.0',
+            source_asset: parent_well_b1.uuid,
+            target_asset: child_well_b2.uuid,
+            outer_request: isc_prep_requests[1].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d1.uuid,
-            'target_asset' => child_well_a1.uuid,
-            'outer_request' => isc_prep_requests[2].uuid
+            volume: '5.0',
+            source_asset: parent_well_d1.uuid,
+            target_asset: child_well_a1.uuid,
+            outer_request: isc_prep_requests[2].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e1.uuid,
-            'target_asset' => child_well_a3.uuid,
-            'outer_request' => isc_prep_requests[3].uuid
+            volume: '5.0',
+            source_asset: parent_well_e1.uuid,
+            target_asset: child_well_a3.uuid,
+            outer_request: isc_prep_requests[3].uuid
           },
           {
-            'volume' => '4.0',
-            'source_asset' => parent_well_f1.uuid,
-            'target_asset' => child_well_b3.uuid,
-            'outer_request' => isc_prep_requests[4].uuid
+            volume: '4.0',
+            source_asset: parent_well_f1.uuid,
+            target_asset: child_well_b3.uuid,
+            outer_request: isc_prep_requests[4].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_h1.uuid,
-            'target_asset' => child_well_c3.uuid,
-            'outer_request' => isc_prep_requests[5].uuid
+            volume: '5.0',
+            source_asset: parent_well_h1.uuid,
+            target_asset: child_well_c3.uuid,
+            outer_request: isc_prep_requests[5].uuid
           },
           {
-            'volume' => '3.2',
-            'source_asset' => parent_well_a2.uuid,
-            'target_asset' => child_well_d3.uuid,
-            'outer_request' => isc_prep_requests[6].uuid
+            volume: '3.2',
+            source_asset: parent_well_a2.uuid,
+            target_asset: child_well_d3.uuid,
+            outer_request: isc_prep_requests[6].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b2.uuid,
-            'target_asset' => child_well_e3.uuid,
-            'outer_request' => isc_prep_requests[7].uuid
+            volume: '5.0',
+            source_asset: parent_well_b2.uuid,
+            target_asset: child_well_e3.uuid,
+            outer_request: isc_prep_requests[7].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_c2.uuid,
-            'target_asset' => child_well_f3.uuid,
-            'outer_request' => isc_prep_requests[8].uuid
+            volume: '5.0',
+            source_asset: parent_well_c2.uuid,
+            target_asset: child_well_f3.uuid,
+            outer_request: isc_prep_requests[8].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d2.uuid,
-            'target_asset' => child_well_g3.uuid,
-            'outer_request' => isc_prep_requests[9].uuid
+            volume: '5.0',
+            source_asset: parent_well_d2.uuid,
+            target_asset: child_well_g3.uuid,
+            outer_request: isc_prep_requests[9].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e2.uuid,
-            'target_asset' => child_well_c2.uuid,
-            'outer_request' => isc_prep_requests[10].uuid
+            volume: '5.0',
+            source_asset: parent_well_e2.uuid,
+            target_asset: child_well_c2.uuid,
+            outer_request: isc_prep_requests[10].uuid
           },
           {
-            'volume' => '30.0',
-            'source_asset' => parent_well_f2.uuid,
-            'target_asset' => child_well_b1.uuid,
-            'outer_request' => isc_prep_requests[11].uuid
+            volume: '30.0',
+            source_asset: parent_well_f2.uuid,
+            target_asset: child_well_b1.uuid,
+            outer_request: isc_prep_requests[11].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_g2.uuid,
-            'target_asset' => child_well_d2.uuid,
-            'outer_request' => isc_prep_requests[12].uuid
+            volume: '5.0',
+            source_asset: parent_well_g2.uuid,
+            target_asset: child_well_d2.uuid,
+            outer_request: isc_prep_requests[12].uuid
           },
           {
-            'volume' => '3.621',
-            'source_asset' => parent_well_h2.uuid,
-            'target_asset' => child_well_c1.uuid,
-            'outer_request' => isc_prep_requests[13].uuid
+            volume: '3.621',
+            source_asset: parent_well_h2.uuid,
+            target_asset: child_well_c1.uuid,
+            outer_request: isc_prep_requests[13].uuid
           }
         ]
-      end
-
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
       end
 
       before do
@@ -489,14 +458,17 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
+        expect_qc_file_creation
+        expect_transfer_request_collection_creation
+
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the method was triggered.
         # Our child plate has 14 wells with 14 requests, so we expect the method to create metadata
         # on the requests to be called 14 times.
         expect(subject).to receive(:create_or_update_request_metadata).exactly(14).times
+
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
 
@@ -693,20 +665,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
       # Create child wells in order of the requests they originated from.
       # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
       # Just done like this to make it easier to match up the requests to the wells.
@@ -762,98 +720,89 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
                ]
       end
 
-      let!(:api_v2_post) { stub_api_v2_post('Well') }
-
-      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
-
       # Not expecting transfer requests for ignored wells E1, A2, C2, G2
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_a1.uuid,
-            'target_asset' => child_well_a2.uuid,
-            'outer_request' => isc_prep_requests[0].uuid
+            volume: '5.0',
+            source_asset: parent_well_a1.uuid,
+            target_asset: child_well_a2.uuid,
+            outer_request: isc_prep_requests[0].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b1.uuid,
-            'target_asset' => child_well_b2.uuid,
-            'outer_request' => isc_prep_requests[1].uuid
+            volume: '5.0',
+            source_asset: parent_well_b1.uuid,
+            target_asset: child_well_b2.uuid,
+            outer_request: isc_prep_requests[1].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d1.uuid,
-            'target_asset' => child_well_a1.uuid,
-            'outer_request' => isc_prep_requests[2].uuid
+            volume: '5.0',
+            source_asset: parent_well_d1.uuid,
+            target_asset: child_well_a1.uuid,
+            outer_request: isc_prep_requests[2].uuid
           },
           {
-            'volume' => '4.0',
-            'source_asset' => parent_well_f1.uuid,
-            'target_asset' => child_well_a3.uuid,
-            'outer_request' => isc_prep_requests[3].uuid
+            volume: '4.0',
+            source_asset: parent_well_f1.uuid,
+            target_asset: child_well_a3.uuid,
+            outer_request: isc_prep_requests[3].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_h1.uuid,
-            'target_asset' => child_well_b3.uuid,
-            'outer_request' => isc_prep_requests[4].uuid
+            volume: '5.0',
+            source_asset: parent_well_h1.uuid,
+            target_asset: child_well_b3.uuid,
+            outer_request: isc_prep_requests[4].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b2.uuid,
-            'target_asset' => child_well_c3.uuid,
-            'outer_request' => isc_prep_requests[5].uuid
+            volume: '5.0',
+            source_asset: parent_well_b2.uuid,
+            target_asset: child_well_c3.uuid,
+            outer_request: isc_prep_requests[5].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d2.uuid,
-            'target_asset' => child_well_d3.uuid,
-            'outer_request' => isc_prep_requests[6].uuid
+            volume: '5.0',
+            source_asset: parent_well_d2.uuid,
+            target_asset: child_well_d3.uuid,
+            outer_request: isc_prep_requests[6].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e2.uuid,
-            'target_asset' => child_well_c2.uuid,
-            'outer_request' => isc_prep_requests[7].uuid
+            volume: '5.0',
+            source_asset: parent_well_e2.uuid,
+            target_asset: child_well_c2.uuid,
+            outer_request: isc_prep_requests[7].uuid
           },
           {
-            'volume' => '30.0',
-            'source_asset' => parent_well_f2.uuid,
-            'target_asset' => child_well_b1.uuid,
-            'outer_request' => isc_prep_requests[8].uuid
+            volume: '30.0',
+            source_asset: parent_well_f2.uuid,
+            target_asset: child_well_b1.uuid,
+            outer_request: isc_prep_requests[8].uuid
           },
           {
-            'volume' => '3.621',
-            'source_asset' => parent_well_h2.uuid,
-            'target_asset' => child_well_c1.uuid,
-            'outer_request' => isc_prep_requests[9].uuid
+            volume: '3.621',
+            source_asset: parent_well_h2.uuid,
+            target_asset: child_well_c1.uuid,
+            outer_request: isc_prep_requests[9].uuid
           }
         ]
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
+      before do
+        stub_api_v2_save('PolyMetadatum')
+        stub_api_v2_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
+        expect_qc_file_creation
+        expect_transfer_request_collection_creation
+
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the method was triggered.
         # Our child plate has 10 wells with 10 requests, so we expect the method to create metadata
         # on the requests to be called 10 times.
         expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
+
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
 
@@ -1049,20 +998,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         )
       end
 
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
       # Create child wells in order of the requests they originated from.
       # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
       # Just done like this to make it easier to match up the requests to the wells.
@@ -1118,98 +1053,89 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
                ]
       end
 
-      let!(:api_v2_post) { stub_api_v2_post('Well') }
-
-      let!(:api_v2_post) { stub_api_v2_save('PolyMetadatum') }
-
       # Not expecting transfer requests for ignored wells E1, A2, C2, G2
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_a1.uuid,
-            'target_asset' => child_well_a2.uuid,
-            'outer_request' => isc_prep_requests[0].uuid
+            volume: '5.0',
+            source_asset: parent_well_a1.uuid,
+            target_asset: child_well_a2.uuid,
+            outer_request: isc_prep_requests[0].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b1.uuid,
-            'target_asset' => child_well_b2.uuid,
-            'outer_request' => isc_prep_requests[1].uuid
+            volume: '5.0',
+            source_asset: parent_well_b1.uuid,
+            target_asset: child_well_b2.uuid,
+            outer_request: isc_prep_requests[1].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d1.uuid,
-            'target_asset' => child_well_a1.uuid,
-            'outer_request' => isc_prep_requests[2].uuid
+            volume: '5.0',
+            source_asset: parent_well_d1.uuid,
+            target_asset: child_well_a1.uuid,
+            outer_request: isc_prep_requests[2].uuid
           },
           {
-            'volume' => '4.0',
-            'source_asset' => parent_well_f1.uuid,
-            'target_asset' => child_well_a3.uuid,
-            'outer_request' => isc_prep_requests[3].uuid
+            volume: '4.0',
+            source_asset: parent_well_f1.uuid,
+            target_asset: child_well_a3.uuid,
+            outer_request: isc_prep_requests[3].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_h1.uuid,
-            'target_asset' => child_well_b3.uuid,
-            'outer_request' => isc_prep_requests[4].uuid
+            volume: '5.0',
+            source_asset: parent_well_h1.uuid,
+            target_asset: child_well_b3.uuid,
+            outer_request: isc_prep_requests[4].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_b2.uuid,
-            'target_asset' => child_well_c3.uuid,
-            'outer_request' => isc_prep_requests[5].uuid
+            volume: '5.0',
+            source_asset: parent_well_b2.uuid,
+            target_asset: child_well_c3.uuid,
+            outer_request: isc_prep_requests[5].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_d2.uuid,
-            'target_asset' => child_well_d3.uuid,
-            'outer_request' => isc_prep_requests[6].uuid
+            volume: '5.0',
+            source_asset: parent_well_d2.uuid,
+            target_asset: child_well_d3.uuid,
+            outer_request: isc_prep_requests[6].uuid
           },
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_e2.uuid,
-            'target_asset' => child_well_c2.uuid,
-            'outer_request' => isc_prep_requests[7].uuid
+            volume: '5.0',
+            source_asset: parent_well_e2.uuid,
+            target_asset: child_well_c2.uuid,
+            outer_request: isc_prep_requests[7].uuid
           },
           {
-            'volume' => '30.0',
-            'source_asset' => parent_well_f2.uuid,
-            'target_asset' => child_well_b1.uuid,
-            'outer_request' => isc_prep_requests[8].uuid
+            volume: '30.0',
+            source_asset: parent_well_f2.uuid,
+            target_asset: child_well_b1.uuid,
+            outer_request: isc_prep_requests[8].uuid
           },
           {
-            'volume' => '3.621',
-            'source_asset' => parent_well_h2.uuid,
-            'target_asset' => child_well_c1.uuid,
-            'outer_request' => isc_prep_requests[9].uuid
+            volume: '3.621',
+            source_asset: parent_well_h2.uuid,
+            target_asset: child_well_c1.uuid,
+            outer_request: isc_prep_requests[9].uuid
           }
         ]
       end
 
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
+      before do
+        stub_api_v2_save('PolyMetadatum')
+        stub_api_v2_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
+        expect_qc_file_creation
+        expect_transfer_request_collection_creation
+
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the method was triggered.
-        # Our child plate has 14 wells with 14 requests, so we expect the method to create metadata
-        # on the requests to be called 14 times.
+        # Our child plate has 10 wells with 10 requests, so we expect the method to create metadata
+        # on the requests to be called 10 times.
         expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
+
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
     end
 
@@ -1519,13 +1445,13 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, wells: [child_well_a1]
       end
 
-      let(:transfer_requests) do
+      let(:transfer_requests_attributes) do
         [
           {
-            'volume' => '5.0',
-            'source_asset' => parent_well_a1.uuid,
-            'target_asset' => child_well_a1.uuid,
-            'outer_request' => loop_2_request.uuid
+            volume: '5.0',
+            source_asset: parent_well_a1.uuid,
+            target_asset: child_well_a1.uuid,
+            outer_request: loop_2_request.uuid
           }
         ]
       end
@@ -1534,33 +1460,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         fixture_file_upload(
           'spec/fixtures/files/targeted_nano_seq/targeted_nano_seq_dil_file_loop.csv',
           'sequencescape/qc_file'
-        )
-      end
-
-      let!(:plate_creation_request) do
-        stub_api_post(
-          'plate_creations',
-          payload: {
-            plate_creation: {
-              parent: parent_uuid,
-              child_purpose: child_purpose_uuid,
-              user: user_uuid
-            }
-          },
-          body: json(:plate_creation)
-        )
-      end
-
-      let!(:transfer_creation_request) do
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
         )
       end
 
@@ -1579,11 +1478,13 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       it 'makes the expected method calls when creating the child plate' do
+        expect_plate_creation
+        expect_qc_file_creation
+        expect_transfer_request_collection_creation
+
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the correct method was triggered.
         expect(subject.save!).to eq true
-        expect(plate_creation_request).to have_been_made
-        expect(transfer_creation_request).to have_been_made
       end
 
       # Check that we cannot create the child plate whilst there are active requests on the parent plate
@@ -1592,15 +1493,14 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         let(:loop_1_request) { create :isc_prep_request, state: 'pending', uuid: 'request-1' }
 
         it 'does not create the child plate' do
+          expect(Sequencescape::Api::V2::PlateCreation).not_to receive(:create!)
+
           # WellFilter catches that there are 2 active submissions on the well and throws an exception
           expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
           expect(subject.errors.messages[:well_filter].count).to eq(1)
           expect(subject.errors.messages[:well_filter][0]).to eq(
             'found 2 eligible requests for A1, possible overlapping submissions'
           )
-
-          expect(plate_creation_request).to_not have_been_made
-          expect(transfer_creation_request).to_not have_been_made
         end
       end
 
@@ -1608,15 +1508,14 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         let(:loop_2_request) { create :library_request, state: 'pending', uuid: 'request-2' }
 
         it 'does not create the child plate' do
+          expect(Sequencescape::Api::V2::PlateCreation).not_to receive(:create!)
+
           expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid)
           expect(subject.errors.messages[:base].count).to eq(1)
           expect(subject.errors.messages[:base][0]).to eq(
             'Parent plate should only contain active requests of type (limber_targeted_nanoseq_isc_prep), ' \
               'found unexpected types (limber_wgs)'
           )
-
-          expect(plate_creation_request).to_not have_been_made
-          expect(transfer_creation_request).to_not have_been_made
         end
       end
     end

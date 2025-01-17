@@ -6,6 +6,10 @@ class Sequencescape::Api::V2::Receptacle < Sequencescape::Api::V2::Base
   has_many :qc_results, class_name: 'Sequencescape::Api::V2::QcResult'
   has_many :aliquots, class_name: 'Sequencescape::Api::V2::Aliquot'
 
+  def latest_concentration
+    latest_qc(key: 'concentration', units: 'ng/ul')
+  end
+
   def latest_molarity
     latest_qc(key: 'molarity', units: 'nM')
   end
