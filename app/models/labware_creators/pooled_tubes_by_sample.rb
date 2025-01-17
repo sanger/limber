@@ -33,10 +33,6 @@ module LabwareCreators
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
     end
 
-    def parent_v1
-      @parent_v1 ||= api.plate.find(parent_uuid)
-    end
-
     # TODO: QUESTIONS:
     #
     # Should we pre-filter wells, based on whether they have been failed, or based on what request they have?
@@ -130,10 +126,14 @@ module LabwareCreators
     end
 
     #
-    # Upload the csv file onto the plate via api v1
+    # Upload the CSV file for the plate.
     #
     def upload_file
-      parent_v1.qc_files.create_from_file!(file, 'tube_rack_scan_file.csv')
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: file.read,
+        filename: 'tube_rack_scan_file.csv',
+        labware: parent
+      )
     end
 
     #
@@ -253,12 +253,7 @@ module LabwareCreators
     end
 
     def request_hash(source, target, submission)
-      {
-        'source_asset' => source,
-        'target_asset' => target,
-        'submission' => submission,
-        'merge_equivalent_aliquots' => true
-      }
+      { source_asset: source, target_asset: target, submission: submission, merge_equivalent_aliquots: true }
     end
   end
 end

@@ -3253,10 +3253,11 @@ ROBOT_CONFIG =
     )
 
     # LRC Hamilton Star bed verification
-    # LRC PBMC Bank to LRC Bank Seq and LRC Bank Spare
+    # LRC PBMC Bank to LRC TR Bank Seq and LRC TR Bank Spare tube racks
+    # Transfers 1:2 (2nd rack optional)
     custom_robot(
-      'hamilton-lrc-pbmc-bank-to-lrc-bank-seq-and-lrc-bank-spare',
-      name: 'Hamilton LRC PBMC Bank => LRC Bank Seq and LRC Bank Spare',
+      'hamilton-lrc-pbmc-bank-to-lrc-bank-seq-and-lrc-bank-spare-tube-racks',
+      name: 'Hamilton LRC PBMC Bank => LRC TR Bank Seq and LRC Bank Spare Tube Racks',
       beds: {
         bed(12).barcode => {
           purpose: 'LRC PBMC Bank',
@@ -3264,13 +3265,13 @@ ROBOT_CONFIG =
           label: 'Bed 12'
         },
         bed(15).barcode => {
-          purpose: 'LRC Bank Seq',
+          purpose: 'LRC TR Bank Seq',
           states: ['pending'],
           label: 'Bed 15',
           target_state: 'passed'
         },
         bed(14).barcode => {
-          purpose: 'LRC Bank Spare',
+          purpose: 'LRC TR Bank Spare',
           states: ['pending'],
           label: 'Bed 14',
           target_state: 'passed'
@@ -3810,6 +3811,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT DNA Frag Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT DNA Frag Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA Frag',
@@ -3827,6 +3829,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT DNA End Prep Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT DNA End Prep Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT DNA End Prep',
@@ -3867,6 +3870,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT EM TET2 Ox Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Finish LCMT EM TET2 Ox Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM TET2 Ox',
@@ -3914,6 +3918,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT EM NaOH Denat Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Finish LCMT EM NaOH Denat Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM NaOH Denat',

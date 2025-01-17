@@ -71,9 +71,9 @@ module LabwareCreators
     def request_hash(source_well, dest_plate, additional_parameters)
       dest_location = transfer_hash[source_well.location][:dest_locn]
       {
-        'source_asset' => source_well.uuid,
-        'target_asset' => get_well_for_plate_location(dest_plate, dest_location)&.uuid,
-        'merge_equivalent_aliquots' => true
+        source_asset: source_well.uuid,
+        target_asset: get_well_for_plate_location(dest_plate, dest_location)&.uuid,
+        merge_equivalent_aliquots: true
       }.merge(additional_parameters)
     end
 
@@ -87,9 +87,9 @@ module LabwareCreators
     # Send the transfer request to SS
     def transfer_material_from_parent!(dest_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: dest_uuid)
-      api.transfer_request_collection.create!(
-        user: user_uuid,
-        transfer_requests: transfer_request_attributes(dest_plate)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes(dest_plate),
+        user_uuid: user_uuid
       )
       true
     end

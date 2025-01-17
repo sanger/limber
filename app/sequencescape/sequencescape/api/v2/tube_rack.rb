@@ -37,6 +37,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset'
 
+  has_many :state_changes
+
   property :name
   property :size
   property :number_or_rows
@@ -45,8 +47,31 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
 
+  # makes use of the StringInquirer class returned by the state method to provide a more readable way to
+  # check the state of the tube rack e.g. tube_rack.state.passed? instead of tube_rack.state == 'passed'
+  delegate :pending?, :started?, :passed?, :failed?, :cancelled?, :mixed?, :empty?, to: :state
+
   def stock_plate
     nil
+  end
+
+  def self.find_by(params)
+    options = params.dup
+    includes = options.delete(:includes) || DEFAULT_INCLUDES
+    Sequencescape::Api::V2::TubeRack.includes(*includes).find(**options).first
+  end
+
+  # This method sorts the racked tubes by their coordinate, taking into account both row and column parts.
+  # Sorts by column first and then by row.
+  #
+  # NB. Assumption that the coordinate is in the format [A-Z][0-9]+ e.g. A1, B12, C3, etc.
+  # Where the first character is the row and the remaining digits are the column.
+  # Deals with both single digit coordinates (e.g. A1, C2, D12) and zero filled digit coordinates
+  # e.g. A01, C02, D12 etc.
+  # @return [Array<RackedTube>] An array of racked tubes sorted by their coordinate.
+  def racked_tubes_in_columns
+    @racked_tubes_in_columns ||=
+      racked_tubes.sort_by { |racked_tube| [racked_tube.coordinate[1..].to_i, racked_tube.coordinate[0]] }
   end
 
   # This method determines the state of the tube rack based on the states of the racked tubes.
@@ -62,25 +87,28 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   # i.e. if we have a mix of cancelled, failed, pending and passed tubes, the state will be 'mixed'
   # i.e. if the tube rack is empty, the state will be 'empty'
   #
-  # @return [String] the state of the tube rack
+  # @return [StringInquirer] the state of the tube rack wrapped in a StringInquirer object
+  # rubocop:disable Metrics/AbcSize
   def state
     # check if rack is empty
-    return STATE_EMPTY if racked_tubes.empty?
+    return STATE_EMPTY.inquiry if racked_tubes.empty?
 
     # fetch states from all tubes in the rack and see if we have a single state
     states = racked_tubes.map { |racked_tube| racked_tube.tube.state }.uniq
-    return states.first if states.one?
+    return states.first.inquiry if states.one?
 
     # we have a mix of states, filter out cancelled tubes first, and then if we still have
     # a mix, filter out the failed tubes and see if we have a single state after that
     STATES_TO_FILTER_OUT.each do |filter|
       states.delete(filter)
-      return states.first if states.one?
+      return states.first.inquiry if states.one?
     end
 
     # if we still have a mixed state, we display it as such
-    STATE_MIXED
+    STATE_MIXED.inquiry
   end
+
+  # rubocop:enable Metrics/AbcSize
 
   private
 

@@ -90,11 +90,6 @@ class LabwareController < ApplicationController
   end
 
   def presenter_for(labware)
-    presenter = Presenters.lookup_for(labware).new(labware:)
-
-    # TODO: {Y24-190} - Remove this line when the API v1 is removed from Presenters::ExtendedCsv
-    presenter.api = api if presenter.respond_to?(:api=)
-
-    presenter
+    Presenters.lookup_for(labware).new(labware:)
   end
 end

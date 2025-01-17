@@ -127,9 +127,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       'wells.downstream_tubes.custom_metadatum_collection'
   end
 
-  # parent plate v1 api
-  let(:parent_v1) { json :plate_with_metadata, uuid: parent_uuid, barcode_number: 6, qc_files_actions: %w[read create] }
-
   # form attributes - required parameters for the labware creator
   let(:form_attributes) do
     { user_uuid: user_uuid, purpose_uuid: child_sequencing_tube_rack_purpose_uuid, parent_uuid: parent_uuid }
@@ -825,27 +822,46 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   context '#save' do
     # body for stubbing the contingency file upload
-    let(:contingency_file_content) do
+    let(:contingency_file_contents) do
       content = contingency_file.read
       contingency_file.rewind
       content
     end
 
-    # stub the contingency file upload
-    let!(:stub_contingency_file_upload) do
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-        body: contingency_file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
+    # body for stubbing the sequencing file upload
+    let(:sequencing_file_contents) do
+      content = sequencing_file.read
+      sequencing_file.rewind
+      content
+    end
+
+    let(:qc_files_attributes) do
+      [
+        {
+          contents: contingency_file_contents,
+          filename: 'scrna_core_contingency_tube_rack_scan.csv',
+          relationships: {
+            labware: {
+              data: {
+                id: parent_plate.id,
+                type: 'labware'
+              }
+            }
+          }
+        },
+        {
+          contents: sequencing_file_contents,
+          filename: 'scrna_core_sequencing_tube_rack_scan.csv',
+          relationships: {
+            labware: {
+              data: {
+                id: parent_plate.id,
+                type: 'labware'
+              }
+            }
+          }
         }
-      ).to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
+      ]
     end
 
     # create the contingency tubes
@@ -881,10 +897,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       )
     end
 
-    before do
-      stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes)
-      stub_api_get(parent_uuid, body: parent_v1)
-    end
+    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'with both sequencing and contingency files' do
       let(:form_attributes) do
@@ -953,47 +966,33 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      # stub the sequencing file upload
-      let!(:stub_sequencing_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-          body: sequencing_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
-          }
-        ).to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
-      end
-
-      # stub the transfer creation
-      let!(:stub_transfer_creation_request) do
+      let(:transfer_requests_attributes) do
         parent_wells = [parent_well_a1, parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
         target_tubes = sequencing_tubes + contingency_tubes
-        transfer_requests =
-          parent_wells.map.with_index do |parent_well, index|
-            { 'submission_id' => '2', 'source_asset' => parent_well.uuid, 'target_asset' => target_tubes[index].uuid }
-          end
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
+
+        parent_wells.map.with_index do |parent_well, index|
+          { submission_id: '2', source_asset: parent_well.uuid, target_asset: target_tubes[index].uuid }
+        end
       end
 
       let(:contingency_file) do
         fixture_file_upload(
           'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
           'sequencescape/qc_file'
+        )
+      end
+
+      let(:custom_metadatum_collections_attributes) do
+        create_custom_metadatum_collection_attributes(
+          'TR00000001' => sequencing_tubes,
+          'TR00000002' => contingency_tubes
+        )
+      end
+
+      let(:specific_tubes_attributes) do
+        create_specific_tube_attributes(
+          child_sequencing_tube_purpose_uuid => sequencing_tubes,
+          child_contingency_tube_purpose_uuid => contingency_tubes
         )
       end
 
@@ -1021,17 +1020,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         child_tube_rack_attributes = generate_child_tube_rack_attributes(params)
 
         expect_specific_tube_rack_creation(child_tube_racks, child_tube_rack_attributes)
-
-        # expect_custom_metadatum_collection_posts(
-        #   { 'TR00000001' => sequencing_tubes, 'TR00000002' => contingency_tubes }
-        # )
-        # TODO: check racked tubes? done on SS side so would be mocked anyway
+        expect_qc_file_creation
+        expect_transfer_request_collection_creation
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
-        expect(stub_sequencing_file_upload).to have_been_made.once
-        expect(stub_contingency_file_upload).to have_been_made.once
-        expect(stub_transfer_creation_request).to have_been_made.once
       end
 
       context 'when a well has been failed' do
@@ -1040,24 +1033,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'failed')
         end
 
-        # one fewer transfer request
-        let!(:stub_transfer_creation_request) do
+        let(:transfer_requests_attributes) do
           parent_wells = [parent_well_b1, parent_well_a2, parent_well_b2, parent_well_a3]
           target_tubes = sequencing_tubes + contingency_tubes
-          transfer_requests =
-            parent_wells.map.with_index do |parent_well, index|
-              { 'submission_id' => '2', 'source_asset' => parent_well.uuid, 'target_asset' => target_tubes[index].uuid }
-            end
-          stub_api_post(
-            'transfer_request_collections',
-            payload: {
-              transfer_request_collection: {
-                user: user_uuid,
-                transfer_requests: transfer_requests
-              }
-            },
-            body: '{}'
-          )
+
+          parent_wells.map.with_index do |parent_well, index|
+            { submission_id: '2', source_asset: parent_well.uuid, target_asset: target_tubes[index].uuid }
+          end
         end
 
         let(:contingency_file) do
@@ -1138,12 +1120,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           child_tube_rack_attributes = generate_child_tube_rack_attributes(params)
 
           expect_specific_tube_rack_creation(child_tube_racks, child_tube_rack_attributes)
+          expect_qc_file_creation
+          expect_transfer_request_collection_creation
 
           expect(subject.valid?).to be_truthy
           expect(subject.save).to be_truthy
-          expect(stub_sequencing_file_upload).to have_been_made.once
-          expect(stub_contingency_file_upload).to have_been_made.once
-          expect(stub_transfer_creation_request).to have_been_made.once
         end
       end
     end
@@ -1170,28 +1151,26 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      # body for stubbing the sequencing file upload
-      let(:sequencing_file_content) do
-        content = sequencing_file.read
-        sequencing_file.rewind
-        content
+      let(:custom_metadatum_collections_attributes) do
+        create_custom_metadatum_collection_attributes('TR00000001' => sequencing_tubes)
       end
 
-      # stub the sequencing file upload
-      let!(:stub_sequencing_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-          body: sequencing_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_sequencing_tube_rack_scan.csv"'
+      # Only the sequencing file expected this time.
+      let(:qc_files_attributes) do
+        [
+          {
+            contents: sequencing_file_contents,
+            filename: 'scrna_core_sequencing_tube_rack_scan.csv',
+            relationships: {
+              labware: {
+                data: {
+                  id: parent_plate.id,
+                  type: 'labware'
+                }
+              }
+            }
           }
-        ).to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_sequencing_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
+        ]
       end
 
       # create the sequencing tubes
@@ -1219,27 +1198,14 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      # stub the transfer creation
-      let!(:stub_transfer_creation_request) do
-        parent_wells = [parent_well_a1, parent_well_b1]
-        transfer_requests =
-          parent_wells.map.with_index do |parent_well, index|
-            {
-              'submission_id' => '2',
-              'source_asset' => parent_well.uuid,
-              'target_asset' => sequencing_tubes[index].uuid
-            }
-          end
-        stub_api_post(
-          'transfer_request_collections',
-          payload: {
-            transfer_request_collection: {
-              user: user_uuid,
-              transfer_requests: transfer_requests
-            }
-          },
-          body: '{}'
-        )
+      let(:specific_tubes_attributes) do
+        create_specific_tube_attributes(child_sequencing_tube_purpose_uuid => sequencing_tubes)
+      end
+
+      let(:transfer_requests_attributes) do
+        [parent_well_a1, parent_well_b1].map.with_index do |parent_well, index|
+          { submission_id: '2', source_asset: parent_well.uuid, target_asset: sequencing_tubes[index].uuid }
+        end
       end
 
       before { stub_v2_user(user) }
@@ -1262,17 +1228,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
         expect_specific_tube_rack_creation(child_tube_racks, child_tube_rack_attributes)
 
+        expect_qc_file_creation
+        expect_transfer_request_collection_creation
+
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
-        expect(stub_sequencing_file_upload).to have_been_made.once
-        expect(stub_transfer_creation_request).to have_been_made.once
       end
     end
-
-    # This test is to check it is not valid to have duplicate samples in the parent plate whilst only providing a
-    # sequencing file.
-    # context 'with just a sequencing file and duplicate samples' do
-    #   # TODO: add validation in labware creator and test for duplicate samples
-    # end
   end
 end

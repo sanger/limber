@@ -4,8 +4,10 @@ FactoryBot.define do
   # API v2 user
   factory :user, class: Sequencescape::Api::V2::User do
     skip_create
+
+    uuid
+
     id { '1234' }
-    uuid { SecureRandom.uuid }
     login { 'usr1' }
     email { 'example@example.com' }
     first_name { 'Jane' }
