@@ -199,7 +199,7 @@ module Robots
         next unless asset.type == 'tube_racks'
 
         # fetch tube rack from API
-        tube_rack = find_tube_rack(asset.id)
+        tube_rack = find_tube_rack(asset.uuid)
 
         # cycle beds, if tube rack matches purpose and state from config, add it
         beds.each_value do |bed|
@@ -232,8 +232,11 @@ module Robots
       Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: PLATE_INCLUDES).first
     end
 
-    def find_tube_rack(id)
-      Sequencescape::Api::V2::TubeRack.find_all({ id: [id] }).first
+    def find_tube_rack(uuid)
+      Sequencescape::Api::V2::TubeRack.find_all(
+        { uuid: [uuid] },
+        includes: Sequencescape::Api::V2::TubeRack::DEFAULT_TUBE_RACK_INCLUDES
+      ).first
     end
   end
 end

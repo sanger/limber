@@ -273,9 +273,9 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
     bed_plate_lookup_with_barcode(tube_rack2_barcode, [], plate_includes)
 
     # Stub robot requests to the Sequencescape API to look up tube-racks
-    tube_rack_includes = 'racked_tubes,racked_tubes.tubes,racked_tubes.tubes.custom_metadatum_collection'
-    bed_tube_rack_lookup_with_barcode(tube_rack1_barcode, [tube_rack1], tube_rack_includes)
-    bed_tube_rack_lookup_with_barcode(tube_rack2_barcode, [tube_rack2], tube_rack_includes)
+    tube_rack_includes = Sequencescape::Api::V2::TubeRack::DEFAULT_TUBE_RACK_INCLUDES
+    bed_tube_rack_lookup_with_uuid(tube_rack1.uuid, [tube_rack1], tube_rack_includes) if tube_rack1
+    bed_tube_rack_lookup_with_uuid(tube_rack2.uuid, [tube_rack2], tube_rack_includes)
 
     # Set up children of plate
     allow(plate).to receive(:children).and_return([tube_rack1, tube_rack2])
