@@ -853,18 +853,21 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       end
 
       context 'with single barcode' do
+        let(:number_of_pools) { 1 }
         let!(:wells) do
-          well = parent_1_plate.wells[0]
-          well.state = 'passed'
-          well.aliquots.first.study = study_1
-          well.aliquots.first.project = project_1
-          well.aliquots.first.sample.sample_metadata.donor_id = 1
-          well.aliquots.first.request = requests[0]
-          well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
+          Array.new(5) do |index|
+            well = parent_1_plate.wells[index]
+            well.state = 'passed'
+            well.aliquots.first.study = study_1
+            well.aliquots.first.project = project_1
+            well.aliquots.first.sample.sample_metadata.donor_id = "donor_#{index}"
+            well.aliquots.first.request = requests[index]
+            well.aliquots.first.request.request_metadata.number_of_pools = number_of_pools
 
-          # TODO: are we changing this to total cell count?
-          well.qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000)
-          [well]
+            # TODO: are we changing this to total cell count?
+            well.qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 1_000_000)
+            well
+          end
         end
         before do
           allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
@@ -953,6 +956,35 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         expect(subject.errors[:source_plates]).to include(
           format(described_class::WELLS_WITH_ALIQUOTS_MUST_HAVE_CELL_COUNT, formatted_string)
         )
+      end
+    end
+
+    describe '#validate_pools_can_be_built' do
+      # In this test, we have 6 wells, 2 of which have the same donor ID but
+      # number_of_pools is 1. It will raise an exception because it cannot
+      # distribute the wells. We test that the exception is caught and
+      # converted to an error message.
+      let(:number_of_pools) { 1 }
+      let!(:wells) do
+        wells = Array(parent_1_plate.wells[0..5])
+        wells.each_with_index do |well, index|
+          well.state = 'passed'
+          well.aliquots.first.study = study_1
+          well.aliquots.first.project = project_1
+          well.aliquots.first.sample.sample_metadata.donor_id = index + 1
+        end
+        wells
+      end
+      before { wells[0..1].map { |well| well.aliquots.first.sample.sample_metadata.donor_id = 'DUPLICATE' } }
+
+      it 'converts exceptions to errors' do
+        exception_message = 'Cannot find a pool to assign the well to.'
+        allow(subject).to receive(:raise).and_call_original # spy on raise
+
+        expect(subject).not_to be_valid
+
+        expect(subject).to have_received(:raise).with(exception_message)
+        expect(subject.errors[:pools]).to include(exception_message)
       end
     end
   end
