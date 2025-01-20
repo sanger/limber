@@ -76,9 +76,6 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   # Constants from config/initializers/scrna_config.rb
   let(:scrna_config) { Rails.application.config.scrna_config }
 
-  let(:study_required_number_of_cells_per_sample_in_pool_key) do
-    scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
-  end
   let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
 
   subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
