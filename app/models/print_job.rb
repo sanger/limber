@@ -163,7 +163,14 @@ class PrintJob # rubocop:todo Style/Documentation
     # Non-200 errors are treated as failures
     # Ref: https://ruby-doc.org/stdlib-2.7.0/libdoc/net/http/rdoc/Net/HTTP.html#class-Net::HTTP-label-GET+with+Dynamic+Parameters
     unless response.is_a?(Net::HTTPSuccess)
-      errors.add(:sprint, 'Trouble connecting to SPrint. Please try again later.')
+      case response
+      when Net::HTTPUnprocessableEntity
+        errors.add(:sprint, 'Sprint could not understand the request. Please check the label data.')
+      when Net::HTTPInternalServerError
+        errors.add(:sprint, 'Internal server error at SPrint. Please try again later.')
+      else
+        errors.add(:sprint, 'Trouble connecting to SPrint. Please try again later.')
+      end
       return false
     end
     if response.body.present? && response.body['jobId'].present?
