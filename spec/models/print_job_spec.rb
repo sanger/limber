@@ -199,17 +199,18 @@ RSpec.describe PrintJob do
       }
     end
 
-    it 'will send a print request to SPrintClient' do
-      pj =
-        PrintJob.new(
-          printer_name: printer_sprint.name,
-          printer: printer_sprint,
-          label_templates_by_service: label_templates_by_service,
-          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
-          labels_sprint: labels_sprint,
-          number_of_copies: 1
-        )
+    let(:pj) do
+      PrintJob.new(
+        printer_name: printer_sprint.name,
+        printer: printer_sprint,
+        label_templates_by_service: label_templates_by_service,
+        labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
+        labels_sprint: labels_sprint,
+        number_of_copies: 1
+      )
+    end
 
+    it 'will send a print request to SPrintClient' do
       allow(pj).to receive(:get_label_template_by_service).and_return(label_template_name_sprint)
       response = Net::HTTPSuccess.new(1.0, '200', 'OK')
       response.instance_variable_set(:@read, true)
@@ -227,15 +228,6 @@ RSpec.describe PrintJob do
     end
 
     it 'will not execute if the SPrintClient is down' do
-      pj =
-        PrintJob.new(
-          printer_name: printer_sprint.name,
-          printer: printer_sprint,
-          label_templates_by_service: label_templates_by_service,
-          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
-          labels_sprint: labels_sprint,
-          number_of_copies: 1
-        )
       response = Net::HTTPBadGateway.new(1.0, '502', nil)
       response.instance_variable_set(:@read, true)
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
@@ -244,15 +236,6 @@ RSpec.describe PrintJob do
     end
 
     it 'will not execute if the SPrintClient sends a valid error with code 200' do
-      pj =
-        PrintJob.new(
-          printer_name: printer_sprint.name,
-          printer: printer_sprint,
-          label_templates_by_service: label_templates_by_service,
-          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
-          labels_sprint: labels_sprint,
-          number_of_copies: 1
-        )
       response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
       response.instance_variable_set(
@@ -277,15 +260,6 @@ RSpec.describe PrintJob do
     end
 
     it 'will not execute if the SPrintClient sends an invalid error with code 200' do
-      pj =
-        PrintJob.new(
-          printer_name: printer_sprint.name,
-          printer: printer_sprint,
-          label_templates_by_service: label_templates_by_service,
-          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
-          labels_sprint: labels_sprint,
-          number_of_copies: 1
-        )
       response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
       response.instance_variable_set(
