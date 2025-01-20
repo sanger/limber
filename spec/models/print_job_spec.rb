@@ -295,7 +295,7 @@ RSpec.describe PrintJob do
         {
           errors: [
             {
-              message: "Failed to parse JSON response from SprintClient",
+              message: 'Failed to parse JSON response from SprintClient',
               locations: [{ line: 1, column: 16 }],
               extensions: {
                 classification: 'ValidationError'
