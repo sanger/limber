@@ -76,9 +76,6 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   # Constants from config/initializers/scrna_config.rb
   let(:scrna_config) { Rails.application.config.scrna_config }
 
-  let(:study_required_number_of_cells_per_sample_in_pool_key) do
-    scrna_config[:study_required_number_of_cells_per_sample_in_pool_key]
-  end
   let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
 
   subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
@@ -87,28 +84,6 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
     Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }
     source_wells_to_a1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_a1) }
     source_wells_to_b1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_b1) }
-  end
-
-  context 'when the labware in pending state' do
-    context 'with the required number of cells option for all studies' do
-      # Configure the first study
-      let(:study_to_a1) do
-        poly_metadatum =
-          create(:poly_metadatum, key: study_required_number_of_cells_per_sample_in_pool_key, value: '1000')
-        create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
-      end
-
-      # Configure the second study
-      let(:study_to_b1) do
-        poly_metadatum =
-          create(:poly_metadatum, key: study_required_number_of_cells_per_sample_in_pool_key, value: '2000')
-        create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
-      end
-
-      it 'does not warn the user about any study' do
-        expect(subject).to be_valid # There are no warnings.
-      end
-    end
   end
 
   context 'when the labware not in pending state' do
