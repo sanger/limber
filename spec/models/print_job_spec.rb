@@ -295,7 +295,7 @@ RSpec.describe PrintJob do
         {
           errors: [
             {
-              message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'.",
+              message: "Failed to parse JSON response from SprintClient",
               locations: [{ line: 1, column: 16 }],
               extensions: {
                 classification: 'ValidationError'
