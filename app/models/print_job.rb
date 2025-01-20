@@ -165,7 +165,7 @@ class PrintJob # rubocop:todo Style/Documentation
     unless response.is_a?(Net::HTTPSuccess)
       errors.add(
         :sprint,
-        "An error occurred while sending the print request to SPrintClient: Trouble connecting to SPrint"
+        "Trouble connecting to SPrint. Please try again later."
       )
       return false
     end
