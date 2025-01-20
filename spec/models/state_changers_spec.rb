@@ -33,8 +33,7 @@ RSpec.describe StateChangers do
   describe StateChangers::PlateStateChanger do
     has_a_working_api
 
-    let(:plate) { json :plate, uuid: labware_uuid, state: plate_state }
-    let(:well_collection) { json :well_collection, default_state: plate_state, custom_state: failed_wells }
+    let(:plate) { create :v2_plate, uuid: labware_uuid, state: plate_state }
     let(:failed_wells) { {} }
     subject { StateChangers::PlateStateChanger.new(api, labware_uuid, user_uuid) }
 
