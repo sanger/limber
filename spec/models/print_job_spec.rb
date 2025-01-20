@@ -241,7 +241,7 @@ RSpec.describe PrintJob do
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(pj.execute).to be false
       expect(pj.errors.full_messages[0]).to eq(
-        'Sprint An error occurred while sending the print request to SPrintClient: Error code: 502'
+        'Sprint An error occurred while sending the print request to SPrintClient: Trouble connecting to SPrint'
       )
     end
 
