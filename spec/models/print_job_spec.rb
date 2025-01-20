@@ -215,7 +215,7 @@ RSpec.describe PrintJob do
       response.instance_variable_set(:@read, true)
       response.instance_variable_set(
         :@body,
-        { data: { print: { jobId: "psd-2:68b27056-11cf-41ff-9b22-bdf6121a95be" } } }.to_json
+        { data: { print: { jobId: 'psd-2:68b27056-11cf-41ff-9b22-bdf6121a95be' } } }.to_json
       )
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(SPrintClient).to receive(:send_print_request).with(
@@ -257,7 +257,6 @@ RSpec.describe PrintJob do
         )
       response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
-      # rubocop:disable Layout/LineLength
       response.instance_variable_set(
         :@body,
         {
@@ -266,13 +265,12 @@ RSpec.describe PrintJob do
               message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'.",
               locations: [{ line: 1, column: 16 }],
               extensions: {
-                classification: "ValidationError"
+                classification: 'ValidationError'
               }
             }
           ]
         }.to_json
       )
-      # rubocop:enable Layout/LineLength
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(pj.execute).to be false
       expect(pj.errors.full_messages[0]).to eq(
@@ -292,7 +290,6 @@ RSpec.describe PrintJob do
         )
       response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
-      # rubocop:disable Layout/LineLength
       response.instance_variable_set(
         :@body,
         {
@@ -301,13 +298,12 @@ RSpec.describe PrintJob do
               message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'.",
               locations: [{ line: 1, column: 16 }],
               extensions: {
-                classification: "ValidationError"
+                classification: 'ValidationError'
               }
             }
           ]
         }.to_json
       )
-      # rubocop:enable Layout/LineLength
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(pj.execute).to be false
       expect(pj.errors.full_messages[0]).to eq('Sprint Failed to parse JSON response from SprintClient')
