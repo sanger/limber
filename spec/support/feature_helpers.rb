@@ -42,14 +42,10 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
 
   def stub_asset_v2_search(barcode, asset)
     if asset.is_a?(Array)
-      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(
-        barcode:
-      ).and_return(asset)
+      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return(asset)
     else
       # TODO: Y24-190 to test
-      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(
-        barcode:
-      ).and_return([asset])
+      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return([asset])
     end
   end
 

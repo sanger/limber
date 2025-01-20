@@ -15,7 +15,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   DEFAULT_INCLUDES = [
     :purpose,
-    {wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]]}
+    { wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]] }
   ].freeze
 
   self.plate = true
