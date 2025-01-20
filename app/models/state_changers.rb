@@ -178,8 +178,12 @@ module StateChangers
       nil
     end
 
+    def v2_labware
+      @v2_labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
+    end
+
     def labware
-      raise 'Tubes are not supported by API V1'
+      @labware ||= v2_labware
     end
   end
 
