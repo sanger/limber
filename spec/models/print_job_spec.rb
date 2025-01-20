@@ -240,9 +240,7 @@ RSpec.describe PrintJob do
       response.instance_variable_set(:@read, true)
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(pj.execute).to be false
-      expect(pj.errors.full_messages[0]).to eq(
-        'Sprint Trouble connecting to SPrint. Please try again later.'
-      )
+      expect(pj.errors.full_messages[0]).to eq('Sprint Trouble connecting to SPrint. Please try again later.')
     end
 
     it 'will not execute if the SPrintClient sends a valid error with code 200' do
