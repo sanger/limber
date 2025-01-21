@@ -10,8 +10,7 @@ class SearchController < ApplicationController
   def new
   end
 
-  def ongoing_plates # rubocop:todo Metrics/AbcSize
-    api.search.find(Settings.searches.fetch('Find plates'))
+  def ongoing_plates
     @purpose_options = helpers.purpose_options('plate')
     @search_options = OngoingPlate.new(ongoing_plate_search_params.merge(page: params['page']&.to_i).compact)
     @search_results =
@@ -19,14 +18,12 @@ class SearchController < ApplicationController
     @search_options.total_results = @search_results.total_count
   end
 
-  def ongoing_tubes # rubocop:todo Metrics/AbcSize
-    tube_search = api.search.find(Settings.searches.fetch('Find tubes'))
+  def ongoing_tubes
     @purpose_options = helpers.purpose_options('tube')
-    @search_options = OngoingTube.new(ongoing_tube_search_params)
-    @search_options.page = params['page'].to_i if params['page'].present?
-
-    @search_results = tube_search.all(Limber::Tube, @search_options.search_parameters)
-    @search_options.total_results = @search_results.size
+    @search_options = OngoingTube.new(ongoing_tube_search_params.merge(page: params['page']&.to_i).compact)
+    @search_results =
+      Sequencescape::Api::V2::Tube.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
+    @search_options.total_results = @search_results.total_count
   end
 
   def qcables

@@ -64,7 +64,7 @@ RSpec.describe SearchController, type: :controller do
       context 'without parameters' do
         let(:search_parameters) do
           {
-            states: %w[pending started passed qc_complete failed cancelled],
+            state: %w[pending started passed qc_complete failed cancelled],
             plate_purpose_uuids: %w[uuid-1 uuid-2],
             show_my_plates_only: false,
             include_used: false,
@@ -82,7 +82,7 @@ RSpec.describe SearchController, type: :controller do
       context 'with parameters' do
         let(:search_parameters) do
           {
-            states: %w[pending started passed qc_complete failed cancelled],
+            state: %w[pending started passed qc_complete failed cancelled],
             plate_purpose_uuids: ['uuid-1'],
             show_my_plates_only: true,
             include_used: true,
@@ -112,7 +112,7 @@ RSpec.describe SearchController, type: :controller do
       context 'without parameters' do
         let(:search_parameters) do
           {
-            states: %w[pending started passed qc_complete failed cancelled],
+            state: %w[pending started passed qc_complete failed cancelled],
             tube_purpose_uuids: %w[uuid-3 uuid-4],
             include_used: false,
             page: 1
@@ -130,7 +130,7 @@ RSpec.describe SearchController, type: :controller do
       context 'with parameters' do
         let(:search_parameters) do
           {
-            states: %w[pending started passed qc_complete failed cancelled],
+            state: %w[pending started passed qc_complete failed cancelled],
             tube_purpose_uuids: ['uuid-3'],
             include_used: true,
             page: 1
