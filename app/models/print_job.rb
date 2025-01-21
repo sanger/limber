@@ -185,7 +185,14 @@ class PrintJob # rubocop:todo Style/Documentation
     if response.body.present?
       begin
         response_body = JSON.parse(response.body)
-        return response_body['errors'].pluck('message').join(' - ') if response_body['errors'].present?
+        if response_body['errors'].present?
+          messages =
+            response_body['errors'].map do |error|
+              extension = error['extensions'] ? " (#{error['extensions']['classification']})" : ''
+              "#{error['message']}#{extension}"
+            end
+          return messages.join(' - ')
+        end
       rescue JSON::ParserError
         return 'Failed to parse JSON response from SprintClient'
       end

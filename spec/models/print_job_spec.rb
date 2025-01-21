@@ -255,7 +255,7 @@ RSpec.describe PrintJob do
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(pj.execute).to be false
       expect(pj.errors.full_messages[0]).to eq(
-        "Sprint Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'."
+        "Sprint Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'. (ValidationError)"
       )
     end
 
@@ -278,7 +278,9 @@ RSpec.describe PrintJob do
       )
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(pj.execute).to be false
-      expect(pj.errors.full_messages[0]).to eq('Sprint Failed to parse JSON response from SprintClient')
+      expect(pj.errors.full_messages[0]).to eq(
+        'Sprint Failed to parse JSON response from SprintClient (ValidationError)'
+      )
     end
   end
 end
