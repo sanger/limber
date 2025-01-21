@@ -5,8 +5,6 @@ module Presenters
   # number of cells by study. If other features are necessary in the presenter,
   # they can be added here or the validation can be moved to the new one.
   class DonorPoolingPlatePresenter < StandardPresenter
-    validates_with Validators::RequiredNumberOfCellsValidator
-
     # The pooling tab is not relevant for this presenter as the wells are already pooled (tab shows future pooling
     # by submission strategy)
     self.pooling_tab = ''

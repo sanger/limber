@@ -69,70 +69,21 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:study_to_a1) { create(:study_with_poly_metadata, name: 'First Study', poly_metadata: []) } # empty poly_metadata
   let(:study_to_b1) { create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: []) } # empty poly_metadata
 
-  let(:warning_template) { Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS }
+  let(:warning_template) do
+    Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS_PER_SAMPLE_PER_POOL
+  end
 
-  let(:option_key) { 'scrna_core_pbmc_donor_pooling_required_number_of_cells' }
-  let(:default_cell_count) { 5000 }
+  # Constants from config/initializers/scrna_config.rb
+  let(:scrna_config) { Rails.application.config.scrna_config }
+
+  let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
 
   subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
 
   before do
-    Settings.purposes = {
-      labware.purpose.uuid => {
-        presenter_class: {
-          args: {
-            default_required_number_of_cells: default_cell_count,
-            study_required_number_of_cells_key: option_key
-          }
-        }
-      }
-    }
+    Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }
     source_wells_to_a1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_a1) }
     source_wells_to_b1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_b1) }
-  end
-
-  context 'when the labware in pending state' do
-    context 'without the required number of cells option for any study' do
-      it 'warns the user about all studies' do
-        expect(subject).not_to be_valid # There are warnings in the errors collection.
-        study_names = [study_to_a1, study_to_b1].map(&:name).join(', ')
-        formatted_string = format(warning_template, default_cell_count, study_names)
-        expect(subject.errors[:required_number_of_cells]).to include(formatted_string)
-      end
-    end
-
-    context 'without the required number of cells option for one study' do
-      # Configure the second study
-      let(:study_to_b1) do
-        poly_metadatum = create(:poly_metadatum, key: option_key, value: '2000')
-        create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
-      end
-
-      it 'warns the user about one study' do
-        expect(subject).not_to be_valid # There are warnings in the errors collection.
-        study_names = [study_to_a1].map(&:name).join(', ')
-        formatted_string = format(warning_template, default_cell_count, study_names)
-        expect(subject.errors[:required_number_of_cells]).to include(formatted_string)
-      end
-    end
-
-    context 'with the required number of cells option for all studies' do
-      # Configure the first study
-      let(:study_to_a1) do
-        poly_metadatum = create(:poly_metadatum, key: option_key, value: '1000')
-        create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
-      end
-
-      # Configure the second study
-      let(:study_to_b1) do
-        poly_metadatum = create(:poly_metadatum, key: option_key, value: '2000')
-        create(:study_with_poly_metadata, poly_metadata: [poly_metadatum]) # poly_metadata with cell count option
-      end
-
-      it 'does not warn the user about any study' do
-        expect(subject).to be_valid # There are no warnings.
-      end
-    end
   end
 
   context 'when the labware not in pending state' do
