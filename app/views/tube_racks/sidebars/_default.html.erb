@@ -4,6 +4,19 @@
   <%= render 'labware/qc_data_upload' %>
 
   <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+    <%# TODO: add render work_completion_form for tube_racks %>
+
+    <%# See CreationController for more information %>
+    <%# TODO: will need testing once we have a labware creator which creates children from tube racks %>
+    <% presenter.control_additional_creation do -%>
+      <%= render presenter.suggested_purposes, parent: presenter.labware %>
+    <% end %>
+
+    <%# TODO: checking with users if this is needed, may need Quanthub changes %>
+    <% presenter.csv_file_links.each do |link_name, link_target| %>
+      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+    <% end %>
+
     <% if presenter.robot? %>
       <% @presenter.each_robot do |robot_id, robot_name| %>
         <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
