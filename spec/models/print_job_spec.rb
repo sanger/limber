@@ -301,4 +301,55 @@ RSpec.describe PrintJob do
       )
     end
   end
+
+  describe '#extract_error_message' do
+    let(:print_job) { PrintJob.new }
+
+    it 'returns the error message with extensions' do
+      response =
+        instance_double(
+          'Net::HTTPResponse',
+          body: {
+            errors: [
+              {
+                message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'.",
+                extensions: {
+                  classification: 'ValidationError'
+                }
+              }
+            ]
+          }.to_json
+        )
+
+      expect(print_job.send(:extract_error_message, response)).to eq(
+        "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'. (ValidationError)"
+      )
+    end
+
+    it 'returns the error message without extensions' do
+      response =
+        instance_double(
+          'Net::HTTPResponse',
+          body: {
+            errors: [{ message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'." }]
+          }.to_json
+        )
+
+      expect(print_job.send(:extract_error_message, response)).to eq(
+        "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'."
+      )
+    end
+
+    it 'returns unknown error if response body is empty' do
+      response = instance_double('Net::HTTPResponse', body: nil)
+
+      expect(print_job.send(:extract_error_message, response)).to eq('Unknown error')
+    end
+
+    it 'returns failed to parse JSON response if JSON parsing fails' do
+      response = instance_double('Net::HTTPResponse', body: 'invalid_json')
+
+      expect(print_job.send(:extract_error_message, response)).to eq('Failed to parse JSON response from SprintClient')
+    end
+  end
 end
