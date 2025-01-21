@@ -39,7 +39,7 @@ RSpec.describe 'tube_racks/tube_racks_exports/tube_rack_concentrations_nm.csv.er
       [
         ['Tube Rack Barcode', tube_rack_barcode],
         [],
-        ['Tube Barcode', 'Rack Coordinate', 'Concentration (nM)', 'Tube State'],
+        ['Tube Barcode', 'Rack Coordinate', 'Concentration (nM)', 'Tube Passed?'],
         [tube2.human_barcode, 'A1', '1.5', '0'],
         [tube1.human_barcode, 'B1', '1.5', '0'],
         [tube3.human_barcode, 'C1', '1.5', '1']
