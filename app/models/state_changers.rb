@@ -19,11 +19,9 @@ module StateChangers
 
   # Plate state changer to automatically complete specified work requests.
   # This is the abstract behaviour.
-  #
-  # Must include v2_labware method in the including class
   module AutomaticBehaviour
     def purpose_uuid
-      @purpose_uuid ||= v2_labware.purpose.uuid
+      @purpose_uuid ||= labware.purpose.uuid
     end
 
     def purpose_config
@@ -53,10 +51,10 @@ module StateChangers
 
     def complete_outstanding_requests
       in_progress_submission_uuids =
-        v2_labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
+        labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
       return if in_progress_submission_uuids.blank?
 
-      api.work_completion.create!(submissions: in_progress_submission_uuids, target: v2_labware.uuid, user: user_uuid)
+      api.work_completion.create!(submissions: in_progress_submission_uuids, target: labware.uuid, user: user_uuid)
     end
   end
 
@@ -178,12 +176,8 @@ module StateChangers
       nil
     end
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
-    end
-
     def labware
-      @labware ||= v2_labware
+      @labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
 
@@ -191,8 +185,8 @@ module StateChangers
   class AutomaticPlateStateChanger < PlateStateChanger
     include AutomaticBehaviour
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
+    def labware
+      @labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
     end
   end
 
@@ -200,12 +194,8 @@ module StateChangers
   class AutomaticTubeRackStateChanger < TubeRackStateChanger
     include AutomaticBehaviour
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
-    end
-
     def labware
-      @labware ||= v2_labware
+      @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
   end
 
@@ -213,12 +203,8 @@ module StateChangers
   class AutomaticTubeStateChanger < TubeStateChanger
     include AutomaticBehaviour
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
-    end
-
     def labware
-      @labware ||= v2_labware
+      @labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
     end
   end
 end
