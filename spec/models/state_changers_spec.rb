@@ -165,16 +165,12 @@ RSpec.describe StateChangers do
 
     subject { StateChangers::TubeRackStateChanger.new(api, labware_uuid, user_uuid) }
 
-    before do
-      stub_v2_tube_rack(tube_rack)
-    end
+    before { stub_v2_tube_rack(tube_rack) }
 
     context 'when all tubes are in failed state' do
       let(:coordinates_to_pass) { [] }
 
-      before do
-        allow(labware).to receive(:racked_tubes).and_return([racked_tube1])
-      end
+      before { allow(labware).to receive(:racked_tubes).and_return([racked_tube1]) }
 
       # if all the tubes are already in the target state expect contents to be empty
       # TODO: I'm not sure this is correct behaviour, it should probably raise an error
