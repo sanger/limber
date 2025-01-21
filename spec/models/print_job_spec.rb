@@ -235,6 +235,24 @@ RSpec.describe PrintJob do
       expect(pj.errors.full_messages[0]).to eq('Sprint Trouble connecting to SPrint. Please try again later.')
     end
 
+    it 'will not execute if the SPrintClient returns unprocessable entity' do
+      response = Net::HTTPUnprocessableEntity.new(1.0, '422', nil)
+      response.instance_variable_set(:@read, true)
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq(
+        'Sprint Sprint could not understand the request. Please check the label data.'
+      )
+    end
+
+    it 'will not execute if the SPrintClient returns unprocessable entity' do
+      response = Net::HTTPInternalServerError.new(1.0, '500', nil)
+      response.instance_variable_set(:@read, true)
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq('Sprint Internal server error at SPrint. Please try again later.')
+    end
+
     it 'will not execute if the SPrintClient sends a valid error with code 200' do
       response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
