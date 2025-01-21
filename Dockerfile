@@ -1,7 +1,7 @@
 FROM ruby:3.2.5-slim
 
 # Major version of Node.js to install
-ARG nodeVersion=20
+ARG nodeVersion=22
 
 ARG bundlerWithout="development test lint"
 ARG yarnFlags="--production"
