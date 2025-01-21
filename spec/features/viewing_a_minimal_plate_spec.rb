@@ -64,8 +64,7 @@ RSpec.feature 'Viewing a plate', js: true do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Submission (active) is not present for this labware. ' \
-          'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+        'Submission Requests of type Limber WGS have already been down the pipeline.'
       )
     end
   end
@@ -105,8 +104,7 @@ RSpec.feature 'Viewing a plate', js: true do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Submission (active) is not present for this labware. ' \
-          'Any further work conducted from this plate may run into issues at the end of the pipeline.'
+        'Submission Requests of type Limber WGS have already been down the pipeline.'
       )
     end
   end
