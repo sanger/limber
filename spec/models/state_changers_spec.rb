@@ -167,15 +167,12 @@ RSpec.describe StateChangers do
 
     before do
       stub_v2_tube_rack(tube_rack)
-
-      # allow(labware).to receive(:racked_tubes).and_return([racked_tube1, racked_tube2, racked_tube3])
     end
 
     context 'when all tubes are in failed state' do
       let(:coordinates_to_pass) { [] }
 
       before do
-        # stub_v2_tube_rack(tube_rack)
         allow(labware).to receive(:racked_tubes).and_return([racked_tube1])
       end
 
