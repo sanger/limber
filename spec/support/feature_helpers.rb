@@ -28,6 +28,15 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
     )
   end
 
+  def stub_find_all_with_pagination(klass, query, paginate, result)
+    api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
+
+    # Return a mock that looks like a an array of results with result-set methods
+    result.define_singleton_method(:total_count) { length } # add total_count method to array
+
+    allow(api_class).to receive(:find_all).with(query, paginate:).and_return(result)
+  end
+
   def stub_swipecard_search(swipecard, user)
     allow(Sequencescape::Api::V2::User).to receive(:find).with(user_code: swipecard).and_return([user])
   end
