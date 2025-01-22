@@ -271,14 +271,20 @@ module ApiUrlHelper
     end
 
     # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: nil)
+    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: false) # rubocop:todo Metrics/AbcSize
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
 
       if custom_query
         allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube)
+      elsif custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
+          custom_includes,
+          { uuid: tube.uuid }
+        ).and_return(tube)
+      else
+        allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with({ uuid: tube.uuid }).and_return(tube)
       end
 
-      stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes:)
       stub_v2_labware(tube)
     end
 

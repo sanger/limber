@@ -74,7 +74,10 @@ RSpec.feature 'Charge and pass libraries', js: true do
       )
     end
 
-    before { stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid]) }
+    before do
+      stub_v2_tube(tube)
+      stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
+    end
 
     let!(:submission_request) do
       stub_api_post(

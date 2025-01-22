@@ -1,16 +1,65 @@
 # frozen_string_literal: true
 
-# A State changer is responsible for transitioning the state of a plate, or
-# individual wells.
+# A State changer is responsible for transitioning the state of labware and its receptacles where applicable.
+#
+# Hierarchy:
+#  - BaseStateChanger
+#    - PlateStateChanger
+#      - AutomaticPlateStateChanger [includes AutomaticBehaviour]
+#    - TubeRackStateChanger
+#      - AutomaticTubeRackStateChanger [includes AutomaticBehaviour]
+#    - TubeStateChanger
+#      - AutomaticTubeStateChanger [includes AutomaticBehaviour]
+#
 module StateChangers
-  class StateChangeError < StandardError
+  def self.lookup_for(purpose_uuid)
+    (details = Settings.purposes[purpose_uuid]) || raise("Unknown purpose UUID: #{purpose_uuid}")
+    details[:state_changer_class].constantize
   end
 
-  # The Default State changer is used by the vast majority of plates. It creates
-  # a simple StateChange record in Sequencescape, specifying the new 'target-state'
-  # As a result, Sequencescape will attempt to transition the entire plate, or the
-  # specified wells.
-  class DefaultStateChanger
+  # Plate state changer to automatically complete specified work requests.
+  # This is the abstract behaviour.
+  module AutomaticBehaviour
+    def purpose_uuid
+      @purpose_uuid ||= labware.purpose.uuid
+    end
+
+    def purpose_config
+      @purpose_config ||= Settings.purposes[purpose_uuid]
+    end
+
+    def work_completion_request_types
+      @work_completion_request_types ||= parse_work_completion_request_types
+    end
+
+    # config can be a single request type or an array of request types
+    # convert them here into a consistent array format
+    def parse_work_completion_request_types
+      config = purpose_config[:work_completion_request_type]
+      return config if config.is_a?(Array)
+
+      [config]
+    end
+
+    # rubocop:todo Style/OptionalBooleanParameter
+    def move_to!(state, reason = nil, customer_accepts_responsibility = false)
+      super
+      complete_outstanding_requests
+    end
+
+    # rubocop:enable Style/OptionalBooleanParameter
+
+    def complete_outstanding_requests
+      in_progress_submission_uuids =
+        labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
+      return if in_progress_submission_uuids.blank?
+
+      api.work_completion.create!(submissions: in_progress_submission_uuids, target: labware.uuid, user: user_uuid)
+    end
+  end
+
+  # The Base state changer that contains common behaviour for all state changers.
+  class BaseStateChanger
     attr_reader :labware_uuid, :api, :user_uuid
     private :api
 
@@ -55,6 +104,20 @@ module StateChangers
     #
     # @param target_state [String] the state to check against the FILTER_FAILS_ON list
     # @return [Array<String>, nil] an array of well locations requiring the state change, or nil if no change is needed
+    def contents_for(_target_state)
+      raise 'Must be implemented on subclass' # pragma: no cover
+    end
+
+    def labware
+      raise 'Must be implemented on subclass' # pragma: no cover
+    end
+  end
+
+  # The Plate State changer is used by the vast majority of plates. It creates
+  # a simple StateChange record in Sequencescape, specifying the new 'target-state'
+  # As a result, Sequencescape will attempt to transition the entire plate, or the
+  # specified wells.
+  class PlateStateChanger < BaseStateChanger
     def contents_for(target_state)
       return nil unless FILTER_FAILS_ON.include?(target_state)
 
@@ -72,14 +135,9 @@ module StateChangers
     end
   end
 
-  def self.lookup_for(purpose_uuid)
-    (details = Settings.purposes[purpose_uuid]) || raise("Unknown purpose UUID: #{purpose_uuid}")
-    details[:state_changer_class].constantize
-  end
-
   # The tube rack state changer is used by TubeRacks.
   # It contains racked tubes.
-  class TubeRackStateChanger < DefaultStateChanger
+  class TubeRackStateChanger < BaseStateChanger
     # This method determines the coordinates of tubes that require a state change based on the target state.
     # If the target state is not in the FILTER_FAILS_ON list, it returns nil.
     # It filters out tubes that are in the 'failed' state and collects their coordinates.
@@ -111,85 +169,42 @@ module StateChangers
   end
 
   # The tube state changer is used by Tubes. It works the same way as the default
-  # state changer but does not need to handle a subset of wells like the plate.
-  class TubeStateChanger < DefaultStateChanger
+  # plate state changer but does not need to handle a subset of wells like the plate.
+  class TubeStateChanger < BaseStateChanger
     # Tubes have no wells so contents is always empty
     def contents_for(_target_state)
       nil
     end
-  end
 
-  # Plate state changer to automatically complete specified work requests.
-  # This is the abstract version.
-  class AutomaticLabwareStateChanger < DefaultStateChanger
-    def v2_labware
-      raise 'Must be implemented on subclass'
-    end
-
-    def purpose_uuid
-      @purpose_uuid ||= v2_labware.purpose.uuid
-    end
-
-    def purpose_config
-      @purpose_config ||= Settings.purposes[purpose_uuid]
-    end
-
-    def work_completion_request_types
-      @work_completion_request_types ||= parse_work_completion_request_types
-    end
-
-    # config can be a single request type or an array of request types
-    # convert them here into a consistent array format
-    def parse_work_completion_request_types
-      config = purpose_config[:work_completion_request_type]
-      return config if config.is_a?(Array)
-
-      [config]
-    end
-
-    # rubocop:todo Style/OptionalBooleanParameter
-    def move_to!(state, reason = nil, customer_accepts_responsibility = false)
-      super
-      complete_outstanding_requests
-    end
-
-    # rubocop:enable Style/OptionalBooleanParameter
-
-    def complete_outstanding_requests
-      in_prog_submissions =
-        v2_labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
-      return if in_prog_submissions.blank?
-
-      api.work_completion.create!(submissions: in_prog_submissions, target: v2_labware.uuid, user: user_uuid)
+    def labware
+      @labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
 
   # This version of the AutomaticLabwareStateChanger is used by Plates.
-  class AutomaticPlateStateChanger < AutomaticLabwareStateChanger
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
-    end
-  end
-
-  # This version of the AutomaticLabwareStateChanger is used by Tubes.
-  class AutomaticTubeStateChanger < AutomaticLabwareStateChanger
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
-    end
+  class AutomaticPlateStateChanger < PlateStateChanger
+    include AutomaticBehaviour
 
     def labware
-      @labware ||= v2_labware
+      @labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
     end
   end
 
   # This version of the AutomaticLabwareStateChanger is used by TubeRacks.
-  class AutomaticTubeRackStateChanger < AutomaticLabwareStateChanger
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
-    end
+  class AutomaticTubeRackStateChanger < TubeRackStateChanger
+    include AutomaticBehaviour
 
     def labware
-      @labware ||= v2_labware
+      @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
+    end
+  end
+
+  # This version of the AutomaticLabwareStateChanger is used by Tubes.
+  class AutomaticTubeStateChanger < TubeStateChanger
+    include AutomaticBehaviour
+
+    def labware
+      @labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
     end
   end
 end

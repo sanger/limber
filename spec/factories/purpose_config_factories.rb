@@ -16,7 +16,7 @@ FactoryBot.define do
     name { 'Plate Purpose' }
     creator_class { 'LabwareCreators::StampedPlate' }
     presenter_class { 'Presenters::StandardPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     default_printer_type { :plate_a }
     asset_type { 'plate' }
     label_class { 'Labels::PlateLabel' }
@@ -357,7 +357,7 @@ FactoryBot.define do
     asset_type { 'tube_rack' }
     default_printer_type { :tube_rack }
     presenter_class { 'Presenters::TubeRackPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     submission { {} }
     label_class { nil }
     printer_type { '96 Well Plate' }
