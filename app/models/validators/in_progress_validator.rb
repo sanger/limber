@@ -11,7 +11,7 @@ module Validators
       return true if first_request.nil?
       presenter.errors.add(
         :submission,
-        "Requests of type #{first_request.request_type.name} have already been down the pipeline. "
+        "Requests of type #{first_request.request_type.name} have already been down the pipeline and were completed."
       )
     end
   end

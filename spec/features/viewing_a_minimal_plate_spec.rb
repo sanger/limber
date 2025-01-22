@@ -64,7 +64,7 @@ RSpec.feature 'Viewing a plate', js: true do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Submission Requests of type Limber WGS have already been down the pipeline.'
+        'Submission Requests of type Limber WGS have already been down the pipeline and were completed.'
       )
     end
   end
@@ -104,7 +104,7 @@ RSpec.feature 'Viewing a plate', js: true do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Submission Requests of type Limber WGS have already been down the pipeline.'
+        'Submission Requests of type Limber WGS have already been down the pipeline and were completed.'
       )
     end
   end
