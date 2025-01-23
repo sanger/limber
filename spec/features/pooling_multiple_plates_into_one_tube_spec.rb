@@ -65,7 +65,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
 
   # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
   let!(:stub_barcode_searches) do
-    stub_asset_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
+    stub_asset_v2_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
   end
 
   let(:transfers_attributes) do
@@ -84,7 +84,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
   let(:well_set_a) { json(:well_collection, aliquot_factory: :tagged_aliquot) }
 
   background do
-    create :purpose_config, uuid: 'example-purpose-uuid'
+    create :purpose_config, uuid: 'example-purpose-uuid', name: 'purpose-config'
     create :pooled_tube_from_plates_purpose_config, uuid: 'child-purpose-0'
     create :pipeline, relationships: { 'example-purpose' => 'Pool tube' }
 
@@ -94,17 +94,9 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     # We'll look up both plates.
 
     # We have a basic inbox search running
-    stub_search_and_multi_result(
-      'Find plates',
-      {
-        'search' => {
-          states: ['passed'],
-          plate_purpose_uuids: ['example-purpose-uuid'],
-          show_my_plates_only: false,
-          include_used: false,
-          page: 1
-        }
-      },
+    stub_find_all(
+      :plates,
+      { state: ['passed'], purpose_name: ['purpose-config'], include_used: false },
       [example_plate_listed, example_plate_2_listed]
     )
 

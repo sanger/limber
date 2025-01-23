@@ -8,7 +8,7 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base # rubocop:t
   has_one :submission
   has_one :order
   has_one :request_metadata, class_name: 'Sequencescape::Api::V2::RequestMetadata'
-  has_one :primer_panel
+  has_one :primer_panel, class_name: 'Sequencescape::Api::V2::PrimerPanel'
 
   delegate :for_multiplexing, to: :request_type
   delegate :key, to: :request_type, prefix: true

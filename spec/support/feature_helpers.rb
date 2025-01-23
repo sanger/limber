@@ -15,6 +15,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
     end
   end
 
+  # Deprecated: replace with stub_find_all or stub_find_all_with_pagination
   def stub_search_and_multi_result(search, query, result)
     search_uuid = search.downcase.tr(' ', '-')
     Settings.searches[search] = search_uuid
@@ -26,6 +27,11 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
       payload: query,
       body: { size: result.length, searches: result }.to_json
     )
+  end
+
+  def stub_find_all(klass, query, result)
+    api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
+    allow(api_class).to receive(:find_all).with(query).and_return(result)
   end
 
   def stub_find_all_with_pagination(klass, query, paginate, result)
