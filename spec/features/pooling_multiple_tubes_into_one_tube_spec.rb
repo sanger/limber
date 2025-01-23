@@ -105,6 +105,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       include_used: false,
       purpose_name: ['example-purpose'],
       includes: 'purpose',
+      state: %w[pending started passed qc_complete failed cancelled],
       paginate: {
         per_page: 30,
         page: 1
