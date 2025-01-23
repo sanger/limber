@@ -22,7 +22,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_listed) { associated(*example_plate_args) }
+  let(:example_plate_listed) { create(*example_plate_args) }
 
   let(:plate_barcode_2) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode }
   let(:plate_uuid_2) { 'plate-2' }
@@ -38,7 +38,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_2_listed) { associated(*example_plate2_args) }
+  let(:example_plate_2_listed) { create(*example_plate2_args) }
 
   let(:plate_barcode_3) { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).human_barcode }
   let(:plate_uuid_3) { 'plate-3' }
@@ -54,7 +54,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_3_listed) { associated(*example_plate3_args) }
+  let(:example_plate_3_listed) { create(*example_plate3_args) }
 
   let(:parent_uuid) { plate_uuid }
   let(:child_tube) { create :v2_tube, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool tube' }
