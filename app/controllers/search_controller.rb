@@ -14,7 +14,7 @@ class SearchController < ApplicationController
     @purpose_options = helpers.purpose_options('plate')
     @search_options = OngoingPlate.new(ongoing_plate_search_params.merge(page: params['page']&.to_i).compact)
     @search_results =
-      Sequencescape::Api::V2::Plate.find_all(@search_options.v2_search_parameters, paginate: @search_options.pagination)
+      Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
     @search_options.total_results = @search_results.total_count
   end
 
@@ -22,7 +22,7 @@ class SearchController < ApplicationController
     @purpose_options = helpers.purpose_options('tube')
     @search_options = OngoingTube.new(ongoing_tube_search_params.merge(page: params['page']&.to_i).compact)
     @search_results =
-      Sequencescape::Api::V2::Tube.find_all(@search_options.v2_search_parameters, paginate: @search_options.pagination)
+      Sequencescape::Api::V2::Tube.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
     @search_options.total_results = @search_results.total_count
   end
 

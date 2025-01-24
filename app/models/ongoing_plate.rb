@@ -6,15 +6,6 @@ class OngoingPlate < AssetSearchForm
 
   def search_parameters
     {
-      states: states || %w[pending started passed qc_complete failed cancelled],
-      tube_purpose_uuids: purpose_uuids,
-      include_used: include_used == '1',
-      page: page
-    }
-  end
-
-  def v2_search_parameters
-    {
       state: states || %w[pending started passed qc_complete failed cancelled],
       purpose_name: purpose_names,
       include_used: include_used == '1'
