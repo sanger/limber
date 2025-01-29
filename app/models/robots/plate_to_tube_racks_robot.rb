@@ -2,27 +2,18 @@
 
 module Robots
   # This plate to tube racks robot takes one parent plate, and transfers it to
-  # its child tubes that are on multiple tube racks. The tube racks handled by
-  # this robot are not actual recorded labware. Their barcodes are extracted
-  # from the metadata of the tubes and they are accessed using wrapper objects.
+  # its child tubes that are on multiple tube racks.
   # When robot controller calls the robot's verify or perform_transfer actions,
   # the robot will first initialize its labware store with the plate and tube
-  # rack objects. The plate information comes from the Sequencescape API call,
-  # however the tube rack information comes from the metadata of the downstream
-  # tubes included in the same API response. Therefore, the bed verification of
-  # the tube racks depend on the verification of the plate.
-  #
-  # The destination tube racks are distinguished by their barcodes. We assume
-  # that the tubes on the same tube rack have the same labware purpose. When
-  # multiple tubes of the same purpose and the same position are found, the
-  # latest tube is assumed to be on the tube rack and the other tubes are
-  # ignored. We also assume that there cannot be multiple tube racks with the
-  # tubes of the same labware purpose on the robot at the same time.
+  # rack objects. This information comes from the Sequencescape API call on the
+  # plate, where the tube racks are children of the plate.
+  # Therefore, the bed verification of the tube racks depend on the verification
+  # of the plate.
   #
   # For bed verification, only the etched barcode of the tube racks are scanned,
   # not the individual tubes. The number of tube racks to be verified not only
   # depends on the robot's configured relationships but also whether the plate
-  # has children with those purposes.
+  # has children with those purposes. e.g. in scRNA one of the tube racks is optional.
   #
   class PlateToTubeRacksRobot < Robots::SplittingRobot
     attr_writer :relationships # Hash from robot config into @relationships
@@ -61,8 +52,7 @@ module Robots
 
     # Returns an array of labware from the robot's labware store for barcodes.
     # This method is called by the robot's beds when they need to find their
-    # labware. The labware returned can be Plate objects or labware-like
-    # wrapper objects for tube racks.
+    # labware. The labware returned can be Plate objects or Tube Rack objects.
     #
     # @param barcodes [Array<String>] array of barcodes
     # @return [Array<Plate, TubeRack>]
@@ -75,7 +65,7 @@ module Robots
     # the given Plate.
     #
     # @param plate [Plate] the parent plate
-    # @return [Array<TubeRack>] array of tube rack wrapper objects
+    # @return [Array<TubeRack>] array of tube racks
     #
     def child_labware(plate)
       labware_store.values.select do |labware|
@@ -96,7 +86,7 @@ module Robots
 
     # Prepares the labware store before handling robot actions. This method is
     # called before the robot's bed verification and perform transfer actions.
-    # NB. This is what labwares should be scanned, given the plate barcode scanned.
+    # NB. This says what tube racks should be scanned, given the parent plate barcode scanned.
     # i.e. the plate barcode is scanned, and the expected tube rack children are determined.
     #
     # @param bed_labwares [Hash] the hash from request parameters
@@ -152,10 +142,10 @@ module Robots
 
     # Deletes the beds and their relationships from the robot's configuration.
     # This method is called by the prepare_beds method after finding which
-    # beds should not be verified. For the scRNA Core pipeline, this means either we need to
-    # verify the parent bed first as it has a problem, or we have to remove
-    # the sequencing tube-rack from the robot's config as the parent has only
-    # contingency-only tube rack to be verified.
+    # beds should not be verified. For the scRNA Core pipeline, there can be
+    # a contingency rack only, or both contingency and sequencing tube racks.
+    # If there is not sequencing rack required for this parent, we delete it from
+    # the robot's configuration.
     #
     # @param barcodes [Array<String>] array of barcodes to be removed
     # @param relationship_children [Array<String>] array of child barcodes
@@ -185,7 +175,7 @@ module Robots
       labware_store[plate.barcode.human] = plate
     end
 
-    # Adds the tube racks wrappers from plate includes to the labware store.
+    # Adds the tube racks children of the plate to the labware store.
     #
     # @param plate [Plate] the parent plate
     # @return [void]
@@ -213,8 +203,7 @@ module Robots
     # rubocop:enable Metrics/AbcSize
 
     # Returns the labware store. The hash is indexed by the labware barcode.
-    # The values are either Plate objects or labware-like wrapper objects for
-    # tube racks.
+    # The values are either Plate objects or Tube Rack objects.
     #
     # @return [Hash<String, Labware>] the labware store
     #
