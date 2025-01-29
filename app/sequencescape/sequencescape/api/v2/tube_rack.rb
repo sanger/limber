@@ -35,6 +35,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'
   has_many :tubes, through: :racked_tubes, class_name: 'Sequencescape::Api::V2::Tube'
 
+  has_one :custom_metadatum_collection, class_name: 'Sequencescape::Api::V2::CustomMetadatumCollection'
+
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
 
   has_many :state_changes
