@@ -139,7 +139,7 @@ GEM
     exception_notification (4.5.0)
       actionmailer (>= 5.2, < 8)
       activesupport (>= 5.2, < 8)
-    factory_bot (6.4.6)
+    factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
@@ -445,7 +445,7 @@ DEPENDENCIES
   capybara
   capybara-selenium
   exception_notification
-  factory_bot
+  factory_bot (~> 6.5)
   guard-rspec
   hashie
   json_api_client!
