@@ -317,3 +317,16 @@ In addition you can also run `lefthook run fix` to run the auto-fixers on staged
 Note that after doing this you will still need to stage the fixes before committing. I'd love to be
 able to automate this, but haven't discovered a solution that maintains the ability to partially
 stage a file, and doesn't involve running the linters directly on files in the .git folder.
+
+## Credentials
+
+Secrets are managed differently after the Rails 7.2 update. The setup can be done by running the command `bundle exec rails credentials:edit` locally
+
+This will create a `credentials.yml.enc` and `master.key` in the config directory
+
+You can then edit the credentials file with the following command:
+`VISUAL="nano --wait" bin/rails credentials:edit`
+
+These should not be committed to the github repo.
+
+Instead they are copied into the `templates` directory within the `roles/deploy_limber` directory in the private deployment project repo.
