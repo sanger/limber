@@ -29,11 +29,11 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 
 // ^^^ Template from Vite. Below is custom code for Limber ^^^
 
-// Importing Turbo as replacement for Rails UJS in Rails 7.2 and later
-import * as Turbo from '@hotwired/turbo'
+// Import Rails UJS as in Sequencescape
+import Rails from '@rails/ujs'
 
 try {
-  Turbo.start()
+  Rails.start()
 } catch {
   // Nothing
 }
