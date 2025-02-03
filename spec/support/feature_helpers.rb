@@ -39,6 +39,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
 
     # Return a mock that looks like a an array of results with result-set methods
     result.define_singleton_method(:total_count) { length } # add total_count method to array
+    result.define_singleton_method(:total_pages) { (length / 5.0).ceil } # add total_pages method to array
 
     allow(api_class).to receive(:find_all).with(query, paginate:).and_return(result)
   end
