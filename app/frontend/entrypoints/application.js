@@ -31,10 +31,9 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 
 // Importing Turbo as replacement for Rails UJS in Rails 7.2 and later
 import * as Turbo from '@hotwired/turbo'
-Turbo.start()
 
 try {
-  Rails.start()
+  Turbo.start()
 } catch {
   // Nothing
 }
