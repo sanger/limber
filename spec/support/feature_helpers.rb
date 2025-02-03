@@ -16,6 +16,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
   end
 
   # Deprecated: replace with stub_find_all or stub_find_all_with_pagination
+  # TODO: Y24-190, remove this method and replace with stub_find_all or stub_find_all_with_pagination
   def stub_search_and_multi_result(search, query, result)
     search_uuid = search.downcase.tr(' ', '-')
     Settings.searches[search] = search_uuid
