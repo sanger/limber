@@ -18,6 +18,9 @@
       :state="offsetTagsByState"
       @input="offsetTagChanged"
     />
+    <b-form-text>
+      <strong> Tags will start from {offsetTagsBy + 1} </strong>
+    </b-form-text>
   </b-form-group>
 </template>
 
