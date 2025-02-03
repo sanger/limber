@@ -15,7 +15,7 @@ class SearchController < ApplicationController
     @search_options = OngoingPlate.new(ongoing_plate_search_params.merge(page: params['page']&.to_i).compact)
     @search_results =
       Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
-    @search_options.total_results = @search_results.total_count
+    pagination_metadata(@search_results)
   end
 
   def ongoing_tubes
@@ -23,7 +23,7 @@ class SearchController < ApplicationController
     @search_options = OngoingTube.new(ongoing_tube_search_params.merge(page: params['page']&.to_i).compact)
     @search_results =
       Sequencescape::Api::V2::Tube.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
-    @search_options.total_results = @search_results.total_count
+    pagination_metadata(@search_results)
   end
 
   def qcables
@@ -70,5 +70,12 @@ class SearchController < ApplicationController
 
   def ongoing_tube_search_params
     params.fetch(:ongoing_tube, {}).permit(:include_used, purposes: [])
+  end
+
+  def pagination_metadata(search_results)
+    # Other possible pagination metadata from <JsonApiClient::ResultSet> includes:
+    # current_page, total_entries, total_results
+    # See the attributes returned by Sequencescape::Api::V2::Plate.find({state:'pending'})
+    @search_options.total_pages = search_results.total_pages
   end
 end
