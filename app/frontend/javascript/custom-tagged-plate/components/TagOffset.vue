@@ -19,7 +19,7 @@
       @input="offsetTagChanged"
     />
     <b-form-text>
-      <strong> Tags will start from {offsetTagsBy + 1} </strong>
+      <strong> Tags will start from {{ offsetTagsByAsNumber + 1 }} </strong>
     </b-form-text>
   </b-form-group>
 </template>
