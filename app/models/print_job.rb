@@ -103,32 +103,9 @@ class PrintJob # rubocop:todo Style/Documentation
 
     merge_fields_list = label_array * number_of_copies
 
-    # assumes all labels use the same label template
-    SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
+    response = SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
 
-    # TODO: DPL-865 [Limber] Handle sprint client response
-    #
-    # This print_to_sprint call fails silently if there is an error. Instead
-    # of returning success, the result of the send_print_request call should
-    # be used to check the response status and response body. Examples:
-    #
-    # The following response body is returned in a 200 response.
-    # {"errors":[{"message":"Variable 'printRequest' has an invalid value: Expected
-    #   type 'Int' but was
-    #   'Double'.","locations":[{"line":1,"column":16}],"extensions":{"classification":"
-    #   ValidationError"}}]}
-    #
-    # The following response body is returned in a 500 response.
-    # {"timestamp": "2023-08-02T14:46:30.160+00:00","status": 500,"error": "Internal
-    #   Server Error","path": "/graphql"}
-    #
-    # When sprint cannot log in to printer, the details are available in response body.
-    #
-    # A successful response has a job id in response body.
-    #
-    # Use errors.add to show proper feedback in the view.
-
-    true
+    handle_sprint_response(response)
   end
 
   def number_of_copies=(number)
@@ -154,5 +131,72 @@ class PrintJob # rubocop:todo Style/Documentation
   def get_label_template_by_service(print_service)
     templates_by_service = JSON.parse(label_templates_by_service)
     templates_by_service[print_service]
+  end
+
+  # Handles the response from the SPrintClient and checks for success.
+  # If the response is successful and contains a job ID, it returns true.
+  # Otherwise, it adds an error message to the errors object and returns false.
+  #
+  # The print_to_sprint call fails silently if there is an error. Instead
+  # of returning success, the result of the send_print_request call should
+  # be used to check the response status and response body. Examples:
+  #
+  # The following response body is returned in a 200 response.
+  # {"errors":[{"message":"Variable 'printRequest' has an invalid value: Expected
+  #   type 'Int' but was
+  #   'Double'.","locations":[{"line":1,"column":16}],"extensions":{"classification":"
+  #   ValidationError"}}]}
+  #
+  # The following response body is returned in a 500 response.
+  # {"timestamp": "2023-08-02T14:46:30.160+00:00","status": 500,"error": "Internal
+  #   Server Error","path": "/graphql"}
+  #
+  # When sprint cannot log in to printer, the details are available in response body.
+  #
+  # A successful response has a job id in response body.
+  #
+  # Use errors.add to show proper feedback in the view.
+  #
+  # @param response [Net::HTTPResponse] The response object from the SPrintClient.
+  # @return [Boolean] True if the response is successful and contains a job ID, false otherwise.
+  def handle_sprint_response(response)
+    # Non-200 errors are treated as failures
+    # Ref: https://ruby-doc.org/stdlib-2.7.0/libdoc/net/http/rdoc/Net/HTTP.html#class-Net::HTTP-label-GET+with+Dynamic+Parameters
+    unless response.is_a?(Net::HTTPSuccess)
+      case response
+      when Net::HTTPUnprocessableEntity
+        errors.add(:sprint, 'Sprint could not understand the request. Please check the label data.')
+      when Net::HTTPInternalServerError
+        errors.add(:sprint, 'Internal server error at SPrint. Please try again later.')
+      else
+        errors.add(:sprint, 'Trouble connecting to SPrint. Please try again later.')
+      end
+      return false
+    end
+    if response.body.present? && response.body['jobId'].present?
+      true
+    else
+      errors.add(:sprint, extract_error_message(response))
+      false
+    end
+  end
+
+  def extract_error_message(response)
+    if response.body.present?
+      begin
+        response_body = JSON.parse(response.body)
+        if response_body['errors'].present?
+          messages =
+            response_body['errors'].map do |error|
+              extension = error['extensions'] ? " (#{error['extensions']['classification']})" : ''
+              "#{error['message']}#{extension}"
+            end
+          return messages.join(' - ')
+        end
+      rescue JSON::ParserError
+        return 'Failed to parse JSON response from SprintClient'
+      end
+    end
+    'Unknown error'
   end
 end
