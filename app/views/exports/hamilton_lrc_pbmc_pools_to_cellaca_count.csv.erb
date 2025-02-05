@@ -17,20 +17,21 @@
 <%
   rows_array = []
 
-  # Reading constants
-  args = Settings.purposes[@plate.purpose.uuid][:presenter_class][:args]
-  required_number_of_cells = args[:required_number_of_cells]
-  wastage_factor = args[:wastage_factor]
-  desired_chip_loading_concentration = args[:desired_chip_loading_concentration]
+  # Constants from config/initializers/scrna_config.rb
+  scrna_config = Rails.application.config.scrna_config
+  required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
+  wastage_factor = scrna_config[:wastage_factor]
+  desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
 
   filtered_wells = @plate.wells_in_columns.reject { |well| well.empty? || well.failed? }
-  filtered_wells.each do | well |
-    samples_in_pool = well.aliquots.size
-    source_well_volume = (samples_in_pool * required_number_of_cells * wastage_factor) / desired_chip_loading_concentration
+  filtered_wells.each do | src_well |
+    samples_in_pool = src_well.aliquots.size
+
+    source_well_volume = (samples_in_pool * required_number_of_cells_per_sample_in_pool * wastage_factor) / desired_chip_loading_concentration
     row = [
       @plate.labware_barcode.human,
-      well.location,
-      well.name,
+      src_well.location,
+      src_well.name,
       '%0.1f' % source_well_volume
     ]
     rows_array << row

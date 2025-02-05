@@ -1,4 +1,7 @@
-FROM ruby:3.2.5-slim
+FROM ruby:3.2.6-slim
+
+# Major version of Node.js to install
+ARG nodeVersion=22
 
 ARG bundlerWithout="development test lint"
 ARG yarnFlags="--production"
@@ -13,7 +16,7 @@ RUN apt-get install -y curl
 RUN apt-get install -y git
 
 RUN set -uex \
-    && NODE_MAJOR=20 \
+    && NODE_MAJOR=${nodeVersion} \
     && apt-get update \
     && apt-get install -y ca-certificates curl gnupg \
     && mkdir -p /etc/apt/keyrings \

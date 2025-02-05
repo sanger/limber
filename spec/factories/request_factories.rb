@@ -192,7 +192,7 @@ FactoryBot.define do
   factory :v2_request_metadata, class: Sequencescape::Api::V2::RequestMetadata do
     skip_create
 
-    number_of_samples_per_pool { nil }
+    number_of_pools { nil }
     cells_per_chip_well { nil }
   end
 end
