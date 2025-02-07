@@ -317,3 +317,9 @@ In addition you can also run `lefthook run fix` to run the auto-fixers on staged
 Note that after doing this you will still need to stage the fixes before committing. I'd love to be
 able to automate this, but haven't discovered a solution that maintains the ability to partially
 stage a file, and doesn't involve running the linters directly on files in the .git folder.
+
+## Miscellaneous
+
+### Sprint Templates for Barcode Label Printing
+
+In order to create new label templates or update the existing ones for different applications, use the deployment project. The templates must be defined in the sprint role, in the directory `sprint/files/label_templates` . The local directory `config/sprint/label_templates` is **not** supposed to be used for this purpose.
