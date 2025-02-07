@@ -797,11 +797,12 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   describe '#transfer_material_from_parent!' do
     let(:cells_per_chip_well) { 90_000 }
+    let(:allowance_band) { 'Full allowance' }
 
     let(:requests) do
       Array.new(10) do |_i|
         create :scrna_customer_request,
-               request_metadata: create(:v2_request_metadata, number_of_pools:, cells_per_chip_well:)
+               request_metadata: create(:v2_request_metadata, number_of_pools:, cells_per_chip_well:, allowance_band:)
       end
     end
 
