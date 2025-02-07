@@ -322,4 +322,4 @@ stage a file, and doesn't involve running the linters directly on files in the .
 
 ### Sprint Templates for Barcode Label Printing
 
-In order to create new label templates or update the existing ones for different applications, use the deployment project. The templates must be defined in the sprint role, in the directory `sprint/files/label_templates` . The local directory `config/sprint/label_templates` is **not** supposed to be used for this purpose.
+In order to create new label templates or update the existing ones, use the deployment project. The templates must be defined in the sprint role, in the directory `sprint/files/label_templates` . The local directory `config/sprint/label_templates` is **not** supposed to be used for this purpose.
