@@ -260,7 +260,7 @@ module LabwareCreators::DonorPoolingCalculator
     return number_of_cells_per_chip_well if final_suspension_volume >= allowance
 
     # we need to adjust the number of cells per chip well according to the number of samples
-    Rails.application.config.scrna_config[:full_allowance_table][count_of_samples_in_pool][allowance_band.to_sym]
+    Rails.application.config.scrna_config[:allowance_table][allowance_band][count_of_samples_in_pool]
   end
 
   # This method calculates the total cells in 300ul for a given pool of samples.
@@ -298,22 +298,18 @@ module LabwareCreators::DonorPoolingCalculator
     scrna_config = Rails.application.config.scrna_config
 
     case allowance_band
-    when "Full allowance"
-        (chip_loading_volume * scrna_config[:desired_number_of_runs]) +
+    when 'Full allowance'
+      (chip_loading_volume * scrna_config[:desired_number_of_runs]) +
         (scrna_config[:desired_number_of_runs] * scrna_config[:volume_taken_for_cell_counting]) +
         scrna_config[:wastage_volume]
-    when "2 pool attempts, 1 count"
-        (chip_loading_volume * scrna_config[:desired_number_of_runs]) +
-        scrna_config[:volume_taken_for_cell_counting] +
+    when '2 pool attempts, 1 count'
+      (chip_loading_volume * scrna_config[:desired_number_of_runs]) + scrna_config[:volume_taken_for_cell_counting] +
         scrna_config[:wastage_volume]
-    when "1 pool attempt, 2 counts"
-        chip_loading_volume +
-        (scrna_config[:desired_number_of_runs] * scrna_config[:volume_taken_for_cell_counting]) +
+    when '1 pool attempt, 2 counts'
+      chip_loading_volume + (scrna_config[:desired_number_of_runs] * scrna_config[:volume_taken_for_cell_counting]) +
         scrna_config[:wastage_volume]
-    when "1 pool attempt, 1 count"
-        chip_loading_volume +
-        scrna_config[:volume_taken_for_cell_counting] +
-        scrna_config[:wastage_volume]
+    when '1 pool attempt, 1 count'
+      chip_loading_volume + scrna_config[:volume_taken_for_cell_counting] + scrna_config[:wastage_volume]
     end
   end
 
