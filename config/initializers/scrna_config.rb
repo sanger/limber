@@ -24,12 +24,29 @@ Rails.application.config.scrna_config = {
   desired_number_of_runs: 2,
   # Volume taken for cell counting in microlitres
   volume_taken_for_cell_counting: 10.0,
-  # Full allowance table, keyed on numbers of samples with values for number of cells per chip well
+  # Full allowance table, keyed on numbers of samples with values for number of cells per chip well 
+  # with values dependent on the Allowance band
   full_allowance_table: {
-    5 => 41_428,
-    6 => 55_714,
-    7 => 70_000,
-    8 => 84_285
+    5 => {
+      "Full allowance": 41_428,
+      "2 pool attempts, 1 count": 53_428,
+      "1 pool attempt, 2 counts": 82_857
+    },
+    6 => {
+      "Full allowance": 55_714,
+      "2 pool attempts, 1 count": 67_714,
+      "1 pool attempt, 2 counts": nil
+    },
+    7 => {
+      "Full allowance": 70_000,
+      "2 pool attempts, 1 count": 82_000,
+      "1 pool attempt, 2 counts": nil
+    },
+    8 => {
+      "Full allowance": 84_285,
+      "2 pool attempts, 1 count": nil,
+      "1 pool attempt, 2 counts": nil
+    }
   },
   # Default viability threshold when passing/failing samples (in percent)
   viability_default_threshold: 65,
