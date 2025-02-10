@@ -150,14 +150,14 @@ module LabwareCreators::DonorPoolingCalculator
     end
   end
 
-  # This method checks the pool for full allowance and adjusts the number of
+  # This method checks the pool against the allowance band and adjusts the number of
   # cells per chip well value if needed.
   # It then stores the number of cells per chip well as metadata on the destination well.
   #
   # @param pool [Array<SourceWell>] an array of source wells from the v2 API
   # @param dest_plate [Object] the destination plate
   # @param dest_well_location [String] the location of the destination well
-  def check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+  def check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
     # count sum of samples in all source wells in the pool (typically will be one sample per source well)
     # for each source well, number of samples = well.aliquots.size
     count_of_samples_in_pool = pool.sum { |source_well| source_well.aliquots.size }
@@ -205,7 +205,7 @@ module LabwareCreators::DonorPoolingCalculator
     if cells_per_chip_well.blank?
       raise StandardError,
             "No request found for source well at #{source_well.location}, cannot fetch cells per chip " \
-              'well metadata for full allowance calculations'
+              'well metadata for allowance band calculations'
     end
 
     cells_per_chip_well
@@ -229,15 +229,15 @@ module LabwareCreators::DonorPoolingCalculator
     if allowance_band.blank?
       raise StandardError,
             "No request found for source well at #{source_well.location}, cannot fetch allowance band " \
-              'well metadata for full allowance calculations'
+              'well metadata for allowance band calculations'
     end
 
     allowance_band
   end
 
   # This method adjusts the number of cells per chip well based on the count of samples in the pool.
-  # If the final suspension volume is greater than or equal to the full allowance, the existing value is retained.
-  # Otherwise, the number of cells per chip well is adjusted according to the full allowance table.
+  # If the final suspension volume is greater than or equal to the allowance band, the existing value is retained.
+  # Otherwise, the number of cells per chip well is adjusted according to the allowance band table.
   #
   # @param count_of_samples_in_pool [Integer] the number of samples in the pool
   # @param number_of_cells_per_chip_well [Integer] the initial number of cells per chip well

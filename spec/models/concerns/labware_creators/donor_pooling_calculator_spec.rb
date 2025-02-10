@@ -25,7 +25,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)
         end.to raise_error StandardError,
                     'No request found for source well at A1, cannot fetch ' \
-                      'cells per chip well metadata for full allowance calculations'
+                      'cells per chip well metadata for allowance band calculations'
       end
     end
 
@@ -74,7 +74,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           instance_of_test_pooling_class.send(:allowance_band_from_request, pool)
         end.to raise_error StandardError,
                     'No request found for source well at A1, cannot fetch ' \
-                      'allowance band well metadata for full allowance calculations'
+                      'allowance band well metadata for allowance band calculations'
       end
     end
 
@@ -146,7 +146,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           ) + Rails.application.config.scrna_config[:wastage_volume]
       end
 
-      it 'calculates the full allowance volume' do
+      it 'calculates the allowance band volume' do
         allowance_band = 'Full allowance'
         expect(instance_of_test_pooling_class.send(:calculate_allowance, chip_loading_volume, allowance_band)).to eq(
           expected_volume
@@ -161,7 +161,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           Rails.application.config.scrna_config[:wastage_volume]
       end
 
-      it 'calculates the full allowance volume' do
+      it 'calculates the allowance band volume' do
         allowance_band = '2 pool attempts, 1 count'
         expect(instance_of_test_pooling_class.send(:calculate_allowance, chip_loading_volume, allowance_band)).to eq(
           expected_volume
@@ -178,7 +178,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           ) + Rails.application.config.scrna_config[:wastage_volume]
       end
 
-      it 'calculates the full allowance volume' do
+      it 'calculates the allowance band volume' do
         allowance_band = '1 pool attempt, 2 counts'
         expect(instance_of_test_pooling_class.send(:calculate_allowance, chip_loading_volume, allowance_band)).to eq(
           expected_volume
@@ -192,7 +192,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           Rails.application.config.scrna_config[:wastage_volume]
       end
 
-      it 'calculates the full allowance volume' do
+      it 'calculates the allowance band volume' do
         allowance_band = '1 pool attempt, 1 count'
         expect(instance_of_test_pooling_class.send(:calculate_allowance, chip_loading_volume, allowance_band)).to eq(
           expected_volume
@@ -201,7 +201,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
   end
 
-  describe '#check_pool_for_full_allowance' do
+  describe '#check_pool_for_allowance_band' do
     # 2nd source well
     let(:source_well2) { create :v2_well, aliquots: [aliquot2] }
     let(:aliquot2) { create :v2_aliquot, request: request2 }
@@ -224,7 +224,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           dest_well
         )
 
-        instance_of_test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+        instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
       end
     end
 
@@ -256,7 +256,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       # pool with 6 source wells
       let(:pool) { [source_well1, source_well2, source_well3, source_well4, source_well5, source_well6] }
 
-      context 'when there is not enough resuspension volume for full allowance' do
+      context 'when there is not enough resuspension volume for the allowance band' do
         it 'stores the modified number of cells per chip well on the destination well' do
           expect(instance_of_test_pooling_class).to receive(:create_new_well_metadata).with(
             Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key],
@@ -264,11 +264,11 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
             dest_well
           )
 
-          instance_of_test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+          instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
         end
       end
 
-      context 'when there is enough resuspension volume for full allowance' do
+      context 'when there is enough resuspension volume for the allowance band' do
         before { allow(instance_of_test_pooling_class).to receive(:calculate_allowance).and_return(60.0) }
 
         it 'stores the request number of cells per chip well on the destination well' do
@@ -278,7 +278,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
             dest_well
           )
 
-          instance_of_test_pooling_class.check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+          instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
         end
       end
     end

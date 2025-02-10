@@ -144,7 +144,7 @@ module LabwareCreators
         transfer_requests_attributes: transfer_request_attributes(dest_plate),
         user_uuid: user_uuid
       )
-      determine_if_pools_have_full_allowance(dest_plate)
+      determine_if_pools_have_allowance_band(dest_plate)
       true
     end
 
@@ -226,21 +226,21 @@ module LabwareCreators
       built_pools
     end
 
-    # This method determines if the pools have full allowance.
+    # This method determines if the pools have the allowance band.
     # It iterates over each pool, retrieves the destination well location from the transfer hash,
-    # and checks each pool for full allowance by calling the check_pool_for_full_allowance method
+    # and checks each pool for the allowance band by calling the check_pool_for_allowance_band method
     # in the donor pooling calculator class.
     # That method then writes the number of cells per chip well to the poly_metadata of the pool wells.
     #
     # @return [void]
-    def determine_if_pools_have_full_allowance(dest_plate)
+    def determine_if_pools_have_allowance_band(dest_plate)
       # a pool is array of v2 wells
       pools.each do |pool|
         # destination location is the same for all wells in the pool, so fetch from first source wells
         dest_well_location = transfer_hash[pool.first][:dest_locn]
 
-        # check this pool for full allowance
-        check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+        # check this pool for allowance band
+        check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
       end
     end
   end
