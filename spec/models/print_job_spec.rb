@@ -199,25 +199,157 @@ RSpec.describe PrintJob do
       }
     end
 
-    it 'will send a print request to SPrintClient' do
-      pj =
-        PrintJob.new(
-          printer_name: printer_sprint.name,
-          printer: printer_sprint,
-          label_templates_by_service: label_templates_by_service,
-          labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
-          labels_sprint: labels_sprint,
-          number_of_copies: 1
-        )
+    let(:pj) do
+      PrintJob.new(
+        printer_name: printer_sprint.name,
+        printer: printer_sprint,
+        label_templates_by_service: label_templates_by_service,
+        labels: [{ label: { barcode: '12345', test_attr: 'test' } }],
+        labels_sprint: labels_sprint,
+        number_of_copies: 1
+      )
+    end
 
+    it 'will send a print request to SPrintClient' do
       allow(pj).to receive(:get_label_template_by_service).and_return(label_template_name_sprint)
-      allow(SPrintClient).to receive(:send_print_request).and_return('a response')
+      response = Net::HTTPSuccess.new(1.0, '200', 'OK')
+      response.instance_variable_set(:@read, true)
+      response.instance_variable_set(
+        :@body,
+        { data: { print: { jobId: 'psd-2:68b27056-11cf-41ff-9b22-bdf6121a95be' } } }.to_json
+      )
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
       expect(SPrintClient).to receive(:send_print_request).with(
         printer_sprint.name,
         label_template_name_sprint,
         labels_sprint.values
       )
       expect(pj.print_to_sprint).to eq(true)
+    end
+
+    it 'will not execute if the SPrintClient is down' do
+      response = Net::HTTPBadGateway.new(1.0, '502', nil)
+      response.instance_variable_set(:@read, true)
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq('Sprint Trouble connecting to SPrint. Please try again later.')
+    end
+
+    it 'will not execute if the SPrintClient returns unprocessable entity' do
+      response = Net::HTTPUnprocessableEntity.new(1.0, '422', nil)
+      response.instance_variable_set(:@read, true)
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq(
+        'Sprint Sprint could not understand the request. Please check the label data.'
+      )
+    end
+
+    it 'will not execute if the SPrintClient returns unprocessable entity' do
+      response = Net::HTTPInternalServerError.new(1.0, '500', nil)
+      response.instance_variable_set(:@read, true)
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq('Sprint Internal server error at SPrint. Please try again later.')
+    end
+
+    it 'will not execute if the SPrintClient sends a valid error with code 200' do
+      response = Net::HTTPSuccess.new(1.0, '200', nil)
+      response.instance_variable_set(:@read, true)
+      response.instance_variable_set(
+        :@body,
+        {
+          errors: [
+            {
+              message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'.",
+              locations: [{ line: 1, column: 16 }],
+              extensions: {
+                classification: 'ValidationError'
+              }
+            }
+          ]
+        }.to_json
+      )
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq(
+        "Sprint Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'. (ValidationError)"
+      )
+    end
+
+    it 'will not execute if the SPrintClient sends an invalid error with code 200' do
+      response = Net::HTTPSuccess.new(1.0, '200', nil)
+      response.instance_variable_set(:@read, true)
+      response.instance_variable_set(
+        :@body,
+        {
+          errors: [
+            {
+              message: 'Failed to parse JSON response from SprintClient',
+              locations: [{ line: 1, column: 16 }],
+              extensions: {
+                classification: 'ValidationError'
+              }
+            }
+          ]
+        }.to_json
+      )
+      allow(SPrintClient).to receive(:send_print_request).and_return(response)
+      expect(pj.execute).to be false
+      expect(pj.errors.full_messages[0]).to eq(
+        'Sprint Failed to parse JSON response from SprintClient (ValidationError)'
+      )
+    end
+  end
+
+  describe '#extract_error_message' do
+    let(:print_job) { PrintJob.new }
+
+    it 'returns the error message with extensions' do
+      response =
+        instance_double(
+          'Net::HTTPResponse',
+          body: {
+            errors: [
+              {
+                message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'.",
+                extensions: {
+                  classification: 'ValidationError'
+                }
+              }
+            ]
+          }.to_json
+        )
+
+      expect(print_job.send(:extract_error_message, response)).to eq(
+        "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'. (ValidationError)"
+      )
+    end
+
+    it 'returns the error message without extensions' do
+      response =
+        instance_double(
+          'Net::HTTPResponse',
+          body: {
+            errors: [{ message: "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'." }]
+          }.to_json
+        )
+
+      expect(print_job.send(:extract_error_message, response)).to eq(
+        "Variable 'printRequest' has an invalid value: Expected type 'Int' but was 'Double'."
+      )
+    end
+
+    it 'returns unknown error if response body is empty' do
+      response = instance_double('Net::HTTPResponse', body: nil)
+
+      expect(print_job.send(:extract_error_message, response)).to eq('Unknown error')
+    end
+
+    it 'returns failed to parse JSON response if JSON parsing fails' do
+      response = instance_double('Net::HTTPResponse', body: 'invalid_json')
+
+      expect(print_job.send(:extract_error_message, response)).to eq('Failed to parse JSON response from SprintClient')
     end
   end
 end

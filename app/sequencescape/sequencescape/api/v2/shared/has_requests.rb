@@ -36,6 +36,16 @@ module Sequencescape::Api::V2::Shared
       active_requests.any?(&:passed?)
     end
 
+    def any_non_create_asset_requests_completed?
+      # Filter out CreateAssetRequests which will be associated for an input plate and completed by the time we get here
+      # and not relevant to this check
+      active_non_create_asset_requests.filter_map(&:passed?).any?
+    end
+
+    def active_non_create_asset_requests
+      active_requests.reject { |r| r.request_type_key == 'create_asset' }
+    end
+
     def pcr_cycles
       active_requests.map(&:pcr_cycles).uniq
     end

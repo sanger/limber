@@ -28,7 +28,7 @@ module LabwareCreators
     end
 
     def pick?(location)
-      well_locations.fetch(location).passed?
+      !(well_locations.fetch(location).failed? || well_locations.fetch(location).empty?)
     end
   end
 end

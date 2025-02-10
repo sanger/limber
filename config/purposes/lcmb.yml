@@ -42,7 +42,7 @@ LCMB Custom Pool:
   :creator_class: LabwareCreators::CustomPooledTubes
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-LCMB Custom Pool Norm:
+LCMB Custom Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose

@@ -15,4 +15,4 @@ LCMB: # Top of the pipeline (Library Prep)
     LCMB End Prep: LCMB Lib PCR
     LCMB Lib PCR: LCMB Lib PCR-XP
     LCMB Lib PCR-XP: LCMB Custom Pool
-    LCMB Custom Pool: LCMB Custom Pool Norm
+    LCMB Custom Pool: LCMB Custom Norm
