@@ -107,6 +107,8 @@ Rails.application.configure do
   # is this used?
   config.request_options = { 'read_length' => 11 }
 
+  config.disable_animations = false
+
   # Label printing services
   config.pmb_uri = ENV.fetch('PMB_URI', rewrite_localhost('http://localhost:3002/v1/'))
   config.sprint_uri = 'http://sprint.psd.sanger.ac.uk/graphql'
