@@ -6,12 +6,16 @@ class OngoingPlate < AssetSearchForm
 
   def search_parameters
     {
-      states: states || %w[pending started passed qc_complete failed cancelled],
-      plate_purpose_uuids: purpose_uuids,
-      show_my_plates_only: show_my_plates_only == '1',
-      include_used: include_used == '1',
-      page: page
+      state: states || %w[pending started passed qc_complete failed cancelled],
+      purpose_name: purpose_names,
+      include_used: include_used == '1'
     }
+  end
+
+  def pagination
+    return {} if page.nil? # No pagination
+
+    { page: page, per_page: PER_PAGE }
   end
 
   def default_purposes
