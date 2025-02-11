@@ -3256,8 +3256,8 @@ ROBOT_CONFIG =
     # LRC PBMC Bank to LRC TR Bank Seq and LRC TR Bank Spare tube racks
     # Transfers 1:2 (2nd rack optional)
     custom_robot(
-      'hamilton-lrc-pbmc-bank-to-lrc-bank-seq-and-lrc-bank-spare-tube-racks',
-      name: 'Hamilton LRC PBMC Bank => LRC TR Bank Seq and LRC Bank Spare Tube Racks',
+      'hamilton-lrc-pbmc-bank-to-lrc-tr-bank-seq-and-lrc-tr-bank-spare-tube-racks',
+      name: 'Hamilton LRC PBMC Bank => LRC TR Bank Seq and LRC TR Bank Spare Tube Racks',
       beds: {
         bed(12).barcode => {
           purpose: 'LRC PBMC Bank',

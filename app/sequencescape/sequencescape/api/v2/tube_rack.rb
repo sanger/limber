@@ -12,6 +12,7 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   self.tube_rack = true
 
+  DEFAULT_TUBE_RACK_INCLUDES = [:purpose, 'racked_tubes', 'racked_tubes.tube'].freeze
   STATES_TO_FILTER_OUT = %w[cancelled failed].freeze
   STATE_EMPTY = 'empty'
   STATE_MIXED = 'mixed'
@@ -34,6 +35,8 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'
   has_many :tubes, through: :racked_tubes, class_name: 'Sequencescape::Api::V2::Tube'
 
+  has_one :custom_metadatum_collection, class_name: 'Sequencescape::Api::V2::CustomMetadatumCollection'
+
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset'
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset'
 
@@ -55,10 +58,12 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
     nil
   end
 
-  def self.find_by(params)
-    options = params.dup
-    includes = options.delete(:includes) || DEFAULT_INCLUDES
+  def self.find_by(options, includes: DEFAULT_TUBE_RACK_INCLUDES)
     Sequencescape::Api::V2::TubeRack.includes(*includes).find(**options).first
+  end
+
+  def self.find_all(options, includes: DEFAULT_TUBE_RACK_INCLUDES)
+    Sequencescape::Api::V2::TubeRack.includes(*includes).where(**options).all
   end
 
   # This method sorts the racked tubes by their coordinate, taking into account both row and column parts.

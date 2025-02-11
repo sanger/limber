@@ -378,10 +378,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   describe '#redirection_target' do
-    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
+    let(:child_tube_racks) { { described_class::SPR_TUBE_RACK_NAME => contingency_tube_rack } }
+
+    before { allow(subject).to receive(:child_tube_racks).and_return(child_tube_racks) }
 
     it 'returns the parent object' do
-      expect(subject.redirection_target).to eq(parent_plate)
+      expect(subject.redirection_target).to eq(contingency_tube_rack)
     end
   end
 
