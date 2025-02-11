@@ -34,21 +34,16 @@
     # expecting 1 sample tube
     destination_tube = source_well.downstream_tubes.last
     destination_tube_v2 = Sequencescape::Api::V2.tube_with_custom_includes(
-                            'custom_metadatum_collection',
+                            'racked_tube',
                             nil,
                             barcode: destination_tube.labware_barcode.machine
                           )
 
     # skip if destination tube not found or doesn't have metadata
-    next unless destination_tube_v2 && destination_tube_v2.custom_metadatum_collection
+    next unless destination_tube_v2 && destination_tube_v2.racked_tube
 
-    # get tube metadata from destination tube
-    metadata = destination_tube_v2.custom_metadatum_collection.metadata
-
-    next unless metadata
-
-    tube_rack_barcode = metadata['tube_rack_barcode']
-    tube_rack_position = metadata['tube_rack_position']
+    tube_rack_barcode = destination_tube_v2.racked_tube.tube_rack.barcode
+    tube_rack_position = destination_tube_v2.racked_tube.coordinate
 
     next unless tube_rack_barcode && tube_rack_position
 
