@@ -32,11 +32,11 @@ LRC PBMC Defrost PBS:
   :qc_thresholds:
     viability:
       units: '%'
-      default_threshold: 65
+      default_threshold: <%= Rails.application.config.scrna_config[:viability_default_threshold] %>
     total_cell_count:
       name: Total cell count
       units: 'cells/ml'
-      default_threshold: 500000
+      default_threshold: <%= Rails.application.config.scrna_config[:total_cell_count_default_threshold] %>
       decimal_places: 0
   :stock_plate: false
   :input_plate: false
@@ -48,23 +48,14 @@ LRC PBMC Pools:
   :qc_thresholds:
     viability:
       units: '%'
-      default_threshold: 65
+      default_threshold: <%= Rails.application.config.scrna_config[:viability_default_threshold] %>
     total_cell_count:
       name: Total cell count
       units: 'cells/ml'
-      default_threshold: 500000
+      default_threshold: <%= Rails.application.config.scrna_config[:total_cell_count_default_threshold] %>
       decimal_places: 0
   :presenter_class:
     name: Presenters::DonorPoolingPlatePresenter
-    args:
-      # The default number of cells to calculate the required volumes.
-      default_required_number_of_cells: 30000
-      # poly_metadatum key for study specific required number of cells.
-      study_required_number_of_cells_key: scrna_core_pbmc_donor_pooling_required_number_of_cells
-      # Constants used to calculate source well volume
-      required_number_of_cells: 30_000
-      wastage_factor: 0.95238
-      desired_chip_loading_concentration: 2_400
   :creator_class:
     name: LabwareCreators::DonorPoolingPlate
     args:
@@ -129,7 +120,7 @@ LRC GEM-X 5p cDNA PCR XP:
   # close off the submission when the plate is created
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type:
-    ['limber_scrna_core_cdna_prep_gem_x_5p_pbmc_pools_input', 'limber_scrna_core_cdna_prep_gem_x_5p']
+    ['limber_scrna_core_cdna_prep_gem_x_5p_gems_input', 'limber_scrna_core_cdna_prep_gem_x_5p']
 # faculty input plate (alternate to LRC GEM-X 5p cDNA PCR XP intermediate plate)
 LRC GEM-X 5p cDNA Input:
   :asset_type: plate
