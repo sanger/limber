@@ -14,7 +14,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
   let(:request1) { create :scrna_customer_request, request_metadata: request_metadata1 }
   let(:request_metadata1) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
   let(:cells_per_chip_well) { 90_000 }
-  let(:allowance_band) { 'Full allowance' }
+  let(:allowance_band) { '2 pool attempts, 2 counts' }
 
   describe '#number_of_cells_per_chip_well_from_request' do
     context 'when the request metadata is nil' do
@@ -137,17 +137,14 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
   describe '#calculate_allowance' do
     let(:chip_loading_volume) { 50.0 }
-    context 'when allowance_band is "Full allowance"' do
+    context 'when allowance_band is "2 pool attempts, 2 counts"' do
       let(:expected_volume) do
-        (chip_loading_volume * Rails.application.config.scrna_config[:desired_number_of_runs]) +
-          (
-            Rails.application.config.scrna_config[:desired_number_of_runs] *
-              Rails.application.config.scrna_config[:volume_taken_for_cell_counting]
-          ) + Rails.application.config.scrna_config[:wastage_volume]
+        (chip_loading_volume * 2) + (2 * Rails.application.config.scrna_config[:volume_taken_for_cell_counting]) +
+          Rails.application.config.scrna_config[:wastage_volume]
       end
 
       it 'calculates the allowance band volume' do
-        allowance_band = 'Full allowance'
+        allowance_band = '2 pool attempts, 2 counts'
         expect(instance_of_test_pooling_class.send(:calculate_allowance, chip_loading_volume, allowance_band)).to eq(
           expected_volume
         )
@@ -156,8 +153,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
     context 'when allowance_band is "2 pool attempts, 1 count"' do
       let(:expected_volume) do
-        (chip_loading_volume * Rails.application.config.scrna_config[:desired_number_of_runs]) +
-          Rails.application.config.scrna_config[:volume_taken_for_cell_counting] +
+        (chip_loading_volume * 2) + Rails.application.config.scrna_config[:volume_taken_for_cell_counting] +
           Rails.application.config.scrna_config[:wastage_volume]
       end
 
@@ -171,11 +167,8 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
     context 'when allowance_band is "1 pool attempt, 2 counts"' do
       let(:expected_volume) do
-        chip_loading_volume +
-          (
-            Rails.application.config.scrna_config[:desired_number_of_runs] *
-              Rails.application.config.scrna_config[:volume_taken_for_cell_counting]
-          ) + Rails.application.config.scrna_config[:wastage_volume]
+        chip_loading_volume + (2 * Rails.application.config.scrna_config[:volume_taken_for_cell_counting]) +
+          Rails.application.config.scrna_config[:wastage_volume]
       end
 
       it 'calculates the allowance band volume' do

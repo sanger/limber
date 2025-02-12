@@ -797,7 +797,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   describe '#transfer_material_from_parent!' do
     let(:cells_per_chip_well) { 90_000 }
-    let(:allowance_band) { 'Full allowance' }
+    let(:allowance_band) { '2 pool attempts, 2 counts' }
 
     let(:requests) do
       Array.new(10) do |_i|

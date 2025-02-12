@@ -6,6 +6,13 @@ module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
 
   VALID_POOL_SIZE_RANGE = Rails.application.config.scrna_config[:valid_pool_size_range]
+  # Enum to aid allowance band calculations
+  ALLOWANCE_BANDS = {
+    two_pools_two_counts: '2 pool attempts, 2 counts',
+    two_pools_one_count: '2 pool attempts, 1 count',
+    one_pool_two_counts: '1 pool attempt, 2 counts',
+    one_pool_one_count: '1 pool attempt, 1 count'
+  }.freeze
 
   # Splits wells into groups by study and project, because:
   # a) no pool should contain samples from more than one study or project,
@@ -253,11 +260,11 @@ module LabwareCreators::DonorPoolingCalculator
     # calculate chip loading volume
     chip_loading_volume = calculate_chip_loading_volume(number_of_cells_per_chip_well)
 
-    # calculate allowance
-    allowance = calculate_allowance(chip_loading_volume, allowance_band)
+    # calculate volume_needed
+    volume_needed = calculate_allowance(chip_loading_volume, allowance_band)
 
     # do not adjust existing value if we have enough volume
-    return number_of_cells_per_chip_well if final_suspension_volume >= allowance
+    return number_of_cells_per_chip_well if final_suspension_volume >= volume_needed
 
     # we need to adjust the number of cells per chip well according to the number of samples
     Rails.application.config.scrna_config[:allowance_table][allowance_band][count_of_samples_in_pool]
@@ -293,22 +300,19 @@ module LabwareCreators::DonorPoolingCalculator
   # number of runs, the volume taken for cell counting, and the wastage volume.
   #
   # @param chip_loading_volume [Float] the chip loading volume
-  # @return [Float] the allowance volume
+  # @return [Float] the volume of material required to do the number of runs and cell counts specified
+  #                 in the allowance band
   def calculate_allowance(chip_loading_volume, allowance_band) # rubocop:disable Metrics/AbcSize
     scrna_config = Rails.application.config.scrna_config
 
     case allowance_band
-    when 'Full allowance'
-      (chip_loading_volume * scrna_config[:desired_number_of_runs]) +
-        (scrna_config[:desired_number_of_runs] * scrna_config[:volume_taken_for_cell_counting]) +
-        scrna_config[:wastage_volume]
-    when '2 pool attempts, 1 count'
-      (chip_loading_volume * scrna_config[:desired_number_of_runs]) + scrna_config[:volume_taken_for_cell_counting] +
-        scrna_config[:wastage_volume]
-    when '1 pool attempt, 2 counts'
-      chip_loading_volume + (scrna_config[:desired_number_of_runs] * scrna_config[:volume_taken_for_cell_counting]) +
-        scrna_config[:wastage_volume]
-    when '1 pool attempt, 1 count'
+    when ALLOWANCE_BANDS[:two_pools_two_counts]
+      (chip_loading_volume * 2) + (2 * scrna_config[:volume_taken_for_cell_counting]) + scrna_config[:wastage_volume]
+    when ALLOWANCE_BANDS[:two_pools_one_count]
+      (chip_loading_volume * 2) + scrna_config[:volume_taken_for_cell_counting] + scrna_config[:wastage_volume]
+    when ALLOWANCE_BANDS[:one_pool_two_counts]
+      chip_loading_volume + (2 * scrna_config[:volume_taken_for_cell_counting]) + scrna_config[:wastage_volume]
+    when ALLOWANCE_BANDS[:one_pool_one_count]
       chip_loading_volume + scrna_config[:volume_taken_for_cell_counting] + scrna_config[:wastage_volume]
     end
   end

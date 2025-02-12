@@ -20,14 +20,12 @@ Rails.application.config.scrna_config = {
   desired_chip_loading_concentration: 2400,
   # Desired volume in the chip well (in microlitres)
   desired_chip_loading_volume: 37.5,
-  # Desired number of runs for allowance band calculations
-  desired_number_of_runs: 2,
   # Volume taken for cell counting in microlitres
   volume_taken_for_cell_counting: 10.0,
   # Allowance table, keyed on numbers of samples with values for number of cells per chip well
   # with values dependent on the Allowance band
   allowance_table: {
-    'Full allowance' => {
+    '2 pool attempts, 2 counts' => {
       5 => 41_428,
       6 => 55_714,
       7 => 70_000,
