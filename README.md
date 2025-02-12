@@ -330,3 +330,9 @@ You can then edit the credentials file with the following command:
 These should not be committed to the github repo.
 
 Instead they are copied into the `templates` directory within the `roles/deploy_limber` directory in the private deployment project repo.
+
+## Miscellaneous
+
+### Sprint Templates for Barcode Label Printing
+
+In order to create new label templates or update the existing ones, use the deployment project. The templates must be defined in the sprint role, in the directory `sprint/files/label_templates` . The local directory `config/sprint/label_templates` is **not** supposed to be used for this purpose.
