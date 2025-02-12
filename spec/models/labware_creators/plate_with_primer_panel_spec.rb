@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators/baited_plate'
 require_relative 'shared_examples'
 
 # A plate with primer panel has a preview page, but otherwise

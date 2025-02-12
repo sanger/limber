@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators/base'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
