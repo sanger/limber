@@ -259,6 +259,19 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
           instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
         end
+
+        it 'errors when the allowance band and number of pools do not match the allowance table' do
+          # Stub allowance band and chip_loading_volume to create conditions that do not match the allowance table
+          allow(instance_of_test_pooling_class).to receive(:allowance_band_from_request).and_return(
+            '1 pool attempt, 2 counts'
+          )
+          allow(instance_of_test_pooling_class).to receive(:calculate_chip_loading_volume).and_return(50)
+
+          expect do
+            instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
+          end.to raise_error StandardError,
+                      'No allowance value found for allowance band 1 pool attempt, 2 counts and sample count 6'
+        end
       end
 
       context 'when there is enough resuspension volume for the allowance band' do

@@ -267,7 +267,13 @@ module LabwareCreators::DonorPoolingCalculator
     return number_of_cells_per_chip_well if final_suspension_volume >= volume_needed
 
     # we need to adjust the number of cells per chip well according to the number of samples
-    Rails.application.config.scrna_config[:allowance_table][allowance_band][count_of_samples_in_pool]
+    # if an appropriate value is not found in the allowance table, raise an error
+    Rails.application.config.scrna_config[:allowance_table][allowance_band][count_of_samples_in_pool] ||
+      raise(
+        StandardError,
+        "No allowance value found for allowance band #{allowance_band} and sample count " \
+          "#{count_of_samples_in_pool}"
+      )
   end
 
   # This method calculates the total cells in 300ul for a given pool of samples.
