@@ -3,13 +3,13 @@ BGE PCR FRee:
   pipeline_group: BGE
   filters:
     request_type_key: limber_bge_pcr_free
+  library_pass: BGE Lib XP2
   relationships:
     BGE Cherrypick: BGE Shear
     BGE Shear: BGE Post Shear
     BGE Post Shear: BGE End Prep
     BGE End Prep: BGE Lib
     BGE Lib: BGE Lib XP2
-  library_pass: BGE Lib XP2
 
 BGE PCR Free MX:
   filters:
@@ -22,6 +22,7 @@ BGE PCR Free to ISC:
   pipeline_group: BGE
   filters:
     request_type_key: limber_bge_transition
+  library_pass: BGE Lib PCR XP
   relationships:
     BGE Lib XP2: BGE Lib PCR
     BGE Lib PCR: BGE Lib PCR XP
@@ -30,27 +31,27 @@ BGE ISC Library Prep:
   pipeline_group: BGE
   filters:
     request_type_key: limber_bge_isc
+  library_pass: BGE Cap Lib PCR XP
   relationships:
     BGE Lib PCR XP: BGE Lib PrePool
     BGE Lib PrePool: BGE Hyb
     BGE Hyb: BGE Cap Lib
     BGE Cap Lib: BGE Cap Lib PCR
-    BGE Cap Lib PCR: BGE Cap PCR XP
-  library_pass: BGE Cap PCR XP
+    BGE Cap Lib PCR: BGE Cap Lib PCR XP
 
 BGE ISC MX:
   pipeline_group: BGE
   filters:
     request_type_key: limber_multiplexing
+  library_pass: BGE Cap Lib Pool Norm
   relationships:
-    BGE Cap PCR XP: BGE Cap Lib Pool
+    BGE Cap Lib PCR XP: BGE Cap Lib Pool
     BGE Cap Lib Pool: BGE Cap Lib Pool Norm
-
-BGE Blend:
-  pipeline_group: BGE
-
-  relationships:
-    BGE Lib Pool: BGE Blended Cap Lib Pool
-    BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
-    BGE Blended Cap Lib Pool: BGE Lib Pool Norm
-    BGE Lib Pool Norm: BGE Custom pool
+# TODO (Y24-368): Enable BGE Blend pipeline configuration
+# BGE Blend:
+#   pipeline_group: BGE
+#   relationships:
+#     BGE Lib Pool: BGE Blended Cap Lib Pool
+#     BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
+#     BGE Blended Cap Lib Pool: BGE Lib Pool Norm
+#     BGE Lib Pool Norm: BGE Custom pool

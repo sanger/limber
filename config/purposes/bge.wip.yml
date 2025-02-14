@@ -29,13 +29,19 @@ BGE Lib:
 # 'Limber-Htp - BGE Transition - Automated' submission is on BGE Lib XP2
 BGE Lib XP2:
   :asset_type: plate
+  # TODO (Y24-367): Customise the submission presenter for BGE Lib XP2.
+  # It uses the permissive submission presenter for now.
   :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
+  # NOTE: We use automatic plate state changer rather than Charge and Pass.
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_bge_pcr_free'
   :submission_options:
     BGE Transition - Automated:
       template_name: 'Limber-Htp - BGE Transition - Automated'
       request_options:
         fragment_size_required_from: '450'
         fragment_size_required_to: '450'
+        library_type: 'BGE'
       allowed_extra_barcodes: false
 BGE Lib Pool:
   :asset_type: tube
@@ -51,35 +57,42 @@ BGE Lib PCR XP:
   :asset_type: plate
 BGE Lib PrePool:
   :asset_type: plate
+  :stock_plate: false
+  :creator_class: LabwareCreators::MultiPlatePool
+  :cherrypickable_target: false
+  :input_plate: false
+  :csv_template: 'show_extended'
+  :alternative_workline_identifier: BGE Lib PCR XP
 BGE Hyb:
   :asset_type: plate
+  :creator_class: LabwareCreators::BaitedPlate
 BGE Cap Lib:
   :asset_type: plate
 BGE Cap Lib PCR:
   :asset_type: plate
-BGE Cap PCR XP:
+BGE Cap Lib PCR XP:
   :asset_type: plate
 BGE Cap Lib Pool:
-  :asset_type: tube
-  :target: StockMultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::PooledTubesBySubmission
-  :presenter_class: Presenters::SimpleTubePresenter
+  :asset_type: plate
+  :creator_class: LabwareCreators::PlateWithTemplate
+  :transfer_template: 'Pool wells based on submission'
 BGE Cap Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::TubeFromTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
   :presenter_class: Presenters::SimpleTubePresenter
-BGE Blended Cap Lib Pool:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::PooledTubesFromWholeTubes
-  :presenter_class: Presenters::SimpleTubePresenter
-BGE Custom pool:
-  :asset_type: tube
-  :target: MultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::TubeFromTube
-  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+# TODO (Y24-368): Enable BGE Blend pipeline configuration
+# BGE Blended Cap Lib Pool:
+#   :asset_type: tube
+#   :target: MultiplexedLibraryTube
+#   :type: IlluminaHtp::InitialStockTubePurpose
+#   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+#   :presenter_class: Presenters::SimpleTubePresenter
+# BGE Custom pool:
+#   :asset_type: tube
+#   :target: MultiplexedLibraryTube
+#   :type: IlluminaHtp::InitialStockTubePurpose
+#   :creator_class: LabwareCreators::TubeFromTube
+#   :presenter_class: Presenters::SimpleTubePresenter
