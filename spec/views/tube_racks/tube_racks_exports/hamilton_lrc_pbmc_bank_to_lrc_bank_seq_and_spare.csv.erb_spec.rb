@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb' do
+RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb' do
   include FeatureHelpers
 
   context 'when creating a hamilton driver file csv' do
