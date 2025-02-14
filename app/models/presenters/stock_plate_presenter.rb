@@ -20,12 +20,5 @@ module Presenters
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator
-
-    # Determine if we should display the pooling tab in the Presenter views
-    # See partial _common_tabbed_pages.html.erb
-    def show_pooling_tab?
-      # do not show the pooling tab for stock plates
-      false
-    end
   end
 end

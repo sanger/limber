@@ -13,12 +13,5 @@ module Presenters
   # This minimal version has a simpler GUI with fewer tabs.
   class MinimalStockPlatePresenter < MinimalPlatePresenter
     include Presenters::StockBehaviour
-
-    # Determine if we should display the pooling tab in the Presenter views
-    # See partial _common_tabbed_pages.html.erb
-    def show_pooling_tab?
-      # do not show the pooling tab for stock plates
-      false
-    end
   end
 end
