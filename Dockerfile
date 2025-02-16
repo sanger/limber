@@ -1,4 +1,4 @@
-FROM ruby:3.2.6-slim
+FROM ruby:3.4.2-slim
 
 # Major version of Node.js to install
 ARG nodeVersion=22
