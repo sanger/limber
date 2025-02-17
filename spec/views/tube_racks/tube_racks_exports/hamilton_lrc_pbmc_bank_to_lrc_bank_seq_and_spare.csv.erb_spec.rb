@@ -180,20 +180,27 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
 
     before do
       assign(:ancestor_tubes, ancestor_tubes)
-      assign(:plate, source_labware)
+      assign(:tube_rack, seq_tube_rack)
       assign(:workflow, workflow_name)
 
-      # stub the v2 child tube lookups
-      custom_includes = 'racked_tube'
-      dest_tubes = [dest_tube1, dest_tube2, dest_tube3, dest_tube4, dest_tube5, dest_tube6]
+      allow(seq_tube_rack).to receive(:ancestors).and_return([source_labware])
+      allow(source_labware).to receive(:children).and_return([seq_tube_rack, spr_tube_rack])
 
-      dest_tubes.each do |dest_tube|
-        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
-          custom_includes,
+      # stub the v2 tube rack lookup
+      tube_racks = [seq_tube_rack, spr_tube_rack]
+      tube_racks.each do |tube_rack|
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+          'racked_tubes.tube',
           nil,
-          barcode: dest_tube.barcode.machine
-        ).and_return(dest_tube)
+          barcode: tube_rack.barcode.machine
+        ).and_return(tube_rack)
       end
+
+      # stub the v2 plate lookup
+      allow(Sequencescape::Api::V2).to receive(:plate_with_custom_includes).with(
+        %w[wells.downstream_tubes wells.transfer_requests_as_source.target_asset],
+        barcode: source_labware.barcode.human
+      ).and_return(source_labware)
     end
 
     it 'renders the expected content' do

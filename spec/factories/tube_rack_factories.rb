@@ -23,6 +23,9 @@ FactoryBot.define do
       # The parent assets
       parents { [] }
 
+      # The ancestor labware
+      ancestors { [] }
+
       racked_tubes do
         tubes.map { |coordinate, tube| create :racked_tube, coordinate: coordinate, tube: tube, tube_rack: instance }
       end
