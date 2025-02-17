@@ -71,84 +71,30 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
     let(:dest_aliquot5) { create(:v2_aliquot, sample: sample2) }
     let(:dest_aliquot6) { create(:v2_aliquot, sample: sample2) }
 
-    # destination tube uuids
-    let(:dest_tube1_uuid) { SecureRandom.uuid }
-    let(:dest_tube2_uuid) { SecureRandom.uuid }
-    let(:dest_tube3_uuid) { SecureRandom.uuid }
-    let(:dest_tube4_uuid) { SecureRandom.uuid }
-    let(:dest_tube5_uuid) { SecureRandom.uuid }
-    let(:dest_tube6_uuid) { SecureRandom.uuid }
-
-    # Tube racks
-    let(:seq_tube_rack) { create(:tube_rack) }
-    let(:spr_tube_rack) { create(:tube_rack) }
-
     # destination tubes
     let(:dest_tube1) do
-      create(
-        :v2_tube,
-        uuid: dest_tube1_uuid,
-        barcode_prefix: 'FX',
-        barcode_number: 4,
-        aliquots: [dest_aliquot1],
-        name: 'SEQ:NT1O:A1',
-        racked_tube: create(:racked_tube, coordinate: 'A1', tube_rack: seq_tube_rack)
-      )
+      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 4, aliquots: [dest_aliquot1], name: 'SEQ:NT1O:A1')
     end
     let(:dest_tube2) do
-      create(
-        :v2_tube,
-        uuid: dest_tube2_uuid,
-        barcode_prefix: 'FX',
-        barcode_number: 5,
-        aliquots: [dest_aliquot2],
-        name: 'SPR:NT1O:A1',
-        racked_tube: create(:racked_tube, coordinate: 'A1', tube_rack: spr_tube_rack)
-      )
+      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 5, aliquots: [dest_aliquot2], name: 'SPR:NT1O:A1')
     end
     let(:dest_tube3) do
-      create(
-        :v2_tube,
-        uuid: dest_tube3_uuid,
-        barcode_prefix: 'FX',
-        barcode_number: 6,
-        aliquots: [dest_aliquot3],
-        name: 'SPR:NT1O:B1',
-        racked_tube: create(:racked_tube, coordinate: 'B1', tube_rack: spr_tube_rack)
-      )
+      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 6, aliquots: [dest_aliquot3], name: 'SPR:NT1O:B1')
     end
     let(:dest_tube4) do
-      create(
-        :v2_tube,
-        uuid: dest_tube4_uuid,
-        barcode_prefix: 'FX',
-        barcode_number: 7,
-        aliquots: [dest_aliquot4],
-        name: 'SEQ:NT2P:B1',
-        racked_tube: create(:racked_tube, coordinate: 'B1', tube_rack: seq_tube_rack)
-      )
+      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7, aliquots: [dest_aliquot4], name: 'SEQ:NT2P:B1')
     end
     let(:dest_tube5) do
-      create(
-        :v2_tube,
-        uuid: dest_tube5_uuid,
-        barcode_prefix: 'FX',
-        barcode_number: 8,
-        aliquots: [dest_aliquot5],
-        name: 'SPR:NT2P:C1',
-        racked_tube: create(:racked_tube, coordinate: 'C1', tube_rack: spr_tube_rack)
-      )
+      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 8, aliquots: [dest_aliquot5], name: 'SPR:NT2P:C1')
     end
     let(:dest_tube6) do
-      create(
-        :v2_tube,
-        uuid: dest_tube6_uuid,
-        barcode_prefix: 'FX',
-        barcode_number: 9,
-        aliquots: [dest_aliquot6],
-        name: 'SPR:NT2P:D1',
-        racked_tube: create(:racked_tube, coordinate: 'D1', tube_rack: spr_tube_rack)
-      )
+      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 9, aliquots: [dest_aliquot6], name: 'SPR:NT2P:D1')
+    end
+
+    # Tube racks
+    let(:seq_tube_rack) { create(:tube_rack, tubes: { A1: dest_tube1, B1: dest_tube4 }) }
+    let(:spr_tube_rack) do
+      create(:tube_rack, tubes: { A1: dest_tube2, B1: dest_tube3, C1: dest_tube5, D1: dest_tube6 })
     end
 
     # workflow
@@ -239,71 +185,25 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
       end
     end
 
-    context 'when destination tubes have no racked_tubes' do
-      let(:dest_tube1) do
+    context 'when destination tubes are not in the tube_rack' do
+      # Setup the tube racks to have different tubes that the ones from the downstream tubes
+      let(:seq_tube_rack) do
         create(
-          :v2_tube,
-          uuid: dest_tube1_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 4,
-          aliquots: [dest_aliquot1],
-          name: 'SEQ:NT1O:A1',
-          racked_tube: nil
+          :tube_rack,
+          tubes: {
+            A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
+            B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
+          }
         )
       end
-      let(:dest_tube2) do
+
+      let(:spr_tube_rack) do
         create(
-          :v2_tube,
-          uuid: dest_tube2_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 5,
-          aliquots: [dest_aliquot2],
-          name: 'SPR:NT1O:A1',
-          racked_tube: nil
-        )
-      end
-      let(:dest_tube3) do
-        create(
-          :v2_tube,
-          uuid: dest_tube3_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 6,
-          aliquots: [dest_aliquot3],
-          name: 'SPR:NT1O:B1',
-          racked_tube: nil
-        )
-      end
-      let(:dest_tube4) do
-        create(
-          :v2_tube,
-          uuid: dest_tube4_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 7,
-          aliquots: [dest_aliquot4],
-          name: 'SEQ:NT2P:B1',
-          racked_tube: nil
-        )
-      end
-      let(:dest_tube5) do
-        create(
-          :v2_tube,
-          uuid: dest_tube5_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 8,
-          aliquots: [dest_aliquot5],
-          name: 'SPR:NT2P:C1',
-          racked_tube: nil
-        )
-      end
-      let(:dest_tube6) do
-        create(
-          :v2_tube,
-          uuid: dest_tube6_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 9,
-          aliquots: [dest_aliquot6],
-          name: 'SPR:NT2P:D1',
-          racked_tube: nil
+          :tube_rack,
+          tubes: {
+            A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
+            B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
+          }
         )
       end
 
