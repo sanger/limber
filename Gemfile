@@ -41,7 +41,7 @@ end
 group :test do
   gem 'capybara' # Interface for integration tests
   gem 'capybara-selenium' # Browser driver for integration tests
-  gem 'factory_bot' # Generate models and json easily in tests
+  gem 'factory_bot', '~> 6.5' # Generate models and json easily in tests
   gem 'launchy' # Used by capybara for eg. save_and_open_screenshot
   gem 'rails-controller-testing'
   gem 'rspec-json_expectations'

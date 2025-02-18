@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'presenters/normalised_binned_plate_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::NormalisedBinnedPlatePresenter do

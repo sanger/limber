@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'presenters/tag_plate_384_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::TagPlate384Presenter do

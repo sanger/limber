@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators/final_tube'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
