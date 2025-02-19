@@ -38,7 +38,7 @@
           'wells.downstream_tubes',
           'wells.transfer_requests_as_source.target_asset'
         ],
-        barcode: @tube_rack.ancestors.last.barcode.human
+        barcode: @tube_rack.parents.last.barcode.human
       )
 
   return if parent_plate.nil?

@@ -92,9 +92,18 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
     end
 
     # Tube racks
-    let(:seq_tube_rack) { create(:tube_rack, tubes: { A1: dest_tube1, B1: dest_tube4 }) }
+    let(:seq_tube_rack) { create(:tube_rack, tubes: { A1: dest_tube1, B1: dest_tube4 }, parents: [source_labware]) }
     let(:spr_tube_rack) do
-      create(:tube_rack, tubes: { A1: dest_tube2, B1: dest_tube3, C1: dest_tube5, D1: dest_tube6 })
+      create(
+        :tube_rack,
+        tubes: {
+          A1: dest_tube2,
+          B1: dest_tube3,
+          C1: dest_tube5,
+          D1: dest_tube6
+        },
+        parents: [source_labware]
+      )
     end
 
     # workflow
@@ -129,7 +138,6 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
       assign(:tube_rack, seq_tube_rack)
       assign(:workflow, workflow_name)
 
-      allow(seq_tube_rack).to receive(:ancestors).and_return([source_labware])
       allow(source_labware).to receive(:children).and_return([seq_tube_rack, spr_tube_rack])
 
       # stub the v2 tube rack lookup
@@ -193,7 +201,8 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
           tubes: {
             A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
             B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
-          }
+          },
+          parents: [source_labware]
         )
       end
 
@@ -203,7 +212,8 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
           tubes: {
             A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
             B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
-          }
+          },
+          parents: [source_labware]
         )
       end
 
