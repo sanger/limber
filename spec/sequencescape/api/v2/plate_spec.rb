@@ -79,7 +79,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
         query: {
           fields: {
             sample_metadata: 'sample_common_name,collected_by,sample_description',
-            submissions: 'lanes_of_sequencing'
+            submissions: 'lanes_of_sequencing,multiplexed?'
           },
           filter: {
             uuid: '8681e102-b737-11ec-8ace-acde48001122'
