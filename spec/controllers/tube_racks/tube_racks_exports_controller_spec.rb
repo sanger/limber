@@ -71,4 +71,62 @@ RSpec.describe TubeRacks::TubeRacksExportsController, type: :controller do
       end.to raise_error(ActionController::RoutingError, 'Unknown template not_a_template')
     end
   end
+
+  context 'finding ancestor tubes' do
+    context 'ancestor_tube_purpose is not present' do
+      let(:csv_id) { 'tube_rack_concentrations_ngul' }
+      let(:includes) { tube_rack_qc_includes }
+      let(:selects) { nil }
+
+      before do
+        expect(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+          includes,
+          selects,
+          uuid: tube_rack_uuid
+        ).and_return(tube_rack)
+      end
+
+      it 'is nil' do
+        get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:ancestor_tubes)).to be_nil
+      end
+    end
+
+    context 'ancestor_tube_purpose is present and matching ancestors exist' do
+      let(:csv_id) { 'hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare' }
+      let(:includes) { 'racked_tubes.tube' }
+      let(:selects) { nil }
+      let(:ancestor_purpose_name) { 'LRC Blood Vac' }
+      let(:ancestor_tubes) { create_list(:v2_tube, 3, purpose: ancestor_purpose_name) }
+      let(:ancestor_tubes_sample_hash) { ancestor_tubes.index_by { |tube| tube.aliquots.first.sample.uuid } }
+
+      before do
+        expect(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+          includes,
+          selects,
+          uuid: tube_rack_uuid
+        ).and_return(tube_rack)
+
+        ancestor_tubes.each do |ancestor_tube|
+          allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(uuid: ancestor_tube.uuid).and_return(
+            ancestor_tube
+          )
+        end
+
+        asset_ancestors =
+          ancestor_tubes.map { |ancestor_tube| double('Sequencescape::Api::V2::Asset', uuid: ancestor_tube.uuid) }
+
+        allow(tube_rack).to receive_message_chain(:ancestors, :where).with(
+          purpose_name: ancestor_purpose_name
+        ).and_return(asset_ancestors)
+      end
+
+      it 'returns the ancestors' do
+        get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:ancestor_tubes)).to eq(ancestor_tubes_sample_hash)
+      end
+    end
+  end
 end
