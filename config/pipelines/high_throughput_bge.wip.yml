@@ -1,5 +1,5 @@
 ---
-BGE PCR FRee:
+BGE PCR Free:
   pipeline_group: BGE
   filters:
     request_type_key: limber_bge_pcr_free
