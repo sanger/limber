@@ -194,5 +194,6 @@ FactoryBot.define do
 
     number_of_pools { nil }
     cells_per_chip_well { nil }
+    allowance_band { nil }
   end
 end
