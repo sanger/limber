@@ -57,6 +57,9 @@ module Limber
     # Printer templates
     config.label_templates = config_for(:label_templates)
 
+    # Disable animations
+    config.disable_animations = false
+
     # Logging
     config.logger = Logger.new(Rails.root.join('log', "#{Rails.env}.log"), 5, 10 * 1024 * 1024)
     config.logger.formatter = ::Logger::Formatter.new

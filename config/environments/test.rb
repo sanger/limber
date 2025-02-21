@@ -67,8 +67,6 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
 
-  config.disable_animations = true
-
   # API v1 config (deprecated)
   config.api = ActiveSupport::OrderedOptions.new
   config.api.v1 = ActiveSupport::OrderedOptions.new
