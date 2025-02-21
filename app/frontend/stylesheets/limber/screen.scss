@@ -77,7 +77,7 @@ header.limber-header {
   }
   @extend .navbar-text;
   @extend .small;
-  @extend .mr-2;
+  @extend .me-2;
 }
 
 // Set the background color of the navbar based on the environment
@@ -203,7 +203,7 @@ nav.robots-list {
   font-style: oblique;
   font-stretch: ultra-condensed;
   font-weight: lighter;
-  @extend .mr-2;
+  @extend .me-2;
 }
 
 .btn-logout {
@@ -522,7 +522,7 @@ form + .btn-block {
       @extend .badge;
       @extend .badge-info;
       @extend .badge-pill;
-      @extend .ml-2;
+      @extend .ms-2;
     }
     .pool-info {
       @extend .text-muted;

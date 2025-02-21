@@ -9,12 +9,12 @@
       <%= label_tag :header_plate_barcode, 'Plate or Tube Barcode', class: 'sr-only' %>
       <%= text_field_tag :plate_barcode, params[:plate_barcode], class: 'plate-barcode form-control', placeholder: 'e.g. 1220012345855 or DN12345', id: 'header_plate_barcode' %>
     <% end %>
-    <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+    <ul class="navbar-nav me-auto mt-2 mt-md-0">
       <!-- No nav items -->
     </ul>
       <% if logged_in? %>
-        <span class="icon icon-user mr-1"></span>
-        <span class='navbar-text mr-sm-2'>
+        <span class="icon icon-user me-1"></span>
+        <span class='navbar-text me-sm-2'>
           <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span>
         </span>
         <%= session_switcher %>
