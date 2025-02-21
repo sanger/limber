@@ -308,7 +308,7 @@ nav.robots-list {
     @extend .col-3;
   }
   select {
-    @extend .custom-select;
+    @extend .form-select;
     @extend .col-9;
   }
 }
@@ -388,18 +388,18 @@ dl#samples-information {
   @extend.badge;
 }
 .state-badge.pending {
-  @extend.badge-warning;
+  @extend.bg-warning;
 }
 .state-badge.started,
 .state-badge.process_1,
 .state-badge.process_2 {
-  @extend.badge-info;
+  @extend.bg-info;
 }
 .state-badge.passed {
-  @extend.badge-success;
+  @extend.bg-success;
 }
 .state-badge.qc_completed {
-  @extend.badge-success;
+  @extend.bg-success;
 }
 .state-badge.cancelled {
   @extend .list-group-item-danger;
@@ -520,7 +520,7 @@ form + .btn-block {
 
     .pool-size {
       @extend .badge;
-      @extend .badge-info;
+      @extend .bg-info;
       @extend .badge-pill;
       @extend .ms-2;
     }

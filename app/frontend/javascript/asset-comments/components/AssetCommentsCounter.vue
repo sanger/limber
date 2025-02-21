@@ -41,9 +41,9 @@ export default {
     },
     badgeClass() {
       if (this.comments?.length > 0) {
-        return 'badge-success'
+        return 'bg-success'
       } else {
-        return 'badge-secondary'
+        return 'bg-secondary'
       }
     },
   },

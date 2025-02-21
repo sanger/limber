@@ -57,9 +57,9 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   # eg. count_badge(0)
-  # <span class="badge badge-secondary">0</span>
+  # <span class="badge bg-secondary">0</span>
   # eg. count_badge(10)
-  # <span class="badge badge-primary">10</span>
+  # <span class="badge bg-primary">10</span>
   def count_badge(count, badge_id = nil, data_attributes = {})
     state =
       case count
