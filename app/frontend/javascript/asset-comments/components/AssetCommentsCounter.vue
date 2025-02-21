@@ -1,5 +1,5 @@
 <template>
-  <span :class="['badge', 'badge-pill', badgeClass]">{{ commentCount }}</span>
+  <span :class="['badge', 'rounded-pill', badgeClass]">{{ commentCount }}</span>
 </template>
 
 <script>
