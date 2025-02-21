@@ -5,7 +5,7 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     begin
       require './lib/deployed_version'
     rescue LoadError
-      module Deployed
+      module DeployedVersion
         VERSION_ID = 'LOCAL'
         VERSION_STRING = "Limber LOCAL [#{ENV.fetch('RACK_ENV', nil)}]".freeze
       end
@@ -13,7 +13,7 @@ module ApplicationHelper # rubocop:todo Style/Documentation
 
     def version_information
       # Provides a quick means of checking the deployed version
-      Deployed::VERSION_STRING
+      DeployedVersion::VERSION_STRING
     end
   end
   include DeploymentInfo

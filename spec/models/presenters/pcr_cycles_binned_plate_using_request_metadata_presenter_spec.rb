@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'presenters/pcr_cycles_binned_plate_using_request_metadata_presenter'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
