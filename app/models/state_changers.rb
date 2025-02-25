@@ -194,6 +194,8 @@ module StateChangers
   class AutomaticTubeRackStateChanger < TubeRackStateChanger
     include AutomaticBehaviour
 
+    ACCEPTED_STATES = %w[pending].freeze
+
     def labware
       @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
@@ -209,7 +211,10 @@ module StateChangers
     def move_to!(state, reason = nil, _customer_accepts_responsibility = nil)
       return if state.nil? || labware.nil? # We have nothing to do
 
-      labware.racked_tubes.each { |racked_tube| change_tube_state(racked_tube.tube, state, reason) }
+      labware
+        .racked_tubes
+        .select { |racked_tube| ACCEPTED_STATES.include?(racked_tube.tube.state) }
+        .each { |racked_tube| change_tube_state(racked_tube.tube, state, reason) }
     end
 
     private
