@@ -139,6 +139,35 @@ RSpec.describe StateChangers do
     end
   end
 
+  describe StateChangers::AutomaticTubeRackStateChanger do
+    has_a_working_api
+
+    let(:tube_starting_state) { 'pending' }
+    let(:target_state) { 'passed' }
+    let(:coordinates_to_pass) { nil }
+
+    let(:tube1_uuid) { SecureRandom.uuid }
+
+    let(:tube) { create :v2_tube, uuid: tube1_uuid, state: tube_starting_state, barcode_number: 1 }
+
+    let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
+
+    let(:racked_tube) { create :racked_tube, coordinate: 'A1', tube: tube, tube_rack: tube_rack }
+
+    let(:labware) { tube_rack }
+
+    subject { StateChangers::TubeRackStateChanger.new(api, labware_uuid, user_uuid) }
+
+    before { stub_v2_tube_rack(tube_rack) }
+
+    context 'when some tubes are not in failed state' do
+      before { allow(labware).to receive(:racked_tubes).and_return([racked_tube]) }
+      it 'returns the coordinates of tubes not in failed state' do
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+      end
+    end
+  end
+
   describe StateChangers::TubeRackStateChanger do
     has_a_working_api
 
