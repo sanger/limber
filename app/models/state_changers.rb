@@ -203,9 +203,6 @@ module StateChangers
     # Overrides the move_to! method to include the completion of outstanding requests.
     # @param state [String] the target state to move the labware to
     # @param reason [String, nil] the reason for the state change (optional)
-    # @param customer_accepts_responsibility [Boolean] whether the customer accepts responsibility
-    # for the state change (default: false)
-    # @return [Sequencescape::Api::V2::StateChange] the created state change record
     #
     # Iterates over the tubes and passes them individually.
     def move_to!(state, reason = nil, _customer_accepts_responsibility = nil)
