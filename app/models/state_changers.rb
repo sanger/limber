@@ -197,6 +197,27 @@ module StateChangers
     def labware
       @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
+
+    # Overrides the move_to! method to include the completion of outstanding requests.
+    # @param state [String] the target state to move the labware to
+    # @param reason [String, nil] the reason for the state change (optional)
+    # @param customer_accepts_responsibility [Boolean] whether the customer accepts responsibility
+    # for the state change (default: false)
+    # @return [Sequencescape::Api::V2::StateChange] the created state change record
+    #
+    # Iterates over the tubes and passes them individually.
+    def move_to!(state, reason = nil, _customer_accepts_responsibility = nil)
+      return if state.nil? || labware.nil? # We have nothing to do
+
+      labware.racked_tubes.each { |racked_tube| change_tube_state(racked_tube.tube, state, reason) }
+    end
+
+    private
+
+    def change_tube_state(tube, target_state, reason)
+      state_changer = StateChangers.lookup_for(tube.purpose.uuid)
+      state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, reason)
+    end
   end
 
   # This version of the AutomaticLabwareStateChanger is used by Tubes.
