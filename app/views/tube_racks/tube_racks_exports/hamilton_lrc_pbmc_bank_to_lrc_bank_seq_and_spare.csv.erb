@@ -44,7 +44,7 @@
   return if parent_plate.nil?
 
   # Fetch the tube racks from the parent plate
-  tube_racks = parent_plate.children.map do |tr| 
+  tube_racks = parent_plate.children.select { |child| child.type == 'tube_racks' }.map do |tr|
     Sequencescape::Api::V2.tube_rack_with_custom_includes(
       'racked_tubes.tube',
       nil,
