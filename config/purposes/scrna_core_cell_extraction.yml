@@ -67,9 +67,6 @@ LRC PBMC Bank:
   :file_links:
     - name: 'Download Hamilton LRC Blood Bank plate to LRC PBMC Bank plate CSV'
       id: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
-    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
-      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
-      states: [passed, qc_complete]
     - name: 'Download PBMC Bank Tubes Content Report'
       id: pbmc_bank_tubes_content_report
       states: [passed, qc_complete]
@@ -110,6 +107,8 @@ LRC TR Bank Seq:
       id: tube_rack_concentrations_ngul
     - name: Download Racked Tube Concentrations (nM) CSV
       id: tube_rack_concentrations_nm
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
 # Tube rack for storing LRC Bank Spare tubes
 LRC TR Bank Spare:
   :asset_type: tube_rack
@@ -127,6 +126,8 @@ LRC TR Bank Spare:
       id: tube_rack_concentrations_ngul
     - name: Download Racked Tube Concentrations (nM) CSV
       id: tube_rack_concentrations_nm
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Seq:
   :asset_type: tube

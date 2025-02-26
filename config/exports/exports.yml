@@ -156,11 +156,7 @@ scrna_core_cell_extraction_sample_arraying_tube_layout:
 hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
   csv: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
   workflow: scRNA Core PBMC Bank
-  plate_includes:
-    - wells.downstream_tubes
-    - wells.aliquots
-    - wells.aliquots.sample
-    - wells.aliquots.sample.sample_metadata
+  tube_rack_includes: racked_tubes.tube
   ancestor_tube_purpose: LRC Blood Vac
   filename:
     name: hamilton_pbmc_bank
