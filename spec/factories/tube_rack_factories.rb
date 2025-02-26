@@ -55,13 +55,19 @@ FactoryBot.define do
 
     id
     coordinate { 'A1' }
-    tube_rack { create :tube_rack }
-    tube { create :v2_tube }
+
+    transient do
+      tube_rack { create :tube_rack }
+      tube { create :v2_tube, racked_tube: instance }
+    end
 
     after(:build) do |racked_tube, evaluator|
       Sequencescape::Api::V2::RackedTube.associations.each do |association|
         racked_tube._cached_relationship(association.attr_name) { evaluator.send(association.attr_name) }
       end
+
+      racked_tube._cached_relationship(:tube_rack) { evaluator.tube_rack }
+      racked_tube._cached_relationship(:tube) { evaluator.tube }
     end
   end
 end

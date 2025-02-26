@@ -12,6 +12,7 @@ class TubeRacks::TubeRacksExportsController < ApplicationController
   def show
     @page = params.fetch(:page, 0).to_i
     @workflow = export.workflow
+    @ancestor_tubes = locate_ancestor_tubes
 
     # Set the filename for the export via the ExportsFilenameBehaviour concern
     set_filename(@labware, @page) if export.filename
@@ -45,10 +46,28 @@ class TubeRacks::TubeRacksExportsController < ApplicationController
   end
 
   def include_parameters
-    export.tube_rack_includes || nil
+    export.tube_rack_includes || 'racked_tubes'
   end
 
   def select_parameters
     export.tube_rack_selects || nil
+  end
+
+  def ancestor_tube_details(ancestor_results)
+    ancestor_results.each_with_object({}) do |ancestor_result, tube_list|
+      tube = Sequencescape::Api::V2::Tube.find_by(uuid: ancestor_result.uuid)
+      tube_sample_uuid = tube&.aliquots&.first&.sample&.uuid
+      tube_list[tube_sample_uuid] = tube if tube_sample_uuid.present?
+    end
+  end
+
+  def locate_ancestor_tubes
+    return nil if export.ancestor_tube_purpose.blank?
+
+    ancestor_results = @tube_rack.ancestors.where(purpose_name: export.ancestor_tube_purpose)
+    return nil if ancestor_results.blank?
+
+    # create hash of sample uuid to tube
+    ancestor_tube_details(ancestor_results)
   end
 end
