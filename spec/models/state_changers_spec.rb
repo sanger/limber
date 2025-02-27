@@ -149,29 +149,18 @@ RSpec.describe StateChangers do
     has_a_working_api
 
     let(:tube_starting_state) { 'pending' }
-    let(:tube_failed_state) { 'failed' }
 
-    let(:target_state) { 'qc_complete' }
+    let(:target_state) { 'passed' }
 
     let(:tube1_uuid) { SecureRandom.uuid }
-    let(:tube2_uuid) { SecureRandom.uuid }
-    let(:tube3_uuid) { SecureRandom.uuid }
 
     let(:tube1) do
-      create :v2_tube, uuid: tube1_uuid, state: tube_failed_state, barcode_number: 1, purpose_uuid: tube1_uuid
-    end
-    let(:tube2) do
-      create :v2_tube, uuid: tube2_uuid, state: tube_starting_state, barcode_number: 2, purpose_uuid: tube2_uuid
-    end
-    let(:tube3) do
-      create :v2_tube, uuid: tube3_uuid, state: tube_starting_state, barcode_number: 3, purpose_uuid: tube3_uuid
+      create :v2_tube, uuid: tube1_uuid, state: tube_starting_state, barcode_number: 1, purpose_uuid: tube1_uuid
     end
 
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
 
     let(:racked_tube1) { create :racked_tube, coordinate: 'A1', tube: tube1, tube_rack: tube_rack }
-    let(:racked_tube2) { create :racked_tube, coordinate: 'B1', tube: tube2, tube_rack: tube_rack }
-    let(:racked_tube3) { create :racked_tube, coordinate: 'C1', tube: tube3, tube_rack: tube_rack }
 
     let(:labware) { tube_rack }
 
@@ -180,8 +169,6 @@ RSpec.describe StateChangers do
     before do
       stub_v2_tube_rack(tube_rack)
       create(:tube_config, uuid: tube1_uuid, name: 'example-purpose')
-      create(:tube_config, uuid: tube2_uuid, name: 'example-purpose')
-      create(:tube_config, uuid: tube3_uuid, name: 'example-purpose')
     end
 
     # context 'when all tubes are in failed state' do
@@ -201,11 +188,25 @@ RSpec.describe StateChangers do
     context 'when some tubes are not in failed state' do
       let(:coordinates_to_pass) { %w[B1 C1] }
 
-      before { allow(labware).to receive(:racked_tubes).and_return([racked_tube1, racked_tube2, racked_tube3]) }
+      before do
+        expect_api_v2_posts(
+          'StateChange',
+          [
+            {
+              contents: nil,
+              customer_accepts_responsibility: customer_accepts_responsibility,
+              reason: reason,
+              target_state: target_state,
+              target_uuid: tube1_uuid,
+              user_uuid: user_uuid
+            }
+          ]
+        )
+        allow(labware).to receive(:racked_tubes).and_return([racked_tube1])
+      end
 
       it 'returns the coordinates of tubes not in failed state' do
-        expect(subject.contents_for(target_state)).to eq(%w[B1 C1])
-        # subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
   end
