@@ -12,7 +12,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
     class_attribute :summary_items, :sidebar_partial, :summary_partial, :pooling_tab
 
-    attr_accessor :labware
+    attr_accessor :labware, :info_messages
 
     self.page = 'show'
     self.sidebar_partial = 'default'
@@ -20,12 +20,18 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     self.summary_partial = ''
     self.pooling_tab = ''
 
+
     def csv
       purpose_config[:csv_template]
     end
   end
 
   delegate :state, :uuid, :id, :purpose_name, to: :labware
+
+  def initialize(*args)
+    super
+    @info_messages = []
+  end
 
   def suggest_library_passing?
     active_pipelines.any? { |pl| pl.library_pass?(purpose_name) }
@@ -98,4 +104,13 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     end
     metadata.present? ? metadata.fetch('stock_barcode', barcode) : 'N/A'
   end
+
+  def add_info_message(message)
+    @info_messages << message
+  end
+
+  def info_messages
+    @info_messages
+  end
+
 end
