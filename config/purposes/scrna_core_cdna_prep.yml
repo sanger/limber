@@ -130,3 +130,9 @@ LRC GEM-X 5p cDNA Input:
   :presenter_class: Presenters::StockPlatePresenter
   # will not be creatable in Limber (created by manifest in Sequencescape)
   :creator_class: LabwareCreators::Uncreatable
+LRC GEM-X 5p GEMs Input CITE:
+  :asset_type: plate
+  :stock_plate: true
+  :input_plate: true
+  :presenter_class: Presenters::StockPlatePresenterWithInfo
+  :creator_class: LabwareCreators::Uncreatable
