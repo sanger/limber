@@ -81,6 +81,8 @@ RSpec.describe StateChangers do
 
   describe StateChangers::AutomaticPlateStateChanger do
 
+    include_context 'common setup'
+
     has_a_working_api
 
     let(:plate_state) { 'pending' }
