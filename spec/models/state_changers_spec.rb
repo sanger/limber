@@ -166,7 +166,7 @@ RSpec.describe StateChangers do
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
 
     let(:racked_tube1) { create :racked_tube, coordinate: 'A1', tube: tube1, tube_rack: tube_rack }
-    let(:racked_tube2) { create :racked_tube, coordinate: 'A1', tube: tube2, tube_rack: tube_rack }
+    let(:racked_tube2) { create :racked_tube, coordinate: 'B1', tube: tube2, tube_rack: tube_rack }
 
     let(:labware) { tube_rack }
 
