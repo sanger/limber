@@ -149,18 +149,24 @@ RSpec.describe StateChangers do
     has_a_working_api
 
     let(:tube_starting_state) { 'pending' }
+    let(:tube_cancelled_state) { 'cancelled' }
 
     let(:target_state) { 'passed' }
 
     let(:tube1_uuid) { SecureRandom.uuid }
+    let(:tube2_uuid) { SecureRandom.uuid }
 
     let(:tube1) do
       create :v2_tube, uuid: tube1_uuid, state: tube_starting_state, barcode_number: 1, purpose_uuid: tube1_uuid
+    end
+    let(:tube2) do
+      create :v2_tube, uuid: tube2_uuid, state: tube_cancelled_state, barcode_number: 2, purpose_uuid: tube1_uuid
     end
 
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
 
     let(:racked_tube1) { create :racked_tube, coordinate: 'A1', tube: tube1, tube_rack: tube_rack }
+    let(:racked_tube2) { create :racked_tube, coordinate: 'A1', tube: tube2, tube_rack: tube_rack }
 
     let(:labware) { tube_rack }
 
@@ -202,7 +208,7 @@ RSpec.describe StateChangers do
             }
           ]
         )
-        allow(labware).to receive(:racked_tubes).and_return([racked_tube1])
+        allow(labware).to receive(:racked_tubes).and_return([racked_tube1, racked_tube2])
       end
 
       it 'returns the coordinates of tubes not in failed state' do
