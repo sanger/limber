@@ -20,7 +20,6 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     self.summary_partial = ''
     self.pooling_tab = ''
 
-
     def csv
       purpose_config[:csv_template]
     end
@@ -112,5 +111,4 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   def info_messages
     @info_messages
   end
-
 end
