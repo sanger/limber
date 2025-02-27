@@ -119,7 +119,7 @@ LRC TR Bank Spare:
     name: LabwareCreators::PlateSplitToTubeRacks
     args: *fluidx_tube_creation_config
   :presenter_class: Presenters::TubeRackPresenter
-  :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
+  :state_changer_class: StateChangers::TubeRackStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
   :file_links:
     - name: Download Tube Rack Concentrations (ng/ul) CSV
