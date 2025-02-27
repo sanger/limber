@@ -1,0 +1,12 @@
+<% if @presenter.respond_to?(:info_messages) && @presenter.info_messages.present? %>
+  <div class="asset-info">
+    <div class="row">
+      <h3>Reminders:</h3>
+      <ul>
+        <% @presenter.info_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
