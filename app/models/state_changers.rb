@@ -13,7 +13,6 @@
 #
 module StateChangers
   def self.lookup_for(purpose_uuid)
-    binding.pry
     (details = Settings.purposes[purpose_uuid]) || raise("Unknown purpose UUID: #{purpose_uuid}")
     details[:state_changer_class].constantize
   end
