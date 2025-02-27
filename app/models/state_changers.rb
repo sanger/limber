@@ -115,7 +115,6 @@ module StateChangers
 
   # Base class for tube racks
   class BaseTubeRackStateChanger < BaseStateChanger
-
     ACCEPTED_STATES = %w[pending].freeze
 
     def labware
@@ -143,7 +142,6 @@ module StateChangers
       state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, reason)
     end
   end
-
 
   # The tube rack state changer is used by TubeRacks.
   # It contains racked tubes.
@@ -177,7 +175,6 @@ module StateChangers
       @labware ||= Sequencescape::Api::V2::TubeRack.find({ uuid: labware_uuid }).first
     end
   end
-
 
   # This version of the AutomaticLabwareStateChanger is used by TubeRacks.
   class AutomaticTubeRackStateChanger < BaseTubeRackStateChanger
@@ -214,7 +211,6 @@ module StateChangers
       @labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
     end
   end
-
 
   # This version of the AutomaticLabwareStateChanger is used by Plates.
   class AutomaticPlateStateChanger < PlateStateChanger

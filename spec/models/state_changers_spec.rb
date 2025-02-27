@@ -80,7 +80,6 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::AutomaticPlateStateChanger do
-
     include_context 'common setup'
 
     has_a_working_api
@@ -158,9 +157,15 @@ RSpec.describe StateChangers do
     let(:tube2_uuid) { SecureRandom.uuid }
     let(:tube3_uuid) { SecureRandom.uuid }
 
-    let(:tube1) { create :v2_tube, uuid: tube1_uuid, state: tube_failed_state, barcode_number: 1, purpose_uuid: tube1_uuid }
-    let(:tube2) { create :v2_tube, uuid: tube2_uuid, state: tube_starting_state, barcode_number: 2, purpose_uuid: tube2_uuid }
-    let(:tube3) { create :v2_tube, uuid: tube3_uuid, state: tube_starting_state, barcode_number: 3, purpose_uuid: tube3_uuid }
+    let(:tube1) do
+      create :v2_tube, uuid: tube1_uuid, state: tube_failed_state, barcode_number: 1, purpose_uuid: tube1_uuid
+    end
+    let(:tube2) do
+      create :v2_tube, uuid: tube2_uuid, state: tube_starting_state, barcode_number: 2, purpose_uuid: tube2_uuid
+    end
+    let(:tube3) do
+      create :v2_tube, uuid: tube3_uuid, state: tube_starting_state, barcode_number: 3, purpose_uuid: tube3_uuid
+    end
 
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
 
