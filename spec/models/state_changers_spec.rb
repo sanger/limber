@@ -149,7 +149,7 @@ RSpec.describe StateChangers do
     has_a_working_api
 
     let(:tube_starting_state) { 'pending' }
-    let(:tube_cancelled_state) { 'cancelled' }
+    let(:tube_cancelled_state) { 'failed' }
 
     let(:target_state) { 'passed' }
 
@@ -177,23 +177,15 @@ RSpec.describe StateChangers do
       create(:tube_config, uuid: tube1_uuid, name: 'example-purpose')
     end
 
-    # context 'when all tubes are in failed state' do
-    #   let(:coordinates_to_pass) { [] }
-    #
-    #   before { allow(labware).to receive(:racked_tubes).and_return([racked_tube1]) }
-    #
-    #   # if all the tubes are already in the target state expect contents to be empty
-    #   # TODO: I'm not sure this is correct behaviour, it should probably raise an error
-    #   # or a validation should catch that the state change is not needed
-    #   it 'returns empty array' do
-    #     expect(subject.contents_for(target_state)).to eq([])
-    #     subject.move_to!(target_state, reason, customer_accepts_responsibility)
-    #   end
-    # end
+    context 'when all tubes are in failed state' do
+      before { allow(labware).to receive(:racked_tubes).and_return([tube2_uuid]) }
+
+      it 'does not call move_to' do
+        expect(subject).not_to receive(:move_to!)
+      end
+    end
 
     context 'when some tubes are not in failed state' do
-      let(:coordinates_to_pass) { %w[B1 C1] }
-
       before do
         expect_api_v2_posts(
           'StateChange',
