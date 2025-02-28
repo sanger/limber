@@ -11,7 +11,7 @@ class PurposeConfig
 
   class_attribute :default_state_changer, :default_options
 
-  self.default_state_changer = 'StateChangers::DefaultStateChanger'
+  self.default_state_changer = 'StateChangers::PlateStateChanger'
 
   def self.load(name, options, store, submission_templates, label_template_config)
     case options.fetch(:asset_type)
@@ -59,17 +59,72 @@ class PurposeConfig
     store.fetch(name).uuid
   end
 
-  # Currently limber does not register its own tube racks. This is because we
-  # will delegate most behaviour to the contained tube purposes
+  # The TubeRack class is a configuration class for defining the purpose and behavior of tube racks within the system.
+  # It inherits from PurposeConfig and sets default options and state changers specific to tube racks.
+  #
+  # Attributes:
+  # - default_state_changer: Specifies the state changer class to be used for tube racks.
+  # - default_options: A hash containing default configuration options for tube racks, including:
+  #   - presenter_class: The class responsible for presenting tube racks.
+  #   - creator_class: The class responsible for creating tube racks from other labwares.
+  #   - default_printer_type: The default printer type for tube racks.
+  #   - label_class: The class responsible for label printing for tube racks.
+  #   - file_links: An array for file links associated with tube racks.
+  #
+  # Methods:
+  # - register!: Registers the tube rack purpose by creating a new TubeRackPurpose record via the Sequencescape API.
+  #   It uses the name and options provided to create the record.
+  #
+  # Example:
+  #   tube_rack = TubeRack.new(name: 'TR Stock 96', options: { target: 'TubeRack', type: 'TubeRack::Purpose' })
+  #   tube_rack.register!
+  #
   class TubeRack < PurposeConfig
-    self.default_options = { default_printer_type: :tube_rack, presenter_class: 'Presenters::TubeRackPresenter' }.freeze
+    self.default_state_changer = 'StateChangers::TubeRackStateChanger'
+
+    self.default_options = {
+      presenter_class: 'Presenters::TubeRackPresenter',
+      # NB. this will need to be a more generic creator in future
+      creator_class: 'LabwareCreators::PlateSplitToTubeRacks',
+      # NB. Tube racks have etched barcodes, so don't typically need labels printed.
+      default_printer_type: :plate_a,
+      label_class: 'Labels::PlateLabel',
+      file_links: []
+    }.freeze
 
     def register!
-      warn 'Cannot create tube racks from within limber'
+      puts "Creating #{name}"
+      options_for_creation = {
+        name: name,
+        size: config.fetch(:size, 96),
+        target_type: config.fetch(:target, 'TubeRack'),
+        purpose_type: config.fetch(:type, 'TubeRack::Purpose')
+      }
+      Sequencescape::Api::V2::TubeRackPurpose.create!(options_for_creation)
     end
   end
 
-  class Tube < PurposeConfig # rubocop:todo Style/Documentation
+  # The Tube class is a configuration class for defining the purpose and behavior of tubes within the system.
+  # It inherits from PurposeConfig and sets default options and state changers specific to tubes.
+  #
+  # Attributes:
+  # - default_state_changer: Specifies the state changer class to be used for tubes.
+  # - default_options: A hash containing default configuration options for tubes, including:
+  #   - default_printer_type: The default printer type for tubes.
+  #   - presenter_class: The class responsible for presenting tubes.
+  #   - creator_class: The class responsible for creating tubes from other tubes.
+  #   - label_class: The class responsible for labeling tubes.
+  #   - file_links: An array for file links associated with tubes.
+  #
+  # Methods:
+  # - register!: Registers the tube purpose by creating a new TubePurpose record in the Sequencescape API.
+  #   It uses the name and options provided to create the record.
+  #
+  # Example:
+  #   tube = Tube.new(name: 'Sample Tube', options: { target: 'Tube', type: 'Sample' })
+  #   tube.register!
+  #
+  class Tube < PurposeConfig
     self.default_state_changer = 'StateChangers::TubeStateChanger'
 
     self.default_options = {
@@ -87,7 +142,28 @@ class PurposeConfig
     end
   end
 
-  class Plate < PurposeConfig # rubocop:todo Style/Documentation
+  # The Plate class is a configuration class for defining the purpose and behavior of plates within the system.
+  # It inherits from PurposeConfig and sets default options specific to plates.
+  #
+  # Attributes:
+  # - default_options: A hash containing default configuration options for plates, including:
+  #   - default_printer_type: The default printer type for plates.
+  #   - presenter_class: The class responsible for presenting plates.
+  #   - creator_class: The class responsible for creating plates from other labware.
+  #   - label_class: The class responsible for labeling plates.
+  #   - file_links: An array of hashes representing file links associated with plates, each containing:
+  #     - name: The display name of the file link.
+  #     - id: The identifier for the file link.
+  #
+  # Methods:
+  # - register!: Registers the plate purpose by creating a new PlatePurpose record in the Sequencescape API.
+  #   It uses the name and options provided to create the record.
+  #
+  # Example:
+  #   plate = Plate.new(name: 'Sample Plate', options: { target: 'Plate', type: 'Sample' })
+  #   plate.register!
+  #
+  class Plate < PurposeConfig
     self.default_options = {
       default_printer_type: :plate_a,
       presenter_class: 'Presenters::StandardPresenter',
