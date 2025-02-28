@@ -4100,7 +4100,7 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Carousel 1,4',
           parent: bed(4).barcode,
-          target_state: 'started'
+          target_state: 'passed'
         }
       }
     )
@@ -4246,7 +4246,6 @@ ROBOT_CONFIG =
       to 'BGE Cap Lib PCR', car('4,5')
     end
 
-
     # BGE Pipeline 4 - ISC Library prep
     # Bravo bed verification
     # BGE Cap Lib PCR to BGE Cap Lib PCR XP
@@ -4254,5 +4253,4 @@ ROBOT_CONFIG =
       from 'BGE Cap Lib PCR', bed(1)
       to 'BGE Cap Lib PCR XP', bed(9)
     end
-
   end
