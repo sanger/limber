@@ -37,14 +37,14 @@ let limberPlateView = function (defaultTab) {
 
   let viewModel = new PlateViewModel(plateElement)
 
-  control.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  control.find('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
     let viewName = e.target.dataset.plateView
     if (viewModel[viewName]) {
       viewModel[viewName].activate()
     }
   })
 
-  control.find('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {
+  control.find('a[data-bs-toggle="tab"]').on('hide.bs.tab', function (e) {
     let viewName = e.target.dataset.plateView
     if (viewModel[viewName]) {
       viewModel[viewName].deactivate()
@@ -56,10 +56,11 @@ let limberPlateView = function (defaultTab) {
   if (!defaultTab.endsWith('_tab')) {
     defaultTab += '_tab'
   }
-  control.find('a[href="' + defaultTab + '"]').tab('show')
+
+  control.find('a[href="' + defaultTab + '"]').show()
 
   plateElement.on('click', '.aliquot', function (event) {
-    control.find('a[data-plate-view="pools-view"]').tab('show')
+    control.find('a[data-plate-view="pools-view"]').show()
 
     let pool = $(event.currentTarget).data('pool')
 

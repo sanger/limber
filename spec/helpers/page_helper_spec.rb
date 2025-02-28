@@ -26,13 +26,13 @@ RSpec.describe PageHelper do
   describe '::state_badge' do
     it 'returns a badge with the given state and default title' do
       expect(state_badge('pending')).to eq(
-        '<span class="state-badge pending" title="Labware State" data-toggle="tooltip">Pending</span>'
+        '<span class="state-badge pending" title="Labware State" data-bs-toggle="tooltip">Pending</span>'
       )
     end
 
     it 'returns a badge with the given state and title' do
       expect(state_badge('passed', title: 'Submission State')).to eq(
-        '<span class="state-badge passed" title="Submission State" data-toggle="tooltip">Passed</span>'
+        '<span class="state-badge passed" title="Submission State" data-bs-toggle="tooltip">Passed</span>'
       )
     end
   end
