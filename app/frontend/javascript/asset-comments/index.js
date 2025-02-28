@@ -41,38 +41,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentStore = commentStoreFactory(axiosInstance, api, assetElem.dataset.assetId, userId)
 
     let assetCommentsApp = createApp({
-      el: '#asset-comments',
       data: commentStore,
-      render: h(AssetComments),
+      render: () => h(AssetComments),
     })
     assetCommentsApp.use(createBootstrap())
-
+    assetCommentsApp.mount('#asset-comments')
     let assetCommentsCounterApp = createApp({
-      el: '#asset-comments-counter',
       data: commentStore,
-      render: h(AssetCommentsCounter),
+      render: () => h(AssetCommentsCounter),
     })
     assetCommentsCounterApp.use(createBootstrap())
-
+    assetCommentsCounterApp.mount('#asset-comments-counter')
     // UserId is required to make comments, but will not be present in
     // older session cookies. To avoid errors or confusion, we render
     // a very basic vue component (essentially just an error message)
     // if userId is missing
     if (userId) {
       let assetCommentsAddFormApp = createApp({
-        el: '#asset-comments-add-form',
         data: commentStore,
-        render(h) {
+        render() {
           return h(AssetCommentsAddForm, { props: this.$el.dataset })
         },
       })
       assetCommentsAddFormApp.use(createBootstrap())
+      assetCommentsAddFormApp.mount('#asset-comments-add-form')
     } else {
       let missingUserIdErrorApp = createApp({
-        el: '#asset-comments-add-form',
         render: h('div', missingUserIdError),
       })
       missingUserIdErrorApp.use(createBootstrap())
+      missingUserIdErrorApp.mount('#asset-comments-add-form')
     }
 
     commentStore.refreshComments()

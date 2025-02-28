@@ -53,14 +53,12 @@ export const renderVueComponent = (selector, component, props = {}, userIdRequir
   if (userIdRequired && !userId) {
     console.error('User id is required to render this component.')
     app = createApp({
-      el: selector_val,
-      render: h('div', missingUserIdError),
+      render: () => h('div', missingUserIdError),
     })
   } else {
     props.userId = userId
     app = createApp({
-      el: selector_val,
-      render: h(component, { props }),
+      render: () => h(component, { props }),
     })
   }
   app.use(createBootstrap())
