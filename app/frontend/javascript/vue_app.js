@@ -1,6 +1,6 @@
 /* eslint no-console: 0 */
 
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
 import { createBootstrap } from 'bootstrap-vue-next'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
@@ -54,13 +54,13 @@ export const renderVueComponent = (selector, component, props = {}, userIdRequir
     console.error('User id is required to render this component.')
     app = createApp({
       el: selector_val,
-      render: (h) => h('div', missingUserIdError),
+      render: h('div', missingUserIdError),
     })
   } else {
     props.userId = userId
     app = createApp({
       el: selector_val,
-      render: (h) => h(component, { props }),
+      render: h(component, { props }),
     })
   }
   app.use(createBootstrap())

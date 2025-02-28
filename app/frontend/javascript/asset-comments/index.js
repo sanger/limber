@@ -1,6 +1,6 @@
 /* eslint no-console: 0 */
 
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
 import { createBootstrap } from 'bootstrap-vue-next'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
@@ -43,14 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let assetCommentsApp = createApp({
       el: '#asset-comments',
       data: commentStore,
-      render: (h) => h(AssetComments),
+      render: h(AssetComments),
     })
     assetCommentsApp.use(createBootstrap())
 
     let assetCommentsCounterApp = createApp({
       el: '#asset-comments-counter',
       data: commentStore,
-      render: (h) => h(AssetCommentsCounter),
+      render: h(AssetCommentsCounter),
     })
     assetCommentsCounterApp.use(createBootstrap())
 
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       let missingUserIdErrorApp = createApp({
         el: '#asset-comments-add-form',
-        render: (h) => h('div', missingUserIdError),
+        render: h('div', missingUserIdError),
       })
       missingUserIdErrorApp.use(createBootstrap())
     }
