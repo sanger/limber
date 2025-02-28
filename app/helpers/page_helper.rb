@@ -57,9 +57,9 @@ module PageHelper # rubocop:todo Style/Documentation
   end
 
   # eg. count_badge(0)
-  # <span class="badge badge-secondary">0</span>
+  # <span class="badge bg-secondary">0</span>
   # eg. count_badge(10)
-  # <span class="badge badge-primary">10</span>
+  # <span class="badge bg-primary">10</span>
   def count_badge(count, badge_id = nil, data_attributes = {})
     state =
       case count
@@ -68,6 +68,6 @@ module PageHelper # rubocop:todo Style/Documentation
       else
         'primary'
       end
-    tag.span(count || '...', class: "badge badge-pill badge-#{state}", id: badge_id, data: data_attributes)
+    tag.span(count || '...', class: "badge rounded-pill badge-#{state}", id: badge_id, data: data_attributes)
   end
 end
