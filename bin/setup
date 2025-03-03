@@ -6,7 +6,7 @@ APP_ROOT = File.expand_path("..", __dir__)
 APP_NAME = "limber"
 
 def system!(*args)
-  system(*args, exception: true) || abort("\n== Command #{args} failed ==")
+  system(*args) || abort("\n== Command #{args} failed ==")
 end
 
 FileUtils.chdir APP_ROOT do
