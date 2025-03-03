@@ -107,8 +107,4 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   def add_info_message(message)
     @info_messages << message
   end
-
-  def info_messages
-    @info_messages
-  end
 end
