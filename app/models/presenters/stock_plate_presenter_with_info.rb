@@ -8,10 +8,8 @@ module Presenters
   class StockPlatePresenterWithInfo < StockPlatePresenter
     def initialize(*args)
       super
-      add_info_message(
-        'Please ensure you use the CITE-seq-compatible primer ' \
-          "when working with 'LRC GEM-X 5p GEMs Input CITE' plates"
-      )
+      messages = purpose_config.dig(:presenter_class, :args, :message)
+      messages&.each { |message| add_info_message(message) }
     end
   end
 end
