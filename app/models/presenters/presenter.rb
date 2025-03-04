@@ -30,6 +30,12 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   def initialize(*args)
     super
     @info_messages = []
+
+    presenter_class_config = purpose_config[:presenter_class]
+    return unless presenter_class_config.is_a?(Hash)
+
+    messages = presenter_class_config.dig(:args, :messages)
+    @info_messages.concat(messages) if messages
   end
 
   def suggest_library_passing?
@@ -102,9 +108,5 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
       metadata = nil
     end
     metadata.present? ? metadata.fetch('stock_barcode', barcode) : 'N/A'
-  end
-
-  def add_info_message(message)
-    @info_messages << message
   end
 end

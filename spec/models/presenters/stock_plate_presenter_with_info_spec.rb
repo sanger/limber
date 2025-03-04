@@ -3,7 +3,7 @@
 require 'spec_helper'
 require_relative 'shared_labware_presenter_examples'
 
-RSpec.describe Presenters::StockPlatePresenterWithInfo do
+RSpec.describe Presenters::StockPlatePresenter do
   let(:labware) do
     build :v2_stock_plate,
           receptacle: receptacle,
@@ -20,7 +20,7 @@ RSpec.describe Presenters::StockPlatePresenterWithInfo do
   let(:purpose_uuid) { 'example-purpose-uuid' }
   let(:labware) { create :v2_stock_plate }
 
-  subject { Presenters::StockPlatePresenterWithInfo.new(labware:) }
+  subject { Presenters::StockPlatePresenter.new(labware:) }
 
   let(:barcode_string) { labware.human_barcode }
 
