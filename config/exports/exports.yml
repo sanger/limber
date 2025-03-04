@@ -2,9 +2,15 @@
 concentrations_ngul:
   csv: concentrations_ngul
   plate_includes: wells.qc_results
+tube_rack_concentrations_ngul:
+  csv: tube_rack_concentrations_ngul
+  tube_rack_includes: racked_tubes.tube.receptacle.qc_results
 concentrations_nm:
   csv: concentrations_nm
   plate_includes: wells.qc_results
+tube_rack_concentrations_nm:
+  csv: tube_rack_concentrations_nm
+  tube_rack_includes: racked_tubes.tube.receptacle.qc_results
 duplex_seq_al_lib_concentrations_for_customer:
   csv: duplex_seq_al_lib_concentrations_for_customer
   plate_includes: wells.qc_results,wells.aliquots.sample.sample_metadata
@@ -150,11 +156,7 @@ scrna_core_cell_extraction_sample_arraying_tube_layout:
 hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
   csv: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
   workflow: scRNA Core PBMC Bank
-  plate_includes:
-    - wells.downstream_tubes
-    - wells.aliquots
-    - wells.aliquots.sample
-    - wells.aliquots.sample.sample_metadata
+  tube_rack_includes: racked_tubes.tube
   ancestor_tube_purpose: LRC Blood Vac
   filename:
     name: hamilton_pbmc_bank

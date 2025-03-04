@@ -15,6 +15,10 @@ class Limber::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube # r
     false
   end
 
+  def tube_rack?
+    false
+  end
+
   #
   # Override the model used in form/URL helpers
   # to allow us to treat tubes and multiplexed tubes

@@ -165,7 +165,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
     end
 
     before do
-      create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
+      create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
       bed_plate_lookup(plate, [:purpose, { wells: :downstream_plates }])
     end
 

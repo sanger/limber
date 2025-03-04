@@ -15,6 +15,10 @@ module Presenters::CreationBehaviour
     construct_buttons(purposes_of_type('tube'))
   end
 
+  def compatible_tube_rack_purposes
+    construct_buttons(purposes_of_type('tube_rack'))
+  end
+
   private
 
   # Eventually this will end up on our labware_creators/creations module
