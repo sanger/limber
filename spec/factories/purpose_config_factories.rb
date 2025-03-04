@@ -41,7 +41,7 @@ FactoryBot.define do
       stock_plate { true }
       cherrypickable_target { true }
       input_plate { true }
-      presenter_class { { name: 'Presenters::StockPlatePresenteWithInfo', args: { message: ['Test message'] } } }
+      presenter_class { { name: 'Presenters::StockPlatePresenteWithInfo', args: { messages: ['Test message'] } } }
     end
 
     # Sets up config for a plate with custom_metadata_fields parameters

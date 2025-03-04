@@ -8,7 +8,7 @@ module Presenters
   class StockPlatePresenterWithInfo < StockPlatePresenter
     def initialize(*args)
       super
-      messages = purpose_config.dig(:presenter_class, :args, :message)
+      messages = purpose_config.dig(:presenter_class, :args, :messages)
       messages&.each { |message| add_info_message(message) }
     end
   end
