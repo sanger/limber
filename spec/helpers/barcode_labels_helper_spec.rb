@@ -9,11 +9,15 @@ RSpec.describe BarcodeLabelsHelper do
     has_a_working_api
 
     let(:plate) { create(:v2_plate) }
+    let!(:purpose_config) { create(:stock_plate_with_info_config, uuid: 'stock-plate-purpose-uuid') }
+    let(:purpose) { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+    let(:purpose_name) { 'Limber example purpose' }
+    let(:purpose_uuid) { 'example-purpose-uuid' }
     let(:labels) { [Labels::PlateLabel.new(plate, {})] }
     let(:redirection_url) { 'example_plate_url' }
     let(:default_printer_name) { 'example_printer_name' }
     let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
-    let(:presenter) { Presenters::StockPlatePresenter.new }
+    let(:presenter) { Presenters::StockPlatePresenter.new(labware: plate) }
 
     before do
       barcode_printers_request

@@ -12,7 +12,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
 
     class_attribute :summary_items, :sidebar_partial, :summary_partial, :pooling_tab
 
-    attr_accessor :labware
+    attr_accessor :labware, :info_messages
 
     self.page = 'show'
     self.sidebar_partial = 'default'
@@ -26,6 +26,17 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   end
 
   delegate :state, :uuid, :id, :purpose_name, to: :labware
+
+  def initialize(*args)
+    super
+    @info_messages = []
+
+    presenter_class_config = purpose_config[:presenter_class]
+    return unless presenter_class_config.is_a?(Hash)
+
+    messages = presenter_class_config.dig(:args, :messages)
+    @info_messages.concat(messages) if messages
+  end
 
   def suggest_library_passing?
     active_pipelines.any? { |pl| pl.library_pass?(purpose_name) }
