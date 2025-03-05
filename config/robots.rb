@@ -3674,7 +3674,7 @@ ROBOT_CONFIG =
       name: 'Hamilton LRC GEM-X 5p GEMs(or Input) => LRC GEM-X 5p cDNA PCR',
       beds: {
         bed(15).barcode => {
-          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input'],
+          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input', 'LRC GEM-X 5p GEMs Input CITE'],
           states: ['passed'],
           label: 'Bed 15'
         },
