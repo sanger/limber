@@ -264,6 +264,73 @@ RSpec.describe Presenters::PlatePresenter do
     end
   end
 
+  context 'showing the pooling tab' do
+    let(:request1) { double('Request', submission: submission1) }
+    let(:request2) { double('Request', submission: submission2) }
+    let(:submission1) { double('Submission', multiplexed?: true) }
+    let(:submission2) { double('Submission', multiplexed?: false) }
+
+    describe '#show_pooling_tab?' do
+      context 'when pooling_tab in the presenter has a value' do
+        it 'returns true' do
+          presenter.pooling_tab = 'some_value'
+          expect(presenter.show_pooling_tab?).to be true
+        end
+      end
+
+      context 'when labware has a multiplexing submission order' do
+        before { allow(labware).to receive(:active_requests).and_return([request1, request2]) }
+
+        it 'returns true and sets pooling_tab' do
+          expect(presenter.show_pooling_tab?).to be true
+          expect(presenter.pooling_tab).to eq('plates/pooling_tab')
+        end
+      end
+
+      context 'when labware does not have a multiplexing submission order' do
+        before { allow(labware).to receive(:active_requests).and_return([request2]) }
+
+        it 'returns false' do
+          expect(presenter.show_pooling_tab?).to be false
+        end
+      end
+
+      context 'when labware has no active requests' do
+        before { allow(labware).to receive(:active_requests).and_return([]) }
+
+        it 'returns false' do
+          expect(presenter.show_pooling_tab?).to be false
+        end
+      end
+    end
+
+    describe '#labware_is_multiplexed' do
+      context 'when labware has active requests with multiplexed submissions' do
+        before { allow(labware).to receive(:active_requests).and_return([request1, request2]) }
+
+        it 'returns true' do
+          expect(presenter.send(:labware_is_multiplexed)).to be true
+        end
+      end
+
+      context 'when labware has active requests with non-multiplexed submissions' do
+        before { allow(labware).to receive(:active_requests).and_return([request2]) }
+
+        it 'returns false' do
+          expect(presenter.send(:labware_is_multiplexed)).to be false
+        end
+      end
+
+      context 'when labware has no active requests' do
+        before { allow(labware).to receive(:active_requests).and_return([]) }
+
+        it 'returns false' do
+          expect(presenter.send(:labware_is_multiplexed)).to be false
+        end
+      end
+    end
+  end
+
   context 'where the cycles differs from the default' do
     let(:warnings) { { 'pcr_cycles_not_in' => ['6'] } }
 

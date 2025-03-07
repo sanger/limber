@@ -34,11 +34,12 @@ module Sequencescape::Api::V2
   end
 
   # sample_description added into includes here for use in bioscan plate label creation
+  # multiplexed? added into includes here is used for deciding if the pooling tab should be shown
   def self.plate_for_presenter(query)
     Plate
       .includes(*PLATE_PRESENTER_INCLUDES)
       .select(
-        submissions: 'lanes_of_sequencing',
+        submissions: %w[lanes_of_sequencing multiplexed?],
         sample_metadata: %w[sample_common_name collected_by sample_description]
       )
       .find(query)
