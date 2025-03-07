@@ -2,7 +2,7 @@
   <b-form-group :label="name | titleize">
     <b-row>
       <b-col>
-        <b-form-group label="Value" :label-for="`qc-field-${name}-value`" label-sr-only>
+        <b-form-group label="Value" :label-for="`qc-field-${name}-value`" label-visually-hidden>
           <b-input-group :append="units">
             <b-form-input
               :id="`qc-field-${name}-value`"
@@ -15,7 +15,7 @@
         </b-form-group>
       </b-col>
       <b-col>
-        <b-form-group label="Assay Type" :label-for="`qc-field-${name}-assay-type`" label-sr-only>
+        <b-form-group label="Assay Type" :label-for="`qc-field-${name}-assay-type`" label-visually-hidden>
           <b-form-select
             :id="`qc-field-${name}-assay-type`"
             v-model="assayType"

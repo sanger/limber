@@ -170,27 +170,23 @@ button#btnGroupWip {
   @extend .btn-primary;
   @extend .dropdown-toggle;
   @extend .btn-lg;
-  @extend .btn-block;
 }
 
 #btnPipelinesOverview {
   @extend .btn;
   @extend .btn-primary;
   @extend .btn-lg;
-  @extend .btn-block;
 }
 
 .btn-upload {
   @extend .btn;
   @extend .btn-success;
   @extend .btn-lg;
-  @extend .btn-block;
 }
 
 nav.inbox-list,
 nav.robots-list {
   @extend .dropdown-menu;
-  @extend .btn-block;
 
   a {
     @extend .dropdown-item;
@@ -265,7 +261,6 @@ nav.robots-list {
 .create-submission-button {
   @extend .btn;
   @extend .btn-lg;
-  @extend .btn-block;
   @extend .mb-2;
 }
 
@@ -464,7 +459,6 @@ dl#samples-information {
 .other-actions {
   div[role='group'] {
     @extend .btn-group;
-    @extend .btn-block;
     button {
       @extend .dropdown-toggle;
     }
@@ -472,7 +466,6 @@ dl#samples-information {
 
   button {
     @extend .btn;
-    @extend .btn-block;
     @extend .btn-lg;
     @extend .btn-secondary;
   }
@@ -489,7 +482,7 @@ dl#samples-information {
   }
 }
 
-form + .btn-block {
+form {
   margin-top: 0.5rem;
 }
 

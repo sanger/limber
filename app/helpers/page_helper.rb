@@ -45,7 +45,7 @@ module PageHelper # rubocop:todo Style/Documentation
 
   def jumbotron(jumbotron_id = nil, options = {}, &)
     options[:class] ||= +''
-    options[:class] << ' jumbotron'
+    options[:class] << ' p-5 mb-4 bg-light rounded-3'
     options[:id] = jumbotron_id
     tag.div(**options, &)
   end
