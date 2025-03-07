@@ -58,7 +58,7 @@ export const renderVueComponent = (selector, component, props = {}, userIdRequir
   } else {
     props.userId = userId
     app = createApp({
-      render: () => h(component, { props }),
+      render: () => h(component, props),
     })
   }
   app.use(createBootstrap())
