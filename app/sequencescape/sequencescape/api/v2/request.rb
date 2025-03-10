@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
+# Represents a request in Limber via the Sequencescape API
+class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasPolyMetadata
 
   FragmentSize = Struct.new(:from, :to)
 
+  has_one :request_type
   has_one :submission
   has_one :order
   has_one :request_metadata, class_name: 'Sequencescape::Api::V2::RequestMetadata'
