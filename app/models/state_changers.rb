@@ -137,6 +137,8 @@ module StateChangers
 
     private
 
+    # Changes the state of the tube to the target state.
+    # This method is using the StateChangers lookup to determine the correct state changer for the tube.
     def change_tube_state(tube, target_state, reason)
       state_changer = StateChangers.lookup_for(tube.purpose.uuid)
       state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, reason)
