@@ -24,6 +24,10 @@ RSpec.shared_examples 'a labware presenter' do
   it 'responds to child_assets' do
     expect(subject).to respond_to(:child_assets)
   end
+
+  it 'initializes with an empty array' do
+    expect(subject.info_messages).to eq([])
+  end
 end
 
 RSpec.shared_examples 'a stock presenter' do

@@ -35,6 +35,15 @@ FactoryBot.define do
       input_plate { true }
     end
 
+    factory :stock_plate_with_info_config do
+      transient { uuid { 'stock-plate-purpose-uuid' } }
+      name { 'Limber Cherrypicked' }
+      stock_plate { true }
+      cherrypickable_target { true }
+      input_plate { true }
+      presenter_class { { name: 'Presenters::StockPlatePresenter', args: { messages: ['Test message'] } } }
+    end
+
     # Sets up config for a plate with custom_metadata_fields parameters
     factory :plate_with_custom_metadata_fields_config do
       name { 'LTHR-384 PCR 2' }
