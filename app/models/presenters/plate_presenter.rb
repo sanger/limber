@@ -15,9 +15,10 @@ module Presenters
 
     class_attribute :aliquot_partial, :allow_well_failure_in_states, :style_class, :samples_partial
 
+    POOLING_TAB_PATH = 'plates/pooling_tab'
+
     self.summary_partial = 'labware/plates/standard_summary'
     self.aliquot_partial = 'standard_aliquot'
-    self.pooling_tab = 'plates/pooling_tab'
     self.samples_partial = 'plates/samples_tab'
 
     # Initializes `summary_items` with a hash mapping display names to their corresponding plate attributes.
@@ -156,6 +157,22 @@ module Presenters
       @qc_thresholds ||= Presenters::QcThresholdPresenter.new(labware, purpose_config.fetch(:qc_thresholds, {}))
     end
 
+    # Determine if we should display the pooling tab in the Presenter views
+    # See partial _common_tabbed_pages.html.erb
+    def show_pooling_tab?
+      # if pooling_tab field is present, show the tab (allows override)
+      return true if pooling_tab.present?
+
+      # if the labware has a multiplexing submission order, show the pooling tab
+      if labware_is_multiplexed
+        self.pooling_tab = POOLING_TAB_PATH
+        return true
+      end
+
+      # do not show the pooling tab by default
+      false
+    end
+
     private
 
     def libraries_passable?
@@ -174,6 +191,12 @@ module Presenters
     # which have not yet been passed, failed or cancelled
     def passable_request_types
       wells.flat_map { |well| well.requests_in_progress.select(&:passable?).map(&:request_type_key) }
+    end
+
+    # This is determined in Sequencescape by accessing the submission orders and checking if any of them are
+    # multiplexed
+    def labware_is_multiplexed
+      @labware_is_multiplexed ||= labware.active_requests.map(&:submission).uniq&.first&.multiplexed? || false
     end
   end
   # rubocop:enable Metrics/ClassLength

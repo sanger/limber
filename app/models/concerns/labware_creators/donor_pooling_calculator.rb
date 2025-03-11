@@ -6,6 +6,13 @@ module LabwareCreators::DonorPoolingCalculator
   extend ActiveSupport::Concern
 
   VALID_POOL_SIZE_RANGE = Rails.application.config.scrna_config[:valid_pool_size_range]
+  # Enum to aid allowance band calculations
+  ALLOWANCE_BANDS = {
+    two_pools_two_counts: '2 pool attempts, 2 counts',
+    two_pools_one_count: '2 pool attempts, 1 count',
+    one_pool_two_counts: '1 pool attempt, 2 counts',
+    one_pool_one_count: '1 pool attempt, 1 count'
+  }.freeze
 
   # Splits wells into groups by study and project, because:
   # a) no pool should contain samples from more than one study or project,
@@ -150,14 +157,14 @@ module LabwareCreators::DonorPoolingCalculator
     end
   end
 
-  # This method checks the pool for full allowance and adjusts the number of
+  # This method checks the pool against the allowance band and adjusts the number of
   # cells per chip well value if needed.
   # It then stores the number of cells per chip well as metadata on the destination well.
   #
   # @param pool [Array<SourceWell>] an array of source wells from the v2 API
   # @param dest_plate [Object] the destination plate
   # @param dest_well_location [String] the location of the destination well
-  def check_pool_for_full_allowance(pool, dest_plate, dest_well_location)
+  def check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
     # count sum of samples in all source wells in the pool (typically will be one sample per source well)
     # for each source well, number of samples = well.aliquots.size
     count_of_samples_in_pool = pool.sum { |source_well| source_well.aliquots.size }
@@ -165,11 +172,14 @@ module LabwareCreators::DonorPoolingCalculator
     # fetch number of cells per chip well from the request metadata of the first aliquot in the first source well
     number_of_cells_per_chip_well = number_of_cells_per_chip_well_from_request(pool)
 
+    # fetch allowance band from the request metadata of the first aliquot in the first source well
+    allowance_band = allowance_band_from_request(pool)
+
     # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 8
     if count_of_samples_in_pool >= 5 && count_of_samples_in_pool <= 8
       # check and adjust number of cells per chip well if needed
       number_of_cells_per_chip_well =
-        adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well)
+        adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well, allowance_band)
     end
 
     # store number of cells per chip well in destination pool well poly metadata
@@ -202,20 +212,44 @@ module LabwareCreators::DonorPoolingCalculator
     if cells_per_chip_well.blank?
       raise StandardError,
             "No request found for source well at #{source_well.location}, cannot fetch cells per chip " \
-              'well metadata for full allowance calculations'
+              'well metadata for allowance band calculations'
     end
 
     cells_per_chip_well
   end
 
+  # This method retrieves the allowance_band from the request metadata
+  # of the first aliquot in the first source well of the provided pool.
+  # If the allowance_band is not present, it raises a StandardError.
+  #
+  # @param pool [Array<SourceWell>] an array of source wells from the v2 API
+  # @return [String] the allowance band
+  # @raise [StandardError] if the allowance_band value is not found in the request metadata
+  def allowance_band_from_request(pool)
+    # pool is an array of v2 api source wells, fetch the first well from the pool
+    source_well = pool.first
+
+    # fetch request metadata for number of cells per chip well from first aliquot in the source well
+    # (it should be the same value for all the aliquots in all the source wells in the pool)
+    allowance_band = source_well&.aliquots&.first&.request&.request_metadata&.allowance_band
+
+    if allowance_band.blank?
+      raise StandardError,
+            "No request found for source well at #{source_well.location}, cannot fetch allowance band " \
+              'well metadata for allowance band calculations'
+    end
+
+    allowance_band
+  end
+
   # This method adjusts the number of cells per chip well based on the count of samples in the pool.
-  # If the final suspension volume is greater than or equal to the full allowance, the existing value is retained.
-  # Otherwise, the number of cells per chip well is adjusted according to the full allowance table.
+  # If the final suspension volume is greater than or equal to the allowance band, the existing value is retained.
+  # Otherwise, the number of cells per chip well is adjusted according to the allowance band table.
   #
   # @param count_of_samples_in_pool [Integer] the number of samples in the pool
   # @param number_of_cells_per_chip_well [Integer] the initial number of cells per chip well
   # @return [Integer] the adjusted number of cells per chip well
-  def adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well)
+  def adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well, allowance_band)
     # calculate total cells in 300ul for the pool
     total_cells_in_300ul = calculate_total_cells_in_300ul(count_of_samples_in_pool)
 
@@ -226,14 +260,20 @@ module LabwareCreators::DonorPoolingCalculator
     # calculate chip loading volume
     chip_loading_volume = calculate_chip_loading_volume(number_of_cells_per_chip_well)
 
-    # calculate full allowance
-    full_allowance = calculate_full_allowance(chip_loading_volume)
+    # calculate volume_needed
+    volume_needed = calculate_allowance(chip_loading_volume, allowance_band)
 
     # do not adjust existing value if we have enough volume
-    return number_of_cells_per_chip_well if final_suspension_volume >= full_allowance
+    return number_of_cells_per_chip_well if final_suspension_volume >= volume_needed
 
     # we need to adjust the number of cells per chip well according to the number of samples
-    Rails.application.config.scrna_config[:full_allowance_table][count_of_samples_in_pool]
+    # if an appropriate value is not found in the allowance table, raise an error
+    Rails.application.config.scrna_config[:allowance_table][allowance_band][count_of_samples_in_pool] ||
+      raise(
+        StandardError,
+        "No allowance value found for allowance band #{allowance_band} and sample count " \
+          "#{count_of_samples_in_pool}"
+      )
   end
 
   # This method calculates the total cells in 300ul for a given pool of samples.
@@ -261,18 +301,26 @@ module LabwareCreators::DonorPoolingCalculator
     num_cells_per_chip_well / chip_loading_conc
   end
 
-  # This method calculates the full allowance volume for a given chip loading volume.
+  # This method calculates the allowance volume for a given chip loading volume and allowance band.
   # It uses configuration values from the scrna_config for the desired
   # number of runs, the volume taken for cell counting, and the wastage volume.
   #
   # @param chip_loading_volume [Float] the chip loading volume
-  # @return [Float] the full allowance volume
-  def calculate_full_allowance(chip_loading_volume)
+  # @return [Float] the volume of material required to do the number of runs and cell counts specified
+  #                 in the allowance band
+  def calculate_allowance(chip_loading_volume, allowance_band) # rubocop:disable Metrics/AbcSize
     scrna_config = Rails.application.config.scrna_config
 
-    (chip_loading_volume * scrna_config[:desired_number_of_runs]) +
-      (scrna_config[:desired_number_of_runs] * scrna_config[:volume_taken_for_cell_counting]) +
-      scrna_config[:wastage_volume]
+    case allowance_band
+    when ALLOWANCE_BANDS[:two_pools_two_counts]
+      (chip_loading_volume * 2) + (2 * scrna_config[:volume_taken_for_cell_counting]) + scrna_config[:wastage_volume]
+    when ALLOWANCE_BANDS[:two_pools_one_count]
+      (chip_loading_volume * 2) + scrna_config[:volume_taken_for_cell_counting] + scrna_config[:wastage_volume]
+    when ALLOWANCE_BANDS[:one_pool_two_counts]
+      chip_loading_volume + (2 * scrna_config[:volume_taken_for_cell_counting]) + scrna_config[:wastage_volume]
+    when ALLOWANCE_BANDS[:one_pool_one_count]
+      chip_loading_volume + scrna_config[:volume_taken_for_cell_counting] + scrna_config[:wastage_volume]
+    end
   end
 
   # This method creates a new well metadata entry for a given destination well.

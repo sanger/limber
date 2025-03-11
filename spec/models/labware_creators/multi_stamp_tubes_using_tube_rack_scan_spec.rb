@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # # Up to 96 tubes are transferred onto a single 96-well plate.
