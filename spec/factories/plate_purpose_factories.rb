@@ -8,6 +8,13 @@ FactoryBot.define do
     uuid { 'example-purpose-uuid' }
   end
 
+  # Basic v2 Tube Rack Purpose
+  factory :v2_tube_rack_purpose, class: Sequencescape::Api::V2::TubeRackPurpose, traits: [:barcoded_v2] do
+    skip_create
+    sequence(:name) { |n| "Limber Example TubeRackPurpose #{n}" }
+    uuid { 'example-tr-purpose-uuid' }
+  end
+
   # Basic V1 Plate Purpose
   factory :plate_purpose, class: Sequencescape::PlatePurpose, traits: [:api_object] do
     name { 'Limber Example Purpose' }

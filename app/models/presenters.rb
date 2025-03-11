@@ -33,6 +33,7 @@ module Presenters
 
     return Presenters::UnknownPlatePresenter if labware.plate?
     return Presenters::UnknownTubePresenter if labware.tube?
+    return Presenters::UnknownTubeRackPresenter if labware.tube_rack?
 
     raise UnknownLabwareType
   end

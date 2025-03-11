@@ -1,0 +1,7 @@
+<%= CSV.generate_line ['Tube Rack Barcode', @tube_rack.labware_barcode.human], row_sep: "" %>
+
+<%= CSV.generate_line ['Tube Barcode', 'Rack Coordinate','Concentration (nM)','Tube Passed?'], row_sep: "" %>
+<% @tube_rack.racked_tubes_in_columns.each do |racked_tube| %>
+<% tube = racked_tube.tube %>
+<%= CSV.generate_line [tube.human_barcode, racked_tube.coordinate, tube.receptacle&.latest_molarity&.value, ((tube.state == 'passed') ? 1 : 0)], row_sep: '' %>
+<% end %>
