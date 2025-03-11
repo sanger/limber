@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'state_changers'
 
 RSpec.describe StateChangers do
   let(:labware_uuid) { SecureRandom.uuid }
