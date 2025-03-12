@@ -80,6 +80,17 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     nil
   end
 
+  # Determine if we should display the pooling tab in the Presenter views
+  # See partial _common_tabbed_pages.html.erb
+  # Overridden in the PlatePresenter
+  def show_pooling_tab?
+    # if pooling_tab field is present, show the tab (allows override)
+    return true if pooling_tab.present?
+
+    # do not show the pooling tab by default
+    false
+  end
+
   private
 
   def active_pipelines
