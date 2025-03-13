@@ -170,7 +170,7 @@ export default {
       type: String,
       required: false,
       default: null,
-    },
+    }
   },
   data() {
     return {

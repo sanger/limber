@@ -966,6 +966,23 @@ const resources = [
     }
   },
   {
+    "resource": "tag_set",
+    "attributes": {
+      "uuid": "",
+      "name": "",
+      "tag_group": {
+        "jsonApi": "hasOne",
+        "type": "tag_group"
+      },
+      "tag2_group": {
+        "jsonApi": "hasOne",
+        "type": "tag_group"
+      }
+    },
+    "options": {
+    }
+  },
+  {
     "resource": "tag_layout_template",
     "attributes": {
       "uuid": "",
