@@ -30,64 +30,69 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row class="form-group form-row">
-      <b-col>
-        <b-form-group
-          id="tag1_group_selection_group"
-          horizontal
-          label="i7 Tag 1 Group:"
-          label-for="tag1_group_selection"
-        >
-          <b-form-select
-            id="tag1_group_selection"
-            v-model="tag1GroupId"
-            :options="tag1GroupOptions"
-            :disabled="tagGroupsDisabled"
-            @input="tagGroupInput"
-            @change="tagGroupChanged"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row class="form-group form-row">
-      <b-col>
-        <b-form-group
-          id="tag2_group_selection_group"
-          horizontal
-          label="i5 Tag 2 Group:"
-          label-for="tag2_group_selection"
-        >
-          <b-form-select
-            id="tag2_group_selection"
-            v-model="tag2GroupId"
-            :options="tag2GroupOptions"
-            :disabled="tagGroupsDisabled"
-            @input="tagGroupInput"
-            @change="tagGroupChanged"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row class="form-group form-row">
-      <b-col>
-        <b-form-group id="tag_set_selection_group" horizontal label="Select Tagset:" label-for="tag_set_selection">
-          <b-form-select
-            id="tag_set_selection"
-            v-model="tagSetId"
-            :options="tagSetOptions"
-            :disabled="tagSetsDisabled"
-            @input="tagSetInput"
-            @change="tagSetChanged"
-          />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row  v-if="tag1GroupName" class="form-group form-row ">
-      <b-label>i7 Tag 1 Group</b-label> : {{ tag1GroupName }}
-    </b-row>
-    <b-row v-if="tag2GroupName" class="form-group form-row mb-2">
-      <b-label >i5 Tag 2 Group</b-label> : {{ tag2GroupName }}</b-row
-    >
+    <template v-if="tagSetOptions.length <= 1">
+      <b-row class="form-group form-row">
+        <b-col>
+          <b-form-group
+            id="tag1_group_selection_group"
+            horizontal
+            label="i7 Tag 1 Group:"
+            label-for="tag1_group_selection"
+          >
+            <b-form-select
+              id="tag1_group_selection"
+              v-model="tag1GroupId"
+              :options="tag1GroupOptions"
+              :disabled="tagGroupsDisabled"
+              @input="tagGroupInput"
+              @change="tagGroupChanged"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row class="form-group form-row">
+        <b-col>
+          <b-form-group
+            id="tag2_group_selection_group"
+            horizontal
+            label="i5 Tag 2 Group:"
+            label-for="tag2_group_selection"
+          >
+            <b-form-select
+              id="tag2_group_selection"
+              v-model="tag2GroupId"
+              :options="tag2GroupOptions"
+              :disabled="tagGroupsDisabled"
+              @input="tagGroupInput"
+              @change="tagGroupChanged"
+            />
+          </b-form-group>
+        </b-col> </b-row
+    ></template>
+    <!--TAG SETS  -->
+    <template v-else>
+      <b-row class="form-group form-row">
+        <b-col>
+          <b-form-group id="tag_set_selection_group" horizontal label="Select Tagset:" label-for="tag_set_selection">
+            <b-form-select
+              id="tag_set_selection"
+              v-model="tagSetId"
+              :options="tagSetOptions"
+              :disabled="tagSetsDisabled"
+              @input="tagSetInput"
+              @change="tagSetChanged"
+            />
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row v-if="tag1GroupName" id="tag1_name_label" class="form-group form-row">
+        <b-label>i7 Tag 1 Group</b-label> : {{ tag1GroupName }}
+      </b-row>
+      <b-row v-if="tag2GroupName" id="tag2_name_label" class="form-group form-row mb-2">
+        <b-label>i5 Tag 2 Group</b-label> : {{ tag2GroupName }}</b-row
+      >
+    </template>
+    <!-- TAG SETS -->
 
     <b-row class="form-group form-row">
       <b-col>
@@ -186,13 +191,15 @@ export default {
     tagPlateLookupIncludes() {
       return 'asset,lot,lot.tag_layout_template,lot.tag_layout_template.tag_group,lot.tag_layout_template.tag2_group'
     },
+    tagGroupsDisabled() {
+      return typeof this.tagPlate != 'undefined' && this.tagPlate !== null
+    },
     tagSetLookupIncludes() {
       return 'tag_group,tag2_group'
     },
     tagSetsDisabled() {
       return typeof this.tagPlate != 'undefined' && this.tagPlate !== null
     },
-    
     walkingByOptions() {
       return [
         { value: null, text: 'Please select a by Walking By Option...' },
@@ -201,11 +208,11 @@ export default {
         { value: 'wells of plate', text: 'By Plate (Fixed)' },
       ]
     },
-    tag1GroupName () {
-      return this.tag1Group?.name
+    tag1GroupName() {
+      return this.tag1Group?.name === this.nullTagGroup.name ? null : this.tag1Group?.name
     },
-    tag2GroupName () {
-      return this.tag2Group?.name
+    tag2GroupName() {
+      return this.tag2Group?.name === this.nullTagGroup.name ? null : this.tag2Group?.name
     },
   },
   methods: {
@@ -213,41 +220,48 @@ export default {
       this.tagPlate = null
       this.tag1GroupId = null
       this.tag2GroupId = null
-      this.tagSetId = null
       this.updateTagPlateScanDisabled()
     },
-    extractTagGroups(plate) {
+    extractTagGroupIds(plate) {
       this.tagPlate = plate
       this.tagPlateWasScanned = true
-      this.tag1Group = null
-      this.tag2Group = null
+      this.tag1GroupId = null
+      this.tag2GroupId = null
+
       if (plate.lot && plate.lot.tag_layout_template) {
-        if (plate.lot.tag_layout_template.tag_group) {
-          this.tag1Group = plate.lot.tag_layout_template.tag_group
+        if (plate.lot.tag_layout_template.tag_group && plate.lot.tag_layout_template.tag_group.id) {
+          this.tag1GroupId = plate.lot.tag_layout_template.tag_group.id
         }
         if (plate.lot.tag_layout_template.tag2_group && plate.lot.tag_layout_template.tag2_group.id) {
-          this.tag2Group = plate.lot.tag_layout_template.tag2_group
+          this.tag2GroupId = plate.lot.tag_layout_template.tag2_group.id
         }
       }
 
       this.updateTagPlateScanDisabled()
     },
+
+    tagGroupChanged() {
+      this.tagPlateWasScanned = false
+    },
     tagGroupInput() {
       this.updateTagPlateScanDisabled()
     },
+
     tagSetInput() {
       this.updateTagPlateScanDisabled()
     },
     tagSetChanged() {
       this.tagPlateWasScanned = false
-      this.tag1Group= this.selectedTagSet?.tag_group
-      this.tag2Group = this.selectedTagSet?.tag2_group
+      this.tag1GroupId = this.selectedTagSet?.tag_group.id
+      this.tag2GroupId = this.selectedTagSet?.tag2_group?.id
       this.updateTagPlateScanDisabled()
     },
+
     tagPlateScanned(data) {
       if (data) {
         if (data.state === 'valid' && data.plate) {
-          this.extractTagGroups(data.plate)
+          this.extractTagGroupIds(data.plate)
+          // this.extractTagGroups(data.plate)
         } else if (data.state === 'empty') {
           this.emptyTagPlate()
         }
@@ -257,7 +271,7 @@ export default {
       if (this.tagPlateWasScanned) {
         this.tagPlateScanDisabled = false
       } else {
-        if (this.tag1GroupName || this.tag2GroupName) {
+        if (this.tag1GroupId || this.tag2GroupId || this.tag1Group?.name || this.tag2Group?.name) {
           this.tagPlateScanDisabled = true
         } else {
           this.tagPlateScanDisabled = false

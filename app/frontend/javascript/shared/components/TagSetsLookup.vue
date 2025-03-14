@@ -21,8 +21,7 @@ export default {
     // This overrides the computed by the same name from the DevourSelect mixin.
     reformattedResults() {
       let tagSetsList = {}
-      const resultsLength = this.results.length
-      if (resultsLength > 0) {
+      if (this.results?.length > 0) {
         this.results.forEach(function (currTagSet) {
           const sortTags = (tags) => tags.sort((obj1, obj2) => obj1.index - obj2.index)
           tagSetsList[currTagSet.id] = {
@@ -30,7 +29,9 @@ export default {
             uuid: currTagSet.uuid,
             name: currTagSet.name,
             tag_group: { ...currTagSet.tag_group, tags: sortTags(currTagSet.tag_group.tags) },
-            tag2_group: currTagSet.tag2_group?{ ...currTagSet.tag2_group, tags: sortTags(currTagSet.tag2_group.tags) }:null,
+            tag2_group: currTagSet.tag2_group
+              ? { ...currTagSet.tag2_group, tags: sortTags(currTagSet.tag2_group.tags) }
+              : null,
           }
         })
       }
@@ -54,11 +55,11 @@ export default {
           include: this.includes,
           page: { number: currentPage, size: 150 },
         })
-        if (response.data.length > 0) {
+        if (response.data?.length > 0) {
           response.data.forEach((e) => tagSetsArray.unshift(e))
         }
         // uses existence of next link to decide if more pages are available
-        morePagesAvailable = response.links.next
+        morePagesAvailable = response.links?.next
       }
 
       return tagSetsArray

@@ -40,10 +40,10 @@ export default {
     return {
       tagPlate: null, // holds the tag plate once scanned
       tagGroupsList: {}, // holds the list of tag groups once retrieved
+      tag1GroupId: null, // holds the id of tag group 1 once selected
+      tag2GroupId: null, // holds the id of tag group 2 once selected
       tagSetList: {}, // holds the list of tag sets once retrieved
       tagSetId: null, // holds the id of tag set once selected
-      tag1Group: null, // holds the tag group 1 once selected
-      tag2Group: null, // holds the tag group 2 once selected
       walkingBy: 'default', // (overriden) holds the chosen tag layout walking by option
       direction: 'column', // holds the chosen tag layout direction option
       offsetTagsBy: 0, // holds the entered tag offset number
@@ -71,7 +71,22 @@ export default {
   },
   computed: {
     selectedTagSet() {
-      return this.tagSetList[this.tagSetId] || this.nullTagSet
+      return this.tagSetList?.[this.tagSetId] || this.nullTagSet
+    },
+    tag1Group() {
+      return this.tagGroupsList?.[this.tag1GroupId] || this.nullTagGroup // holds the tag group 1 once selected
+    },
+    tag2Group() {
+      return this.tagGroupsList?.[this.tag2GroupId] || this.nullTagGroup // holds the tag group 2 once selected
+    },
+    coreTagGroupOptions() {
+      return Object.values(this.tagGroupsList)
+        .map((tagGroup) => {
+          return { value: tagGroup.id, text: tagGroup.name }
+        })
+        .sort((a, b) => {
+          return a.text.localeCompare(b.text)
+        })
     },
 
     coreTagSetOptions() {
@@ -82,6 +97,12 @@ export default {
         .sort((a, b) => {
           return a.text.localeCompare(b.text)
         })
+    },
+    tag1GroupOptions() {
+      return [{ value: null, text: 'Please select an i7 Tag 1 group...' }].concat(this.coreTagGroupOptions.slice())
+    },
+    tag2GroupOptions() {
+      return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
     },
     tagSetOptions() {
       return [{ value: null, text: 'Please select a Tagset...' }].concat(this.coreTagSetOptions.slice())
