@@ -5,8 +5,6 @@ class SearchController < ApplicationController
   class InputError < StandardError
   end
 
-  before_action :check_for_login!, only: [:my_plates] # rubocop:todo Rails/LexicallyScopedActionFilter
-
   def new
   end
 

@@ -2,7 +2,7 @@
 
 require 'open3'
 
-module Deployed # rubocop:todo Style/Documentation
+module DeployedVersion # rubocop:todo Style/Documentation
   class RepoData # rubocop:todo Style/Documentation
     def tag
       @tag ||= git_tag || read_file('TAG').strip.presence
