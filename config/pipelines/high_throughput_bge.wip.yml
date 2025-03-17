@@ -47,11 +47,10 @@ BGE ISC MX:
   relationships:
     BGE Cap Lib PCR XP: BGE Cap Lib Pool
     BGE Cap Lib Pool: BGE Cap Lib Pool Norm
-# TODO (Y24-368): Enable BGE Blend pipeline configuration
-# BGE Blend:
-#   pipeline_group: BGE
-#   relationships:
-#     BGE Lib Pool: BGE Blended Cap Lib Pool
-#     BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
-#     BGE Blended Cap Lib Pool: BGE Lib Pool Norm
-#     BGE Lib Pool Norm: BGE Custom pool
+BGE Blend:
+  pipeline_group: BGE
+  relationships:
+    BGE Lib Pool: BGE Blended Cap Lib Pool
+    BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
+    BGE Blended Cap Lib Pool: BGE Lib Pool Norm
+    BGE Lib Pool Norm: BGE Custom pool
