@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require_dependency 'presenters'
 
 module Presenters::Presenter # rubocop:todo Style/Documentation
@@ -30,6 +29,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   def initialize(*args)
     super
     @info_messages = []
+    return unless defined?(purpose) && purpose.respond_to?(:uuid)
 
     presenter_class_config = purpose_config[:presenter_class]
     return unless presenter_class_config.is_a?(Hash)
