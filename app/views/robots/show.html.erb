@@ -25,13 +25,15 @@
   <%= sidebar do %>
     <%= form_for :robot, url: start_robot_path(robot.id) do |form| %>
       <%= render partial: 'bed', locals: {robot: robot, form: form } %>
-      <%= submit_tag robot.start_button_message,
-        name: nil,
-        class: "submit btn btn-lg btn-success btn-block",
-        id: 'start-robot',
-        disabled: true,
-        data: { disable_with: 'Starting...' }
-      %>
+      <div class="d-grid gap-2">
+        <%= submit_tag robot.start_button_message,
+          name: nil,
+          class: "submit btn btn-lg btn-success",
+          id: 'start-robot',
+          disabled: true,
+          data: { disable_with: 'Starting...' }
+        %>
+      </div>
     <% end # of form %>
   <% end # of sidebar %>
 <% end # of page %>

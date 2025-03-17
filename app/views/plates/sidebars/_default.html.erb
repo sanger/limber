@@ -20,9 +20,11 @@
 
   <% if presenter.robot? %>
     <h4 class="card-title mt-3">Robots</h4>
-    <% presenter.each_robot do |robot_id, robot_name| %>
-      <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block logged_in_only' %>
-    <% end %>
+    <div class="d-grid gap-2">
+      <% presenter.each_robot do |robot_id, robot_name| %>
+        <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lglogged_in_only' %>
+      <% end %>
+    </div>
   <% else %>
     <%= simple_state_change_form(presenter) %>
   <% end %>
