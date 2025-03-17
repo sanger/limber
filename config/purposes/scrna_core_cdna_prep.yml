@@ -134,5 +134,9 @@ LRC GEM-X 5p GEMs Input CITE:
   :asset_type: plate
   :stock_plate: true
   :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
+  :presenter_class:
+  name: Presenters::StockPlatePresenter
+  args:
+    messages:
+      - "Please ensure you use the CITE-seq-compatible primer when working with 'LRC GEM-X 5p GEMs Input CITE' plates"
   :creator_class: LabwareCreators::Uncreatable
