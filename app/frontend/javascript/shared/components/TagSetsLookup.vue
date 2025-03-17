@@ -1,4 +1,11 @@
 <script>
+/**
+ * TagSetsLookup Component
+ *
+ * This component is responsible for looking up tag sets using the Devour API.
+ * It extends the functionality of the DevourSelect mixin and provides custom
+ * validation, data formatting, and API request handling.
+ */
 import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
 import { hasExpectedProperties } from '@/javascript/shared/devourApiValidators.js'
 
@@ -6,6 +13,15 @@ export default {
   name: 'TagSetsLookup',
   mixins: [DevourSelect],
   props: {
+    /**
+     * validation
+     *
+     * A validation function to validate the properties of the tag sets.
+     * This overrides the property by the same name in the DevourSelect mixin.
+     *
+     * @type {Function}
+     * @default hasExpectedProperties(['id', 'uuid', 'name'])
+     */
     validation: {
       // A validation function. see plateScanValidators.js for examples and details
       // This overrides the property by the same name in the DevourSelect mixin.
@@ -18,7 +34,14 @@ export default {
     return {}
   },
   computed: {
-    // This overrides the computed by the same name from the DevourSelect mixin.
+    /**
+     * reformattedResults
+     *
+     * Reformats the results from the API to a dictionary of tag sets.
+     * This overrides the computed property by the same name from the DevourSelect mixin.
+     *
+     * @returns {Object} A dictionary of tag sets with sorted tags.
+     */
     reformattedResults() {
       let tagSetsList = {}
       if (this.results?.length > 0) {
@@ -42,7 +65,15 @@ export default {
     this.performLookup()
   },
   methods: {
-    // This overrides the method by the same name from the DevourSelect mixin.
+    /**
+     * performFind
+     *
+     * Performs the API request to find all tag sets. It handles pagination
+     * by checking for the existence of a next link in the response.
+     * This overrides the method by the same name from the DevourSelect mixin.
+     *
+     * @returns {Array} An array of all tag sets retrieved from the API.
+     */
     async performFind() {
       let tagSetsArray = []
       let morePagesAvailable = true
