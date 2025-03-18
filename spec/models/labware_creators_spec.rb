@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators'
 
 # CreationForm is the base class for our forms
 RSpec.describe LabwareCreators do

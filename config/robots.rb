@@ -3631,10 +3631,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 5'
         },
-        bed(15).barcode => {
+        bed(12).barcode => {
           purpose: 'LRC GEM-X 5p Chip',
           states: ['pending'],
-          label: 'Bed 15',
+          label: 'Bed 12',
           parent: bed(5).barcode,
           target_state: 'passed'
         }
@@ -3650,16 +3650,16 @@ ROBOT_CONFIG =
       name: 'Hamilton LRC GEM-X 5p Chip => LRC GEM-X 5p GEMs',
       require_robot: true,
       beds: {
-        bed(15).barcode => {
+        bed(12).barcode => {
           purpose: 'LRC GEM-X 5p Chip',
           states: ['passed'],
-          label: 'Bed 15'
+          label: 'Bed 12'
         },
         bed(4).barcode => {
           purpose: 'LRC GEM-X 5p GEMs',
           states: ['pending'],
           label: 'Bed 4',
-          parent: bed(15).barcode,
+          parent: bed(12).barcode,
           target_state: 'passed'
         }
       }
@@ -3673,16 +3673,16 @@ ROBOT_CONFIG =
       'hamilton-lrc-gem-x-5p-gems-to-lrc-gem-x-5p-cdna-pcr',
       name: 'Hamilton LRC GEM-X 5p GEMs(or Input) => LRC GEM-X 5p cDNA PCR',
       beds: {
-        bed(15).barcode => {
-          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input'],
+        bed(13).barcode => {
+          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input', 'LRC GEM-X 5p GEMs Input CITE'],
           states: ['passed'],
-          label: 'Bed 15'
+          label: 'Bed 13'
         },
         bed(5).barcode => {
           purpose: 'LRC GEM-X 5p cDNA PCR',
           states: ['pending'],
           label: 'Bed 5',
-          parent: bed(15).barcode,
+          parent: bed(13).barcode,
           target_state: 'passed'
         }
       }

@@ -6,7 +6,7 @@
     <li class="nav-item">
       <a class="nav-link" href="#relatives_tab" data-bs-toggle="tab" role="tab" data-plate-view="pools-view">Relatives</a>
     </li>
-    <% if @presenter.pooling_tab.present? %>
+    <% if @presenter.show_pooling_tab? %>
     <li class="nav-item">
       <a class="nav-link" href="#pooling_tab" data-bs-toggle="tab" role="tab" data-plate-view="pools-view">Pooling</a>
     </li>
@@ -30,7 +30,7 @@
   <div class="tab-pane active" id='summary_tab' role="tabpanel">
     <%= render partial: 'summary', locals: { presenter: presenter } %>
   </div>
-  <% if @presenter.pooling_tab.present? %>
+  <% if @presenter.show_pooling_tab? %>
   <div class="tab-pane" id='pooling_tab' role="tabpanel">
     <%= render partial: @presenter.pooling_tab, locals: { plate_presenter: presenter } %>
   </div>
