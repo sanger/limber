@@ -68,6 +68,6 @@ module PageHelper # rubocop:todo Style/Documentation
       else
         'primary'
       end
-    tag.span(count || '...', class: "badge rounded-pill badge-#{state}", id: badge_id, data: data_attributes)
+    tag.span(count || '...', class: "badge rounded-pill bg-#{state}", id: badge_id, data: data_attributes)
   end
 end
