@@ -105,7 +105,7 @@ header.limber-header {
     }
     .btn-logout {
       @extend .btn-success;
-      border-color: darken($training, 5%) !important;
+      border-color: shade-color($training, 5%) !important;
     }
   }
 }
@@ -118,7 +118,7 @@ header.limber-header {
     }
     .btn-logout {
       @extend .btn-danger;
-      border-color: darken($staging, 5%) !important;
+      border-color: shade-color($staging, 5%) !important;
     }
   }
 }
