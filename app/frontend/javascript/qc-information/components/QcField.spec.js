@@ -30,8 +30,8 @@ describe('QcField', () => {
   it('renders the units', () => {
     let wrapper = wrapperFactory()
 
-    expect(wrapper.find('.input-group-append').exists()).toBe(true)
-    expect(wrapper.find('.input-group-append').text()).toBe('ul')
+    expect(wrapper.find('.input-group-text').exists()).toBe(true)
+    expect(wrapper.find('.input-group-text').text()).toBe('ul')
   })
 
   it('renders possible assay types', () => {

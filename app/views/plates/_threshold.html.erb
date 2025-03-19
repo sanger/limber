@@ -23,9 +23,7 @@
              list="<%= threshold.key %>-data"
              form
              class="form-control">
-      <div class="input-group-append">
-        <span class="input-group-text"><%= threshold.units %></span>
-      </div>
+      <span class="input-group-text"><%= threshold.units %></span>
     </div>
     <datalist id="<%= threshold.key %>-data">
       <% threshold.options do |value, label| %>
