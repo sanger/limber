@@ -116,7 +116,8 @@ module LabwareCreators
       Sequencescape::Api::V2::PlateCreation.create!(
         child_purpose_uuid: purpose_uuid,
         parent_uuid: parent_uuid,
-        user_uuid: user_uuid
+        user_uuid: user_uuid,
+        register_stock: purpose_config.fetch(:register_stock_plate, false)
       )
     end
 

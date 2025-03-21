@@ -11,9 +11,10 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   has_a_working_api
 
   let(:child_uuid) { 'child-uuid' }
-  let(:child_plate) { create :v2_plate, uuid: child_uuid, purpose_uuid: child_purpose_uuid }
+  let(:child_plate) { create :v2_plate, uuid: child_uuid, purpose_uuid: child_purpose_uuid, register_stock: false }
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:transfer_template_uuid) { 'custom-transfer-template' } # Defined in spec_helper.rb
+  let(:register_stock) { false }
 
   let(:transfers_attributes) do
     [
@@ -45,7 +46,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   end
 
   describe '#save!' do
-    let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
+    let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid:, register_stock: }] }
 
     it 'makes the expected requests' do
       expect_plate_creation
