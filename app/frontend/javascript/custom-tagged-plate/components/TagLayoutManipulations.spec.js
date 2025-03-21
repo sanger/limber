@@ -153,6 +153,28 @@ describe('TagLayoutManipulations', () => {
       expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
     })
 
+    it('reenables the tag plate scan input if the tag group 1 and 2 is cleared', () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setData({ tagGroupsList: exampleTagGroupsList })
+
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
+
+      //Set a tag group and this disables the tagPlate scan
+      wrapper.setData({ tag1GroupId: 1 })
+      wrapper.vm.tagGroupChanged()
+      wrapper.vm.tagGroupInput()
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
+
+      //Remove tag group  selection and this re-enables the tagPlate scan
+      wrapper.setData({ tag1GroupId: null, tag2GroupId: null })
+      wrapper.vm.tagGroupChanged()
+      wrapper.vm.tagGroupInput()
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
+
+      wrapper.vm.tagGroupChanged()
+    })
+
     it('disables the tag plate scan input if a tagset is selected', () => {
       const wrapper = wrapperFactory()
 
@@ -167,6 +189,24 @@ describe('TagLayoutManipulations', () => {
       expect(wrapper.vm.tag2GroupId).toBe(exampleTagSetList[1].tag2_group.id)
 
       expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
+    })
+
+    it('reenables the tag plate scan input if the tagset is cleared', () => {
+      const wrapper = wrapperFactory()
+      wrapper.setData({ tagSetList: exampleTagSetList })
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
+
+      //Set a tag set and this disables the tagPlate scan
+      wrapper.setData({ tagSetId: 1 })
+      wrapper.vm.tagSetChanged()
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
+
+      //Remove tag set  selection and this re-enables the tagPlate scan
+      wrapper.setData({ tagSetId: null })
+      wrapper.vm.tagSetChanged()
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
+
+      wrapper.vm.tagGroupChanged()
     })
 
     it('emits a call to the parent container on a change of the form data', () => {
