@@ -1,6 +1,6 @@
 <% if threshold.enabled? %>
   <div data-qc-key="qc<%= threshold.key.camelcase %>" class="form-group alert alert-success">
-    <h4 class="alert-heading"><label for="qc-<%= threshold.key %>"><%= threshold.name.titlecase %></label></h4>
+    <h4 class="alert-heading"><label class="form-label" for="qc-<%= threshold.key %>"><%= threshold.name.titlecase %></label></h4>
     <input type="range"
            id="qc-<%= threshold.key %>-range"
            name="<%= threshold.key %>"

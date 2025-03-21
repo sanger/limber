@@ -37,7 +37,7 @@
         <% @labware_creator.expected_source_purposes.size.times do |i| %>
           <div class="labware-container scan-labware form-group row">
             <label for="plate[barcodes][<%= i %>]"
-                   class="plate-label col-md-2" >Source Plate <%= i+1 %></label>
+                   class="plate-label col-md-2 form-label" >Source Plate <%= i+1 %></label>
             <input type="text"
                    id="plate[barcodes][<%= i %>]"
                    name="plate[barcodes][]"

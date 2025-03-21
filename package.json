@@ -2,8 +2,9 @@
   "dependencies": {
     "@rails/ujs": "^7.1.501",
     "axios": "^1.8.2",
-    "bootstrap-vue": "^2.23.1",
-    "cytoscape": "^3.31.1",
+    "bootstrap": "^5.3.3",
+    "bootstrap-vue-next": "^0.26.28",
+    "cytoscape": "^3.30.4",
     "cytoscape-elk": "^2.3.0",
     "cytoscape-popper": "^2.0.0",
     "devour-client": "^2.1.2",

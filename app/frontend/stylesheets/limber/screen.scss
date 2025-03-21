@@ -482,8 +482,17 @@ dl#samples-information {
   }
 }
 
-form {
-  margin-top: 0.5rem;
+// Classes deprecated during bootstrap v4 -> v5
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-row {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
 }
 
 // Tubes borrow bootstrap styling. We could use the styles directly,
