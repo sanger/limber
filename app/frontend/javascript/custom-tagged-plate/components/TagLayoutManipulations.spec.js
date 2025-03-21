@@ -6,7 +6,9 @@ import {
   nullQcableData,
   exampleQcableData,
   exampleTagGroupsList,
+  exampleTagSetList,
 } from '@/javascript/custom-tagged-plate/testData/customTaggedPlateTestData.js'
+import { expect } from 'vitest'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -44,6 +46,7 @@ describe('TagLayoutManipulations', () => {
         wrapper.setData({ tagPlate: null })
 
         expect(wrapper.vm.tagGroupsDisabled).toBe(false)
+        expect(wrapper.vm.tagSetsDisabled).toBe(false)
       })
 
       it('returns true if a valid tag plate was scanned', () => {
@@ -52,6 +55,7 @@ describe('TagLayoutManipulations', () => {
         wrapper.setData({ tagPlate: exampleQcableData.plate })
 
         expect(wrapper.vm.tagGroupsDisabled).toBe(true)
+        expect(wrapper.vm.tagSetsDisabled).toBe(true)
       })
     })
   })
@@ -73,6 +77,11 @@ describe('TagLayoutManipulations', () => {
       const wrapper = wrapperFactory()
 
       expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
+    })
+
+    it('does not render a tag set selection dropdown if tagsets are not available', () => {
+      const wrapper = wrapperFactory()
+      expect(wrapper.find('#tag_set_selection').exists()).toBe(false)
     })
 
     it('renders a walking by select dropdown', () => {
@@ -101,6 +110,7 @@ describe('TagLayoutManipulations', () => {
       // NB cannot check the vue bootstrap elements directly with shallowMount
       // wrapper
       expect(wrapper.vm.tagGroupsDisabled).toBe(true)
+      expect(wrapper.vm.tagSetsDisabled).toBe(true)
     })
 
     it('re-enables the tag group selects when the tag plate is cleared', () => {
@@ -113,13 +123,16 @@ describe('TagLayoutManipulations', () => {
       // NB cannot check the vue bootstrap elements directly with shallowMount
       // wrapper
       expect(wrapper.vm.tagGroupsDisabled).toBe(true)
+      expect(wrapper.vm.tagSetsDisabled).toBe(true)
 
       wrapper.vm.tagPlateScanned(nullQcableData)
 
       expect(wrapper.vm.tagGroupsDisabled).toBe(false)
+      expect(wrapper.vm.tagSetsDisabled).toBe(false)
 
       expect(wrapper.vm.tag1GroupId).toEqual(null)
       expect(wrapper.vm.tag2GroupId).toEqual(null)
+      expect(wrapper.vm.tagSetId).toEqual(null)
       expect(wrapper.vm.tagPlate).toEqual(null)
     })
 
@@ -136,6 +149,22 @@ describe('TagLayoutManipulations', () => {
 
       wrapper.vm.tagGroupChanged()
       wrapper.vm.tagGroupInput()
+
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
+    })
+
+    it('disables the tag plate scan input if a tagset is selected', () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setData({ tagSetList: exampleTagSetList })
+
+      expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
+
+      wrapper.setData({ tagSetId: 1 })
+
+      wrapper.vm.tagSetChanged()
+      expect(wrapper.vm.tag1GroupId).toBe(exampleTagSetList[1].tag_group.id)
+      expect(wrapper.vm.tag2GroupId).toBe(exampleTagSetList[1].tag2_group.id)
 
       expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
     })
