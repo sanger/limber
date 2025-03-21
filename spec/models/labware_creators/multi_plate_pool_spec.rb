@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # Presents the user with a form allowing them to scan in up to four plates
