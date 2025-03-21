@@ -252,7 +252,7 @@ export default {
     },
     tagSetChanged() {
       this.tagPlateWasScanned = false
-      this.tag1GroupId = this.selectedTagSet?.tag_group.id
+      this.tag1GroupId = this.selectedTagSet?.tag_group?.id
       this.tag2GroupId = this.selectedTagSet?.tag2_group?.id
       this.updateTagPlateScanDisabled()
     },
@@ -261,7 +261,6 @@ export default {
       if (data) {
         if (data.state === 'valid' && data.plate) {
           this.extractTagGroupIds(data.plate)
-          // this.extractTagGroups(data.plate)
         } else if (data.state === 'empty') {
           this.emptyTagPlate()
         }
@@ -271,7 +270,7 @@ export default {
       if (this.tagPlateWasScanned) {
         this.tagPlateScanDisabled = false
       } else {
-        if (this.tag1GroupId || this.tag2GroupId || this.tag1Group?.name || this.tag2Group?.name) {
+        if (this.tag1GroupId || this.tag2GroupId) {
           this.tagPlateScanDisabled = true
         } else {
           this.tagPlateScanDisabled = false
