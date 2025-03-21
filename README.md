@@ -162,6 +162,10 @@ If during development changes do not seem to be taking effect, try:
 - Rebuild the Docker image, particularly useful for changing dependencies
 - Clobber local resources `rails assets:clobber`
 
+### Cucumber / RSpec feature chromedriver issues
+
+If you encounter Selenium/Chromedriver issues locally it may be because the latest version of Chrome is yet to be supported by our testing libraries (Capybara). This may require a fix to the `Capybara.rb` file, e.g. new driver arguments. In the case the fix is not identifiable you made need to rely on a pinned version of Chrome in the CI to run these tests, see [Chromedriver issues](#chromedriver-issues) below for further instructions.
+
 ## Note about the remainder of this document
 
 The rest of the sections shown here were written for and apply to the native
@@ -336,3 +340,7 @@ Instead they are copied into the `templates` directory within the `roles/deploy_
 ### Sprint Templates for Barcode Label Printing
 
 In order to create new label templates or update the existing ones, use the deployment project. The templates must be defined in the sprint role, in the directory `sprint/files/label_templates` . The local directory `config/sprint/label_templates` is **not** supposed to be used for this purpose.
+
+### Chromedriver issues
+
+If you encounter CI failures for cucumber and rspec feature tests it may be caused by our CI GitHub runner being on the latest version of Chrome while our testing libraries are yet to support it. To fix this, you can pin the version of Chrome in the CI to an older, known working version. This can be done in the `.github/workflows/test_ruby.yml` workflow under `Setup stable Chrome`. If this is required ensure you revert the change once the testing libraries are updated.
