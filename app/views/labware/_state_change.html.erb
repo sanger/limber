@@ -13,7 +13,7 @@
         <fieldset>
           <legend class="col-form-label">Change state to</legend>
           <% transitions.each do |transition| %>
-            <div class="custom-control custom-radio custom-control-inline form-group">
+            <div class="custom-control custom-radio d-inline-flex me-3 form-group">
               <%= radio_button_tag :state, transition.to, false, required: true , class: 'custom-control-input' %>
               <%= label_tag "state_#{transition.to}", transition.human_to_name, class: 'custom-control-label' %>
             </div>

@@ -182,6 +182,8 @@ button#btnGroupWip {
   @extend .btn;
   @extend .btn-success;
   @extend .btn-lg;
+
+  width: 100%
 }
 
 nav.inbox-list,
@@ -262,6 +264,9 @@ nav.robots-list {
   @extend .btn;
   @extend .btn-lg;
   @extend .mb-2;
+
+  width: 100%;
+  display: block;
 }
 
 .choose-workflow {
