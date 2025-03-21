@@ -1,10 +1,12 @@
 import TagGroupsLookup from '@/javascript/shared/components/TagGroupsLookup.vue'
+import TagSetsLookup from '@/javascript/shared/components/TagSetsLookup.vue'
 import TagOffset from '@/javascript/custom-tagged-plate/components/TagOffset.vue'
 
 export default {
   name: 'TagLayout',
   components: {
     'lb-tag-groups-lookup': TagGroupsLookup,
+    'lb-tag-sets-lookup': TagSetsLookup,
     'lb-tag-offset': TagOffset,
   },
   props: {
@@ -40,6 +42,8 @@ export default {
       tagGroupsList: {}, // holds the list of tag groups once retrieved
       tag1GroupId: null, // holds the id of tag group 1 once selected
       tag2GroupId: null, // holds the id of tag group 2 once selected
+      tagSetList: {}, // holds the list of tag sets once retrieved
+      tagSetId: null, // holds the id of tag set once selected
       walkingBy: 'default', // (overriden) holds the chosen tag layout walking by option
       direction: 'column', // holds the chosen tag layout direction option
       offsetTagsBy: 0, // holds the entered tag offset number
@@ -48,6 +52,13 @@ export default {
         uuid: null, // uuid of the tag group
         name: 'No tag group selected', // name of the tag group
         tags: [], // array of tags in the tag group
+      },
+      nullTagSet: {
+        // null tag set object used in place of a selected tag set
+        uuid: null, // uuid of the tag set
+        name: 'No tag set selected', // name of the tag set
+        tag1Group: this.nullTagGroup,
+        tag2Group: this.nullTagGroup,
       },
       directionOptions: [
         { value: null, text: 'Please select a Direction Option...' },
@@ -59,16 +70,29 @@ export default {
     }
   },
   computed: {
+    selectedTagSet() {
+      return this.tagSetList?.[this.tagSetId] || this.nullTagSet
+    },
     tag1Group() {
-      return this.tagGroupsList[this.tag1GroupId] || this.nullTagGroup
+      return this.tagGroupsList?.[this.tag1GroupId] || this.nullTagGroup // holds the tag group 1 once selected
     },
     tag2Group() {
-      return this.tagGroupsList[this.tag2GroupId] || this.nullTagGroup
+      return this.tagGroupsList?.[this.tag2GroupId] || this.nullTagGroup // holds the tag group 2 once selected
     },
     coreTagGroupOptions() {
       return Object.values(this.tagGroupsList)
         .map((tagGroup) => {
           return { value: tagGroup.id, text: tagGroup.name }
+        })
+        .sort((a, b) => {
+          return a.text.localeCompare(b.text)
+        })
+    },
+
+    coreTagSetOptions() {
+      return Object.values(this.tagSetList)
+        .map((tagSet) => {
+          return { value: tagSet.id, text: tagSet.name }
         })
         .sort((a, b) => {
           return a.text.localeCompare(b.text)
@@ -80,6 +104,9 @@ export default {
     tag2GroupOptions() {
       return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
     },
+    tagSetOptions() {
+      return [{ value: null, text: 'Please select a Tagset...' }].concat(this.coreTagSetOptions.slice())
+    },
   },
   methods: {
     tagOffsetChanged(tagOffset) {
@@ -90,6 +117,12 @@ export default {
       this.tagGroupsList = {}
       if (data.state === 'valid' && data.results) {
         this.tagGroupsList = data.results
+      }
+    },
+    tagSetsLookupUpdated(data) {
+      this.tagSetList = {}
+      if (data.state === 'valid' && data.results) {
+        this.tagSetList = data.results
       }
     },
     updateTagParams() {
