@@ -7,7 +7,7 @@ import SCAPE from '@/javascript/lib/global_message_system.js'
 
 let closeIcon = function () {
   return $(document.createElement('a'))
-    .attr('class', 'close')
+    .attr('class', 'btn-close')
     .attr('aria-label', 'close')
     .append($(document.createElement('span')).attr('aria-hidden', 'true').text('×'))
 }

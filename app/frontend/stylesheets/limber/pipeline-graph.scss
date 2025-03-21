@@ -56,7 +56,7 @@
       #pipelines-key-text {
         @extend .flex-grow-1;
         /* TODO: Added !optional to avoid Error: The target selector was not found. */
-        @extend .font-weight-bold !optional;
+        @extend .fw-bold !optional;
         @extend .me-1;
       }
 
