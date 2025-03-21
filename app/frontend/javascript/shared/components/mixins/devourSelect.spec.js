@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
@@ -27,7 +27,7 @@ describe('DevourSelect mixin', () => {
       fields: testFields,
       validation: testValidation,
     }
-    cmp = Vue.extend({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
+    cmp = createApp({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
     devourSelectInstance = new cmp({
       propsData: data,
     })

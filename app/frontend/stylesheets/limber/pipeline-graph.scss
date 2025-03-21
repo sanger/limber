@@ -55,13 +55,14 @@
 
       #pipelines-key-text {
         @extend .flex-grow-1;
-        @extend .font-weight-bold;
-        @extend .mr-1;
+        /* TODO: Added !optional to avoid Error: The target selector was not found. */
+        @extend .font-weight-bold !optional;
+        @extend .me-1;
       }
 
       #show-pipeline-groups {
         @extend .icon-pipeline_stack-light;
-        @extend .mr-1;
+        @extend .me-1;
       }
       #show-pipeline-groups:hover {
         @extend .icon-pipeline_single-light;
@@ -70,7 +71,7 @@
 
       #show-pipelines {
         @extend .icon-pipeline_single-light;
-        @extend .mr-1;
+        @extend .me-1;
       }
       #show-pipelines:hover {
         @extend .icon-pipeline_stack-light;
@@ -79,7 +80,7 @@
 
       #pipelines-back {
         @extend .icon-arrowleft-light;
-        @extend .ml-1;
+        @extend .ms-1;
         height: 1.5em;
         width: 1.5em;
         background-size: 1.5em;
@@ -115,7 +116,7 @@
   .graph-tooltip-inner {
     @extend .tooltip-inner;
     @extend .rounded;
-    @extend .text-left;
+    @extend .text-start;
 
     ul {
       @extend .mb-0;

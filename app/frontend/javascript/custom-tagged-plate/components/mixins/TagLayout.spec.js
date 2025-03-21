@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import TagLayout from '@/javascript/custom-tagged-plate/components/mixins/TagLayout.js'
 import {
   nullTagGroup,
@@ -15,7 +15,7 @@ describe('TagLayout mixin', () => {
       numberOfTargetWells: 10,
       tagsPerWell: 1,
     }
-    cmp = Vue.extend({ mixins: [TagLayout] })
+    cmp = createApp({ mixins: [TagLayout] })
     tagLayout = new cmp({
       propsData: data,
       stubs: {

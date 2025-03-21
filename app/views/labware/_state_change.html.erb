@@ -31,7 +31,9 @@
               associated library requests. You will be able to return to an earlier plate in the process, and continue
               work.
             </div>
-            <%= cancelled.submit 'Cancel Labware', class: 'btn btn-lg btn-danger btn-block form-group', data: { disable_with: 'Cancelling...' } %>
+            <div class="d-grid gap-2">
+              <%= cancelled.submit 'Cancel Labware', class: 'btn btn-lg btn-danger form-group', data: { disable_with: 'Cancelling...' } %>
+            </div>
           <% end %>
         </div>
 
@@ -50,7 +52,9 @@
               reversible and will prevent any further work being carried out on parent plates. <b>Note:</b> This action will
               also remove all downstream aliquots unless there is a sequencing batch downstream already.
             </div>
-            <%= failed.submit 'Fail Labware', class: 'btn btn-lg btn-danger btn-block', data: { disable_with: 'Failing...' } %>
+            <div class="d-grid gap-2">
+              <%= failed.submit 'Fail Labware', class: 'btn btn-lg btn-danger', data: { disable_with: 'Failing...' } %>
+            </div>
           <% end %>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import PoolXPTubeSubmitPanel from './PoolXPTubeSubmitPanel.vue'
-import BootstrapVue from 'bootstrap-vue'
+import { createBootstrap } from 'bootstrap-vue-next'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import flushPromises from 'flush-promises'
 import ReadyIcon from '../../icons/ReadyIcon.vue'
@@ -10,7 +10,7 @@ import ErrorIcon from '../../icons/ErrorIcon.vue'
 import TubeIcon from '../../icons/TubeIcon.vue'
 
 const localVue = createLocalVue()
-localVue.use(BootstrapVue)
+localVue.use(createBootstrap())
 
 // Default props
 const defaultProps = {
