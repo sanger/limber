@@ -6,6 +6,7 @@ BGE Cherrypick:
   :stock_plate: true
   :cherrypickable_target: true
   :input_plate: true
+  :default_printer_type: :plate_a
   :presenter_class: Presenters::StockPlatePresenter
 BGE Shear:
   :asset_type: plate
@@ -30,6 +31,7 @@ BGE Lib:
 # 'Limber-Htp - BGE Transition - Automated' submission is on BGE Lib XP2
 BGE Lib XP2:
   :asset_type: plate
+  :label_template: plate_xp
   # TODO (Y24-367): Customise the submission presenter for BGE Lib XP2.
   # It uses the permissive submission presenter for now.
   :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
@@ -56,25 +58,36 @@ BGE Lib PCR:
 # 'Limber-Htp - BGE ISC' manual submission is on BGE Lib PCR XP
 BGE Lib PCR XP:
   :asset_type: plate
+  :file_links:
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
 BGE Lib PrePool:
   :asset_type: plate
   :stock_plate: false
   :creator_class: LabwareCreators::MultiPlatePool
   :cherrypickable_target: false
   :input_plate: false
+  :default_printer_type: :plate_b
   :csv_template: 'show_extended'
   :alternative_workline_identifier: BGE Lib PCR XP
 BGE Hyb:
   :asset_type: plate
+  :default_printer_type: :plate_b
   :creator_class: LabwareCreators::BaitedPlate
 BGE Cap Lib:
   :asset_type: plate
+  :default_printer_type: :plate_b
 BGE Cap Lib PCR:
   :asset_type: plate
+  :default_printer_type: :plate_b
 BGE Cap Lib PCR XP:
   :asset_type: plate
+  :default_printer_type: :plate_b
 BGE Cap Lib Pool:
   :asset_type: plate
+  :default_printer_type: :plate_b
   :creator_class: LabwareCreators::PlateWithTemplate
   :transfer_template: 'Pool wells based on submission'
 BGE Cap Lib Pool Norm:
