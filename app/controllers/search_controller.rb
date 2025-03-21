@@ -37,13 +37,16 @@ class SearchController < ApplicationController
   def create # rubocop:todo Metrics/AbcSize
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
 
-    respond_to { |format| format.html { redirect_to find_labware(params[:plate_barcode]) } }
+    respond_to do |format|
+      format.html { redirect_to find_labware(params[:plate_barcode]) }
+      format.json { render json: { location: find_labware(params[:plate_barcode]) } }
+    end
   rescue StandardError => e
     flash.now[:error] = e.message
 
     # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
-      format.html { render :new }
+      format.html { render :new, status: :unprocessable_entity }
       format.json { render json: { error: e.message }, status: :not_found }
     end
   end
