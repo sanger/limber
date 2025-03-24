@@ -113,12 +113,12 @@ module LabwareCreators
     end
 
     def create_plate_from_parent!
-      Sequencescape::Api::V2::PlateCreation.create!(
-        child_purpose_uuid: purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid,
-        register_stock: purpose_config.fetch(:register_stock_plate, false)
-      )
+      attributes = { child_purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }
+
+      # Add `register_stock` only if `purpose_config[:register_stock_plate]` is explicitly set
+      attributes[:register_stock] = purpose_config[:register_stock_plate] if purpose_config.key?(:register_stock_plate)
+
+      Sequencescape::Api::V2::PlateCreation.create!(attributes)
     end
 
     def transfer!(attributes)
