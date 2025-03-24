@@ -2,7 +2,9 @@ import Vue from 'vue'
 import TagLayout from '@/javascript/custom-tagged-plate/components/mixins/TagLayout.js'
 import {
   nullTagGroup,
+  nullTagSet,
   exampleTagGroupsList,
+  exampleTagSetList,
 } from '@/javascript/custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
 describe('TagLayout mixin', () => {
@@ -108,56 +110,33 @@ describe('TagLayout mixin', () => {
       })
     })
 
-    describe('coreTagGroupOptions', () => {
+    describe('coreTagSetOptions', () => {
       it('returns empty array if tag groups list empty', () => {
-        expect(tagLayout.coreTagGroupOptions).toEqual([])
+        expect(tagLayout.coreTagSetOptions).toEqual([])
       })
 
-      it('returns valid array if tag groups list set', () => {
-        tagLayout.tagGroupsList = exampleTagGroupsList
+      it('returns valid array if tag set list given', () => {
+        tagLayout.tagSetList = exampleTagSetList
 
-        const expectedCoreTagGroupOptions = [
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' },
+        const expectedCoreTagSetOptions = [
+          { value: '1', text: 'Tag Set 1' },
+          { value: '2', text: 'Tag Set 2' },
         ]
 
-        expect(tagLayout.coreTagGroupOptions).toEqual(expectedCoreTagGroupOptions)
+        expect(tagLayout.coreTagSetOptions).toEqual(expectedCoreTagSetOptions)
       })
     })
 
-    describe('tag1GroupOptions:', () => {
-      it('returns empty array for tag 1 groups if tag groups list empty', () => {
-        expect(tagLayout.tag1GroupOptions).toEqual([{ value: null, text: 'Please select an i7 Tag 1 group...' }])
+    describe('selectedTagSet', () => {
+      it('returns a null tagset by default', () => {
+        tagLayout.tagSetList = exampleTagSetList
+        let val = tagLayout.selectedTagSet
+        expect(val).toEqual(nullTagSet)
       })
-
-      it('returns valid array of tag 1 groups if tag groups list set', () => {
-        tagLayout.tagGroupsList = exampleTagGroupsList
-
-        const expectedTag1GroupOptions = [
-          { value: null, text: 'Please select an i7 Tag 1 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' },
-        ]
-
-        expect(tagLayout.tag1GroupOptions).toEqual(expectedTag1GroupOptions)
-      })
-    })
-
-    describe('tag2GroupOptions:', () => {
-      it('returns empty array for tag 2 groups if tag groups list empty', () => {
-        expect(tagLayout.tag2GroupOptions).toEqual([{ value: null, text: 'Please select an i5 Tag 2 group...' }])
-      })
-
-      it('returns valid array of tag 2 groups if tag groups list set', () => {
-        tagLayout.tagGroupsList = exampleTagGroupsList
-
-        const expectedTag2GroupOptions = [
-          { value: null, text: 'Please select an i5 Tag 2 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' },
-        ]
-
-        expect(tagLayout.tag2GroupOptions).toEqual(expectedTag2GroupOptions)
+      it('sets the selected tagset when tagset Id chnages', () => {
+        tagLayout.tagSetList = exampleTagSetList
+        tagLayout.tagSetId = 1
+        expect(tagLayout.selectedTagSet).toEqual(exampleTagSetList[1])
       })
     })
   })
