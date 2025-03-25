@@ -85,7 +85,7 @@ module LabwareCreators
     end
 
     def parent_tubes
-      Sequencescape::Api::V2::Tube.find_all(uuid: parent_uuids, includes: 'receptacle,aliquots,aliquots.study')
+      Sequencescape::Api::V2::Tube.find_all({ uuid: parent_uuids }, includes: 'receptacle,aliquots,aliquots.study')
     end
 
     def transfer_material_from_parent!

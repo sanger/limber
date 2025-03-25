@@ -48,7 +48,7 @@ module LabwareCreators
     end
 
     def parents
-      @parents ||= Sequencescape::Api::V2::Tube.find_all(barcode: barcodes, includes: [])
+      @parents ||= Sequencescape::Api::V2::Tube.find_all({ barcode: barcodes }, includes: [])
     end
 
     def parents_suitable
