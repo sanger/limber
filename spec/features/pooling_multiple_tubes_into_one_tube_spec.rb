@@ -77,7 +77,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      barcode: [tube_barcode_1, tube_barcode_2],
+      { barcode: [tube_barcode_1, tube_barcode_2] },
       includes: []
     ).and_return([example_tube, example_tube_2])
   end
