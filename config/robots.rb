@@ -3632,10 +3632,10 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 5'
         },
-        bed(15).barcode => {
+        bed(12).barcode => {
           purpose: 'LRC GEM-X 5p Chip',
           states: ['pending'],
-          label: 'Bed 15',
+          label: 'Bed 12',
           parent: bed(5).barcode,
           target_state: 'passed'
         }
@@ -3651,16 +3651,16 @@ ROBOT_CONFIG =
       name: 'Hamilton LRC GEM-X 5p Chip => LRC GEM-X 5p GEMs',
       require_robot: true,
       beds: {
-        bed(15).barcode => {
+        bed(12).barcode => {
           purpose: 'LRC GEM-X 5p Chip',
           states: ['passed'],
-          label: 'Bed 15'
+          label: 'Bed 12'
         },
         bed(4).barcode => {
           purpose: 'LRC GEM-X 5p GEMs',
           states: ['pending'],
           label: 'Bed 4',
-          parent: bed(15).barcode,
+          parent: bed(12).barcode,
           target_state: 'passed'
         }
       }
@@ -3674,16 +3674,16 @@ ROBOT_CONFIG =
       'hamilton-lrc-gem-x-5p-gems-to-lrc-gem-x-5p-cdna-pcr',
       name: 'Hamilton LRC GEM-X 5p GEMs(or Input) => LRC GEM-X 5p cDNA PCR',
       beds: {
-        bed(15).barcode => {
-          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input'],
+        bed(13).barcode => {
+          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input', 'LRC GEM-X 5p GEMs Input CITE'],
           states: ['passed'],
-          label: 'Bed 15'
+          label: 'Bed 13'
         },
         bed(5).barcode => {
           purpose: 'LRC GEM-X 5p cDNA PCR',
           states: ['pending'],
           label: 'Bed 5',
-          parent: bed(15).barcode,
+          parent: bed(13).barcode,
           target_state: 'passed'
         }
       }
@@ -4067,4 +4067,191 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # BGE Pipeline 1 - PCR Free library prep
+    # Bravo bed verification
+    # BGE Cherrypick to BGE Shear
+    bravo_robot do
+      from 'BGE Cherrypick', bed(7)
+      to 'BGE Shear', bed(9)
+    end
+
+    # BGE Pipeline 1 - PCR Free library prep
+    # Bravo bed verification
+    # BGE Shear to BGE Post Shear
+    bravo_robot do
+      from 'BGE Shear', bed(9)
+      to 'BGE Post Shear', bed(7)
+    end
+
+    # BGE Pipeline 1 - PCR Free library prep
+    # Bravo bed verification
+    # BGE Post Shear to BGE End Prep
+    custom_robot(
+      'bravo-bge-post-shear-to-bge-end-prep',
+      name: 'Bravo BGE Post Shear => BGE End Prep',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'BGE Post Shear',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,4').barcode => {
+          purpose: 'BGE End Prep',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # BGE Pipeline 1 - PCR Free library prep
+    # Bravo bed verification
+    # BGE End Prep to BGE Lib XP2
+    # Through BGE Lib
+    custom_robot(
+      'bravo-bge-end-prep-to-bge-lib-xp2',
+      name: 'Bravo BGE End Prep to BGE Lib XP2',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'BGE End Prep',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'BGE Lib',
+          states: ['pending'],
+          label: 'Bed 6',
+          target_state: 'passed',
+          parent: bed(5).barcode
+        },
+        car('4,3').barcode => {
+          purpose: 'BGE Lib XP2',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          target_state: 'passed',
+          parent: bed(6).barcode
+        }
+      }
+    )
+
+    # BGE Pipeline 3 - PCR Free to ISC
+    # Bravo bed verification
+    # BGE Lib XP2 to BGE Lib PCR
+    custom_robot(
+      'bravo-bge-lib-xp2-to-bge-lib-pcr',
+      name: 'Bravo BGE Lib XP2 => BGE Lib PCR',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'BGE Lib XP2',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(5).barcode => {
+          purpose: 'BGE Lib PCR',
+          states: ['pending'],
+          label: 'Bed 5',
+          target_state: 'passed',
+          parent: bed(4).barcode
+        }
+      }
+    )
+
+    # BGE Pipeline 3 - PCR Free to ISC
+    # Hamilton bed verification
+    # BGE Lib PCR to BGE Lib PCR XP
+    custom_robot(
+      'hamilton-bge-lib-pcr-to-bge-lib-pcr-xp',
+      name: 'Hamilton BGE Lib PCR => BGE Lib PCR XP',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'BGE Lib PCR',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(7).barcode => {
+          purpose: 'BGE Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 7',
+          target_state: 'passed',
+          parent: bed(9).barcode
+        }
+      }
+    )
+
+    # BGE Pipeline 4 - ISC Library prep
+    # Beckman bed verification
+    # BGE Lib PCR XP to BGE Lib PrePool
+    custom_robot(
+      'beckman-bge-lib-pcr-xp-to-bge-lib-prepool',
+      name: 'Beckman BGE Lib PCR XP => BGE Lib PrePool',
+      beds: {
+        bed(2).barcode => {
+          purpose: 'BGE Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 2'
+        },
+        bed(5).barcode => {
+          purpose: 'BGE Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 5'
+        },
+        bed(3).barcode => {
+          purpose: 'BGE Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 3'
+        },
+        bed(6).barcode => {
+          purpose: 'BGE Lib PCR XP',
+          states: %w[passed],
+          child: bed(4).barcode,
+          label: 'Bed 6'
+        },
+        bed(4).barcode => {
+          purpose: 'BGE Lib PrePool',
+          states: %w[pending],
+          parents: [bed(2).barcode, bed(5).barcode, bed(3).barcode, bed(6).barcode],
+          target_state: 'passed',
+          label: 'Bed 4'
+        }
+      },
+      destination_bed: bed(4).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    # BGE Pipeline 4 - ISC Library prep
+    # Beckman bed verification
+    # BGE Lib PrePool to BGE Hyb
+    simple_robot('Beckman') do
+      from 'BGE Lib PrePool', bed(2)
+      to 'BGE Hyb', bed(4)
+    end
+
+    # BGE Pipeline 4 - ISC Library prep
+    # Bravo bed verification
+    # BGE Hyb to BGE Cap Lib
+    bravo_robot do
+      from 'BGE Hyb', bed(4)
+      to 'BGE Cap Lib', car('1,3')
+    end
+
+    # BGE Pipeline 4 - ISC Library prep
+    # Bravo bed verification
+    # BGE Cap Lib to BGE Cap Lib PCR
+    bravo_robot do
+      from 'BGE Cap Lib', bed(4)
+      to 'BGE Cap Lib PCR', car('4,5')
+    end
+
+    # BGE Pipeline 4 - ISC Library prep
+    # Bravo bed verification
+    # BGE Cap Lib PCR to BGE Cap Lib PCR XP
+    simple_robot('Hamilton') do
+      from 'BGE Cap Lib PCR', bed(1)
+      to 'BGE Cap Lib PCR XP', bed(9)
+    end
   end
