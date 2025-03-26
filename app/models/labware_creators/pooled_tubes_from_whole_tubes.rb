@@ -43,7 +43,9 @@ module LabwareCreators
       @search_options = OngoingTube.new(purpose_names: [parent.purpose.name], include_used: false)
       @search_results =
         Sequencescape::Api::V2::Tube.find_all(
-          **@search_options.search_parameters.merge({ includes: 'purpose', paginate: @search_options.pagination })
+          @search_options.search_parameters,
+          includes: 'purpose',
+          paginate: @search_options.pagination
         )
     end
 

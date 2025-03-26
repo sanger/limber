@@ -63,17 +63,14 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   end
 
   before do
-    stub_find_all_with_pagination(
-      :tube,
+    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
       {
         include_used: false,
         purpose_name: ['example-purpose'],
-        includes: 'purpose',
         state: %w[pending started passed qc_complete failed cancelled]
       },
-      { per_page: 30, page: 1 },
-      [example_tube, example_tube_2]
-    )
+      { includes: 'purpose', paginate: { page: 1, per_page: 30 } }
+    ).and_return([example_tube, example_tube_2])
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
