@@ -41,7 +41,7 @@ class SearchController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to result }
-      format.json { render json: { location: result } }
+      format.json { redirect_to result }
     end
   rescue StandardError => e
     handle_create_error(e)
@@ -77,7 +77,7 @@ class SearchController < ApplicationController
     flash.now[:error] = error.message
 
     respond_to do |format|
-      format.html { render :new, status: :unprocessable_entity }
+      format.html { render :new, status: :not_found }
       format.json { render json: { error: error.message }, status: :not_found }
     end
   end

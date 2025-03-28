@@ -57,21 +57,21 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware for HTML format' do
         post :create, params: { plate_barcode: barcode }, format: :html
+        expect(response).to have_http_status(:found)
         expect(response).to redirect_to('/labware/ABC123')
       end
 
       it 'returns a JSON response with the labware location' do
         post :create, params: { plate_barcode: barcode }, format: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.parsed_body).to eq('location' => '/labware/ABC123')
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to('/labware/ABC123')
       end
     end
 
     context 'when no plate barcode is provided' do
       it 'renders the new template with an error message for HTML' do
         post :create, params: { plate_barcode: '' }, format: :html
-        print response.body
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:not_found)
         expect(response).to render_template(:new)
         expect(flash[:error]).to eq('You have not supplied a labware barcode')
       end
