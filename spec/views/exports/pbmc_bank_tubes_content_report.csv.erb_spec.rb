@@ -97,7 +97,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     # destination tubes
     let(:dest_tube1) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_seq,
         uuid: dest_tube1_uuid,
         barcode_prefix: 'FX',
@@ -108,7 +108,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     end
     let(:dest_tube2) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube2_uuid,
         barcode_prefix: 'FX',
@@ -119,7 +119,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     end
     let(:dest_tube3) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube3_uuid,
         barcode_prefix: 'FX',
@@ -130,7 +130,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     end
     let(:dest_tube4) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_seq,
         uuid: dest_tube4_uuid,
         barcode_prefix: 'FX',
@@ -141,7 +141,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     end
     let(:dest_tube5) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube5_uuid,
         barcode_prefix: 'FX',
@@ -152,28 +152,13 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     end
     let(:dest_tube6) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube6_uuid,
         barcode_prefix: 'FX',
         barcode_number: 9,
         aliquots: [dest_aliquot6],
         name: 'SPR:NT2P:D1'
-      )
-    end
-
-    # Tube racks
-    let(:seq_tube_rack) { create(:tube_rack, tubes: { A1: dest_tube1, B1: dest_tube4 }, parents: [src_labware]) }
-    let(:spr_tube_rack) do
-      create(
-        :tube_rack,
-        tubes: {
-          A1: dest_tube2,
-          B1: dest_tube3,
-          C1: dest_tube5,
-          D1: dest_tube6
-        },
-        parents: [src_labware]
       )
     end
 
@@ -212,18 +197,6 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
       assign(:ancestor_tubes, ancestor_tubes)
       assign(:plate, src_labware)
       assign(:workflow, workflow_name)
-
-      allow(src_labware).to receive(:children).and_return([seq_tube_rack, spr_tube_rack])
-
-      # stub the v2 tube rack lookup
-      tube_racks = [seq_tube_rack, spr_tube_rack]
-      tube_racks.each do |tube_rack|
-        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
-          'racked_tubes.tube',
-          nil,
-          barcode: tube_rack.barcode.machine
-        ).and_return(tube_rack)
-      end
     end
 
     it 'renders the expected content row by row' do
@@ -275,55 +248,6 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
       let(:src_well_b1) { create(:v2_well, location: 'B1', aliquots: [src_aliquot1_s2], downstream_tubes: []) }
       let(:src_well_b2) { create(:v2_well, location: 'B2', aliquots: [src_aliquot2_s2], downstream_tubes: []) }
       let(:src_well_b3) { create(:v2_well, location: 'B3', aliquots: [src_aliquot3_s2], downstream_tubes: []) }
-
-      let(:expected_content) do
-        [
-          ['Workflow', workflow_name],
-          [],
-          [
-            'Well name',
-            'Donor ID',
-            'Stock barcode',
-            'FluidX barcode',
-            'Extraction and freeze date',
-            'Sequencing or contingency',
-            'Total cell count (cells/ml)',
-            'Viability (%)',
-            'Volume (µl)',
-            'Study name',
-            'Collection site'
-          ]
-        ]
-      end
-
-      it 'does not show sample rows' do
-        expect(CSV.parse(render)).to eq(expected_content)
-      end
-    end
-
-    context 'when destination tubes are not in the tube_rack' do
-      # Setup the tube racks to have different tubes that the ones from the downstream tubes
-      let(:seq_tube_rack) do
-        create(
-          :tube_rack,
-          tubes: {
-            A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
-            B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
-          },
-          parents: [src_labware]
-        )
-      end
-
-      let(:spr_tube_rack) do
-        create(
-          :tube_rack,
-          tubes: {
-            A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
-            B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
-          },
-          parents: [src_labware]
-        )
-      end
 
       let(:expected_content) do
         [
