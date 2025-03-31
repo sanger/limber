@@ -51,10 +51,6 @@ describe('LabwareCustomMetadataAddForm', () => {
         sequencescapeApi,
         sequencescapeUrl,
       },
-      // b-icon is unknown to the component so we stub it
-      stubs: {
-        'b-icon': true,
-      },
     })
   }
 
