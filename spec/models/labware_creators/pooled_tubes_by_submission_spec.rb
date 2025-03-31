@@ -62,6 +62,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       [
         {
           uuid: purpose_uuid,
+          parent_uuids: [parent_uuid],
           child_tubes: child_tubes,
           tube_attributes: child_tubes.map { |tube| { name: tube.name } }
         }

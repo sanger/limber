@@ -52,7 +52,14 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
 
     let(:child_tube) { create :v2_tube }
     let(:specific_tubes_attributes) do
-      [{ uuid: purpose_uuid, child_tubes: [child_tube], tube_attributes: [{ name: 'DN2+' }] }]
+      [
+        {
+          uuid: purpose_uuid,
+          parent_uuids: [parent_uuid],
+          child_tubes: [child_tube],
+          tube_attributes: [{ name: 'DN2+' }]
+        }
+      ]
     end
 
     let(:transfers_attributes) do

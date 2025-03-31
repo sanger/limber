@@ -276,6 +276,15 @@ FactoryBot.define do
       ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
     end
 
+    factory :blended_tube_purpose_config do
+      transient { ancestor_plate_purpose { 'ancestor_plate_purpose1' } }
+      transient { acceptable_parent_tube_purposes { %w[parent_tube_purpose1 parent_tube_purpose2] } }
+      creator_class do
+        { name: 'LabwareCreators::BlendedTube', args: { ancestor_plate_purpose:, acceptable_parent_tube_purposes: } }
+      end
+      presenter_class { 'Presenters::SimpleTubePresenter' }
+    end
+
     # Configuration to set number_of_source_wells argument
     factory :pooled_wells_by_sample_in_groups_purpose_config do
       transient { number_of_source_wells { 2 } }

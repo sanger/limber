@@ -1,4 +1,5 @@
-const plateToPlateTransferCreator = function (transfers, extraParams = (_) => {}) {
+// For transitions from plates to plates
+const transferPlatesToPlatesCreator = function (transfers, extraParams = (_) => {}) {
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
     transfersArray[i] = {
@@ -13,6 +14,7 @@ const plateToPlateTransferCreator = function (transfers, extraParams = (_) => {}
   return transfersArray
 }
 
+// For transfers from tubes to plates
 const transferTubesToPlateCreator = function (transfers, extraParams = (_) => {}) {
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
@@ -29,18 +31,18 @@ const transferTubesToPlateCreator = function (transfers, extraParams = (_) => {}
 }
 
 // TODO: needed?
-// const transferTubesToTubeCreator = function (transfers, extraParams = (_) => {}) {
-//   const transfersArray = new Array(transfers.length)
-//   transfersArray = {
-//     source_tube1: transfers[0].tubeObj[0].tube.uuid,
-//     source_asset1: transfers[0].tubeObj[0].tube.receptacle.uuid,
-//     source_tube2: transfers[1].tubeObj[1].tube.uuid,
-//     source_asset2: transfers[1].tubeObj[1].tube.receptacle.uuid,
-//     outer_request: null,
-//     new_target: target_tube.uuid,
-//     ...extraParams(transfers[0]),
-//   }
-//   return transfersArray
-// }
+// For transfers from tube to tube
+const transferTubesToTubeCreator = function (transfers, extraParams = (_) => {}) {
+  const transfersArray = new Array(transfers.length)
+  for (let i = 0; i < transfers.length; i++) {
+    transfersArray[i] = {
+      source_tube: transfers[i].tubeObj.tube.uuid,
+      outer_request: null,
+      // newtarget: ?,
+      ...extraParams(transfers[i]),
+    }
+  }
+  return transfersArray
+}
 
-export { plateToPlateTransferCreator, transferTubesToPlateCreator }
+export { transferPlatesToPlatesCreator, transferTubesToPlateCreator, transferTubesToTubeCreator }

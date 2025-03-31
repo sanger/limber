@@ -94,8 +94,8 @@ const elements = [
     userIdRequired: true,
   },
   {
-    id: 'pool-xp-tube-submit-panel',
-    component: PoolXPTubeSubmitPanel,
+    id: 'blended-tube-page',
+    component: BlendedTube,
     userIdRequired: true,
   },
   {
@@ -126,6 +126,11 @@ const elements = [
   {
     id: 'multi-stamp-tubes-page',
     component: MultiStampTubes,
+  },
+  {
+    id: 'pool-xp-tube-submit-panel',
+    component: PoolXPTubeSubmitPanel,
+    userIdRequired: true,
   },
   {
     id: 'qc-information',
