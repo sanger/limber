@@ -1,10 +1,11 @@
 inherit_from:
   - .rubocop_todo.yml
   - node_modules/@prettier/plugin-ruby/rubocop.yml
-
 require:
-  - rubocop-rails
   - rubocop-performance
+plugins:
+  - rubocop-rails
+
 AllCops:
   Exclude:
     - node_modules/**/*
