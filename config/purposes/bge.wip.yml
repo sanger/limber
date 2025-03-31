@@ -97,16 +97,22 @@ BGE Cap Lib Pool Norm:
   :creator_class: LabwareCreators::FinalTubeFromPlate
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-# TODO (Y24-368): Enable BGE Blend pipeline configuration
-# BGE Blended Cap Lib Pool:
-#   :asset_type: tube
-#   :target: MultiplexedLibraryTube
-#   :type: IlluminaHtp::InitialStockTubePurpose
-#   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
-#   :presenter_class: Presenters::SimpleTubePresenter
-# BGE Custom pool:
-#   :asset_type: tube
-#   :target: MultiplexedLibraryTube
-#   :type: IlluminaHtp::InitialStockTubePurpose
-#   :creator_class: LabwareCreators::TubeFromTube
-#   :presenter_class: Presenters::SimpleTubePresenter
+BGE Blended Cap Lib Pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class:
+    name: LabwareCreators::BlendedTube
+    args:
+      ancestor_labware_purpose_name: BGE Lib XP2
+      acceptable_parent_tube_purposes:
+        - BGE Lib Pool
+        - BGE Cap Lib Pool Norm
+      single_ancestor_parent_tube_purpose: BGE Lib Pool
+  :presenter_class: Presenters::SimpleTubePresenter
+BGE Custom pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter

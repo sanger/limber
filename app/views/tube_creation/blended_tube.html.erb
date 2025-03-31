@@ -1,0 +1,13 @@
+<div id='blended-tube-page'
+     data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+     data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+     data-child-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
+     data-child-purpose-name="<%= @labware_creator.purpose_name %>"
+     data-ancestor-labware-purpose-name="<%= @labware_creator.ancestor_labware_purpose_name %>"
+     data-target-url="<%= limber_tube_children_path(@labware_creator.parent) %>"
+     data-transfers-creator="<%= @labware_creator.transfers_creator %>"
+     data-acceptable-parent-tube-purposes="<%= @labware_creator.acceptable_parent_tube_purposes %>"
+     data-single-ancestor-parent-tube-purpose="<%= @labware_creator.single_ancestor_parent_tube_purpose %>"
+     >
+  <div class="spinner-dark">Loading...</div>
+</div>
