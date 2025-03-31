@@ -17,8 +17,6 @@ class Sequencescape::Api::V2::TagLayoutTemplate < Sequencescape::Api::V2::Base
   rescue NameError => e
     Rails.logger.warn("Unrecognised layout options: #{e.message}")
     extend Unsupported
-  ensure
-    self
   end
 
   # This returns an array of well location to pool pairs.  The 'walker' is responsible for actually doing the walking
