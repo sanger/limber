@@ -80,14 +80,6 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     useful_barcode(labware.barcode)
   end
 
-  # Human barcode for simple display
-  #
-  # @return [String] Barcode string eg: NT1234
-  def human_barcode
-    # Support for old API
-    barcode.try(:human) || "#{barcode.prefix}#{barcode.number}"
-  end
-
   # Formatted stock plate barcode string for display
   #
   # @return [String] Barcode string. eg. DN1 12200000123
