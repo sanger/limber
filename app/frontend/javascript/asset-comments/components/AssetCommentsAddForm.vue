@@ -15,6 +15,7 @@
     <b-button
       id="asset_comment_submit_button"
       name="asset_comment_submit_button"
+      class="w-100"
       :disabled="disabled"
       :variant="buttonStyle"
       size="lg"
