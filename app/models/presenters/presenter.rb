@@ -42,8 +42,12 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     active_pipelines.any? { |pl| pl.library_pass?(purpose_name) }
   end
 
+  # Generates a formatted title for the labware.
+  #
+  # Combines the purpose name and human-readable barcode, if available.
+  # @return [String] Formatted title, e.g., "Tube Purpose (NT1234)".
   def title
-    purpose_name
+    human_barcode ? "#{purpose_name} (#{human_barcode})" : purpose_name
   end
 
   def default_printer
@@ -74,6 +78,14 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   # @return [String] Barcode string. eg. DN1 12200000123
   def barcode
     useful_barcode(labware.barcode)
+  end
+
+  # Human barcode for simple display
+  #
+  # @return [String] Barcode string eg: NT1234
+  def human_barcode
+    # Support for old API
+    barcode.try(:human) || "#{barcode.prefix}#{barcode.number}"
   end
 
   # Formatted stock plate barcode string for display
