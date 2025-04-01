@@ -14,6 +14,8 @@ class LabwareController < ApplicationController
 
   rescue_from Presenters::UnknownLabwareType, with: :unknown_type
 
+  layout 'labware'
+
   def show # rubocop:todo Metrics/AbcSize
     @presenter = presenter_for(@labware)
 
