@@ -1,0 +1,112 @@
+---
+# BGE Pipeline Purposes
+# 'Limber-Htp - BGE PCR Free' manual submission is on BGE Cherrypick
+BGE Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StockPlatePresenter
+BGE Shear:
+  :asset_type: plate
+BGE Post Shear:
+  :asset_type: plate
+BGE End Prep:
+  :asset_type: plate
+BGE Lib:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  # TODO: (Y24-367) Update the tag_layout_template_names for 'BGE Lib'
+  :tag_layout_templates:
+    - 'IDT for Illumina UDI v1'
+    - 'IDT for Illumina UDI v2'
+    - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
+    - 'PF_adapters_UDI_96_A'
+    - 'PF_adapters_UDI_96_B_ROWS'
+    - 'PF_adapters_UDI_96_B'
+    - 'PF_adapters_UDI_96_C'
+    - 'PF_adapters_UDI_96_D'
+# 'Limber-Htp - BGE Transition - Automated' submission is on BGE Lib XP2
+BGE Lib XP2:
+  :asset_type: plate
+  :label_template: plate_xp
+  # TODO (Y24-367): Customise the submission presenter for BGE Lib XP2.
+  # It uses the permissive submission presenter for now.
+  :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
+  # NOTE: We use automatic plate state changer rather than Charge and Pass.
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_bge_pcr_free'
+  :submission_options:
+    BGE Transition - Automated:
+      template_name: 'Limber-Htp - BGE Transition - Automated'
+      request_options:
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
+        library_type: 'BGE'
+      allowed_extra_barcodes: false
+BGE Lib Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+BGE Lib PCR:
+  :asset_type: plate
+# 'Limber-Htp - BGE ISC' manual submission is on BGE Lib PCR XP
+BGE Lib PCR XP:
+  :asset_type: plate
+  :file_links:
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+BGE Lib PrePool:
+  :asset_type: plate
+  :stock_plate: false
+  :creator_class: LabwareCreators::MultiPlatePool
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :csv_template: 'show_extended'
+  :alternative_workline_identifier: BGE Lib PCR XP
+BGE Hyb:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::BaitedPlate
+BGE Cap Lib:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+BGE Cap Lib PCR:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+BGE Cap Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+BGE Cap Lib Pool:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::PlateWithTemplate
+  :transfer_template: 'Pool wells based on submission'
+BGE Cap Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+# TODO (Y24-368): Enable BGE Blend pipeline configuration
+# BGE Blended Cap Lib Pool:
+#   :asset_type: tube
+#   :target: MultiplexedLibraryTube
+#   :type: IlluminaHtp::InitialStockTubePurpose
+#   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
+#   :presenter_class: Presenters::SimpleTubePresenter
+# BGE Custom pool:
+#   :asset_type: tube
+#   :target: MultiplexedLibraryTube
+#   :type: IlluminaHtp::InitialStockTubePurpose
+#   :creator_class: LabwareCreators::TubeFromTube
+#   :presenter_class: Presenters::SimpleTubePresenter

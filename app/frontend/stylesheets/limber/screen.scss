@@ -582,6 +582,19 @@ footer.version-info {
   }
 }
 
+.asset-info {
+  @extend .card-body;
+  @extend .bg-info;
+  @extend .text-white;
+
+  h3 {
+    @extend .col-xl-3;
+  }
+  ul {
+    @extend .col-xl-9;
+  }
+}
+
 .aliquot.suboptimal {
   position: relative;
 }

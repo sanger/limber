@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'labware_creators/base'
 require_relative 'shared_examples'
 
 # Uses a custom transfer template to transfer material into the new plate
