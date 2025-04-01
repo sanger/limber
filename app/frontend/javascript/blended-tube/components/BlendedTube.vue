@@ -45,15 +45,6 @@
             @change="updateTubePair($event)"
           />
         </b-form-group>
-        <b-alert :show="transfersError !== ''" variant="danger">
-          {{ transfersError }}
-        </b-alert>
-        <component
-          :is="transfersCreatorComponent"
-          :valid-transfers="validTransfers"
-          @change="transfersCreatorObj = $event"
-        />
-        <hr />
         <b-button :disabled="!valid" variant="success" @click="createTube()"> Blend </b-button>
       </b-card>
     </lb-sidebar>
@@ -67,9 +58,6 @@ import devourApi from '@/javascript/shared/devourApi.js'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
 import { transferTubesToTubeCreator } from '@/javascript/shared/transfersCreators.js'
-import { transfersForTubes } from '@/javascript/shared/transfersLayouts.js'
-import BlendedTubeTransfers from '@/javascript/blended-tube/components/BlendedTubeTransfers.vue'
-import transfersCreatorsComponentsMap from '@/javascript/blended-tube/components/transfersCreatorsComponentsMap.js'
 
 // Blended tube is used in the BGE pipeline where two parent tubes are blended together to create a child tube.
 
@@ -78,7 +66,6 @@ export default {
   components: {
     'lb-pair-tubes-to-blend': PairTubesToBlend,
     'lb-loading-modal': LoadingModal,
-    'lb-blended-tube-transfers': BlendedTubeTransfers,
   },
   props: {
     // Sequencescape API V2 URL
@@ -95,12 +82,6 @@ export default {
 
     // Limber target Asset URL for posting the transfers
     targetUrl: { type: String, required: true },
-
-    // Name of the transfers creator to use. Transfers Creators translates
-    // validTransfers into apiTransfers and potentially modify or add
-    // parameters to each transfer
-    // (See ./transfersCreatorsComponentsMap.js for components name mapping)
-    transfersCreator: { type: String, required: true },
 
     // Object storing response's redirect URL
     locationObj: {
@@ -133,15 +114,14 @@ export default {
       // (See ../../shared/resources.js for details)
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources, this.sequencescapeApiKey),
 
-      // Object containing transfers creator's extraParam function and the
-      // state of the transfers (i.e. isValid)
-      transfersCreatorObj: {},
-
       // Flag for toggling loading screen
       loading: false,
 
       // Message to be shown during loading screen
       progressMessage: '',
+
+      // Tubes passed from blending component
+      validParentTubes: [],
     }
   },
   computed: {
@@ -155,96 +135,39 @@ export default {
     // Returns a boolean indicating whether the provided tubes are valid.
     // Used to enable and disable the 'Blend' button.
     valid() {
-      return (
-        this.unsuitableParentTubes.length === 0 && // None of the tubes are invalid
-        this.validTransfers.length > 0 && // We have at least one transfer
-        this.transfersCreatorObj.isValid
-      )
-    },
-    // Returns an array of tubes that are in a 'valid' state.
-    // TODO: what is valid state?
-    // TODO: where will we get these tubes from? pairing component?
-    validParentTubes() {
-      // TODO
-      // return this.tubes.filter((tube) => tube.state === 'valid')
-      return []
-    },
-    // Returns an array of tubes that are not in a 'valid' or 'empty' state.
-    unsuitableParentTubes() {
-      // TODO
-      // return this.tubes.filter((tube) => !(tube.state === 'valid' || tube.state === 'empty'))
-      return []
-    },
-    // TODO: won't need this?
-    transfers() {
-      return transfersForTubes(this.validParentTubes)
-    },
-    // TODO: won't need this?
-    //  validTransfers returns an array with the following structure:
-    //
-    //  [
-    //    { tubeObj: { index: 0, tube: {...} }, targetWell: 'A1' },
-    //    { tubeObj: { index: 1, tube: {...} }, targetWell: 'A2' },
-    //    ...etc...
-    //  ]
-    validTransfers() {
-      return this.transfers.valid
-    },
-    // TODO: what will this pick up on?
-    transfersError() {
-      const errorMessages = []
-      // TODO: what errors can we have here? duplicate and excess requests seem impossible with tubes
-      return errorMessages.join(' and ')
-    },
-    transfersCreatorComponent() {
-      return transfersCreatorsComponentsMap[this.transfersCreator]
+      return this.validParentTubes.length === 2
     },
   },
   methods: {
     updateTubePair(data) {
-      console.log('updateTubePair:')
-      console.log(data)
-      // this.$set(this.pairedTubes, index, { ...data, index: index })
+      if (data.state === 'valid') {
+        this.$set(
+          this,
+          'validParentTubes',
+          data.pairedTubes.map((tube) => tube.labware),
+        )
+      } else {
+        this.$set(this.validParentTubes, [])
+      }
+      this.valid
     },
-    /**
-     * The entry point for updating tubes attached to the plate.
-     * Called when a tube is scanned into a well.
-     *
-     * @param {Number} index - The (1-based) index of the tube in the tubes array.
-     * @param {Object} data - The tube object returned from the scan, which includes:
-     *   - labware: Contains details about the labware, such as id, uuid, and barcode details.
-     *   - state: The "scanned" state of the tube, e.g., "valid".
-     *   @example {
-     *     labware: {
-     *       id: "47",
-     *       uuid: "1234-5678-91011",
-     *       labware_barcode: {
-     *         ean13_barcode: "3980000035714",
-     *         human_barcode: "NT35G",
-     *         machine_barcode: "3980000035714"
-     *       },
-     *       links: {...},
-     *       receptacle: {...},
-     *       type: "tubes",
-     *       state: "passed"
-     *     },
-     *     state: "valid"
-     *   }
-     */
     apiTransfers() {
       // what we want to transfer when creating the child tube
-      return transferTubesToTubeCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
+      return transferTubesToTubeCreator(this.validParentTubes)
     },
     createTube() {
       this.progressMessage = 'Creating blended tube...'
       this.loading = true
+
       let payload = {
         tube: {
-          parent_uuids: this.validParentTubes.map((tube) => tube.labware.uuid),
+          // parent_uuids: this.validParentTubes.map((tube) => tube.uuid),
+          parent_uuid: this.validParentTubes[0].uuid,
           purpose_uuid: this.childPurposeUuid,
           transfers: this.apiTransfers(),
         },
       }
+
       this.$axios({
         method: 'post',
         url: this.targetUrl,

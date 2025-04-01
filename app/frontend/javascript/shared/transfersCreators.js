@@ -30,18 +30,17 @@ const transferTubesToPlateCreator = function (transfers, extraParams = (_) => {}
   return transfersArray
 }
 
-// TODO: needed?
 // For transfers from tube to tube
 const transferTubesToTubeCreator = function (transfers, extraParams = (_) => {}) {
   const transfersArray = new Array(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
     transfersArray[i] = {
-      source_tube: transfers[i].tubeObj.tube.uuid,
+      source_tube: transfers[i].uuid,
       outer_request: null,
-      // newtarget: ?,
       ...extraParams(transfers[i]),
     }
   }
+
   return transfersArray
 }
 

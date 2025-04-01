@@ -30,9 +30,14 @@ const requestsFromPlates = function (plateObjs) {
 }
 
 const handleFailedRequest = function (request) {
-  // generate an alert on the page
-  const title = request.response.data.message[1]
-  const messages = request.response.data.message[0].join(', ')
+  // Errors seem to have different formats, this is an attempt to handle several types
+  const title = request.response?.data?.message?.[1] || request.response?.statusText || 'Error'
+  const messages = request.response?.data?.message
+    ? Array.isArray(request.response.data.message)
+      ? request.response.data.message.join(', ')
+      : request.response.data.message
+    : request.message || 'Cannot determine error message'
+
   eventBus.$emit('push-alert', {
     level: 'danger',
     title: title,

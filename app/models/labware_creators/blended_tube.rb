@@ -7,15 +7,16 @@ module LabwareCreators
     include LabwareCreators::CustomPage
     include SupportParent::TubeOnly
 
-    attr_accessor :transfers
-
     class_attribute :transfers_creator
+
+    # transfers are passed in from the Vue JS page
+    self.attributes += [{ transfers: [%i[source_tube outer_request]] }]
+    attr_accessor :transfers
 
     self.page = 'blended_tube'
     self.transfers_creator = 'blended-tube'
 
     validates :transfers, presence: true
-    validate :parents_suitable
 
     # Fetch the ancestor plate purpose type from purpose configuration
     def ancestor_labware_purpose_name
@@ -43,7 +44,6 @@ module LabwareCreators
     end
 
     def tube_attributes
-      # TODO: ensure pairing component returns them in the same order by purpose
       [{ name: parents.map(&:human_barcode).join(':') }]
     end
 
@@ -66,34 +66,26 @@ module LabwareCreators
       )
     end
 
-    def parent_uuids
-      transfers.pluck(:source_tube_uuid).uniq
+    def parent_uuids_from_transfers
+      transfers.pluck(:source_tube).uniq
     end
 
     def parents
-      Sequencescape::Api::V2::Tube.find_all(uuid: parent_uuids, includes: 'receptacle,aliquots')
+      Sequencescape::Api::V2::Tube.find_all(uuid: parent_uuids_from_transfers, includes: 'receptacle,aliquots')
     end
 
     def transfer_request_attributes
-      transfers.map { |transfer| request_hash(transfer) }
+      # passing an index to be used for adding tag depth to aliquot attributes
+      transfers.map.with_index { |transfer, index| request_hash(transfer, index) }
     end
 
-    def request_hash(transfer)
-      parent_tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube_uuid])
+    def request_hash(transfer, index)
+      parent_tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube])
 
-      { source_asset: parent_tube.uuid, target_asset: @child_tube.uuid }
-    end
-
-    def parents_suitable
-      # TODO: validate parents - what we need to do here depends on what the pairing component does
-      # internally.
-      # The 2 parent tubes must have the expected purposes.
-      # The 2 parent tubes must have different purposes.
-      # The 2 parent tubes must have different barcodes.
-      # The 2 parent tubes must have the same ancestor parent plate.
-      # The 2 parent tubes must have a matching set of samples fron the same ancestor wells.
-      # The 2 parent tubes must contain libraries that are compatible for blending. They will have the same tags.
-      true
+      # tag_depth is added to aliquot attributes to allow the blended pair to be pooled together.
+      # without this you get a tag clash detection error from Sequencescape, as both tubes have the same samples
+      # with the same tags.
+      { source_asset: parent_tube.uuid, target_asset: @child_tube.uuid, aliquot_attributes: { tag_depth: index.to_s } }
     end
   end
 end
