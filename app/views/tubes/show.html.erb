@@ -5,7 +5,7 @@
     <%= card without_block: true do %>
       <%= render 'content_header', presenter: @presenter, type: 'tube' %>
       <%= render 'warnings', presenter: @presenter %>
-
+      <%= render 'info', presenter: @presenter %>
       <div id="labware-summary">
         <%= render partial: 'labware/tube', locals: { tube: @presenter.labware, presenter: @presenter } %>
       </div>

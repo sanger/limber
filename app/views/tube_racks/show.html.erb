@@ -5,6 +5,7 @@
     <%= card without_block: true, id: 'main-content' do %>
       <%= render 'content_header', presenter: @presenter, type: 'tube-rack' %>
       <%= render 'warnings', presenter: @presenter %>
+      <%= render 'info', presenter: @presenter %>
       <% if @presenter.tube_failing_applicable? %>
         <div id="labware-well-failing" class='well-fail-toggle collapse'>
           <%= render 'fail_wells', presenter: @presenter %>
