@@ -116,7 +116,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
 
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
-    let(:title) { purpose_name }
+    let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
     let(:state) { 'pending' }
     let(:sidebar_partial) { 'default' }
     let(:submission_study) { create :v2_study, name: 'Submission Study' }
@@ -167,7 +167,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     let(:submissions) { create_list :v2_submission, 1, state: 'pending' }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
-    let(:title) { purpose_name }
+    let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
     let(:state) { 'pending' }
     let(:sidebar_partial) { 'default' }
     let(:summary_tab) do
@@ -216,7 +216,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     let(:submissions) { create_list :v2_submission, 1, state: 'ready', updated_at: now - 5.seconds }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
-    let(:title) { purpose_name }
+    let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
     let(:state) { 'pending' }
     let(:sidebar_partial) { 'default' }
     let(:summary_tab) do
@@ -252,7 +252,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     let(:labware) { create :v2_stock_plate, purpose_name: purpose_name, barcode_number: 2, pool_sizes: [2] }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
-    let(:title) { purpose_name }
+    let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
     let(:state) { 'passed' }
     let(:sidebar_partial) { 'submission_default' }
     let(:summary_tab) do
@@ -284,7 +284,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     let(:submissions) { create_list :v2_submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
-    let(:title) { purpose_name }
+    let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
     let(:state) { 'cancelled' }
     let(:sidebar_partial) { 'default' }
     let(:summary_tab) do
@@ -330,7 +330,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     let(:submissions) { create_list :v2_submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
-    let(:title) { purpose_name }
+    let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
     let(:state) { 'failed' }
     let(:sidebar_partial) { 'default' }
     let(:summary_tab) do

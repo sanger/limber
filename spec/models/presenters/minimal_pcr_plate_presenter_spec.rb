@@ -14,7 +14,7 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
   end
 
   let(:purpose_name) { 'Limber example purpose' }
-  let(:title) { purpose_name }
+  let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
