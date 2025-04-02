@@ -9,6 +9,39 @@
 
 A flexible front end to pipelines in Sequencescape.
 
+## Contents
+
+<!-- toc -->
+
+- [User Requirements](#user-requirements)
+- [Initial Setup (using Docker)](#initial-setup-using-docker)
+- [Initial Setup (using native installation)](#initial-setup-using-native-installation)
+- [Linting and formatting](#linting-and-formatting)
+- [Troubleshooting](#troubleshooting)
+  - [ViteRuby::MissingEntrypointError in Search#new](#viterubymissingentrypointerror-in-search%23new)
+  - [Changes not updating](#changes-not-updating)
+  - [Cucumber / RSpec feature chromedriver issues](#cucumber--rspec-feature-chromedriver-issues)
+- [Note about the remainder of this document](#note-about-the-remainder-of-this-document)
+- [Docs](#docs)
+- [Configuring pipelines](#configuring-pipelines)
+- [Running Specs](#running-specs)
+  - [RSpec](#rspec)
+  - [Vitest](#vitest)
+  - [Writing specs](#writing-specs)
+    - [Factory Bot](#factory-bot)
+    - [Request stubbing for the Sequencescape v1 API](#request-stubbing-for-the-sequencescape-v1-api)
+    - [Request stubbing for the Sequencescape v2 API](#request-stubbing-for-the-sequencescape-v2-api)
+      - [FactoryBot is not mocking my related resources correctly](#factorybot-is-not-mocking-my-related-resources-correctly)
+    - [Feature debugging](#feature-debugging)
+  - [Lefthook](#lefthook)
+- [Credentials](#credentials)
+- [Miscellaneous](#miscellaneous)
+  - [Sprint Templates for Barcode Label Printing](#sprint-templates-for-barcode-label-printing)
+  - [Chromedriver issues](#chromedriver-issues)
+  - [Updating the table of contents](#updating-the-table-of-contents)
+
+<!-- tocstop -->
+
 ## User Requirements
 
 - Used on laboratory instrument machines often running older browser versions due to vendor and network limitations.
@@ -344,3 +377,13 @@ In order to create new label templates or update the existing ones, use the depl
 ### Chromedriver issues
 
 If you encounter CI failures for cucumber and rspec feature tests it may be caused by our CI GitHub runner being on the latest version of Chrome while our testing libraries are yet to support it. To fix this, you can pin the version of Chrome in the CI to an older, known working version. This can be done in the `.github/workflows/test_ruby.yml` workflow under `Setup stable Chrome`. If this is required ensure you revert the change once the testing libraries are updated.
+
+### Updating the table of contents
+
+To update the table of contents after adding things to this README you can use the [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
+node module. To install it, make sure you have installed the dev dependencies from yarn. To update
+the table of contents, run:
+
+```shell
+npx markdown-toc -i README.md --bullets "-"
+```
