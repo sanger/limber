@@ -19,7 +19,7 @@
   <%= sidebar do %>
     <%= card title: 'Add plates to pool', without_block: true do %>
       <div id="validation_report"></div>
-      <div id="add-plates-instructions-block" class="card-body" >
+      <div id="add-plates-instructions-block" class="card-body">
         <div class="instructions">
           <p>Scan in up to 4 plates.</p>
         </div>
@@ -35,8 +35,8 @@
         <%= form.hidden_field :purpose_uuid %>
         <% 4.times do |i| %>
           <div class="labware-container scan-labware form-group row">
-            <label for="plate[<%= i %>]" class="plate-label col-2" >Plate <%= i+1 %></label>
-            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control labware-box col-8" tabindex="1" data-position=<%= i %> />
+            <label for="plate[<%= i %>]" class="plate-label col-2">Plate <%= i+1 %></label>
+            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control labware-box col-8" tabindex="1" data-position="<%= i %>">
           </div>
         <% end %>
         <%= form.submit 'Make Pre-Cap pool Plate', class: 'btn btn-success btn-lg', id: 'create-labware', disabled: true %>
