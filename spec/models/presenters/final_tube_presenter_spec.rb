@@ -11,7 +11,7 @@ RSpec.describe Presenters::FinalTubePresenter do
   before { create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid') }
 
   let(:purpose_name) { 'Limber example purpose' }
-  let(:title) { purpose_name }
+  let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
