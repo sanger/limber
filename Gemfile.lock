@@ -104,6 +104,13 @@ GEM
     ast (2.4.3)
     base64 (0.2.0)
     benchmark (0.4.0)
+    better_html (2.1.1)
+      actionview (>= 6.0)
+      activesupport (>= 6.0)
+      ast (~> 2.0)
+      erubi (~> 1.4)
+      parser (>= 2.4)
+      smart_properties
     bigdecimal (3.1.9)
     bindex (0.8.1)
     bootsnap (1.18.4)
@@ -135,6 +142,13 @@ GEM
     docile (1.4.0)
     drb (2.2.1)
     dry-cli (1.2.0)
+    erb_lint (0.9.0)
+      activesupport
+      better_html (>= 2.0.1)
+      parser (>= 2.7.1.4)
+      rainbow
+      rubocop (>= 1)
+      smart_properties
     erubi (1.13.1)
     exception_notification (4.5.0)
       actionmailer (>= 5.2, < 8)
@@ -397,6 +411,7 @@ GEM
     simplecov-html (0.12.3)
     simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
+    smart_properties (1.17.0)
     sprint_client (0.1.0)
     state_machines (0.6.0)
     stringio (3.1.6)
@@ -455,6 +470,7 @@ DEPENDENCIES
   bootsnap
   capybara
   capybara-selenium
+  erb_lint
   exception_notification
   factory_bot (~> 6.5)
   guard-rspec
