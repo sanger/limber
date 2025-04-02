@@ -1,0 +1,24 @@
+---
+scRNA Core Chromium GEM-X 5p TCR:
+  pipeline_group: scRNA Core Library Prep
+  filters:
+    request_type_key: limber_scrna_core_library_prep
+    library_type:
+      - Chromium single cell GEM-X 5p v3 TCR
+  library_pass: LRC GEM-X 5p TCR Post PCR
+  relationships:
+    LRC GEM-X 5p Cherrypick: LRC GEM-X 5p TCR Dil 1
+    LRC GEM-X 5p TCR Dil 1: LRC GEM-X 5p TCR Enrich1 2XSPRI
+    LRC GEM-X 5p TCR Enrich1 2XSPRI: LRC GEM-X 5p TCR Enrich2 2XSPRI
+    LRC GEM-X 5p TCR Enrich2 2XSPRI: LRC GEM-X 5p TCR Dil 2
+    LRC GEM-X 5p TCR Dil 2: LRC GEM-X 5p TCR Post Lig 1XSPRI
+    LRC GEM-X 5p TCR Post Lig 1XSPRI: LRC GEM-X 5p TCR Post PCR
+scRNA Core Chromium GEM-X 5p TCR MX:
+  pipeline_group: scRNA Core Library Prep
+  filters:
+    request_type_key:
+      - limber_multiplexing
+  relationships:
+    LRC GEM-X 5p TCR Post PCR: LRC GEM-X 5p TCR LibPS
+    LRC GEM-X 5p TCR LibPS: LRC GEM-X 5p TCR Pool Norm
+    LRC GEM-X 5p TCR Pool Norm: LB Lib Pool Norm

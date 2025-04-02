@@ -4350,4 +4350,101 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # scRNA pipeline
+    # scRNA core library prep chromium bespoke TCR
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-tcr-dil-1',
+      name: 'hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p TCR Dil 1',
+      beds: {
+        bed(1).barcode => {
+          purpose: 'LRC GEM-X 5p Cherrypick',
+          states: ['passed'],
+          label: 'Bed 1'
+        },
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 1',
+          states: ['pending'],
+          label: 'Bed 13',
+          target_state: 'passed',
+          parent: bed(1).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-dil-1-to-lrc-gem-x-5p-tcr-enrich1-2xspri',
+      name: 'hamilton LRC GEM-X 5p TCR Dil 1 => LRC GEM-X 5p TCR Enrich1 2XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 1',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich1 2XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-enrich1-2xspri-to-lrc-gem-x-5p-tcr-enrich2-2xspri',
+      name: 'hamilton LRC GEM-X 5p TCR Enrich1 2XSPRI => LRC GEM-X 5p TCR Enrich2 2XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich1 2XSPRI',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich2 2XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-enrich2-2xspri-to-lrc-gem-x-5p-tcr-dil-2',
+      name: 'hamilton LRC GEM-X 5p TCR Enrich2 2XSPRI => LRC GEM-X 5p TCR Dil 2',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich2 2XSPRI',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 2',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-dil-2-to-lrc-gem-x-5p-tcr-post-lig-1xspri',
+      name: 'hamilton LRC GEM-X 5p TCR Dil 2 => LRC GEM-X 5p TCR Post Lig 1XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 2',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Post Lig 1XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
   end
