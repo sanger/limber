@@ -1,6 +1,6 @@
 <%
-  parents = labware.parents&.filter{ |parent| parent.purpose.present? } || []
-  children = labware.children&.filter{ |child| child.purpose.present? } || []
+  parents = @labware.parents&.filter{ |parent| parent.purpose.present? } || []
+  children = @labware.children&.filter{ |child| child.purpose.present? } || []
 
   grandparents = parents&.filter{ |grandparent| grandparent.purpose.present? } || []
   grandchildren = children&.filter{ |child| child.purpose.present? } || []
@@ -18,7 +18,7 @@
     <% if parents.any? %>
         <%= previous_purposes %> »
     <% end %>
-    <strong><%= labware.purpose.name %></strong>
+    <strong><%= @labware.purpose.name %></strong>
     <% if children.any? %>
         <span class="text-muted">» <%= next_purposes %></span>
     <% end %>
