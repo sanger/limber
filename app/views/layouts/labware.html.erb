@@ -1,7 +1,7 @@
 <%= content_for(:main_content) do %>
   <%= page(yield(:page_id), :'show-page', prevent_row: true) do %>
     <div class="row">
-      <%= render partial: 'pipeline_info', class: 'row ' %>
+      <%= render 'pipeline_info', class: 'row', labware: @labware %>
     </div>
 
     <div class="row">

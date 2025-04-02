@@ -1,0 +1,23 @@
+<%
+  children = labware.children&.filter{ |child| child.purpose.present? } || []
+  parents = labware.parents&.filter{ |parent| parent.purpose.present? } || []
+  grandparents = parents&.filter{ |grandparent| grandparent.purpose.present? } || []
+
+  previous_purposes = parents.map { |parent| parent.purpose.name }.uniq.join(", ")
+  next_purposes = children.map { |child| child.purpose.name }.uniq.join(", ")
+
+  pipeline_name = "PIPELINE"
+%>
+<div class="mt-3 ml-3 mr-3">
+    <strong><%= pipeline_name %></strong> »
+    <% if grandparents.any? %>
+        ... »
+    <% end %>
+    <% if parents.any? %>
+        <%= previous_purposes %> »
+    <% end %>
+    <strong><%= labware.purpose.name %></strong>
+    <% if children.any? %>
+        <span class="text-muted">» <%= next_purposes %></span>
+    <% end %>
+</div>
