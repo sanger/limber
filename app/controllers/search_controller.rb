@@ -56,7 +56,7 @@ class SearchController < ApplicationController
       .includes(*includes)
       .where(barcode:)
       .first
-      .tap { |labware| raise "Sorry, could not find qcable with the barcode '#{barcode}'." if qcable.nil? }
+      .tap { |qcable| raise "Sorry, could not find qcable with the barcode '#{barcode}'." if qcable.nil? }
   end
 
   private
