@@ -64,10 +64,10 @@ group :development do
 end
 
 group :lint do
+  gem 'erb_lint', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
-  gem 'erb_lint', require: false
 
   # Ruby dependencies specifically requested by prettier/plugin-ruby v4
   # https://github.com/prettier/plugin-ruby
