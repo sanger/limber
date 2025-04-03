@@ -26,14 +26,34 @@ LRC GEM-X 5p BCR Enrich2 2XSPRI:
       id: concentrations_ngul
 LRC GEM-X 5p BCR Dil 2:
   :asset_type: plate
-  :creator_class: LabwareCreators::ConcentrationNormalisedPlate
+  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
+  :creator_class: LabwareCreators::ConcentrationBinnedPlate
   :dilutions:
-    :target_amount_ng: 50
-    :target_volume: 20
-    :minimum_source_volume: 0.2
+    :source_volume: 10
+    :diluent_volume: 0
+    :bins:
+      - max: 25.0
+        pcr_cycles: 9
+        colour: 1
+      - min: 25.0
+        max: 150.0
+        pcr_cycles: 8
+        colour: 2
+      - min: 150.0
+        max: 500.0
+        pcr_cycles: 7
+        colour: 3
+      - min: 500.0
+        max: 1_000.0
+        pcr_cycles: 6
+        colour: 4
+      # What about pcr_cycles for 1_000.0 to 1_500.0?
+      - min: 1_500.0
+        pcr_cycles: 5
+        colour: 5
   :file_links:
-    - name: 'Download Hamilton BCR Enrich2 2XSPRI to BCR Dil 2 CSV'
-      id: 'hamilton_lbc_bcr_enrich2_2xspri_to_lbc_bcr_dil_2'
+    - name: 'Download Hamilton LRC GEM-X 5p BCR Enrich2 2XSPRI to LRC GEM-X 5p BCR Dil 2 CSV'
+      id: 'hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2'
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
 LRC GEM-X 5p BCR Post Lig 1XSPRI:

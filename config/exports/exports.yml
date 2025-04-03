@@ -250,3 +250,11 @@ hamilton_gem_x_5p_chip_loading:
     - LRC PBMC Pools
     - LRC GEM-X 5p GEMs Input
     - LRC GEM-X 5p GEMs Input CITE
+hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2:
+  csv: hamilton_fixed_volume_dilutions
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: Sample Dilution
+hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2:
+  csv: hamilton_fixed_volume_dilutions
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: Sample Dilution

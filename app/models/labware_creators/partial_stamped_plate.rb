@@ -25,7 +25,7 @@ module LabwareCreators
     # The well filter will be used to identify the parent wells to be taken forward.
     # Filters on request type, library type and state.
     def well_filter
-      @well_filter ||= WellFilterAllowingPartials.new(creator: self, request_state: 'pending')
+      @well_filter ||= WellFilterAllowingPartials.new(creator: self, request_state: %w[pending started])
     end
 
     # Returns the parent wells selected to be taken forward.
