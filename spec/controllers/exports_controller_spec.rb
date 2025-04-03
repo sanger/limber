@@ -251,6 +251,18 @@ RSpec.describe ExportsController, type: :controller do
 
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
+
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2' }
+
+        it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2' }
+
+        it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
     end
 
     context 'where csv id requested is cellaca_input_file.csv' do
