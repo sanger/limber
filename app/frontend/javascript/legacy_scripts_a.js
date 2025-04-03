@@ -59,7 +59,9 @@ let limberPlateView = function (defaultTab) {
   }
 
   const defaultTabEl = document.querySelector('a[href="' + defaultTab + '"]')
-  new Tab(defaultTabEl).show()
+  if (defaultTabEl !== null) {
+    new Tab(defaultTabEl).show()
+  }
 
   plateElement.on('click', '.aliquot', function (event) {
     control.find('a[data-plate-view="pools-view"]').show()

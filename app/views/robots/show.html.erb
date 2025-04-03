@@ -25,7 +25,7 @@
   <%= sidebar do %>
     <%= form_for :robot, url: start_robot_path(robot.id) do |form| %>
       <%= render partial: 'bed', locals: {robot: robot, form: form } %>
-      <div class="d-grid gap-2">
+      <div class="d-grid py-2">
         <%= submit_tag robot.start_button_message,
           name: nil,
           class: "submit btn btn-lg btn-success",
