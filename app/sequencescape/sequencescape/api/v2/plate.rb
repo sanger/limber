@@ -160,4 +160,15 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   def generate_pools
     Pools.new(wells_in_columns)
   end
+
+  def register_stock_for_plate
+    response = self.class.requestor.post("#{self.class.path}/#{id}/register_stock_for_plate")
+
+    if response.success?
+      true
+    else
+      errors.add(:base, response.body['error'])
+      false
+    end
+  end
 end
