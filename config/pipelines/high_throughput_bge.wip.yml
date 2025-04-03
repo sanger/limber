@@ -44,7 +44,6 @@ BGE ISC MX:
   pipeline_group: BGE
   filters:
     request_type_key: limber_multiplexing_bge_isc
-  library_pass: BGE Cap Lib Pool Norm
   relationships:
     BGE Cap Lib PCR XP: BGE Cap Lib Pool
     BGE Cap Lib Pool: BGE Cap Lib Pool Norm
