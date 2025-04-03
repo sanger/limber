@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import { Tab } from 'bootstrap'
 import { ENTER_KEYCODE, TAB_KEYCODE } from '@/javascript/lib/keycodes.js'
 
 // The majority of the code below is for the data-plate-view data attribute used to
@@ -57,7 +58,8 @@ let limberPlateView = function (defaultTab) {
     defaultTab += '_tab'
   }
 
-  control.find('a[href="' + defaultTab + '"]').show()
+  const defaultTabEl = document.querySelector('a[href="' + defaultTab + '"]')
+  new Tab(defaultTabEl).show()
 
   plateElement.on('click', '.aliquot', function (event) {
     control.find('a[data-plate-view="pools-view"]').show()
