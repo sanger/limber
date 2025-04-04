@@ -58,6 +58,7 @@ export default {
     },
     assetUuid: { type: String, required: true },
   },
+  emits: ['change'],
   data() {
     return {
       value: this.defaultValue,

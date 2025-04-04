@@ -54,6 +54,7 @@ export default {
       },
     },
   },
+  emits: ['onwellclicked'],
   computed: {
     sizeClass: function () {
       return 'plate-' + this.columns * this.rows

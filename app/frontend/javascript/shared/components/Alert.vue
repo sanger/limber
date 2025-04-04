@@ -15,5 +15,6 @@ export default {
     title: { type: String, default: '' },
     message: { type: String, default: '' },
   },
+  emits: ['close'],
 }
 </script>

@@ -4,7 +4,13 @@
       <b-col />
       <b-col>
         <b-input-group prepend="Volume" append="µL">
-          <b-form-input id="input-volume" v-model="volume" type="number" :number="true" />
+          <b-form-input
+            id="input-volume"
+            v-model="volume"
+            type="number"
+            :number="true"
+            @update:model-value="emitVolumeChange"
+          />
         </b-input-group>
       </b-col>
     </b-row>
@@ -22,6 +28,7 @@ export default {
       type: Number,
     },
   },
+  emits: ['update:model-value'],
   data() {
     return {
       volume: null,
@@ -37,16 +44,16 @@ export default {
       return !isNaN(Number.parseFloat(this.volume))
     },
   },
-  watch: {
-    volume: function () {
-      this.$emit('change', {
+  created() {
+    this.volume = this.defaultVolume
+  },
+  methods: {
+    emitVolumeChange() {
+      this.$emit('update:model-value', {
         extraParams: this.transferFunc,
         isValid: this.isValid,
       })
     },
-  },
-  created() {
-    this.volume = this.defaultVolume
   },
 }
 </script>

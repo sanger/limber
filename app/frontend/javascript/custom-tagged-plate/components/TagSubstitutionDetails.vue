@@ -66,6 +66,7 @@ export default {
       },
     },
   },
+  emits: ['removetagsubstitution'],
   data() {
     return {}
   },

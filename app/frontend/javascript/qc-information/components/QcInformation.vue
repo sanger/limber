@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     updateResult(property, result) {
-      this.$set(this.qcResults, property, result)
+      this.qcResults[property] = result
     },
     submit() {
       this.state = 'busy'

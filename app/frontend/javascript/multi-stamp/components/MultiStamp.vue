@@ -39,7 +39,7 @@
           :is="transfersCreatorComponent"
           :default-volume="defaultVolumeNumber"
           :valid-transfers="validTransfers"
-          @change="transfersCreatorObj = $event"
+          @update:model-value="transfersCreatorObj = $event"
         />
         <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>
       </b-card>
@@ -192,6 +192,7 @@ export default {
       return JSON.parse(this.acceptablePurposes)
     },
     valid() {
+      console.log('transfersCreatorObj', this.transfersCreatorObj)
       return (
         this.unsuitablePlates.length === 0 && // None of the plates are invalid
         this.validTransfers.length > 0 && // We have at least one transfer
@@ -260,6 +261,8 @@ export default {
       return wells
     },
     requestsFilterComponent() {
+      console.log('fiflterProps', filterProps)
+      console.log('requestsFilter', filterProps[this.requestsFilter].requestsFilter)
       return filterProps[this.requestsFilter].requestsFilter
     },
     plateIncludes() {
@@ -279,7 +282,7 @@ export default {
   },
   methods: {
     updatePlate(index, data) {
-      this.$set(this.plates, index - 1, { ...data, index: index - 1 })
+      this.plates[index - 1] = { ...data, index: index - 1 }
     },
     apiTransfers() {
       return baseTransferCreator(this.validTransfers, this.transfersCreatorObj.extraParams)

@@ -37,6 +37,7 @@ export default {
       },
     },
   },
+  emits: ['onwellclicked'],
   data() {
     return {
       tagIndex: 0,

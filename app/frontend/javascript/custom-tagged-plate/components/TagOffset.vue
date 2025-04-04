@@ -54,6 +54,7 @@ export default {
       default: 1,
     },
   },
+  emits: ['tagoffsetchanged'],
   data() {
     return {
       offsetTagsByMin: 0, // holds the tag offset minimum value

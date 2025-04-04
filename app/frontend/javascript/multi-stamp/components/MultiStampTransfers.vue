@@ -6,6 +6,7 @@ export default {
   props: {
     validTransfers: { type: Array, required: true },
   },
+  emits: ['change'],
   watch: {
     validTransfers: function () {
       this.$emit('change', {

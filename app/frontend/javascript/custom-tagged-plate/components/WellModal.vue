@@ -96,6 +96,7 @@ export default {
       },
     },
   },
+  emits: ['wellmodalsubtituteselected'],
   data() {
     return {
       substituteTagId: null, // the input substitute tag map id (input so string)

@@ -685,13 +685,13 @@ export default {
         // delete the substitution from the list
         this.removeTagSubstitution(originalTagMapId)
       } else {
-        this.$set(this.tagSubstitutions, originalTagMapId, substituteTagId)
+        this.tagSubstitutions[originalTagMapId] = substituteTagId
       }
 
       this.hideWellModal()
     },
     removeTagSubstitution(originalTagMapId) {
-      this.$delete(this.tagSubstitutions, originalTagMapId)
+      delete this.tagSubstitutions[originalTagMapId]
     },
   },
 }

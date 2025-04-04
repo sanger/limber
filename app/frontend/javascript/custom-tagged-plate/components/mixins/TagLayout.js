@@ -34,6 +34,7 @@ export default {
       default: 1,
     },
   },
+  emits: ['tagparamsupdated'],
   data() {
     return {
       tagPlate: null, // holds the tag plate once scanned

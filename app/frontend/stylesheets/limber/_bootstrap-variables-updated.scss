@@ -33,31 +33,31 @@
 //   $grays
 // );
 
-$blue:    #007aff !default;
+$blue: #007aff !default;
 // $indigo:  #6610f2 !default;
 // $purple:  #6f42c1 !default;
 // $pink:    #e83e8c !default;
-$red:     #dc3546 !default;
+$red: #dc3546 !default;
 // $orange:  #fd7e14 !default;
-$yellow:  #fffe03 !default;
-$green:   #27a844 !default;
+$yellow: #fffe03 !default;
+$green: #27a844 !default;
 // $teal:    #20c997 !default;
-$cyan:    #17a2b7 !default;
+$cyan: #17a2b7 !default;
 
 .btn-success {
-    background-color: #27a844 !important;
-    color: #fff !important;
+  background-color: #27a844 !important;
+  color: #fff !important;
 }
 .btn-primary {
-    background-color: #007aff !important;
-    color: #fff !important;
+  background-color: #007aff !important;
+  color: #fff !important;
 }
 .bg-success {
-    background-color: #27a844 !important;
+  background-color: #27a844 !important;
 }
 .btn-info {
-    background-color: #17a2b7 !important;
-    color: #fff !important;
+  background-color: #17a2b7 !important;
+  color: #fff !important;
 }
 
 // $colors: () !default;
@@ -123,13 +123,12 @@ $cyan:    #17a2b7 !default;
 //   (")", "%29"),
 // ) !default;
 
-
 // // Options
 // //
 // // Quickly modify global styling by enabling or disabling optional features.
 
 // $enable-caret:                                true !default;
-$enable-rounded:                                 false !default;
+$enable-rounded: false !default;
 // $enable-shadows:                              false !default;
 // $enable-gradients:                            false !default;
 // $enable-transitions:                          true !default;
@@ -141,7 +140,6 @@ $enable-rounded:                                 false !default;
 // $enable-responsive-font-sizes:                false !default;
 // $enable-validation-icons:                     true !default;
 // $enable-deprecation-messages:                 true !default;
-
 
 // // Spacing
 // //
@@ -176,14 +174,12 @@ $enable-rounded:                                 false !default;
 //   $sizes
 // );
 
-
 // // Body
 // //
 // // Settings for the `<body>` element.
 
 // $body-bg:                   $white !default;
 // $body-color:                $gray-900 !default;
-
 
 // // Links
 // //
@@ -202,7 +198,6 @@ $enable-rounded:                                 false !default;
 
 // $paragraph-margin-bottom:   1rem !default;
 
-
 // // Grid breakpoints
 // //
 // // Define the minimum dimensions at which your layout will change,
@@ -219,7 +214,6 @@ $enable-rounded:                                 false !default;
 // @include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
 // @include _assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
 
-
 // // Grid containers
 // //
 // // Define the maximum width of `.container` for different screen sizes.
@@ -233,7 +227,6 @@ $enable-rounded:                                 false !default;
 
 // @include _assert-ascending($container-max-widths, "$container-max-widths");
 
-
 // // Grid columns
 // //
 // // Set the number of columns and specify the width of the gutters.
@@ -241,7 +234,6 @@ $enable-rounded:                                 false !default;
 // $grid-columns:                12 !default;
 // $grid-gutter-width:           30px !default;
 // $grid-row-columns:            6 !default;
-
 
 // // Components
 // //
@@ -360,7 +352,6 @@ $enable-rounded:                                 false !default;
 
 // $hr-margin-y:                 $spacer !default;
 
-
 // // Tables
 // //
 // // Customizes the `.table` component with basic values, each used across all table variations.
@@ -396,7 +387,6 @@ $enable-rounded:                                 false !default;
 // $table-bg-level:              -9 !default;
 // $table-border-level:          -6 !default;
 
-
 // // Buttons + Forms
 // //
 // // Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
@@ -422,7 +412,6 @@ $enable-rounded:                                 false !default;
 // $input-btn-line-height-lg:    $line-height-lg !default;
 
 // $input-btn-border-width:      $border-width !default;
-
 
 // // Buttons
 // //
@@ -464,7 +453,6 @@ $enable-rounded:                                 false !default;
 // $btn-border-radius-sm:        $border-radius-sm !default;
 
 // $btn-transition:              color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
-
 
 // // Forms
 
@@ -666,7 +654,6 @@ $enable-rounded:                                 false !default;
 //   en: "Browse"
 // ) !default;
 
-
 // // Form validation
 
 // $form-feedback-margin-top:          $form-text-margin-top !default;
@@ -707,7 +694,6 @@ $enable-rounded:                                 false !default;
 // $zindex-popover:                    1060 !default;
 // $zindex-tooltip:                    1070 !default;
 
-
 // // Navs
 
 // $nav-link-padding-y:                .5rem !default;
@@ -728,7 +714,6 @@ $enable-rounded:                                 false !default;
 
 // $nav-divider-color:                 $gray-200 !default;
 // $nav-divider-margin-y:              $spacer * .5 !default;
-
 
 // // Navbar
 
@@ -769,7 +754,6 @@ $enable-rounded:                                 false !default;
 // $navbar-dark-brand-color:                 $navbar-dark-active-color !default;
 // $navbar-dark-brand-hover-color:           $navbar-dark-active-color !default;
 
-
 // // Dropdowns
 // //
 // // Dropdown menu container and contents.
@@ -804,7 +788,6 @@ $enable-rounded:                                 false !default;
 // $dropdown-header-color:             $gray-600 !default;
 // $dropdown-header-padding:           $dropdown-padding-y $dropdown-item-padding-x !default;
 
-
 // // Pagination
 
 // $pagination-padding-y:              .5rem !default;
@@ -838,13 +821,11 @@ $enable-rounded:                                 false !default;
 // $pagination-border-radius-sm:       $border-radius-sm !default;
 // $pagination-border-radius-lg:       $border-radius-lg !default;
 
-
 // // Jumbotron
 
 // $jumbotron-padding:                 2rem !default;
 // $jumbotron-color:                   null !default;
 // $jumbotron-bg:                      $gray-200 !default;
-
 
 // // Cards
 
@@ -869,7 +850,6 @@ $enable-rounded:                                 false !default;
 // $card-columns-gap:                  1.25rem !default;
 // $card-columns-margin:               $card-spacer-y !default;
 
-
 // // Tooltips
 
 // $tooltip-font-size:                 $font-size-sm !default;
@@ -893,7 +873,6 @@ $enable-rounded:                                 false !default;
 // $form-feedback-tooltip-line-height:   $line-height-base !default;
 // $form-feedback-tooltip-opacity:       $tooltip-opacity !default;
 // $form-feedback-tooltip-border-radius: $tooltip-border-radius !default;
-
 
 // // Popovers
 
@@ -921,7 +900,6 @@ $enable-rounded:                                 false !default;
 
 // $popover-arrow-outer-color:         fade-in($popover-border-color, .05) !default;
 
-
 // // Toasts
 
 // $toast-max-width:                   350px !default;
@@ -939,7 +917,6 @@ $enable-rounded:                                 false !default;
 // $toast-header-background-color:     rgba($white, .85) !default;
 // $toast-header-border-color:         rgba(0, 0, 0, .05) !default;
 
-
 // // Badges
 
 // $badge-font-size:                   75% !default;
@@ -955,7 +932,6 @@ $enable-rounded:                                 false !default;
 // // Use a higher than normal value to ensure completely rounded edges when
 // // customizing padding or font-size on labels.
 // $badge-pill-border-radius:          10rem !default;
-
 
 // // Modals
 
@@ -999,7 +975,6 @@ $enable-rounded:                                 false !default;
 // $modal-transition:                  transform .3s ease-out !default;
 // $modal-scale-transform:             scale(1.02) !default;
 
-
 // // Alerts
 // //
 // // Define alert colors, border radius, and padding.
@@ -1015,7 +990,6 @@ $enable-rounded:                                 false !default;
 // $alert-border-level:                -9 !default;
 // $alert-color-level:                 6 !default;
 
-
 // // Progress bars
 
 // $progress-height:                   1rem !default;
@@ -1027,7 +1001,6 @@ $enable-rounded:                                 false !default;
 // $progress-bar-bg:                   theme-color("primary") !default;
 // $progress-bar-animation-timing:     1s linear infinite !default;
 // $progress-bar-transition:           width .6s ease !default;
-
 
 // // List group
 
@@ -1054,7 +1027,6 @@ $enable-rounded:                                 false !default;
 // $list-group-action-active-color:    $body-color !default;
 // $list-group-action-active-bg:       $gray-200 !default;
 
-
 // // Image thumbnails
 
 // $thumbnail-padding:                 .25rem !default;
@@ -1064,12 +1036,10 @@ $enable-rounded:                                 false !default;
 // $thumbnail-border-radius:           $border-radius !default;
 // $thumbnail-box-shadow:              0 1px 2px rgba($black, .075) !default;
 
-
 // // Figures
 
 // $figure-caption-font-size:          90% !default;
 // $figure-caption-color:              $gray-600 !default;
-
 
 // // Breadcrumbs
 
@@ -1087,7 +1057,6 @@ $enable-rounded:                                 false !default;
 // $breadcrumb-divider:                quote("/") !default;
 
 // $breadcrumb-border-radius:          $border-radius !default;
-
 
 // // Carousel
 
@@ -1115,7 +1084,6 @@ $enable-rounded:                                 false !default;
 // $carousel-transition-duration:       .6s !default;
 // $carousel-transition:                transform $carousel-transition-duration ease-in-out !default; // Define transform transition first if using multiple transitions (e.g., `transform 2s ease, opacity .5s ease-out`)
 
-
 // // Spinners
 
 // $spinner-width:           2rem !default;
@@ -1127,14 +1095,12 @@ $enable-rounded:                                 false !default;
 // $spinner-height-sm:       $spinner-width-sm !default;
 // $spinner-border-width-sm: .2em !default;
 
-
 // // Close
 
 // $close-font-size:                   $font-size-base * 1.5 !default;
 // $close-font-weight:                 $font-weight-bold !default;
 // $close-color:                       $black !default;
 // $close-text-shadow:                 0 1px 0 $white !default;
-
 
 // // Code
 
@@ -1150,14 +1116,12 @@ $enable-rounded:                                 false !default;
 // $pre-color:                         $gray-900 !default;
 // $pre-scrollable-max-height:         340px !default;
 
-
 // // Utilities
 
 // $displays: none, inline, inline-block, block, table, table-row, table-cell, flex, inline-flex !default;
 // $overflows: auto, hidden !default;
 // $positions: static, relative, absolute, fixed, sticky !default;
 // $user-selects: all, auto, none !default;
-
 
 // // Printing
 
