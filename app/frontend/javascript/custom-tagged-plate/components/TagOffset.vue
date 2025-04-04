@@ -16,7 +16,7 @@
       step="1"
       :placeholder="offsetTagsByPlaceholder"
       :state="offsetTagsByState"
-      @input="offsetTagChanged"
+      @update:model-value="offsetTagChanged"
     />
     <b-form-text>
       <strong> Tags will start from {{ offsetTagsByAsNumber + 1 }} </strong>

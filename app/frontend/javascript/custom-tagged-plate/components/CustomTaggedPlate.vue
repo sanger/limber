@@ -207,7 +207,7 @@ export default {
       this.tagSubstitutions // used for tag substitution check
       this.childUsedOligos // used for tag clash check
 
-      if (this.parentWells === {}) {
+      if (this.parentWells == {}) {
         return {}
       }
       if (Object.keys(this.tagLayout).length === 0) {

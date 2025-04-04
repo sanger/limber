@@ -12,7 +12,7 @@
         <!-- only show input for fields which are defined in config -->
         <b-row>
           <b-col cols="10">
-            <b-form-input :id="item" v-model="form[item]" @update="onUpdate"></b-form-input>
+            <b-form-input :id="item" v-model="form[item]" @update:model-value="onUpdate"></b-form-input>
           </b-col>
           <b-col>
             <b-button

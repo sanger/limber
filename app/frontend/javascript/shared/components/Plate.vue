@@ -16,7 +16,7 @@
     <tbody>
       <tr v-for="row in rows" :key="row">
         <th class="first-col">
-          {{ row | toLetter }}
+          {{ rowHeader(row) }}
         </th>
         <td v-for="column in columns" :key="column">
           <lb-well
@@ -61,6 +61,9 @@ export default {
     },
   },
   methods: {
+    rowHeader(row) {
+      return rowNumToLetter(row)
+    },
     tooltip_label: function (row, column) {
       return this.wellAt(row, column).human_barcode
     },

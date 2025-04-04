@@ -13,7 +13,7 @@
             id="tag1_group_selection"
             v-model="tag1GroupId"
             :options="tag1GroupOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -25,7 +25,7 @@
             id="walking_by_options"
             v-model="walkingBy"
             :options="walkingByOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -35,7 +35,7 @@
             id="direction_options"
             v-model="direction"
             :options="directionOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>

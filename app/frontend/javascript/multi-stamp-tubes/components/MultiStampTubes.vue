@@ -39,7 +39,7 @@
         <component
           :is="transfersCreatorComponent"
           :valid-transfers="validTransfers"
-          @change="transfersCreatorObj = $event"
+          @update:model-value="transfersCreatorObj = $event"
         />
         <hr />
         <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>

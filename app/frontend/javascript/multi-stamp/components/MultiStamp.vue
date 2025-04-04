@@ -192,7 +192,6 @@ export default {
       return JSON.parse(this.acceptablePurposes)
     },
     valid() {
-      console.log('transfersCreatorObj', this.transfersCreatorObj)
       return (
         this.unsuitablePlates.length === 0 && // None of the plates are invalid
         this.validTransfers.length > 0 && // We have at least one transfer
@@ -261,8 +260,6 @@ export default {
       return wells
     },
     requestsFilterComponent() {
-      console.log('fiflterProps', filterProps)
-      console.log('requestsFilter', filterProps[this.requestsFilter].requestsFilter)
       return filterProps[this.requestsFilter].requestsFilter
     },
     plateIncludes() {

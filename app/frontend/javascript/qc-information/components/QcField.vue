@@ -9,7 +9,7 @@
               v-model="value"
               :type="dataType"
               v-bind="fieldOptions"
-              @input="emitOnChange"
+              @update:model-value="emitOnChange"
             />
           </b-input-group>
         </b-form-group>
@@ -20,7 +20,7 @@
             :id="`qc-field-${name}-assay-type`"
             v-model="assayType"
             :options="assayTypes"
-            @change="emitOnChange"
+            @update:model-value="emitOnChange"
           />
         </b-form-group>
       </b-col>
