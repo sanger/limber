@@ -61,19 +61,19 @@ describe('PairTubesToBlend.vue', () => {
     wrapper.destroy()
   })
 
-  // Test for validateTubes
-  it('validateTubes should return true when both tubes are scanned and valid', () => {
-    expect(wrapper.vm.validateTubes()).toBe(true)
+  // Test for validatedTubes
+  it('validatedTubes should return true when both tubes are scanned and valid', () => {
+    expect(wrapper.vm.validatedTubes()).toBe(true)
   })
 
-  it('validateTubes should return false when one or both tubes are not valid', () => {
+  it('validatedTubes should return false when one or both tubes are not valid', () => {
     wrapper.setData({
       pairedTubes: [
         { labware: null, state: 'invalid' },
         { labware: null, state: 'invalid' },
       ],
     })
-    expect(wrapper.vm.validateTubes()).toBe(false)
+    expect(wrapper.vm.validatedTubes()).toBe(false)
   })
 
   // Test for findSharedAncestor
@@ -175,14 +175,14 @@ describe('PairTubesToBlend.vue', () => {
     expect(wrapper.vm.matchedSamplesSummary).toBe('1 of 3 samples match')
   })
 
-  it('matchedSamplesSummary should return "Valid pairing required" if tubes are not valid', () => {
+  it('matchedSamplesSummary should return "valid pairing required first" if tubes are not valid', () => {
     wrapper.setData({
       pairedTubes: [
         { labware: null, state: 'invalid' },
         { labware: null, state: 'invalid' },
       ],
     })
-    expect(wrapper.vm.matchedSamplesSummary).toBe('Valid pairing required')
+    expect(wrapper.vm.matchedSamplesSummary).toBe('valid pairing required first')
   })
 
   describe('performPairingValidations', () => {

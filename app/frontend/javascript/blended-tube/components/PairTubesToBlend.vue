@@ -1,11 +1,7 @@
 <template>
   <div>
     <b-container>
-      <b-row>
-        <b>Pairing status:&nbsp;&nbsp;</b>
-        <div :style="{ backgroundColor: colorForState, width: '50px', height: '30px', borderRadius: '5px' }"></div>
-      </b-row>
-      <b-row>
+      <b-row style="margin-bottom: 10px">
         <b>Scan the pair of tubes to be blended:</b>
       </b-row>
       <b-row>
@@ -39,8 +35,17 @@
         </b-col>
       </b-row>
     </b-container>
-    <b-container>
+    <b-container style="margin-bottom: 20px">
       <b-row>
+        <div
+          :style="{
+            backgroundColor: colorForState,
+            width: '50px',
+            height: '30px',
+            borderRadius: '5px',
+            marginRight: '10px',
+          }"
+        ></div>
         <div id="pairing_state_message">
           <span :class="stateMessageClass">{{ stateMessage }}</span>
         </div>
@@ -53,25 +58,40 @@
           Tube {{ index + 1 }}:
           <b>{{
             tube.labware
-              ? tube.labware.labware_barcode.human_barcode + ' - ' + tube.labware.purpose.name
+              ? tube.labware.labware_barcode.human_barcode +
+                ' (' +
+                tube.labware.labware_barcode.machine_barcode +
+                ') - ' +
+                tube.labware.purpose.name
               : 'No tube scanned'
           }}</b>
         </li>
       </ul>
-      <p v-if="areBothTubesValid">
-        Matching Ancestor:
-        <b>{{
-          sharedAncestorPlate
-            ? sharedAncestorPlate.labware_barcode.human_barcode + ' - ' + sharedAncestorPlate.purpose.name
-            : 'No shared ancestor'
-        }}</b>
-      </p>
-      <p v-if="areBothTubesValid">
-        Sufficient samples match: <b>{{ tubesHaveMatchingSamples ? 'Yes' : 'No' }}</b>
-      </p>
-      <p v-if="areBothTubesValid">
-        Matched Samples: <b>{{ matchedSamplesSummary }}</b>
-      </p>
+      <div v-if="validatedTubes">
+        <p>
+          Matching Ancestor:
+          <b>{{
+            sharedAncestorPlate
+              ? sharedAncestorPlate.labware_barcode.human_barcode + ' - ' + sharedAncestorPlate.purpose.name
+              : 'No shared ancestor'
+          }}</b>
+        </p>
+        <p>
+          Sufficient samples match: <b>{{ tubesHaveMatchingSamples ? 'Yes' : 'No' }}, {{ matchedSamplesSummary }}</b>
+        </p>
+        <div v-if="haveNonMatchedSamples">
+          Non-matching samples:
+          <ul>
+            <li v-for="(sample, index) in nonMatchingSamples" :key="index">
+              <b>{{ sample.name }}</b>
+              <span v-if="sample.inTube1"> in Tube 1</span>
+              <span v-else> missing from Tube 1</span>
+              <span v-if="sample.inTube2">, in Tube 2</span>
+              <span v-else>, missing from Tube 2</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </b-card>
   </div>
 </template>
@@ -207,7 +227,7 @@ export default {
       return this.pairedTubes.every((tube) => tube.state === 'valid')
     },
     sharedAncestorPlate() {
-      if (!this.validateTubes()) {
+      if (!this.validatedTubes()) {
         return null
       }
 
@@ -220,7 +240,7 @@ export default {
       }
     },
     tubesHaveMatchingSamples() {
-      if (!this.validateTubes()) {
+      if (!this.validatedTubes()) {
         return false
       }
 
@@ -239,15 +259,15 @@ export default {
       return hasAtLeastOneSharedSample
     },
     matchedSamplesSummary() {
-      if (!this.validateTubes()) {
-        return 'Valid pairing required'
+      if (!this.validatedTubes()) {
+        return 'valid pairing required first'
       }
 
       const tubeSampleIds = this.pairedTubes.map((tube) => this.extractSampleIds(tube))
 
       // Ensure there are two tubes with sample IDs
       if (tubeSampleIds.length !== 2) {
-        return 'Valid pairing required'
+        return 'valid pairing required first'
       }
 
       const [tube1SampleIds, tube2SampleIds] = tubeSampleIds
@@ -258,6 +278,53 @@ export default {
 
       // Return the summary
       return `${matchedSampleIds.length} of ${totalSamples} samples match`
+    },
+    nonMatchingSamples() {
+      if (!this.validatedTubes()) {
+        return []
+      }
+
+      const tubeSampleIds = this.pairedTubes.map((tube) => this.extractSampleIds(tube))
+      const tubeSampleNames = this.pairedTubes.map(
+        (tube) => tube.labware?.receptacle?.aliquots.map((aliquot) => aliquot.sample.name) || [],
+      )
+
+      // Ensure there are two tubes with sample IDs
+      if (tubeSampleIds.length !== 2) {
+        return []
+      }
+
+      const [tube1SampleIds, tube2SampleIds] = tubeSampleIds
+      const [tube1SampleNames, tube2SampleNames] = tubeSampleNames
+
+      const nonMatchingSamples = []
+
+      // Find samples in tube 1 that are not in tube 2
+      tube1SampleIds.forEach((id, index) => {
+        if (!tube2SampleIds.includes(id)) {
+          nonMatchingSamples.push({
+            name: tube1SampleNames[index],
+            inTube1: true,
+            inTube2: false,
+          })
+        }
+      })
+
+      // Find samples in tube 2 that are not in tube 1
+      tube2SampleIds.forEach((id, index) => {
+        if (!tube1SampleIds.includes(id)) {
+          nonMatchingSamples.push({
+            name: tube2SampleNames[index],
+            inTube1: false,
+            inTube2: true,
+          })
+        }
+      })
+
+      return nonMatchingSamples
+    },
+    haveNonMatchedSamples() {
+      return this.nonMatchingSamples.length > 0
     },
   },
   watch: {
@@ -367,7 +434,7 @@ export default {
       const sampleIds = tube.labware.receptacle.aliquots.map((aliquot) => aliquot.sample.id)
       return sampleIds
     },
-    validateTubes() {
+    validatedTubes() {
       if (!this.areBothTubesScanned) {
         return false
       }

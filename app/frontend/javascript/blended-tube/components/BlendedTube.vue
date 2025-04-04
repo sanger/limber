@@ -121,7 +121,10 @@ export default {
       progressMessage: '',
 
       // Tubes passed from blending component
-      validParentTubes: [],
+      parentTubes: [],
+
+      // State of the pairing process
+      isPairingValid: false,
     }
   },
   computed: {
@@ -132,37 +135,40 @@ export default {
     acceptableParentTubePurposesArray() {
       return JSON.parse(this.acceptableParentTubePurposes)
     },
-    // Returns a boolean indicating whether the provided tubes are valid.
+    // Returns a boolean indicating whether the pair of tubes are valid.
     // Used to enable and disable the 'Blend' button.
     valid() {
-      return this.validParentTubes.length === 2
+      return this.isPairingValid
     },
   },
   methods: {
     updateTubePair(data) {
       if (data.state === 'valid') {
-        this.$set(
-          this,
-          'validParentTubes',
-          data.pairedTubes.map((tube) => tube.labware),
-        )
+        this.$set(this, 'isPairingValid', true),
+          this.$set(
+            this,
+            'parentTubes',
+            data.pairedTubes.map((tube) => tube.labware),
+          )
       } else {
-        this.$set(this.validParentTubes, [])
+        this.$set(this, 'isPairingValid', false), this.$set(this, 'parentTubes', [])
       }
       this.valid
     },
     apiTransfers() {
       // what we want to transfer when creating the child tube
-      return transferTubesToTubeCreator(this.validParentTubes)
+      return transferTubesToTubeCreator(this.parentTubes)
     },
     createTube() {
       this.progressMessage = 'Creating blended tube...'
       this.loading = true
 
+      console.log('this.parentTubes:')
+      console.log(this.parentTubes)
+
       let payload = {
         tube: {
-          // parent_uuids: this.validParentTubes.map((tube) => tube.uuid),
-          parent_uuid: this.validParentTubes[0].uuid,
+          parent_uuid: this.parentTubes[0].uuid,
           purpose_uuid: this.childPurposeUuid,
           transfers: this.apiTransfers(),
         },
