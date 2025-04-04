@@ -1,4 +1,3 @@
-import { createApp } from 'vue'
 import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
 import { mount } from '@vue/test-utils'
 import { flushPromises } from '@vue/test-utils'
@@ -26,10 +25,13 @@ describe('DevourSelect mixin', () => {
       fields: testFields,
       validation: testValidation,
     }
-    cmp = createApp({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
-    devourSelectInstance = new cmp({
-      propsData: data,
+    cmp = mount({component: '<div></div>'}, {
+      props: data,
+      global: {
+        mixins: [DevourSelect],
+      }
     })
+    devourSelectInstance = cmp.vm
   })
 
   describe('checking props:', () => {
