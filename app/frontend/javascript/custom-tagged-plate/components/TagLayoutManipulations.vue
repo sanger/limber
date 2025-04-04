@@ -36,7 +36,8 @@
             v-model="tag1GroupId"
             :options="tag1GroupOptions"
             :disabled="tagGroupsDisabled"
-            @update:model-value="tagGroupChanged"
+            @input="tagGroupInput"
+            @change="tagGroupChanged"
           />
         </b-form-group>
       </b-col>
@@ -54,7 +55,8 @@
             v-model="tag2GroupId"
             :options="tag2GroupOptions"
             :disabled="tagGroupsDisabled"
-            @update:model-value="tagGroupChanged"
+            @input="tagGroupInput"
+            @change="tagGroupChanged"
           />
         </b-form-group>
       </b-col>
@@ -194,6 +196,8 @@ export default {
     },
     tagGroupChanged() {
       this.tagPlateWasScanned = false
+    },
+    tagGroupInput() {
       this.updateTagPlateScanDisabled()
     },
     tagPlateScanned(data) {
