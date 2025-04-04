@@ -21,7 +21,7 @@ class OngoingPlate < AssetSearchForm
   # @note
   # This is currently only being used by the SearchController, as other usages pass in `purposes`,
   #   and therefore don't use the default_purposes method.
-  #   We are returning an empty array here, becuase there are hundreads of plate purposes in the database,
+  #   We are returning an empty array here, because there are hundreds of plate purposes in the database,
   #   and the GET query was exceeding the maximum number of bytes.
   #   Instead, the page can load, then the user can then select a purpose from the list, which will be paginated.
   def default_purposes
