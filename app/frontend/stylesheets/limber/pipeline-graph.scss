@@ -99,6 +99,7 @@
       li {
         @extend .list-group-item;
         @extend .bg-dark;
+        @extend .text-light;
       }
       li:hover {
         @extend .text-light, :hover;
