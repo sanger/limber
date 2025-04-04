@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import PoolXPTubeSubmitPanel from './PoolXPTubeSubmitPanel.vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import ReadyIcon from '../../icons/ReadyIcon.vue'
 import TubeSearchIcon from '../../icons/TubeSearchIcon.vue'
 import SuccessIcon from '../../icons/SuccessIcon.vue'

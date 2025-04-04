@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import MultiStamp from './MultiStamp.vue'
 import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.shared_spec'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import { plateFactory } from '@/javascript/test_support/factories.js'
 import axios from 'axios'
 

@@ -1,6 +1,6 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import MockAdapter from 'axios-mock-adapter'
 
 import QcInformation from './QcInformation.vue'

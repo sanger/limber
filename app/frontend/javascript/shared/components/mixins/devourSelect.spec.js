@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import mockApi from '@/javascript/test_support/mock_api.js'
 
 describe('DevourSelect mixin', () => {

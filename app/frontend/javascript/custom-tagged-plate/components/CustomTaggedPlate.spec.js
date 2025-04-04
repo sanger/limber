@@ -1,9 +1,9 @@
 // Import the component being tested
-import { mount, shallowMount } from '@vue/test-utils'
+import { mount, shallowMount, flushPromises } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
 import MockAdapter from 'axios-mock-adapter'
-import flushPromises from 'flush-promises'
 import axios from 'axios'
+import { nextTick } from 'vue'
 
 import {
   plateUuid,
@@ -682,20 +682,22 @@ describe('CustomTaggedPlate', () => {
           tagsPerWell: '1',
           locationObj: mockLocation,
         },
-        stubs: {
-          'lb-parent-plate-lookup': true,
-          'lb-parent-plate-view': true,
-          'lb-tag-substitution-details': true,
-          'lb-tag-layout-manipulations': true,
-          'lb-well-modal': true,
-        },
+        global: {
+          stubs: {
+            'lb-parent-plate-lookup': true,
+            'lb-parent-plate-view': true,
+            'lb-tag-substitution-details': true,
+            'lb-tag-layout-manipulations': true,
+            'lb-well-modal': true,
+          },
+        }
       })
 
       wrapper.setData({
         parentPlate: exampleParent,
       })
 
-      // await localVue.nextTick()
+      await nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
       expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
@@ -717,20 +719,22 @@ describe('CustomTaggedPlate', () => {
           tagsPerWell: '4',
           locationObj: mockLocation,
         },
-        stubs: {
-          'lb-parent-plate-lookup': true,
-          'lb-parent-plate-view': true,
-          'lb-tag-substitution-details': true,
-          'lb-tag-layout-manipulations-multiple': true,
-          'lb-well-modal': true,
-        },
+        global: {
+          stubs: {
+            'lb-parent-plate-lookup': true,
+            'lb-parent-plate-view': true,
+            'lb-tag-substitution-details': true,
+            'lb-tag-layout-manipulations-multiple': true,
+            'lb-well-modal': true,
+          },
+        }
       })
 
       wrapper.setData({
         parentPlate: exampleParent,
       })
 
-      // await localVue.nextTick()
+      await nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
       expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)

@@ -8,7 +8,6 @@
     "cytoscape-elk": "^2.3.0",
     "cytoscape-popper": "^2.0.0",
     "devour-client": "^2.1.2",
-    "flush-promises": "^1.0.0",
     "jquery": "^3.5.1",
     "pluralize": "^7.0.0",
     "tiny-emitter": "^2.1.0",

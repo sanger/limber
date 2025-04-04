@@ -1,6 +1,6 @@
 // // Import the component being tested
 import commentStoreFactory from './comment-store.js'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import mockApi from '@/javascript/test_support/mock_api.js'

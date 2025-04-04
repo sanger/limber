@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import TagGroupsLookup from '@/javascript/shared/components/TagGroupsLookup.vue'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 import mockApi from '@/javascript/test_support/mock_api.js'

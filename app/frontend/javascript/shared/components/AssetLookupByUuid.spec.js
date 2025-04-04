@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import AssetLookupByUuid from '@/javascript/shared/components/AssetLookupByUuid.vue'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 import mockApi from '@/javascript/test_support/mock_api.js'

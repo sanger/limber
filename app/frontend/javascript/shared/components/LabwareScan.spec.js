@@ -2,7 +2,7 @@
 
 // Import the component being tested
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import { checkState } from '@/javascript/shared/components/tubeScanValidators.js'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'

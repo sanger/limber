@@ -1,4 +1,4 @@
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import LabwareCustomMetadataAddForm from './LabwareCustomMetadataAddForm.vue'
 
