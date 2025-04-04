@@ -1,4 +1,3 @@
-import localVue from '@/javascript/test_support/base_vue.js'
 import TransferVolumes from './TransferVolumes.vue'
 import { shallowMount } from '@vue/test-utils'
 
@@ -26,7 +25,6 @@ describe('TransferVolumes', () => {
         tube: mockTube,
         ...options,
       },
-      localVue,
     })
   }
 

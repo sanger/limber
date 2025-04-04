@@ -8,9 +8,6 @@ import { checkState } from '@/javascript/shared/components/tubeScanValidators.js
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 import mockApi from '@/javascript/test_support/mock_api.js'
 
-// create an extended `Vue` constructor
-import localVue from '@/javascript/test_support/base_vue.js'
-
 describe('LabwareScan', () => {
   const wrapperFactoryPlate = function (api = mockApi()) {
     return mount(LabwareScan, {
@@ -22,7 +19,6 @@ describe('LabwareScan', () => {
         includes: '',
         colourIndex: 3,
       },
-      localVue,
     })
   }
 
@@ -37,7 +33,6 @@ describe('LabwareScan', () => {
         colourIndex: 3,
         validators: validators,
       },
-      localVue,
     })
   }
 
@@ -52,7 +47,6 @@ describe('LabwareScan', () => {
         colourIndex: 3,
         scanDisabled: true,
       },
-      localVue,
     })
   }
 
@@ -65,7 +59,6 @@ describe('LabwareScan', () => {
         api: api.devour,
         includes: '',
       },
-      localVue,
     })
   }
 
@@ -296,7 +289,6 @@ describe('LabwareScan', () => {
           api: api.devour,
           includes: 'wells.requests_as_source,wells.aliquots.request',
         },
-        localVue,
       })
     }
     it('is valid if it can find a plate', async () => {

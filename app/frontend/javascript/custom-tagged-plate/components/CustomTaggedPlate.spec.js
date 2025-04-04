@@ -1,9 +1,10 @@
 // Import the component being tested
 import { mount, shallowMount } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
-import localVue from '@/javascript/test_support/base_vue.js'
 import MockAdapter from 'axios-mock-adapter'
 import flushPromises from 'flush-promises'
+import axios from 'axios'
+
 import {
   plateUuid,
   exampleParent,
@@ -32,7 +33,6 @@ describe('CustomTaggedPlate', () => {
         tagsPerWell: '1',
         locationObj: mockLocation,
       },
-      localVue,
     })
   }
 
@@ -689,14 +689,13 @@ describe('CustomTaggedPlate', () => {
           'lb-tag-layout-manipulations': true,
           'lb-well-modal': true,
         },
-        localVue,
       })
 
       wrapper.setData({
         parentPlate: exampleParent,
       })
 
-      await localVue.nextTick()
+      // await localVue.nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
       expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
@@ -725,14 +724,13 @@ describe('CustomTaggedPlate', () => {
           'lb-tag-layout-manipulations-multiple': true,
           'lb-well-modal': true,
         },
-        localVue,
       })
 
       wrapper.setData({
         parentPlate: exampleParent,
       })
 
-      await localVue.nextTick()
+      // await localVue.nextTick()
 
       expect(wrapper.find('lb-parent-plate-view-stub').exists()).toBe(true)
       expect(wrapper.find('lb-tag-substitution-details-stub').exists()).toBe(true)
@@ -807,7 +805,7 @@ describe('CustomTaggedPlate', () => {
     })
 
     it('sends a post request when the create plate button is clicked', async () => {
-      let mock = new MockAdapter(localVue.prototype.$axios)
+      let mock = new MockAdapter(axios)
 
       const wrapper = wrapperFactory()
 

@@ -2,9 +2,9 @@
 import { shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { aggregate } from '@/javascript/shared/components/scanValidators.js'
-import localVue from '@/javascript/test_support/base_vue.js'
 import { tubeFactory } from '@/javascript/test_support/factories.js'
 import MultiStampTubes from './MultiStampTubes.vue'
+import axios from 'axios'
 
 import MockAdapter from 'axios-mock-adapter'
 
@@ -32,7 +32,6 @@ describe('MultiStampTubes', () => {
         acceptablePurposes: '[]',
         ...options,
       },
-      localVue,
     })
   }
 
@@ -137,7 +136,7 @@ describe('MultiStampTubes', () => {
   })
 
   it('sends a post request when the button is clicked', async () => {
-    let mock = new MockAdapter(localVue.prototype.$axios)
+    let mock = new MockAdapter(axios)
 
     const tube = {
       state: 'valid',

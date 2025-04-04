@@ -1,6 +1,5 @@
-import { mount, createLocalVue } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import PoolXPTubeSubmitPanel from './PoolXPTubeSubmitPanel.vue'
-import { createBootstrap } from 'bootstrap-vue-next'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import flushPromises from 'flush-promises'
 import ReadyIcon from '../../icons/ReadyIcon.vue'
@@ -8,9 +7,6 @@ import TubeSearchIcon from '../../icons/TubeSearchIcon.vue'
 import SuccessIcon from '../../icons/SuccessIcon.vue'
 import ErrorIcon from '../../icons/ErrorIcon.vue'
 import TubeIcon from '../../icons/TubeIcon.vue'
-
-const localVue = createLocalVue()
-localVue.use(createBootstrap())
 
 // Default props
 const defaultProps = {
@@ -24,7 +20,6 @@ const defaultProps = {
 // Helper function to create the wrapper with the given state and props
 const createWrapper = (state = 'checking_tube_status', props = { ...defaultProps }) => {
   return mount(PoolXPTubeSubmitPanel, {
-    localVue,
     propsData: {
       ...props,
     },

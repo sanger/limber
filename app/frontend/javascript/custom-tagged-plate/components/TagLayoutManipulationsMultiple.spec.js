@@ -1,7 +1,6 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulationsMultiple from './TagLayoutManipulationsMultiple.vue'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
@@ -18,7 +17,6 @@ describe('TagLayoutManipulationsMultiple', () => {
         'lb-tag-groups-lookup': true,
         'lb-tag-offset': true,
       },
-      localVue,
     })
   }
 

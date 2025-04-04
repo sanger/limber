@@ -3,7 +3,6 @@ import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import mockApi from '@/javascript/test_support/mock_api.js'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 describe('DevourSelect mixin', () => {
   const testResourceName = 'test'
@@ -61,8 +60,7 @@ describe('DevourSelect mixin', () => {
 
   describe('checking api behaviour', () => {
     const wrapperFactory = function (api = mockApi()) {
-      const MyComponent = Vue.extend({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
-      return mount(MyComponent, {
+      return mount({component: '<div></div>'}, {
         propsData: {
           api: api.devour,
           resourceName: testResourceName,
@@ -71,7 +69,9 @@ describe('DevourSelect mixin', () => {
           fields: testFields,
           validation: testValidationApiError,
         },
-        localVue,
+        global: {
+          mixins: [DevourSelect],
+        }
       })
     }
 

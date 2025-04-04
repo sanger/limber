@@ -1,7 +1,6 @@
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
-import localVue from '@/javascript/test_support/base_vue.js'
 import {
   nullQcableData,
   exampleQcableData,
@@ -24,7 +23,6 @@ describe('TagLayoutManipulations', () => {
         'lb-tag-groups-lookup': true,
         'lb-tag-offset': true,
       },
-      localVue,
     })
   }
 

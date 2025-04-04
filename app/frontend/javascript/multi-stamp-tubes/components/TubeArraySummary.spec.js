@@ -2,9 +2,6 @@
 import { mount } from '@vue/test-utils'
 import TubeArraySummary from './TubeArraySummary.vue'
 
-// create an extended `Vue` constructor
-import localVue from '@/javascript/test_support/base_vue.js'
-
 describe('TubeArraySummary', () => {
   let emptyTubes = []
   for (let i = 0; i < 96; i++) {
@@ -92,7 +89,6 @@ describe('TubeArraySummary', () => {
       propsData: {
         tubes: emptyTubes,
       },
-      localVue,
     })
   }
 
@@ -101,7 +97,6 @@ describe('TubeArraySummary', () => {
       propsData: {
         tubes: mixtureOfTubesWithDuplicates,
       },
-      localVue,
     })
   }
 
@@ -110,7 +105,6 @@ describe('TubeArraySummary', () => {
       propsData: {
         tubes: fullSetOfTubes,
       },
-      localVue,
     })
   }
 
@@ -119,7 +113,6 @@ describe('TubeArraySummary', () => {
       propsData: {
         tubes: mixtureOfTubesWithDifferingStates,
       },
-      localVue,
     })
   }
 

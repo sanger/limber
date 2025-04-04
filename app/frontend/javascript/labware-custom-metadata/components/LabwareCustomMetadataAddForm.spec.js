@@ -1,5 +1,4 @@
 import flushPromises from 'flush-promises'
-import localVue from '@/javascript/test_support/base_vue.js'
 import { mount } from '@vue/test-utils'
 import LabwareCustomMetadataAddForm from './LabwareCustomMetadataAddForm.vue'
 
@@ -42,7 +41,6 @@ describe('LabwareCustomMetadataAddForm', () => {
 
     return mount(LabwareCustomMetadataAddForm, {
       attachTo: createContainer(),
-      localVue,
       parentComponent: parent,
       propsData: {
         customMetadataFields,

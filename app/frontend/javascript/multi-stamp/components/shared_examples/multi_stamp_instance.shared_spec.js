@@ -4,7 +4,6 @@
 
 // Import the component being tested
 import { shallowMount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
 import { plateFactory, wellFactory, requestFactory } from '@/javascript/test_support/factories.js'
 
 const sharedSpecs = (args) => {
@@ -28,7 +27,6 @@ const sharedSpecs = (args) => {
           transfersCreator: 'multi-stamp',
           ...options,
         },
-        localVue,
       })
     }
 
@@ -199,7 +197,6 @@ const sharedSpecs = (args) => {
               defaultVolume: '34',
               ...options,
             },
-            localVue,
           })
         }
 

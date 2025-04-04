@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
 import flushPromises from 'flush-promises'
+import axios from 'axios'
 
 import MockAdapter from 'axios-mock-adapter'
 
@@ -34,7 +34,6 @@ describe('MultiStampLibrarySplitter', () => {
           }),
           ...options,
         },
-        localVue,
       })
     }
 
@@ -43,7 +42,7 @@ describe('MultiStampLibrarySplitter', () => {
         // This will check receiving 3 plates, plate 1 and 2 received in positions
         // 1 and 2; and plate 3 received in position 4, so there will be a gap for
         // the wells corresponding to the missing plate at position 3
-        let mock = new MockAdapter(localVue.prototype.$axios)
+        let mock = new MockAdapter(axios)
 
         const plateContent = {
           uuid: 'plate-uuid',

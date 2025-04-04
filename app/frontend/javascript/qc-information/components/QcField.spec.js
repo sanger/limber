@@ -1,6 +1,5 @@
 // Import the component being tested
 import { mount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 import QcField from './QcField.vue'
 // Here are some Jasmine 2.0 tests, though you can
@@ -15,7 +14,6 @@ describe('QcField', () => {
         assayTypes: ['One', 'Two'],
         assetUuid: 'uuid',
       },
-      localVue,
     })
   }
 

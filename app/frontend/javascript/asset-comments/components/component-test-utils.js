@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
 import * as commentStoreHelpers from '@/javascript/asset-comments/comment-store-helpers.js'
 import eventBus from '@/javascript/shared/eventBus.js'
 
@@ -22,7 +21,6 @@ const mountWithCommentFactory = function (Component, comments, propsData = {}) {
   vi.spyOn(commentStoreHelpers, 'createCommentFactory').mockReturnValue(mockCommentFactory)
   vi.spyOn(commentStoreHelpers, 'removeCommentFactory').mockImplementation(removeCommentFactoryMockFn)
   const wrapper = mount(Component, {
-    localVue,
     propsData: { ...commentProps, ...propsData },
   })
   return { wrapper, mockCommentFactory, removeCommentFactoryMockFn }

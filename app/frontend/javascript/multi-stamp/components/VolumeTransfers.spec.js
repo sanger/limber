@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
 import VolumeTransfers from './VolumeTransfers.vue'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 describe('VolumeTransfers', () => {
   const wrapperFactory = function () {
@@ -8,7 +7,6 @@ describe('VolumeTransfers', () => {
       propsData: {
         validTransfers: [],
       },
-      localVue,
     })
   }
 
