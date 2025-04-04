@@ -51,10 +51,10 @@ class SearchController < ApplicationController
   end
 
   def find_qcable(barcode)
-    includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
+    includes = [:asset, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
     Sequencescape::Api::V2::Qcable
-      .includes(*includes)
       .where(barcode:)
+      .includes(*includes)
       .first
       .tap { |qcable| raise "Sorry, could not find qcable with the barcode '#{barcode}'." if qcable.nil? }
   end
