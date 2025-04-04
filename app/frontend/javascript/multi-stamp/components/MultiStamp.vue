@@ -27,7 +27,7 @@
             @change="updatePlate(i, $event)"
           />
         </b-form-group>
-        <b-alert :show="transfersError !== ''" variant="danger">
+        <b-alert :model-value="transfersError !== ''" variant="danger">
           {{ transfersError }}
         </b-alert>
         <component

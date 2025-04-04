@@ -7,9 +7,11 @@
       :asset-uuid="assetUuid"
       @change="updateResult(qcField.name, $event)"
     />
-    <b-button :disabled="disabled" :variant="buttonStyle" size="lg" block @click="submit">
-      {{ buttonText }}
-    </b-button>
+    <div class="d-grid">
+      <b-button :disabled="disabled" :variant="buttonStyle" size="lg" @click="submit">
+        {{ buttonText }}
+      </b-button>
+    </div>
   </div>
 </template>
 

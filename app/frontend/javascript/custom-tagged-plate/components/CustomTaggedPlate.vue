@@ -57,14 +57,13 @@
               :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
               @tagparamsupdated="tagParamsUpdated"
             />
-            <div class="form-group form-row">
+            <div class="form-group form-row d-grid">
               <b-button
                 id="custom_tagged_plate_submit_button"
                 name="custom_tagged_plate_submit_button"
                 :disabled="createButtonDisabled"
                 :variant="createButtonStyle"
                 size="lg"
-                block
                 @click="createPlate"
               >
                 {{ createButtonText }}

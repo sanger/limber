@@ -37,9 +37,11 @@
         </b-row>
       </b-form-group>
 
-      <b-button id="labware_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>
-        {{ buttonText }}
-      </b-button>
+      <div class="d-grid">
+        <b-button id="labware_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg">
+          {{ buttonText }}
+        </b-button>
+      </div>
     </b-form>
   </div>
 </template>

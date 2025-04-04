@@ -12,18 +12,19 @@
         tabindex="1"
       />
     </div>
-    <b-button
-      id="asset_comment_submit_button"
-      name="asset_comment_submit_button"
-      class="w-100"
-      :disabled="disabled"
-      :variant="buttonStyle"
-      size="lg"
-      block
-      @click="submit"
-    >
-      {{ buttonText }}
-    </b-button>
+    <div class="d-grid">
+      <b-button
+        id="asset_comment_submit_button"
+        name="asset_comment_submit_button"
+        class="w-100"
+        :disabled="disabled"
+        :variant="buttonStyle"
+        size="lg"
+        @click="submit"
+      >
+        {{ buttonText }}
+      </b-button>
+    </div>
   </div>
 </template>
 
