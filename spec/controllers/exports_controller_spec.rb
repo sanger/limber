@@ -252,16 +252,52 @@ RSpec.describe ExportsController, type: :controller do
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
 
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_dil_1_to_lrc_gem_x_5p_bcr_enrich1_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_dil_1_to_lrc_gem_x_5p_bcr_enrich1_2xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_enrich1_2xspri_to_lrc_gem_x_5p_bcr_enrich2_2xspri.csv' do # rubocop:disable Layout/LineLength
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_enrich1_2xspri_to_lrc_gem_x_5p_bcr_enrich2_2xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
       context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2.csv' do
         let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2' }
 
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
 
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_dil_2_to_lrc_gem_x_5p_bcr_post_lig_1xspri.csv' do
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_dil_2_to_lrc_gem_x_5p_bcr_post_lig_1xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_dil_1_to_lrc_gem_x_5p_tcr_enrich1_2xspri.csv' do
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_dil_1_to_lrc_gem_x_5p_tcr_enrich1_2xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_enrich1_2xspri_to_lrc_gem_x_5p_tcr_enrich2_2xspri.csv' do # rubocop:disable Layout/LineLength
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_enrich1_2xspri_to_lrc_gem_x_5p_tcr_enrich2_2xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
       context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2.csv' do
         let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2' }
 
         it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_dil_2_to_lrc_gem_x_5p_tcr_post_lig_1xspri.csv' do
+        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_dil_2_to_lrc_gem_x_5p_tcr_post_lig_1xspri' }
+
+        it_behaves_like 'a hamilton plate stamp view'
       end
     end
 
