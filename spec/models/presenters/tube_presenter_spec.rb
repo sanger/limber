@@ -18,7 +18,7 @@ RSpec.describe Presenters::TubePresenter do
   let(:purpose) { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
   let(:purpose_name) { 'Limber example purpose' }
   let(:purpose_uuid) { 'example-purpose-uuid' }
-  let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
+  let(:title) { purpose_name }
   let(:state) { 'pending' }
   let(:qc_results) do
     [
