@@ -147,6 +147,31 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     end
   end
 
+  def purpose_config
+    Settings.purposes[purpose&.uuid] || {}
+  end
+  
+  # return true if the plate has register_stock_plate flag in config file
+  def register_stock_plate?
+    purpose_config.fetch(:register_stock_plate, false)
+  end
+
+  # @return [Boolean] true if the plate is registered to stock resource sucessfully
+  # @note This method is used to register the stock plate in Sequencescape.
+  #       It sends a POST request to the Sequencescape API to register the stock plate.
+  #       If the request is successful, it returns true. Otherwise, it adds an error message
+  #       to the errors collection and returns false.
+  def register_stock
+    url = "#{self.class.site}/plates/#{id}/register_stock_for_plate"
+  
+    response = Faraday.post(url)
+    response.headers['Content-Type'] = 'application/json'
+    return true if response.success?
+    
+    errors.add(:base, response.body['error'])
+    false
+  end
+
   private
 
   def aliquots
@@ -161,14 +186,4 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Pools.new(wells_in_columns)
   end
 
-  def register_stock_for_plate
-    response = self.class.requestor.post("#{self.class.path}/#{id}/register_stock_for_plate")
-
-    if response.success?
-      true
-    else
-      errors.add(:base, response.body['error'])
-      false
-    end
-  end
 end
