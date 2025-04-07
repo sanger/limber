@@ -150,7 +150,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   def purpose_config
     Settings.purposes[purpose&.uuid] || {}
   end
-  
+
   # return true if the plate has register_stock_plate flag in config file
   def register_stock_plate?
     purpose_config.fetch(:register_stock_plate, false)
@@ -163,11 +163,10 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   #       to the errors collection and returns false.
   def register_stock
     url = "#{self.class.site}/plates/#{id}/register_stock_for_plate"
-  
     response = Faraday.post(url)
     response.headers['Content-Type'] = 'application/json'
     return true if response.success?
-    
+
     errors.add(:base, response.body['error'])
     false
   end
@@ -185,5 +184,4 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   def generate_pools
     Pools.new(wells_in_columns)
   end
-
 end

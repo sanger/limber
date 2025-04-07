@@ -125,14 +125,16 @@ module LabwareCreators
       transfer_material_from_parent!
       yield(@child) if block_given?
       after_transfer!
-      
-      # call stock register after sample transfer
+
+      # call stock register after sample transfer if register_stock_plate flag is true
       if @child_plate_v2.register_stock_plate?
         begin
           if @child_plate_v2.register_stock
             Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
           else
-            Rails.logger.error("Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}")
+            Rails.logger.error(
+              "Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}"
+            )
           end
         rescue StandardError => e
           Rails.logger.error("Stock registration error for plate #{@child.uuid}: #{e.message}")
