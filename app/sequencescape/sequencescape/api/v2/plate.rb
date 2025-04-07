@@ -142,7 +142,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     wells.each do |well|
       pool = pooled_wells.find { |wells| wells.include?(well.location) }
       next if pool.nil?
-
       well.pool = pool
     end
   end
@@ -156,11 +155,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     purpose_config.fetch(:register_stock_plate, false)
   end
 
-  # @return [Boolean] true if the plate is registered to stock resource sucessfully
-  # @note This method is used to register the stock plate in Sequencescape.
-  #       It sends a POST request to the Sequencescape API to register the stock plate.
-  #       If the request is successful, it returns true. Otherwise, it adds an error message
-  #       to the errors collection and returns false.
+  # This method is used to register the stock plate in Sequencescape.
   def register_stock
     url = "#{self.class.site}/plates/#{id}/register_stock_for_plate"
     response = Faraday.post(url)

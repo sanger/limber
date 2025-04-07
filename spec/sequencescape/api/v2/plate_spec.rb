@@ -113,4 +113,35 @@ RSpec.describe Sequencescape::Api::V2::Plate do
       expect(plate.wells_in_rows.map(&:location)).to eq(locations_in_rows)
     end
   end
+
+  describe '#register_stock' do
+    let(:plate) { described_class.new(id: '123') }
+    let(:url) { "#{described_class.site}/plates/123/register_stock_for_plate" }
+
+    context 'when the request is successful' do
+      before do
+        stub_request(:post, url).to_return(status: 200, body: '', headers: { 'Content-Type' => 'application/json' })
+      end
+
+      it 'returns true' do
+        expect(plate.register_stock).to be true
+      end
+    end
+
+    context 'when the request fails' do
+      before do
+        stub_request(:post, url).to_return(
+          status: 400,
+          body: { error: 'Stock registration failed:' }.to_json,
+          headers: {
+            'Content-Type' => 'application/json'
+          }
+        )
+      end
+
+      it 'adds an error and returns false' do
+        expect(plate.register_stock).to be false
+      end
+    end
+  end
 end
