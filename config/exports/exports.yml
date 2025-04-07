@@ -257,7 +257,7 @@ hamilton_lrc_gem_x_5p_bcr_dil_1_to_lrc_gem_x_5p_bcr_enrich1_2xspri:
 hamilton_lrc_gem_x_5p_bcr_enrich1_2xspri_to_lrc_gem_x_5p_bcr_enrich2_2xspri:
   csv: hamilton_plate_stamp
   plate_includes: wells.transfer_requests_as_target.source_asset
-  workflow: 10X VDJ Post Target Enrichment 2 Double SPRI
+  workflow: 10X GEM-X 5' VDJ Post Target Enrichment 2 Double SPRI
 hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2:
   csv: hamilton_fixed_volume_dilutions
   plate_includes: wells.transfer_requests_as_target.source_asset
