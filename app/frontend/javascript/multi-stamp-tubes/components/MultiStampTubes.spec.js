@@ -15,7 +15,7 @@ describe('MultiStampTubes', () => {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
     return shallowMount(MultiStampTubes, {
-      propsData: {
+      props: {
         parentPurposeName: 'parent',
         purposeName: 'purpose',
         purposeUuid: 'test',

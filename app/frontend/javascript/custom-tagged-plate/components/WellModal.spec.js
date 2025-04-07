@@ -8,7 +8,7 @@ import { nextTick } from 'vue'
 describe('WellModal', () => {
   const wrapperFactory = function () {
     return shallowMount(WellModal, {
-      propsData: {
+      props: {
         wellModalDetails: {
           position: 'A1',
           originalTag: 1,

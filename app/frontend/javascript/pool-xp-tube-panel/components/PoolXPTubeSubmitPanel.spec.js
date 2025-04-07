@@ -20,7 +20,7 @@ const defaultProps = {
 // Helper function to create the wrapper with the given state and props
 const createWrapper = (state = 'checking_tube_status', props = { ...defaultProps }) => {
   return mount(PoolXPTubeSubmitPanel, {
-    propsData: {
+    props: {
       ...props,
     },
     data() {

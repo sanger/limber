@@ -4,7 +4,7 @@ import VolumeTransfers from './VolumeTransfers.vue'
 describe('VolumeTransfers', () => {
   const wrapperFactory = function () {
     return shallowMount(VolumeTransfers, {
-      propsData: {
+      props: {
         validTransfers: [],
       },
     })

@@ -7,7 +7,7 @@ import QcField from './QcField.vue'
 describe('QcField', () => {
   const wrapperFactory = function () {
     return mount(QcField, {
-      propsData: {
+      props: {
         name: 'volume',
         units: 'ul',
         defaultAssayType: 'One',

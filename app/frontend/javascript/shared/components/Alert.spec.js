@@ -7,7 +7,7 @@ describe('Alert.vue', () => {
     const title = 'Test Title'
     const message = 'Test Message'
     const wrapper = shallowMount(Alert, {
-      propsData: { level, title, message },
+      props: { level, title, message },
     })
 
     expect(wrapper.classes()).toContain(`alert-${level}`)

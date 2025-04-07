@@ -15,7 +15,7 @@ const sharedSpecs = (args) => {
       // Not ideal using mount here, but having massive trouble
       // triggering change events on unmounted components
       return shallowMount(subject, {
-        propsData: {
+        props: {
           targetRows: '16',
           targetColumns: '24',
           sourcePlates: '4',
@@ -184,7 +184,7 @@ const sharedSpecs = (args) => {
           // Not ideal using mount here, but having massive trouble
           // triggering change events on unmounted components
           return shallowMount(subject, {
-            propsData: {
+            props: {
               targetRows: '16',
               targetColumns: '24',
               sourcePlates: '4',

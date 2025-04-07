@@ -7,7 +7,7 @@ import TagOffset from './TagOffset.vue'
 describe('TagOffset', () => {
   const wrapperFactory = function () {
     return shallowMount(TagOffset, {
-      propsData: {
+      props: {
         numberOfTags: 5,
         numberOfTargetWells: 5,
         tagsPerWell: 1,

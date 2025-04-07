@@ -42,7 +42,7 @@ describe('LabwareCustomMetadataAddForm', () => {
     return mount(LabwareCustomMetadataAddForm, {
       attachTo: createContainer(),
       parentComponent: parent,
-      propsData: {
+      props: {
         customMetadataFields,
         labwareId,
         userId,

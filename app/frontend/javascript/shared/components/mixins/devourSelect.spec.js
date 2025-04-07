@@ -25,12 +25,15 @@ describe('DevourSelect mixin', () => {
       fields: testFields,
       validation: testValidation,
     }
-    cmp = mount({component: '<div></div>'}, {
-      props: data,
-      global: {
-        mixins: [DevourSelect],
-      }
-    })
+    cmp = mount(
+      { component: '<div></div>' },
+      {
+        props: data,
+        global: {
+          mixins: [DevourSelect],
+        },
+      },
+    )
     devourSelectInstance = cmp.vm
   })
 
@@ -62,19 +65,22 @@ describe('DevourSelect mixin', () => {
 
   describe('checking api behaviour', () => {
     const wrapperFactory = function (api = mockApi()) {
-      return mount({component: '<div></div>'}, {
-        propsData: {
-          api: api.devour,
-          resourceName: testResourceName,
-          includes: testIncludes,
-          filter: testFilter,
-          fields: testFields,
-          validation: testValidationApiError,
+      return mount(
+        { component: '<div></div>' },
+        {
+          props: {
+            api: api.devour,
+            resourceName: testResourceName,
+            includes: testIncludes,
+            filter: testFilter,
+            fields: testFields,
+            validation: testValidationApiError,
+          },
+          global: {
+            mixins: [DevourSelect],
+          },
         },
-        global: {
-          mixins: [DevourSelect],
-        }
-      })
+      )
     }
 
     it('is invalid if there are api troubles', async () => {

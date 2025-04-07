@@ -12,7 +12,7 @@ import {
 describe('TagLayoutManipulations', () => {
   const wrapperFactory = function () {
     return shallowMount(TagLayoutManipulations, {
-      propsData: {
+      props: {
         api: {},
         numberOfTags: 10,
         numberOfTargetWells: 10,

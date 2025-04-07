@@ -86,7 +86,7 @@ describe('TubeArraySummary', () => {
 
   const wrapperTubeArraySummaryEmpty = function () {
     return mount(TubeArraySummary, {
-      propsData: {
+      props: {
         tubes: emptyTubes,
       },
     })
@@ -94,7 +94,7 @@ describe('TubeArraySummary', () => {
 
   const wrapperTubeArraySummaryWithDuplicates = function () {
     return mount(TubeArraySummary, {
-      propsData: {
+      props: {
         tubes: mixtureOfTubesWithDuplicates,
       },
     })
@@ -102,7 +102,7 @@ describe('TubeArraySummary', () => {
 
   const wrapperTubeArraySummaryFull = function () {
     return mount(TubeArraySummary, {
-      propsData: {
+      props: {
         tubes: fullSetOfTubes,
       },
     })
@@ -110,7 +110,7 @@ describe('TubeArraySummary', () => {
 
   const wrapperTubeArraySummaryWithDifferingStates = function () {
     return mount(TubeArraySummary, {
-      propsData: {
+      props: {
         tubes: mixtureOfTubesWithDifferingStates,
       },
     })

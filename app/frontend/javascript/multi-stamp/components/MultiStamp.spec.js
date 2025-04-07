@@ -16,7 +16,7 @@ describe('MultiStamp', () => {
       // Not ideal using mount here, but having massive trouble
       // triggering change events on unmounted components
       return shallowMount(MultiStamp, {
-        propsData: {
+        props: {
           targetRows: '16',
           targetColumns: '24',
           sourcePlates: '4',

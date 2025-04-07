@@ -7,14 +7,12 @@ import axios from 'axios'
 import mockApi from '@/javascript/test_support/mock_api.js'
 
 config.global.components = {
-    'LbMainContent': MainContent,
-    'LbPage': Page,
-    'LbSidebar': Sidebar,
+  LbMainContent: MainContent,
+  LbPage: Page,
+  LbSidebar: Sidebar,
 }
-config.global.plugins = [
-    createBootstrap(),
-]
+config.global.plugins = [createBootstrap()]
 config.global.mocks = {
-    $axios: () => axios,
-    $api: () => mockApi(),
+  $axios: () => axios,
+  $api: () => mockApi(),
 }

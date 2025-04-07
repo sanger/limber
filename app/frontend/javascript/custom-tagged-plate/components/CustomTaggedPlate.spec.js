@@ -23,7 +23,7 @@ describe('CustomTaggedPlate', () => {
   const mockLocation = {}
   const wrapperFactory = function () {
     return shallowMount(CustomTaggedPlate, {
-      propsData: {
+      props: {
         sequencescapeApi: 'http://localhost:3000/api/v2',
         sequencescapeApiKey: 'development',
         purposeUuid: '',
@@ -672,7 +672,7 @@ describe('CustomTaggedPlate', () => {
   describe('#rendering tests:', () => {
     it('renders child components for single tag per well', async () => {
       const wrapper = mount(CustomTaggedPlate, {
-        propsData: {
+        props: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
           sequencescapeApiKey: 'development',
           purposeUuid: '',
@@ -690,7 +690,7 @@ describe('CustomTaggedPlate', () => {
             'lb-tag-layout-manipulations': true,
             'lb-well-modal': true,
           },
-        }
+        },
       })
 
       wrapper.setData({
@@ -709,7 +709,7 @@ describe('CustomTaggedPlate', () => {
 
     it('renders child components for multiple tags per well', async () => {
       const wrapper = mount(CustomTaggedPlate, {
-        propsData: {
+        props: {
           sequencescapeApi: 'http://localhost:3000/api/v2',
           sequencescapeApiKey: 'development',
           purposeUuid: '',
@@ -727,7 +727,7 @@ describe('CustomTaggedPlate', () => {
             'lb-tag-layout-manipulations-multiple': true,
             'lb-well-modal': true,
           },
-        }
+        },
       })
 
       wrapper.setData({

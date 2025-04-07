@@ -12,7 +12,7 @@ describe('AssetLookupByUuid', () => {
     // Not ideal using mount here, but having trouble
     // triggering change events on unmounted components
     return mount(AssetLookupByUuid, {
-      propsData: {
+      props: {
         api: api.devour,
         resourceName: 'plate',
         includes: '',

@@ -11,7 +11,7 @@ describe('LbPlate', () => {
   // Populate the wells props with a full plate worth of wells
   plateFactory({ _wellOptions: { colour_index: 1 } }).wells.forEach((well) => (wells[well.position.name] = well))
   const wrapper = shallowMount(LbPlate, {
-    propsData: { columns: 12, rows: 8, caption: myCaption, wells: wells },
+    props: { columns: 12, rows: 8, caption: myCaption, wells: wells },
   })
 
   // Inspect the raw component options

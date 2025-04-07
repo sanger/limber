@@ -78,7 +78,7 @@ describe('TagGroupsLookup', () => {
 
   const wrapperFactory = function (api = mockApi()) {
     return mount(TagGroupsLookup, {
-      propsData: {
+      props: {
         api: api.devour,
         resourceName: 'tag_group',
       },

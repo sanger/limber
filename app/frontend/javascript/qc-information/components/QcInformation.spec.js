@@ -9,7 +9,7 @@ import QcInformation from './QcInformation.vue'
 describe('QcInformation', () => {
   const wrapperFactory = function () {
     return shallowMount(QcInformation, {
-      propsData: {
+      props: {
         assetUuid: 'test',
       },
     })

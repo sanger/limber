@@ -6,7 +6,7 @@ import { requestsFromPlates } from '@/javascript/shared/requestHelpers.js'
 describe('PrimerPanelFilter', () => {
   const wrapperFactory = function (requests) {
     return shallowMount(PrimerPanelFilter, {
-      propsData: {
+      props: {
         requestsWithPlates: requests,
       },
     })

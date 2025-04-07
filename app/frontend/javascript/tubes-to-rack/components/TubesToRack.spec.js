@@ -8,7 +8,7 @@ vi.mock('@/javascript/shared/components/tubeScanValidators')
 describe('MultiStampTubes', () => {
   const wrapperFactory = function (options = {}) {
     return shallowMount(TubesToRack, {
-      propsData: {
+      props: {
         targetUrl: '',
         ...options,
       },

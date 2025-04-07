@@ -7,7 +7,7 @@ import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
 describe('TagSubstitutionDetails', () => {
   const wrapperFactory = function () {
     return shallowMount(TagSubstitutionDetails, {
-      propsData: {
+      props: {
         tagSubstitutions: { 2: '5', 3: '6' },
       },
     })

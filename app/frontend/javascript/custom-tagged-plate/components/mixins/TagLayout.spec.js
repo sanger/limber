@@ -8,7 +8,6 @@ import {
 describe('TagLayout mixin', () => {
   let tagLayout, data
 
-
   beforeEach(() => {
     data = {
       api: {},
@@ -17,12 +16,15 @@ describe('TagLayout mixin', () => {
       tagsPerWell: 1,
     }
 
-    const wrapper = mount({ template: '<div></div>' }, {
-      props: { ...data },
-      global: {
-        mixins: [TagLayout]
+    const wrapper = mount(
+      { template: '<div></div>' },
+      {
+        props: { ...data },
+        global: {
+          mixins: [TagLayout],
+        },
       },
-    })
+    )
     tagLayout = wrapper.vm
   })
 

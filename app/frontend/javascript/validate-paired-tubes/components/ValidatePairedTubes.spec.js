@@ -1,5 +1,5 @@
 import ValidatePairedTubes from './ValidatePairedTubes.vue'
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import {
   checkId,
@@ -18,11 +18,11 @@ describe('TransferVolumes', () => {
       },
     }
 
-    return shallowMount(ValidatePairedTubes, {
+    return mount(ValidatePairedTubes, {
       stubs: {
         'lb-labware-scan': LabwareScan,
       },
-      propsData: {
+      props: {
         purposeConfigJson: '{}',
         ...options,
       },
