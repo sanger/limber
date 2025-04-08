@@ -24,7 +24,7 @@ namespace :lint do
     system('bundle exec rubocop -a')
 
     puts 'Running ERB Lint in auto-correct mode...'
-    system('bundle exec erb_lint -a .')
+    system('bundle exec erb_lint --autocorrect --lint-all')
 
     puts 'Lint formatting complete!'
   end
