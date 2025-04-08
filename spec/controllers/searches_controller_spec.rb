@@ -65,11 +65,7 @@ RSpec.describe SearchController, type: :controller do
       let(:result) { create :v2_plate }
       context 'without parameters' do
         let(:search_parameters) do
-          {
-            state: %w[pending started passed qc_complete failed cancelled],
-            purpose_name: %w[purpose-config minimal-purpose-config],
-            include_used: false
-          }
+          { state: %w[pending started passed qc_complete failed cancelled], purpose_name: [], include_used: false }
         end
 
         it 'finds all plates' do
@@ -82,11 +78,7 @@ RSpec.describe SearchController, type: :controller do
 
       context 'with parameters' do
         let(:search_parameters) do
-          {
-            state: %w[pending started passed qc_complete failed cancelled],
-            purpose_name: %w[purpose-config minimal-purpose-config],
-            include_used: true
-          }
+          { state: %w[pending started passed qc_complete failed cancelled], purpose_name: [], include_used: true }
         end
 
         it 'finds specified plates' do
