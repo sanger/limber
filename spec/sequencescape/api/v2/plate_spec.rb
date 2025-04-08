@@ -139,7 +139,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
         )
       end
 
-      it 'adds an error and returns false' do
+      it 'returns false' do
         expect(plate.register_stock).to be false
       end
     end
