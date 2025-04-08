@@ -146,21 +146,20 @@ Only one terminal for Limber is needed (unless running the integration suite)
 
 ## Linting and formatting
 
-Linting and formatting are provided by rubocop, prettier and Eslint. I strongly
-recommend checking out editor integrations. Also, using lefthook will help
-ensure that only valid files are committed.
+Linting and formatting are provided by rubocop, prettier, ESlint and erb_lint.
+I strongly recommend checking out editor integrations.
+Also, using lefthook will help ensure that only valid files are committed.
 
-```shell
-# Run rubocop
-bundle exec rubocop
-# Run rubocop with safe autofixes
-bundle exec rubocop -a
-# ESlint
-yarn lint
-# Check prettier formatting
-yarn prettier --check .
-# Fix prettier formatting
-yarn prettier --write .
+There are two built-in rake tasks to run the linters. To just perform a check, run:
+
+```sh
+bundle exec rake lint:check
+```
+
+To make simple automatic fixes, run:
+
+```sh
+bundle exec rake lint:format
 ```
 
 ## Troubleshooting
