@@ -38,7 +38,8 @@ module Presenters
       all_tubes.map(&:priority).max
     end
 
-    def title
+    # Generates the content title for the labware as seen in the page.
+    def content_title
       "#{purpose_name} : #{tube_purpose_names}"
     end
 
