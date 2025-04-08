@@ -163,6 +163,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   private
+
   def aliquots
     wells.flat_map(&:aliquots)
   end

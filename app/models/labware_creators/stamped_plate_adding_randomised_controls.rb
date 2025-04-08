@@ -133,17 +133,16 @@ module LabwareCreators
     end
 
     def register_stock_for_plate
-        # call Sequencescape::Api::V2::Plate register_stock method
-        if @child_plate_v2.register_stock
-          Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
-        else
-          Rails.logger.error(
-            "Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}"
-          )
-        end
-      rescue StandardError => e
-        Rails.logger.error("Stock registration error for plate #{@child.uuid}: #{e.message}")
-      
+      # call Sequencescape::Api::V2::Plate register_stock method
+      if @child_plate_v2.register_stock
+        Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
+      else
+        Rails.logger.error(
+          "Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}"
+        )
+      end
+    rescue StandardError => e
+      Rails.logger.error("Stock registration error for plate #{@child.uuid}: #{e.message}")
     end
 
     # create the control samples in the chosen well locations in the child plate
