@@ -5,7 +5,7 @@ require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
   let(:purpose_name) { 'Limber example purpose' }
-  let(:title) { "#{purpose_name} (#{labware.human_barcode})" }
+  let(:title) { purpose_name }
   let(:state) { 'pending' }
   let(:summary_tab) do
     [
