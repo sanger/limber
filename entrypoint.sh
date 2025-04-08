@@ -6,6 +6,9 @@ set -e
 # Remove a potentially pre-existing server.pid for Rails.
 rm -f /code/tmp/pids/server.pid
 
+# Install any missing packages - very useful for development without rebuilding the image
+bundle install
+
 # Generate the latest config on launch
 if [ "${GENERATE_CONFIG:-}" = "true" ]; then
   bundle exec rails config:generate
