@@ -47,8 +47,7 @@ LRC GEM-X 5p BCR Dil 2:
         max: 1_000.0
         pcr_cycles: 6
         colour: 4
-      # What about pcr_cycles for 1_000.0 to 1_500.0?
-      - min: 1_500.0
+      - min: 1_000.0
         pcr_cycles: 5
         colour: 5
   :file_links:
