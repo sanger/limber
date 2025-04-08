@@ -38,10 +38,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2::Plate.includes(*includes).where(**options).all
   end
 
-  #
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same
-  #
   # @return [ActiveModel::Name] The resource behaves like a Limber::Plate
   #
   def model_name
@@ -74,14 +72,12 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   # Returns wells sorted by rows first and then columns.
-  #
   # @return [Array<Well>] The wells sorted in row-major order.
   def wells_in_rows
     @wells_in_rows ||= wells.sort_by { |well| [well.coordinate[1], well.coordinate[0]] }
   end
 
   # Returns the well at a specified location.
-  #
   # @param well_location [String] The location to find the well at.
   # @return [Well, nil] The well at the specified location, or `nil` if no
   #   well is found at that location.
@@ -167,7 +163,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   private
-
   def aliquots
     wells.flat_map(&:aliquots)
   end
