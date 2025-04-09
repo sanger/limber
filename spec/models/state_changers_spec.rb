@@ -148,6 +148,7 @@ RSpec.describe StateChangers do
     has_a_working_api
 
     let(:tube_starting_state) { 'pending' }
+    let(:tube_failed_state) { 'failed' }
     let(:tube_cancelled_state) { 'failed' }
 
     let(:target_state) { 'passed' }
