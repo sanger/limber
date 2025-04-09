@@ -1,5 +1,5 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
 import {
   nullQcableData,
@@ -7,22 +7,22 @@ import {
   exampleTagGroupsList,
 } from '@/javascript/custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('TagLayoutManipulations', () => {
   const wrapperFactory = function () {
-    return shallowMount(TagLayoutManipulations, {
+    return mount(TagLayoutManipulations, {
       props: {
         api: {},
         numberOfTags: 10,
         numberOfTargetWells: 10,
         tagsPerWell: 1,
       },
-      stubs: {
-        'lb-plate-scan': true,
-        'lb-tag-groups-lookup': true,
-        'lb-tag-offset': true,
-      },
+      global:{
+        stubs: {
+          'lb-plate-scan': true,
+          'TagGroupsLookup': true,
+          'lb-tag-offset': true,
+        },
+      }
     })
   }
 
@@ -140,7 +140,6 @@ describe('TagLayoutManipulations', () => {
 
     it('emits a call to the parent container on a change of the form data', () => {
       const wrapper = wrapperFactory()
-      const emitted = wrapper.emitted()
 
       wrapper.setData({ walkingBy: 'manual by plate' })
 
@@ -166,6 +165,7 @@ describe('TagLayoutManipulations', () => {
       // NB. cannot interact with vue bootstrap components when wrapper is
       // shallowMounted
       wrapper.vm.updateTagParams()
+      const emitted = wrapper.emitted()
 
       expect(emitted.tagparamsupdated.length).toBe(1)
       expect(emitted.tagparamsupdated[0]).toEqual(expectedEmitted)

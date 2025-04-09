@@ -61,8 +61,7 @@ describe('QcField', () => {
     await wrapper.find('input').setValue('1.5')
     await wrapper.find('select').setValue('Two')
 
-    expect(wrapper.emitted()).toEqual({
-      change: [
+    expect(wrapper.emitted().change).toEqual([
         [
           {
             value: '1.5',
@@ -83,7 +82,6 @@ describe('QcField', () => {
             uuid: 'uuid',
           },
         ],
-      ],
-    })
+    ])
   })
 })

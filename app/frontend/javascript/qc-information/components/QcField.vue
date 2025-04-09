@@ -1,5 +1,5 @@
 <template>
-  <b-form-group :label="name | titleize">
+  <b-form-group :label="titleize(name)">
     <b-row>
       <b-col>
         <b-form-group label="Value" :label-for="`qc-field-${name}-value`" label-visually-hidden>
@@ -9,7 +9,7 @@
               v-model="value"
               :type="dataType"
               v-bind="fieldOptions"
-              @update:model-value="emitOnChange"
+              @change="emitOnChange"
             />
           </b-input-group>
         </b-form-group>
@@ -20,7 +20,7 @@
             :id="`qc-field-${name}-assay-type`"
             v-model="assayType"
             :options="assayTypes"
-            @update:model-value="emitOnChange"
+            @change="emitOnChange"
           />
         </b-form-group>
       </b-col>
@@ -31,13 +31,6 @@
 <script>
 export default {
   name: 'QcField',
-  filters: {
-    titleize(value) {
-      if (!value) return ''
-      value = value.toString().replace('_', ' ')
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    },
-  },
   props: {
     name: { type: String, required: true },
     units: { type: String, required: true },
@@ -76,6 +69,11 @@ export default {
         uuid: this.assetUuid,
       })
     },
+    titleize(name) {
+      if (!name) return ''
+      name = name.toString().replace('_', ' ')
+      return name.charAt(0).toUpperCase() + name.slice(1)
+    }
   },
 }
 </script>

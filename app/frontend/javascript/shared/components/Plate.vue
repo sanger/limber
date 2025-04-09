@@ -37,9 +37,6 @@ import { rowNumToLetter } from '@/javascript/shared/wellHelpers.js'
 
 export default {
   name: 'LbPlate',
-  filters: {
-    toLetter: rowNumToLetter,
-  },
   components: {
     'lb-well': LbWell,
   },

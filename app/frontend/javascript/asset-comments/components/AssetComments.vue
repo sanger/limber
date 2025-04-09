@@ -11,7 +11,7 @@
         <small class="user-name"
           >{{ comment.user.first_name }} {{ comment.user.last_name }} ({{ comment.user.login }})</small
         >
-        <small class="comment-date">{{ comment.created_at | formatDate }}</small>
+        <small class="comment-date">{{ formatDate(comment.created_at) }}</small>
       </div>
     </li>
     <li v-if="noComments" class="no-comment">No comments available</li>
@@ -30,16 +30,9 @@ const dateOptions = {
   hour: 'numeric',
   minute: '2-digit',
 }
-const formatDate = function (date) {
-  const dateObject = new Date(date)
-  return dateObject.toLocaleString('en-GB', dateOptions)
-}
 
 export default {
   name: 'AssetComments',
-  filters: {
-    formatDate: formatDate,
-  },
   props: {
     sequencescapeApi: {
       type: String,
@@ -95,7 +88,6 @@ export default {
     removeCommentFactory(this.assetId)
     eventBus.$off('update-comments')
   },
-
   created() {
     // Listen for the event
     eventBus.$on('update-comments', (data) => {
@@ -105,5 +97,11 @@ export default {
       this.comments = data.comments
     })
   },
+  methods: {
+    formatDate(date) {
+      const dateObject = new Date(date)
+      return dateObject.toLocaleString('en-GB', dateOptions)
+    }
+  }
 }
 </script>
