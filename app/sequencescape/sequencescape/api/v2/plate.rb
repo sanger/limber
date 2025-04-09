@@ -3,6 +3,7 @@
 require_dependency 'well_helpers'
 
 # A plate from sequencescape via the V2 API
+# rubocop:disable Metrics/ClassLength
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include WellHelpers::Extensions
   include Sequencescape::Api::V2::Shared::HasRequests
@@ -175,4 +176,5 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   def generate_pools
     Pools.new(wells_in_columns)
   end
+  # rubocop:enable Metrics/ClassLength
 end
