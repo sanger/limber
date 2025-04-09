@@ -55,3 +55,4 @@ Style/SafeNavigationChainLength:
     - 'app/models/labware_creators/donor_pooling_plate.rb'
     - 'app/models/labware_creators/quadrant_stamp_base.rb'
     - 'app/sequencescape/sequencescape/api/v2/receptacle.rb'
+    - 'app/controllers/tube_racks/tube_racks_exports_controller.rb'
