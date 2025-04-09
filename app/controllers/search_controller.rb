@@ -63,7 +63,7 @@ class SearchController < ApplicationController
   end
 
   def ongoing_plate_search_params
-    params.fetch(:ongoing_plate, {}).permit(:show_my_plates_only, :include_used, purposes: [])
+    params.fetch(:ongoing_plate, {}).permit(:include_used, purposes: [])
   end
 
   def ongoing_tube_search_params
