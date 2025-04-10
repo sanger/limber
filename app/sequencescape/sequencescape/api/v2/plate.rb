@@ -159,7 +159,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     response.headers['Content-Type'] = 'application/json'
     return true if response.success?
 
-    errors.add(:base, response.body['error'])
+    error_message = JSON.parse(response.body)['error']
+    errors.add(:base, error_message)
     false
   end
 
