@@ -109,6 +109,11 @@ BGE Blended Cap Lib Pool:
         - BGE Lib Pool
         - BGE Cap Lib Pool Norm
       single_ancestor_parent_tube_purpose: BGE Lib Pool
+      preferred_purpose_name_when_deduplicating: BGE Cap Lib Pool Norm
+      list_of_aliquot_attributes_to_consider_a_duplicate:
+        - sample_id
+        - tag_id
+        - tag2_id
   :presenter_class: Presenters::SimpleTubePresenter
 BGE Custom pool:
   :asset_type: tube

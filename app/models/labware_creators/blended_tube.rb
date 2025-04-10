@@ -31,6 +31,14 @@ module LabwareCreators
       purpose_config.dig(:creator_class, :args, :single_ancestor_parent_tube_purpose)
     end
 
+    def preferred_purpose_name_when_deduplicating
+      purpose_config.dig(:creator_class, :args, :preferred_purpose_name_when_deduplicating)
+    end
+
+    def list_of_aliquot_attributes_to_consider_a_duplicate
+      purpose_config.dig(:creator_class, :args, :list_of_aliquot_attributes_to_consider_a_duplicate)
+    end
+
     def redirection_target
       @child_tube
     end
@@ -75,17 +83,19 @@ module LabwareCreators
     end
 
     def transfer_request_attributes
-      # passing an index to be used for adding tag depth to aliquot attributes
-      transfers.map.with_index { |transfer, index| request_hash(transfer, index) }
+      transfers.map { |transfer| request_hash(transfer) }
     end
 
-    def request_hash(transfer, index)
+    def request_hash(transfer)
       parent_tube = Sequencescape::Api::V2::Tube.find_by(uuid: transfer[:source_tube])
 
-      # tag_depth is added to aliquot attributes to allow the blended pair to be pooled together.
-      # without this you get a tag clash detection error from Sequencescape, as both tubes have the same samples
-      # with the same tags.
-      { source_asset: parent_tube.uuid, target_asset: @child_tube.uuid, aliquot_attributes: { tag_depth: index.to_s } }
+      {
+        source_asset: parent_tube.uuid,
+        target_asset: @child_tube.uuid,
+        merge_equivalent_aliquots: true,
+        list_of_aliquot_attributes_to_consider_a_duplicate: list_of_aliquot_attributes_to_consider_a_duplicate,
+        keep_this_aliquot_when_deduplicating: parent_tube.purpose.name == preferred_purpose_name_when_deduplicating
+      }
     end
   end
 end
