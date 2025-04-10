@@ -110,3 +110,33 @@ LRC GEM-X 5p GE Pool Norm:
   :type: IlluminaHtp::InitialStockTubePurpose
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+LRC GEM-X 5p CITE SUP:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+LRC GEM-X 5p CITE SUP XP:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+LRC GEM-X 5p CITE Ligation:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :tags_per_well: 1
+LRC GEM-X 5p CITE Lib PCR-XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :label_template: plate_xp
+LRC GEM-X 5p CITE Lib Pool Stock:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LRC GEM-X 5p CITE Pool Norm:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
