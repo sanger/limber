@@ -1,5 +1,4 @@
-# This configuration file is for the Bespoke Chromium Automated pipeline for scRNA core library prep VDJ option TCR
-# library type requests.
+# This configuration file is the BCR branch of scRNA Core library prep pipeline
 ---
 LRC GEM-X 5p TCR Dil 1:
   :asset_type: plate

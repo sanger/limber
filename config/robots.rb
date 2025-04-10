@@ -4254,7 +4254,7 @@ ROBOT_CONFIG =
       to 'BGE Cap Lib PCR XP', bed(9)
     end
 
-    # scRNA pipeline
+    # scRNA Core pipeline
     # scRNA core library prep chromium bespoke BCR
     custom_robot(
       'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-bcr-dil-1',
@@ -4351,7 +4351,7 @@ ROBOT_CONFIG =
       }
     )
 
-    # scRNA pipeline
+    # scRNA Core pipeline
     # scRNA core library prep chromium bespoke TCR
     custom_robot(
       'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-tcr-dil-1',

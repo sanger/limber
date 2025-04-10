@@ -1,6 +1,6 @@
 ---
 scRNA Core Chromium GEM-X 5p BCR:
-  pipeline_group: scRNA Core Library Prep
+  pipeline_group: scRNA Core BCR Library Prep
   filters:
     request_type_key: limber_scrna_core_library_prep
     library_type: Chromium single cell GEM-X 5p v3 BCR
