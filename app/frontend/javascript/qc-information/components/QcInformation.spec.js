@@ -1,7 +1,6 @@
 // Import the component being tested
 import { mount } from '@vue/test-utils'
 import { flushPromises } from '@vue/test-utils'
-import MockAdapter from 'axios-mock-adapter'
 
 import QcInformation from './QcInformation.vue'
 describe('QcInformation', () => {
@@ -101,12 +100,8 @@ describe('QcInformation', () => {
       },
     }
 
-    let mock = new MockAdapter(wrapper.vm.axiosInstance)
-
-    mock.onPost().reply((request) => {
-      expect(request.url).toEqual('qc_assays')
-      expect(request.data).toEqual(JSON.stringify(expectedPayload))
-      return [201, {}]
+    wrapper.vm.axiosInstance = vi.fn().mockResolvedValue({
+      data: {},
     })
 
     wrapper.setData({
@@ -118,8 +113,12 @@ describe('QcInformation', () => {
 
     await flushPromises()
 
-    expect(mock.history.post.length).toBe(1)
-
+    expect(wrapper.vm.axiosInstance).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.axiosInstance).toHaveBeenCalledWith({
+      method: 'post',
+      url: 'qc_assays',
+      data: expectedPayload
+    })
     expect(wrapper.vm.buttonStyle).toEqual('success')
   })
 })
