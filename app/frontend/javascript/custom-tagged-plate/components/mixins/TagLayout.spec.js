@@ -17,12 +17,13 @@ describe('TagLayout mixin', () => {
     }
 
     const wrapper = mount(
-      { template: '<div></div>' },
+      {
+        template: '<div></div>',
+        mixins: [TagLayout],
+        props: Object.keys(data),
+      },
       {
         props: { ...data },
-        global: {
-          mixins: [TagLayout],
-        },
       },
     )
     tagLayout = wrapper.vm

@@ -26,12 +26,9 @@ describe('DevourSelect mixin', () => {
       validation: testValidation,
     }
     cmp = mount(
-      { component: '<div></div>' },
+      { component: '<div></div>', mixins: [DevourSelect], props: Object.keys(data) },
       {
-        props: data,
-        global: {
-          mixins: [DevourSelect],
-        },
+        props: { ...data },
       },
     )
     devourSelectInstance = cmp.vm
@@ -65,20 +62,18 @@ describe('DevourSelect mixin', () => {
 
   describe('checking api behaviour', () => {
     const wrapperFactory = function (api = mockApi()) {
+      data = {
+        api: api.devour,
+        resourceName: testResourceName,
+        includes: testIncludes,
+        filter: testFilter,
+        fields: testFields,
+        validation: testValidationApiError,
+      }
       return mount(
-        { component: '<div></div>' },
+        { component: '<div></div>', mixins: [DevourSelect], props: Object.keys(data) },
         {
-          props: {
-            api: api.devour,
-            resourceName: testResourceName,
-            includes: testIncludes,
-            filter: testFilter,
-            fields: testFields,
-            validation: testValidationApiError,
-          },
-          global: {
-            mixins: [DevourSelect],
-          },
+          props: { ...data },
         },
       )
     }
