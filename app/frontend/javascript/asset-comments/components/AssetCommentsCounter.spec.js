@@ -5,6 +5,7 @@ import {
   mountWithCommentFactory,
   testCommentFactoryInitAndDestroy,
 } from '@/javascript/asset-comments/components/component-test-utils.js'
+import { flushPromises } from '@vue/test-utils'
 
 describe('AssetCommentsCounter', () => {
   testCommentFactoryInitAndDestroy(AssetCommentsCounter, [{ id: 1, text: 'Test comment' }])
@@ -41,7 +42,7 @@ describe('AssetCommentsCounter', () => {
 
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, mockComments)
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(wrapper.find('.badge.bg-success').exists()).toBe(true)
     expect(wrapper.find('.badge.bg-success').text()).toContain('2')
@@ -49,7 +50,8 @@ describe('AssetCommentsCounter', () => {
 
   it('renders a greyed out zero indicating no comments', async () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, [])
-    await wrapper.vm.$nextTick()
+    await flushPromises()
+
     expect(wrapper.find('.badge.bg-secondary').exists()).toBe(true)
     expect(wrapper.find('.badge.bg-secondary').text()).toContain('0')
   })
@@ -63,7 +65,8 @@ describe('AssetCommentsCounter', () => {
 
   it('updates comments when eventBus emits update-comments', async () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, [])
-    await wrapper.vm.$nextTick()
+    await flushPromises()
+
     expect(wrapper.find('.badge.bg-secondary').text()).toContain('0')
     eventBus.$emit('update-comments', { assetId: '123', comments: [{ id: 1, text: 'Test comment' }] })
     await wrapper.vm.$nextTick()
@@ -71,7 +74,8 @@ describe('AssetCommentsCounter', () => {
   })
   it('does not update comments when eventBus emits update-comments for a different assetId', async () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, [])
-    await wrapper.vm.$nextTick()
+    await flushPromises()
+
     expect(wrapper.find('.badge.bg-secondary').text()).toContain('0')
     eventBus.$emit('update-comments', { assetId: '456', comments: [{ id: 1, text: 'Test comment' }] })
     await wrapper.vm.$nextTick()

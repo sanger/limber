@@ -23,6 +23,7 @@ const mountWithCommentFactory = function (Component, comments, props = {}) {
   const wrapper = mount(Component, {
     props: { ...commentProps, ...props },
   })
+
   return { wrapper, mockCommentFactory, removeCommentFactoryMockFn }
 }
 

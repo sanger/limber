@@ -1,13 +1,11 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import WellModal from './WellModal.vue'
 import { nextTick } from 'vue'
 
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('WellModal', () => {
   const wrapperFactory = function () {
-    return shallowMount(WellModal, {
+    return mount(WellModal, {
       props: {
         wellModalDetails: {
           position: 'A1',
@@ -17,6 +15,11 @@ describe('WellModal', () => {
           existingSubstituteTagId: '2',
         },
         isWellModalVisible: true,
+      },
+      global: {
+        stubs: {
+          teleport: true,
+        },
       },
     })
   }
@@ -169,13 +172,13 @@ describe('WellModal', () => {
   describe('#integration tests', () => {
     it('emits a call to the parent on clicking Ok button with valid substitution', () => {
       const wrapper = wrapperFactory()
-      const emitted = wrapper.emitted()
 
       wrapper.setData({ substituteTagId: '3' })
 
       // cannot click ok button in modal from here, plus cannot handle evt.preventDefault
       wrapper.vm.handleWellModalOk()
 
+      const emitted = wrapper.emitted()
       expect(emitted.wellmodalsubtituteselected.length).toBe(1)
       expect(emitted.wellmodalsubtituteselected[0]).toEqual([3])
     })

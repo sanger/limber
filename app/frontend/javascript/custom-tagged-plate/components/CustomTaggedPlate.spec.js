@@ -1,8 +1,6 @@
 // Import the component being tested
 import { mount, shallowMount, flushPromises } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
-import MockAdapter from 'axios-mock-adapter'
-import axios from 'axios'
 import { nextTick } from 'vue'
 
 import {
@@ -745,7 +743,27 @@ describe('CustomTaggedPlate', () => {
     })
 
     it('renders a submit button', async () => {
-      const wrapper = wrapperFactory()
+      const wrapper = mount(CustomTaggedPlate, {
+        props: {
+          sequencescapeApi: 'http://localhost:3000/api/v2',
+          sequencescapeApiKey: 'development',
+          purposeUuid: '',
+          purposeName: 'Custom Tagged Plate',
+          targetUrl: '',
+          parentUuid: plateUuid,
+          tagsPerWell: '4',
+          locationObj: mockLocation,
+        },
+        global: {
+          stubs: {
+            'lb-parent-plate-lookup': true,
+            'lb-parent-plate-view': true,
+            'lb-tag-substitution-details': true,
+            'lb-tag-layout-manipulations-multiple': true,
+            'lb-well-modal': true,
+          },
+        },
+      })
 
       await flushPromises()
 
@@ -809,8 +827,6 @@ describe('CustomTaggedPlate', () => {
     })
 
     it('sends a post request when the create plate button is clicked', async () => {
-      let mock = new MockAdapter(axios)
-
       const wrapper = wrapperFactory()
 
       await wrapper.setProps({
@@ -852,17 +868,23 @@ describe('CustomTaggedPlate', () => {
       }
 
       mockLocation.href = null
-      mock.onPost().reply((config) => {
-        expect(config.url).toEqual('example/example')
-        expect(config.data).toEqual(JSON.stringify(expectedPayload))
-        return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
-      })
+      wrapper.vm.$axios = vi
+        .fn()
+        .mockResolvedValue({ data: { redirect: 'http://wwww.example.com', message: 'Creating...' } })
 
       // to click the button we would need to mount rather than shallowMount, but then we run into issues with mocking other database calls
       wrapper.vm.createPlate()
 
       await flushPromises()
 
+      expect(wrapper.vm.$axios).toHaveBeenCalledTimes(1)
+      expect(wrapper.vm.$axios).toHaveBeenCalledWith({
+        url: 'example/example',
+        method: 'post',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: expectedPayload,
+      })
+      expect(wrapper.vm.progressMessage).toEqual('Creating...')
       expect(mockLocation.href).toEqual('http://wwww.example.com')
     })
   })
