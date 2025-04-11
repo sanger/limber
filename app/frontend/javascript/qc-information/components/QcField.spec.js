@@ -62,26 +62,26 @@ describe('QcField', () => {
     await wrapper.find('select').setValue('Two')
 
     expect(wrapper.emitted().change).toEqual([
-        [
-          {
-            value: '1.5',
-            assay_type: 'One',
-            units: 'ul',
-            key: 'volume',
-            assay_version: 'manual',
-            uuid: 'uuid',
-          },
-        ],
-        [
-          {
-            value: '1.5',
-            assay_type: 'Two',
-            units: 'ul',
-            key: 'volume',
-            assay_version: 'manual',
-            uuid: 'uuid',
-          },
-        ],
+      [
+        {
+          value: '1.5',
+          assay_type: 'One',
+          units: 'ul',
+          key: 'volume',
+          assay_version: 'manual',
+          uuid: 'uuid',
+        },
+      ],
+      [
+        {
+          value: '1.5',
+          assay_type: 'Two',
+          units: 'ul',
+          key: 'volume',
+          assay_version: 'manual',
+          uuid: 'uuid',
+        },
+      ],
     ])
   })
 })

@@ -73,7 +73,7 @@ export default {
       if (!name) return ''
       name = name.toString().replace('_', ' ')
       return name.charAt(0).toUpperCase() + name.slice(1)
-    }
+    },
   },
 }
 </script>

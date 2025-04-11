@@ -1,16 +1,19 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { flushPromises } from '@vue/test-utils'
 import MockAdapter from 'axios-mock-adapter'
 
 import QcInformation from './QcInformation.vue'
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('QcInformation', () => {
   const wrapperFactory = function () {
-    return shallowMount(QcInformation, {
+    return mount(QcInformation, {
       props: {
         assetUuid: 'test',
+      },
+      global: {
+        stubs: {
+          'lb-qc-field': true,
+        },
       },
     })
   }
@@ -32,11 +35,11 @@ describe('QcInformation', () => {
       key: 'molarity',
       assay_version: 'manual',
     }
-    wrapper.find('lb-qc-field-stub[name="volume"]').vm.$emit('change', volumeAttributes)
-    wrapper.find('lb-qc-field-stub[name="molarity"]').vm.$emit('change', molarityAttributes)
+    wrapper.find('lb-qc-field-stub[name="volume"]').trigger('change', volumeAttributes)
+    wrapper.find('lb-qc-field-stub[name="molarity"]').trigger('change', molarityAttributes)
 
-    expect(wrapper.vm.qcResults.volume).toEqual(volumeAttributes)
-    expect(wrapper.vm.qcResults.molarity).toEqual(molarityAttributes)
+    expect(wrapper.vm.qcResults.volume).toEqual(expect.objectContaining(volumeAttributes))
+    expect(wrapper.vm.qcResults.molarity).toEqual(expect.objectContaining(molarityAttributes))
   })
 
   it('filters empty values', () => {

@@ -63,14 +63,14 @@ describe('TagSubstitutionDetails', () => {
   describe('#integration tests', () => {
     it('emits a call to the parent on clicking a remove substitution button', () => {
       const wrapper = wrapperFactory()
-      
+
       expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(true)
-      
+
       // const button = wrapper.find('#remove_tag_id_2_submit_button')
       // button.trigger('click')
       // cannot click button in test for some reason...
       wrapper.vm.removeSubstitution('2')
-      
+
       const emitted = wrapper.emitted()
       expect(emitted.removetagsubstitution.length).toBe(1)
       expect(emitted.removetagsubstitution[0]).toEqual(['2'])

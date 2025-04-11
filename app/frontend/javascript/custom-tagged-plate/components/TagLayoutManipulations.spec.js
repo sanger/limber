@@ -16,13 +16,13 @@ describe('TagLayoutManipulations', () => {
         numberOfTargetWells: 10,
         tagsPerWell: 1,
       },
-      global:{
+      global: {
         stubs: {
           'lb-plate-scan': true,
-          'TagGroupsLookup': true,
+          TagGroupsLookup: true,
           'lb-tag-offset': true,
         },
-      }
+      },
     })
   }
 

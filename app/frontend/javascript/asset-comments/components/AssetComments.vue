@@ -101,7 +101,7 @@ export default {
     formatDate(date) {
       const dateObject = new Date(date)
       return dateObject.toLocaleString('en-GB', dateOptions)
-    }
-  }
+    },
+  },
 }
 </script>

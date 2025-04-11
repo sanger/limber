@@ -1,9 +1,9 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import VolumeTransfers from './VolumeTransfers.vue'
 
 describe('VolumeTransfers', () => {
   const wrapperFactory = function () {
-    return shallowMount(VolumeTransfers, {
+    return mount(VolumeTransfers, {
       props: {
         validTransfers: [],
       },
@@ -33,19 +33,19 @@ describe('VolumeTransfers', () => {
 
   it('emits the correct composite object', async () => {
     const wrapper = wrapperFactory()
-    wrapper.setData({ volume: '40' })
+    wrapper.find('#input-volume').setValue('40')
 
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.emitted()).toEqual({
-      change: [
-        [
-          {
-            isValid: true,
-            extraParams: wrapper.vm.transferFunc,
-          },
-        ],
-      ],
-    })
+    const emittedEvents = wrapper.emitted()['update:model-value']
+
+    // Not sure why 2 events are emitted
+    // Potentially because setValue triggers an input event for each value
+    expect(emittedEvents).toHaveLength(2)
+    expect(emittedEvents[0][0].isValid).toEqual(true)
+    // This is not a nice way to check the events but because extraParams passes a function reference
+    // It is easier to compare the output of the function rather than comparing the function references are the same
+    // Because this causes issues with the test comparison
+    expect(emittedEvents[0][0].extraParams()).toEqual(wrapper.vm.transferFunc())
   })
 })

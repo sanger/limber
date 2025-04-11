@@ -45,12 +45,11 @@ describe('Well', () => {
   })
 
   it('emits a well clicked event', () => {
-    const emitted = wrapperWithAliquot.emitted()
-
     expect(wrapperWithAliquot.find('span').exists()).toBe(true)
 
     const input = wrapperWithAliquot.find('span')
     input.trigger('click')
+    const emitted = wrapperWithAliquot.emitted()
 
     expect(emitted.onwellclicked.length).toBe(1)
     expect(emitted.onwellclicked[0]).toEqual(['A1'])
