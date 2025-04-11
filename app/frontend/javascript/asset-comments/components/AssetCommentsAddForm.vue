@@ -98,7 +98,7 @@ export default {
     })
     this.commentFactory = commentFactory
   },
-  beforeDestroy() {
+  beforeUnmount() {
     removeCommentFactory(this.assetId)
   },
   methods: {

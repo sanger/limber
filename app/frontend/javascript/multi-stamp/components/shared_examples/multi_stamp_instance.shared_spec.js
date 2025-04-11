@@ -3,7 +3,7 @@
 // run as a test suite itself.
 
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { plateFactory, wellFactory, requestFactory } from '@/javascript/test_support/factories.js'
 
 const sharedSpecs = (args) => {
@@ -14,7 +14,7 @@ const sharedSpecs = (args) => {
     const wrapperFactory = function (options = {}) {
       // Not ideal using mount here, but having massive trouble
       // triggering change events on unmounted components
-      return shallowMount(subject, {
+      return mount(subject, {
         props: {
           targetRows: '16',
           targetColumns: '24',
@@ -26,6 +26,12 @@ const sharedSpecs = (args) => {
           transfersLayout: 'quadrant',
           transfersCreator: 'multi-stamp',
           ...options,
+        },
+        global: {
+          stubs: {
+            LbPlate: true,
+            PlateSummary: true,
+          },
         },
       })
     }
@@ -64,7 +70,7 @@ const sharedSpecs = (args) => {
 
       wrapper.setData({ requestsWithPlatesFiltered: [] })
 
-      expect(wrapper.find('b-button-stub').element.getAttribute('disabled')).toEqual('true')
+      expect(wrapper.findComponent({ name: 'b-button' }).vm.disabled).toEqual(true)
     })
 
     it('disables creation when there are some invalid plates', () => {
@@ -183,7 +189,7 @@ const sharedSpecs = (args) => {
         const wrapperFactory = function (options = {}) {
           // Not ideal using mount here, but having massive trouble
           // triggering change events on unmounted components
-          return shallowMount(subject, {
+          return mount(subject, {
             props: {
               targetRows: '16',
               targetColumns: '24',
@@ -196,6 +202,11 @@ const sharedSpecs = (args) => {
               transfersCreator: 'multi-stamp',
               defaultVolume: '34',
               ...options,
+            },
+            global: {
+              stubs: {
+                LbPlate: true,
+              },
             },
           })
         }

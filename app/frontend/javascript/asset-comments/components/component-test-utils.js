@@ -37,10 +37,10 @@ function testCommentFactoryInitAndDestroy(Component, mockComments, props) {
     expect(wrapper.vm.comments).toEqual(mockComments)
   })
 
-  it('removes eventBus listener on destroy', () => {
+  it('removes eventBus listener on unmount', () => {
     vi.spyOn(eventBus, '$off')
     const { wrapper, removeCommentFactoryMockFn } = mountWithCommentFactory(Component, mockComments, props)
-    wrapper.destroy()
+    wrapper.unmount()
     expect(eventBus.$off).toHaveBeenCalledWith('update-comments')
     expect(removeCommentFactoryMockFn).toHaveBeenCalled()
   })

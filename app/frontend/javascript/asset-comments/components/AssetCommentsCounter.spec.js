@@ -42,6 +42,7 @@ describe('AssetCommentsCounter', () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, mockComments)
 
     await wrapper.vm.$nextTick()
+
     expect(wrapper.find('.badge.bg-success').exists()).toBe(true)
     expect(wrapper.find('.badge.bg-success').text()).toContain('2')
   })

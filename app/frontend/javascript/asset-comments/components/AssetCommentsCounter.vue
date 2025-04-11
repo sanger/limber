@@ -57,7 +57,7 @@ export default {
     await this.commentFactory.refreshComments()
     this.comments = this.commentFactory.comments
   },
-  beforeDestroy() {
+  beforeUnmount() {
     removeCommentFactory(this.assetId)
     eventBus.$off('update-comments')
   },
