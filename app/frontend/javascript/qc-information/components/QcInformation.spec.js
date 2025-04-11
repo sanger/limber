@@ -117,7 +117,7 @@ describe('QcInformation', () => {
     expect(wrapper.vm.axiosInstance).toHaveBeenCalledWith({
       method: 'post',
       url: 'qc_assays',
-      data: expectedPayload
+      data: expectedPayload,
     })
     expect(wrapper.vm.buttonStyle).toEqual('success')
   })
