@@ -5,6 +5,6 @@
 
   <%= card title: 'Results', css_class: 'mb-3' , without_block: true do %>
     <%= render(partial: 'pagination', locals: {search_options: @search_options }) %>
-    <%= render(partial: 'inbox', locals: { search_results: search_results }) %>
+    <%= render(partial: 'inbox', locals: { search_results: }) %>
   <% end %>
 <% end %>
