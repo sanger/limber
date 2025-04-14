@@ -1,7 +1,7 @@
 <h2>Source Plate</h2>
 <%= render partial: "pooled_plate", locals: {plate_presenter: presenter, walker: presenter.walk_source, transfers: presenter.labware.creation_transfer.transfers} %>
-<br/>
+<br />
 <h2>Pooled Plate</h2>
-<% transfers = Hash[presenter.labware.creation_transfer.transfers.map { |_, location| [ location, location ] }] %>
+<% transfers = presenter.labware.creation_transfer.transfers.to_h { |_, location| [ location, location ] } %>
 <%= render partial: "pooled_plate", locals: {plate_presenter: presenter, walker: presenter.walk_destination, transfers: transfers} %>
-<%= render partial: 'plate_summary', locals: { presenter: presenter } %>
+<%= render partial: 'plate_summary', locals: { presenter: } %>

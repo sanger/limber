@@ -1,13 +1,13 @@
 <%= render 'plate_printing' %>
 <% presenter.tubes_and_sources do %>
-  <%= render 'tube_printing', presenter: presenter %>
+  <%= render 'tube_printing', presenter: %>
 <% end %>
 
 <%= render 'labware/qc_data_upload' %>
 
 <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
   <% presenter.control_suggested_library_passing do %>
-    <%= render 'work_completion_form', presenter: presenter %>
+    <%= render 'work_completion_form', presenter: %>
   <% end %>
 
   <% presenter.control_additional_creation do -%>
@@ -60,7 +60,7 @@
     <% end %>
 
   <% presenter.control_library_passing do %>
-    <%= render 'work_completion_form', presenter: presenter %>
+    <%= render 'work_completion_form', presenter: %>
   <% end %>
 
   <% if presenter.well_failing_applicable? %>
