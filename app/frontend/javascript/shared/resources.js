@@ -966,6 +966,37 @@ const resources = [
     }
   },
   {
+    "resource": "tag2_group",
+    "attributes": {
+      "uuid": "",
+      "name": "",
+      "tags": "",
+      "tag_group_adapter_type": {
+        "jsonApi": "hasOne",
+        "type": "tag_group_adapter_type"
+      }
+    },
+    "options": {
+    }
+  },
+  {
+    "resource": "tag_set",
+    "attributes": {
+      "uuid": "",
+      "name": "",
+      "tag_group": {
+        "jsonApi": "hasOne",
+        "type": "tag_group"
+      },
+      "tag2_group": {
+        "jsonApi": "hasOne",
+        "type": "tag_group"
+      }
+    },
+    "options": {
+    }
+  },
+  {
     "resource": "tag_layout_template",
     "attributes": {
       "uuid": "",
