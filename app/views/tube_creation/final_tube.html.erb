@@ -4,8 +4,7 @@
       @labware_creator,
       url: limber_tube_tubes_path(@labware_creator.parent),
       as: :tube,
-      html: { method: :post }) do |form|
-  %>
+      html: { method: :post }) do |form| %>
   <div class='row'>
     <%= content do %>
       <%= card title: 'Tubes', without_block: true do %>
@@ -34,15 +33,14 @@
             </div>
             <div class="tube-scanner">
               <label for="tube_scan" class="tube-label">Scan tube:</label>
-              <input id="tube_scan" name="tube_scan" placeholder="Tube barcode" class="tube" tabindex="1"/>
+              <input id="tube_scan" name="tube_scan" placeholder="Tube barcode" class="tube" tabindex="1" />
             </div>
             <%= form.hidden_field :purpose_uuid, value: @labware_creator.purpose_uuid %>
             <%= form.submit "Make Tube",
               id: 'tube_submit',
               class: 'create-button btn btn-success',
               tab_index: 2,
-              disabled: true
-            %>
+              disabled: true %>
           <% else %>
             <div class="tube-suggestions alert alert-warning">
               <p>Please resolve any issues with the tubes before continuing.</p>
