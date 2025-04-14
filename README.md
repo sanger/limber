@@ -162,6 +162,28 @@ To make simple automatic fixes, run:
 bundle exec rake lint:format
 ```
 
+To run a specific linter, use one of the following commands as appropriate:
+
+```sh
+# Run rubocop
+bundle exec rubocop
+# Run rubocop with safe autofixes
+bundle exec rubocop -a
+
+# Check prettier formatting
+yarn prettier --check .
+# Fix prettier formatting
+yarn prettier --write .
+
+# ESlint
+yarn lint
+
+# Check ERB lint formatting
+bundle exec erb_lint --lint-all
+# Fix ERB lint formatting
+bundle exec erb_lint --autocorrect --lint-all
+```
+
 ## Troubleshooting
 
 ### ViteRuby::MissingEntrypointError in Search#new
