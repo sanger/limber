@@ -153,16 +153,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   # This method is used to register the stock plate in Sequencescape.
-  def register_stock
-    url = "#{self.class.site}/plates/#{id}/register_stock_for_plate"
-    response = Faraday.post(url)
-    response.headers['Content-Type'] = 'application/json'
-    return true if response.success?
-
-    error_message = JSON.parse(response.body)['error']
-    errors.add(:base, error_message)
-    false
-  end
+  custom_endpoint :register_stock_for_plate, on: :member, request_method: :post
 
   private
 

@@ -133,8 +133,8 @@ module LabwareCreators
     end
 
     def register_stock_for_plate
-      # call Sequencescape::Api::V2::Plate register_stock method
-      if @child_plate_v2.register_stock
+      # call Sequencescape::Api::V2::Plate register_stock_for_plate method
+      if @child_plate_v2.register_stock_for_plate
         Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
       else
         Rails.logger.error(
