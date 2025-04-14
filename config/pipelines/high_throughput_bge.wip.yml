@@ -13,8 +13,9 @@ BGE PCR Free:
 
 BGE PCR Free MX:
   filters:
-    request_type_key: limber_multiplexing
+    request_type_key: limber_multiplexing_bge_pcr_free
   pipeline_group: BGE
+  library_pass: BGE Lib Pool
   relationships:
     BGE Lib XP2: BGE Lib Pool
 
@@ -42,7 +43,7 @@ BGE ISC Library Prep:
 BGE ISC MX:
   pipeline_group: BGE
   filters:
-    request_type_key: limber_multiplexing
+    request_type_key: limber_multiplexing_bge_isc
   library_pass: BGE Cap Lib Pool Norm
   relationships:
     BGE Cap Lib PCR XP: BGE Cap Lib Pool

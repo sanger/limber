@@ -30,18 +30,17 @@ class SearchController < ApplicationController
     render json: { 'error' => e.message }
   end
 
-  def create # rubocop:todo Metrics/AbcSize
+  def create
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
 
-    respond_to { |format| format.html { redirect_to find_labware(params[:plate_barcode]) } }
-  rescue StandardError => e
-    flash.now[:error] = e.message
+    result = find_labware(params[:plate_barcode])
 
-    # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
-      format.html { render :new }
-      format.json { render json: { error: e.message }, status: :not_found }
+      format.html { redirect_to result }
+      format.json { redirect_to result }
     end
+  rescue StandardError => e
+    handle_create_error(e)
   end
 
   def find_labware(barcode)
@@ -75,5 +74,14 @@ class SearchController < ApplicationController
     # current_page, total_entries, total_results
     # See the attributes returned by Sequencescape::Api::V2::Plate.find({state:'pending'})
     @search_options.total_pages = search_results.total_pages
+  end
+
+  def handle_create_error(error)
+    flash.now[:error] = error.message
+
+    respond_to do |format|
+      format.html { render :new, status: :not_found }
+      format.json { render json: { error: error.message }, status: :not_found }
+    end
   end
 end

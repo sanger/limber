@@ -32,7 +32,7 @@ module ContractHelper
     }mx
 
     # rubocop:enable Lint/MixedRegexpCaptureTypes
-    # rubocop:todo Metrics/AbcSize Metrics/MethodLength
+    # rubocop:todo Metrics/AbcSize
     def request(contract_name)
       contract(contract_name) do |file|
         match =
@@ -47,7 +47,7 @@ module ContractHelper
       end
     end
 
-    # rubocop:enable Metrics/AbcSize Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     def response(contract_name, times: nil)
       contract(contract_name) do |file|
