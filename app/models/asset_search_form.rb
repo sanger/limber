@@ -7,8 +7,7 @@ class AssetSearchForm
 
   include ActiveModel::Model
 
-  # We include 'show_my_plates_only' to let us share pagination forms
-  attr_accessor :show_my_plates_only, :include_used, :states, :total_pages
+  attr_accessor :include_used, :states, :total_pages
   attr_writer :purposes, :page, :purpose_names
 
   class_attribute :form_partial

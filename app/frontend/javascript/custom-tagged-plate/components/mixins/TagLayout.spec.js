@@ -2,7 +2,9 @@ import Vue from 'vue'
 import TagLayout from '@/javascript/custom-tagged-plate/components/mixins/TagLayout.js'
 import {
   nullTagGroup,
+  nullTagSet,
   exampleTagGroupsList,
+  exampleTagSetList,
 } from '@/javascript/custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
 describe('TagLayout mixin', () => {
@@ -124,6 +126,22 @@ describe('TagLayout mixin', () => {
         expect(tagLayout.coreTagGroupOptions).toEqual(expectedCoreTagGroupOptions)
       })
     })
+    describe('coreTagSetOptions', () => {
+      it('returns empty array if tag groups list empty', () => {
+        expect(tagLayout.coreTagSetOptions).toEqual([])
+      })
+
+      it('returns valid array if tag set list given', () => {
+        tagLayout.tagSetList = exampleTagSetList
+
+        const expectedCoreTagSetOptions = [
+          { value: '1', text: 'Tag Set 1' },
+          { value: '2', text: 'Tag Set 2' },
+        ]
+
+        expect(tagLayout.coreTagSetOptions).toEqual(expectedCoreTagSetOptions)
+      })
+    })
 
     describe('tag1GroupOptions:', () => {
       it('returns empty array for tag 1 groups if tag groups list empty', () => {
@@ -158,6 +176,19 @@ describe('TagLayout mixin', () => {
         ]
 
         expect(tagLayout.tag2GroupOptions).toEqual(expectedTag2GroupOptions)
+      })
+    })
+
+    describe('selectedTagSet', () => {
+      it('returns a null tagset by default', () => {
+        tagLayout.tagSetList = exampleTagSetList
+        let val = tagLayout.selectedTagSet
+        expect(val).toEqual(nullTagSet)
+      })
+      it('sets the selected tagset when tagset Id chnages', () => {
+        tagLayout.tagSetList = exampleTagSetList
+        tagLayout.tagSetId = 1
+        expect(tagLayout.selectedTagSet).toEqual(exampleTagSetList[1])
       })
     })
   })

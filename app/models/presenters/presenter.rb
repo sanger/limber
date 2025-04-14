@@ -42,7 +42,16 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     active_pipelines.any? { |pl| pl.library_pass?(purpose_name) }
   end
 
-  def title
+  # Generates a formatted title for the labware as seen in the HTML document title.
+  #
+  # Combines the purpose name and human-readable barcode, if available.
+  # @return [String] Formatted title, e.g., "Tube Purpose (NT1234)".
+  def document_title
+    human_barcode ? "#{purpose_name} (#{human_barcode})" : purpose_name
+  end
+
+  # Generates the content title for the labware as seen in the page.
+  def content_title
     purpose_name
   end
 

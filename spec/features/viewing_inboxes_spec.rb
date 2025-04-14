@@ -23,11 +23,7 @@ RSpec.feature 'Viewing an inbox', js: true do
 
     stub_find_all_with_pagination(
       :plates,
-      {
-        state: %w[pending started passed qc_complete failed cancelled],
-        purpose_name: %w[purpose-config minimal-purpose-config],
-        include_used: false
-      },
+      { state: %w[pending started passed qc_complete failed cancelled], purpose_name: [], include_used: false },
       { page: 1, per_page: 30 },
       [plate_1, plate_2, plate_3]
     )

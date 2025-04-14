@@ -22,11 +22,11 @@
               <%= asset_groups_form.fields_for group_id.to_s do |ag_form| %>
                 <% asset_group.except(:asset_uuids).each do |key, value| %>
                   <%# Deconstruct the other fields of our asset group, such as study and project %>
-                  <%= ag_form.hidden_field key, value: value  %>
+                  <%= ag_form.hidden_field key, value: %>
                 <% end %>
                 <%= ag_form.fields_for :asset_uuids do |asset_form| %>
                 <% asset_group[:asset_uuids].each do |asset_uuid| %>
-                  <%= asset_form.hidden_field nil, value: asset_uuid  %>
+                  <%= asset_form.hidden_field nil, value: asset_uuid %>
                 <% end %>
                 <% end %>
               <% end %>
@@ -35,7 +35,7 @@
 
           <% if submission.allowed_extra_barcodes %>
             <%= f.label :extra_barcodes, 'Add additional labware barcodes to the submission (Optional)' %>
-            <br/>
+            <br />
             <% (1..submission.num_extra_barcodes).each do |num| %>
               <div class="form-group row">
                 <%= f.label "extra_barcodes_#{num}", "Barcode #{num}", class:"plate-label col-md-2" %>
