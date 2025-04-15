@@ -53,9 +53,7 @@ class Presenters::TubesWithSources
     @sources = []
   end
 
-  def <<(well)
-    @sources << well
-  end
+  delegate :<<, to: :@sources
 
   # Returns the pool id based on the shared submission between the wells
   def pool_id

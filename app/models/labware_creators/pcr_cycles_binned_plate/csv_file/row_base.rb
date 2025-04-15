@@ -59,7 +59,7 @@ module LabwareCreators
       @well = (@row_data[well_column] || '').strip.upcase
       @concentration = @row_data[concentration_column]&.strip&.to_f
       @sanger_sample_id = @row_data[sanger_sample_id_column]&.strip
-      @supplier_sample_name = (@row_data[supplier_sample_name_column])&.strip
+      @supplier_sample_name = @row_data[supplier_sample_name_column]&.strip
       @input_amount_available = @row_data[input_amount_available_column]&.strip&.to_f
 
       # initialize customer fields
