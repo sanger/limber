@@ -56,3 +56,21 @@ jobs:
         run: yarn install
       - name: Run ESLint
         run: yarn lint
+
+  erb_lint:
+    name: ERB Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # Runs bundle install and caches gems.
+      - name: Setup Node # ERB Lint has a Prettier dependency for formatting
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Install Node dependencies
+        run: yarn install
+      - name: Run ERB Lint
+        run: bundle exec erb_lint --format json --lint-all
