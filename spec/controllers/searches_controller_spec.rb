@@ -49,6 +49,41 @@ RSpec.describe SearchController, type: :controller do
     end
   end
 
+  describe 'POST #create' do
+    context 'when a valid plate barcode is provided' do
+      let(:barcode) { 'ABC123' }
+
+      before { allow(controller).to receive(:find_labware).with(barcode).and_return('/labware/ABC123') }
+
+      it 'redirects to the found labware for HTML format' do
+        post :create, params: { plate_barcode: barcode }, format: :html
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to('/labware/ABC123')
+      end
+
+      it 'returns a JSON response with the labware location' do
+        post :create, params: { plate_barcode: barcode }, format: :json
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to('/labware/ABC123')
+      end
+    end
+
+    context 'when no plate barcode is provided' do
+      it 'renders the new template with an error message for HTML' do
+        post :create, params: { plate_barcode: '' }, format: :html
+        expect(response).to have_http_status(:not_found)
+        expect(response).to render_template(:new)
+        expect(flash[:error]).to eq('You have not supplied a labware barcode')
+      end
+
+      it 'returns a JSON error response' do
+        post :create, params: { plate_barcode: '' }, format: :json
+        expect(response).to have_http_status(:not_found)
+        expect(response.parsed_body).to eq('error' => 'You have not supplied a labware barcode')
+      end
+    end
+  end
+
   context 'configured plates and tubes' do
     before do
       create(:purpose_config, uuid: 'uuid-1')
