@@ -3674,7 +3674,7 @@ ROBOT_CONFIG =
       name: 'Hamilton LRC GEM-X 5p GEMs(or Input) => LRC GEM-X 5p cDNA PCR',
       beds: {
         bed(13).barcode => {
-          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input', 'LRC GEM-X 5p GEMs Input CITE'],
+          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input'],
           states: ['passed'],
           label: 'Bed 13'
         },
@@ -3690,15 +3690,38 @@ ROBOT_CONFIG =
 
     # scRNA pipeline
     # Hamilton bed verification
-    # LRC GEM-X 5p cDNA PCR to LRC GEM-X 5p cDNA PCR XP
+    # LRC GEM-X 5p GEMs Input CITE to LRC GEM-X 5p cDNA PCR CITE
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-gems-cite-to-lrc-gem-x-5p-cdna-pcr-cite',
+      name: 'Hamilton LRC GEM-X 5p GEMs Input CITE => LRC GEM-X 5p cDNA PCR CITE',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p GEMs Input CITE',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(5).barcode => {
+          purpose: 'LRC GEM-X 5p cDNA PCR CITE',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton bed verification
+    # LRC GEM-X 5p cDNA PCR (or CITE) to LRC GEM-X 5p cDNA PCR XP
     # Transfers 1:1
     custom_robot(
       'hamilton-lrc-gem-x-cdna-pcr-to-lrc-gem-x-5p-cdna-pcr-xp',
-      name: 'Hamilton LRC GEM-X 5p cDNA PCR => LRC GEM-X 5p cDNA PCR XP',
+      name: 'Hamilton LRC GEM-X 5p cDNA PCR (or CITE) => LRC GEM-X 5p cDNA PCR XP',
       require_robot: true,
       beds: {
         bed(13).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR',
+          purpose: ['LRC GEM-X 5p cDNA PCR', 'LRC GEM-X 5p cDNA PCR CITE'],
           states: ['passed'],
           label: 'Bed 13'
         },
