@@ -146,7 +146,7 @@ LRC GEM-X 5p cDNA PCR CITE:
   :input_plate: false
   :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
   :submission_options:
-    scRNA Core cDNA prep:
+    CITE-Seq Branch - Automated Submission:
       template_name: 'Limber-Htp - scRNA Core cDNA PCR CITE'
       allowed_extra_barcodes: false
       request_options:
