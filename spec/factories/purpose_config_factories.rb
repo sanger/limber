@@ -260,48 +260,6 @@ FactoryBot.define do
       end
     end
 
-    # Configuration for a plate with auto submission purpose
-    factory :plate_with_auto_submission_purpose_config do
-      creator_class { 'LabwareCreators::PlateWithAutoSubmission' }
-      presenter_class { 'Presenters::StockPlatePresenter' }
-
-      submission_options do
-        {
-          'scRNA library prep' => {
-            'template_name' => 'example',
-            'allowed_extra_barcodes' => false,
-            'request_options' => {
-              'library_type' => 'example_library'
-            }
-          }
-        }
-      end
-    end
-    # Configuration for a plate with auto submission purpose
-    factory :plate_with_auto_submission_purpose_configs do
-      creator_class { 'LabwareCreators::PlateWithAutoSubmission' }
-      presenter_class { 'Presenters::StockPlatePresenter' }
-
-      submission_options do
-        {
-          'scRNA library prep' => {
-            'template_name' => 'example',
-            'allowed_extra_barcodes' => false,
-            'request_options' => {
-              'library_type' => 'example_library'
-            }
-          },
-          'Another scRNA library prep' => {
-            'template_name' => 'example',
-            'allowed_extra_barcodes' => false,
-            'request_options' => {
-              'library_type' => 'example_library'
-            }
-          }
-        }
-      end
-    end
-
     # Configuration for a plate split to tube racks purpose
     factory :plate_split_to_tube_racks_purpose_config do
       creator_class do
