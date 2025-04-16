@@ -24,6 +24,9 @@ class SearchController < ApplicationController
     pagination_metadata(@search_results)
   end
 
+  # Receives AJAX requests when creating tag plates, returns the
+  # plate information eg. lot number, template
+  # The front end makes a decision regarding suitability
   def qcables
     includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
 

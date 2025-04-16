@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# CAUTION: SUSPECTED NOT USED
-#
 # Receives AJAX requests when creating tag plates, returns the
 # plate information eg. lot number, template
 # The front end makes a decision regarding suitability
+#
+# See `SearchController.qcables` for a similar implementation
 class TagPlatesController < ApplicationController
   INCLUDES = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
 
