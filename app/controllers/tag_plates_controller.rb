@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# CAUTION: SUSPECTED NOT USED
+#
 # Receives AJAX requests when creating tag plates, returns the
 # plate information eg. lot number, template
 # The front end makes a decision regarding suitability
