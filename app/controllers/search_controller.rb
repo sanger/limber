@@ -30,7 +30,7 @@ class SearchController < ApplicationController
   def qcables
     includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
 
-    qcable_resource = Sequencescape::Api::V2::Qcable.includes(*includes).find(barcode: params[:qcable_barcode]).first
+    qcable_resource = Sequencescape::Api::V2::Qcable.includes(*includes).find(barcode: qcable_barcode).first
     qcable_presenter = Presenters::QcablePresenter.new(qcable_resource)
     respond_to { |format| format.json { render json: { 'qcable' => qcable_presenter } } }
   rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => e
@@ -54,15 +54,6 @@ class SearchController < ApplicationController
     Sequencescape::Api::V2
       .minimal_labware_by_barcode(barcode)
       .tap { |labware| raise "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil? }
-  end
-
-  def find_qcable(barcode)
-    includes = [:asset, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
-    Sequencescape::Api::V2::Qcable
-      .includes(*includes)
-      .find(barcode:)
-      .first
-      .tap { |qcable| raise "Sorry, could not find qcable with the barcode '#{barcode}'." if qcable.nil? }
   end
 
   private
