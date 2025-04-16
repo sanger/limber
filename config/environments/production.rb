@@ -49,7 +49,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == '/health' } } }
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
