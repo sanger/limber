@@ -28,11 +28,7 @@ class SearchController < ApplicationController
   # plate information eg. lot number, template
   # The front end makes a decision regarding suitability
   def qcables
-    includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
-
-    qcable_resource = Sequencescape::Api::V2::Qcable.includes(*includes).find(barcode: qcable_barcode).first
-    qcable_presenter = Presenters::QcablePresenter.new(qcable_resource)
-    respond_to { |format| format.json { render json: { 'qcable' => qcable_presenter } } }
+    respond_to { |format| format.json { render json: { 'qcable' => find_qcable(qcable_barcode) } } }
   rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => e
     render json: { 'error' => e.message }
   end
@@ -54,6 +50,15 @@ class SearchController < ApplicationController
     Sequencescape::Api::V2
       .minimal_labware_by_barcode(barcode)
       .tap { |labware| raise "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil? }
+  end
+
+  def find_qcable(barcode)
+    includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
+
+    qcable_resource = Sequencescape::Api::V2::Qcable.includes(*includes).find(barcode: qcable_barcode).first
+    Presenters::QcablePresenter.new(qcable_resource)
+  rescue Sequencescape::Api::ResourceNotFound => e
+    raise e, "Sorry, could not find qcable with the barcode '#{barcode}'."
   end
 
   private
