@@ -279,7 +279,7 @@ module ApiUrlHelper
     end
 
     def stub_v2_qcable(qcable)
-      arguments = [{ uuid: qcable.uuid }]
+      arguments = [{ barcode: qcable.labware.barcode.machine }]
       query_builder = double
 
       allow(Sequencescape::Api::V2::Qcable).to receive(:includes).and_return(query_builder)
