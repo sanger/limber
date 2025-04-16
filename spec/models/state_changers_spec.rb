@@ -149,7 +149,7 @@ RSpec.describe StateChangers do
 
     let(:tube_starting_state) { 'pending' }
     let(:tube_failed_state) { 'failed' }
-    let(:tube_cancelled_state) { 'failed' }
+    let(:tube_cancelled_state) { 'cancelled' }
 
     let(:target_state) { 'passed' }
 
