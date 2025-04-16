@@ -24,9 +24,12 @@ class SearchController < ApplicationController
     pagination_metadata(@search_results)
   end
 
+  # Receives AJAX requests when creating tag plates, returns the
+  # plate information eg. lot number, template
+  # The front end makes a decision regarding suitability
   def qcables
-    respond_to { |format| format.json { redirect_to find_qcable(qcable_barcode) } }
-  rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => e
+    respond_to { |format| format.json { render json: { 'qcable' => find_qcable(qcable_barcode) } } }
+  rescue ActionController::ParameterMissing, InputError => e
     render json: { 'error' => e.message }
   end
 
@@ -50,9 +53,16 @@ class SearchController < ApplicationController
   end
 
   def find_qcable(barcode)
-    api.search.find(Settings.searches['Find qcable by barcode']).first(barcode:)
-  rescue Sequencescape::Api::ResourceNotFound => e
-    raise e, "Sorry, could not find qcable with the barcode '#{barcode}'."
+    includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
+
+    qcable_resource =
+      Sequencescape::Api::V2::Qcable
+        .includes(*includes)
+        .find(barcode: qcable_barcode)
+        .first
+        .tap { |qcable| raise InputError, "Sorry, could not find qcable with the barcode '#{barcode}'." if qcable.nil? }
+
+    Presenters::QcablePresenter.new(qcable_resource)
   end
 
   private

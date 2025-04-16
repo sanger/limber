@@ -30,7 +30,6 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   let(:qcable) { create :v2_qcable, lot: qcable_lot, labware: qcable_labware, uuid: tag_plate_qcable_uuid }
 
   let(:tag_plate_barcode) { qcable_labware.labware_barcode.machine }
-  let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
   let(:enforce_uniqueness) { true }
 
@@ -107,12 +106,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
       stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
       stub_api_v2_post('StateChange')
-
-      stub_search_and_single_result(
-        'Find qcable by barcode',
-        { 'search' => { 'barcode' => tag_plate_barcode } },
-        tag_plate_qcable
-      )
+      stub_v2_qcable(qcable)
     end
 
     scenario 'creation with the plate' do
@@ -133,13 +127,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
   end
 
   shared_examples 'it rejects the candidate plate' do
-    before do
-      stub_search_and_single_result(
-        'Find qcable by barcode',
-        { 'search' => { 'barcode' => tag_plate_barcode } },
-        tag_plate_qcable
-      )
-    end
+    before { stub_v2_qcable(qcable) }
 
     scenario 'rejects the candidate plate' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
