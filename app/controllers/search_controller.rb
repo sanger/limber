@@ -29,7 +29,7 @@ class SearchController < ApplicationController
   # The front end makes a decision regarding suitability
   def qcables
     respond_to { |format| format.json { render json: { 'qcable' => find_qcable(qcable_barcode) } } }
-  rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => e
+  rescue ActionController::ParameterMissing, InputError => e
     render json: { 'error' => e.message }
   end
 
@@ -55,10 +55,14 @@ class SearchController < ApplicationController
   def find_qcable(barcode)
     includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
 
-    qcable_resource = Sequencescape::Api::V2::Qcable.includes(*includes).find(barcode: qcable_barcode).first
+    qcable_resource =
+      Sequencescape::Api::V2::Qcable
+        .includes(*includes)
+        .find(barcode: qcable_barcode)
+        .first
+        .tap { |qcable| raise InputError, "Sorry, could not find qcable with the barcode '#{barcode}'." if qcable.nil? }
+
     Presenters::QcablePresenter.new(qcable_resource)
-  rescue Sequencescape::Api::ResourceNotFound => e
-    raise e, "Sorry, could not find qcable with the barcode '#{barcode}'."
   end
 
   private
