@@ -1,0 +1,17 @@
+<%= page(yield(:page_id), :'show-page', prevent_row: true) do %>
+  <div class="row">
+    <%= render 'pipeline_info', class: 'row' %>
+  </div>
+
+  <div class="row">
+    <%= content do %>
+      <%= card without_block: true, id: 'labware-content' do %>
+        <%= yield(:labware_content) %>
+      <% end %>
+    <% end %>
+
+    <%= yield(:labware_sidebar) %>
+  </div>
+<% end %>
+
+<% parent_layout :application %>
