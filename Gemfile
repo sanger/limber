@@ -20,9 +20,6 @@ group :default do
   # Adds easy conversions between units
   gem 'ruby-units'
 
-  # Used in the setting object, allows access by object and hash notation.
-  gem 'hashie'
-
   # Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
   gem 'json_api_client', github: 'sanger/json_api_client', branch: 'v1.21.0a'
 
