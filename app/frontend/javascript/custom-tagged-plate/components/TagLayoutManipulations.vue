@@ -86,10 +86,10 @@
         </b-col>
       </b-row>
       <b-row v-if="tag1GroupName" id="tag1_name_label" class="form-group form-row">
-        <b-label>i7 Tag 1 Group</b-label> : {{ tag1GroupName }}
+        <label class="form-label">i7 Tag 1 Group</label> : {{ tag1GroupName }}
       </b-row>
       <b-row v-if="tag2GroupName" id="tag2_name_label" class="form-group form-row mb-2">
-        <b-label>i5 Tag 2 Group</b-label> : {{ tag2GroupName }}</b-row
+        <label class="form-label">i5 Tag 2 Group</label> : {{ tag2GroupName }}</b-row
       >
     </template>
     <!-- TAG SETS -->
