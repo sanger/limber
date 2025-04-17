@@ -57,14 +57,13 @@
               :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
               @tagparamsupdated="tagParamsUpdated"
             />
-            <div class="form-group form-row">
+            <div class="form-group form-row d-grid">
               <b-button
                 id="custom_tagged_plate_submit_button"
                 name="custom_tagged_plate_submit_button"
                 :disabled="createButtonDisabled"
                 :variant="createButtonStyle"
                 size="lg"
-                block
                 @click="createPlate"
               >
                 {{ createButtonText }}
@@ -207,7 +206,7 @@ export default {
       this.tagSubstitutions // used for tag substitution check
       this.childUsedOligos // used for tag clash check
 
-      if (this.parentWells === {}) {
+      if (this.parentWells == {}) {
         return {}
       }
       if (Object.keys(this.tagLayout).length === 0) {
@@ -685,13 +684,13 @@ export default {
         // delete the substitution from the list
         this.removeTagSubstitution(originalTagMapId)
       } else {
-        this.$set(this.tagSubstitutions, originalTagMapId, substituteTagId)
+        this.tagSubstitutions[originalTagMapId] = substituteTagId
       }
 
       this.hideWellModal()
     },
     removeTagSubstitution(originalTagMapId) {
-      this.$delete(this.tagSubstitutions, originalTagMapId)
+      delete this.tagSubstitutions[originalTagMapId]
     },
   },
 }

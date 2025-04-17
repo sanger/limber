@@ -40,7 +40,7 @@ module PageHelper # rubocop:todo Style/Documentation
 
   def jumbotron(jumbotron_id = nil, options = {}, &)
     options[:class] ||= +''
-    options[:class] << ' jumbotron'
+    options[:class] << ' p-5 mb-4 bg-light rounded-3'
     options[:id] = jumbotron_id
     tag.div(**options, &)
   end
@@ -48,13 +48,13 @@ module PageHelper # rubocop:todo Style/Documentation
   # eg. state_badge('pending')
   # <span class="state-badge-pending">Pending</span>
   def state_badge(state, title: 'Labware State')
-    tag.span(state.titleize, class: "state-badge #{state}", title: title, data: { toggle: 'tooltip' })
+    tag.span(state.titleize, class: "state-badge #{state}", title: title, data: { 'bs-toggle': 'tooltip' })
   end
 
   # eg. count_badge(0)
-  # <span class="badge badge-secondary">0</span>
+  # <span class="badge bg-secondary">0</span>
   # eg. count_badge(10)
-  # <span class="badge badge-primary">10</span>
+  # <span class="badge bg-primary">10</span>
   def count_badge(count, badge_id = nil, data_attributes = {})
     state =
       case count
@@ -63,6 +63,6 @@ module PageHelper # rubocop:todo Style/Documentation
       else
         'primary'
       end
-    tag.span(count || '...', class: "badge badge-pill badge-#{state}", id: badge_id, data: data_attributes)
+    tag.span(count || '...', class: "badge rounded-pill bg-#{state}", id: badge_id, data: data_attributes)
   end
 end

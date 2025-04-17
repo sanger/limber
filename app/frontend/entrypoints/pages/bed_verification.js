@@ -7,9 +7,9 @@ import SCAPE from '@/javascript/lib/global_message_system.js'
 
 let closeIcon = function () {
   return $(document.createElement('a'))
-    .attr('class', 'close')
-    .attr('aria-label', 'close')
-    .append($(document.createElement('span')).attr('aria-hidden', 'true').text('×'))
+    .attr('class', 'btn-close float-end')
+    .attr('aria-label', 'Close')
+    .append($(document.createElement('span')).attr('aria-hidden', 'true'))
 }
 
 SCAPE.robot_beds = {}

@@ -1,21 +1,21 @@
 <template>
-  <b-form-group :label="name | titleize">
+  <b-form-group :label="titleize(name)">
     <b-row>
       <b-col>
-        <b-form-group label="Value" :label-for="`qc-field-${name}-value`" label-sr-only>
+        <b-form-group label="Value" :label-for="`qc-field-${name}-value`" label-visually-hidden>
           <b-input-group :append="units">
             <b-form-input
               :id="`qc-field-${name}-value`"
               v-model="value"
               :type="dataType"
               v-bind="fieldOptions"
-              @input="emitOnChange"
+              @change="emitOnChange"
             />
           </b-input-group>
         </b-form-group>
       </b-col>
       <b-col>
-        <b-form-group label="Assay Type" :label-for="`qc-field-${name}-assay-type`" label-sr-only>
+        <b-form-group label="Assay Type" :label-for="`qc-field-${name}-assay-type`" label-visually-hidden>
           <b-form-select
             :id="`qc-field-${name}-assay-type`"
             v-model="assayType"
@@ -31,13 +31,6 @@
 <script>
 export default {
   name: 'QcField',
-  filters: {
-    titleize(value) {
-      if (!value) return ''
-      value = value.toString().replace('_', ' ')
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    },
-  },
   props: {
     name: { type: String, required: true },
     units: { type: String, required: true },
@@ -58,6 +51,7 @@ export default {
     },
     assetUuid: { type: String, required: true },
   },
+  emits: ['change'],
   data() {
     return {
       value: this.defaultValue,
@@ -74,6 +68,11 @@ export default {
         assay_version: 'manual',
         uuid: this.assetUuid,
       })
+    },
+    titleize(name) {
+      if (!name) return ''
+      name = name.toString().replace('_', ' ')
+      return name.charAt(0).toUpperCase() + name.slice(1)
     },
   },
 }

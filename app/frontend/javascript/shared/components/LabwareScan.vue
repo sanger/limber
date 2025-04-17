@@ -30,7 +30,7 @@
               size="lg"
               :placeholder="'Scan ' + labwareType"
               :disabled="scanDisabled"
-              @change="lookupLabware"
+              @update:model-value="lookupLabware"
             />
           </b-form-group>
         </b-col>
@@ -130,6 +130,7 @@ export default {
       default: 'Great!',
     },
   },
+  emits: ['change'],
   data() {
     uid += 1
     return {
