@@ -10,7 +10,7 @@ module PageHelper # rubocop:todo Style/Documentation
   def page(id, css_class = nil, prevent_row: false, &block)
     tag.div(id: id, class: "container-fluid #{css_class}") do
       if prevent_row
-        yield
+        concat yield
       else
         concat tag.div(class: 'row', &block)
       end
