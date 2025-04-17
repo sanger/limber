@@ -31,10 +31,8 @@ module LabwareCreators
 
     MISSING_WELL_DETAIL = 'is missing a row for well %s, all wells with content must have a row in the uploaded file.'
     PENDING_WELL =
-      # rubocop:todo Layout/LineLength
-      'contains at least one pending well %s, the plate and all wells in it should be passed before creating the child plate.'
-
-    # rubocop:enable Layout/LineLength
+      'contains at least one pending well %s, the plate and all wells in it should be passed before creating the ' \
+        'child plate.'
 
     self.page = 'pcr_cycles_binned_plate'
     self.attributes += [:file]

@@ -64,18 +64,17 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      include_used: false,
-      purpose_name: ['example-purpose'],
-      includes: 'purpose',
-      paginate: {
-        size: 30,
-        number: 1
-      }
+      {
+        include_used: false,
+        purpose_name: ['example-purpose'],
+        state: %w[pending started passed qc_complete failed cancelled]
+      },
+      { includes: 'purpose', paginate: { page: 1, per_page: 30 } }
     ).and_return([example_tube, example_tube_2])
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      barcode: [tube_barcode_1, tube_barcode_2],
+      { barcode: [tube_barcode_1, tube_barcode_2] },
       includes: []
     ).and_return([example_tube, example_tube_2])
   end
@@ -103,9 +102,10 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       include_used: false,
       purpose_name: ['example-purpose'],
       includes: 'purpose',
+      state: %w[pending started passed qc_complete failed cancelled],
       paginate: {
-        size: 30,
-        number: 1
+        per_page: 30,
+        page: 1
       }
     ).and_return([example_tube, example_tube_2])
 

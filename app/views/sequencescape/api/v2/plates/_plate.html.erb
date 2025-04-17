@@ -1,4 +1,3 @@
-  # TODO: Y24-190 - This file should be removed once v1 is no longer in use
 <%# Used in inboxes %>
 <%= link_to(plate, id: "plate_#{plate.barcode.ean13}", class: "#{plate.role} list-group-item-action") do %>
 <li class="labware">
@@ -9,11 +8,11 @@
     <% if plate.stock_plate.present? %><p class="list-group-item-text"><span class="field-description">Input plate:</span> <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
     <dl>
       <dt>Created</dt><dd><%= plate.created_at.to_fs(:date_created) %></dd>
-      <dt>Type</dt><dd><%= plate.plate_purpose.name %></dd>
+      <dt>Type</dt><dd><%= plate.purpose.name %></dd>
       <dt>Library Type</dt><dd><%= plate.library_type_name %></dd>
       <dt>Number of Pools</dt><dd><%= plate.number_of_pools %></dd>
       <dt>Insert Size</dt><dd><%= plate.insert_size %></dd>
-      <% if plate.primer_panel.exists? %>
+      <% unless plate.primer_panel.nil? %>
         <dt>Primer Panel</dt><dd><%= plate.primer_panel.name %></dd>
       <% end %>
     </dl>

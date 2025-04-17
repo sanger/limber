@@ -12,6 +12,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
   include Sequencescape::Api::V2::Shared::HasQcFiles
 
+  UNKNOWN = 'Unknown'
+
+  DEFAULT_INCLUDES = [
+    :purpose,
+    { wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]] }
+  ].freeze
+
   self.plate = true
   has_many :wells
   has_many :samples
@@ -35,8 +42,8 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2.plate_for_presenter(**options)
   end
 
-  def self.find_all(options, includes: DEFAULT_INCLUDES)
-    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).all
+  def self.find_all(options, includes: DEFAULT_INCLUDES, paginate: {})
+    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).paginate(paginate).all
   end
 
   # Override the model used in form/URL helpers
@@ -84,6 +91,29 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   #   well is found at that location.
   def well_at_location(well_location)
     wells.detect { |well| well.location == well_location }
+  end
+
+  def number_of_pools
+    pooling_metadata.length
+  end
+
+  def library_type_name
+    return UNKNOWN if first_pool.nil?
+
+    first_pool.dig('library_type', 'name') || UNKNOWN
+  end
+
+  def insert_size
+    return UNKNOWN if first_pool.nil?
+
+    first_pool.fetch('insert_size', [UNKNOWN]).to_a.join(' ')
+  end
+
+  # A number of attributes should be consistent across the plate.
+  # The example pool provides a source of this information.
+  # Note that if this assumption no longer holds true, this will need updating.
+  def first_pool
+    pooling_metadata.values.first
   end
 
   def tagged?

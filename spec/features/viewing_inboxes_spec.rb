@@ -8,50 +8,34 @@ RSpec.feature 'Viewing an inbox', js: true do
   let(:user) { create :user }
   let(:user_swipecard) { 'aaa' }
 
+  let(:plate_1) { create(:plate, barcode_number: 1) }
+  let(:plate_2) { create(:plate, barcode_number: 2) }
+  let(:plate_3) { create(:plate, barcode_number: 3) }
+
+  let(:tube_1) { create(:tube, barcode_number: 1) }
+  let(:tube_2) { create(:tube, barcode_number: 2) }
+
   background do
     stub_swipecard_search(user_swipecard, user)
-    create(:purpose_config, uuid: 'uuid-1')
-    create(:minimal_purpose_config, uuid: 'uuid-2')
-    create(:tube_config, uuid: 'uuid-3')
-    create(:tube_config, uuid: 'uuid-4')
+    create(:purpose_config, name: 'purpose-config', uuid: 'purpose-config-uuid')
+    create(:minimal_purpose_config, name: 'minimal-purpose-config', uuid: 'minimal-purpose-config-uuid')
+    create(:tube_config, name: 'tube-config')
 
-    stub_search_and_multi_result(
-      'Find plates',
-      {
-        'search' => {
-          states: %w[pending started passed qc_complete failed cancelled],
-          plate_purpose_uuids: %w[uuid-1 uuid-2],
-          show_my_plates_only: false,
-          include_used: false,
-          page: 1
-        }
-      },
-      [associated(:plate, barcode_number: 1), associated(:plate, barcode_number: 3)]
+    stub_find_all_with_pagination(
+      :plates,
+      { state: %w[pending started passed qc_complete failed cancelled], purpose_name: [], include_used: false },
+      { page: 1, per_page: 30 },
+      [plate_1, plate_2, plate_3]
     )
-    stub_search_and_multi_result(
-      'Find plates',
+    stub_find_all_with_pagination(
+      :tubes,
       {
-        'search' => {
-          states: %w[pending started passed qc_complete failed cancelled],
-          plate_purpose_uuids: %w[uuid-1 uuid-2],
-          show_my_plates_only: true,
-          include_used: false,
-          page: 1
-        }
+        state: %w[pending started passed qc_complete failed cancelled],
+        purpose_name: %w[tube-config],
+        include_used: false
       },
-      [associated(:plate, barcode_number: 1)]
-    )
-    stub_search_and_multi_result(
-      'Find tubes',
-      {
-        'search' => {
-          states: %w[pending started passed qc_complete failed cancelled],
-          tube_purpose_uuids: %w[uuid-3 uuid-4],
-          include_used: false,
-          page: 1
-        }
-      },
-      [associated(:tube, barcode_number: 2)]
+      { page: 1, per_page: 30 },
+      [tube_1, tube_2]
     )
   end
 
@@ -61,9 +45,6 @@ RSpec.feature 'Viewing an inbox', js: true do
     click_link 'All Ongoing Plates'
     expect(page).to have_content('Ongoing Plates')
     expect(page).to have_content('DN3')
-    check 'Show my plates only', allow_label_click: true
-    click_on 'Update'
-    expect(page).not_to have_content('DN3')
   end
 
   scenario 'ongoing tubes' do

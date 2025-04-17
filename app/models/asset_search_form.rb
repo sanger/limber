@@ -7,8 +7,7 @@ class AssetSearchForm
 
   include ActiveModel::Model
 
-  # We include 'show_my_plates_only' to let us share pagination forms
-  attr_accessor :show_my_plates_only, :include_used, :states, :total_results
+  attr_accessor :include_used, :states, :total_pages
   attr_writer :purposes, :page, :purpose_names
 
   class_attribute :form_partial
@@ -26,15 +25,11 @@ class AssetSearchForm
   end
 
   def purpose_names
-    @purpose_names || Settings.purposes.values_at(purpose_uuids).pluck(:name)
+    @purpose_names || Settings.purposes.values_at(*purpose_uuids).pluck(:name)
   end
 
   def page
     @page || 1
-  end
-
-  def total_pages
-    @total_pages ||= (total_results || 0) / PER_PAGE
   end
 
   def each_page
