@@ -2,7 +2,7 @@
 
 module LabwareCreators
   # Copy of the ConcentrationBinnedPlate class creator but uses a stamp instead of
-  # a partial stamp.
+  # a partial stamp to allow mid-pipeline use of concentration binned plates.
   #
   # Handles the generation of a concentration binned plate.
   # For each well on the source plate we use the concentration entered via
@@ -54,7 +54,7 @@ module LabwareCreators
   # |E1| conc=33.7  x10=337 (bin 2)  |  |  |  |
   # +--+--+--~                       +--+--+--~
   # |G1| conc=25.9  x10=259 (bin 2)  |  |  |  |
-  class ConcentrationBinnedPlateStamp < StampedPlate
+  class ConcentrationBinnedFullPlate < StampedPlate
     include LabwareCreators::RequireWellsWithConcentrations
     include LabwareCreators::GenerateQcResults
 

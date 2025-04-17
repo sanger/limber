@@ -44,7 +44,7 @@ LRC GEM-X 5p GE Dil:
   :stock_plate: false
   :input_plate: false
   :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
-  :creator_class: LabwareCreators::ConcentrationBinnedPlateStamp
+  :creator_class: LabwareCreators::ConcentrationBinnedPlate
   :dilutions:
     :source_volume: 10
     :diluent_volume: 25

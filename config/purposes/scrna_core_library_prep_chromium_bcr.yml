@@ -26,7 +26,7 @@ LRC GEM-X 5p BCR Enrich2 2XSPRI:
 LRC GEM-X 5p BCR Dil 2:
   :asset_type: plate
   :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
-  :creator_class: LabwareCreators::ConcentrationBinnedPlateStamp
+  :creator_class: LabwareCreators::ConcentrationBinnedFullPlate
   :dilutions:
     :source_volume: 10
     :diluent_volume: 0

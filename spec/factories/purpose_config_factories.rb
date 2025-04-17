@@ -117,10 +117,10 @@ FactoryBot.define do
       end
     end
 
-    # Sets up the configuration required for a Concentration Binned Stamp plate
+    # Sets up the configuration required for a Concentration Binned Full plate
     factory :concentration_binning_stamp_purpose_config do
       presenter_class { 'Presenters::ConcentrationBinnedPlatePresenter' }
-      creator_class { 'LabwareCreators::ConcentrationBinnedPlateStamp' }
+      creator_class { 'LabwareCreators::ConcentrationBinnedFullPlate' }
       dilutions do
         {
           source_volume: 10,
