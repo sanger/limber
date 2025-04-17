@@ -5,15 +5,10 @@ module PageHelper # rubocop:todo Style/Documentation
     render(partial: 'application/flash_messages')
   end
 
-  def grouping(_data_role, options = {}, &)
-    tag.div(**options, &)
-  end
-  private :grouping
-
   # Renders the content in the block in the
   # standard page template, including heading flash and sidebar
   def page(id, css_class = nil, prevent_row: false, &block)
-    grouping(:page, id: id, class: "container-fluid #{css_class}") do
+    tag.div(id: id, class: "container-fluid #{css_class}") do
       if prevent_row
         concat yield
       else
@@ -24,12 +19,12 @@ module PageHelper # rubocop:todo Style/Documentation
 
   # Main body of the page, provides information about what you HAVE
   def content(&)
-    grouping(:content, class: 'content-main', &)
+    tag.div(class: 'content-main', &)
   end
 
   # Provides information about what you can DO
   def sidebar(&)
-    grouping(:sidebar, class: 'sidebar content-secondary', &)
+    tag.div(class: 'sidebar content-secondary', &)
   end
 
   def card(title: nil, css_class: '', without_block: false, id: nil, &block)

@@ -28,7 +28,7 @@
 
 <div class="tab-content">
   <div class="tab-pane active" id='summary_tab' role="tabpanel">
-    <%= render partial: 'summary', locals: { presenter: presenter } %>
+    <%= render partial: 'summary', locals: { presenter: } %>
   </div>
   <% if @presenter.show_pooling_tab? %>
   <div class="tab-pane" id='pooling_tab' role="tabpanel">
@@ -43,7 +43,7 @@
     </div>
   </div>
   <div class="tab-pane" id='relatives_tab' role="tabpanel">
-    <%= render partial: 'relatives_list', locals: { presenter: presenter } %>
+    <%= render partial: 'relatives_list', locals: { presenter: } %>
   </div>
   <%= yield(:additional_panels) if content_for?(:additional_panels) %>
 </div>

@@ -9,6 +9,39 @@
 
 A flexible front end to pipelines in Sequencescape.
 
+## Contents
+
+<!-- toc -->
+
+- [User Requirements](#user-requirements)
+- [Initial Setup (using Docker)](#initial-setup-using-docker)
+- [Initial Setup (using native installation)](#initial-setup-using-native-installation)
+- [Linting and formatting](#linting-and-formatting)
+- [Troubleshooting](#troubleshooting)
+  - [ViteRuby::MissingEntrypointError in Search#new](#viterubymissingentrypointerror-in-search%23new)
+  - [Changes not updating](#changes-not-updating)
+  - [Cucumber / RSpec feature chromedriver issues](#cucumber--rspec-feature-chromedriver-issues)
+- [Note about the remainder of this document](#note-about-the-remainder-of-this-document)
+- [Docs](#docs)
+- [Configuring pipelines](#configuring-pipelines)
+- [Running Specs](#running-specs)
+  - [RSpec](#rspec)
+  - [Vitest](#vitest)
+  - [Writing specs](#writing-specs)
+    - [Factory Bot](#factory-bot)
+    - [Request stubbing for the Sequencescape v1 API](#request-stubbing-for-the-sequencescape-v1-api)
+    - [Request stubbing for the Sequencescape v2 API](#request-stubbing-for-the-sequencescape-v2-api)
+      - [FactoryBot is not mocking my related resources correctly](#factorybot-is-not-mocking-my-related-resources-correctly)
+    - [Feature debugging](#feature-debugging)
+  - [Lefthook](#lefthook)
+- [Credentials](#credentials)
+- [Miscellaneous](#miscellaneous)
+  - [Sprint Templates for Barcode Label Printing](#sprint-templates-for-barcode-label-printing)
+  - [Chromedriver issues](#chromedriver-issues)
+  - [Updating the table of contents](#updating-the-table-of-contents)
+
+<!-- tocstop -->
+
 ## User Requirements
 
 - Used on laboratory instrument machines often running older browser versions due to vendor and network limitations.
@@ -113,21 +146,42 @@ Only one terminal for Limber is needed (unless running the integration suite)
 
 ## Linting and formatting
 
-Linting and formatting are provided by rubocop, prettier and Eslint. I strongly
-recommend checking out editor integrations. Also, using lefthook will help
-ensure that only valid files are committed.
+Linting and formatting are provided by rubocop, prettier, ESlint and erb_lint.
+I strongly recommend checking out editor integrations.
+Also, using lefthook will help ensure that only valid files are committed.
 
-```shell
+There are two built-in rake tasks to run the linters. To just perform a check, run:
+
+```sh
+bundle exec rake lint:check
+```
+
+To make simple automatic fixes, run:
+
+```sh
+bundle exec rake lint:format
+```
+
+To run a specific linter, use one of the following commands as appropriate:
+
+```sh
 # Run rubocop
 bundle exec rubocop
 # Run rubocop with safe autofixes
 bundle exec rubocop -a
-# ESlint
-yarn lint
+
 # Check prettier formatting
 yarn prettier --check .
 # Fix prettier formatting
 yarn prettier --write .
+
+# ESlint
+yarn lint
+
+# Check ERB lint formatting
+bundle exec erb_lint --lint-all
+# Fix ERB lint formatting
+bundle exec erb_lint --autocorrect --lint-all
 ```
 
 ## Troubleshooting
@@ -344,3 +398,13 @@ In order to create new label templates or update the existing ones, use the depl
 ### Chromedriver issues
 
 If you encounter CI failures for cucumber and rspec feature tests it may be caused by our CI GitHub runner being on the latest version of Chrome while our testing libraries are yet to support it. To fix this, you can pin the version of Chrome in the CI to an older, known working version. This can be done in the `.github/workflows/test_ruby.yml` workflow under `Setup stable Chrome`. If this is required ensure you revert the change once the testing libraries are updated.
+
+### Updating the table of contents
+
+To update the table of contents after adding things to this README you can use the [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
+node module. To install it, make sure you have installed the dev dependencies from yarn. To update
+the table of contents, run:
+
+```shell
+npx markdown-toc -i README.md --bullets "-"
+```

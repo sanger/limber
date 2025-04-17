@@ -1,13 +1,13 @@
 <%= render 'plate_printing' %>
 <% presenter.tubes_and_sources do %>
-  <%= render 'tube_printing', presenter: presenter %>
+  <%= render 'tube_printing', presenter: %>
 <% end %>
 
 <%= render 'labware/qc_data_upload' %>
 
 <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
   <% presenter.control_suggested_library_passing do %>
-    <%= render 'work_completion_form', presenter: presenter %>
+    <%= render 'work_completion_form', presenter: %>
   <% end %>
 
   <% presenter.control_additional_creation do -%>
@@ -31,8 +31,8 @@
 <% end %>
 
 <%= card title: 'Adding a Comment', css_class: 'logged_in_only' do %>
-    <div id="asset-comments-add-form" 
-      data-comment-title="<%= presenter.comment_title %>" 
+    <div id="asset-comments-add-form"
+      data-comment-title="<%= presenter.comment_title %>"
       data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
       data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
       data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
@@ -61,7 +61,7 @@
   <% end %>
 
   <% presenter.control_library_passing do %>
-    <%= render 'work_completion_form', presenter: presenter %>
+    <%= render 'work_completion_form', presenter: %>
   <% end %>
 
   <% if presenter.well_failing_applicable? %>

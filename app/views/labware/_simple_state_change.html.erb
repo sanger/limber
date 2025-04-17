@@ -1,9 +1,8 @@
 <%# TODO This form code breaks the semantic presenter model pattern.
-    The form should use attriutes on the presenter class not the labware directly.
-%>
+    The form should use attriutes on the presenter class not the labware directly. %>
 
 <% presenter.default_state_change do |transition| %>
-  <%= form_for(presenter.labware) do |f|%>
+  <%= form_for(presenter.labware) do |f| %>
     <%= hidden_field_tag :purpose_uuid, presenter.purpose.uuid %>
     <%= hidden_field_tag :labware_barcode, presenter.human_barcode %>
     <%= hidden_field_tag :state, transition.to %>
@@ -11,8 +10,7 @@
     <div class="d-grid gap-2">
     <%= f.submit t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]),
         class: 'btn btn-lg btn-warning',
-        data: { disable_with: t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitioning]) }
-    %>
+        data: { disable_with: t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitioning]) } %>
     </div>
   <% end %>
 <% end %>
