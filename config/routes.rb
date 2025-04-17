@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   resources 'pipeline_work_in_progress', only: :show
 
-  get '/health', controller: :health, action: 'show', as: :health
+  get '/health' => 'rails/health#show', :as => :rails_health_check
 
   scope 'search', controller: :search do
     get '/', action: :new, as: :search
