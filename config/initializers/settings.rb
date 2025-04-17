@@ -22,7 +22,7 @@ class Settings
 
       # To view a list of pipeline groups and respective pipelines:
       # e.g. Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipelines| pipelines.map(&:name) }
-      @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
+      @instance['pipelines'] = ConfigLoader::PipelinesLoader.new.pipelines
 
       @instance
     rescue Errno::ENOENT
