@@ -23,7 +23,7 @@
         <% @labware_creator.number_of_parent_labwares.times do |i| %>
           <div class="labware-container scan-labware form-group row">
             <label for="tube[barcodes][<%= i %>]" class="plate-label col-2 form-label">Tube <%= i+1 %></label>
-            <input id="tube[barcodes][<%= i %>]" name="tube[barcodes][]" class="form-control labware-box col-8" tabindex="1" autocomplete="off" data-position="<%= i %>">
+            <input id="tube[barcodes][<%= i %>]" name="tube[barcodes][]" class="form-control labware-box col-8" tabindex="1" autocomplete="off" data-position="<%= i %>" data-labware-type="tube">
           </div>
         <% end %>
         <%= form.submit 'Make Pool', class: 'btn btn-success btn-lg', id: 'create-labware', disabled: true %>
