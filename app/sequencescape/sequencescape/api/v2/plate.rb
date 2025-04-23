@@ -3,6 +3,7 @@
 require_dependency 'well_helpers'
 
 # A plate from sequencescape via the V2 API
+# rubocop:disable Metrics/ClassLength
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include WellHelpers::Extensions
   include Sequencescape::Api::V2::Shared::HasRequests
@@ -47,7 +48,6 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
 
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same
-  #
   # @return [ActiveModel::Name] The resource behaves like a Limber::Plate
   #
   def model_name
@@ -80,14 +80,12 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   # Returns wells sorted by rows first and then columns.
-  #
   # @return [Array<Well>] The wells sorted in row-major order.
   def wells_in_rows
     @wells_in_rows ||= wells.sort_by { |well| [well.coordinate[1], well.coordinate[0]] }
   end
 
   # Returns the well at a specified location.
-  #
   # @param well_location [String] The location to find the well at.
   # @return [Well, nil] The well at the specified location, or `nil` if no
   #   well is found at that location.
@@ -171,10 +169,21 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     wells.each do |well|
       pool = pooled_wells.find { |wells| wells.include?(well.location) }
       next if pool.nil?
-
       well.pool = pool
     end
   end
+
+  def purpose_config
+    Settings.purposes[purpose&.uuid] || {}
+  end
+
+  # return true if the plate has register_stock_plate flag in config file
+  def register_stock_plate?
+    purpose_config.fetch(:register_stock_plate, false)
+  end
+
+  # This method is used to register the stock plate in Sequencescape.
+  custom_endpoint :register_stock_for_plate, on: :member, request_method: :post
 
   private
 
@@ -189,4 +198,5 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   def generate_pools
     Pools.new(wells_in_columns)
   end
+  # rubocop:enable Metrics/ClassLength
 end

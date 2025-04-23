@@ -125,7 +125,24 @@ module LabwareCreators
       transfer_material_from_parent!
       yield(@child) if block_given?
       after_transfer!
+
+      # call stock register if there is register_stock_plate flag
+      register_stock_for_plate if @child_plate_v2.register_stock_plate?
+
       true
+    end
+
+    def register_stock_for_plate
+      # call Sequencescape::Api::V2::Plate register_stock_for_plate method
+      if @child_plate_v2.register_stock_for_plate
+        Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
+      else
+        Rails.logger.error(
+          "Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}"
+        )
+      end
+    rescue StandardError => e
+      Rails.logger.error("Stock registration error for plate #{@child.uuid}: #{e.message}")
     end
 
     # create the control samples in the chosen well locations in the child plate
