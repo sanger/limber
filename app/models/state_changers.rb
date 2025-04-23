@@ -108,7 +108,11 @@ module StateChangers
         v2_labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
       return if in_prog_submissions.blank?
 
-      api.work_completion.create!(submissions: in_prog_submissions, target: v2_labware.uuid, user: user_uuid)
+      Sequencescape::Api::V2::WorkCompletion.create!(
+        submission_uuids: in_prog_submissions,
+        target_uuid: v2_labware.uuid,
+        user_uuid: user_uuid
+      )
     end
   end
 
