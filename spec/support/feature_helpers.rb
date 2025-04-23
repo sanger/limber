@@ -15,6 +15,8 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
     end
   end
 
+  # Deprecated: replace with stub_find_all or stub_find_all_with_pagination
+  # TODO: Y24-190, remove this method and replace with stub_find_all or stub_find_all_with_pagination
   def stub_search_and_multi_result(search, query, result)
     search_uuid = search.downcase.tr(' ', '-')
     Settings.searches[search] = search_uuid
@@ -28,6 +30,21 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
     )
   end
 
+  def stub_find_all(klass, query, result)
+    api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
+    allow(api_class).to receive(:find_all).with(query).and_return(result)
+  end
+
+  def stub_find_all_with_pagination(klass, query, paginate, result)
+    api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
+
+    # Return a mock that looks like a an array of results with result-set methods
+    result.define_singleton_method(:total_count) { length } # add total_count method to array
+    result.define_singleton_method(:total_pages) { (length / 5.0).ceil } # add total_pages method to array
+
+    allow(api_class).to receive(:find_all).with(query, paginate:).and_return(result)
+  end
+
   def stub_swipecard_search(swipecard, user)
     allow(Sequencescape::Api::V2::User).to receive(:find).with(user_code: swipecard).and_return([user])
   end
@@ -37,6 +54,15 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
       stub_search_and_multi_result('Find assets by barcode', { 'search' => { 'barcode' => barcode } }, asset)
     else
       stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => barcode } }, asset)
+    end
+  end
+
+  def stub_asset_v2_search(barcode, asset)
+    if asset.is_a?(Array)
+      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return(asset)
+    else
+      # TODO: Y24-190 to test
+      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return([asset])
     end
   end
 
