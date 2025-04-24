@@ -122,6 +122,8 @@ LRC GEM-X 5p CITE SUP Input:
   :asset_type: plate
   :stock_plate: true # Uploaded via sample manifest.
   :input_plate: true # Passed when submission is built.
+  :cherrypickable_target: false # Not destination in Sequencescape cherrypicking.
+  :presenter_class: Presenters::StockPlatePresenter # Display as stock plate.
 LRC GEM-X 5p CITE Ligation:
   :asset_type: plate
   :stock_plate: false
