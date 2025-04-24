@@ -6,19 +6,16 @@ class OngoingTube < AssetSearchForm
 
   def search_parameters
     {
-      states: states || %w[pending started passed qc_complete failed cancelled],
-      tube_purpose_uuids: purpose_uuids,
-      include_used: include_used == '1',
-      page: page
+      state: states || %w[pending started passed qc_complete failed cancelled],
+      purpose_name: purpose_names,
+      include_used: include_used == '1'
     }
   end
 
-  def v2_search_parameters
-    { purpose_name: purpose_names, include_used: include_used == '1' }
-  end
+  def pagination
+    return {} if page.nil? # No pagination
 
-  def v2_pagination
-    { number: page, size: 30 }
+    { page: page, per_page: PER_PAGE }
   end
 
   def default_purposes
