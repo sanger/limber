@@ -118,6 +118,10 @@ LRC GEM-X 5p CITE SUP XP:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
+LRC GEM-X 5p CITE SUP Input:
+  :asset_type: plate
+  :stock_plate: true # Uploaded via sample manifest.
+  :input_plate: true # Passed when submission is built.
 LRC GEM-X 5p CITE Ligation:
   :asset_type: plate
   :stock_plate: false
