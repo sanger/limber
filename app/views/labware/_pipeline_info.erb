@@ -1,6 +1,10 @@
 <div class="mt-3 ml-3 mr-3">
   <strong><%=  @pipeline_info.pipeline_names %></strong> »
 
+  <% if @pipeline_info.great_grandparent_purposes? %>
+    ... »
+  <% end %>
+
   <% if @pipeline_info.grandparent_purposes.present? %>
     <%= @pipeline_info.grandparent_purposes %> »
   <% end %>
