@@ -41,6 +41,8 @@ scRNA Core Chromium GEM-X 5p cDNA PCR CITE:
     LRC GEM-X 5p cDNA PCR CITE: LRC GEM-X 5p CITE SUP
     LRC GEM-X 5p CITE SUP: LRC GEM-X 5p CITE SUP XP
     LRC GEM-X 5p CITE SUP XP: LRC GEM-X 5p CITE Ligation
+    # Faculty input can go down this branch as well.
+    LRC GEM-X 5p CITE SUP Input: LRC GEM-X 5p CITE Ligation
     LRC GEM-X 5p CITE Ligation: LRC GEM-X 5p CITE Lib PCR-XP
 scRNA Core Chromium GEM-X 5p CITE MX:
   pipeline_group: scRNA Core Library Prep
