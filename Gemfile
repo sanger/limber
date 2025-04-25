@@ -11,7 +11,7 @@ group :default do
   gem 'state_machines'
 
   # Packages removed from the standard Ruby library
-  gem 'csv'
+  gem 'csv' # removed from Ruby 3.4.0
 
   # Build dependencies
   gem 'vite_rails'
