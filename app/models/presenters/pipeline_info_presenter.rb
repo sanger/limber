@@ -43,26 +43,29 @@ class Presenters::PipelineInfoPresenter
   # If the labware has no grandparents, it returns an empty string.
   # @return [String] Comma-separated list of grandparent purposes.
   def grandparent_purposes
-    @labware
-      .parents
-      .map { |parent| labware_from_asset(parent).parents.map { |grandparent| grandparent.purpose.name } }
-      .flatten
-      .uniq
-      .join(', ')
+    join_up_to(
+      2,
+      @labware
+        .parents
+        .map { |parent| labware_from_asset(parent).parents.map { |grandparent| grandparent.purpose.name } }
+        .flatten
+        .uniq
+        .sort
+    )
   end
 
   # Returns a comma-separated list of the purposes of the labware's parents.
   # If the labware has no parents, it returns an empty string.
   # @return [String] Comma-separated list of parent purposes.
   def parent_purposes
-    @labware.parents.map { |parent| parent.purpose.name }.uniq.join(', ')
+    join_up_to(2, @labware.parents.map { |parent| parent.purpose.name }.uniq.sort)
   end
 
   # Returns a comma-separated list of potential child purposes for the labware.
   # If the labware is the last in the pipeline, it returns an empty string.
   # @return [String] Comma-separated list of child purposes
   def child_purposes
-    suggested_purposes.map(&:name).uniq.join(', ')
+    join_up_to(2, suggested_purposes.map(&:name).uniq.sort)
   end
 
   # Returns true if the labware purpose has any defined child of child relationships, false otherwise.
