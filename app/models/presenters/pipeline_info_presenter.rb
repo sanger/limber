@@ -20,13 +20,13 @@ class Presenters::PipelineInfoPresenter
   end
 
   def pipeline_names
-    if pipeline_groups_by_filter.empty?
+    if pipeline_groups_by_requests.empty?
       # if there are no active pipelines, return the pipeline groups by purpose
       return join_up_to(3, pipeline_groups_by_purpose.sort)
     end
-    if pipeline_groups_by_purpose.intersect?(pipeline_groups_by_filter)
+    if pipeline_groups_by_purpose.intersect?(pipeline_groups_by_requests)
       # combine the two arrays to find the common pipeline groups
-      return join_up_to(3, (pipeline_groups_by_purpose & pipeline_groups_by_filter).sort)
+      return join_up_to(3, (pipeline_groups_by_purpose & pipeline_groups_by_requests).sort)
     end
     'No Pipelines Found'
   end
@@ -87,7 +87,7 @@ class Presenters::PipelineInfoPresenter
     "#{array[0..max_listed - 1].join(separator)}, ...(#{array.size - max_listed} more)"
   end
 
-  def pipeline_groups_by_filter
+  def pipeline_groups_by_requests
     Settings.pipelines.active_pipelines_for(@labware).map(&:pipeline_group).uniq
   end
 
