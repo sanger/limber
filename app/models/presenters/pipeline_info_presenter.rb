@@ -25,9 +25,11 @@ class Presenters::PipelineInfoPresenter
   #
   # 1. By purpose - the pipeline is determined by the labware's purpose as specified in the config
   # 2. By request - the pipeline is determined by the active requests on the labware
-  # 3. By orders and submissions - the pipeline is determined by the orders and submissions on the labware
+  # 3. By orders and submissions - the pipeline is determined by the orders and submissions on the
+  #    labware
   #
-  # In some cases, an intersection of these three groups might be required to accurately determine the pipeline and pipeline group.
+  # In some cases, an intersection of these three groups might be required to accurately determine
+  # the pipeline and pipeline group.
   def pipeline_groups
     return compatible_pipelines.sort if compatible_pipelines.any?
 
