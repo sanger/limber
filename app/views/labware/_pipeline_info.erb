@@ -1,21 +1,21 @@
 <div class="mt-3 ml-3 mr-3">
   <strong><%=  @pipeline_info.pipeline_names %></strong> »
 
-  <% if @pipeline_info.grandparents.any? %>
-    ... »
+  <% if @pipeline_info.grandparent_purposes.present? %>
+    <%= @pipeline_info.grandparent_purposes %> »
   <% end %>
 
-  <% if @pipeline_info.parents.any? %>
-    <%= @pipeline_info.previous_purposes %> »
+  <% if @pipeline_info.parent_purposes.present? %>
+    <%= @pipeline_info.parent_purposes %> »
   <% end %>
 
   <strong><%= @labware.purpose.name %></strong>
 
-  <% if @pipeline_info.children.any? %>
-    <span class="text-muted">» <%= @pipeline_info.next_purposes %></span>
+  <% if @pipeline_info.child_purposes.present? %>
+    <span class="text-muted">» <%= @pipeline_info.child_purposes %></span>
   <% end %>
 
-  <% if @pipeline_info.grandchildren.any? %>
+  <% if @pipeline_info.grandchild_purposes? %>
     <span class="text-muted">» ...</span>
   <% end %>
 </div>

@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
 # This presenter is used to show the pipeline context for a labware item.
-# It provides methods to retrieve the parents, children, and their purposes,
-# as well as the pipeline names associated with the labware's purpose.
+# It shows the appropriate pipeline name, along with the path through the
+# pipeline that that particular labware has come, and the potential child
+# purposes that it could continue as.
 class Presenters::PipelineInfoPresenter
+  include Presenters::CreationBehaviour
+
   attr_reader :labware
+
+  # redirect presenter methods to the labware
+  delegate :uuid, to: :labware
 
   # Initializes the presenter with the given labware.
   #
@@ -22,27 +28,51 @@ class Presenters::PipelineInfoPresenter
       .join(', ')
   end
 
-  def parents
-    @labware.parents&.filter { |parent| parent.purpose.present? } || []
-  end
-
-  def children
-    @labware.children&.filter { |child| child.purpose.present? } || []
-  end
-
-  def grandparents
-    @labware.parents&.filter { |grandparent| grandparent.purpose.present? } || []
-  end
-
-  def grandchildren
-    @labware.children&.filter { |child| child.purpose.present? } || []
-  end
-
-  def previous_purposes
+  # Returns a comma-separated list of the purposes of the labware's parents.
+  # If the labware has no parents, it returns an empty string.
+  # @return [String] Comma-separated list of parent purposes.
+  def parent_purposes
     @labware.parents.map { |parent| parent.purpose.name }.uniq.join(', ')
   end
 
-  def next_purposes
-    @labware.children.map { |child| child.purpose.name }.uniq.join(', ')
+  # Returns a comma-separated list of potential child purposes for the labware.
+  # If the labware is the last in the pipeline, it returns an empty string.
+  # @return [String] Comma-separated list of child purposes
+  def child_purposes
+    suggested_purposes.map(&:name).uniq.join(', ')
+  end
+
+  # Returns a comma-separated list of the purposes of the labware's grandparents.
+  # If the labware has no grandparents, it returns an empty string.
+  # @return [String] Comma-separated list of grandparent purposes.
+  def grandparent_purposes
+    @labware
+      .parents
+      .map { |parent| labware_from_asset(parent).parents.map { |grandparent| grandparent.purpose.name } }
+      .flatten
+      .uniq
+      .join(', ')
+  end
+
+  # Returns true if the labware purpose has any defined child of child relationships, false otherwise.
+  # return [Boolean] True if the labware has grandchild purposes
+  def grandchild_purposes?
+    true
+  end
+
+  private
+
+  def find_plate(barcode)
+    Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }).first
+  end
+
+  def find_tube(barcode)
+    Sequencescape::Api::V2::Tube.find_all({ barcode: [barcode] }).first
+  end
+
+  def labware_from_asset(asset)
+    return find_plate(asset.barcode) if asset.plate?
+    return find_tube(asset.barcode) if asset.tube?
+    nil
   end
 end
