@@ -54,11 +54,6 @@ class Presenters::PipelineInfoPresenter
     'No Pipelines Found'
   end
 
-  # Returns the pipeline group name if there is only one pipeline group, otherwise nil.
-  def graph_path(pipelines_path)
-    pipelines_path + "?filter=#{CGI.escape(pipeline_group_name)}" if pipeline_group_name
-  end
-
   # Returns true if the labware purpose has any defined parent of grand-parent relationships, false otherwise.
   # return [Boolean] True if the labware has great-grandparent purposes
   def great_grandparent_purposes?
