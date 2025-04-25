@@ -29,21 +29,23 @@ class Presenters::PipelineInfoPresenter
   #
   # In some cases, an intersection of these three groups might be required to accurately determine the pipeline and pipeline group.
   def pipeline_groups
-    if pipeline_groups_by_requests.empty?
-      # if there are no active pipelines, return the pipeline groups by purpose
-      return pipeline_groups_by_purpose.sort
-    end
+    return compatible_pipelines.sort if compatible_pipelines.any?
 
+    # if there are no active pipelines, return the pipeline groups by purpose
+    return pipeline_groups_by_purpose.sort if pipeline_groups_by_requests.empty?
+
+    # combine the two arrays to find the common pipeline groups
     if pipeline_groups_by_purpose.intersect?(pipeline_groups_by_requests)
-      # combine the two arrays to find the common pipeline groups
       return (pipeline_groups_by_purpose & pipeline_groups_by_requests).sort
     end
+
     nil
   end
 
   # Returns the pipeline group name if there is only one pipeline group, otherwise nil.
   def pipeline_group_name
     return pipeline_groups.first if pipeline_groups&.size == 1
+
     nil
   end
 
