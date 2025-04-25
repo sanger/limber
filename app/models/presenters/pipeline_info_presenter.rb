@@ -19,7 +19,16 @@ class Presenters::PipelineInfoPresenter
     @labware = labware
   end
 
-  def pipeline_names
+  # Determine which pipeline group(s?) the labware is in.
+  #
+  # There are three different methods of linking labware to a pipeline:
+  #
+  # 1. By purpose - the pipeline is determined by the labware's purpose as specified in the config
+  # 2. By request - the pipeline is determined by the active requests on the labware
+  # 3. By orders and submissions - the pipeline is determined by the orders and submissions on the labware
+  #
+  # In some cases, an intersection of these three groups might be required to accurately determine the pipeline and pipeline group.
+  def pipeline_group_names
     if pipeline_groups_by_requests.empty?
       # if there are no active pipelines, return the pipeline groups by purpose
       return join_up_to(3, pipeline_groups_by_purpose.sort)
