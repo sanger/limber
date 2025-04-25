@@ -295,4 +295,51 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       end
     end
   end
+
+  describe '#register_stock_for_plate' do
+    let(:logger) { instance_double(Logger) }
+    let(:child_uuid) { 'child-uuid' }
+    let(:child_plate_v2) { instance_double('Plate') }
+    let(:child) { instance_double('Plate', uuid: child_uuid) }
+
+    before do
+      allow(Rails).to receive(:logger).and_return(logger)
+      subject.instance_variable_set(:@child_plate_v2, child_plate_v2)
+      subject.instance_variable_set(:@child, child)
+    end
+
+    context 'when stock registration succeeds' do
+      before { allow(child_plate_v2).to receive(:register_stock_for_plate).and_return(true) }
+
+      it 'logs a success message' do
+        expect(logger).to receive(:info).with(/Stock registration successful for plate #{child_uuid}/)
+        subject.send(:register_stock_for_plate)
+      end
+    end
+
+    context 'when stock registration fails' do
+      before do
+        allow(child_plate_v2).to receive(:register_stock_for_plate).and_return(false)
+        allow(child_plate_v2).to receive_message_chain(:errors, :full_messages).and_return(['Something went wrong'])
+      end
+
+      it 'logs an error message with the errors' do
+        expect(logger).to receive(:error).with(
+          /Stock registration failed for plate #{child_uuid}: Something went wrong/
+        )
+        subject.send(:register_stock_for_plate)
+      end
+    end
+
+    context 'when an exception occurs' do
+      before do
+        allow(child_plate_v2).to receive(:register_stock_for_plate).and_raise(StandardError, 'unexpected failure')
+      end
+
+      it 'logs an exception error message' do
+        expect(logger).to receive(:error).with(/Stock registration error for plate #{child_uuid}: unexpected failure/)
+        subject.send(:register_stock_for_plate)
+      end
+    end
+  end
 end
