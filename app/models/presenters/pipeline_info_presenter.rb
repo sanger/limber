@@ -28,16 +28,35 @@ class Presenters::PipelineInfoPresenter
   # 3. By orders and submissions - the pipeline is determined by the orders and submissions on the labware
   #
   # In some cases, an intersection of these three groups might be required to accurately determine the pipeline and pipeline group.
-  def pipeline_group_names
+  def pipeline_groups
     if pipeline_groups_by_requests.empty?
       # if there are no active pipelines, return the pipeline groups by purpose
-      return join_up_to(3, pipeline_groups_by_purpose.sort)
+      return pipeline_groups_by_purpose.sort
     end
+
     if pipeline_groups_by_purpose.intersect?(pipeline_groups_by_requests)
       # combine the two arrays to find the common pipeline groups
-      return join_up_to(3, (pipeline_groups_by_purpose & pipeline_groups_by_requests).sort)
+      return (pipeline_groups_by_purpose & pipeline_groups_by_requests).sort
     end
+    nil
+  end
+
+  # Returns the pipeline group name if there is only one pipeline group, otherwise nil.
+  def pipeline_group_name
+    return pipeline_groups.first if pipeline_groups&.size == 1
+    nil
+  end
+
+  # Returns a string of the pipeline group names, or 'No Pipelines Found' if none are found.
+  def pipeline_group_names
+    return join_up_to(3, pipeline_groups) if pipeline_groups
+
     'No Pipelines Found'
+  end
+
+  # Returns the pipeline group name if there is only one pipeline group, otherwise nil.
+  def graph_path(pipelines_path)
+    pipelines_path + "?filter=#{CGI.escape(pipeline_group_name)}" if pipeline_group_name
   end
 
   # Returns true if the labware purpose has any defined parent of grand-parent relationships, false otherwise.
