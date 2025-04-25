@@ -14,7 +14,12 @@ class Presenters::PipelineInfoPresenter
   end
 
   def pipeline_names
-    Settings.pipelines.active_pipelines_for(@labware).map(&:pipeline_group).uniq.join(', ')
+    Settings
+      .pipelines
+      .select_pipelines_with_purpose(Settings.pipelines.list, @labware.purpose)
+      .map(&:pipeline_group)
+      .uniq
+      .join(', ')
   end
 
   def parents
