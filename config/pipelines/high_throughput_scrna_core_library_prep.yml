@@ -55,7 +55,7 @@ scRNA Core Chromium GEM-X 5p CITE SUP Input:
   library_pass: LRC GEM-X 5p CITE Lib PCR-XP
   filters:
     request_type_key: limber_scrna_core_library_prep
-    library_type: Chromium single cell GEM-X 5p v3 CITE-Seq
+    library_type: Chromium single cell GEM-X 5p v3 cell surface protein
   relationships:
     LRC GEM-X 5p CITE SUP Input: LRC GEM-X 5p CITE Ligation
     LRC GEM-X 5p CITE Ligation: LRC GEM-X 5p CITE Lib PCR-XP
