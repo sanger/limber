@@ -31,8 +31,6 @@ class Presenters::PipelineInfoPresenter
   # In some cases, an intersection of these three groups might be required to accurately determine
   # the pipeline and pipeline group.
   def pipeline_groups
-    return compatible_pipelines.sort if compatible_pipelines.any?
-
     # if there are no active pipelines, return the pipeline groups by purpose
     return pipeline_groups_by_purpose.sort if pipeline_groups_by_requests.empty?
 
