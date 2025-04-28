@@ -176,7 +176,7 @@ module LabwareCreators::DonorPoolingCalculator
     allowance_band = allowance_band_from_request(pool)
 
     # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 8
-    if count_of_samples_in_pool >= 5 && count_of_samples_in_pool <= 8
+    if count_of_samples_in_pool.between?(5, 8)
       # check and adjust number of cells per chip well if needed
       number_of_cells_per_chip_well =
         adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well, allowance_band)
