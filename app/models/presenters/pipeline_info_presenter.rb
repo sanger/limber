@@ -23,23 +23,24 @@ class Presenters::PipelineInfoPresenter
   #
   # There are three different methods of linking labware to a pipeline:
   #
-  # 1. By purpose - the pipeline is determined by the labware's purpose as specified in the config
-  # 2. By request - the pipeline is determined by the active requests on the labware
-  # 3. By orders and submissions - the pipeline is determined by the orders and submissions on the
-  #    labware
+  # 1. By purpose            - the pipeline is determined by the labware's purpose as specified in the config
+  # 2. By request (optional) - the pipeline is determined by the active requests on the labware
+  # 3. By library (optional) - the pipeline is determined by the library type of the labware
   #
   # In some cases, an intersection of these three groups might be required to accurately determine
   # the pipeline and pipeline group.
   def pipeline_groups
-    # if there are no active pipelines, return the pipeline groups by purpose
-    return pipeline_groups_by_purpose.sort if pipeline_groups_by_requests.empty?
+    # any matching pipeline MUST match the labware's purpose
+    pipeline_groups = pipeline_groups_by_purpose
 
-    # combine the two arrays to find the common pipeline groups
-    if pipeline_groups_by_purpose.intersect?(pipeline_groups_by_requests)
-      return (pipeline_groups_by_purpose & pipeline_groups_by_requests).sort
-    end
+    # any matching pipeline MIGHT match the active requests
+    pipeline_groups &= pipeline_groups_by_requests if pipeline_groups_by_requests&.any?
 
-    nil
+    # any matching pipeline MIGHT match the library type
+    pipeline_groups &= pipeline_groups_by_library if pipeline_groups_by_library&.any?
+
+    # Return the remaining pipeline groups as a sorted array, or nil if none are found.
+    pipeline_groups.sort if pipeline_groups.any?
   end
 
   # Returns the pipeline group name if there is only one pipeline group, otherwise nil.
@@ -101,6 +102,12 @@ class Presenters::PipelineInfoPresenter
 
   private
 
+  def join_up_to(max_listed, array, separator = ', ')
+    return array.join(separator) if array.size <= max_listed
+
+    "#{array[0..max_listed - 1].join(separator)}, ...(#{array.size - max_listed} more)"
+  end
+
   def pipeline_groups_by_purpose
     Settings
       .pipelines
@@ -109,14 +116,22 @@ class Presenters::PipelineInfoPresenter
       .uniq
   end
 
-  def join_up_to(max_listed, array, separator = ', ')
-    return array.join(separator) if array.size <= max_listed
-
-    "#{array[0..max_listed - 1].join(separator)}, ...(#{array.size - max_listed} more)"
+  def pipeline_groups_by_requests
+    active_pipelines.map(&:pipeline_group).uniq
   end
 
-  def pipeline_groups_by_requests
-    Settings.pipelines.active_pipelines_for(@labware).map(&:pipeline_group).uniq
+  def pipeline_groups_by_library
+    return nil unless @labware.respond_to?(:pooling_metadata)
+
+    # Extract the library type name from pooling_metadata
+    labware_library_names =
+      @labware.pooling_metadata.values.filter_map { |details| details.dig('library_type', 'name') }
+
+    Settings
+      .pipelines
+      .select { |pipeline| pipeline.filters['library_type']&.intersect?(labware_library_names) }
+      .map(&:pipeline_group)
+  end
   end
 
   def find_plate(barcode)
