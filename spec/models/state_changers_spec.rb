@@ -8,20 +8,22 @@ RSpec.describe StateChangers do
   let(:reason) { 'Because I want to' }
   let(:customer_accepts_responsibility) { false }
 
-  before do
-    expect_api_v2_posts(
-      'StateChange',
-      [
-        {
-          contents: coordinates_to_pass,
-          customer_accepts_responsibility: customer_accepts_responsibility,
-          reason: reason,
-          target_state: target_state,
-          target_uuid: labware_uuid,
-          user_uuid: user_uuid
-        }
-      ]
-    )
+  shared_context 'common setup' do
+    before do
+      expect_api_v2_posts(
+        'StateChange',
+        [
+          {
+            contents: coordinates_to_pass,
+            customer_accepts_responsibility: customer_accepts_responsibility,
+            reason: reason,
+            target_state: target_state,
+            target_uuid: labware_uuid,
+            user_uuid: user_uuid
+          }
+        ]
+      )
+    end
   end
 
   shared_examples 'a state changer' do
@@ -32,6 +34,7 @@ RSpec.describe StateChangers do
 
   describe StateChangers::PlateStateChanger do
     has_a_working_api
+    include_context 'common setup'
 
     let(:plate) { create :v2_plate, uuid: labware_uuid, state: plate_state }
     let(:failed_wells) { {} }
@@ -76,6 +79,8 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::AutomaticPlateStateChanger do
+    include_context 'common setup'
+
     has_a_working_api
 
     let(:plate_state) { 'pending' }
@@ -144,50 +149,65 @@ RSpec.describe StateChangers do
 
     let(:tube_starting_state) { 'pending' }
     let(:tube_failed_state) { 'failed' }
+    let(:tube_cancelled_state) { 'cancelled' }
 
-    let(:target_state) { 'qc_complete' }
+    let(:target_state) { 'passed' }
 
     let(:tube1_uuid) { SecureRandom.uuid }
     let(:tube2_uuid) { SecureRandom.uuid }
     let(:tube3_uuid) { SecureRandom.uuid }
 
-    let(:tube1) { create :v2_tube, uuid: tube1_uuid, state: tube_failed_state, barcode_number: 1 }
-    let(:tube2) { create :v2_tube, uuid: tube2_uuid, state: tube_starting_state, barcode_number: 2 }
-    let(:tube3) { create :v2_tube, uuid: tube3_uuid, state: tube_starting_state, barcode_number: 3 }
+    let(:tube1) do
+      create :v2_tube, uuid: tube1_uuid, state: tube_starting_state, barcode_number: 1, purpose_uuid: tube1_uuid
+    end
+    let(:tube2) do
+      create :v2_tube, uuid: tube2_uuid, state: tube_cancelled_state, barcode_number: 2, purpose_uuid: tube1_uuid
+    end
+    let(:tube3) do
+      create :v2_tube, uuid: tube3_uuid, state: tube_failed_state, barcode_number: 3, purpose_uuid: tube1_uuid
+    end
 
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
 
     let(:racked_tube1) { create :racked_tube, coordinate: 'A1', tube: tube1, tube_rack: tube_rack }
     let(:racked_tube2) { create :racked_tube, coordinate: 'B1', tube: tube2, tube_rack: tube_rack }
-    let(:racked_tube3) { create :racked_tube, coordinate: 'C1', tube: tube3, tube_rack: tube_rack }
 
     let(:labware) { tube_rack }
 
     subject { StateChangers::TubeRackStateChanger.new(api, labware_uuid, user_uuid) }
 
-    before { stub_v2_tube_rack(tube_rack) }
+    before do
+      stub_v2_tube_rack(tube_rack)
+      create(:tube_config, uuid: tube1_uuid, name: 'example-purpose')
+    end
 
     context 'when all tubes are in failed state' do
-      let(:coordinates_to_pass) { [] }
+      before { allow(labware).to receive(:racked_tubes).and_return([tube3_uuid]) }
 
-      before { allow(labware).to receive(:racked_tubes).and_return([racked_tube1]) }
-
-      # if all the tubes are already in the target state expect contents to be empty
-      # TODO: I'm not sure this is correct behaviour, it should probably raise an error
-      # or a validation should catch that the state change is not needed
-      it 'returns empty array' do
-        expect(subject.contents_for(target_state)).to eq([])
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+      it 'does not call move_to' do
+        expect(subject).not_to receive(:move_to!)
       end
     end
 
     context 'when some tubes are not in failed state' do
-      let(:coordinates_to_pass) { %w[B1 C1] }
-
-      before { allow(labware).to receive(:racked_tubes).and_return([racked_tube1, racked_tube2, racked_tube3]) }
+      before do
+        expect_api_v2_posts(
+          'StateChange',
+          [
+            {
+              contents: nil,
+              customer_accepts_responsibility: customer_accepts_responsibility,
+              reason: reason,
+              target_state: target_state,
+              target_uuid: tube1_uuid,
+              user_uuid: user_uuid
+            }
+          ]
+        )
+        allow(labware).to receive(:racked_tubes).and_return([racked_tube1, racked_tube2])
+      end
 
       it 'returns the coordinates of tubes not in failed state' do
-        expect(subject.contents_for(target_state)).to eq(%w[B1 C1])
         subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
@@ -195,6 +215,7 @@ RSpec.describe StateChangers do
 
   describe StateChangers::TubeStateChanger do
     has_a_working_api
+    include_context 'common setup'
 
     let(:tube) { json :tube, uuid: labware_uuid, state: tube_state }
     let(:well_collection) { json :well_collection, default_state: tube_state, custom_state: failed_wells }
