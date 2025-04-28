@@ -132,7 +132,6 @@ class Presenters::PipelineInfoPresenter
       .select { |pipeline| pipeline.filters['library_type']&.intersect?(labware_library_names) }
       .map(&:pipeline_group)
   end
-  end
 
   def find_plate(barcode)
     Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }).first
