@@ -30,7 +30,7 @@
               size="lg"
               :placeholder="'Scan ' + labwareType"
               :disabled="scanDisabled"
-              @update:model-value="lookupLabware"
+              @change="lookupLabware"
             />
           </b-form-group>
         </b-col>
