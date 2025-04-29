@@ -52,7 +52,7 @@ class Presenters::PipelineInfoPresenter
 
   # Returns a string of the pipeline group names, or 'No Pipelines Found' if none are found.
   def pipeline_group_names
-    return join_up_to(3, pipeline_groups) if pipeline_groups
+    return join_up_to(3, pipeline_groups) if pipeline_groups&.any?
 
     'No Pipelines Found'
   end
