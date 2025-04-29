@@ -3715,12 +3715,12 @@ ROBOT_CONFIG =
     # Hamilton bed verification
     # LRC GEM-X 5p cDNA PCR (or CITE) to LRC GEM-X 5p cDNA PCR XP
     custom_robot(
-      'hamilton-lrc-gem-x-cdna-pcr-or-cite-to-lrc-gem-x-cdna-pcr-xp',
+      'hamilton-lrc-gem-x-cdna-pcr-to-lrc-gem-x-cdna-pcr-xp',
       name: 'Hamilton LRC GEM-X 5p cDNA PCR (or CITE) => LRC GEM-X 5p cDNA PCR XP',
       require_robot: true,
       beds: {
         bed(13).barcode => {
-          purpose: ['LRC GEM-X 5p cDNA PCR', 'LRC GEM-X 5p cDNA PCR CITE'],
+          purpose: ['LRC GEM-X 5p cDNA PCR'],
           states: ['passed'],
           label: 'Bed 13'
         },
@@ -3734,18 +3734,22 @@ ROBOT_CONFIG =
       }
     )
 
-    # scRNA pipeline
-    # Hamilton bed verification
-    # LRC GEM-X 5p cDNA PCR CITE to LRC GEM-X 5p CITE SUP
     custom_robot(
-      'hamilton-lrc-gem-x-cdna-pcr-cite-to-lrc-gem-x-5p-cite-sup',
-      name: 'Hamilton LRC GEM-X 5p cDNA PCR CITE => LRC GEM-X 5p CITE SUP',
+      'hamilton-lrc-gem-x-cdna-cite-to-lrc-gem-x-cdna-pcr-xp-and-cite-sup',
+      name: 'Hamilton LRC GEM-X 5p cDNA PCR CITE => LRC GEM-X 5p cDNA PCR XP and CITE SUP',
       require_robot: true,
       beds: {
         bed(13).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR CITE',
+          purpose: ['LRC GEM-X 5p cDNA PCR CITE'],
           states: ['passed'],
           label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(13).barcode,
+          target_state: 'passed'
         },
         bed(9).barcode => {
           purpose: 'LRC GEM-X 5p CITE SUP',
@@ -3756,6 +3760,29 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # # scRNA pipeline
+    # # Hamilton bed verification
+    # # LRC GEM-X 5p cDNA PCR CITE to LRC GEM-X 5p CITE SUP
+    # custom_robot(
+    #   'hamilton-lrc-gem-x-cdna-pcr-cite-to-lrc-gem-x-5p-cite-sup',
+    #   name: 'Hamilton LRC GEM-X 5p cDNA PCR CITE => LRC GEM-X 5p CITE SUP',
+    #   require_robot: true,
+    #   beds: {
+    #     bed(13).barcode => {
+    #       purpose: 'LRC GEM-X 5p cDNA PCR CITE',
+    #       states: ['passed'],
+    #       label: 'Bed 13'
+    #     },
+    #     bed(9).barcode => {
+    #       purpose: 'LRC GEM-X 5p CITE SUP',
+    #       states: ['pending'],
+    #       label: 'Bed 9',
+    #       parent: bed(13).barcode,
+    #       target_state: 'passed'
+    #     }
+    #   }
+    # )
 
     # scRNA pipeline
     # Hamilton bed verification
