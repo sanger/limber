@@ -144,16 +144,16 @@ export default {
   methods: {
     updateTubePair(data) {
       if (data.state === 'valid') {
-        this.$set(this, 'isPairingValid', true),
-          this.$set(
-            this,
-            'parentTubes',
-            data.pairedTubes.map((tube) => tube.labware),
-          )
+        this.isPairingValid = true
+        this.$set(
+          this,
+          'parentTubes',
+          data.pairedTubes.map((tube) => tube.labware),
+        )
       } else {
-        this.$set(this, 'isPairingValid', false), this.$set(this, 'parentTubes', [])
+        this.isPairingValid = false
+        this.$set(this, 'parentTubes', [])
       }
-      this.valid
     },
     apiTransfers() {
       // what we want to transfer when creating the child tube
@@ -162,9 +162,6 @@ export default {
     createTube() {
       this.progressMessage = 'Creating blended tube...'
       this.loading = true
-
-      console.log('this.parentTubes:')
-      console.log(this.parentTubes)
 
       let payload = {
         tube: {
