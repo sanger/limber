@@ -99,10 +99,6 @@ const elements = [
     userIdRequired: true,
   },
   {
-    id: 'blended-tube-page',
-    component: BlendedTube,
-  },
-  {
     id: 'custom-tagged-plate-page',
     component: CustomTaggedPlate,
   },
