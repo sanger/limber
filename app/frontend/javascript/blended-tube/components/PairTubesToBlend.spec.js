@@ -483,4 +483,116 @@ describe('PairTubesToBlend.vue', () => {
       expect(ancestors).toEqual([])
     })
   })
+
+  describe('updateTube', () => {
+    it('should update the tube at the specified index with the provided data', () => {
+      const newTubeData = {
+        labware: {
+          labware_barcode: { human_barcode: 'NEW_TUBE' },
+          purpose: { name: 'New Tube Purpose' },
+          receptacle: {
+            aliquots: [{ sample: { id: 99, name: 'New Sample' } }],
+          },
+          ancestors: [
+            { id: 99, labware_barcode: { human_barcode: 'NEW_PLATE' }, purpose: { name: 'Ancestor Purpose Name' } },
+          ],
+        },
+        state: 'valid',
+      }
+
+      // Update the tube at index 0
+      wrapper.vm.updateTube(0, newTubeData)
+
+      // Verify the tube at index 0 was updated properly
+      expect(wrapper.vm.pairedTubes[0].labware.labware_barcode.human_barcode).toBe('NEW_TUBE')
+      expect(wrapper.vm.pairedTubes[0].state).toBe('valid')
+      expect(wrapper.vm.pairedTubes[0].index).toBe(0) // Verify index was added to the object
+
+      // Verify the tube at index 1 was not modified
+      expect(wrapper.vm.pairedTubes[1].labware.labware_barcode.human_barcode).toBe('TUBE2')
+    })
+  })
+
+  describe('Computed Properties', () => {
+    describe('colorForState', () => {
+      it('returns grey for empty state', () => {
+        wrapper.setData({ state: 'empty' })
+        expect(wrapper.vm.colorForState).toBe('grey')
+      })
+
+      it('returns orange for warning state', () => {
+        wrapper.setData({ state: 'warning' })
+        expect(wrapper.vm.colorForState).toBe('orange')
+      })
+
+      it('returns red for invalid state', () => {
+        wrapper.setData({ state: 'invalid' })
+        expect(wrapper.vm.colorForState).toBe('red')
+      })
+
+      it('returns green for valid state', () => {
+        wrapper.setData({ state: 'valid' })
+        expect(wrapper.vm.colorForState).toBe('green')
+      })
+
+      it('returns gray for unknown state', () => {
+        wrapper.setData({ state: 'unknown' })
+        expect(wrapper.vm.colorForState).toBe('gray')
+      })
+    })
+
+    describe('stateMessage', () => {
+      it('returns correct message for empty state', () => {
+        wrapper.setData({ state: 'empty' })
+        expect(wrapper.vm.stateMessage).toBe('Awaiting tube scans...')
+      })
+
+      it('returns correct message for warning state', () => {
+        wrapper.setData({ state: 'warning' })
+        expect(wrapper.vm.stateMessage).toBe('Scan the other tube...')
+      })
+
+      it('returns correct message for invalid state', () => {
+        wrapper.setData({ state: 'invalid', errorMessages: ['Error 1', 'Error 2'] })
+        expect(wrapper.vm.stateMessage).toBe('Invalid: Error 1, Error 2')
+      })
+
+      it('returns correct message for valid state', () => {
+        wrapper.setData({ state: 'valid' })
+        expect(wrapper.vm.stateMessage).toBe('Valid Pairing!')
+      })
+
+      it('returns correct message for unknown state', () => {
+        wrapper.setData({ state: 'unknown' })
+        expect(wrapper.vm.stateMessage).toBe('Unknown state...')
+      })
+    })
+
+    describe('stateMessageClass', () => {
+      it('returns correct class for empty state', () => {
+        wrapper.setData({ state: 'empty' })
+        expect(wrapper.vm.stateMessageClass).toBe('color-black')
+      })
+
+      it('returns correct class for warning state', () => {
+        wrapper.setData({ state: 'warning' })
+        expect(wrapper.vm.stateMessageClass).toBe('color-orange')
+      })
+
+      it('returns correct class for invalid state', () => {
+        wrapper.setData({ state: 'invalid' })
+        expect(wrapper.vm.stateMessageClass).toBe('color-red')
+      })
+
+      it('returns correct class for valid state', () => {
+        wrapper.setData({ state: 'valid' })
+        expect(wrapper.vm.stateMessageClass).toBe('color-green')
+      })
+
+      it('returns correct class for unknown state', () => {
+        wrapper.setData({ state: 'unknown' })
+        expect(wrapper.vm.stateMessageClass).toBe('color-black')
+      })
+    })
+  })
 })
