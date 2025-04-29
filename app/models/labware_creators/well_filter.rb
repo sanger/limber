@@ -33,8 +33,8 @@ class LabwareCreators::WellFilter
 
   def filter_requests(requests, well)
     return extract_submission(well) if well.requests_as_source.empty?
-
-    filtered_requests_by_rt = filter_by_request_type(requests)
+    
+    filtered_requests_by_rt = filter_by_request_type(requests.uniq(&:id))
     filtered_requests_by_lt = filter_by_library_type(filtered_requests_by_rt)
 
     if filtered_requests_by_lt.count == 1
