@@ -51,7 +51,7 @@
         </div>
       </b-row>
     </b-container>
-    <b-card bg-variant="white" text-variant="black" :header="headerSummary" header-tag="h5">
+    <b-card bg-variant="white" text-variant="black" :header="'Summary for this pairing:'" header-tag="h5">
       <label>Scanned tubes:</label>
       <ul>
         <li v-for="(tube, index) in pairedTubes" :key="index">
@@ -213,9 +213,6 @@ export default {
       } else {
         return 'color-black' // default color class
       }
-    },
-    headerSummary() {
-      return `Summary for this pairing:`
     },
     areTubeScansEmpty() {
       return this.pairedTubes.every((tube) => tube.labware === null)
@@ -388,8 +385,11 @@ export default {
     },
     findAncestors() {
       const tubeAncestors = this.pairedTubes.map((tube) => {
-        // Ensure labware and ancestors exist
-        if (!tube.labware || !tube.labware.ancestors) {
+        // Ensure ancestors exist
+        if (!tube.labware.ancestors || tube.labware.ancestors.length === 0) {
+          this.errorMessages.push(
+            `Tube with purpose: "${tube.labware.purpose.name}" does not appear to have any ancestors. Cannot confirm if safe to blend.`,
+          )
           return []
         }
 
@@ -435,15 +435,7 @@ export default {
       return sampleIds
     },
     validatedTubes() {
-      if (!this.areBothTubesScanned) {
-        return false
-      }
-
-      if (!this.areBothTubesValid) {
-        return false
-      }
-
-      return true
+      return this.areBothTubesScanned && this.areBothTubesValid
     },
     findSharedAncestor() {
       const tubeAncestors = this.findAncestors()

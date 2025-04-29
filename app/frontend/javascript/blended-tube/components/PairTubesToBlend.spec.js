@@ -5,6 +5,7 @@ import mockApi from '@/javascript/test_support/mock_api.js'
 
 // create an extended `Vue` constructor
 import localVue from '@/javascript/test_support/base_vue.js'
+import { expect } from 'vitest'
 
 describe('PairTubesToBlend.vue', () => {
   let wrapper
@@ -397,15 +398,26 @@ describe('PairTubesToBlend.vue', () => {
       ])
     })
 
-    it('should return an empty array if labware or ancestors are missing', () => {
+    it('should return an empty array if ancestors are missing', () => {
       wrapper.setData({
         pairedTubes: [
-          { labware: null, state: 'valid' },
+          // Tube with no ancestors
+          {
+            labware: {
+              labware_barcode: { human_barcode: 'TUBE1' },
+              purpose: { name: 'Tube Purpose 1' },
+              ancestors: [],
+            },
+            state: 'valid',
+          },
+          // Tube with ancestors
           {
             labware: {
               labware_barcode: { human_barcode: 'TUBE2' },
               purpose: { name: 'Tube Purpose 2' },
-              ancestors: null,
+              ancestors: [
+                { id: 1, labware_barcode: { human_barcode: 'PLATE1' }, purpose: { name: 'Ancestor Purpose Name' } },
+              ],
             },
             state: 'valid',
           },
@@ -414,7 +426,13 @@ describe('PairTubesToBlend.vue', () => {
 
       const ancestors = wrapper.vm.findAncestors()
 
-      expect(ancestors).toEqual([[], []])
+      expect(ancestors).toEqual([
+        [],
+        [{ id: 1, labware_barcode: { human_barcode: 'PLATE1' }, purpose: { name: 'Ancestor Purpose Name' } }],
+      ])
+      expect(wrapper.vm.errorMessages).toContain(
+        'Tube with purpose: "Tube Purpose 1" does not appear to have any ancestors. Cannot confirm if safe to blend.',
+      )
     })
 
     it('should push an error message if a tube with a specific purpose does not have exactly one ancestor', () => {
