@@ -6,7 +6,7 @@ RVIG RT:
 
 RVIG cDNA XP:
   :asset_type: plate
-  :presenter_class: Presenters::RviCdnaXpPresenter
+  :presenter_class: Presenters::PermissivePresenter
 
 RVIG Lig:
   :asset_type: plate

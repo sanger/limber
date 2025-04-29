@@ -11,7 +11,7 @@ GSLP RVI Bait Capture Library: # Top of the pipeline (Library Prep)
   library_pass:
     - RVIG Cap Lib PCR XP
   relationships:
-    RVIG Cherrypick: RVIG RT
+    RVI Cherrypick: RVIG RT
     RVIG RT: RVIG cDNA XP
     RVIG cDNA XP: RVIG Lig
     RVIG Lig: RVIG Lig Bind
