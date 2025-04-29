@@ -20,7 +20,7 @@
   <%= sidebar do %>
     <%= card title: 'Scan plates to combine', without_block: true do %>
       <div id="validation_report"></div>
-      <div id="add-plates-instructions-block" class="card-body" >
+      <div id="add-plates-instructions-block" class="card-body">
         <div class="instructions">
           <p>Scan in the plates to be combined.</p>
         </div>
@@ -37,12 +37,12 @@
         <% @labware_creator.expected_source_purposes.size.times do |i| %>
           <div class="labware-container scan-labware form-group row">
             <label for="plate[barcodes][<%= i %>]"
-                   class="plate-label col-md-2" >Source Plate <%= i+1 %></label>
+                   class="plate-label col-md-2">Source Plate <%= i+1 %></label>
             <input type="text"
                    id="plate[barcodes][<%= i %>]"
                    name="plate[barcodes][]"
                    class="form-control col-md-8"
-                   required="required"/>
+                   required="required" />
           </div>
         <% end %>
         <%= form.submit 'Merge Plates', class: 'btn btn-success btn-lg', id: 'create-labware' %>

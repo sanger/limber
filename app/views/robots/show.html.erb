@@ -19,19 +19,18 @@
           </ol>
         </div>
       </div>
-    <% end # of card%>
-  <% end # of content%>
+    <% end # of card %>
+  <% end # of content %>
 
   <%= sidebar do %>
     <%= form_for :robot, url: start_robot_path(robot.id) do |form| %>
-      <%= render partial: 'bed', locals: {robot: robot, form: form } %>
+      <%= render partial: 'bed', locals: {robot:, form: } %>
       <%= submit_tag robot.start_button_message,
         name: nil,
         class: "submit btn btn-lg btn-success btn-block",
         id: 'start-robot',
         disabled: true,
-        data: { disable_with: 'Starting...' }
-      %>
+        data: { disable_with: 'Starting...' } %>
     <% end # of form %>
   <% end # of sidebar %>
 <% end # of page %>

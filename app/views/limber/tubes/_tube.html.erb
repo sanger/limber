@@ -8,7 +8,7 @@
       </p>
     <% end %>
     <dl>
-      <dt>Created</dt><dd><%= tube.created_at.to_formatted_s(:date_created) %></dd>
+      <dt>Created</dt><dd><%= tube.created_at.to_fs(:date_created) %></dd>
       <dt>Type</dt><dd><%= tube.purpose.name %></dd>
     </dl>
   <% end -%>
