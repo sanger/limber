@@ -4276,4 +4276,348 @@ ROBOT_CONFIG =
       from 'BGE Cap Lib PCR', bed(1)
       to 'BGE Cap Lib PCR XP', bed(9)
     end
+
+    # GSLP RVI Bait Capture Library prep pipeline bed verifications
+    custom_robot(
+      'bravo-rvi-cherrypick-to-rvig-rt',
+      name: 'Bravo RVI Cherrypick => RVIG RT',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVI Cherrypick',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(6).barcode => {
+          purpose: 'RVIG RT',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(4).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'mosquito-rvig-rt',
+      name: 'Mosquito RVIG RT Random Primers',
+      beds: {
+        bed(3).barcode => {
+          purpose: 'RVIG RT',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'processed_1'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-rt-1',
+      name: 'Bravo RVIG RT Mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG RT',
+          states: ['processed_1'],
+          label: 'Bed 8',
+          target_state: 'processed_2'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-rt-2',
+      name: 'Bravo RVIG RT First Strand Mix',
+      beds: {
+        bed(6).barcode => {
+          purpose: 'RVIG RT',
+          states: ['processed_2'],
+          label: 'Bed 6',
+          target_state: 'processed_3'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-rt-3',
+      name: 'Bravo RVIG RT Second Strand Mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG RT',
+          states: ['processed_3'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-rt-to-rvig-cdna-xp',
+      name: 'Hamilton RVIG RT => RVIG cDNA XP',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG RT',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['pending'],
+          label: 'Bed 13',
+          parent: bed(4).barcode,
+          target_state: 'processed_1'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG RT',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(12).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['pending'],
+          label: 'Bed 12',
+          parent: bed(9).barcode,
+          target_state: 'processed_1'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-cdna-xp-frag-mix',
+      name: 'Bravo RVIG cDNA XP Frag mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['processed_1'],
+          label: 'Bed 8',
+          target_state: 'processed_2'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-cdna-xp-to-rvig-lig',
+      name: 'Bravo RVIG cDNA XP => RVIG Lig',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['processed_2'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        },
+        bed(6).barcode => {
+          purpose: 'RVIG Lig',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-lig-to-rvig-lig-bind',
+      name: 'Hamilton RVIG Lig => RVIG Lig Bind',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG Lig',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(3).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG Lig',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(8).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['pending'],
+          label: 'Bed 8',
+          parent: bed(9).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-lig-bind-to-rvig-lib-pcr',
+      name: 'Bravo RVIG Lig Bind => RVIG Lib PCR',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['pending'],
+          label: 'Bed 13',
+          parent: bed(5).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-lib-pcr-to-rvig-lib-pcr-xp',
+      name: 'Hamilton RVIG Lib PCR => RVIG Lib PCR XP',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(10).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 10',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(15).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 15',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'beckman-rvig-lib-pcr-xp-to-rvig-lib-prepool',
+      name: 'Beckman RVIG Lib PCR XP => RVIG Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG Lib PrePool',
+          states: %w[pending],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    custom_robot(
+      'bravo-rvig-hyb-to-rvig-cap-lib',
+      name: 'Bravo RVIG Hyb => RVIG Cap Lib',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG Hyb',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,3').barcode => {
+          purpose: 'RVIG Cap Lib',
+          states: ['pending'],
+          label: 'Carousel 1,3',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-cap-lib-to-rvig-cap-lib-pcr',
+      name: 'Bravo RVIG Cap Lib => RVIG Cap Lib PCR',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG Cap Lib',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('4,5').barcode => {
+          purpose: 'RVIG Cap Lib PCR',
+          states: ['pending'],
+          label: 'Carousel 4,5',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-cap-lib-pcr-to-rvig-cap-lib-pcr-xp',
+      name: 'Hamilton RVIG Cap Lib PCR => RVIG Cap Lib PCR XP',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG Cap Lib PCR',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(10).barcode => {
+          purpose: 'RVIG Cap Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 10',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG Cap Lib PCR',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(15).barcode => {
+          purpose: 'RVIG Cap Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 15',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'beckman-rvig-cap-lib-pcr-xp-to-rvig-cap-lib-pool',
+      name: 'Beckman RVIG Cap Lib PCR XP => RVIG Cap Lib Pool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVIG Cap Lib PCR XP',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG Cap Lib Pool',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(5).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
