@@ -78,9 +78,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
     end
 
-    context 'when the scenario is more complex' do
-      # Test a matrix of scenarios and their purposes
-      #
+    context 'when the scenario a linear config' do
       # simple_linear_config: a simple chain of 3 purposes in a row, belonging to the same pipeline group.
       #     All three should return the same pipeline group.
       #
@@ -88,22 +86,23 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       #    and the second and third having another pipeline group.
       #    The first should return the first pipeline group, the second should return both groups?,
       #    and the third should return the second group.
-      #
-      # branching_config: a common parent with two children, each with their own pipeline group.
-      #     The children should return their own pipeline group, but the parent should return both groups?
-      #
-      # combining_config: a common child with two parents, each with their own pipeline group.
-      #     The child should return both groups, but the parents should return their own group.
 
-      let(:purpose_first) { double('Purpose', name: 'purpose-1') }
-      let(:purpose_middle) { double('Purpose', name: 'purpose-2') }
-      let(:purpose_last) { double('Purpose', name: 'purpose-3') }
+      let(:purpose_first) { create(:v2_purpose, name: 'purpose-first') }
+      let(:purpose_middle) { create(:v2_purpose, name: 'purpose-middle') }
+      let(:purpose_last) { create(:v2_purpose, name: 'purpose-last') }
 
-      let(:labware_first) { double('Labware', purpose: purpose_first, pooling_metadata: {}, ancestors: []) }
+      let(:labware_first) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_first) }
       let(:labware_middle) do
-        double('Labware', purpose: purpose_middle, pooling_metadata: {}, ancestors: [labware_first])
+        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_middle, ancestors: [labware_first])
       end
-      let(:labware_last) { double('Labware', purpose: purpose_last, pooling_metadata: {}, ancestors: [labware_middle]) }
+      let(:labware_last) do
+        create(
+          :v2_stock_plate,
+          :has_pooling_metadata,
+          purpose: purpose_last,
+          ancestors: [labware_middle, labware_first]
+        )
+      end
 
       context 'when there is a simple linear config' do
         before do
@@ -113,8 +112,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 Pipeline,
                 pipeline_group: 'Group A',
                 relationships: {
-                  'purpose-1' => 'purpose-2',
-                  'purpose-2' => 'purpose-3'
+                  'purpose-first' => 'purpose-middle',
+                  'purpose-middle' => 'purpose-last'
                 },
                 filters: {
                 }
@@ -156,7 +155,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 Pipeline,
                 pipeline_group: 'Group A',
                 relationships: {
-                  'purpose-1' => 'purpose-2'
+                  'purpose-first' => 'purpose-middle'
                 },
                 filters: {
                 }
@@ -165,7 +164,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 Pipeline,
                 pipeline_group: 'Group B',
                 relationships: {
-                  'purpose-2' => 'purpose-3'
+                  'purpose-middle' => 'purpose-last'
                 },
                 filters: {
                 }
@@ -176,6 +175,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
 
         context 'when inspecting the first purpose in the chain' do
           let(:labware) { labware_first }
+
           it 'returns the correct pipeline group for the first purpose' do
             expect(presenter.pipeline_groups).to eq(['Group A'])
           end
@@ -188,6 +188,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             expect(presenter.pipeline_groups).to eq(['Group A', 'Group B'])
           end
         end
+
         context 'when inspecting the last purpose in the chain' do
           let(:labware) { labware_last }
 
@@ -195,6 +196,39 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             expect(presenter.pipeline_groups).to eq(['Group B'])
           end
         end
+      end
+    end
+
+    context 'when the scenario a non-linear config' do
+      # branching_config: a common parent with two children, each with their own pipeline group.
+      #     The children should return their own pipeline group, but the parent should return both groups?
+      #
+      # combining_config: a common child with two parents, each with their own pipeline group.
+      #     The child should return both groups, but the parents should return their own group.
+      #
+
+      let(:purpose_parent) { create(:v2_purpose, name: 'purpose-parent') }
+      let(:purpose_child) { create(:v2_purpose, name: 'purpose-child') }
+      let(:purpose_other_parent) { create(:v2_purpose, name: 'purpose-other-parent') }
+      let(:purpose_other_child) { create(:v2_purpose, name: 'purpose-other-child') }
+
+      let(:labware_branching_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
+      let(:labware_child) do
+        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_child, ancestors: [labware_parent])
+      end
+      let(:labware_other_child) do
+        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_child, ancestors: [labware_parent])
+      end
+
+      let(:labware_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
+      let(:labware_other_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_parent) }
+      let(:labware_combining_child) do
+        create(
+          :v2_stock_plate,
+          :has_pooling_metadata,
+          purpose: purpose_child,
+          ancestors: [labware_parent, labware_other_parent]
+        )
       end
 
       context 'when there is a branching config' do
@@ -205,7 +239,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 Pipeline,
                 pipeline_group: 'Group A',
                 relationships: {
-                  'purpose-1' => 'purpose-2'
+                  'purpose-parent' => 'purpose-child'
                 },
                 filters: {
                 }
@@ -214,7 +248,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 Pipeline,
                 pipeline_group: 'Group B',
                 relationships: {
-                  'purpose-1' => 'purpose-3'
+                  'purpose-parent' => 'purpose-other-child'
                 },
                 filters: {
                 }
@@ -222,8 +256,9 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             ]
           )
         end
-        context 'when inspecting the first purpose in the chain' do
-          let(:labware) { labware_first }
+
+        context 'when inspecting the common parent purpose in the chain' do
+          let(:labware) { labware_branching_parent }
 
           it 'returns the correct pipeline group for the common parent purpose' do
             expect(presenter.pipeline_groups).to eq(['Group A', 'Group B'])
@@ -231,7 +266,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         end
 
         context 'when inspecting the first child purpose in the chain' do
-          let(:labware) { labware_middle }
+          let(:labware) { labware_child }
 
           it 'returns the correct pipeline group for the first child' do
             expect(presenter.pipeline_groups).to eq(['Group A'])
@@ -239,7 +274,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         end
 
         context 'when inspecting the second child purpose in the chain' do
-          let(:labware) { labware_last }
+          let(:labware) { labware_other_child }
 
           it 'returns the correct pipeline group for the second child' do
             expect(presenter.pipeline_groups).to eq(['Group B'])
@@ -255,7 +290,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 Pipeline,
                 pipeline_group: 'Group A',
                 relationships: {
-                  'purpose-1' => 'purpose-3'
+                  'purpose-parent' => 'purpose-combining-child'
                 },
                 filters: {
                 }
@@ -264,7 +299,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 Pipeline,
                 pipeline_group: 'Group B',
                 relationships: {
-                  'purpose-2' => 'purpose-3'
+                  'purpose-other-parent' => 'purpose-combining-child'
                 },
                 filters: {
                 }
@@ -274,7 +309,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         end
 
         context 'when inspecting the first parent purpose in the chain' do
-          let(:labware) { labware_first }
+          let(:labware) { labware_parent }
 
           it 'returns the correct pipeline group for the first parent' do
             expect(presenter.pipeline_groups).to eq(['Group A'])
@@ -282,7 +317,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         end
 
         context 'when inspecting the second parent purpose in the chain' do
-          let(:labware) { labware_middle }
+          let(:labware) { labware_other_parent }
 
           it 'returns the correct pipeline group for the second parent' do
             expect(presenter.pipeline_groups).to eq(['Group B'])
@@ -290,10 +325,10 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         end
 
         context 'when inspecting the common child purpose in the chain' do
-          let(:labware) { labware_last }
+          let(:labware) { labware_combining_child }
 
           it 'returns the correct pipeline group for the common child' do
-            expect(presenter.pipeline_groups).to eq(['Group A', 'Group B'])
+            expect(presenter.pipeline_groups).to be_nil
           end
         end
       end
