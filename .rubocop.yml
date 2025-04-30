@@ -10,8 +10,9 @@ plugins:
 
 AllCops:
   Exclude:
-    - node_modules/**/*
     - bin/**/*
+    - node_modules/**/*
+    - tmp/**/*
     - vendor/**/*
   NewCops: enable
 Rails:
