@@ -3737,7 +3737,8 @@ ROBOT_CONFIG =
     # scRNA pipeline
     # Hamilton bed verification
     # LRC GEM-X 5p cDNA PCR CITE to LRC GEM-X 5p cDNA PCR XP and LRC GEM-X 5p CITE SUP
-    # Enforces both destination plates (LRC GEM-X 5p cDNA PCR XP and LRC GEM-X 5p CITE SUP) to be available for bed verification
+    # Enforces both destination plates (LRC GEM-X 5p cDNA PCR XP and LRC GEM-X 5p CITE SUP)
+    # to be available for bed verification
     custom_robot(
       'hamilton-lrc-gem-x-cdna-cite-to-lrc-gem-x-cdna-pcr-xp-and-cite-sup',
       name: 'Hamilton LRC GEM-X 5p cDNA PCR CITE => LRC GEM-X 5p cDNA PCR XP and CITE SUP',
