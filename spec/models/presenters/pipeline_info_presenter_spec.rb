@@ -77,6 +77,227 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         expect(presenter.pipeline_groups).to eq(['Group D'])
       end
     end
+
+    context 'when the scenario is more complex' do
+      # Test a matrix of scenarios and their purposes
+      #
+      # simple_linear_config: a simple chain of 3 purposes in a row, belonging to the same pipeline group.
+      #     All three should return the same pipeline group.
+      #
+      # chained_linear_config: a chain of 3 purposes in a row, with the first and second having one pipeline group,
+      #    and the second and third having another pipeline group.
+      #    The first should return the first pipeline group, the second should return both groups?,
+      #    and the third should return the second group.
+      #
+      # branching_config: a common parent with two children, each with their own pipeline group.
+      #     The children should return their own pipeline group, but the parent should return both groups?
+      #
+      # combining_config: a common child with two parents, each with their own pipeline group.
+      #     The child should return both groups, but the parents should return their own group.
+
+      let(:purpose_first) { double('Purpose', name: 'purpose-1') }
+      let(:purpose_middle) { double('Purpose', name: 'purpose-2') }
+      let(:purpose_last) { double('Purpose', name: 'purpose-3') }
+
+      let(:labware_first) { double('Labware', purpose: purpose_first, pooling_metadata: {}, ancestors: []) }
+      let(:labware_middle) do
+        double('Labware', purpose: purpose_middle, pooling_metadata: {}, ancestors: [labware_first])
+      end
+      let(:labware_last) { double('Labware', purpose: purpose_last, pooling_metadata: {}, ancestors: [labware_middle]) }
+
+      context 'when there is a simple linear config' do
+        before do
+          allow(Settings.pipelines).to receive(:list).and_return(
+            [
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group A',
+                relationships: {
+                  'purpose-1' => 'purpose-2',
+                  'purpose-2' => 'purpose-3'
+                },
+                filters: {
+                }
+              )
+            ]
+          )
+        end
+
+        context 'when inspecting the first purpose in the chain' do
+          let(:labware) { labware_first }
+
+          it 'returns the correct pipeline group for the first purpose' do
+            expect(presenter.pipeline_groups).to eq(['Group A'])
+          end
+        end
+
+        context 'when inspecting the middle purpose in the chain' do
+          let(:labware) { labware_middle }
+
+          it 'returns the correct pipeline group for the middle purpose' do
+            expect(presenter.pipeline_groups).to eq(['Group A'])
+          end
+        end
+
+        context 'when inspecting the last purpose in the chain' do
+          let(:labware) { labware_last }
+
+          it 'returns the correct pipeline group for the last purpose' do
+            expect(presenter.pipeline_groups).to eq(['Group A'])
+          end
+        end
+      end
+
+      context 'when there is a chained linear config' do
+        before do
+          allow(Settings.pipelines).to receive(:list).and_return(
+            [
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group A',
+                relationships: {
+                  'purpose-1' => 'purpose-2'
+                },
+                filters: {
+                }
+              ),
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group B',
+                relationships: {
+                  'purpose-2' => 'purpose-3'
+                },
+                filters: {
+                }
+              )
+            ]
+          )
+        end
+
+        context 'when inspecting the first purpose in the chain' do
+          let(:labware) { labware_first }
+          it 'returns the correct pipeline group for the first purpose' do
+            expect(presenter.pipeline_groups).to eq(['Group A'])
+          end
+        end
+
+        context 'when inspecting the middle purpose in the chain' do
+          let(:labware) { labware_middle }
+
+          it 'returns the correct pipeline group for the middle purpose' do
+            expect(presenter.pipeline_groups).to eq(['Group A', 'Group B'])
+          end
+        end
+        context 'when inspecting the last purpose in the chain' do
+          let(:labware) { labware_last }
+
+          it 'returns the correct pipeline group for the last purpose' do
+            expect(presenter.pipeline_groups).to eq(['Group B'])
+          end
+        end
+      end
+
+      context 'when there is a branching config' do
+        before do
+          allow(Settings.pipelines).to receive(:list).and_return(
+            [
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group A',
+                relationships: {
+                  'purpose-1' => 'purpose-2'
+                },
+                filters: {
+                }
+              ),
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group B',
+                relationships: {
+                  'purpose-1' => 'purpose-3'
+                },
+                filters: {
+                }
+              )
+            ]
+          )
+        end
+        context 'when inspecting the first purpose in the chain' do
+          let(:labware) { labware_first }
+
+          it 'returns the correct pipeline group for the common parent purpose' do
+            expect(presenter.pipeline_groups).to eq(['Group A', 'Group B'])
+          end
+        end
+
+        context 'when inspecting the first child purpose in the chain' do
+          let(:labware) { labware_middle }
+
+          it 'returns the correct pipeline group for the first child' do
+            expect(presenter.pipeline_groups).to eq(['Group A'])
+          end
+        end
+
+        context 'when inspecting the second child purpose in the chain' do
+          let(:labware) { labware_last }
+
+          it 'returns the correct pipeline group for the second child' do
+            expect(presenter.pipeline_groups).to eq(['Group B'])
+          end
+        end
+      end
+
+      context 'when there is a combining config' do
+        before do
+          allow(Settings.pipelines).to receive(:list).and_return(
+            [
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group A',
+                relationships: {
+                  'purpose-1' => 'purpose-3'
+                },
+                filters: {
+                }
+              ),
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group B',
+                relationships: {
+                  'purpose-2' => 'purpose-3'
+                },
+                filters: {
+                }
+              )
+            ]
+          )
+        end
+
+        context 'when inspecting the first parent purpose in the chain' do
+          let(:labware) { labware_first }
+
+          it 'returns the correct pipeline group for the first parent' do
+            expect(presenter.pipeline_groups).to eq(['Group A'])
+          end
+        end
+
+        context 'when inspecting the second parent purpose in the chain' do
+          let(:labware) { labware_middle }
+
+          it 'returns the correct pipeline group for the second parent' do
+            expect(presenter.pipeline_groups).to eq(['Group B'])
+          end
+        end
+
+        context 'when inspecting the common child purpose in the chain' do
+          let(:labware) { labware_last }
+
+          it 'returns the correct pipeline group for the common child' do
+            expect(presenter.pipeline_groups).to eq(['Group A', 'Group B'])
+          end
+        end
+      end
+    end
   end
 
   describe '#pipeline_group_names' do
