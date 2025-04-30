@@ -10,6 +10,9 @@ group :default do
   gem 'rake'
   gem 'state_machines'
 
+  # Packages removed from the standard Ruby library
+  gem 'csv' # removed from Ruby 3.4.0
+
   # Build dependencies
   gem 'vite_rails'
   gem 'vite_ruby'
