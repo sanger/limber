@@ -28,7 +28,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   let(:parent_plate_includes) do
     'wells.requests_as_source,wells.requests_as_source.request_type,' \
-      'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample_metadata'
+      'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
   end
   let(:control_well_locations) { %w[B5 H3] }
 
