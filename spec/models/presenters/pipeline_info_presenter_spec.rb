@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe Presenters::PipelineInfoPresenter, type: :model do
+RSpec.describe Presenters::PipelineInfoPresenter do
   let(:presenter) { described_class.new(labware) }
-  let(:labware) { double('Labware') }
+  let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
+  let(:labware) { create(:v2_stock_plate, :has_pooling_metadata, purpose: wgs_purpose) }
 
   before do
-    allow(labware).to receive(:purpose).and_return(double('Purpose', name: 'WGS Purpose'))
-    allow(labware).to receive(:pooling_metadata).and_return({ 'key1' => { 'library_type' => { 'name' => 'WGS' } } })
-    allow(labware).to receive(:ancestors).and_return([])
+    allow(labware).to receive_messages(
+      pooling_metadata: {
+        'key1' => {
+          'library_type' => {
+            'name' => 'WGS'
+          }
+        }
+      },
+      ancestors: []
+    )
   end
 
   describe '#pipeline_groups' do
@@ -15,8 +23,16 @@ RSpec.describe Presenters::PipelineInfoPresenter, type: :model do
       before do
         allow(Settings.pipelines).to receive(:list).and_return(
           [
-            double('Pipeline', pipeline_group: 'Group A', relationships: { 'parent' => 'child' }, filters: {}),
-            double('Pipeline', pipeline_group: 'Group B', relationships: { 'parent' => 'WGS Purpose' }, filters: {})
+            instance_double(Pipeline, pipeline_group: 'Group A', relationships: { 'parent' => 'child' }, filters: {}),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group B',
+              relationships: {
+                'parent' => 'WGS Purpose'
+              },
+              filters: {
+              }
+            )
           ]
         )
       end
@@ -27,10 +43,7 @@ RSpec.describe Presenters::PipelineInfoPresenter, type: :model do
     end
 
     context 'when no pipelines match' do
-      before do
-        allow(Settings.pipelines).to receive(:list).and_return([])
-        allow(Settings.pipelines).to receive(:select_pipelines_with_purpose).and_return([])
-      end
+      before { allow(Settings.pipelines).to receive_messages(list: [], select_pipelines_with_purpose: []) }
 
       it 'returns nil' do
         expect(presenter.pipeline_groups).to be_nil
@@ -40,8 +53,8 @@ RSpec.describe Presenters::PipelineInfoPresenter, type: :model do
     context 'when pipelines match by library type' do
       before do
         pipelines = [
-          double(
-            'Pipeline',
+          instance_double(
+            Pipeline,
             pipeline_group: 'Group A',
             relationships: {
               'parent' => 'WGS Purpose'
@@ -50,8 +63,8 @@ RSpec.describe Presenters::PipelineInfoPresenter, type: :model do
               'library_type' => ['RNA-Seq']
             }
           ),
-          double(
-            'Pipeline',
+          instance_double(
+            Pipeline,
             pipeline_group: 'Group B',
             relationships: {
               'parent' => 'WGS Purpose'
@@ -61,8 +74,7 @@ RSpec.describe Presenters::PipelineInfoPresenter, type: :model do
             }
           )
         ]
-        allow(Settings.pipelines).to receive(:list).and_return(pipelines)
-        allow(Settings.pipelines).to receive(:select).and_return(pipelines)
+        allow(Settings.pipelines).to receive_messages(list: pipelines, select: pipelines)
       end
 
       it 'returns the pipeline groups matching the library type' do
@@ -88,19 +100,17 @@ RSpec.describe Presenters::PipelineInfoPresenter, type: :model do
       end
     end
 
-    context 'when no pipeline groups are present' do
-      context 'as an empty array' do
-        before { allow(presenter).to receive(:pipeline_groups).and_return(nil) }
+    context 'when no pipeline groups returns an empty array' do
+      before { allow(presenter).to receive(:pipeline_groups).and_return(nil) }
 
-        it 'returns a short message' do
-          expect(presenter.pipeline_group_names).to eq('No Pipelines Found')
-        end
+      it 'return a short message' do
+        expect(presenter.pipeline_group_names).to eq('No Pipelines Found')
       end
+    end
 
-      context 'as nil' do
-        it 'returns a short message' do
-          expect(presenter.pipeline_group_names).to eq('No Pipelines Found')
-        end
+    context 'when pipeline groups returns nil' do
+      it 'return a short message' do
+        expect(presenter.pipeline_group_names).to eq('No Pipelines Found')
       end
     end
   end
