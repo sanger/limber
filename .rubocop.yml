@@ -76,3 +76,39 @@ Naming/VariableNumber:
   CheckSymbols:
     false # Rubocop gets annoyed about our states. I'm disabling globally
     # as I'm honestly not that bothered.
+
+RSpec/ContextWording:
+  Prefixes:
+    - for
+    - if
+    - unless
+    - when
+    - where
+    - with
+    - without
+
+RSpec/DescribedClass:
+  SkipBlocks: true # Addresses a known caveat with rspec-rails’s ‘controller` helper that runs its
+  # block in a different context
+
+RSpec/ExampleLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+RSpec/LetBeforeExamples:
+  Enabled: false # It can be helpful to have the let variables just before the relevant example
+
+RSpec/ScatteredLet:
+  Enabled: false # Disabling due to scattered lets not being such a big deal and the automated fix
+  # being unreliable (see https://github.com/rubocop/rubocop-rspec/issues/1167).
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 13 # Default is 5, but we have a lot of memoized helpers in our specs, I'm inclined to
+  # disable this, but I think it's better to just increase the limit for now - 15 lets is a bit much
+  # and probably indicates a deeper problem. If this happens, make another context group.
+
+RSpec/NestedGroups:
+  Max: 5 # Default is 3, but we have a lot of nested groups in our specs
