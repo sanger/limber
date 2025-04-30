@@ -28,7 +28,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   let(:parent_plate_includes) do
     'wells.requests_as_source,wells.requests_as_source.request_type,' \
-      'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+      'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample_metadata'
   end
   let(:control_well_locations) { %w[B5 H3] }
 
@@ -340,6 +340,70 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         expect(logger).to receive(:error).with(/Stock registration error for plate #{child_uuid}: unexpected failure/)
         subject.send(:register_stock_for_plate)
       end
+    end
+  end
+
+  describe '#generate_control_sample_desc' do
+    let(:plate_size) { 96 }
+    let(:sample_metadata) { create :v2_sample_metadata, sample_description: test_description }
+    let(:sample) { create :v2_sample, sample_metadata: }
+    let(:aliquot) { create :v2_aliquot, sample: }
+
+    before do
+      allow(parent_plate).to receive_message_chain(
+        :wells,
+        :first,
+        :aliquots,
+        :first,
+        :sample,
+        :sample_metadata,
+        :sample_description
+      ).and_return(test_description)
+      # Setup the parent_wells_with_aliquots method to return a well with our test aliquot
+      allow(subject).to receive(:parent_wells_with_aliquots).and_return([instance_double('Well', aliquots: [aliquot])])
+    end
+
+    context 'when sample description is present' do
+      let(:test_description) { 'Test Description' }
+
+      it 'returns the sample description from the parent well' do
+        expect(subject.send(:generate_control_sample_desc)).to eq(test_description)
+      end
+    end
+
+    context 'when sample description is blank' do
+      let(:test_description) { '' }
+
+      before { allow(parent_plate).to receive(:human_barcode).and_return('TEST-BARCODE') }
+
+      it 'returns the parent plate barcode' do
+        expect(subject.send(:generate_control_sample_desc)).to eq('TEST-BARCODE')
+      end
+    end
+  end
+
+  describe '#create_control_sample_name' do
+    let(:plate_size) { 96 }
+    let(:control) { double('Control', name_prefix: 'CONTROL_POS_') } # Replace OpenStruct with a test double
+    let(:well_location) { 'B5' }
+    let(:child_barcode) { 'CHILD-12345' }
+
+    before do
+      allow(subject.instance_variable_get(:@child)).to receive_message_chain(:labware_barcode, :human).and_return(
+        child_barcode
+      )
+    end
+
+    it 'returns a properly formatted control sample name' do
+      expected_name = 'CONTROL_POS_CHILD-12345_B5'
+      expect(subject.send(:create_control_sample_name, control, well_location)).to eq(expected_name)
+    end
+
+    it 'includes the control name prefix, child barcode, and well location' do
+      sample_name = subject.send(:create_control_sample_name, control, well_location)
+      expect(sample_name).to include(control.name_prefix)
+      expect(sample_name).to include(child_barcode)
+      expect(sample_name).to include(well_location)
     end
   end
 end
