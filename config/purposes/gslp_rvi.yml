@@ -2,19 +2,19 @@
 
 RVIG RT:
   :asset_type: plate
-  :presenter_class: Presenters::PermissivePresenter
+  :default_printer_type: :plate_b
 
 RVIG cDNA XP:
   :asset_type: plate
-  :presenter_class: Presenters::PermissivePresenter
+  :default_printer_type: :plate_b
 
 RVIG Lig:
   :asset_type: plate
-  :presenter_class: Presenters::PermissivePresenter
+  :default_printer_type: :plate_b
 
 RVIG Lig Bind:
   :asset_type: plate
-  :presenter_class: Presenters::PermissivePresenter
+  :default_printer_type: :plate_b
 
 RVIG Lib PCR:
   :asset_type: plate

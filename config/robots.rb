@@ -4362,7 +4362,7 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 13',
           parent: bed(4).barcode,
-          target_state: 'processed_1'
+          target_state: 'started'
         },
         bed(9).barcode => {
           purpose: 'RVIG RT',
@@ -4374,7 +4374,7 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 12',
           parent: bed(9).barcode,
-          target_state: 'processed_1'
+          target_state: 'started'
         }
       }
     )
@@ -4385,9 +4385,9 @@ ROBOT_CONFIG =
       beds: {
         bed(8).barcode => {
           purpose: 'RVIG cDNA XP',
-          states: ['processed_1'],
+          states: ['started'],
           label: 'Bed 8',
-          target_state: 'processed_2'
+          target_state: 'passed'
         }
       }
     )
@@ -4398,9 +4398,8 @@ ROBOT_CONFIG =
       beds: {
         bed(8).barcode => {
           purpose: 'RVIG cDNA XP',
-          states: ['processed_2'],
-          label: 'Bed 8',
-          target_state: 'passed'
+          states: ['passed'],
+          label: 'Bed 8'
         },
         bed(6).barcode => {
           purpose: 'RVIG Lig',
