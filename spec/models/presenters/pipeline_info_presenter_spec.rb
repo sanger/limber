@@ -20,22 +20,14 @@ RSpec.describe Presenters::PipelineInfoPresenter do
 
   describe '#pipeline_groups' do
     context 'when pipelines match by purpose' do
-      before do
-        allow(Settings.pipelines).to receive(:list).and_return(
-          [
-            instance_double(Pipeline, pipeline_group: 'Group A', relationships: { 'parent' => 'child' }, filters: {}),
-            instance_double(
-              Pipeline,
-              pipeline_group: 'Group B',
-              relationships: {
-                'parent' => 'WGS Purpose'
-              },
-              filters: {
-              }
-            )
-          ]
-        )
+      let(:simplest_pipeline) do
+        instance_double(Pipeline, pipeline_group: 'Group A', relationships: { 'parent' => 'child' }, filters: {})
       end
+      let(:wgs_purpose_pipeline) do
+        instance_double(Pipeline, pipeline_group: 'Group B', relationships: { 'parent' => 'WGS Purpose' }, filters: {})
+      end
+
+      before { allow(Settings.pipelines).to receive(:list).and_return([simplest_pipeline, wgs_purpose_pipeline]) }
 
       it 'returns the pipeline groups matching the purpose' do
         expect(presenter.pipeline_groups).to eq(['Group B'])
@@ -51,34 +43,38 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when pipelines match by library type' do
+      let(:wgs_purpose_and_unrelated_library_type_pipeline) do
+        instance_double(
+          Pipeline,
+          pipeline_group: 'Group C',
+          relationships: {
+            'parent' => 'WGS Purpose'
+          },
+          filters: {
+            'library_type' => ['Unrelated']
+          }
+        )
+      end
+      let(:wgs_purpose_and_library_type_pipeline) do
+        instance_double(
+          Pipeline,
+          pipeline_group: 'Group D',
+          relationships: {
+            'parent' => 'WGS Purpose'
+          },
+          filters: {
+            'library_type' => ['WGS']
+          }
+        )
+      end
+
       before do
-        pipelines = [
-          instance_double(
-            Pipeline,
-            pipeline_group: 'Group A',
-            relationships: {
-              'parent' => 'WGS Purpose'
-            },
-            filters: {
-              'library_type' => ['RNA-Seq']
-            }
-          ),
-          instance_double(
-            Pipeline,
-            pipeline_group: 'Group B',
-            relationships: {
-              'parent' => 'WGS Purpose'
-            },
-            filters: {
-              'library_type' => ['WGS']
-            }
-          )
-        ]
+        pipelines = [wgs_purpose_and_unrelated_library_type_pipeline, wgs_purpose_and_library_type_pipeline]
         allow(Settings.pipelines).to receive_messages(list: pipelines, select: pipelines)
       end
 
       it 'returns the pipeline groups matching the library type' do
-        expect(presenter.pipeline_groups).to eq(['Group B'])
+        expect(presenter.pipeline_groups).to eq(['Group D'])
       end
     end
   end
