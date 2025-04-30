@@ -784,6 +784,91 @@ const exampleTagGroupsList = {
   },
 }
 
+const nullTagSet = {
+  uuid: null,
+  name: 'No tag set selected',
+  tag1Group: undefined,
+  tag2Group: undefined,
+}
+
+const exampleTagSetList = {
+  1: {
+    id: '1',
+    type: 'tag_sets',
+    uuid: 'tag-set-1-uuid',
+    name: 'Tag Set 1',
+    tag_group: {
+      id: '1',
+      uuid: 'tag-1-group-uuid',
+      name: 'Tag Group 1',
+      type: 'tag_groups',
+      tags: [
+        {
+          index: 1,
+          oligo: 'CTAGCTAG',
+        },
+        {
+          index: 2,
+          oligo: 'TTATACGA',
+        },
+      ],
+      tag_group_adapter_type: 'Chromium',
+    },
+    tag2_group: {
+      id: '2',
+      uuid: 'tag-2-group-uuid',
+      type: 'tag_groups',
+      name: 'Tag Group 2',
+      tags: [
+        {
+          index: 2,
+          oligo: 'AATTCGCA',
+        },
+        {
+          index: 1,
+          oligo: 'CCTTAAGG',
+        },
+      ],
+    },
+  },
+  2: {
+    id: '2',
+    type: 'tag_sets',
+    uuid: 'tag-set-2-uuid',
+    name: 'Tag Set 2',
+    tag_group: {
+      id: '1',
+      uuid: 'tag-1-group-uuid',
+      name: 'Tag Group 1',
+      tags: [
+        {
+          index: 1,
+          oligo: 'CTAGCTAG',
+        },
+        {
+          index: 2,
+          oligo: 'TTATACGA',
+        },
+      ],
+    },
+    tag2_group: {
+      id: '2',
+      uuid: 'tag-2-group-uuid',
+      name: 'Tag Group 2',
+      tags: [
+        {
+          index: 2,
+          oligo: 'AATTCGCA',
+        },
+        {
+          index: 1,
+          oligo: 'CCTTAAGG',
+        },
+      ],
+    },
+  },
+}
+
 export {
   plateUuid,
   exampleParent,
@@ -808,4 +893,6 @@ export {
   exampleParentWellSubmissionDetails,
   exampleParentUsedOligosForPools,
   exampleParentWellSubmissionDetailsForPools,
+  exampleTagSetList,
+  nullTagSet,
 }

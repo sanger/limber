@@ -8,8 +8,8 @@
       <% end %>
       <%= sub.hidden_field :template_uuid %>
       <% submission.assets.each do |asset_uuid| %>
-        <%= sub.fields_for :assets do |asset_form|%>
-          <%= asset_form.hidden_field nil, value: asset_uuid  %>
+        <%= sub.fields_for :assets do |asset_form| %>
+          <%= asset_form.hidden_field nil, value: asset_uuid %>
         <% end %>
       <% end %>
     <% end %>

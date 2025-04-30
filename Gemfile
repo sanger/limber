@@ -10,6 +10,9 @@ group :default do
   gem 'rake'
   gem 'state_machines'
 
+  # Packages removed from the standard Ruby library
+  gem 'csv' # removed from Ruby 3.4.0
+
   # Build dependencies
   gem 'vite_rails'
   gem 'vite_ruby'
@@ -64,6 +67,7 @@ group :development do
 end
 
 group :lint do
+  gem 'erb_lint', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false

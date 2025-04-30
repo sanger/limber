@@ -22,12 +22,12 @@
         <%= form.hidden_field :purpose_uuid %>
         <div class="labware-container scan-labware form-group row">
           <label for="spikedbuffer_tube_barcode"
-                  class="plate-label col-md-2" >PhiX tube barcode</label>
+                  class="plate-label col-md-2">PhiX tube barcode</label>
           <input type="text"
                   id="spikedbuffer_tube_barcode"
                   name="plate[spikedbuffer_tube_barcode]"
                   class="form-control col-md-8"
-                  required="required"/>
+                  required="required" />
         </div>
         <%= form.submit 'Add PhiX and continue', class: 'btn btn-success btn-lg', id: 'create-labware-with-phix' %>
       <% end %>

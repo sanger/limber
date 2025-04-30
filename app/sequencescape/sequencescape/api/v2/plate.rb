@@ -3,6 +3,7 @@
 require_dependency 'well_helpers'
 
 # A plate from sequencescape via the V2 API
+# rubocop:disable Metrics/ClassLength
 class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include WellHelpers::Extensions
   include Sequencescape::Api::V2::Shared::HasRequests
@@ -10,6 +11,13 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasBarcode
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
   include Sequencescape::Api::V2::Shared::HasQcFiles
+
+  UNKNOWN = 'Unknown'
+
+  DEFAULT_INCLUDES = [
+    :purpose,
+    { wells: [requests_as_source: %i[primer_panel], aliquots: [request: %i[primer_panel request_type]]] }
+  ].freeze
 
   self.plate = true
   has_many :wells
@@ -34,14 +42,12 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2.plate_for_presenter(**options)
   end
 
-  def self.find_all(options, includes: DEFAULT_INCLUDES)
-    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).all
+  def self.find_all(options, includes: DEFAULT_INCLUDES, paginate: {})
+    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).paginate(paginate).all
   end
 
-  #
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same
-  #
   # @return [ActiveModel::Name] The resource behaves like a Limber::Plate
   #
   def model_name
@@ -74,19 +80,40 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   end
 
   # Returns wells sorted by rows first and then columns.
-  #
   # @return [Array<Well>] The wells sorted in row-major order.
   def wells_in_rows
     @wells_in_rows ||= wells.sort_by { |well| [well.coordinate[1], well.coordinate[0]] }
   end
 
   # Returns the well at a specified location.
-  #
   # @param well_location [String] The location to find the well at.
   # @return [Well, nil] The well at the specified location, or `nil` if no
   #   well is found at that location.
   def well_at_location(well_location)
     wells.detect { |well| well.location == well_location }
+  end
+
+  def number_of_pools
+    pooling_metadata.length
+  end
+
+  def library_type_name
+    return UNKNOWN if first_pool.nil?
+
+    first_pool.dig('library_type', 'name') || UNKNOWN
+  end
+
+  def insert_size
+    return UNKNOWN if first_pool.nil?
+
+    first_pool.fetch('insert_size', [UNKNOWN]).to_a.join(' ')
+  end
+
+  # A number of attributes should be consistent across the plate.
+  # The example pool provides a source of this information.
+  # Note that if this assumption no longer holds true, this will need updating.
+  def first_pool
+    pooling_metadata.values.first
   end
 
   def tagged?
@@ -142,10 +169,21 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     wells.each do |well|
       pool = pooled_wells.find { |wells| wells.include?(well.location) }
       next if pool.nil?
-
       well.pool = pool
     end
   end
+
+  def purpose_config
+    Settings.purposes[purpose&.uuid] || {}
+  end
+
+  # return true if the plate has register_stock_plate flag in config file
+  def register_stock_plate?
+    purpose_config.fetch(:register_stock_plate, false)
+  end
+
+  # This method is used to register the stock plate in Sequencescape.
+  custom_endpoint :register_stock_for_plate, on: :member, request_method: :post
 
   private
 
@@ -160,4 +198,5 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   def generate_pools
     Pools.new(wells_in_columns)
   end
+  # rubocop:enable Metrics/ClassLength
 end
