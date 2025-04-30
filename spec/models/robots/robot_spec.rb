@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::Robot, robots: true do
+RSpec.describe Robots::Robot, :robots do
   include RobotHelpers
   has_a_working_api
 
@@ -44,6 +44,7 @@ RSpec.describe Robots::Robot, robots: true do
   shared_examples 'a robot' do
     context 'with an unknown plate' do
       before { bed_labware_lookup_with_barcode('dodgy_barcode', []) }
+
       let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
       it { is_expected.not_to be_valid }
@@ -162,6 +163,7 @@ RSpec.describe Robots::Robot, robots: true do
 
         context 'and related plates' do
           before { bed_labware_lookup_with_barcode([source_plate_barcode, 'Other barcode'], [source_plate]) }
+
           let(:target_plate_parents) { [source_plate] }
 
           it { is_expected.not_to be_valid }
@@ -273,6 +275,7 @@ RSpec.describe Robots::Robot, robots: true do
 
         context 'and related plates' do
           before { bed_labware_lookup_with_barcode([source_plate_barcode, 'Other barcode'], [source_plate]) }
+
           let(:target_plate_parents) { [source_plate] }
 
           it { is_expected.not_to be_valid }
@@ -357,6 +360,7 @@ RSpec.describe Robots::Robot, robots: true do
 
         context 'and related plates' do
           before { bed_labware_lookup_with_barcode([source_plate_barcode, 'Other barcode'], [source_plate]) }
+
           let(:target_plate_parents) { [source_plate] }
 
           it { is_expected.not_to be_valid }

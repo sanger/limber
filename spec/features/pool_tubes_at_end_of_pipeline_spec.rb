@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Pool tubes at end of pipeline', js: true do
+RSpec.feature 'Pool tubes at end of pipeline', :js do
   has_a_working_api
   let(:user_uuid) { 'user-uuid' }
   let(:user) { create :user, uuid: user_uuid }
@@ -70,7 +70,7 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
       expect_transfer_creation
 
       fill_in_swipecard_and_barcode user_swipecard, tube_barcode
-      page_title = find('#tube-title')
+      page_title = find_by_id('tube-title')
       expect(page_title).to have_text('Example Purpose')
       click_on('Add an empty Final Tube Purpose tube')
       expect(page).to have_text('Multi Tube pooling')

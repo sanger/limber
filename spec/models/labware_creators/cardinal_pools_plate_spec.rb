@@ -6,7 +6,7 @@ require 'spec_helper'
 # 2. Update Manifest
 # 3. Create Submission
 
-RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
+RSpec.describe LabwareCreators::CardinalPoolsPlate, :cardinal do
   has_a_working_api
 
   subject { LabwareCreators::CardinalPoolsPlate.new(api, form_attributes) }
@@ -185,6 +185,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
     context 'when there are 21 passed samples' do
       before { parent_plate.wells[4..95].each { |well| well['state'] = 'passed' } }
+
       it 'returns an object where passed source well keys map to pool destination well' do
         parent_plate.wells[4..74].each { |well| well['state'] = 'failed' }
         result = subject.transfer_hash

@@ -94,6 +94,7 @@ RSpec.describe SearchController, type: :controller do
       create(:tube_config, name: 'tube-config-3', uuid: 'uuid-3')
       create(:tube_config, name: 'tube-config-4', uuid: 'uuid-4')
     end
+
     let(:expected_search) do
       stub_find_all_with_pagination(api_class, search_parameters, { page: 1, per_page: 30 }, [result])
     end

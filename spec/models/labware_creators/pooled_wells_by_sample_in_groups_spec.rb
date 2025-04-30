@@ -214,7 +214,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       # Assume A1 to A1 transfer
       expect(request[:source_asset]).to eq(source_well.uuid)
       expect(request[:target_asset]).to eq(child_plate.wells.first.uuid)
-      expect(request[:merge_equivalent_aliquots]).to eq(true)
+      expect(request[:merge_equivalent_aliquots]).to be(true)
       expect(request[:submission_id]).to eq(submission_id)
     end
   end
@@ -222,6 +222,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   describe '#transfer_request_attributes' do
     context 'when there is no passed source well' do
       before { parent_plate.wells.map { |well| well.state = 'failed' } }
+
       it 'returns empty list' do
         expect(subject.transfer_request_attributes(child_plate)).to eq([])
       end
@@ -244,7 +245,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         # Source wells: A1, B1, C1, D1
         requests.each_with_index do |request, index|
           expect(request[:source_asset]).to eq(parent_plate.wells[index].uuid)
-          expect(request[:merge_equivalent_aliquots]).to eq(true)
+          expect(request[:merge_equivalent_aliquots]).to be(true)
         end
 
         # Destination wells: A1, A1, B1, C1

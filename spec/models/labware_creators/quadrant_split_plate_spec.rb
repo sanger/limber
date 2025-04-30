@@ -157,7 +157,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
         expect_plate_creation([child_plate_a, child_plate_b, child_plate_c, child_plate_d])
         expect_transfer_request_collection_creation
 
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
 
         expect(subject.redirection_target).to eq(plate)
       end

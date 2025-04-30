@@ -55,7 +55,7 @@ RSpec.describe SearchHelper, type: :helper do
 
       it 'returns nil' do
         ref = SearchHelper.alternative_workline_reference_name(plate)
-        expect(ref).to eq(nil)
+        expect(ref).to be_nil
       end
     end
   end

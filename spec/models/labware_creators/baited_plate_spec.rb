@@ -63,7 +63,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
       expect_plate_creation
       expect_transfer_request_collection_creation
 
-      expect(subject.create_labware!).to eq true
+      expect(subject.create_labware!).to be true
     end
   end
 end

@@ -69,6 +69,7 @@ RSpec.describe Utility::CellCountSpotChecking do
         # is a computed property; there is no way to set it directly.
         plate.wells_in_columns.first.state = 'failed' # Fail A1
       end
+
       it 'returns the second replicate as the first replicate' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
@@ -100,6 +101,7 @@ RSpec.describe Utility::CellCountSpotChecking do
         # is a computed property; there is no way to set it directly.
         plate.wells_in_columns.second.state = 'failed' # Fail B1
       end
+
       it 'returns the following replicate as the second replicate' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Pooling multiple tubes into a tube', js: true do
+RSpec.feature 'Pooling multiple tubes into a tube', :js do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -131,7 +131,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       expect_tube_from_tube_creation
 
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
-      tube_title = find('#tube-title')
+      tube_title = find_by_id('tube-title')
       expect(tube_title).to have_text(parent_purpose_name)
       click_on('Add an empty Pool tube tube')
       scan_in('Tube 1', with: tube_barcode_1)
@@ -147,7 +147,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
     scenario 'detects tag clash' do
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
-      tube_title = find('#tube-title')
+      tube_title = find_by_id('tube-title')
       expect(tube_title).to have_text('example-purpose')
       click_on('Add an empty Pool tube tube')
       scan_in('Tube 1', with: tube_barcode_1)

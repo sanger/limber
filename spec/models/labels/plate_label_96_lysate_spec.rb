@@ -60,7 +60,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
         it 'creates a label without the partner id shown' do
           additional_label_definitions = label.additional_label_definitions[0]
           expect(additional_label_definitions[:bottom_right]).to eq expected_message
-          expect(additional_label_definitions[:barcode]).to eq nil
+          expect(additional_label_definitions[:barcode]).to be_nil
         end
       end
 

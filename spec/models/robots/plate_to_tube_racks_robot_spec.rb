@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
+RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   include FeatureHelpers # Include methods for stubbing Sequencescape API requests.
   include RobotHelpers # Include methods for stubbing bed labware lookups.
   has_a_working_api # Add a mock Sequencescape API to the test context.

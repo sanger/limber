@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
+RSpec.describe Robots::PoolingAndSplittingRobot, :robots do
   include RobotHelpers
 
   has_a_working_api

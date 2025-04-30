@@ -134,7 +134,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
 
@@ -157,7 +157,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
     end

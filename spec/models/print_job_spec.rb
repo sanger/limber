@@ -134,7 +134,7 @@ RSpec.describe PrintJob do
       allow(PMB::PrintJob).to receive(:new).and_return(pmb_print_job)
       allow(pmb_print_job).to receive(:save).and_return(true)
 
-      expect(pj.print_to_pmb).to eq(true)
+      expect(pj.print_to_pmb).to be(true)
     end
 
     it 'multiplies lablels if several copies required' do
@@ -153,7 +153,7 @@ RSpec.describe PrintJob do
       allow(PMB::PrintJob).to receive(:new).and_return(pmb_print_job)
       allow(pmb_print_job).to receive(:save).and_return(false)
 
-      expect(pj.print_to_pmb).to eq(false)
+      expect(pj.print_to_pmb).to be(false)
     end
 
     it 'does not execute if pmb is down' do
@@ -224,7 +224,7 @@ RSpec.describe PrintJob do
         label_template_name_sprint,
         labels_sprint.values
       )
-      expect(pj.print_to_sprint).to eq(true)
+      expect(pj.print_to_sprint).to be(true)
     end
 
     it 'does not execute if the SPrintClient is down' do

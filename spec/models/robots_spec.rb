@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots, robots: true do
+RSpec.describe Robots, :robots do
   include FeatureHelpers
 
   has_a_working_api

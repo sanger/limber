@@ -131,19 +131,19 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         describe '#autodetect_studies' do
           it 'returns true when specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ autodetect_studies: true, request_options: {} })
-            expect(subject.send(:autodetect_studies)).to eq(true)
+            expect(subject.send(:autodetect_studies)).to be(true)
           end
 
           it 'returns false when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_studies: false, request_options: {} }
             )
-            expect(subject.send(:autodetect_studies)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to be(false)
           end
 
           it 'returns false if not specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ request_options: {} })
-            expect(subject.send(:autodetect_studies)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to be(false)
           end
         end
 
@@ -152,19 +152,19 @@ RSpec.describe LabwareCreators::MultiStampTubes do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_projects: true, request_options: {} }
             )
-            expect(subject.send(:autodetect_projects)).to eq(true)
+            expect(subject.send(:autodetect_projects)).to be(true)
           end
 
           it 'returns false when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_projects: false, request_options: {} }
             )
-            expect(subject.send(:autodetect_projects)).to eq(false)
+            expect(subject.send(:autodetect_projects)).to be(false)
           end
 
           it 'returns false if not specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ request_options: {} })
-            expect(subject.send(:autodetect_projects)).to eq(false)
+            expect(subject.send(:autodetect_projects)).to be(false)
           end
         end
       end

@@ -30,6 +30,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
     context 'when a stock_plate' do
       before { expect(plate).to receive(:stock_plate?).and_return(true) }
+
       it 'returns itself' do
         expect(plate.stock_plate).to eq(plate)
       end

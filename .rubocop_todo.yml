@@ -6,26 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 33
-# This cop supports safe autocorrection (--autocorrect).
-Capybara/SpecificFinders:
-  Exclude:
-    - 'spec/features/cancelling_a_whole_plate_spec.rb'
-    - 'spec/features/charge_and_pass_libraries_spec.rb'
-    - 'spec/features/creating_a_plate_spec.rb'
-    - 'spec/features/creating_a_tag_plate_spec.rb'
-    - 'spec/features/creating_plate_with_bait_spec.rb'
-    - 'spec/features/failing_a_whole_plate_spec.rb'
-    - 'spec/features/failing_quadrants_spec.rb'
-    - 'spec/features/failing_thresholds_spec.rb'
-    - 'spec/features/failing_wells_spec.rb'
-    - 'spec/features/pool_tubes_at_end_of_pipeline_spec.rb'
-    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
-    - 'spec/features/pooling_multiple_plates_spec.rb'
-    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
-    - 'spec/features/viewing_a_minimal_plate_spec.rb'
-    - 'spec/features/viewing_a_plate_spec.rb'
-
 # Offense count: 4
 # Configuration parameters: LengthThreshold.
 Metrics/CollectionLiteralLength:
@@ -77,39 +57,6 @@ RSpec/AnyInstance:
     - 'spec/features/viewing_a_plate_spec.rb'
     - 'spec/models/labware_creators/common_file_handling/csv_file/row_base_spec.rb'
     - 'spec/support/api_url_helper.rb'
-
-# Offense count: 67
-# This cop supports unsafe autocorrection (--autocorrect-all).
-RSpec/BeEq:
-  Exclude:
-    - 'spec/controllers/exports_controller_spec.rb'
-    - 'spec/helpers/search_helper_spec.rb'
-    - 'spec/models/labels/plate_label_96_lysate_spec.rb'
-    - 'spec/models/labware_creators/baited_plate_spec.rb'
-    - 'spec/models/labware_creators/merged_plate_spec.rb'
-    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
-    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_duplex_seq_spec.rb'
-    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
-    - 'spec/models/labware_creators/plate_with_primer_panel_spec.rb'
-    - 'spec/models/labware_creators/plate_with_template_spec.rb'
-    - 'spec/models/labware_creators/pooled_wells_by_sample_in_groups_spec.rb'
-    - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
-    - 'spec/models/labware_creators/shared_examples.rb'
-    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
-    - 'spec/models/labware_creators/stamped_plate_spec.rb'
-    - 'spec/models/pipeline_spec.rb'
-    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
-    - 'spec/models/presenters/qc_threshold_presenter_spec.rb'
-    - 'spec/models/presenters/submission_plate_presenter_spec.rb'
-    - 'spec/models/presenters/unknown_plate_presenter_spec.rb'
-    - 'spec/models/print_job_spec.rb'
-    - 'spec/models/utility/concentration_binning_calculator_spec.rb'
-    - 'spec/models/utility/concentration_normalisation_calculator_spec.rb'
-    - 'spec/models/utility/fixed_normalisation_calculator_spec.rb'
-    - 'spec/models/utility/normalised_binning_calculator_spec.rb'
-    - 'spec/sequencescape/api/v2/request_spec.rb'
-    - 'spec/sequencescape/api/v2/shared_examples.rb'
-    - 'spec/sequencescape/api/v2/well_spec.rb'
 
 # Offense count: 334
 # Configuration parameters: Prefixes, AllowedPatterns.
@@ -335,25 +282,6 @@ RSpec/DescribedClass:
 RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/controllers/tube_creation_controller_spec.rb'
-
-# Offense count: 24
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowConsecutiveOneLiners.
-RSpec/EmptyLineAfterHook:
-  Exclude:
-    - 'spec/controllers/searches_controller_spec.rb'
-    - 'spec/features/charge_and_pass_libraries_spec.rb'
-    - 'spec/models/labware_creators/cardinal_pools_plate_spec.rb'
-    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
-    - 'spec/models/labware_creators/pooled_wells_by_sample_in_groups_spec.rb'
-    - 'spec/models/labware_creators/shared_examples.rb'
-    - 'spec/models/presenters/standard_presenter_spec.rb'
-    - 'spec/models/robots/pooling_robot_spec.rb'
-    - 'spec/models/robots/quadrant_robot_spec.rb'
-    - 'spec/models/robots/robot_spec.rb'
-    - 'spec/models/robots/splitting_robot_spec.rb'
-    - 'spec/models/utility/cell_count_spot_checking_spec.rb'
-    - 'spec/sequencescape/api/v2/plate_spec.rb'
 
 # Offense count: 149
 # Configuration parameters: Max, CountAsOne.
@@ -661,47 +589,6 @@ RSpec/MessageSpies:
     - 'spec/models/print_job_spec.rb'
     - 'spec/sequencescape/api/v2/plate_spec.rb'
     - 'spec/support/api_url_helper.rb'
-
-# Offense count: 41
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: hash, symbol
-RSpec/MetadataStyle:
-  Exclude:
-    - 'spec/controllers/robots_controller_spec.rb'
-    - 'spec/features/cancelling_a_whole_plate_spec.rb'
-    - 'spec/features/charge_and_pass_libraries_spec.rb'
-    - 'spec/features/creating_a_plate_spec.rb'
-    - 'spec/features/creating_a_quadrant_stamp_primer_panel_plate_spec.rb'
-    - 'spec/features/creating_a_tag_plate_spec.rb'
-    - 'spec/features/creating_plate_with_bait_spec.rb'
-    - 'spec/features/failing_a_whole_plate_spec.rb'
-    - 'spec/features/failing_quadrants_spec.rb'
-    - 'spec/features/failing_thresholds_spec.rb'
-    - 'spec/features/failing_wells_spec.rb'
-    - 'spec/features/plate_transfer_spec.rb'
-    - 'spec/features/pool_tubes_at_end_of_pipeline_spec.rb'
-    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
-    - 'spec/features/pooling_multiple_plates_spec.rb'
-    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
-    - 'spec/features/viewing_a_minimal_plate_spec.rb'
-    - 'spec/features/viewing_a_plate_spec.rb'
-    - 'spec/features/viewing_inboxes_spec.rb'
-    - 'spec/lib/config_loader/exports_loader_spec.rb'
-    - 'spec/lib/config_loader/pipelines_loader_spec.rb'
-    - 'spec/lib/config_loader/purposes_loader_spec.rb'
-    - 'spec/models/labware_creators/cardinal_pools_plate_spec.rb'
-    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
-    - 'spec/models/labware_creators/tagged_plate_spec.rb'
-    - 'spec/models/limber/tag_layout_template_spec.rb'
-    - 'spec/models/robots/plate_to_tube_racks_robot_spec.rb'
-    - 'spec/models/robots/pooling_and_splitting_robot_spec.rb'
-    - 'spec/models/robots/pooling_robot_spec.rb'
-    - 'spec/models/robots/quadrant_robot_spec.rb'
-    - 'spec/models/robots/robot_spec.rb'
-    - 'spec/models/robots/splitting_robot_spec.rb'
-    - 'spec/models/robots_spec.rb'
-    - 'spec/views/exports/cardinal_tagging_csv_for_custom_pooling.csv.erb_spec.rb'
 
 # Offense count: 6
 RSpec/MultipleDescribes:
@@ -1172,15 +1059,6 @@ RSpec/ScatteredLet:
     - 'spec/views/exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb_spec.rb'
     - 'spec/views/exports/targeted_nanoseq_al_lib_concentrations_for_customer.csv.erb_spec.rb'
     - 'spec/views/exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb_spec.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/SortMetadata:
-  Exclude:
-    - 'spec/controllers/robots_controller_spec.rb'
-    - 'spec/lib/config_loader/exports_loader_spec.rb'
-    - 'spec/lib/config_loader/pipelines_loader_spec.rb'
-    - 'spec/lib/config_loader/purposes_loader_spec.rb'
 
 # Offense count: 12
 # Configuration parameters: Include, CustomTransform, IgnoreMethods, IgnoreMetadata.

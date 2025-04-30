@@ -3,7 +3,7 @@
 require 'rails_helper'
 require './app/controllers/robots_controller'
 
-RSpec.describe RobotsController, type: :controller, robots: true do
+RSpec.describe RobotsController, :robots, type: :controller do
   has_a_working_api
 
   include FeatureHelpers

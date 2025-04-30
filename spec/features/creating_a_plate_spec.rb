@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Creating a plate', js: true, tag_plate: true do
+RSpec.feature 'Creating a plate', :js, :tag_plate do
   has_a_working_api
   let(:user_uuid) { 'user-uuid' }
   let(:user) { create :user, uuid: user_uuid }
@@ -86,7 +86,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     expect_transfer_request_collection_creation
 
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('Limber Cherrypicked')
     click_on('Add an empty Basic plate')
     expect(page).to have_content('New empty labware added to the system.')
@@ -117,7 +117,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       allow(PMB::LabelTemplate).to receive(:where).and_return(label_templates)
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
     end
 
@@ -195,7 +195,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     # We'll eventually add in a disambiguation page here
     scenario 'basic plate creation' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
       expect(page).to have_content('Cannot create the next piece of labware:')
@@ -230,7 +230,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       expect_transfer_request_collection_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
       expect(page).to have_content('New empty labware added to the system.')
@@ -274,7 +274,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       expect_transfer_request_collection_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
       expect(page).to have_content('New empty labware added to the system.')

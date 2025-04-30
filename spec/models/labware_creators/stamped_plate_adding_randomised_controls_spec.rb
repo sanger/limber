@@ -130,7 +130,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         expect_plate_creation
         expect_transfer_request_collection_creation
 
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
     end
   end
@@ -254,7 +254,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[H1 G1] }
 
         it 'returns false' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq false
+          expect(subject.validate_control_rules(control_well_locations)).to be false
         end
       end
 
@@ -262,7 +262,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 C2] }
 
         it 'returns true' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq true
+          expect(subject.validate_control_rules(control_well_locations)).to be true
         end
       end
     end
@@ -282,7 +282,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 H12] }
 
         it 'returns false' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq false
+          expect(subject.validate_control_rules(control_well_locations)).to be false
         end
       end
 
@@ -290,7 +290,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 C2] }
 
         it 'returns true' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq true
+          expect(subject.validate_control_rules(control_well_locations)).to be true
         end
       end
     end

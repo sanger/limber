@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
+RSpec.feature 'Creating a tag plate', :js, :tag_plate do
   has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
@@ -113,14 +113,14 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       expect_plate_conversion_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')
-      expect(find('#tag-help')).to have_content(help_text)
+      expect(find_by_id('tag-help')).to have_content(help_text)
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
       expect(page).to have_content(qcable_lot.lot_number)
-      expect(find('#well_A2')).to have_content(a2_tag)
+      expect(find_by_id('well_A2')).to have_content(a2_tag)
       click_on('Create Plate')
       expect(page).to have_content('New empty labware added to the system.')
     end
@@ -131,7 +131,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
     scenario 'rejects the candidate plate' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')

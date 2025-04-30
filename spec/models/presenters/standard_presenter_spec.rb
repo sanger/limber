@@ -209,6 +209,7 @@ RSpec.describe Presenters::StandardPresenter do
         create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
+
       let(:suggest_passes) { ['limber_wgs'] }
 
       context 'and passed' do
@@ -310,6 +311,7 @@ RSpec.describe Presenters::StandardPresenter do
         create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
+
       let(:suggest_passes) { ['limber_wgs'] }
 
       context 'and passed' do

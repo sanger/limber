@@ -51,7 +51,7 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
       expect_plate_creation
       expect_transfer_creation
 
-      expect(subject.save!).to eq true
+      expect(subject.save!).to be true
     end
   end
 end

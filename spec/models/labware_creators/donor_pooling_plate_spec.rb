@@ -849,6 +849,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           includes: described_class::SOURCE_PLATE_INCLUDES
         ).and_return([parent_1_plate])
       end
+
       let(:barcodes) { [parent_1_plate.human_barcode] * 2 }
 
       it 'reports the error' do
@@ -879,6 +880,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
             includes: described_class::SOURCE_PLATE_INCLUDES
           ).and_return([parent_1_plate])
         end
+
         let(:barcodes) { [parent_1_plate.human_barcode] }
 
         it 'allows plate creation' do
@@ -897,6 +899,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           includes: described_class::SOURCE_PLATE_INCLUDES
         ).and_return([parent_1_plate])
       end
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_plates]).to include(

@@ -162,6 +162,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         let(:tagged) { true }
 
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
+
         it { is_expected.to be false }
       end
 
@@ -170,6 +171,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         let(:tagged) { true }
 
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
+
         it { is_expected.to be true }
       end
 
@@ -177,6 +179,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         let(:parent) { build :plate, pools: }
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
+
         let(:pools) do
           # rubocop:todo Layout/LineLength
           # Taken from actual problem plate. Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
@@ -245,6 +248,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
         let(:tagged) { true }
 
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
+
         it { is_expected.to be false }
       end
 
@@ -253,6 +257,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
         let(:tagged) { true }
 
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
+
         it { is_expected.to be true }
       end
     end
@@ -270,7 +275,7 @@ RSpec.shared_examples 'a QC assaying plate creator' do
       expect_plate_creation
       expect_transfer_request_collection_creation
 
-      expect(subject.save!).to eq true
+      expect(subject.save!).to be true
     end
   end
 end

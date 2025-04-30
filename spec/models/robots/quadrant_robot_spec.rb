@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::QuadrantRobot, robots: true do
+RSpec.describe Robots::QuadrantRobot, :robots do
   include RobotHelpers
 
   has_a_working_api
@@ -120,6 +120,7 @@ RSpec.describe Robots::QuadrantRobot, robots: true do
     context 'a simple robot' do
       context 'with an unknown plate' do
         before { bed_plate_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :upstream_plates }]) }
+
         let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
         it { is_expected.not_to be_valid }

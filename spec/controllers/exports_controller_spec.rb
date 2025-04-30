@@ -277,7 +277,7 @@ RSpec.describe ExportsController, type: :controller do
           @response.headers['Content-Disposition'].include?(
             "filename=\"cellaca_input_file_#{plate_barcode}_#{page + 1}.csv\""
           )
-        ).to eq(true)
+        ).to be(true)
       end
     end
   end
