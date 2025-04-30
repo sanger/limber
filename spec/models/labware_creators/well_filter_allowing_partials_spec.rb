@@ -83,7 +83,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
     context 'when a state filter is applied' do
       context 'with a valid filter' do
-        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_state: 'started') }
+        subject { described_class.new(creator: labware_creator, request_state: 'started') }
 
         let(:request_a) do
           create :library_request,
@@ -111,7 +111,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
       context 'with a valid filter for some wells' do
         subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
+          described_class.new(
             creator: labware_creator,
             request_type_key: request_type_key_a
           )
@@ -149,7 +149,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
       context 'with a valid filter for all wells' do
         subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
+          described_class.new(
             creator: labware_creator,
             request_type_key: request_type_key_a
           )
@@ -163,7 +163,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
       context 'with a valid filter for a partial subset of the wells' do
         subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
+          described_class.new(
             creator: labware_creator,
             request_type_key: request_type_key_b
           )
@@ -178,7 +178,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with an invalid filter' do
-        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_type_key: 'rt_c') }
+        subject { described_class.new(creator: labware_creator, request_type_key: 'rt_c') }
 
         # up to the creator to catch the situation where the filter returns no wells as a validation check
         it 'returns no wells' do

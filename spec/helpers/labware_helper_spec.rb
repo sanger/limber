@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe LabwareHelper do
-  include LabwareHelper
+  include described_class
 
   describe '::failable?' do
     subject { failable?(well) }

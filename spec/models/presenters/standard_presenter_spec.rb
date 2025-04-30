@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::StandardPresenter do
-  subject { Presenters::StandardPresenter.new(labware:) }
+  subject { described_class.new(labware:) }
 
   let(:purpose_name) { 'Example purpose' }
   let(:aliquot_type) { :v2_aliquot }

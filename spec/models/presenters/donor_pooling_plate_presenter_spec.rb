@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Presenters::DonorPoolingPlatePresenter do
   # First set of source wells
 
-  subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
+  subject { described_class.new(labware:) }
 
   let(:source_well_a1) { create(:v2_well, location: 'A1') }
   let(:source_well_b1) { create(:v2_well, location: 'B1') }

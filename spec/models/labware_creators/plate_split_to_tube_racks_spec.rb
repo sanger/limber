@@ -196,7 +196,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PlateSplitToTubeRacks
+      expect(subject).to be_a described_class
     end
   end
 

@@ -10,7 +10,7 @@ RSpec.describe LabwareCreators::FinalTube do
   it_behaves_like 'it only allows creation from tubes'
 
   context 'on creation' do
-    subject { LabwareCreators::FinalTube.new(api, form_attributes) }
+    subject { described_class.new(api, form_attributes) }
 
     before { stub_v2_tube(parent_tube) }
 

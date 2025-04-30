@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe PlateHelper do
-  include PlateHelper
+  include described_class
 
   describe '#sorted_pre_cap_pool_json' do
     # create 3 pre-cap pools with ids not in sequential order

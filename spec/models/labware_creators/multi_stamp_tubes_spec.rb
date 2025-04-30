@@ -49,12 +49,12 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on new' do
-    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes) }
+    subject { described_class.new(api, form_attributes) }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_tube_uuid } }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::MultiStampTubes
+      expect(subject).to be_a described_class
     end
 
     it 'renders the "multi_stamp_tubes" page' do
@@ -67,7 +67,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {

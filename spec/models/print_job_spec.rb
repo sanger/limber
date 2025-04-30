@@ -26,7 +26,7 @@ RSpec.describe PrintJob do
   describe 'init' do
     it 'has the correct insatnce variables' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -52,7 +52,7 @@ RSpec.describe PrintJob do
   describe 'execute' do
     it 'calls print_to_pmb when service is PMB' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -72,7 +72,7 @@ RSpec.describe PrintJob do
 
     it 'calls print_to_sprint when service is SPrint' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_sprint.name,
           printer: printer_sprint,
           label_templates_by_service: label_templates_by_service,
@@ -92,7 +92,7 @@ RSpec.describe PrintJob do
 
     it 'adds an error when service is down' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_unknown.name,
           printer: printer_unknown,
           label_templates_by_service: label_templates_by_service,
@@ -122,7 +122,7 @@ RSpec.describe PrintJob do
 
     it 'sends post request to pmb if job is valid' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -139,7 +139,7 @@ RSpec.describe PrintJob do
 
     it 'multiplies lablels if several copies required' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -158,7 +158,7 @@ RSpec.describe PrintJob do
 
     it 'does not execute if pmb is down' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -172,7 +172,7 @@ RSpec.describe PrintJob do
 
     it 'does not execute if the pmb label template cannot be found' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -200,7 +200,7 @@ RSpec.describe PrintJob do
     end
 
     let(:pj) do
-      PrintJob.new(
+      described_class.new(
         printer_name: printer_sprint.name,
         printer: printer_sprint,
         label_templates_by_service: label_templates_by_service,
@@ -303,7 +303,7 @@ RSpec.describe PrintJob do
   end
 
   describe '#extract_error_message' do
-    let(:print_job) { PrintJob.new }
+    let(:print_job) { described_class.new }
 
     it 'returns the error message with extensions' do
       response =

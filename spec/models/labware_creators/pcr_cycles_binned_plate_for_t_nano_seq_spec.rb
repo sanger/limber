@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader do
-  subject { LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
@@ -294,7 +294,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq
+      expect(subject).to be_a described_class
     end
   end
 

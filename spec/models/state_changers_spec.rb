@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe StateChangers::DefaultStateChanger do
   has_a_working_api
 
-  subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
+  subject { described_class.new(api, plate_uuid, user_uuid) }
 
   let(:plate_uuid) { SecureRandom.uuid }
   let(:plate) { create(:v2_plate, uuid: plate_uuid, state: plate_state) }

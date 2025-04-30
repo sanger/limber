@@ -8,7 +8,7 @@ require_relative 'shared_examples'
 # Adds the controls to randomised well locations on the child plate, potentially displacing samples
 # that would otherwise have been stamped across.
 RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
-  subject { LabwareCreators::StampedPlateAddingRandomisedControls.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
@@ -112,7 +112,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::StampedPlateAddingRandomisedControls
+      expect(subject).to be_a described_class
     end
   end
 

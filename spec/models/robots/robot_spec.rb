@@ -39,7 +39,7 @@ RSpec.describe Robots::Robot, :robots do
   let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: }
   let(:metadata) { { 'other_key' => 'value' } }
 
-  let(:robot) { Robots::Robot.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
 
   shared_examples 'a robot' do
     context 'with an unknown plate' do
@@ -804,12 +804,12 @@ RSpec.describe Robots::Robot, :robots do
     end
 
     it 'returns the correct message when the robot does not have a start_button_text' do
-      robot = Robots::Robot.new(robot_spec)
+      robot = described_class.new(robot_spec)
       expect(robot.start_button_message).to eq("Start the #{robot.name}")
     end
 
     it 'returns the robots start_button_text when present' do
-      robot = Robots::Robot.new(robot_spec.merge(start_button_text: 'Be different'))
+      robot = described_class.new(robot_spec.merge(start_button_text: 'Be different'))
       expect(robot.start_button_message).to eq('Be different')
     end
   end

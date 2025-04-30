@@ -5,7 +5,7 @@ require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::FixedNormalisationCalculator do
   context 'when computing values for fixed normalisation' do
-    subject { Utility::FixedNormalisationCalculator.new(dilutions_config) }
+    subject { described_class.new(dilutions_config) }
 
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }

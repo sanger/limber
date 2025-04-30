@@ -5,7 +5,7 @@ require './lib/repeated_state_change_error'
 
 RSpec.describe RepeatedStateChangeError do
   # We're actually testing case equality here, so the cop isn't wanted.
-  subject { RepeatedStateChangeError === exception } # rubocop:disable Style/CaseEquality
+  subject { described_class === exception } # rubocop:disable Style/CaseEquality
 
   let(:exception) { exception_class.new(exception_message) }
 

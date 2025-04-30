@@ -12,7 +12,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
   has_a_working_api
 
-  subject { LabwareCreators::PooledTubesBySubmission.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 

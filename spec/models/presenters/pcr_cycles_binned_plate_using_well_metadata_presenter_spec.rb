@@ -4,7 +4,7 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
-  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter.new(labware:) }
+  subject(:presenter) { described_class.new(labware:) }
 
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }

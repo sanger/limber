@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::SimpleTubePresenter do
-  subject { Presenters::SimpleTubePresenter.new(labware:) }
+  subject { described_class.new(labware:) }
 
   let(:labware) { build :v2_tube, state: }
 

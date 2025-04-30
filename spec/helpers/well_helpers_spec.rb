@@ -498,12 +498,12 @@ RSpec.describe WellHelpers do
 
   shared_examples 'range generator' do
     it 'generates ranges' do
-      expect(WellHelpers.formatted_range(wells, size)).to eq(range)
+      expect(described_class.formatted_range(wells, size)).to eq(range)
     end
   end
 
   context 'Full plate' do
-    let(:wells) { WellHelpers.column_order }
+    let(:wells) { described_class.column_order }
     let(:size) { 96 }
     let(:range) { 'A1-H12' }
 
@@ -511,7 +511,7 @@ RSpec.describe WellHelpers do
   end
 
   context 'Partial plate' do
-    let(:wells) { WellHelpers.column_order.slice(0, 12) }
+    let(:wells) { described_class.column_order.slice(0, 12) }
     let(:size) { 96 }
     let(:range) { 'A1-D2' }
 
@@ -544,13 +544,13 @@ RSpec.describe WellHelpers do
 
   describe '::column_order' do
     context 'by default' do
-      subject { WellHelpers.column_order }
+      subject { described_class.column_order }
 
       it { is_expected.to eq(well_96) }
     end
 
     context 'with a specified size' do
-      subject { WellHelpers.column_order(size) }
+      subject { described_class.column_order(size) }
 
       context 'of 96' do
         let(:size) { 96 }
@@ -567,7 +567,7 @@ RSpec.describe WellHelpers do
   end
 
   describe '::stamp_hash' do
-    subject { WellHelpers.stamp_hash(size) }
+    subject { described_class.stamp_hash(size) }
 
     context '96' do
       let(:size) { 96 }
@@ -584,7 +584,7 @@ RSpec.describe WellHelpers do
 
   describe('::index_of') do
     context 'by default' do
-      subject { WellHelpers.index_of(well) }
+      subject { described_class.index_of(well) }
 
       WELL_96.each_with_index do |test_well, test_index|
         context("well #{test_well}") do
@@ -596,7 +596,7 @@ RSpec.describe WellHelpers do
     end
 
     context 'with a specified size' do
-      subject { WellHelpers.index_of(well, size) }
+      subject { described_class.index_of(well, size) }
 
       context 'of 96' do
         let(:size) { 96 }
@@ -625,7 +625,7 @@ RSpec.describe WellHelpers do
   end
 
   describe ':well_name' do
-    subject { WellHelpers.well_name(row, column) }
+    subject { described_class.well_name(row, column) }
 
     context 'A1' do
       let(:row) { 0 }

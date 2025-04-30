@@ -5,7 +5,7 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
-  subject { LabwareCreators::CustomTaggedPlate.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
@@ -41,7 +41,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
     let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::CustomTaggedPlate
+      expect(subject).to be_a described_class
     end
 
     it 'describes the parent uuid' do
@@ -169,7 +169,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
       end
 
       it 'can be created' do
-        expect(subject).to be_a LabwareCreators::CustomTaggedPlate
+        expect(subject).to be_a described_class
       end
 
       it_behaves_like 'it has a custom page', 'custom_tagged_plate'
