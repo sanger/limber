@@ -37,7 +37,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     [
       [
         'LTHR-96',
-        be_a_kind_of(SequencescapeSubmission).and(
+        be_a(SequencescapeSubmission).and(
           have_attributes(
             template_uuid: example_template_uuid,
             request_options: {
@@ -49,7 +49,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
       ],
       [
         'LTHR-384',
-        be_a_kind_of(SequencescapeSubmission).and(
+        be_a(SequencescapeSubmission).and(
           have_attributes(
             template_uuid: example2_template_uuid,
             request_options: {

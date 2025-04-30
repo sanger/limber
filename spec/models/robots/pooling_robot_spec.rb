@@ -142,6 +142,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
 
         context 'but unrelated plates' do
           let(:transfer_source_plates) { [create(:v2_plate)] }
+
           it { is_expected.not_to be_valid }
         end
       end

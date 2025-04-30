@@ -9,6 +9,8 @@ require 'spec_helper'
 RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
   has_a_working_api
 
+  subject { LabwareCreators::CardinalPoolsPlate.new(api, form_attributes) }
+
   let(:dest_purpose_uuid) { 'dest-purpose' }
   let(:parent_uuid) { 'example-parent-uuid' }
   let(:user_uuid) { 'user-uuid' }
@@ -43,8 +45,6 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
 
   before { stub_v2_plate(parent_plate, stub_search: false) }
 
-  subject { LabwareCreators::CardinalPoolsPlate.new(api, form_attributes) }
-
   context 'on new' do
     it 'can be initialised' do
       expect(subject).to be_a LabwareCreators::CardinalPoolsPlate
@@ -65,21 +65,21 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
       it 'fails validation when all wells are missing a sample metadata' do
         parent_plate.wells.each { |well| well.aliquots.first.sample.sample_metadata = nil }
 
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
         expect(subject.errors.messages[:parent]).to be_present
       end
 
       it 'fails validation when 1 well is missing a sample metadata' do
         parent_plate.wells[0].aliquots.first.sample.sample_metadata = nil
 
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
         expect(subject.errors.messages[:parent]).to be_present
       end
 
       it 'fails validation when the sample metadata: collected_by is missing' do
         parent_plate.wells[0].aliquots.first.sample.sample_metadata.collected_by = nil
 
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
         expect(subject.errors.messages[:parent]).to be_present
       end
     end
@@ -109,7 +109,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
   end
 
-  context '#number_of_pools' do
+  describe '#number_of_pools' do
     #  20 passed, 76 failed
     it 'has 1 pool' do
       parent_plate.wells[0..19].each { |well| well['state'] = 'passed' }
@@ -159,13 +159,13 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
     end
   end
 
-  context '#get_well_for_plate_location' do
+  describe '#get_well_for_plate_location' do
     it 'returns the well for a given plate and location' do
       expect(subject.get_well_for_plate_location(child_plate, 'A1')).to eq child_plate.wells[0]
     end
   end
 
-  context '#dest_coordinates' do
+  describe '#dest_coordinates' do
     it 'returns a list of A1 -> H1' do
       expect(subject.dest_coordinates).to include('A1', 'H1')
       expect(subject.dest_coordinates.count).to eq(8)
@@ -257,11 +257,11 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, cardinal: true do
         end
 
         expect(subject.wells_grouped_by_collected_by.count).to eq(3)
-        expect(subject.wells_grouped_by_collected_by.keys).to match_array [
-                      'collected by location 3',
-                      'collected by location 2',
-                      'collected by location 1'
-                    ]
+        expect(subject.wells_grouped_by_collected_by.keys).to contain_exactly(
+          'collected by location 3',
+          'collected by location 2',
+          'collected by location 1'
+        )
         expect(subject.wells_grouped_by_collected_by['collected by location 4']).to be_nil
       end
     end

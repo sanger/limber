@@ -96,7 +96,7 @@ RSpec.feature 'Multi plate pooling', js: true do
     click_on('Add an empty Pool Plate plate')
     scan_in('Plate 1', with: plate_barcode_1)
     expect(page).to have_content('DN1: A1')
-    expect(page).not_to have_content('DN1: A1, B1')
+    expect(page).to have_no_content('DN1: A1, B1')
     scan_in('Plate 2', with: plate_barcode_2)
     expect(page).to have_content('DN2: A1, B1')
     click_on('Make Pre-Cap pool Plate')

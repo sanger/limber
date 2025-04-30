@@ -7,9 +7,9 @@ require_relative 'shared_examples'
 # behaves exactly as a normal plate stamp
 RSpec.describe LabwareCreators::PlateWithPrimerPanel do
   has_a_working_api
-  it_behaves_like 'it only allows creation from plates'
-
   subject { LabwareCreators::PlateWithPrimerPanel.new(api, form_attributes) }
+
+  it_behaves_like 'it only allows creation from plates'
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
@@ -34,7 +34,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
 
   before { create :purpose_config, pcr_stage: 'pcr 1', uuid: purpose_uuid }
 
-  it 'should have page' do
+  it 'has page' do
     expect(LabwareCreators::PlateWithPrimerPanel.page).to eq 'plate_with_primer_panel'
   end
 
@@ -76,7 +76,7 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
         end
     end
 
-    it 'should create objects' do
+    it 'creates objects' do
       expect_plate_creation
       expect_transfer_request_collection_creation
 

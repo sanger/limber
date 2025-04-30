@@ -4,12 +4,13 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::DonorPoolingPlate do
+  subject { described_class.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has a custom page', 'donor_pooling_plate'
 
   has_a_working_api
 
-  subject { described_class.new(api, form_attributes) }
   let(:user_uuid) { 'user-uuid' }
   let(:parent_1_plate_uuid) { 'parent-1-plate-uuid' }
   let(:parent_2_plate_uuid) { 'parent-2-plate-uuid' }
@@ -752,6 +753,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   describe '#tag_depth_hash' do
     let(:number_of_pools) { 2 }
+
     it 'returns a hash mapping positions of wells in their pools' do
       wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
       wells.each_with_index do |well, index|
@@ -833,6 +835,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   describe '#valid?' do
     describe '#source_barcodes_must_be_entered' do
       let(:barcodes) { [] }
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_barcodes]).to include(described_class::SOURCE_BARCODES_MUST_BE_ENTERED)
@@ -847,6 +850,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         ).and_return([parent_1_plate])
       end
       let(:barcodes) { [parent_1_plate.human_barcode] * 2 }
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_barcodes]).to include(described_class::SOURCE_BARCODES_MUST_BE_DIFFERENT)
@@ -876,6 +880,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           ).and_return([parent_1_plate])
         end
         let(:barcodes) { [parent_1_plate.human_barcode] }
+
         it 'allows plate creation' do
           expect(wells.first.latest_live_cell_count&.value).to eq(1_000_000) # sanity check
           expect(subject).to be_valid
@@ -885,6 +890,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     describe '#source_plates_must_exist' do
       let(:barcodes) { [parent_1_plate.human_barcode, 'NOT-A-PLATE-BARCODE'] }
+
       before do
         allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
           { barcode: barcodes },
@@ -915,6 +921,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         wells[5].aliquots.first.sample.sample_metadata.donor_id = ' ' # ERROR
         wells
       end
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         invalid_wells_hash = {
@@ -942,6 +949,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         wells[3].qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 2_000_000) # OK
         wells
       end
+
       it 'reports the error' do
         # We should see an error report on index = 2 of plate 1 and
         # index = 1 and 2 of plate 2. They correspond to wells[2], wells[4] and
@@ -975,6 +983,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         end
         wells
       end
+
       before { wells[0..1].map { |well| well.aliquots.first.sample.sample_metadata.donor_id = 'DUPLICATE' } }
 
       it 'converts exceptions to errors' do

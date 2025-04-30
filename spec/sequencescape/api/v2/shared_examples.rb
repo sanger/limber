@@ -27,6 +27,7 @@ RSpec.shared_examples 'a labware with a workline identifier' do
     context 'when the plate has no stock plates' do
       let(:stock_plates) { [] }
       let(:stock_plate) { nil }
+
       it 'returns nil' do
         expect(the_labware.workline_reference).to be_nil
       end
@@ -35,6 +36,7 @@ RSpec.shared_examples 'a labware with a workline identifier' do
     context 'when the plate has one stock plate' do
       let(:stock_plates) { create_list :v2_plate, 1 }
       let(:stock_plate) { stock_plates.last }
+
       it 'returns the stock plate' do
         expect(the_labware.workline_reference).to eq(stock_plates.last)
       end

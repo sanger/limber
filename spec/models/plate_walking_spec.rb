@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe PlateWalking::Walker do
   subject { PlateWalking::Walker.new(plate, plate.wells) }
+
   let(:plate) { build :v2_plate }
 
   it 'yields wells in rows' do

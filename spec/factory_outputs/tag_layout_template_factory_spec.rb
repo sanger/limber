@@ -29,7 +29,7 @@ RSpec.describe 'tag layout template factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)['tag_layout_template']).to eq JSON.parse(json_content)['tag_layout_template']
   end
 end

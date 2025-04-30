@@ -8,6 +8,8 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   # In these tests, sample uuid and well state are modified at specific
   # wells for setup.
 
+  subject { described_class.new(api, form_attributes) }
+
   let(:user_uuid) { 'user-uuid' }
   let(:parent_plate_uuid) { 'parent-plate-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
@@ -27,8 +29,6 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
 
   # Child plate assumed to be created
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
-
-  subject { described_class.new(api, form_attributes) }
 
   before do
     # Create a purpose config for the plate (number_of_source_wells is 2)
@@ -71,6 +71,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         expect(wells[1].location).to eq('H1')
       end
     end
+
     context 'when wells are not ordered between columns' do
       before do
         # Swap wells between columns so that they are not in correct order

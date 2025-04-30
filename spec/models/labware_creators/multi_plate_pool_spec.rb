@@ -22,9 +22,9 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   before { create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid }
 
   context 'on new' do
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
-
     subject { LabwareCreators::MultiPlatePool.new(api, form_attributes) }
+
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::MultiPlatePool
@@ -104,7 +104,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
       [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [plate_uuid, plate_b_uuid], user_uuid: user_uuid }]
     end
 
-    context '#save!' do
+    describe '#save!' do
       it 'creates a plate!' do
         expect_bulk_transfer_creation
         expect_pooled_plate_creation

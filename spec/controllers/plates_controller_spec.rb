@@ -31,7 +31,7 @@ RSpec.describe PlatesController, type: :controller do
       expect(response).to have_http_status(:ok)
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:presenter)).to be_a(Presenters::StockPlatePresenter)
-      assert_equal 'text/csv; charset=utf-8', @response.content_type
+      expect(@response.content_type).to eq('text/csv; charset=utf-8')
     end
   end
 

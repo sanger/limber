@@ -144,7 +144,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
     scan_in('Plate 3', with: '')
 
-    expect(page).to_not have_text(
+    expect(page).to have_no_text(
       'The scanned plate contains tags that would clash with those in other plates in the pool.'
     )
   end

@@ -162,7 +162,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
       scan_in('Tube 2', with: '')
 
-      expect(page).to_not have_text(
+      expect(page).to have_no_text(
         'The scanned tube contains tags that would clash with those in other tubes in the pool.'
       )
     end

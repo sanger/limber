@@ -23,7 +23,11 @@ RSpec.feature 'Charge and pass libraries', js: true do
   end
 
   context 'plate with no submissions to be made' do
-    before { create :purpose_config, uuid: 'example-purpose-uuid' }
+    before do
+      create :purpose_config, uuid: 'example-purpose-uuid'
+      stub_v2_plate(plate)
+      stub_v2_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
+    end
 
     let(:plate_barcode) { plate.labware_barcode.machine }
     let(:submission_uuids) { %w[pool-1-uuid pool-2-uuid] }
@@ -34,11 +38,6 @@ RSpec.feature 'Charge and pass libraries', js: true do
              pool_sizes: [8, 8],
              include_submissions: true,
              well_factory: :v2_tagged_well
-    end
-
-    before do
-      stub_v2_plate(plate)
-      stub_v2_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
     end
 
     scenario 'charge and pass libraries' do
@@ -52,7 +51,10 @@ RSpec.feature 'Charge and pass libraries', js: true do
   end
 
   context 'tube with submissions to be made' do
-    before { create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid' }
+    before do
+      create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid'
+      stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
+    end
     let(:submission_uuids) { [] }
     let(:request_options) { { read_length: '150' } }
     let(:tube) { create :v2_tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
@@ -73,8 +75,6 @@ RSpec.feature 'Charge and pass libraries', js: true do
         }
       ]
     end
-
-    before { stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid]) }
 
     let(:submissions_attributes) do
       [{ attributes: { and_submit: true, order_uuids: ['order-uuid'], user_uuid: user_uuid }, uuid_out: 'sub-uuid' }]

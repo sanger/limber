@@ -5,6 +5,8 @@ require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::ConcentrationBinningCalculator do
   context 'when computing values for concentration binning' do
+    subject { Utility::ConcentrationBinningCalculator.new(dilutions_config) }
+
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
@@ -80,8 +82,6 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         ]
       }
     end
-
-    subject { Utility::ConcentrationBinningCalculator.new(dilutions_config) }
 
     describe '#source_multiplication_factor' do
       it 'calculates the value correctly' do

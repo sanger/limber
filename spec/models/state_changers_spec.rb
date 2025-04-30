@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe StateChangers::DefaultStateChanger do
   has_a_working_api
 
+  subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
+
   let(:plate_uuid) { SecureRandom.uuid }
   let(:plate) { create(:v2_plate, uuid: plate_uuid, state: plate_state) }
   let(:failed_wells) { [] }
@@ -24,8 +26,6 @@ RSpec.describe StateChangers::DefaultStateChanger do
     ]
   end
 
-  subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
-
   describe '#move_to!' do
     before do
       expect_state_change_creation
@@ -43,6 +43,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
       let(:plate_state) { 'pending' }
       let(:target_state) { 'passed' }
       let(:wells_to_pass) { nil }
+
       it_behaves_like 'a state changer'
     end
 
@@ -70,6 +71,8 @@ RSpec.describe StateChangers::DefaultStateChanger do
     end
 
     context 'on use of an automated plate state changer' do
+      subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
+
       let(:plate_state) { 'pending' }
       let!(:plate) { create :v2_plate_for_aggregation, uuid: plate_uuid, state: plate_state }
       let(:target_state) { 'passed' }
@@ -78,8 +81,6 @@ RSpec.describe StateChangers::DefaultStateChanger do
       let(:work_completions_attributes) do
         [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
       end
-
-      subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
 
       before { stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, plate_uuid]) }
 

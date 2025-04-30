@@ -4,6 +4,8 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
+  subject { LabwareCreators::ConcentrationNormalisedPlate.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -58,8 +60,6 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
-  subject { LabwareCreators::ConcentrationNormalisedPlate.new(api, form_attributes) }
-
   context 'on new' do
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::ConcentrationNormalisedPlate
@@ -78,7 +78,7 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
       end
 
       it 'fails validation' do
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
       end
     end
   end

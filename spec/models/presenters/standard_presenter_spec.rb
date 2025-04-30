@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::StandardPresenter do
+  subject { Presenters::StandardPresenter.new(labware:) }
+
   let(:purpose_name) { 'Example purpose' }
   let(:aliquot_type) { :v2_aliquot }
   let(:state) { 'pending' }
@@ -38,8 +40,6 @@ RSpec.describe Presenters::StandardPresenter do
     ]
   end
   let(:suggest_passes) { nil }
-
-  subject { Presenters::StandardPresenter.new(labware:) }
 
   it 'returns the priority' do
     expect(subject.priority).to eq(2)
@@ -166,12 +166,15 @@ RSpec.describe Presenters::StandardPresenter do
 
           context 'when not suggested' do
             let(:suggest_passes) { ['other_pipeline'] }
+
             it 'supports passing' do
               expect { |b| subject.control_library_passing(&b) }.to yield_control
             end
           end
+
           context 'when suggested' do
             let(:suggest_passes) { ['limber_wgs'] }
+
             it 'does not have inactive passing' do
               expect { |b| subject.control_library_passing(&b) }.not_to yield_control
             end
@@ -180,6 +183,7 @@ RSpec.describe Presenters::StandardPresenter do
 
         context 'and pending' do
           let(:state) { 'pending' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -188,8 +192,10 @@ RSpec.describe Presenters::StandardPresenter do
 
       context 'untagged' do
         let(:aliquot_type) { :v2_aliquot }
+
         context 'and passed' do
           let(:state) { 'passed' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -204,6 +210,7 @@ RSpec.describe Presenters::StandardPresenter do
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
       let(:suggest_passes) { ['limber_wgs'] }
+
       context 'and passed' do
         let(:state) { 'passed' }
 
@@ -211,6 +218,7 @@ RSpec.describe Presenters::StandardPresenter do
           expect { |b| subject.control_suggested_library_passing(&b) }.to yield_control
         end
       end
+
       context 'and pending' do
         let(:state) { 'pending' }
 
@@ -264,8 +272,10 @@ RSpec.describe Presenters::StandardPresenter do
               expect { |b| subject.control_library_passing(&b) }.not_to yield_control
             end
           end
+
           context 'when suggested' do
             let(:suggest_passes) { ['limber_wgs'] }
+
             it 'does not have inactive passing' do
               expect { |b| subject.control_library_passing(&b) }.not_to yield_control
             end
@@ -274,6 +284,7 @@ RSpec.describe Presenters::StandardPresenter do
 
         context 'and pending' do
           let(:state) { 'pending' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -282,8 +293,10 @@ RSpec.describe Presenters::StandardPresenter do
 
       context 'untagged' do
         let(:aliquot_type) { :v2_aliquot }
+
         context 'and passed' do
           let(:state) { 'passed' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -298,6 +311,7 @@ RSpec.describe Presenters::StandardPresenter do
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
       let(:suggest_passes) { ['limber_wgs'] }
+
       context 'and passed' do
         let(:state) { 'passed' }
 
@@ -305,6 +319,7 @@ RSpec.describe Presenters::StandardPresenter do
           expect { |b| subject.control_suggested_library_passing(&b) }.not_to yield_control
         end
       end
+
       context 'and pending' do
         let(:state) { 'pending' }
 

@@ -4,14 +4,17 @@ require 'spec_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
+  subject(:presenter) { described_class.new(labware:) }
+
   let(:purpose_name) { 'Example purpose' }
   let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
-  subject(:presenter) { described_class.new(labware:) }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: 'Child purpose'
     create :purpose_config, uuid: 'other-purpose', name: 'Other purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
+    create(:purpose_config, uuid: labware.purpose.uuid, submission_options: submission_options)
+    Settings.submission_templates = { 'example' => example_template_uuid, 'example2' => example2_template_uuid }
   end
 
   context 'when pending' do
@@ -66,18 +69,13 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
   let(:example_template_uuid) { SecureRandom.uuid }
   let(:example2_template_uuid) { SecureRandom.uuid }
 
-  before do
-    create(:purpose_config, uuid: labware.purpose.uuid, submission_options: submission_options)
-    Settings.submission_templates = { 'example' => example_template_uuid, 'example2' => example2_template_uuid }
-  end
-
   let(:wells_with_aliquots) { %w[2-well-A1 2-well-B1] }
 
   let(:template_options) do
     [
       [
         'LTHR-96',
-        be_a_kind_of(SequencescapeSubmission).and(
+        be_a(SequencescapeSubmission).and(
           have_attributes(
             template_uuid: example_template_uuid,
             request_options: {
@@ -89,7 +87,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       ],
       [
         'LTHR-384',
-        be_a_kind_of(SequencescapeSubmission).and(
+        be_a(SequencescapeSubmission).and(
           have_attributes(
             template_uuid: example2_template_uuid,
             request_options: {

@@ -7,6 +7,8 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::QuadrantSplitPlate do
   include FeatureHelpers
 
+  subject { LabwareCreators::QuadrantSplitPlate.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -123,8 +125,6 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
-
-  subject { LabwareCreators::QuadrantSplitPlate.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be created' do

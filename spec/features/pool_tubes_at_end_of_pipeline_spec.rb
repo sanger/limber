@@ -89,11 +89,13 @@ RSpec.feature 'Pool tubes at end of pipeline', js: true do
   # want to show the same behaviour.
   context 'when barcode readers send a tab' do
     let(:barcode_reader_key) { :tab }
+
     it_behaves_like 'a tube validation form'
   end
 
   context 'when barcode readers send an enter' do
     let(:barcode_reader_key) { :enter }
+
     it_behaves_like 'a tube validation form'
   end
 end

@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::MinimalStockPlatePresenter do
+  subject(:presenter) { Presenters::MinimalStockPlatePresenter.new(labware:) }
+
   let(:labware) do
     create :v2_stock_plate,
            purpose_name: purpose_name,
@@ -32,8 +34,6 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
 
   before { create :stock_plate_config, uuid: labware.purpose.uuid, name: purpose_name }
 
-  subject(:presenter) { Presenters::MinimalStockPlatePresenter.new(labware:) }
-
   it 'returns label attributes' do
     expected_label = {
       top_left: Time.zone.today.strftime('%e-%^b-%Y'),
@@ -52,7 +52,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
     let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
 
     it 'reports as invalid' do
-      expect(subject).to_not be_valid
+      expect(subject).not_to be_valid
     end
 
     it 'reports the error' do

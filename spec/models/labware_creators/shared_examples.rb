@@ -9,11 +9,13 @@ RSpec.shared_examples 'it only allows creation from tubes' do
 
       context 'with a tube' do
         let(:parent) { build :tube }
+
         it { is_expected.to be true }
       end
 
       context 'with a plate' do
         let(:parent) { create :v2_plate }
+
         it { is_expected.to be false }
       end
     end
@@ -24,12 +26,15 @@ RSpec.shared_examples 'it has a custom page' do |custom_page|
   it 'has a page' do
     expect(described_class.page).to eq custom_page
   end
+
   it 'renders the page' do
     expect(subject.page).to eq(custom_page)
   end
+
   it 'can be created' do
     expect(subject).to be_a described_class
   end
+
   it 'returns a CustomCreatorButton' do
     expect(described_class.creator_button({})).to be_a LabwareCreators::CustomCreatorButton
   end
@@ -39,9 +44,11 @@ RSpec.shared_examples 'it has no custom page' do |_custom_page|
   it 'renders the default new template' do
     expect(described_class.page).to eq('new')
   end
+
   it 'can be created' do
     expect(subject).to be_a described_class
   end
+
   it 'returns a CreatorButton' do
     expect(described_class.creator_button({})).to be_a LabwareCreators::CreatorButton
   end
@@ -56,11 +63,13 @@ RSpec.shared_examples 'it only allows creation from plates' do
 
       context 'with a tube' do
         let(:parent) { build :tube }
+
         it { is_expected.to be false }
       end
 
       context 'with a plate' do
         let(:parent) { build :plate }
+
         it { is_expected.to be true }
       end
     end
@@ -76,20 +85,24 @@ RSpec.shared_examples 'it only allows creation from tagged plates' do
 
       context 'with a tube' do
         let(:parent) { build :tube }
+
         it { is_expected.to be false }
       end
 
       context 'with a plate' do
         let(:parent) { build :plate }
+
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
 
         context 'which is untagged' do
           let(:tagged) { false }
+
           it { is_expected.to be false }
         end
 
         context 'which is tagged' do
           let(:tagged) { true }
+
           it { is_expected.to be true }
         end
       end
@@ -106,20 +119,24 @@ RSpec.shared_examples 'it does not allow creation' do
 
       context 'with a tube' do
         let(:parent) { build :tube }
+
         it { is_expected.to be false }
       end
 
       context 'with a plate' do
         let(:parent) { build :plate }
+
         before { allow(parent).to receive(:tagged?).and_return(tagged) }
 
         context 'which is untagged' do
           let(:tagged) { false }
+
           it { is_expected.to be false }
         end
 
         context 'which is tagged' do
           let(:tagged) { true }
+
           it { is_expected.to be false }
         end
       end
@@ -136,12 +153,14 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
 
       context 'with a tube' do
         let(:parent) { build :tube }
+
         it { is_expected.to be false }
       end
 
       context 'with an unpassed plate' do
         let(:parent) { build :unpassed_plate }
         let(:tagged) { true }
+
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         it { is_expected.to be false }
       end
@@ -149,6 +168,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       context 'with a passed plate' do
         let(:parent) { build :passed_plate }
         let(:tagged) { true }
+
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         it { is_expected.to be true }
       end
@@ -200,6 +220,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
             }
           }
         end
+
         it { is_expected.to be true }
       end
     end
@@ -215,12 +236,14 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
 
       context 'with a tube' do
         let(:parent) { build :tube }
+
         it { is_expected.to be false }
       end
 
       context 'with an unpassed plate' do
         let(:parent) { build :unpassed_plate }
         let(:tagged) { true }
+
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         it { is_expected.to be false }
       end
@@ -228,6 +251,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
       context 'with a passed plate' do
         let(:parent) { build :passed_plate }
         let(:tagged) { true }
+
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
         it { is_expected.to be true }
       end

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::PermissivePresenter do
+  subject { Presenters::PermissivePresenter.new(labware:) }
+
   let(:purpose_name) { 'Example purpose' }
   let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
-
-  subject { Presenters::PermissivePresenter.new(labware:) }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: 'Child purpose'

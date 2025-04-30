@@ -105,6 +105,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
 
         context 'but unrelated plates' do
           let(:transfer_target_1) { [create(:v2_plate)] }
+
           it { is_expected.not_to be_valid }
         end
       end

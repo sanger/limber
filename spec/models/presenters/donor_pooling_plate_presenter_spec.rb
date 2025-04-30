@@ -5,6 +5,8 @@ require 'spec_helper'
 RSpec.describe Presenters::DonorPoolingPlatePresenter do
   # First set of source wells
 
+  subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
+
   let(:source_well_a1) { create(:v2_well, location: 'A1') }
   let(:source_well_b1) { create(:v2_well, location: 'B1') }
   let(:source_well_c1) { create(:v2_well, location: 'D1') }
@@ -77,8 +79,6 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:scrna_config) { Rails.application.config.scrna_config }
 
   let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
-
-  subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
 
   before do
     Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }

@@ -153,6 +153,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
       context 'when there is not alternative workline_identifiers' do
         let(:alternatives) { nil }
+
         it 'prints the last stock plate in the top right of the label' do
           first_label = @data_printed[:labels][:body][0]
           expect(first_label['main_label']['top_right']).to eq(stock_plates.last.barcode.human)
@@ -161,6 +162,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
       context 'when there is alternative workline identifier' do
         let(:alternatives) { alternative_purpose_name }
+
         it 'prints the workline identifier' do
           first_label = @data_printed[:labels][:body][0]
           expect(first_label['main_label']['top_right']).to eq(alternative_plate.barcode.human)

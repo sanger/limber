@@ -38,6 +38,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
 
   context 'with first replicates' do
     let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_first_count' }
+
     it 'renders the expected content' do
       render(template:)
       content = CSV.parse(rendered)
@@ -48,6 +49,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
 
   context 'with second replicates' do
     let(:template) { 'exports/hamilton_lrc_pbmc_bank_to_cellaca_second_count' }
+
     it 'renders the expected content' do
       render(template:)
       content = CSV.parse(rendered)

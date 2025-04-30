@@ -54,7 +54,7 @@ RSpec.feature 'Viewing a plate', js: true do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
       expect(find('.state-badge')).to have_content('Started')
-      expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+      expect(page).to have_no_button('Add an empty Limber Example Purpose plate')
     end
   end
 
@@ -101,6 +101,7 @@ RSpec.feature 'Viewing a plate', js: true do
              size: 384,
              pool_sizes: [5, 12, 48, 48, 9, 35, 35, 5, 12, 48, 48, 9, 35, 35]
     end
+
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(

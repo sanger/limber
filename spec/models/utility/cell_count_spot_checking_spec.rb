@@ -3,6 +3,8 @@
 # This test checks well selection for different number of ancestor tubes and
 # specifications of the number of wells to select.
 RSpec.describe Utility::CellCountSpotChecking do
+  subject { described_class.new(plate) }
+
   let(:number_of_tubes) { 4 }
 
   let(:ancestor_tubes) do
@@ -41,8 +43,6 @@ RSpec.describe Utility::CellCountSpotChecking do
       .values
   end
 
-  subject { described_class.new(plate) }
-
   describe '#initialize' do
     it 'sets the plate and ancestor tubes' do
       # Using attribute readers
@@ -62,6 +62,7 @@ RSpec.describe Utility::CellCountSpotChecking do
         expect(result).to eq(selected_wells)
       end
     end
+
     context 'when a first replicate is failed' do
       before do
         # Well state is set for testing purposes. In the actual code, the state
