@@ -13,7 +13,7 @@ Metrics/CollectionLiteralLength:
     - 'spec/helpers/well_helpers_spec.rb'
     - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
 
-# Offense count: 46
+# Offense count: 38
 # Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.
 Metrics/MethodLength:
   Exclude:
@@ -46,6 +46,772 @@ Metrics/MethodLength:
     - 'spec/support/factory_bot_extensions.rb'
     - 'spec/support/feature_helpers.rb'
     - 'spec/support/with_pmb_stubbed.rb'
+
+# Offense count: 10
+RSpec/AnyInstance:
+  Exclude:
+    - 'spec/controllers/robots_controller_spec.rb'
+    - 'spec/controllers/tube_creation_controller_spec.rb'
+    - 'spec/features/plate_transfer_spec.rb'
+    - 'spec/features/viewing_a_minimal_plate_spec.rb'
+    - 'spec/features/viewing_a_plate_spec.rb'
+    - 'spec/models/labware_creators/common_file_handling/csv_file/row_base_spec.rb'
+    - 'spec/support/api_url_helper.rb'
+
+# Offense count: 268
+# Configuration parameters: Prefixes, AllowedPatterns.
+# Prefixes: when, with, without
+RSpec/ContextWording:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/searches_controller_spec.rb'
+    - 'spec/controllers/tube_creation_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/features/charge_and_pass_libraries_spec.rb'
+    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
+    - 'spec/features/viewing_a_minimal_plate_spec.rb'
+    - 'spec/features/viewing_a_plate_spec.rb'
+    - 'spec/helpers/exports_helper_spec.rb'
+    - 'spec/helpers/well_helpers_spec.rb'
+    - 'spec/lib/repeated_state_change_error_spec.rb'
+    - 'spec/models/labware_creators/baited_plate_spec.rb'
+    - 'spec/models/labware_creators/cardinal_pools_plate_spec.rb'
+    - 'spec/models/labware_creators/common_file_handling/csv_file_for_tube_rack_spec.rb'
+    - 'spec/models/labware_creators/common_file_handling/csv_file_for_tube_rack_with_rack_barcode_spec.rb'
+    - 'spec/models/labware_creators/concentration_binned_plate_spec.rb'
+    - 'spec/models/labware_creators/concentration_normalised_plate_spec.rb'
+    - 'spec/models/labware_creators/custom_pooled_tubes/csv_file_spec.rb'
+    - 'spec/models/labware_creators/custom_pooled_tubes_spec.rb'
+    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/final_tube_spec.rb'
+    - 'spec/models/labware_creators/fixed_normalised_plate_spec.rb'
+    - 'spec/models/labware_creators/merged_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_plate_pool_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/normalised_binned_plate_spec.rb'
+    - 'spec/models/labware_creators/partial_stamped_plate_without_dilution_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_duplex_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_duplex_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/plate_with_primer_panel_spec.rb'
+    - 'spec/models/labware_creators/plate_with_template_spec.rb'
+    - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
+    - 'spec/models/labware_creators/quadrant_stamp_primer_panel_spec.rb'
+    - 'spec/models/labware_creators/shared_examples.rb'
+    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_compressed_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_spec.rb'
+    - 'spec/models/labware_creators/tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/tube_from_tube_spec.rb'
+    - 'spec/models/labware_creators/well_filtered_tagged_plate_creator_spec.rb'
+    - 'spec/models/labware_metadata_spec.rb'
+    - 'spec/models/limber/tag_layout_template_spec.rb'
+    - 'spec/models/presenters/concentration_binned_plate_presenter_spec.rb'
+    - 'spec/models/presenters/minimal_pcr_plate_presenter_spec.rb'
+    - 'spec/models/presenters/minimal_plate_presenter_spec.rb'
+    - 'spec/models/presenters/minimal_stock_plate_presenter_spec.rb'
+    - 'spec/models/presenters/normalised_binned_plate_presenter_spec.rb'
+    - 'spec/models/presenters/pcr_cycles_binned_plate_using_request_metadata_presenter_spec.rb'
+    - 'spec/models/presenters/pcr_cycles_binned_plate_using_well_metadata_presenter_spec.rb'
+    - 'spec/models/presenters/plate_presenter_spec.rb'
+    - 'spec/models/presenters/standard_presenter_spec.rb'
+    - 'spec/models/presenters/tube_presenter_spec.rb'
+    - 'spec/models/presenters/tube_rack_presenter_spec.rb'
+    - 'spec/models/robots/pooling_and_splitting_robot_spec.rb'
+    - 'spec/models/robots/pooling_robot_spec.rb'
+    - 'spec/models/robots/quadrant_robot_spec.rb'
+    - 'spec/models/robots/robot_spec.rb'
+    - 'spec/models/robots/splitting_robot_spec.rb'
+    - 'spec/models/state_changers_spec.rb'
+    - 'spec/models/tube_rack_walking_spec.rb'
+    - 'spec/sequencescape/api/v2/receptacle_spec.rb'
+    - 'spec/views/exports/cardinal_tagging_csv_for_custom_pooling.csv.erb_spec.rb'
+
+# Offense count: 25
+# Configuration parameters: IgnoredMetadata.
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/factory_outputs/multiplexed_library_tube_factory_spec.rb'
+    - 'spec/factory_outputs/plate_conversion_factory_spec.rb'
+    - 'spec/factory_outputs/plate_creation_factory_spec.rb'
+    - 'spec/factory_outputs/plate_factory_spec.rb'
+    - 'spec/factory_outputs/plate_purpose_factory_spec.rb'
+    - 'spec/factory_outputs/qc_file_factory_spec.rb'
+    - 'spec/factory_outputs/search_factory_spec.rb'
+    - 'spec/factory_outputs/state_change_factory_spec.rb'
+    - 'spec/factory_outputs/submission_factory_spec.rb'
+    - 'spec/factory_outputs/submission_pool_factory_spec.rb'
+    - 'spec/factory_outputs/submission_template_factory_spec.rb'
+    - 'spec/factory_outputs/tag2_layout_template_factory_spec.rb'
+    - 'spec/factory_outputs/tag_layout_template_factory_spec.rb'
+    - 'spec/factory_outputs/transfer_factory_spec.rb'
+    - 'spec/factory_outputs/transfer_request_collection_factory_spec.rb'
+    - 'spec/factory_outputs/transfer_template_factory_spec.rb'
+    - 'spec/factory_outputs/tube_creation_factory_spec.rb'
+    - 'spec/factory_outputs/tube_factory_spec.rb'
+    - 'spec/factory_outputs/well_factory_spec.rb'
+    - 'spec/factory_outputs/work_completion_factory_spec.rb'
+    - 'spec/views/exports/bioscan_mbrave.tsv.erb_spec.rb'
+    - 'spec/views/exports/cardinal_sample_arraying_tube_layout.csv.erb_spec.rb'
+    - 'spec/views/exports/cardinal_tagging_csv_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/cellaca_input_file.csv.erb_spec.rb'
+    - 'spec/views/exports/concentrations_ngul.csv.erb_spec.rb'
+    - 'spec/views/exports/concentrations_nm.csv.erb_spec.rb'
+    - 'spec/views/exports/duplex_seq_al_lib_concentrations_for_customer.csv.erb_spec.rb'
+    - 'spec/views/exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_aggregate_cherrypick.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_fixed_volume_dilutions.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_gem_x_5p_chip_loading.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_bank_to_cellaca_common.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_plate_stamp.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_pooling_plate_pbmc.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_variable_volume_dilutions.csv.erb_spec.rb'
+    - 'spec/views/exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/pbmc_bank_tubes_content_report.csv.erb_spec.rb'
+    - 'spec/views/exports/scrna_core_cell_extraction_sample_arraying_tube_layout.csv.erb_spec.rb'
+    - 'spec/views/exports/targeted_nanoseq_al_lib_concentrations_for_customer.csv.erb_spec.rb'
+    - 'spec/views/exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb_spec.rb'
+
+# Offense count: 1
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: SkipBlocks, EnforcedStyle, OnlyStaticConstants.
+# SupportedStyles: described_class, explicit
+RSpec/DescribedClass:
+  Exclude:
+    - 'spec/sequencescape/api/v2/plate/pools_spec.rb'
+
+# Offense count: 1
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: AutoCorrect.
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - 'spec/controllers/tube_creation_controller_spec.rb'
+
+# Offense count: 83
+# Configuration parameters: Max, CountAsOne.
+RSpec/ExampleLength:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/print_jobs_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/features/cancelling_a_whole_plate_spec.rb'
+    - 'spec/features/charge_and_pass_libraries_spec.rb'
+    - 'spec/features/creating_a_plate_spec.rb'
+    - 'spec/features/creating_a_tag_plate_spec.rb'
+    - 'spec/features/creating_plate_with_bait_spec.rb'
+    - 'spec/features/failing_a_whole_plate_spec.rb'
+    - 'spec/features/failing_quadrants_spec.rb'
+    - 'spec/features/failing_thresholds_spec.rb'
+    - 'spec/features/failing_wells_spec.rb'
+    - 'spec/features/plate_transfer_spec.rb'
+    - 'spec/features/pool_tubes_at_end_of_pipeline_spec.rb'
+    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
+    - 'spec/features/pooling_multiple_plates_spec.rb'
+    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
+    - 'spec/features/viewing_a_minimal_plate_spec.rb'
+    - 'spec/features/viewing_a_plate_spec.rb'
+    - 'spec/helpers/barcode_labels_helper_spec.rb'
+    - 'spec/models/labels/plate_384_single_label_spec.rb'
+    - 'spec/models/labels/plate_double_label_spec.rb'
+    - 'spec/models/labels/plate_label_96_lysate_spec.rb'
+    - 'spec/models/labels/plate_label_base_spec.rb'
+    - 'spec/models/labels/plate_label_human_barcode_spec.rb'
+    - 'spec/models/labels/tube_label_spec.rb'
+    - 'spec/models/labels/tube_label_traction_compatible_spec.rb'
+    - 'spec/models/labels/tube_rack_label_spec.rb'
+    - 'spec/models/labware_creators/cardinal_pools_plate_spec.rb'
+    - 'spec/models/labware_creators/common_file_handling/csv_file_for_tube_rack_spec.rb'
+    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/partial_stamped_plate_without_dilution_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_duplex_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/pooled_tubes_by_submission_spec.rb'
+    - 'spec/models/labware_creators/pooled_wells_by_sample_in_groups_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_compressed_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_reordering_columns_to_rows_spec.rb'
+    - 'spec/models/labware_creators/tagged_plate_spec.rb'
+    - 'spec/models/plate_walking_spec.rb'
+    - 'spec/models/presenters/plate_presenter_spec.rb'
+    - 'spec/models/presenters/tag_plate_384_presenter_spec.rb'
+    - 'spec/models/print_job_spec.rb'
+    - 'spec/views/exports/cardinal_sample_arraying_tube_layout.csv.erb_spec.rb'
+    - 'spec/views/exports/cardinal_tagging_csv_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_gem_x_5p_chip_loading.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb_spec.rb'
+    - 'spec/views/exports/scrna_core_cell_extraction_sample_arraying_tube_layout.csv.erb_spec.rb'
+
+# Offense count: 2
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: CustomTransform, IgnoredWords, DisallowedExamples.
+# DisallowedExamples: works
+RSpec/ExampleWording:
+  Exclude:
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+
+# Offense count: 23
+RSpec/ExpectInHook:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/tube_creation_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/features/creating_a_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/shared_examples.rb'
+    - 'spec/sequencescape/api/v2/plate_spec.rb'
+
+# Offense count: 12
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: implicit, each, example
+RSpec/HookArgument:
+  Exclude:
+    - 'spec/models/presenters/permissive_presenter_spec.rb'
+    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
+    - 'spec/models/presenters/rvi_cnda_xp_presenter_spec.rb'
+    - 'spec/models/presenters/single_child_permissive_presenter_spec.rb'
+    - 'spec/models/robots/robot_spec.rb'
+    - 'spec/spec_helper.rb'
+    - 'spec/support/contract_helper.rb'
+
+# Offense count: 26
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AutoCorrect.
+RSpec/HooksBeforeExamples:
+  Exclude:
+    - 'spec/models/labware_creators/base_spec.rb'
+    - 'spec/models/labware_creators/concentration_binned_plate_spec.rb'
+    - 'spec/models/labware_creators/concentration_normalised_plate_spec.rb'
+    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/fixed_normalised_plate_spec.rb'
+    - 'spec/models/labware_creators/merged_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_plate_pool_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/normalised_binned_plate_spec.rb'
+    - 'spec/models/labware_creators/partial_stamped_plate_without_dilution_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/plate_with_primer_panel_spec.rb'
+    - 'spec/models/labware_creators/plate_with_template_spec.rb'
+    - 'spec/models/labware_creators/pooled_tubes_by_submission_spec.rb'
+    - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
+    - 'spec/models/labware_creators/quadrant_stamp_primer_panel_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_compressed_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_spec.rb'
+    - 'spec/models/labware_creators/tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/well_filtered_tagged_plate_creator_spec.rb'
+    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
+    - 'spec/models/presenters/submission_plate_presenter_spec.rb'
+
+# Offense count: 5
+RSpec/IdenticalEqualityAssertion:
+  Exclude:
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+
+# Offense count: 471
+# Configuration parameters: Max, AllowedIdentifiers, AllowedPatterns.
+RSpec/IndexedLet:
+  Exclude:
+    - 'spec/controllers/pipeline_work_in_progress_controller_spec.rb'
+    - 'spec/features/plate_transfer_spec.rb'
+    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
+    - 'spec/features/pooling_multiple_plates_spec.rb'
+    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
+    - 'spec/features/viewing_inboxes_spec.rb'
+    - 'spec/helpers/exports_helper_spec.rb'
+    - 'spec/helpers/plate_helpers_spec.rb'
+    - 'spec/helpers/well_helpers_spec.rb'
+    - 'spec/models/concerns/labware_creators/donor_pooling_calculator_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/merged_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/partial_stamped_plate_without_dilution_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_duplex_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_duplex_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/pooled_tubes_from_whole_plates_spec.rb'
+    - 'spec/models/labware_creators/quadrant_stamp_primer_panel_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_compressed_spec.rb'
+    - 'spec/models/labware_creators/well_filtered_tagged_plate_creator_spec.rb'
+    - 'spec/models/presenters/concentration_binned_plate_presenter_spec.rb'
+    - 'spec/models/presenters/normalised_binned_plate_presenter_spec.rb'
+    - 'spec/models/presenters/pcr_cycles_binned_plate_using_request_metadata_presenter_spec.rb'
+    - 'spec/models/presenters/pcr_cycles_binned_plate_using_well_metadata_presenter_spec.rb'
+    - 'spec/models/presenters/plate_presenter_spec.rb'
+    - 'spec/models/robots/plate_to_tube_racks_robot_spec.rb'
+    - 'spec/models/robots/pooling_and_splitting_robot_spec.rb'
+    - 'spec/models/robots/splitting_robot_spec.rb'
+    - 'spec/sequencescape/api/v2/v2_spec.rb'
+    - 'spec/views/exports/cardinal_tagging_csv_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_gem_x_5p_chip_loading.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_pooling_plate_pbmc.csv.erb_spec.rb'
+    - 'spec/views/exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/pbmc_bank_tubes_content_report.csv.erb_spec.rb'
+    - 'spec/views/exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb_spec.rb'
+
+# Offense count: 9
+# Configuration parameters: AssignmentOnly.
+RSpec/InstanceVariable:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/plates_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/features/creating_a_plate_spec.rb'
+    - 'spec/helpers/barcode_labels_helper_spec.rb'
+
+# Offense count: 2
+RSpec/IteratedExpectation:
+  Exclude:
+    - 'spec/views/exports/pbmc_bank_tubes_content_report.csv.erb_spec.rb'
+
+# Offense count: 15
+RSpec/LetSetup:
+  Exclude:
+    - 'spec/controllers/plates/work_completions_controller_spec.rb'
+    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
+    - 'spec/helpers/barcode_labels_helper_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/presenters/stock_plate_presenter_with_info_spec.rb'
+    - 'spec/models/presenters/tube_presenter_spec.rb'
+    - 'spec/sequencescape/api/v2/request_spec.rb'
+
+# Offense count: 2
+RSpec/MessageChain:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
+
+# Offense count: 55
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: have_received, receive
+RSpec/MessageSpies:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/models/concerns/labware_creators/donor_pooling_calculator_spec.rb'
+    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/shared_examples.rb'
+    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
+    - 'spec/models/labware_metadata_spec.rb'
+    - 'spec/models/presenters/standard_presenter_spec.rb'
+    - 'spec/models/print_job_spec.rb'
+    - 'spec/sequencescape/api/v2/plate_spec.rb'
+    - 'spec/support/api_url_helper.rb'
+
+# Offense count: 6
+RSpec/MultipleDescribes:
+  Exclude:
+    - 'spec/factory_outputs/plate_factory_spec.rb'
+    - 'spec/factory_outputs/transfer_factory_spec.rb'
+    - 'spec/factory_outputs/well_factory_spec.rb'
+    - 'spec/models/utility/concentration_binning_calculator_spec.rb'
+    - 'spec/models/utility/normalised_binning_calculator_spec.rb'
+    - 'spec/models/utility/pcr_cycles_binning_calculator_spec.rb'
+
+# Offense count: 239
+# Configuration parameters: Max.
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/plates/work_completions_controller_spec.rb'
+    - 'spec/controllers/plates_controller_spec.rb'
+    - 'spec/controllers/qc_files_controller_spec.rb'
+    - 'spec/controllers/searches_controller_spec.rb'
+    - 'spec/controllers/tube_creation_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/controllers/tubes/work_completions_controller_spec.rb'
+    - 'spec/controllers/tubes_controller_spec.rb'
+    - 'spec/factory_outputs/well_factory_spec.rb'
+    - 'spec/features/charge_and_pass_libraries_spec.rb'
+    - 'spec/features/creating_a_plate_spec.rb'
+    - 'spec/features/creating_a_tag_plate_spec.rb'
+    - 'spec/features/creating_plate_with_bait_spec.rb'
+    - 'spec/features/plate_transfer_spec.rb'
+    - 'spec/features/pool_tubes_at_end_of_pipeline_spec.rb'
+    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
+    - 'spec/features/pooling_multiple_plates_spec.rb'
+    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
+    - 'spec/features/viewing_a_minimal_plate_spec.rb'
+    - 'spec/features/viewing_a_plate_spec.rb'
+    - 'spec/features/viewing_inboxes_spec.rb'
+    - 'spec/helpers/barcode_labels_helper_spec.rb'
+    - 'spec/lib/config_loader/exports_loader_spec.rb'
+    - 'spec/lib/config_loader/pipelines_loader_spec.rb'
+    - 'spec/lib/config_loader/purposes_loader_spec.rb'
+    - 'spec/models/concerns/presenters/statemachine/feature_in_states_spec.rb'
+    - 'spec/models/labels/plate_384_single_label_spec.rb'
+    - 'spec/models/labels/plate_double_label_spec.rb'
+    - 'spec/models/labels/plate_label_96_lysate_spec.rb'
+    - 'spec/models/labels/plate_label_base_spec.rb'
+    - 'spec/models/labels/plate_label_cellaca_qc_spec.rb'
+    - 'spec/models/labels/plate_label_human_barcode_spec.rb'
+    - 'spec/models/labels/plate_label_quad_qc_spec.rb'
+    - 'spec/models/labels/tube_label_spec.rb'
+    - 'spec/models/labels/tube_label_traction_compatible_spec.rb'
+    - 'spec/models/labels/tube_rack_label_spec.rb'
+    - 'spec/models/labware_creators/cardinal_pools_plate_spec.rb'
+    - 'spec/models/labware_creators/common_file_handling/csv_file_for_tube_rack_spec.rb'
+    - 'spec/models/labware_creators/custom_pooled_tubes/csv_file_spec.rb'
+    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/final_tube_spec.rb'
+    - 'spec/models/labware_creators/merged_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/partial_stamped_plate_without_dilution_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_duplex_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/pooled_tubes_by_submission_spec.rb'
+    - 'spec/models/labware_creators/pooled_wells_by_sample_in_groups_spec.rb'
+    - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_compressed_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_reordering_columns_to_rows_spec.rb'
+    - 'spec/models/labware_creators/tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/well_filter_allowing_partials_spec.rb'
+    - 'spec/models/labware_creators/well_filter_spec.rb'
+    - 'spec/models/plate_walking_spec.rb'
+    - 'spec/models/presenters/permissive_presenter_spec.rb'
+    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
+    - 'spec/models/presenters/plate_presenter_spec.rb'
+    - 'spec/models/presenters/rvi_cnda_xp_presenter_spec.rb'
+    - 'spec/models/presenters/simple_tube_spec.rb'
+    - 'spec/models/presenters/single_child_permissive_presenter_spec.rb'
+    - 'spec/models/presenters/standard_presenter_spec.rb'
+    - 'spec/models/presenters/tag_plate_384_presenter_spec.rb'
+    - 'spec/models/print_job_spec.rb'
+    - 'spec/models/robots_spec.rb'
+    - 'spec/models/sequencescape_submission_spec.rb'
+    - 'spec/models/utility/cell_count_spot_checking_spec.rb'
+    - 'spec/models/utility/concentration_binning_calculator_spec.rb'
+    - 'spec/models/utility/concentration_normalisation_calculator_spec.rb'
+    - 'spec/models/utility/fixed_normalisation_calculator_spec.rb'
+    - 'spec/models/utility/normalised_binning_calculator_spec.rb'
+    - 'spec/sequencescape/api/v2/plate/pools_spec.rb'
+    - 'spec/sequencescape/api/v2/plate_spec.rb'
+    - 'spec/sequencescape/api/v2/request_spec.rb'
+    - 'spec/views/exports/cardinal_sample_arraying_tube_layout.csv.erb_spec.rb'
+    - 'spec/views/exports/cardinal_tagging_csv_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_gem_x_5p_chip_loading.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb_spec.rb'
+    - 'spec/views/exports/scrna_core_cell_extraction_sample_arraying_tube_layout.csv.erb_spec.rb'
+
+# Offense count: 487
+# Configuration parameters: AllowSubject, Max.
+RSpec/MultipleMemoizedHelpers:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/pipeline_work_in_progress_controller_spec.rb'
+    - 'spec/features/creating_a_plate_spec.rb'
+    - 'spec/features/creating_a_quadrant_stamp_primer_panel_plate_spec.rb'
+    - 'spec/features/creating_a_tag_plate_spec.rb'
+    - 'spec/features/creating_plate_with_bait_spec.rb'
+    - 'spec/features/plate_transfer_spec.rb'
+    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
+    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
+    - 'spec/features/viewing_a_plate_spec.rb'
+    - 'spec/helpers/exports_helper_spec.rb'
+    - 'spec/helpers/plate_helpers_spec.rb'
+    - 'spec/models/concerns/labware_creators/donor_pooling_calculator_spec.rb'
+    - 'spec/models/labels/plate_label_96_lysate_spec.rb'
+    - 'spec/models/labware_creators/concentration_binned_plate_spec.rb'
+    - 'spec/models/labware_creators/concentration_normalised_plate_spec.rb'
+    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/fixed_normalised_plate_spec.rb'
+    - 'spec/models/labware_creators/merged_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/normalised_binned_plate_spec.rb'
+    - 'spec/models/labware_creators/partial_stamped_plate_without_dilution_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_duplex_seq_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/pooled_tubes_from_whole_plates_spec.rb'
+    - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
+    - 'spec/models/labware_creators/quadrant_stamp_primer_panel_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_reordering_columns_to_rows_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_spec.rb'
+    - 'spec/models/labware_creators/tagged_plate_spec.rb'
+    - 'spec/models/labware_creators/well_filter_allowing_partials_spec.rb'
+    - 'spec/models/labware_creators/well_filter_spec.rb'
+    - 'spec/models/labware_creators/well_filtered_tagged_plate_creator_spec.rb'
+    - 'spec/models/presenters/donor_pooling_plate_presenter_spec.rb'
+    - 'spec/models/presenters/pcr_cycles_binned_plate_using_request_metadata_presenter_spec.rb'
+    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
+    - 'spec/models/presenters/submission_plate_presenter_spec.rb'
+    - 'spec/models/robots/plate_to_tube_racks_robot_spec.rb'
+    - 'spec/models/robots/pooling_and_splitting_robot_spec.rb'
+    - 'spec/models/robots/pooling_robot_spec.rb'
+    - 'spec/models/robots/quadrant_robot_spec.rb'
+    - 'spec/models/robots/robot_spec.rb'
+    - 'spec/models/robots/splitting_robot_spec.rb'
+    - 'spec/models/utility/concentration_binning_calculator_spec.rb'
+    - 'spec/models/utility/concentration_normalisation_calculator_spec.rb'
+    - 'spec/models/utility/fixed_normalisation_calculator_spec.rb'
+    - 'spec/models/utility/normalised_binning_calculator_spec.rb'
+    - 'spec/models/utility/pcr_cycles_binning_calculator_spec.rb'
+    - 'spec/views/exports/hamilton_gem_x_5p_chip_loading.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_pooling_plate_pbmc.csv.erb_spec.rb'
+    - 'spec/views/exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb_spec.rb'
+    - 'spec/views/exports/pbmc_bank_tubes_content_report.csv.erb_spec.rb'
+    - 'spec/views/exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb_spec.rb'
+
+# Offense count: 29
+# Configuration parameters: EnforcedStyle, IgnoreSharedExamples.
+# SupportedStyles: always, named_only
+RSpec/NamedSubject:
+  Exclude:
+    - 'spec/models/presenters/minimal_pcr_plate_presenter_spec.rb'
+    - 'spec/models/presenters/minimal_plate_presenter_spec.rb'
+    - 'spec/models/presenters/minimal_stock_plate_presenter_spec.rb'
+    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
+    - 'spec/models/presenters/plate_presenter_spec.rb'
+    - 'spec/models/sequencescape_submission_spec.rb'
+
+# Offense count: 20
+# Configuration parameters: Max, AllowedGroups.
+RSpec/NestedGroups:
+  Exclude:
+    - 'spec/models/labware_creators/custom_tagged_plate_spec.rb'
+    - 'spec/models/presenters/standard_presenter_spec.rb'
+    - 'spec/models/robots/robot_spec.rb'
+
+# Offense count: 3
+# Configuration parameters: AllowedPatterns.
+# AllowedPatterns: ^expect_, ^assert_
+RSpec/NoExpectationExample:
+  Exclude:
+    - 'spec/features/creating_a_quadrant_stamp_primer_panel_plate_spec.rb'
+    - 'spec/models/state_changers_spec.rb'
+
+# Offense count: 2
+RSpec/OverwritingSetup:
+  Exclude:
+    - 'spec/features/creating_a_quadrant_stamp_primer_panel_plate_spec.rb'
+    - 'spec/models/presenters/stock_plate_presenter_with_info_spec.rb'
+
+# Offense count: 7
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: Strict, EnforcedStyle, AllowedExplicitMatchers.
+# SupportedStyles: inflected, explicit
+RSpec/PredicateMatcher:
+  Exclude:
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/presenters/tube_presenter_spec.rb'
+
+# Offense count: 13
+# This cop supports unsafe autocorrection (--autocorrect-all).
+RSpec/ReceiveMessages:
+  Exclude:
+    - 'spec/features/creating_a_plate_spec.rb'
+    - 'spec/models/concerns/labware_creators/donor_pooling_calculator_spec.rb'
+    - 'spec/models/labware_creators/common_file_handling/csv_file/row_base_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/sequencescape/api/v2/shared_examples.rb'
+
+# Offense count: 4
+RSpec/RepeatedDescription:
+  Exclude:
+    - 'spec/lib/config_loader/pipelines_loader_spec.rb'
+    - 'spec/models/print_job_spec.rb'
+
+# Offense count: 4
+RSpec/RepeatedExampleGroupBody:
+  Exclude:
+    - 'spec/models/labware_creators/tagged_plate_spec.rb'
+
+# Offense count: 6
+RSpec/RepeatedExampleGroupDescription:
+  Exclude:
+    - 'spec/models/export_spec.rb'
+    - 'spec/models/labware_creators/final_tube_spec.rb'
+    - 'spec/models/robots/robot_spec.rb'
+
+# Offense count: 12
+# Configuration parameters: Include, CustomTransform, IgnoreMethods, IgnoreMetadata.
+# Include: **/*_spec.rb
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - 'spec/controllers/searches_controller_spec.rb'
+    - 'spec/models/labels/plate_384_single_label_spec.rb'
+    - 'spec/models/labels/plate_label_96_lysate_spec.rb'
+    - 'spec/models/plate_walking_spec.rb'
+    - 'spec/models/presenters/banking_plate_presenter_spec.rb'
+    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
+    - 'spec/models/presenters/rvi_cnda_xp_presenter_spec.rb'
+    - 'spec/models/presenters/simple_tube_spec.rb'
+    - 'spec/models/presenters/tag_plate_384_presenter_spec.rb'
+    - 'spec/models/state_changers_spec.rb'
+    - 'spec/models/tube_rack_walking_spec.rb'
+    - 'spec/sequencescape/api/v2/v2_spec.rb'
+
+# Offense count: 1
+# Configuration parameters: Include.
+# Include: **/*_spec*rb*, **/spec/**/*
+RSpec/SpecFilePathSuffix:
+  Exclude:
+    - 'spec/lib/labware_barcode.rb'
+
+# Offense count: 32
+RSpec/StubbedMock:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/tube_creation_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/shared_examples.rb'
+    - 'spec/models/labware_metadata_spec.rb'
+    - 'spec/models/presenters/standard_presenter_spec.rb'
+    - 'spec/sequencescape/api/v2/plate_spec.rb'
+    - 'spec/support/api_url_helper.rb'
+
+# Offense count: 39
+RSpec/SubjectStub:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/models/labware_creators/common_file_handling/csv_file/row_base_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
+    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/labware_creators/pooled_wells_by_sample_in_groups_spec.rb'
+    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
+    - 'spec/sequencescape/api/v2/plate_spec.rb'
+
+# Offense count: 14
+# Configuration parameters: EnforcedStyle, AllowedPatterns.
+# SupportedStyles: snake_case, camelCase
+RSpec/VariableName:
+  Exclude:
+    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_duplex_seq_spec.rb'
+
+# Offense count: 7
+# This cop supports unsafe autocorrection (--autocorrect-all).
+RSpec/VerifiedDoubleReference:
+  Exclude:
+    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
+    - 'spec/models/print_job_spec.rb'
+    - 'spec/sequencescape/api/v2/plate_spec.rb'
+
+# Offense count: 33
+# Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
+RSpec/VerifiedDoubles:
+  Exclude:
+    - 'spec/controllers/concerns/exports_filename_behaviour_spec.rb'
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/features/creating_a_plate_spec.rb'
+    - 'spec/features/creating_plate_with_bait_spec.rb'
+    - 'spec/models/labels/plate_label_xp_base_spec.rb'
+    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
+    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
+    - 'spec/models/presenters/plate_presenter_spec.rb'
+    - 'spec/sequencescape/api/v2/plate_spec.rb'
+    - 'spec/sequencescape/api/v2/shared_examples.rb'
+    - 'spec/sequencescape/api/v2/v2_spec.rb'
+    - 'spec/support/api_url_helper.rb'
+
+# Offense count: 29
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: Inferences.
+RSpecRails/InferredSpecType:
+  Exclude:
+    - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/pipeline_work_in_progress_controller_spec.rb'
+    - 'spec/controllers/plates/work_completions_controller_spec.rb'
+    - 'spec/controllers/plates_controller_spec.rb'
+    - 'spec/controllers/print_jobs_controller_spec.rb'
+    - 'spec/controllers/qc_files_controller_spec.rb'
+    - 'spec/controllers/robots_controller_spec.rb'
+    - 'spec/controllers/searches_controller_spec.rb'
+    - 'spec/controllers/sequencescape_submissions_controller_spec.rb'
+    - 'spec/controllers/tube_creation_controller_spec.rb'
+    - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
+    - 'spec/controllers/tubes/work_completions_controller_spec.rb'
+    - 'spec/controllers/tubes_controller_spec.rb'
+    - 'spec/helpers/search_helper_spec.rb'
+    - 'spec/models/labels/plate_384_single_label_spec.rb'
+    - 'spec/models/labels/plate_double_label_spec.rb'
+    - 'spec/models/labels/plate_label_96_lysate_spec.rb'
+    - 'spec/models/labels/plate_label_base_spec.rb'
+    - 'spec/models/labels/plate_label_cellaca_qc_spec.rb'
+    - 'spec/models/labels/plate_label_human_barcode_spec.rb'
+    - 'spec/models/labels/plate_label_quad_qc_spec.rb'
+    - 'spec/models/labels/plate_label_xp_base_spec.rb'
+    - 'spec/models/labels/tube_label_spec.rb'
+    - 'spec/models/labels/tube_label_traction_compatible_spec.rb'
+    - 'spec/models/labels/tube_rack_label_spec.rb'
+    - 'spec/models/presenters/presenter_spec.rb'
+    - 'spec/views/exports/cellaca_input_file.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_bank_to_cellaca_common.csv.erb_spec.rb'
+    - 'spec/views/exports/pbmc_bank_tubes_content_report.csv.erb_spec.rb'
+
+# Offense count: 2
+# This cop supports unsafe autocorrection (--autocorrect-all).
+RSpecRails/TravelAround:
+  Exclude:
+    - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
+    - 'spec/models/presenters/submission_plate_presenter_spec.rb'
+
+# Offense count: 1
+# Configuration parameters: AllowedConstants.
+Style/Documentation:
+  Exclude:
+    - 'spec/factories/strategies/api_strategy.rb'
+    - 'spec/factories/strategies/associated_strategy.rb'
+    - 'spec/factories/strategies/json_strategy.rb'
+    - 'spec/sequencescape/api/v2/tube_spec.rb'
+    - 'spec/support/api_url_helper.rb'
+    - 'spec/support/api_url_helper.rb'
+    - 'spec/support/contract_helper.rb'
+    - 'spec/support/contract_helper.rb'
+    - 'spec/support/contract_helper.rb'
+    - 'spec/support/factory_bot_extensions.rb'
+    - 'spec/support/feature_helpers.rb'
+    - 'spec/support/json_renderers.rb'
+    - 'spec/support/robot_helpers.rb'
+    - 'spec/support/test_form_class.rb'
 
 # Offense count: 5
 # Configuration parameters: Max.

@@ -27,7 +27,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
 
   describe '#all_latest_qc' do
     it 'gives all the latest results back for each key' do
-      expect(receptacle.all_latest_qc).to match_array [later_molarity, volume]
+      expect(receptacle.all_latest_qc).to contain_exactly(later_molarity, volume)
     end
 
     context 'no qc results' do

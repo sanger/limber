@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Creating a quadrant stamp primer panel plate', js: true do
+RSpec.feature 'Creating a quadrant stamp primer panel plate', :js do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }

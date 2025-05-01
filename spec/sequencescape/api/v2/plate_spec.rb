@@ -5,6 +5,7 @@ require_relative 'shared_examples'
 
 RSpec.describe Sequencescape::Api::V2::Plate do
   subject(:plate) { create :v2_plate, barcode_number: 12_345 }
+
   let(:the_labware) { plate }
 
   it { is_expected.to be_plate }
@@ -30,6 +31,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
     context 'when a stock_plate' do
       before { expect(plate).to receive(:stock_plate?).and_return(true) }
+
       it 'returns itself' do
         expect(plate.stock_plate).to eq(plate)
       end
@@ -64,6 +66,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
     it 'returns a LabwareBarcode' do
       expect(plate.labware_barcode).to be_a LabwareBarcode
     end
+
     it 'has the correct values' do
       expect(plate.labware_barcode.human).to eq('DN12345U')
       expect(plate.labware_barcode.machine).to eq('DN12345U')
@@ -100,9 +103,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
           'Content-Type' => 'application/vnd.api+json'
         }
       ).to_return(File.new('./spec/contracts/v2-plate-by-uuid-for-presenter.txt'))
-      expect(
-        Sequencescape::Api::V2::Plate.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')
-      ).to be_a Sequencescape::Api::V2::Plate
+      expect(described_class.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')).to be_a described_class
     end
   end
 

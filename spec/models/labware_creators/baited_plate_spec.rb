@@ -4,9 +4,9 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::BaitedPlate do
-  it_behaves_like 'it only allows creation from plates'
+  subject { described_class.new(api, form_attributes) }
 
-  subject { LabwareCreators::BaitedPlate.new(api, form_attributes) }
+  it_behaves_like 'it only allows creation from plates'
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
@@ -30,8 +30,8 @@ RSpec.describe LabwareCreators::BaitedPlate do
     end
   end
 
-  it 'should have page' do
-    expect(LabwareCreators::BaitedPlate.page).to eq 'baited_plate'
+  it 'has page' do
+    expect(described_class.page).to eq 'baited_plate'
   end
 
   context 'create plate' do
@@ -49,7 +49,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
       stub_api_v2_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
     end
 
-    it 'should make an api call for bait library layout preview' do
+    it 'makes an api call for bait library layout preview' do
       bait_library_layout_preview = {
         'A1' => 'Human all exon 50MB',
         'B1' => 'Human all exon 50MB',
@@ -59,11 +59,11 @@ RSpec.describe LabwareCreators::BaitedPlate do
       expect(subject.bait_library_layout_preview).to eq bait_library_layout_preview
     end
 
-    it 'should create objects' do
+    it 'creates objects' do
       expect_plate_creation
       expect_transfer_request_collection_creation
 
-      expect(subject.create_labware!).to eq true
+      expect(subject.create_labware!).to be true
     end
   end
 end

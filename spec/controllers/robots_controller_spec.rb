@@ -3,7 +3,7 @@
 require 'rails_helper'
 require './app/controllers/robots_controller'
 
-RSpec.describe RobotsController, type: :controller, robots: true do
+RSpec.describe RobotsController, :robots, type: :controller do
   has_a_working_api
 
   include FeatureHelpers
@@ -32,7 +32,7 @@ RSpec.describe RobotsController, type: :controller, robots: true do
       ]
     end
 
-    setup do
+    before do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
       create :purpose_config, uuid: 'target_plate_purpose_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
       stub_v2_user(user)

@@ -8,11 +8,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   has_a_working_api
 
-  it_behaves_like 'it only allows creation from plates'
-
   subject { described_class.new(api, form_attributes) }
 
-  it 'should have a custom page' do
+  it_behaves_like 'it only allows creation from plates'
+
+  it 'has a custom page' do
     expect(described_class.page).to eq 'plate_split_to_tube_racks'
   end
 
@@ -357,7 +357,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PlateSplitToTubeRacks
+      expect(subject).to be_a described_class
     end
   end
 
@@ -581,8 +581,16 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#check_tube_rack_barcodes_differ_between_files' do
-    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
+  describe '#check_tube_rack_barcodes_differ_between_files' do
+    before do
+      stub_v2_plate(
+        parent_plate,
+        stub_search: false,
+        custom_includes:
+          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
+            'wells.downstream_tubes.custom_metadatum_collection'
+      )
+    end
 
     context 'when files are not present' do
       before { subject.validate }
@@ -691,8 +699,16 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#check_tube_barcodes_differ_between_files' do
-    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
+  describe '#check_tube_barcodes_differ_between_files' do
+    before do
+      stub_v2_plate(
+        parent_plate,
+        stub_search: false,
+        custom_includes:
+          'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
+            'wells.downstream_tubes.custom_metadatum_collection'
+      )
+    end
 
     context 'when files are not present' do
       before { subject.validate }
@@ -785,7 +801,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#check_tube_rack_scan_file' do
+  describe '#check_tube_rack_scan_file' do
     let(:tube_rack_file) { double('tube_rack_file') } # don't need an actual file for this test
     let(:tube_posn) { 'A1' }
     let(:foreign_barcode) { '123456' }
@@ -821,7 +837,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#save' do
+  describe '#save' do
     # body for stubbing the contingency file upload
     let(:contingency_file_contents) do
       content = contingency_file.read

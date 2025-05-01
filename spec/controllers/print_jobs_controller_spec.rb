@@ -29,7 +29,7 @@ RSpec.describe PrintJobsController, type: :controller do
       post :create, params: params, format: :json
 
       assert assigns(:print_job)
-      assert_equal 'Your label(s) have been sent to tube printer 1', flash.notice
+      expect(flash.notice).to eq('Your label(s) have been sent to tube printer 1')
     end
   end
 end
