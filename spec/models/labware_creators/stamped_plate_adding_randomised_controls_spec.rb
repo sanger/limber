@@ -384,11 +384,13 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   describe '#create_control_sample_name' do
     let(:plate_size) { 96 }
-    let(:control) { double('Control', name_prefix: 'CONTROL_POS_') } # Replace OpenStruct with a test double
+    let(:control) { instance_double('Control', name_prefix: 'CONTROL_POS_') }
     let(:well_location) { 'B5' }
     let(:child_barcode) { 'CHILD-12345' }
 
     before do
+      RSpec::Mocks.configuration.allow_message_expectations_on_nil = true
+      # subject.@child is created at initialisation, so is expected to be nil at this point - therefore allow it
       allow(subject.instance_variable_get(:@child)).to receive_message_chain(:labware_barcode, :human).and_return(
         child_barcode
       )
@@ -401,9 +403,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     it 'includes the control name prefix, child barcode, and well location' do
       sample_name = subject.send(:create_control_sample_name, control, well_location)
-      expect(sample_name).to include(control.name_prefix)
-      expect(sample_name).to include(child_barcode)
-      expect(sample_name).to include(well_location)
+      expect(sample_name).to include(control.name_prefix, child_barcode, well_location)
     end
   end
 end
