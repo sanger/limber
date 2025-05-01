@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe ExportsHelper do
-  include ExportsHelper
+  include described_class
 
   describe '#each_source_metadata_for_plate' do
     let(:ancestor_plate_barcode) { 'ANCESTOR_PLATE' }
@@ -126,11 +126,13 @@ RSpec.describe ExportsHelper do
 
     context 'when a basic single sample well' do
       let(:well) { create :v2_well }
+
       it { is_expected.to eq 1 }
     end
 
     context 'when a basic multi sample well' do
       let(:well) { create :v2_well, aliquot_count: 3 }
+
       it { is_expected.to eq 3 }
     end
 
@@ -139,6 +141,7 @@ RSpec.describe ExportsHelper do
       let(:aliquot2) { create :v2_aliquot }
       let(:well) { create(:v2_well, aliquots: [aliquot1, aliquot2]) }
       let(:aliquot_count) { 2 }
+
       it { is_expected.to eq aliquot_count }
     end
   end

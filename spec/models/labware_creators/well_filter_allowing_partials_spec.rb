@@ -83,6 +83,8 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
     context 'when a state filter is applied' do
       context 'with a valid filter' do
+        subject { described_class.new(creator: labware_creator, request_state: 'started') }
+
         let(:request_a) do
           create :library_request,
                  state: 'started',
@@ -90,8 +92,6 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
                  uuid: 'request-0',
                  library_type: library_type_name_a
         end
-
-        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_state: 'started') }
 
         it 'returns the correct wells' do
           expect(subject.filtered.count).to eq(1)
@@ -110,12 +110,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with a valid filter for some wells' do
-        subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_a
-          )
-        end
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'returns the expected wells' do
           expect(subject.filtered.count).to eq(2)
@@ -148,12 +143,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with a valid filter for all wells' do
-        subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_a
-          )
-        end
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'returns all the wells' do
           expect(subject.filtered.count).to eq(4)
@@ -162,12 +152,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with a valid filter for a partial subset of the wells' do
-        subject do
-          LabwareCreators::WellFilterAllowingPartials.new(
-            creator: labware_creator,
-            request_type_key: request_type_key_b
-          )
-        end
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_b) }
 
         # this represents a partial submission of wells on the plate
         it 'returns the expected wells' do
@@ -178,7 +163,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with an invalid filter' do
-        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_type_key: 'rt_c') }
+        subject { described_class.new(creator: labware_creator, request_type_key: 'rt_c') }
 
         # up to the creator to catch the situation where the filter returns no wells as a validation check
         it 'returns no wells' do
