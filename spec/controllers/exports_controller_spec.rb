@@ -252,50 +252,50 @@ RSpec.describe ExportsController, type: :controller do
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_dil_1_to_lrc_gem_x_5p_bcr_enrich1_2xspri.csv' do
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_dil_1_to_lrc_gem_x_5p_bcr_enrich1_2xspri' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_dil_1_to_lrc_gemx_5p_bcr_enrich1.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_dil_1_to_lrc_gemx_5p_bcr_enrich1' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_enrich1_2xspri_to_lrc_gem_x_5p_bcr_enrich2_2xspri.csv' do # rubocop:disable Layout/LineLength
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_enrich1_2xspri_to_lrc_gem_x_5p_bcr_enrich2_2xspri' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_enrich1_to_lrc_gemx_5p_bcr_enrich2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_enrich1_to_lrc_gemx_5p_bcr_enrich2' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2.csv' do
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_enrich2_2xspri_to_lrc_gem_x_5p_bcr_dil_2' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_enrich2_to_lrc_gemx_5p_bcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_enrich2_to_lrc_gemx_5p_bcr_dil_2' }
 
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_bcr_dil_2_to_lrc_gem_x_5p_bcr_post_lig_1xspri.csv' do
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_bcr_dil_2_to_lrc_gem_x_5p_bcr_post_lig_1xspri' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_dil_2_to_lrc_gemx_5p_bcr_post_lig.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_dil_2_to_lrc_gemx_5p_bcr_post_lig' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_dil_1_to_lrc_gem_x_5p_tcr_enrich1_2xspri.csv' do
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_dil_1_to_lrc_gem_x_5p_tcr_enrich1_2xspri' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_dil_1_to_lrc_gemx_5p_tcr_enrich1.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_dil_1_to_lrc_gemx_5p_tcr_enrich1' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_enrich1_2xspri_to_lrc_gem_x_5p_tcr_enrich2_2xspri.csv' do # rubocop:disable Layout/LineLength
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_enrich1_2xspri_to_lrc_gem_x_5p_tcr_enrich2_2xspri' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_enrich1_to_lrc_gemx_5p_tcr_enrich2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_enrich1_to_lrc_gemx_5p_tcr_enrich2' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2.csv' do
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_enrich2_to_lrc_gemx_5p_tcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_enrich2_to_lrc_gemx_5p_tcr_dil_2' }
 
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
 
-      context 'where csv id requested is hamilton_lrc_gem_x_5p_tcr_dil_2_to_lrc_gem_x_5p_tcr_post_lig_1xspri.csv' do
-        let(:csv_id) { 'hamilton_lrc_gem_x_5p_tcr_dil_2_to_lrc_gem_x_5p_tcr_post_lig_1xspri' }
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig' }
 
         it_behaves_like 'a hamilton plate stamp view'
       end

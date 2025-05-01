@@ -15,12 +15,12 @@ LRC GEM-X 5p TCR Enrich1 2XSPRI:
   :asset_type: plate
   :file_links:
     - name: 'Download Hamilton LRC GEM-X 5p TCR Dil 1 to LRC GEM-X 5p TCR Enrich1 2XSPRI CSV'
-      id: 'hamilton_lrc_gem_x_5p_tcr_dil_1_to_lrc_gem_x_5p_tcr_enrich1_2xspri'
+      id: 'hamilton_lrc_gemx_5p_tcr_dil_1_to_lrc_gemx_5p_tcr_enrich1'
 LRC GEM-X 5p TCR Enrich2 2XSPRI:
   :asset_type: plate
   :file_links:
     - name: 'Download Hamilton LRC GEM-X 5p TCR Enrich1 2XSPRI to LRC GEM-X 5p TCR Enrich2 2XSPRI CSV'
-      id: 'hamilton_lrc_gem_x_5p_tcr_enrich1_2xspri_to_lrc_gem_x_5p_tcr_enrich2_2xspri'
+      id: 'hamilton_lrc_gemx_5p_tcr_enrich1_to_lrc_gemx_5p_tcr_enrich2'
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
 LRC GEM-X 5p TCR Dil 2:
@@ -51,7 +51,7 @@ LRC GEM-X 5p TCR Dil 2:
         colour: 5
   :file_links:
     - name: 'Download Hamilton LRC GEM-X 5p TCR Enrich2 2XSPRI to LRC GEM-X 5p TCR Dil 2 CSV'
-      id: 'hamilton_lrc_gem_x_5p_tcr_enrich2_2xspri_to_lrc_gem_x_5p_tcr_dil_2'
+      id: 'hamilton_lrc_gemx_5p_tcr_enrich2_to_lrc_gemx_5p_tcr_dil_2'
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
 LRC GEM-X 5p TCR Post Lig 1XSPRI:
@@ -61,7 +61,7 @@ LRC GEM-X 5p TCR Post Lig 1XSPRI:
   :tags_per_well: 1
   :file_links:
     - name: 'Download Hamilton LRC GEM-X 5p TCR Dil 2 to LRC GEM-X 5p TCR Post Lig 1XSPRI CSV'
-      id: 'hamilton_lrc_gem_x_5p_tcr_dil_2_to_lrc_gem_x_5p_tcr_post_lig_1xspri'
+      id: 'hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig'
 LRC GEM-X 5p TCR Post PCR:
   :asset_type: plate
   :file_links:

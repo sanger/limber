@@ -4374,6 +4374,25 @@ ROBOT_CONFIG =
       }
     )
 
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-bcr-post-lig-1xspir-to-lrc-gem-x-5p-bcr-post-pcr',
+      name: 'hamilton LRC GEM-X 5p BCR Post Lig 1XSPRI => LRC GEM-X 5p BCR Post PCR',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Post Lig 1XSPRI',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(10).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Post PCR',
+          states: ['pending'],
+          label: 'Bed 10',
+          target_state: 'passed',
+          parent: bed(7).barcode
+        }
+      }
+    )
+
     # scRNA Core pipeline
     # scRNA core library prep chromium bespoke TCR
     custom_robot(
@@ -4467,6 +4486,25 @@ ROBOT_CONFIG =
           label: 'Bed 3',
           target_state: 'passed',
           parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-post-lig-1xspir-to-lrc-gem-x-5p-tcr-post-pcr',
+      name: 'hamilton LRC GEM-X 5p TCR Post Lig 1XSPRI => LRC GEM-X 5p TCR Post PCR',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Post Lig 1XSPRI',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(10).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Post PCR',
+          states: ['pending'],
+          label: 'Bed 10',
+          target_state: 'passed',
+          parent: bed(7).barcode
         }
       }
     )
