@@ -898,24 +898,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       )
     end
 
-    before do
-      stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes)
-
-      # stub the contingency file upload
-      stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-        body: contingency_file_content,
-        headers: {
-          'Content-Type' => 'sequencescape/qc_file',
-          'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
-        }
-      ).to_return(
-        status: 201,
-        body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-        headers: {
-          'content-type' => 'application/json'
-        }
-      )
-    end
+    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'with both sequencing and contingency files' do
       let(:form_attributes) do
@@ -997,7 +980,24 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      before { stub_v2_user(user) }
+      before do
+        stub_v2_user(user)
+
+        # stub the contingency file upload
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+          body: contingency_file_content,
+          headers: {
+            'Content-Type' => 'sequencescape/qc_file',
+            'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
+          }
+        ).to_return(
+          status: 201,
+          body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
+          headers: {
+            'content-type' => 'application/json'
+          }
+        )
+      end
 
       it 'creates the child tubes' do
         child_tube_racks = [sequencing_tube_rack, contingency_tube_rack]
