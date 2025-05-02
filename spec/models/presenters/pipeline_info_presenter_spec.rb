@@ -465,6 +465,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             expect(presenter.pipeline_groups).to eq(['Group C1 Branching'])
           end
         end
+
         context 'when inspecting the labware-other-child' do
           let(:labware) { labware_other_child }
 
