@@ -332,6 +332,147 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           end
         end
       end
+
+      context 'when it is a combining, chained, and branching config' do
+        before do
+          allow(Settings.pipelines).to receive(:list).and_return(
+            # purpose-parent    purpose-other-parent
+            #       \ A1                  / A2
+            #       purpose-combining-child
+            #                  | B
+            #       purpose-branching-parent
+            #        / C1                 \ C2
+            # purpose-child         purpose-other-child
+            [
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group A1 Combined',
+                relationships: {
+                  'purpose-parent' => 'purpose-combining-child'
+                },
+                filters: {
+                }
+              ),
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group A2 Combined',
+                relationships: {
+                  'purpose-other-parent' => 'purpose-combining-child'
+                },
+                filters: {
+                }
+              ),
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group B Chained',
+                relationships: {
+                  'purpose-combining-child' => 'purpose-branching-parent'
+                },
+                filters: {
+                }
+              ),
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group C1 Branching',
+                relationships: {
+                  'purpose-branching-parent' => 'purpose-child'
+                },
+                filters: {
+                }
+              ),
+              instance_double(
+                Pipeline,
+                pipeline_group: 'Group C2 Branching',
+                relationships: {
+                  'purpose-branching-parent' => 'purpose-other-child'
+                },
+                filters: {
+                }
+              )
+            ]
+          )
+        end
+
+        let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
+        let(:purpose_branching_parent) { create(:v2_purpose, name: 'purpose-branching-parent') }
+
+        let(:labware_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
+        let(:labware_other_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_parent) }
+        let(:labware_combining_child) do
+          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_combining_child, ancestors: [labware_parent])
+        end
+        let(:labware_branching_parent) do
+          create(
+            :v2_stock_plate,
+            :has_pooling_metadata,
+            purpose: purpose_branching_parent,
+            ancestors: [labware_combining_child, labware_other_parent]
+          )
+        end
+        let(:labware_child) do
+          create(
+            :v2_stock_plate,
+            :has_pooling_metadata,
+            purpose: purpose_child,
+            ancestors: [labware_branching_parent, labware_combining_child, labware_parent]
+          )
+        end
+        let(:labware_other_child) do
+          create(
+            :v2_stock_plate,
+            :has_pooling_metadata,
+            purpose: purpose_other_child,
+            ancestors: [labware_branching_parent, labware_combining_child, labware_other_parent]
+          )
+        end
+
+        context 'when inspecting the labware-parent' do
+          let(:labware) { labware_parent }
+
+          it 'returns the correct pipeline group for the labware-parent' do
+            expect(presenter.pipeline_groups).to eq(['Group A1 Combined'])
+          end
+        end
+
+        context 'when inspecting the labware-other-parent' do
+          let(:labware) { labware_other_parent }
+
+          it 'returns the correct pipeline group for the labware-other-parent' do
+            expect(presenter.pipeline_groups).to eq(['Group A2 Combined'])
+          end
+        end
+
+        context 'when inspecting the labware-combining-child' do
+          let(:labware) { labware_combining_child }
+
+          it 'returns the correct pipeline group for the labware-combining-child' do
+            expect(presenter.pipeline_groups).to eq(['Group A1 Combined'])
+          end
+        end
+
+        context 'when inspecting the labware-branching-parent' do
+          let(:labware) { labware_branching_parent }
+
+          it 'returns the correct pipeline group for the labware-branching-parent' do
+            expect(presenter.pipeline_groups).to eq(['Group A2 Combined', 'Group B Chained'])
+          end
+        end
+
+        context 'when inspecting the labware-child' do
+          let(:labware) { labware_child }
+
+          it 'returns the correct pipeline group for the labware-child' do
+            expect(presenter.pipeline_groups).to eq(['Group C1 Branching'])
+          end
+        end
+        context 'when inspecting the labware-other-child' do
+          let(:labware) { labware_other_child }
+
+          it 'returns the correct pipeline group for the labware-other-child' do
+            expect(presenter.pipeline_groups).to eq(['Group C2 Branching'])
+          end
+        end
+      end
     end
   end
 
