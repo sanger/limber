@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::BaitedPlate do
-  subject { LabwareCreators::BaitedPlate.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
@@ -31,7 +31,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
   end
 
   it 'has page' do
-    expect(LabwareCreators::BaitedPlate.page).to eq 'baited_plate'
+    expect(described_class.page).to eq 'baited_plate'
   end
 
   context 'create plate' do
@@ -63,7 +63,7 @@ RSpec.describe LabwareCreators::BaitedPlate do
       expect_plate_creation
       expect_transfer_request_collection_creation
 
-      expect(subject.create_labware!).to eq true
+      expect(subject.create_labware!).to be true
     end
   end
 end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::Bed::PlateToTubeRacksBed, type: :model do
+RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   # user
   subject { described_class.new }
 
@@ -99,8 +99,7 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed, type: :model do
     stub_v2_tube(tube1)
     stub_v2_tube(tube2)
 
-    allow(subject).to receive(:labware).and_return(tube_rack)
-    allow(subject).to receive(:user_uuid).and_return(user_uuid)
+    allow(subject).to receive_messages(labware: tube_rack, user_uuid: user_uuid)
   end
 
   describe '#labware_created_with_robot' do

@@ -14,7 +14,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
     let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: [aliquot]) }
     let(:labware) { create :v2_plate, wells: [well_c6] }
 
-    let(:label) { Labels::PlateLabel96Lysate.new(labware) }
+    let(:label) { described_class.new(labware) }
 
     describe '#attributes' do
       it 'has the correct attributes' do
@@ -60,7 +60,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
         it 'creates a label without the partner id shown' do
           additional_label_definitions = label.additional_label_definitions[0]
           expect(additional_label_definitions[:bottom_right]).to eq expected_message
-          expect(additional_label_definitions[:barcode]).to eq nil
+          expect(additional_label_definitions[:barcode]).to be_nil
         end
       end
 

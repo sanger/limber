@@ -5,7 +5,7 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
-  subject { LabwareCreators::TaggedPlate.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
@@ -49,7 +49,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::TaggedPlate
+      expect(subject).to be_a described_class
     end
 
     it 'describes the parent barcode' do
@@ -200,7 +200,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
       it_behaves_like 'it has a custom page', 'tagged_plate'
 
       it 'can be created' do
-        expect(subject).to be_a LabwareCreators::TaggedPlate
+        expect(subject).to be_a described_class
       end
 
       context 'on save' do

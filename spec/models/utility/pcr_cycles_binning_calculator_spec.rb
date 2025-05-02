@@ -5,7 +5,7 @@ require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::PcrCyclesBinningCalculator do
   context 'when computing values for pcr cycles binning' do
-    subject { Utility::PcrCyclesBinningCalculator.new(well_details) }
+    subject { described_class.new(well_details) }
 
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }

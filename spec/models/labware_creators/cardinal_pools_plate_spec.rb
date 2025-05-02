@@ -9,7 +9,7 @@ require 'spec_helper'
 RSpec.describe LabwareCreators::CardinalPoolsPlate, :cardinal do
   has_a_working_api
 
-  subject { LabwareCreators::CardinalPoolsPlate.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   let(:dest_purpose_uuid) { 'dest-purpose' }
   let(:parent_uuid) { 'example-parent-uuid' }
@@ -47,7 +47,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, :cardinal do
 
   context 'on new' do
     it 'can be initialised' do
-      expect(subject).to be_a LabwareCreators::CardinalPoolsPlate
+      expect(subject).to be_a described_class
     end
 
     it 'has the config loaded' do

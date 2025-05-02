@@ -15,11 +15,11 @@ RSpec.describe LabwareMetadata do
     invalid_barcode = 'not_a_barcode'
     allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode: invalid_barcode).and_raise(error)
 
-    expect { LabwareMetadata.new(barcode: invalid_barcode, user_uuid: user.uuid) }.to raise_error(error)
+    expect { described_class.new(barcode: invalid_barcode, user_uuid: user.uuid) }.to raise_error(error)
   end
 
   it 'raises an exception if both labware and barcode are nil' do
-    expect { LabwareMetadata.new }.to raise_error(ArgumentError)
+    expect { described_class.new }.to raise_error(ArgumentError)
   end
 
   context 'plates' do
@@ -37,14 +37,14 @@ RSpec.describe LabwareMetadata do
       it 'creates metadata' do
         expect_custom_metadatum_collection_creation
 
-        LabwareMetadata.new(labware: plate, user_uuid: user.uuid).update!(updated_metadata)
+        described_class.new(labware: plate, user_uuid: user.uuid).update!(updated_metadata)
       end
 
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(plate_with_metadata.custom_metadatum_collection).to receive(:update!).with(metadata:).and_return(true)
 
-        LabwareMetadata.new(labware: plate_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
+        described_class.new(labware: plate_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
       end
     end
 
@@ -52,14 +52,14 @@ RSpec.describe LabwareMetadata do
       it 'creates metadata' do
         expect_custom_metadatum_collection_creation
 
-        LabwareMetadata.new(barcode: plate.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
+        described_class.new(barcode: plate.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
       end
 
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(plate_with_metadata.custom_metadatum_collection).to receive(:update!).with(metadata:).and_return(true)
 
-        LabwareMetadata.new(barcode: plate_with_metadata.barcode.machine, user_uuid: user.uuid).update!(
+        described_class.new(barcode: plate_with_metadata.barcode.machine, user_uuid: user.uuid).update!(
           updated_metadata
         )
       end
@@ -81,14 +81,14 @@ RSpec.describe LabwareMetadata do
       it 'creates metadata' do
         expect_custom_metadatum_collection_creation
 
-        LabwareMetadata.new(labware: tube, user_uuid: user.uuid).update!(updated_metadata)
+        described_class.new(labware: tube, user_uuid: user.uuid).update!(updated_metadata)
       end
 
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(tube_with_metadata.custom_metadatum_collection).to receive(:update!).with(metadata:).and_return(true)
 
-        LabwareMetadata.new(labware: tube_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
+        described_class.new(labware: tube_with_metadata, user_uuid: user.uuid).update!(updated_metadata)
       end
     end
 
@@ -96,14 +96,14 @@ RSpec.describe LabwareMetadata do
       it 'creates metadata' do
         expect_custom_metadatum_collection_creation
 
-        LabwareMetadata.new(barcode: tube.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
+        described_class.new(barcode: tube.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
       end
 
       it 'updates metadata' do
         metadata = attributes_for(:custom_metadatum_collection).fetch(:metadata, {}).merge(updated_metadata)
         expect(tube_with_metadata.custom_metadatum_collection).to receive(:update!).with(metadata:).and_return(true)
 
-        LabwareMetadata.new(barcode: tube_with_metadata.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
+        described_class.new(barcode: tube_with_metadata.barcode.machine, user_uuid: user.uuid).update!(updated_metadata)
       end
     end
   end

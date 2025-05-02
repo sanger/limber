@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe TubeRackHelper do
-  include TubeRackHelper
+  include described_class
 
   describe '::racked_tube_tooltip' do
     let(:tube) { build(:v2_tube, name: 'tube-name', labware_barcode: 'tube-barcode') }

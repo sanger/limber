@@ -5,7 +5,7 @@ require_relative 'shared_examples'
 
 # Uses a custom transfer template to transfer material into the new plate
 RSpec.describe LabwareCreators::MergedPlate do
-  subject { LabwareCreators::MergedPlate.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has a custom page', 'merged_plate'
@@ -102,7 +102,7 @@ RSpec.describe LabwareCreators::MergedPlate do
         expect_transfer_request_collection_creation
 
         expect(subject).to be_valid
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
     end
   end
@@ -269,7 +269,7 @@ RSpec.describe LabwareCreators::MergedPlate do
     end
 
     it 'is invalid' do
-      expect(subject.valid?).to eq false
+      expect(subject.valid?).to be false
     end
   end
 
@@ -300,7 +300,7 @@ RSpec.describe LabwareCreators::MergedPlate do
     end
 
     it 'is invalid' do
-      expect(subject.valid?).to eq false
+      expect(subject.valid?).to be false
     end
   end
 
@@ -341,7 +341,7 @@ RSpec.describe LabwareCreators::MergedPlate do
     end
 
     it 'is invalid' do
-      expect(subject.valid?).to eq false
+      expect(subject.valid?).to be false
     end
   end
 end

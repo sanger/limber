@@ -34,7 +34,7 @@ RSpec.describe StateChangers do
 
   describe StateChangers::PlateStateChanger do
     has_a_working_api
-    subject { StateChangers::PlateStateChanger.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
 
@@ -81,7 +81,7 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::AutomaticPlateStateChanger do
-    subject { StateChangers::AutomaticPlateStateChanger.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
 
@@ -149,7 +149,7 @@ RSpec.describe StateChangers do
   describe StateChangers::TubeRackStateChanger do
     has_a_working_api
 
-    subject { StateChangers::TubeRackStateChanger.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(api, labware_uuid, user_uuid) }
 
     let(:tube_starting_state) { 'pending' }
     let(:tube_failed_state) { 'failed' }
@@ -217,7 +217,7 @@ RSpec.describe StateChangers do
 
   describe StateChangers::TubeStateChanger do
     has_a_working_api
-    subject { StateChangers::TubeStateChanger.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
 

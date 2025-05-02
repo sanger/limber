@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe ExportsHelper do
-  include ExportsHelper
+  include described_class
 
   describe '#each_source_metadata_for_plate' do
     let(:ancestor_plate_barcode) { 'ANCESTOR_PLATE' }

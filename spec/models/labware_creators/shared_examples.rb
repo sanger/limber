@@ -275,7 +275,7 @@ RSpec.shared_examples 'a QC assaying plate creator' do
       expect_plate_creation
       expect_transfer_request_collection_creation
 
-      expect(subject.save!).to eq true
+      expect(subject.save!).to be true
     end
   end
 end

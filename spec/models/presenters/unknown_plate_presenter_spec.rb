@@ -14,7 +14,7 @@ RSpec.describe Presenters::UnknownPlatePresenter do
   end
 
   it 'prevents well failure' do
-    expect(subject.well_failing_applicable?).to eq false
+    expect(subject.well_failing_applicable?).to be false
   end
 
   context 'with a well request' do

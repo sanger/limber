@@ -9,7 +9,7 @@ RSpec.shared_examples 'a labware with a workline identifier' do
 
     it 'does not break if there is no workline reference' do
       allow(the_labware).to receive(:workline_reference).and_return(nil)
-      expect(the_labware.workline_identifier).to eq(nil)
+      expect(the_labware.workline_identifier).to be_nil
     end
   end
 

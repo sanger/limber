@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe TubeRacks::TubeRacksExportsController, type: :controller do
+RSpec.describe TubeRacks::TubeRacksExportsController do
   let(:tube_rack_qc_includes) { 'racked_tubes.tube.receptacle.qc_results' }
   let(:tube_rack_selects) { { 'sample_metadata' => %w[tube_rack_barcode] } }
   let(:labware_uuid) { SecureRandom.uuid }

@@ -7,7 +7,7 @@ RSpec.describe Labels::PlateLabelHumanBarcode, type: :model do
 
   context 'when creating the label of a plate with a human readable barcode' do
     let(:labware) { create :v2_plate }
-    let(:label) { Labels::PlateLabelHumanBarcode.new(labware) }
+    let(:label) { described_class.new(labware) }
 
     describe '#attributes' do
       it 'has the correct attributes' do

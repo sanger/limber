@@ -152,7 +152,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
     end
 
     it 'returns nil if the key is not configured' do
-      expect(presenter.value_for(invalid_qc)).to eq nil
+      expect(presenter.value_for(invalid_qc)).to be_nil
     end
   end
 end

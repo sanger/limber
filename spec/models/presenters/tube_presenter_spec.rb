@@ -4,7 +4,7 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::TubePresenter do
-  subject { Presenters::TubePresenter.new(labware:) }
+  subject { described_class.new(labware:) }
 
   let(:labware) do
     build :v2_tube,

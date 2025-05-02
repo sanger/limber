@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader do
-  subject { LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq.new(api, form_attributes) }
+  subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
@@ -294,7 +294,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq
+      expect(subject).to be_a described_class
     end
   end
 
@@ -467,7 +467,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         # on the requests to be called 14 times.
         expect(subject).to receive(:create_or_update_request_metadata).exactly(14).times
 
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
     end
 
@@ -801,7 +801,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         # on the requests to be called 10 times.
         expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
 
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
     end
 
@@ -1134,7 +1134,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         # on the requests to be called 10 times.
         expect(subject).to receive(:create_or_update_request_metadata).exactly(10).times
 
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
     end
 
@@ -1483,7 +1483,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
         # NB. because we're mocking the API call for the save of the request metadata we cannot
         # check the metadata values on the requests, only that the correct method was triggered.
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
 
       # Check that we cannot create the child plate whilst there are active requests on the parent plate

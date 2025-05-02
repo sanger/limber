@@ -7,7 +7,7 @@ RSpec.describe Labels::PlateLabelBase, type: :model do
 
   context 'when creating the label of a plate' do
     let(:labware) { create :v2_plate }
-    let(:label) { Labels::PlateLabelBase.new(labware) }
+    let(:label) { described_class.new(labware) }
 
     describe '#attributes' do
       it 'has the correct attributes' do

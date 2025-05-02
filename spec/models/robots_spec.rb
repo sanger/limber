@@ -12,7 +12,7 @@ RSpec.describe Robots, :robots do
   before { Settings.robots = settings[:robots] }
 
   describe '::find' do
-    subject { Robots.find(id: robot_id, api: api, user_uuid: user_uuid) }
+    subject { described_class.find(id: robot_id, api: api, user_uuid: user_uuid) }
 
     let(:user_uuid) { SecureRandom.uuid }
 
@@ -37,7 +37,7 @@ RSpec.describe Robots, :robots do
 
   describe '::each_robot' do
     it 'yields each robot name and id' do
-      expect { |b| Robots.each_robot(&b) }.to yield_successive_args(
+      expect { |b| described_class.each_robot(&b) }.to yield_successive_args(
         ['bravo-lb-end-prep', 'bravo LB End Prep'],
         ['bravo-lb-post-shear-to-lb-end-prep', 'bravo LB Post Shear => LB End Prep'],
         %w[grandparent_robot robot_name],

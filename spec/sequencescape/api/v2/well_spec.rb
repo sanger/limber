@@ -8,7 +8,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
 
     context 'with no control' do
       it 'returns false' do
-        expect(well.contains_control?).to eq(false)
+        expect(well.contains_control?).to be(false)
       end
     end
 
@@ -16,7 +16,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
       before { well.aliquots[0].sample.control = true }
 
       it 'returns true' do
-        expect(well.contains_control?).to eq(true)
+        expect(well.contains_control?).to be(true)
       end
     end
   end

@@ -37,7 +37,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::CustomPooledTubes
+      expect(subject).to be_a described_class
     end
   end
 

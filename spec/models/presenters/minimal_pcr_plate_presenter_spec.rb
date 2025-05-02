@@ -4,7 +4,7 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::MinimalPcrPlatePresenter do
-  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(labware:) }
+  subject(:presenter) { described_class.new(labware:) }
 
   let(:labware) do
     create :v2_plate_with_primer_panels,
