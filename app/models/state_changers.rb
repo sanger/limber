@@ -179,7 +179,6 @@ module StateChangers
     def labware
       @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
-
   end
 
   # The Plate State changer is used by the vast majority of plates. It creates
