@@ -99,6 +99,9 @@ RSpec/ExampleLength:
     - heredoc
     - method_call
 
+RSpec/IndexedLet:
+  Enabled: false # We have a lot of indexed lets in our specs, mostly based on wells or racked tubes
+
 RSpec/LetBeforeExamples:
   Enabled: false # It can be helpful to have the let variables just before the relevant example
 
