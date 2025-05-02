@@ -126,11 +126,11 @@ module StateChangers
     # @param reason [String, nil] the reason for the state change (optional)
     #
     # Iterates over the tubes and passes them individually.
-    def move_to!(state, reason = nil, _customer_accepts_responsibility = nil)
+    def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
       return if state.nil? || labware.nil? # We have nothing to do
       Sequencescape::Api::V2::StateChange.create!(
         contents: nil,
-        customer_accepts_responsibility: false,
+        customer_accepts_responsibility: customer_accepts_responsibility,
         reason: reason,
         target_state: state,
         target_uuid: labware_uuid,
