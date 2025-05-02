@@ -269,10 +269,10 @@ RSpec.describe Presenters::PlatePresenter do
 
   context 'a plate with duplicated samples per well' do
     let(:labware) { create :v2_plate, barcode_number: '2', wells: wells }
-    let(:request_a) { create :library_request, pcr_cycles: 1 }
-    let(:request_b) { create :library_request, pcr_cycles: 2 }
-    let(:request_c) { create :library_request, pcr_cycles: 1 }
-    let(:request_d) { create :library_request, pcr_cycles: 2 }
+    let(:request_a) { create :library_request, id: 1 }
+    let(:request_b) { create :library_request, id: 2 }
+    let(:request_c) { create :library_request, id: 3 }
+    let(:request_d) { create :library_request, id: 4 }
     let(:wells) do
       [
         create(
@@ -291,8 +291,9 @@ RSpec.describe Presenters::PlatePresenter do
         )
       ]
     end
+
     it 'returns unique active requests' do
-      expect(labware.active_requests).to match_array([request_a, request_b, request_c, request_d])
+      expect(labware.active_requests).to contain_exactly(request_a, request_b, request_c, request_d)
     end
   end
 
