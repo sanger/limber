@@ -35,18 +35,18 @@ LRC GEM-X 5p TCR Dil 2:
         pcr_cycles: 9
         colour: 1
       - min: 25.0
-        max: 150.0
+        max: 151.0
         pcr_cycles: 8
         colour: 2
-      - min: 150.0
-        max: 500.0
+      - min: 151.0
+        max: 501.0
         pcr_cycles: 7
         colour: 3
-      - min: 500.0
-        max: 1_000.0
+      - min: 501.0
+        max: 1_001.0
         pcr_cycles: 6
         colour: 4
-      - min: 1_000.0
+      - min: 1_001.0
         pcr_cycles: 5
         colour: 5
   :file_links:
