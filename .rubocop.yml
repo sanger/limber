@@ -99,11 +99,17 @@ RSpec/DescribedClass:
   # block in a different context
 
 RSpec/ExampleLength:
+  inherit_mode:
+    merge:
+      - Exclude
   CountAsOne:
     - array
     - hash
     - heredoc
     - method_call
+  # Disable for features, as we might want to step through long processes
+  Exclude:
+    - "spec/features/**/*"
 
 RSpec/IndexedLet:
   Enabled: false # We have a lot of indexed lets in our specs, mostly based on wells or racked tubes
