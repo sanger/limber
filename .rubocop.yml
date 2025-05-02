@@ -87,6 +87,12 @@ RSpec/ContextWording:
     - with
     - without
 
+RSpec/DescribeClass:
+   # Exclude files like exports that do not have a specific class.
+  Exclude:
+    - spec/factory_outputs/**/*.rb
+    - spec/views/**/*exports/**/*.rb
+
 RSpec/DescribedClass:
   EnforcedStyle: described_class
   SkipBlocks: true # Addresses a known caveat with rspec-rails’s ‘controller` helper that runs its
