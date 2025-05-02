@@ -246,9 +246,15 @@ module LabwareCreators
       create_aliquot_in_child_well(control_v2, child_well_v2, well_location)
     end
 
+    # create the name for the control
+    # NB. using child labware barcode in the name to ensure uniqueness when lab does repeat runs
+    def create_control_sample_name(control, well_location)
+      "#{control.name_prefix}#{child.labware_barcode.human}_#{well_location}"
+    end
+
     # create the control sample and metadata NB. sample_name cannot contain spaces!!
     def create_control_sample(control, well_location)
-      sample_name = "#{control.name_prefix}#{control_desc}_#{well_location}"
+      sample_name = create_control_sample_name(control, well_location)
 
       # sample name must not contain spaces, if it does replace with underscores
       sample_name.parameterize.underscore

@@ -137,6 +137,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
   describe '#calculate_allowance' do
     let(:chip_loading_volume) { 50.0 }
+
     context 'when allowance_band is "2 pool attempts, 2 counts"' do
       let(:expected_volume) do
         (chip_loading_volume * 2) + (2 * Rails.application.config.scrna_config[:volume_taken_for_cell_counting]) +

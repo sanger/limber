@@ -7,9 +7,9 @@ RSpec.describe Labels::TubeLabel, type: :model do
 
   context 'when creating the label of a plate' do
     let(:labware) { create :v2_tube }
-    let(:label) { Labels::TubeLabel.new(labware) }
+    let(:label) { described_class.new(labware) }
 
-    context '#attributes' do
+    describe '#attributes' do
       it 'has the correct attributes' do
         attributes = label.attributes
         expect(attributes[:first_line]).to eq labware.name[2..] if labware.name.present?

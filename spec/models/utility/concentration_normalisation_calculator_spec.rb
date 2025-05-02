@@ -5,6 +5,8 @@ require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::ConcentrationNormalisationCalculator do
   context 'when computing values for normalised binning' do
+    subject { described_class.new(dilutions_config) }
+
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
@@ -42,8 +44,6 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
     let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
     let(:dilutions_config) { { 'target_amount_ng' => 50, 'target_volume' => 20, 'minimum_source_volume' => 0.2 } }
-
-    subject { Utility::ConcentrationNormalisationCalculator.new(dilutions_config) }
 
     describe '#normalisation_details' do
       it 'calculates normalisation details correctly' do
@@ -185,7 +185,7 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
     end
