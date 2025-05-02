@@ -246,6 +246,7 @@ RSpec.describe Robots::Robot, :robots do
 
           context 'but in the wrong state' do
             let(:source_plate_state) { 'pending' }
+
             it { is_expected.not_to be_valid }
           end
 
@@ -253,28 +254,33 @@ RSpec.describe Robots::Robot, :robots do
             let(:source_purpose) { 'Something' }
             let(:source_purpose_name) { 'Invalid plate purpose' }
             let(:source_purpose_uuid) { SecureRandom.uuid }
+
             it { is_expected.not_to be_valid }
           end
 
           context 'but target is of the wrong purpose' do
             let(:target_purpose) { 'Something' }
             let(:target_purpose_name) { 'Invalid plate purpose' }
+
             it { is_expected.not_to be_valid }
           end
         end
 
         context 'but unrelated plates' do
           let(:target_plate_parents) { [create(:v2_plate)] }
+
           it { is_expected.not_to be_valid }
         end
 
         context 'and an unchecked additional parent' do
           let(:target_plate_parents) { [source_plate, create(:v2_plate)] }
+
           it { is_expected.to be_valid }
         end
 
         context 'and no parents' do
           let(:target_plate_parents) { [] }
+
           it { is_expected.not_to be_valid }
         end
 
@@ -294,17 +300,20 @@ RSpec.describe Robots::Robot, :robots do
           let(:scanned_layout) { { 'bed1_barcode' => [], 'bed2_barcode' => [target_plate_barcode] } }
 
           let(:target_plate_parents) { [create(:v2_plate)] }
+
           it { is_expected.not_to be_valid }
         end
 
         context 'and robot config allows multiple source purposes' do
           let(:source_purpose) { [source_purpose_name, 'Other'] }
+
           it { is_expected.to be_valid }
 
           context 'but when the wrong source plate purpose' do
             let(:source_purpose) { %w[Something Other] }
             let(:source_purpose_name) { 'Invalid plate purpose' }
             let(:source_purpose_uuid) { SecureRandom.uuid }
+
             it { is_expected.not_to be_valid }
           end
         end
@@ -325,6 +334,7 @@ RSpec.describe Robots::Robot, :robots do
 
           context 'but with a source plate in one pair in the wrong state' do
             let(:source_plate_state) { 'pending' }
+
             it { is_expected.not_to be_valid }
           end
 
@@ -332,28 +342,33 @@ RSpec.describe Robots::Robot, :robots do
             let(:source_purpose) { 'Something' }
             let(:source_purpose_name) { 'Invalid plate purpose' }
             let(:source_purpose_uuid) { SecureRandom.uuid }
+
             it { is_expected.not_to be_valid }
           end
 
           context 'but with a target plate in one pair of the wrong purpose' do
             let(:target_purpose) { 'Something' }
             let(:target_purpose_name) { 'Invalid plate purpose' }
+
             it { is_expected.not_to be_valid }
           end
         end
 
         context 'and if one target plate has an unrelated parent' do
           let(:target_plate_parents) { [create(:v2_plate)] }
+
           it { is_expected.not_to be_valid }
         end
 
         context 'and if one target plate has an unchecked additional parent' do
           let(:target_plate_parents) { [source_plate, create(:v2_plate)] }
+
           it { is_expected.to be_valid }
         end
 
         context 'and if one target plate has no parents' do
           let(:target_plate_parents) { [] }
+
           it { is_expected.not_to be_valid }
         end
 
