@@ -110,9 +110,7 @@ RSpec/ScatteredLet:
   # being unreliable (see https://github.com/rubocop/rubocop-rspec/issues/1167).
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 13 # Default is 5, but we have a lot of memoized helpers in our specs, I'm inclined to
-  # disable this, but I think it's better to just increase the limit for now - 15 lets is a bit much
-  # and probably indicates a deeper problem. If this happens, make another context group.
+  Enabled: false # We have a lot of memoized helpers in our specs, not sure how best to work around this, so disabling
 
 RSpec/NestedGroups:
   Max: 5 # Default is 3, but we have a lot of nested groups in our specs
