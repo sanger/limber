@@ -137,15 +137,6 @@ module StateChangers
         user_uuid: user_uuid
       )
     end
-
-    private
-
-    # Changes the state of the tube to the target state.
-    # This method is using the StateChangers lookup to determine the correct state changer for the tube.
-    def change_tube_state(tube, target_state, reason)
-      state_changer = StateChangers.lookup_for(tube.purpose.uuid)
-      state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, reason)
-    end
   end
 
   # The tube rack state changer is used by TubeRacks.
@@ -189,10 +180,6 @@ module StateChangers
       @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
 
-    def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
-      super
-      complete_outstanding_requests
-    end
   end
 
   # The Plate State changer is used by the vast majority of plates. It creates
@@ -228,6 +215,7 @@ module StateChangers
 
   # The tube state changer is used by Tubes. It works the same way as the default
   # plate state changer but does not need to handle a subset of wells like the plate.
+  # Use this where you don't want work completion to occur.
   class TubeStateChanger < BaseStateChanger
     # Tubes have no wells so contents is always empty
     def contents_for(_target_state)
