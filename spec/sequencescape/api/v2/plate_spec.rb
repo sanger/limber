@@ -103,9 +103,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
           'Content-Type' => 'application/vnd.api+json'
         }
       ).to_return(File.new('./spec/contracts/v2-plate-by-uuid-for-presenter.txt'))
-      expect(
-        described_class.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')
-      ).to be_a described_class
+      expect(described_class.find_by(uuid: '8681e102-b737-11ec-8ace-acde48001122')).to be_a described_class
     end
   end
 

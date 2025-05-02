@@ -88,7 +88,7 @@ RSpec/ContextWording:
     - without
 
 RSpec/DescribeClass:
-   # Exclude files like exports that do not have a specific class.
+  # Exclude files like exports that do not have a specific class.
   Exclude:
     - spec/factory_outputs/**/*.rb
     - spec/views/**/*exports/**/*.rb
@@ -109,7 +109,7 @@ RSpec/ExampleLength:
     - method_call
   # Disable for features, as we might want to step through long processes
   Exclude:
-    - "spec/features/**/*"
+    - 'spec/features/**/*'
 
 RSpec/IndexedLet:
   Enabled: false # We have a lot of indexed lets in our specs, mostly based on wells or racked tubes
