@@ -264,6 +264,35 @@ RSpec.describe Presenters::PlatePresenter do
     end
   end
 
+  context 'a plate with duplicated samples per well' do
+    let(:labware) { create :v2_plate, barcode_number: '2', wells: wells }
+    let(:request_a) { create :library_request, pcr_cycles: 1 }
+    let(:request_b) { create :library_request, pcr_cycles: 2 }
+    let(:request_c) { create :library_request, pcr_cycles: 1 }
+    let(:request_d) { create :library_request, pcr_cycles: 2 }
+    let(:wells) do
+      [
+        create(
+          :v2_stock_well,
+          uuid: '2-well-A1',
+          location: 'A1',
+          aliquot_count: 1,
+          requests_as_source: [request_a, request_a, request_b]
+        ),
+        create(
+          :v2_stock_well,
+          uuid: '2-well-B1',
+          location: 'B1',
+          aliquot_count: 1,
+          requests_as_source: [request_c, request_d]
+        )
+      ]
+    end
+    it 'returns unique active requests' do
+      expect(labware.active_requests).to match_array([request_a, request_b, request_c, request_d])
+    end
+  end
+
   context 'showing the pooling tab' do
     let(:request1) { double('Request', submission: submission1) }
     let(:request2) { double('Request', submission: submission2) }
