@@ -35,7 +35,7 @@ RSpec.describe 'transfer_template factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)['transfer_template']).to eq JSON.parse(json_content)['transfer_template']
   end
 end

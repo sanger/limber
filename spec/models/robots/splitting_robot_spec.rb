@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::SplittingRobot, robots: true do
+RSpec.describe Robots::SplittingRobot, :robots do
   include FeatureHelpers
   include RobotHelpers
   has_a_working_api
@@ -27,7 +27,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
   let(:metadata_uuid) { SecureRandom.uuid }
   let(:custom_metadatum_collection) { create :custom_metdatum_collection, uuid: metadata_uuid }
 
-  let(:robot) { Robots::SplittingRobot.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
 
   describe '#verify' do
     subject { robot.verify(bed_labwares: scanned_layout) }
@@ -79,6 +79,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
 
       context 'with an unknown plate' do
         before { bed_plate_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :downstream_plates }]) }
+
         let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
         it { is_expected.not_to be_valid }
@@ -105,6 +106,7 @@ RSpec.describe Robots::SplittingRobot, robots: true do
 
         context 'but unrelated plates' do
           let(:transfer_target_1) { [create(:v2_plate)] }
+
           it { is_expected.not_to be_valid }
         end
       end
