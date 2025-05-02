@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'config_loader/exports_loader'
 
-RSpec.describe ConfigLoader::ExportsLoader, type: :model, loader: true do
+RSpec.describe ConfigLoader::ExportsLoader, :loader, type: :model do
   subject(:loader) { described_class.new(directory: test_directory, files: selected_files) }
 
   let(:test_directory) { Rails.root.join('spec/fixtures/config/exports') }
