@@ -65,7 +65,7 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
     let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
 
     context 'when a submission is created' do
-      post :create, params: request_parameters, session: { user_uuid: }
+      before { post :create, params: request_parameters, session: { user_uuid: } }
 
       it 'creates an order' do
         expect(order_request).to have_been_made.once

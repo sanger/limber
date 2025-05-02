@@ -241,10 +241,12 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         end
 
         context 'creates a plate!' do
-          expect_pooled_plate_creation
-          expect_transfer_request_collection_creation
+          before do
+            expect_pooled_plate_creation
+            expect_transfer_request_collection_creation
 
-          subject.save!
+            subject.save!
+          end
 
           it 'creates an order' do
             expect(order_request).to have_been_made.once
