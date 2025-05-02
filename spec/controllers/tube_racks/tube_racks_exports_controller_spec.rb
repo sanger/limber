@@ -23,7 +23,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
 
   let(:tube_rack_uuid) { tube_rack.uuid }
 
-  RSpec.shared_examples 'a csv view' do
+  RSpec.shared_examples 'a tube rack csv view' do
     context 'when the tube rack is requested' do
       before { get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv }
 
@@ -64,7 +64,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       let(:csv_id) { 'tube_rack_concentrations_ngul' }
       let(:expected_template) { 'tube_rack_concentrations_ngul' }
 
-      it_behaves_like 'a csv view'
+      it_behaves_like 'a tube rack csv view'
     end
 
     context 'where csv id requested is tube_rack_concentrations_nm.csv' do
@@ -73,7 +73,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       let(:csv_id) { 'tube_rack_concentrations_nm' }
       let(:expected_template) { 'tube_rack_concentrations_nm' }
 
-      it_behaves_like 'a csv view'
+      it_behaves_like 'a tube rack csv view'
     end
   end
 
