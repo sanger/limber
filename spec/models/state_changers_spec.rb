@@ -199,7 +199,7 @@ RSpec.describe StateChangers do
               customer_accepts_responsibility: customer_accepts_responsibility,
               reason: reason,
               target_state: target_state,
-              target_uuid: tube1_uuid,
+              target_uuid: labware_uuid,
               user_uuid: user_uuid
             }
           ]
