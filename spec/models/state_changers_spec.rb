@@ -34,11 +34,12 @@ RSpec.describe StateChangers do
 
   describe StateChangers::PlateStateChanger do
     has_a_working_api
+    subject { StateChangers::PlateStateChanger.new(api, labware_uuid, user_uuid) }
+
     include_context 'common setup'
 
     let(:plate) { create :v2_plate, uuid: labware_uuid, state: plate_state }
     let(:failed_wells) { {} }
-    subject { StateChangers::PlateStateChanger.new(api, labware_uuid, user_uuid) }
 
     context 'when labware is a plate' do
       before do
@@ -50,6 +51,7 @@ RSpec.describe StateChangers do
         let(:plate_state) { 'pending' }
         let(:target_state) { 'passed' }
         let(:coordinates_to_pass) { nil }
+
         it_behaves_like 'a state changer'
       end
 
@@ -79,6 +81,8 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::AutomaticPlateStateChanger do
+    subject { StateChangers::AutomaticPlateStateChanger.new(api, labware_uuid, user_uuid) }
+
     include_context 'common setup'
 
     has_a_working_api
@@ -95,8 +99,6 @@ RSpec.describe StateChangers do
     let!(:work_completion_creation) do
       stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
     end
-
-    subject { StateChangers::AutomaticPlateStateChanger.new(api, labware_uuid, user_uuid) }
 
     before { stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, labware_uuid]) }
 
@@ -121,7 +123,7 @@ RSpec.describe StateChangers do
       it 'changes plate state but does not trigger a work completion' do
         subject.move_to!(target_state, reason, customer_accepts_responsibility)
 
-        expect(work_completion_creation).to_not have_been_made
+        expect(work_completion_creation).not_to have_been_made
       end
     end
 
@@ -146,6 +148,8 @@ RSpec.describe StateChangers do
 
   describe StateChangers::TubeRackStateChanger do
     has_a_working_api
+
+    subject { StateChangers::TubeRackStateChanger.new(api, labware_uuid, user_uuid) }
 
     let(:tube_starting_state) { 'pending' }
     let(:tube_failed_state) { 'failed' }
@@ -173,8 +177,6 @@ RSpec.describe StateChangers do
     let(:racked_tube2) { create :racked_tube, coordinate: 'B1', tube: tube2, tube_rack: tube_rack }
 
     let(:labware) { tube_rack }
-
-    subject { StateChangers::TubeRackStateChanger.new(api, labware_uuid, user_uuid) }
 
     before do
       stub_v2_tube_rack(tube_rack)
@@ -215,17 +217,19 @@ RSpec.describe StateChangers do
 
   describe StateChangers::TubeStateChanger do
     has_a_working_api
+    subject { StateChangers::TubeStateChanger.new(api, labware_uuid, user_uuid) }
+
     include_context 'common setup'
 
     let(:tube) { json :tube, uuid: labware_uuid, state: tube_state }
     let(:well_collection) { json :well_collection, default_state: tube_state, custom_state: failed_wells }
     let(:failed_wells) { {} }
-    subject { StateChangers::TubeStateChanger.new(api, labware_uuid, user_uuid) }
 
     context 'on a fully pending tube' do
       let(:tube_state) { 'pending' }
       let(:target_state) { 'passed' }
       let(:coordinates_to_pass) { nil } # tubes don't have wells
+
       it_behaves_like 'a state changer'
     end
 
@@ -242,6 +246,7 @@ RSpec.describe StateChangers do
 
       let(:tube_state) { 'passed' }
       let(:target_state) { 'qc_complete' }
+
       it_behaves_like 'a state changer'
     end
 

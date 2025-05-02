@@ -40,7 +40,7 @@ RSpec.describe LabwareCreators::FinalTube do
       let(:parent_tube) { create :v2_tube, uuid: parent_uuid }
 
       describe '#save' do
-        it 'should be vaild' do
+        it 'is vaild' do
           expect_transfer_creation
 
           expect(subject.save).to be true
@@ -54,12 +54,12 @@ RSpec.describe LabwareCreators::FinalTube do
         let(:parent_tube) { create(:v2_tube, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
 
         describe '#save' do
-          it 'should return false' do
+          it 'returns false' do
             expect(subject.save).to be false
           end
         end
 
-        it 'should be ready' do
+        it 'is ready' do
           subject.each_sibling do |sibling|
             expect(sibling).to be_a(Sibling)
             expect(sibling.ready?).to be true
@@ -103,7 +103,7 @@ RSpec.describe LabwareCreators::FinalTube do
             ]
           end
 
-          it 'should create transfers per sibling' do
+          it 'creates transfers per sibling' do
             expect_transfer_creation
 
             expect(subject).to be_valid

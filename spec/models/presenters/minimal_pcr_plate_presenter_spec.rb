@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::MinimalPcrPlatePresenter do
+  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(labware:) }
+
   let(:labware) do
     create :v2_plate_with_primer_panels,
            purpose_name: purpose_name,
@@ -30,8 +32,6 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject(:presenter) { Presenters::MinimalPcrPlatePresenter.new(labware:) }
-
   before do
     create(:purpose_config, uuid: labware.purpose.uuid)
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
@@ -54,7 +54,7 @@ RSpec.describe Presenters::MinimalPcrPlatePresenter do
     let(:labware) { build :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
 
     it 'reports as invalid' do
-      expect(subject).to_not be_valid
+      expect(subject).not_to be_valid
     end
 
     it 'reports the error' do

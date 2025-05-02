@@ -4,6 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Robots::Bed::PlateToTubeRacksBed, type: :model do
   # user
+  subject { described_class.new }
+
   let(:user) { create :user }
   let(:user_uuid) { user.uuid }
 
@@ -90,8 +92,6 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed, type: :model do
   let(:tube2_custom_metadatum_collections_attributes) do
     [{ user_id: user.id, asset_id: tube2.id, metadata: { created_with_robot: robot_barcode } }]
   end
-
-  subject { described_class.new }
 
   before do
     stub_v2_user(user)

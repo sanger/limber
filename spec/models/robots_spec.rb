@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots, robots: true do
+RSpec.describe Robots, :robots do
   include FeatureHelpers
 
   has_a_working_api
@@ -12,9 +12,9 @@ RSpec.describe Robots, robots: true do
   before { Settings.robots = settings[:robots] }
 
   describe '::find' do
-    let(:user_uuid) { SecureRandom.uuid }
-
     subject { Robots.find(id: robot_id, api: api, user_uuid: user_uuid) }
+
+    let(:user_uuid) { SecureRandom.uuid }
 
     context 'with a standard robot' do
       let(:robot_id) { 'robot_id' }

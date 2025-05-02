@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
+  subject(:presenter) { Presenters::NormalisedBinnedPlatePresenter.new(labware:) }
+
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -56,8 +58,6 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
-  subject(:presenter) { Presenters::NormalisedBinnedPlatePresenter.new(labware:) }
-
   context 'when configuration is missing' do
     it 'throws an exception' do
       expect { presenter.binned_normalisation_config }.to raise_error(Exception)
@@ -77,7 +77,7 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
     it_behaves_like 'a labware presenter'
 
     context 'binned normalisation plate display' do
-      it 'should create a key for the bins that will be displayed' do
+      it 'creates a key for the bins that will be displayed' do
         # NB. contains min/max because just using bins template, but fields not needed in presentation
         expected_bins_key = [
           { 'colour' => 1, 'max' => 25.0, 'min' => 0.0, 'pcr_cycles' => 16 },
@@ -87,7 +87,7 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
         expect(presenter.bins_key).to eq(expected_bins_key)
       end
 
-      it 'should create bin details which will be used to colour and annotate the well aliquots' do
+      it 'creates bin details which will be used to colour and annotate the well aliquots' do
         expected_bin_details = {
           'A1' => {
             'colour' => 1,

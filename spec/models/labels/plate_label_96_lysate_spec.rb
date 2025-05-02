@@ -16,7 +16,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
 
     let(:label) { Labels::PlateLabel96Lysate.new(labware) }
 
-    context '#attributes' do
+    describe '#attributes' do
       it 'has the correct attributes' do
         attributes = label.attributes
         expect(attributes[:top_left]).to eq Time.zone.today.strftime('%e-%^b-%Y')
@@ -27,7 +27,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
       end
     end
 
-    context '#additional_label_definitions' do
+    describe '#additional_label_definitions' do
       let(:expected_partner_id) { 'ABCD-123-SDC' }
 
       context 'when the partner id is a normal length' do

@@ -54,10 +54,12 @@ RSpec.describe SequencescapeSubmission do
 
     let(:plate) { create :v2_plate }
     let(:obj) { described_class.new(attributes.merge(extra_barcodes: %w[1234 5678])) }
+
     it 'raises error if barcodes not found in service' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return(nil)
       expect { obj.extra_plates }.to raise_error('Barcodes not found ["1234", "5678"]')
     end
+
     it 'returns the data obtained from service' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).and_return([plate])
       expect(obj.extra_plates).to eq([plate])
@@ -71,6 +73,7 @@ RSpec.describe SequencescapeSubmission do
 
     let(:plate) { create(:passed_plate) }
     let(:plate2) { create(:passed_plate) }
+
     it 'returns the uuids of the labwares wells' do
       obj = described_class.new(attributes.merge(extra_barcodes: %w[1234 5678]))
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
@@ -80,6 +83,7 @@ RSpec.describe SequencescapeSubmission do
       # There are 4 non-empty wells in each labware
       expect(obj.extra_assets.count).to eq(8)
     end
+
     it 'removes duplicates uuids in the returned list' do
       allow(Sequencescape::Api::V2).to receive(:additional_plates_for_presenter).with(
         barcode: %w[1234 1234 5678]
@@ -99,6 +103,7 @@ RSpec.describe SequencescapeSubmission do
       obj = described_class.new(attributes)
       expect(obj.asset_groups_for_orders_creation).to eq(obj.asset_groups)
     end
+
     context 'when extra barcodes provided' do
       let(:plate) { create(:passed_plate) }
       let(:plate2) { create(:passed_plate) }

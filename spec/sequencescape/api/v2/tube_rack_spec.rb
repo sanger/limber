@@ -29,15 +29,15 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       end
 
       it 'returns all requests in progress' do
-        expect(tube_rack.requests_in_progress.map(&:id)).to match_array([request1.id, request2.id])
+        expect(tube_rack.requests_in_progress.map(&:id)).to contain_exactly(request1.id, request2.id)
       end
 
       it 'filters requests by request types to complete' do
-        expect(tube_rack.requests_in_progress(request_types_to_complete: 'type1').map(&:id)).to match_array(
-          [request1.id]
+        expect(tube_rack.requests_in_progress(request_types_to_complete: 'type1').map(&:id)).to contain_exactly(
+          request1.id
         )
-        expect(tube_rack.requests_in_progress(request_types_to_complete: 'type2').map(&:id)).to match_array(
-          [request2.id]
+        expect(tube_rack.requests_in_progress(request_types_to_complete: 'type2').map(&:id)).to contain_exactly(
+          request2.id
         )
       end
     end
@@ -81,7 +81,7 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       end
 
       it 'returns all requests associated with the tube rack' do
-        expect(tube_rack.all_requests.map(&:id)).to match_array([request1.id, request2.id])
+        expect(tube_rack.all_requests.map(&:id)).to contain_exactly(request1.id, request2.id)
       end
     end
   end

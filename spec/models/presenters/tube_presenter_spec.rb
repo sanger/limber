@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::TubePresenter do
+  subject { Presenters::TubePresenter.new(labware:) }
+
   let(:labware) do
     build :v2_tube,
           receptacle: receptacle,
@@ -38,8 +40,6 @@ RSpec.describe Presenters::TubePresenter do
   end
   let(:sidebar_partial) { 'default' }
 
-  subject { Presenters::TubePresenter.new(labware:) }
-
   it_behaves_like 'a labware presenter'
 
   shared_examples 'qc summary' do
@@ -56,6 +56,7 @@ RSpec.describe Presenters::TubePresenter do
 
   context 'has no receptacle' do
     let(:receptacle) { nil }
+
     it_behaves_like 'no qc summary'
   end
 
@@ -64,6 +65,7 @@ RSpec.describe Presenters::TubePresenter do
 
     context 'no qc results' do
       let(:qc_results) { [] }
+
       it_behaves_like 'no qc summary'
     end
 
@@ -98,6 +100,7 @@ RSpec.describe Presenters::TubePresenter do
         expect(subject.custom_metadata_fields).to eq('["IDX DFD Syringe lot Number","Another"]')
       end
     end
+
     context 'with empty custom_metadata_fields' do
       before { create(:plate_with_empty_custom_metadata_fields_config) }
 
@@ -105,14 +108,17 @@ RSpec.describe Presenters::TubePresenter do
         expect(subject.custom_metadata_fields).to eq('[]')
       end
     end
+
     context 'without custom_metadata_fields' do
       it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
         expect(subject.custom_metadata_fields).to eq('[]')
       end
     end
   end
+
   describe '#csv_links_for' do
     let!(:purpose_config) { create(:tube_with_file_links_config, uuid: purpose_uuid) }
+
     context 'when the file is a .tsv' do
       it 'renders the right links' do
         expect(subject.csv_file_links).to eq(

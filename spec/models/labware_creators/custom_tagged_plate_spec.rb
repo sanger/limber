@@ -4,7 +4,9 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
+RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
+  subject { LabwareCreators::CustomTaggedPlate.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
 
   has_a_working_api
@@ -24,8 +26,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, tag_plate: true do
     create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
     stub_v2_plate(plate)
   end
-
-  subject { LabwareCreators::CustomTaggedPlate.new(api, form_attributes) }
 
   context 'on new' do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }

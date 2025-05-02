@@ -12,9 +12,9 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
   has_a_working_api
 
-  it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
-
   subject { LabwareCreators::PooledTubesBySubmission.new(api, form_attributes) }
+
+  it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
   let(:user_uuid) { SecureRandom.uuid }
 
@@ -41,7 +41,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
   before { stub_v2_plate(source_plate, stub_search: false) }
 
-  context '#save!' do
+  describe '#save!' do
     let(:child_1_name) { 'DN5 A1:C1' }
     let(:child_2_name) { 'DN5 D1:A2' }
 

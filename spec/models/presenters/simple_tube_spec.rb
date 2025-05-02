@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::SimpleTubePresenter do
-  let(:labware) { build :v2_tube, state: }
-
   subject { Presenters::SimpleTubePresenter.new(labware:) }
+
+  let(:labware) { build :v2_tube, state: }
 
   before do
     create(:purpose_config, name: 'Example Plate Purpose', uuid: 'example-purpose-uuid-1')

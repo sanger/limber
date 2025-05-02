@@ -5,6 +5,8 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::PlateWithTemplate do
+  subject { LabwareCreators::PlateWithTemplate.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -35,8 +37,6 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   before { create(:templated_transfer_config, uuid: child_purpose_uuid) }
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
-
-  subject { LabwareCreators::PlateWithTemplate.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be created' do

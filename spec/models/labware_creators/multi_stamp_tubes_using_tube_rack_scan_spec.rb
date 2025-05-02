@@ -116,10 +116,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     stub_v2_tube(parent_tube_1)
   end
 
-  context '#new' do
-    let(:form_attributes) { { purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid } }
-
+  describe '#new' do
     subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
+    let(:form_attributes) { { purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid } }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::MultiStampTubesUsingTubeRackScan
@@ -134,7 +134,9 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     end
   end
 
-  context '#save when everything is valid' do
+  describe '#save when everything is valid' do
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
@@ -179,8 +181,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       ]
     end
 
-    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
-
     it 'creates a plate!' do
       # barcode from multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_valid.csv
       subject.labware.labware_barcode = { 'human_barcode' => 'AB10000001', 'machine_barcode' => 'AB10000001' }
@@ -196,6 +196,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a file is not correctly parsed' do
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
     let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/' \
@@ -207,8 +209,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
-
-    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     before { subject.validate }
 
@@ -222,6 +222,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a tube is not in LIMS' do
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
     let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/multi_stamp_tubes_using_tube_rack_scan/tube_rack_scan_with_unknown_barcode.csv',
@@ -232,8 +234,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
-
-    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     before do
       allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(
@@ -254,14 +254,14 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a tube is not of expected purpose type' do
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
     let(:parent_tube_2_purpose_uuid) { 'parent-tube-purpose-type-unknown-uuid' }
     let(:parent_tube_2_purpose_name) { 'Parent Tube Purpose Type Unknown' }
-
-    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     before { subject.validate }
 
@@ -275,13 +275,13 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a tube does not have an active request of the expected type' do
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
     let(:request_type_2) { create :request_type, key: 'unrelated_request_type_key' }
-
-    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     before { subject.validate }
 
@@ -303,6 +303,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   context 'when a tube rack has a source tube with a ean13 barcode' do
     # source tube
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
     let(:source_tube) { subject.labware }
     let(:source_tube_barcode) { source_tube.barcode.machine }
 
@@ -316,8 +318,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
-
-    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     before { subject.validate }
 
@@ -332,6 +332,8 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   context 'when a tube rack does not contain the source tube' do
     # source tube
+    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
+
     let(:source_tube) { subject.labware }
     let(:source_tube_barcode) { source_tube.barcode.machine }
 
@@ -345,8 +347,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
-
-    subject { LabwareCreators::MultiStampTubesUsingTubeRackScan.new(api, form_attributes) }
 
     before { subject.validate }
 

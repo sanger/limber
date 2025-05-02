@@ -83,6 +83,8 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
     context 'when a state filter is applied' do
       context 'with a valid filter' do
+        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_state: 'started') }
+
         let(:request_a) do
           create :library_request,
                  state: 'started',
@@ -90,8 +92,6 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
                  uuid: 'request-0',
                  library_type: library_type_name_a
         end
-
-        subject { LabwareCreators::WellFilterAllowingPartials.new(creator: labware_creator, request_state: 'started') }
 
         it 'returns the correct wells' do
           expect(subject.filtered.count).to eq(1)

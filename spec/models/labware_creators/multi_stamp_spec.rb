@@ -56,9 +56,9 @@ RSpec.describe LabwareCreators::MultiStamp do
   end
 
   context 'on new' do
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
-
     subject { LabwareCreators::MultiStamp.new(api, form_attributes) }
+
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
 
     it 'can be created' do
       expect(subject).to be_a LabwareCreators::MultiStamp
@@ -528,7 +528,7 @@ RSpec.describe LabwareCreators::MultiStamp do
       [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user_uuid }]
     end
 
-    context '#save!' do
+    describe '#save!' do
       it 'creates a plate!' do
         expect_pooled_plate_creation
         expect_transfer_request_collection_creation

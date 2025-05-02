@@ -69,7 +69,7 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
       expect(order_request).to have_been_made.once
       expect(submission_request).to have_been_made.once
       expect(submission_submit).to have_been_made.once
-      assert_equal ['Your submissions have been made and should be built shortly.'], flash.notice
+      expect(flash.notice).to eq(['Your submissions have been made and should be built shortly.'])
     end
   end
 end

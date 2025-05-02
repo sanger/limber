@@ -30,7 +30,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController, type: :controller do
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::TubeRack)
       expect(assigns(:tube_rack)).to be_a(Sequencescape::Api::V2::TubeRack)
       expect(response).to render_template(expected_template)
-      assert_equal 'text/csv; charset=utf-8', @response.content_type
+      expect(@response.content_type).to eq('text/csv; charset=utf-8')
     end
   end
 

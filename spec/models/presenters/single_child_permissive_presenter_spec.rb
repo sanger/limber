@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::SingleChildPermissivePresenter do
+  subject { Presenters::SingleChildPermissivePresenter.new(labware:) }
+
   let(:purpose_name) { 'Example purpose' }
   let(:labware) { create :v2_plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
   let(:child_purpose) { 'Child purpose' }
   let(:child_plate) { create :v2_plate, purpose_name: child_purpose }
-
-  subject { Presenters::SingleChildPermissivePresenter.new(labware:) }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: child_purpose
@@ -39,7 +39,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
       before(:each) { labware.child_plates = [child_plate] }
 
       it 'does not allow child creation' do
-        expect { |b| subject.control_additional_creation(&b) }.to_not yield_control
+        expect { |b| subject.control_additional_creation(&b) }.not_to yield_control
       end
     end
   end
@@ -65,7 +65,7 @@ RSpec.describe Presenters::SingleChildPermissivePresenter do
       before(:each) { labware.child_plates = [child_plate] }
 
       it 'does not allow child creation' do
-        expect { |b| subject.control_additional_creation(&b) }.to_not yield_control
+        expect { |b| subject.control_additional_creation(&b) }.not_to yield_control
       end
     end
   end
