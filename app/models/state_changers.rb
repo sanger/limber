@@ -128,11 +128,14 @@ module StateChangers
     # Iterates over the tubes and passes them individually.
     def move_to!(state, reason = nil, _customer_accepts_responsibility = nil)
       return if state.nil? || labware.nil? # We have nothing to do
-
-      labware
-        .racked_tubes
-        .select { |racked_tube| ACCEPTED_STATES.include?(racked_tube.tube.state) }
-        .each { |racked_tube| change_tube_state(racked_tube.tube, state, reason) }
+      Sequencescape::Api::V2::StateChange.create!(
+        contents: nil,
+        customer_accepts_responsibility: false,
+        reason: reason,
+        target_state: state,
+        target_uuid: labware_uuid,
+        user_uuid: user_uuid
+      )
     end
 
     private
