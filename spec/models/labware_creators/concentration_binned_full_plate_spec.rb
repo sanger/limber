@@ -4,6 +4,24 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
+  subject { described_class.new(api, form_attributes) }
+
+  before do
+    create(
+      :concentration_binning_stamp_purpose_config,
+      uuid: child_purpose_uuid,
+      name: child_purpose_name,
+      library_type_name: library_type_name
+    )
+    stub_v2_plate(child_plate, stub_search: false)
+    stub_v2_plate(
+      parent_plate,
+      stub_search: false,
+      custom_includes:
+        'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
+    )
+  end
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -86,29 +104,11 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
 
   let(:user_uuid) { 'user-uuid' }
 
-  before do
-    create(
-      :concentration_binning_stamp_purpose_config,
-      uuid: child_purpose_uuid,
-      name: child_purpose_name,
-      library_type_name: library_type_name
-    )
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(
-      parent_plate,
-      stub_search: false,
-      custom_includes:
-        'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
-    )
-  end
-
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
-
-  subject { LabwareCreators::ConcentrationBinnedFullPlate.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::ConcentrationBinnedFullPlate
+      expect(subject).to be_a described_class
     end
 
     context 'when wells are missing a concentration value' do
@@ -124,7 +124,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
       end
 
       it 'fails validation' do
-        expect(subject).to_not be_valid
+        expect(subject).not_to be_valid
       end
     end
   end
