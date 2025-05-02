@@ -34,7 +34,7 @@ class LabwareCreators::WellFilter
   def filter_requests(requests, well)
     return extract_submission(well) if well.requests_as_source.empty?
 
-    filtered_requests_by_rt = filter_by_request_type(requests.uniq(&:id))
+    filtered_requests_by_rt = filter_by_request_type(requests)
     filtered_requests_by_lt = filter_by_library_type(filtered_requests_by_rt)
 
     if filtered_requests_by_lt.count == 1
@@ -66,7 +66,6 @@ class LabwareCreators::WellFilter
     @well_transfers ||=
       wells.each_with_object([]) do |well, transfers|
         next if well.empty? || well.failed?
-
         transfers << [well, filter_requests(well.active_requests, well)]
       end
   end
