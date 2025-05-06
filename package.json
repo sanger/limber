@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@rails/ujs": "^7.1.501",
-    "axios": "^1.8.4",
+    "axios": "^1.9.0",
     "bootstrap-vue": "^2.23.1",
     "cytoscape": "^3.31.2",
     "cytoscape-elk": "^2.3.0",
