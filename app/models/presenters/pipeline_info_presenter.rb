@@ -100,7 +100,7 @@ class Presenters::PipelineInfoPresenter
   # Returns true if the labware purpose has any defined child of child relationships, false otherwise.
   # return [Boolean] True if the labware has grandchild purposes
   def grandchild_purposes?
-    true
+    false
   end
 
   private
