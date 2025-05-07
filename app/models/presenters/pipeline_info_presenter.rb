@@ -28,19 +28,21 @@ class Presenters::PipelineInfoPresenter
   # 3. By library (optional) - the pipeline is determined by the library type of the labware
   #
   # In some cases, an intersection of these three groups might be required to accurately determine
-  # the pipeline and pipeline group.
+  # the pipeline and pipeline group, in others the parent purpose might be used to determine the pipeline.
   def pipeline_groups
-    # any matching pipeline MUST match the labware's purpose
-    pipeline_groups = pipeline_groups_by_purpose
+    pipeline_groups = [
+      pipeline_groups_by_purpose, # any matching pipeline MUST match the labware's purpose
+      pipeline_groups_by_parent_purposes, # any matching pipeline MIGHT match the labware's parent purposes
+      pipeline_groups_by_requests, # any matching pipeline MIGHT match the active requests
+      pipeline_groups_by_library # any matching pipeline MIGHT match the library type
+    ]
 
-    # any matching pipeline MIGHT match the labware's parent purposes
-    pipeline_groups &= pipeline_groups_by_parent_purposes if pipeline_groups_by_parent_purposes&.any?
+    # Remove nil values and empty arrays from the pipeline_groups array
+    pipeline_groups.compact!
+    pipeline_groups.reject!(&:empty?)
 
-    # any matching pipeline MIGHT match the active requests
-    pipeline_groups &= pipeline_groups_by_requests if pipeline_groups_by_requests&.any?
-
-    # any matching pipeline MIGHT match the library type
-    pipeline_groups &= pipeline_groups_by_library if pipeline_groups_by_library&.any?
+    # intersect the pipeline groups to find the common pipelines
+    pipeline_groups = pipeline_groups.reduce { |acc, group| acc & group }
 
     # Return the remaining pipeline groups as a sorted array, or nil if none are found.
     pipeline_groups.sort if pipeline_groups&.any?
