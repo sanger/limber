@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+def stub_plate_find_all_barcode(plate)
+  allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with({ barcode: [plate.barcode] }).and_return([plate])
+end
+
 RSpec.describe Presenters::PipelineInfoPresenter do
   let(:presenter) { described_class.new(labware) }
   let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
@@ -392,29 +396,14 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             ]
           )
 
-          allow(labware_combining_child).to receive_messages(parents: [labware_parent], ancestors: [labware_parent])
-          allow(labware_branching_parent).to receive_messages(
-            ancestors: [labware_combining_child, labware_other_parent],
-            parents: [labware_combining_child]
-          )
-          allow(labware_child).to receive_messages(
-            ancestors: [labware_branching_parent, labware_combining_child, labware_parent],
-            parents: [labware_branching_parent]
-          )
-          allow(labware_other_child).to receive_messages(
-            ancestors: [labware_branching_parent, labware_combining_child, labware_other_parent],
-            parents: [labware_branching_parent]
-          )
+          allow(labware_combining_child).to receive_messages(parents: [labware_parent])
+          allow(labware_branching_parent).to receive_messages(parents: [labware_combining_child])
+          allow(labware_child).to receive_messages(parents: [labware_branching_parent])
+          allow(labware_other_child).to receive_messages(parents: [labware_branching_parent])
 
-          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
-            { barcode: [labware_combining_child.barcode] }
-          ).and_return([labware_combining_child])
-          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
-            { barcode: [labware_branching_parent.barcode] }
-          ).and_return([labware_branching_parent])
-          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
-            { barcode: [labware_parent.barcode] }
-          ).and_return([labware_parent])
+          stub_plate_find_all_barcode(labware_combining_child)
+          stub_plate_find_all_barcode(labware_branching_parent)
+          stub_plate_find_all_barcode(labware_parent)
         end
 
         let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
