@@ -136,7 +136,6 @@ class Presenters::PipelineInfoPresenter
       .map(&:pipeline_group)
   end
 
-
   def pipeline_groups_by_parent_purposes
     @labware
       .parents
