@@ -5,7 +5,7 @@ GSLP RVI Bait Capture Library: # Top of the pipeline (Library Prep)
   filters:
     request_type_key:
       - limber_rvig_bait_capture_library_prep
-      - limber_reisc # Typically this should occur on RVIG Lib PCR XP
+      - limber_reisc # Typically reISC should occur on RVIG Lib PCR XP
     library_type:
       - RVIG-BCL
   library_pass:
