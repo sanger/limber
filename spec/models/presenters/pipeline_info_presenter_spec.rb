@@ -4,6 +4,10 @@ def stub_plate_find_all_barcode(plate)
   allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with({ barcode: [plate.barcode] }).and_return([plate])
 end
 
+def stub_tube_find_all_barcode(tube)
+  allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with({ barcode: [tube.barcode] }).and_return([tube])
+end
+
 RSpec.describe Presenters::PipelineInfoPresenter do
   let(:presenter) { described_class.new(labware) }
   let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
@@ -525,6 +529,99 @@ RSpec.describe Presenters::PipelineInfoPresenter do
 
       it 'returns nil' do
         expect(presenter.pipeline_group_name).to be_nil
+      end
+    end
+  end
+
+  describe '#grandparent_purposes' do
+    context 'when a tube has no grandparents' do
+      before { allow(labware).to receive(:parents).and_return([]) }
+
+      it 'returns an empty string' do
+        expect(presenter.grandparent_purposes).to eq('')
+      end
+    end
+
+    context 'when a tube has grandparents' do
+      let(:grandparent_purpose) { create(:v2_purpose, name: 'Grandparent Purpose') }
+      let(:parent_purpose) { create(:v2_purpose, name: 'Parent Purpose') }
+
+      let(:parent_tube) { create(:v2_stock_tube, purpose: parent_purpose, uuid: 'parent-tube-uuid') }
+      let(:grandparent_tube) { create(:v2_stock_tube, purpose: grandparent_purpose, uuid: 'grandparent-tube-uuid') }
+
+      before do
+        allow(labware).to receive_messages(parents: [parent_tube])
+        allow(parent_tube).to receive_messages(parents: [grandparent_tube])
+
+        stub_tube_find_all_barcode(parent_tube)
+      end
+
+      it 'returns the grandparent purposes' do
+        expect(presenter.grandparent_purposes).to eq('Grandparent Purpose')
+      end
+    end
+  end
+
+  describe '#parent_purposes' do
+    context 'when a tube has no parents' do
+      before { allow(labware).to receive(:parents).and_return([]) }
+
+      it 'returns an empty string' do
+        expect(presenter.parent_purposes).to eq('')
+      end
+    end
+
+    context 'when a tube has parents' do
+      let(:parent_purpose) { create(:v2_purpose, name: 'Parent Purpose') }
+      let(:parent_tube) { create(:v2_stock_tube, purpose: parent_purpose, uuid: 'parent-tube-uuid') }
+
+      before do
+        allow(labware).to receive_messages(parents: [parent_tube])
+
+        stub_tube_find_all_barcode(parent_tube)
+      end
+
+      it 'returns the parent purposes' do
+        expect(presenter.parent_purposes).to eq('Parent Purpose')
+      end
+    end
+
+    context 'when a tube has multiple parents' do
+      let(:parent_purpose_1) { create(:v2_purpose, name: 'Parent Purpose 1') }
+      let(:parent_purpose_2) { create(:v2_purpose, name: 'Parent Purpose 2') }
+      let(:parent_tube_1) { create(:v2_stock_tube, purpose: parent_purpose_1, uuid: 'parent-tube-uuid-1') }
+      let(:parent_tube_2) { create(:v2_stock_tube, purpose: parent_purpose_2, uuid: 'parent-tube-uuid-2') }
+
+      before do
+        allow(labware).to receive_messages(parents: [parent_tube_1, parent_tube_2])
+
+        stub_tube_find_all_barcode(parent_tube_1)
+        stub_tube_find_all_barcode(parent_tube_2)
+      end
+
+      it 'returns the parent purposes' do
+        expect(presenter.parent_purposes).to eq('Parent Purpose 1, Parent Purpose 2')
+      end
+    end
+  end
+
+  describe '#child_purposes' do
+    context 'when a tube has no children' do
+      before { allow(labware).to receive(:children).and_return([]) }
+
+      it 'returns an empty string' do
+        expect(presenter.child_purposes).to eq('')
+      end
+    end
+
+    context 'when a tube has children' do
+      let(:child_purpose_1) { create(:v2_purpose, name: 'Child Purpose 1') }
+      let(:child_purpose_2) { create(:v2_purpose, name: 'Child Purpose 2') }
+
+      before { allow(presenter).to receive(:suggested_purposes).and_return([child_purpose_1, child_purpose_2]) }
+
+      it 'returns the child purposes' do
+        expect(presenter.child_purposes).to eq('Child Purpose 1, Child Purpose 2')
       end
     end
   end
