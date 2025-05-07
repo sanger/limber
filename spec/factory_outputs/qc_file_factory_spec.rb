@@ -18,7 +18,7 @@ RSpec.describe 'qc file factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)['qc_file']).to eq JSON.parse(json_content)['qc_file']
   end
 end
