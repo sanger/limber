@@ -391,6 +391,30 @@ RSpec.describe Presenters::PipelineInfoPresenter do
               )
             ]
           )
+
+          allow(labware_combining_child).to receive_messages(parents: [labware_parent], ancestors: [labware_parent])
+          allow(labware_branching_parent).to receive_messages(
+            ancestors: [labware_combining_child, labware_other_parent],
+            parents: [labware_combining_child]
+          )
+          allow(labware_child).to receive_messages(
+            ancestors: [labware_branching_parent, labware_combining_child, labware_parent],
+            parents: [labware_branching_parent]
+          )
+          allow(labware_other_child).to receive_messages(
+            ancestors: [labware_branching_parent, labware_combining_child, labware_other_parent],
+            parents: [labware_branching_parent]
+          )
+
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+            { barcode: [labware_combining_child.barcode] }
+          ).and_return([labware_combining_child])
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+            { barcode: [labware_branching_parent.barcode] }
+          ).and_return([labware_branching_parent])
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
+            { barcode: [labware_parent.barcode] }
+          ).and_return([labware_parent])
         end
 
         let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
@@ -399,32 +423,13 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         let(:labware_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
         let(:labware_other_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_parent) }
         let(:labware_combining_child) do
-          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_combining_child, ancestors: [labware_parent])
+          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_combining_child)
         end
         let(:labware_branching_parent) do
-          create(
-            :v2_stock_plate,
-            :has_pooling_metadata,
-            purpose: purpose_branching_parent,
-            ancestors: [labware_combining_child, labware_other_parent]
-          )
+          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_branching_parent)
         end
-        let(:labware_child) do
-          create(
-            :v2_stock_plate,
-            :has_pooling_metadata,
-            purpose: purpose_child,
-            ancestors: [labware_branching_parent, labware_combining_child, labware_parent]
-          )
-        end
-        let(:labware_other_child) do
-          create(
-            :v2_stock_plate,
-            :has_pooling_metadata,
-            purpose: purpose_other_child,
-            ancestors: [labware_branching_parent, labware_combining_child, labware_other_parent]
-          )
-        end
+        let(:labware_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_child) }
+        let(:labware_other_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_child) }
 
         context 'when inspecting the labware-parent' do
           let(:labware) { labware_parent }
@@ -454,7 +459,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           let(:labware) { labware_branching_parent }
 
           it 'returns the correct pipeline group for the labware-branching-parent' do
-            expect(presenter.pipeline_groups).to eq(['Group A2 Combined', 'Group B Chained'])
+            expect(presenter.pipeline_groups).to eq(['Group B Chained'])
           end
         end
 

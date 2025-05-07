@@ -33,6 +33,9 @@ class Presenters::PipelineInfoPresenter
     # any matching pipeline MUST match the labware's purpose
     pipeline_groups = pipeline_groups_by_purpose
 
+    # any matching pipeline MIGHT match the labware's parent purposes
+    pipeline_groups &= pipeline_groups_by_parent_purposes if pipeline_groups_by_parent_purposes&.any?
+
     # any matching pipeline MIGHT match the active requests
     pipeline_groups &= pipeline_groups_by_requests if pipeline_groups_by_requests&.any?
 
@@ -40,7 +43,7 @@ class Presenters::PipelineInfoPresenter
     pipeline_groups &= pipeline_groups_by_library if pipeline_groups_by_library&.any?
 
     # Return the remaining pipeline groups as a sorted array, or nil if none are found.
-    pipeline_groups.sort if pipeline_groups.any?
+    pipeline_groups.sort if pipeline_groups&.any?
   end
 
   # Returns the pipeline group name if there is only one pipeline group, otherwise nil.
@@ -133,6 +136,19 @@ class Presenters::PipelineInfoPresenter
       .map(&:pipeline_group)
   end
 
+
+  def pipeline_groups_by_parent_purposes
+    @labware
+      .parents
+      .map do |parent|
+        parent_labware = labware_from_asset(parent)
+        Settings
+          .pipelines
+          .select_pipelines_with_purpose(Settings.pipelines.list, parent_labware.purpose)
+          .map(&:pipeline_group)
+      end
+      .reduce(:&)
+  end
   def find_plate(barcode)
     Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }).first
   end
