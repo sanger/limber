@@ -10,11 +10,12 @@ import PoolXPTubeSubmitPanel from '@/javascript/pool-xp-tube-panel/components/Po
 import AssetComments from '@/javascript/asset-comments/components/AssetComments.vue'
 import AssetCommentsCounter from '@/javascript/asset-comments/components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from '@/javascript/asset-comments/components/AssetCommentsAddForm.vue'
+import BlendedTube from '@/javascript/blended-tube/components/BlendedTube.vue'
 import CustomTaggedPlate from '@/javascript/custom-tagged-plate/components/CustomTaggedPlate.vue'
 import FileList from '@/javascript/file-list/components/FileList.vue'
 import LabwareCustomMetadataAddForm from '@/javascript/labware-custom-metadata/components/LabwareCustomMetadataAddForm.vue'
 import MultiStamp from '@/javascript/multi-stamp/components/MultiStamp.vue'
-import MultiStampLibrarySpliter from '@/javascript/multi-stamp/components/MultiStampLibrarySplitter.js'
+import MultiStampLibrarySplitter from '@/javascript/multi-stamp/components/MultiStampLibrarySplitter.js'
 import MultiStampTubes from '@/javascript/multi-stamp-tubes/components/MultiStampTubes.vue'
 import QcInformation from '@/javascript/qc-information/components/QcInformation.vue'
 import TubesToRack from '@/javascript/tubes-to-rack/components/TubesToRack.vue'
@@ -93,8 +94,8 @@ const elements = [
     userIdRequired: true,
   },
   {
-    id: 'pool-xp-tube-submit-panel',
-    component: PoolXPTubeSubmitPanel,
+    id: 'blended-tube-page',
+    component: BlendedTube,
     userIdRequired: true,
   },
   {
@@ -116,11 +117,16 @@ const elements = [
   },
   {
     id: 'multi-stamp-library-splitter-page',
-    component: MultiStampLibrarySpliter,
+    component: MultiStampLibrarySplitter,
   },
   {
     id: 'multi-stamp-tubes-page',
     component: MultiStampTubes,
+  },
+  {
+    id: 'pool-xp-tube-submit-panel',
+    component: PoolXPTubeSubmitPanel,
+    userIdRequired: true,
   },
   {
     id: 'qc-information',

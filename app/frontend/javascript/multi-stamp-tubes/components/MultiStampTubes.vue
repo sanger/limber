@@ -60,7 +60,7 @@ import {
 import devourApi from '@/javascript/shared/devourApi.js'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
-import { transferTubesCreator } from '@/javascript/shared/transfersCreators.js'
+import { transferTubesToPlateCreator } from '@/javascript/shared/transfersCreators.js'
 import { transfersForTubes } from '@/javascript/shared/transfersLayouts.js'
 import { buildTubeObjs } from '@/javascript/shared/tubeHelpers.js'
 import { findUniqueIndex, indexToName } from '@/javascript/shared/wellHelpers.js'
@@ -330,7 +330,7 @@ export default {
     },
     apiTransfers() {
       // what we want to transfer when creating the plate
-      return transferTubesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
+      return transferTubesToPlateCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {
       this.progressMessage = 'Creating plate...'
