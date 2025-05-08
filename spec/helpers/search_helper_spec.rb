@@ -28,7 +28,7 @@ RSpec.describe SearchHelper, type: :helper do
 
   before { allow(Settings).to receive(:purposes).and_return(data) }
 
-  describe '#purpose_config_for_purpose_name' do
+  describe '.purpose_config_for_purpose_name' do
     it 'returns the purpose config from the purposes file' do
       conf = described_class.purpose_config_for_purpose_name('Plate with holes')
       expect(conf[:name]).to eq('Plate with holes')
@@ -40,7 +40,7 @@ RSpec.describe SearchHelper, type: :helper do
     end
   end
 
-  describe '#alternative_workline_reference_name' do
+  describe '.alternative_workline_reference_name' do
     context 'when the plate purpose for my plate has alternative workline identifier' do
       let(:plate) { create :v2_plate, purpose_name: 'Plate with more holes' }
 
