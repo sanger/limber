@@ -502,13 +502,6 @@ RSpec/SpecFilePathFormat:
     - 'spec/models/tube_rack_walking_spec.rb'
     - 'spec/sequencescape/api/v2/v2_spec.rb'
 
-# Offense count: 1
-# Configuration parameters: Include.
-# Include: **/*_spec*rb*, **/spec/**/*
-RSpec/SpecFilePathSuffix:
-  Exclude:
-    - 'spec/lib/labware_barcode.rb'
-
 # Offense count: 32
 RSpec/StubbedMock:
   Exclude:
