@@ -26,7 +26,7 @@ RSpec.describe PrintJob do
   describe 'init' do
     it 'has the correct insatnce variables' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -40,19 +40,19 @@ RSpec.describe PrintJob do
           number_of_copies: 2
         )
 
-      assert_equal expected_labels, pj.labels
-      assert_equal expected_sprint_labels, pj.labels_sprint
-      assert_equal printer_pmb.name, pj.printer_name
-      assert_equal printer_pmb, pj.printer
-      assert_equal label_templates_by_service, pj.label_templates_by_service
-      assert_equal printer_pmb.print_service, pj.printer.print_service
+      expect(pj.labels).to eq(expected_labels)
+      expect(pj.labels_sprint).to eq(expected_sprint_labels)
+      expect(pj.printer_name).to eq(printer_pmb.name)
+      expect(pj.printer).to eq(printer_pmb)
+      expect(pj.label_templates_by_service).to eq(label_templates_by_service)
+      expect(pj.printer.print_service).to eq(printer_pmb.print_service)
     end
   end
 
   describe 'execute' do
     it 'calls print_to_pmb when service is PMB' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -72,7 +72,7 @@ RSpec.describe PrintJob do
 
     it 'calls print_to_sprint when service is SPrint' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_sprint.name,
           printer: printer_sprint,
           label_templates_by_service: label_templates_by_service,
@@ -92,7 +92,7 @@ RSpec.describe PrintJob do
 
     it 'adds an error when service is down' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_unknown.name,
           printer: printer_unknown,
           label_templates_by_service: label_templates_by_service,
@@ -120,9 +120,9 @@ RSpec.describe PrintJob do
       )
     end
 
-    it 'should send post request to pmb if job is valid' do
+    it 'sends post request to pmb if job is valid' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -134,12 +134,12 @@ RSpec.describe PrintJob do
       allow(PMB::PrintJob).to receive(:new).and_return(pmb_print_job)
       allow(pmb_print_job).to receive(:save).and_return(true)
 
-      expect(pj.print_to_pmb).to eq(true)
+      expect(pj.print_to_pmb).to be(true)
     end
 
-    it 'should multiply lablels if several copies required' do
+    it 'multiplies lablels if several copies required' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -153,12 +153,12 @@ RSpec.describe PrintJob do
       allow(PMB::PrintJob).to receive(:new).and_return(pmb_print_job)
       allow(pmb_print_job).to receive(:save).and_return(false)
 
-      expect(pj.print_to_pmb).to eq(false)
+      expect(pj.print_to_pmb).to be(false)
     end
 
-    it 'should not execute if pmb is down' do
+    it 'does not execute if pmb is down' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -170,9 +170,9 @@ RSpec.describe PrintJob do
       expect(pj.errors.full_messages[0]).to eq('Pmb PrintMyBarcode service is down')
     end
 
-    it 'should not execute if the pmb label template cannot be found' do
+    it 'does not execute if the pmb label template cannot be found' do
       pj =
-        PrintJob.new(
+        described_class.new(
           printer_name: printer_pmb.name,
           printer: printer_pmb,
           label_templates_by_service: label_templates_by_service,
@@ -200,7 +200,7 @@ RSpec.describe PrintJob do
     end
 
     let(:pj) do
-      PrintJob.new(
+      described_class.new(
         printer_name: printer_sprint.name,
         printer: printer_sprint,
         label_templates_by_service: label_templates_by_service,
@@ -210,7 +210,7 @@ RSpec.describe PrintJob do
       )
     end
 
-    it 'will send a print request to SPrintClient' do
+    it 'sends a print request to SPrintClient' do
       allow(pj).to receive(:get_label_template_by_service).and_return(label_template_name_sprint)
       response = Net::HTTPSuccess.new(1.0, '200', 'OK')
       response.instance_variable_set(:@read, true)
@@ -224,10 +224,10 @@ RSpec.describe PrintJob do
         label_template_name_sprint,
         labels_sprint.values
       )
-      expect(pj.print_to_sprint).to eq(true)
+      expect(pj.print_to_sprint).to be(true)
     end
 
-    it 'will not execute if the SPrintClient is down' do
+    it 'does not execute if the SPrintClient is down' do
       response = Net::HTTPBadGateway.new(1.0, '502', nil)
       response.instance_variable_set(:@read, true)
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
@@ -235,7 +235,7 @@ RSpec.describe PrintJob do
       expect(pj.errors.full_messages[0]).to eq('Sprint Trouble connecting to SPrint. Please try again later.')
     end
 
-    it 'will not execute if the SPrintClient returns unprocessable entity' do
+    it 'does not execute if the SPrintClient returns unprocessable entity' do
       response = Net::HTTPUnprocessableEntity.new(1.0, '422', nil)
       response.instance_variable_set(:@read, true)
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
@@ -245,7 +245,7 @@ RSpec.describe PrintJob do
       )
     end
 
-    it 'will not execute if the SPrintClient returns unprocessable entity' do
+    it 'does not execute if the SPrintClient returns unprocessable entity' do
       response = Net::HTTPInternalServerError.new(1.0, '500', nil)
       response.instance_variable_set(:@read, true)
       allow(SPrintClient).to receive(:send_print_request).and_return(response)
@@ -253,7 +253,7 @@ RSpec.describe PrintJob do
       expect(pj.errors.full_messages[0]).to eq('Sprint Internal server error at SPrint. Please try again later.')
     end
 
-    it 'will not execute if the SPrintClient sends a valid error with code 200' do
+    it 'does not execute if the SPrintClient sends a valid error with code 200' do
       response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
       response.instance_variable_set(
@@ -277,7 +277,7 @@ RSpec.describe PrintJob do
       )
     end
 
-    it 'will not execute if the SPrintClient sends an invalid error with code 200' do
+    it 'does not execute if the SPrintClient sends an invalid error with code 200' do
       response = Net::HTTPSuccess.new(1.0, '200', nil)
       response.instance_variable_set(:@read, true)
       response.instance_variable_set(
@@ -303,7 +303,7 @@ RSpec.describe PrintJob do
   end
 
   describe '#extract_error_message' do
-    let(:print_job) { PrintJob.new }
+    let(:print_job) { described_class.new }
 
     it 'returns the error message with extensions' do
       response =

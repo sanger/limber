@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Creating a plate with bait', js: true do
+RSpec.feature 'Creating a plate with bait', :js do
   has_a_working_api
   let(:user_uuid) { 'user-uuid' }
   let(:user) { create :user, uuid: user_uuid }
@@ -63,7 +63,7 @@ RSpec.feature 'Creating a plate with bait', js: true do
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on 'Add an empty with-baits plate'
     expect(page).to have_content('Carefully check the bait layout')

@@ -4,6 +4,8 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::StampedPlateCompressed do
+  subject { described_class.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -72,8 +74,6 @@ RSpec.describe LabwareCreators::StampedPlateCompressed do
       }
     }
   end
-
-  subject { described_class.new(api, form_attributes) }
 
   context 'on new' do
     it 'can be created' do
