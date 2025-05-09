@@ -8,11 +8,11 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   has_a_working_api
 
-  it_behaves_like 'it only allows creation from plates'
-
   subject { described_class.new(api, form_attributes) }
 
-  it 'should have a custom page' do
+  it_behaves_like 'it only allows creation from plates'
+
+  it 'has a custom page' do
     expect(described_class.page).to eq 'plate_split_to_tube_racks'
   end
 
@@ -357,7 +357,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::PlateSplitToTubeRacks
+      expect(subject).to be_a described_class
     end
   end
 
@@ -458,7 +458,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#must_have_correct_number_of_tubes_in_rack_files' do
+  describe '#must_have_correct_number_of_tubes_in_rack_files' do
     let(:num_parent_wells) { 96 }
     let(:num_parent_unique_samples) { 48 }
     let(:num_sequencing_tubes) { 48 }
@@ -581,7 +581,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#check_tube_rack_barcodes_differ_between_files' do
+  describe '#check_tube_rack_barcodes_differ_between_files' do
     before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'when files are not present' do
@@ -691,7 +691,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#check_tube_barcodes_differ_between_files' do
+  describe '#check_tube_barcodes_differ_between_files' do
     before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'when files are not present' do
@@ -785,7 +785,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#check_tube_rack_scan_file' do
+  describe '#check_tube_rack_scan_file' do
     let(:tube_rack_file) { double('tube_rack_file') } # don't need an actual file for this test
     let(:tube_posn) { 'A1' }
     let(:foreign_barcode) { '123456' }
@@ -821,7 +821,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#save' do
+  describe '#save' do
     # body for stubbing the contingency file upload
     let(:contingency_file_contents) do
       content = contingency_file.read
@@ -918,23 +918,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         content
       end
 
-      # stub the contingency file upload
-      let!(:stub_contingency_file_upload) do
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-          body: contingency_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
-          }
-        ).to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
-      end
-
       # body for stubbing the sequencing file upload
       let(:sequencing_file_content) do
         content = sequencing_file.read
@@ -997,7 +980,24 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      before { stub_v2_user(user) }
+      before do
+        stub_v2_user(user)
+
+        # stub the contingency file upload
+        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
+          body: contingency_file_content,
+          headers: {
+            'Content-Type' => 'sequencescape/qc_file',
+            'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
+          }
+        ).to_return(
+          status: 201,
+          body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
+          headers: {
+            'content-type' => 'application/json'
+          }
+        )
+      end
 
       it 'creates the child tubes' do
         child_tube_racks = [sequencing_tube_rack, contingency_tube_rack]

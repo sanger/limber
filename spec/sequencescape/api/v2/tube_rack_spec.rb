@@ -16,8 +16,8 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
     end
 
     context 'when there are requests on the tube aliquots' do
-      let(:request_type1) { create(:request_type, key: 'type1') }
-      let(:request_type2) { create(:request_type, key: 'type2') }
+      let(:request_type1) { create(:request_type, key: 'first_key') }
+      let(:request_type2) { create(:request_type, key: 'second_key') }
       let(:request1) { create(:request, request_type: request_type1, state: 'started') }
       let(:request2) { create(:request, request_type: request_type2, state: 'started') }
       let(:tube1) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: request1)]) }
@@ -29,15 +29,18 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       end
 
       it 'returns all requests in progress' do
-        expect(tube_rack.requests_in_progress.map(&:id)).to match_array([request1.id, request2.id])
+        expect(tube_rack.requests_in_progress.map(&:id)).to contain_exactly(request1.id, request2.id)
       end
 
-      it 'filters requests by request types to complete' do
-        expect(tube_rack.requests_in_progress(request_types_to_complete: 'type1').map(&:id)).to match_array(
-          [request1.id]
+      it 'filters the first_key request to complete' do
+        expect(tube_rack.requests_in_progress(request_types_to_complete: 'first_key').map(&:id)).to contain_exactly(
+          request1.id
         )
-        expect(tube_rack.requests_in_progress(request_types_to_complete: 'type2').map(&:id)).to match_array(
-          [request2.id]
+      end
+
+      it 'filters the second_key request to complete' do
+        expect(tube_rack.requests_in_progress(request_types_to_complete: 'second_key').map(&:id)).to contain_exactly(
+          request2.id
         )
       end
     end
@@ -81,7 +84,7 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       end
 
       it 'returns all requests associated with the tube rack' do
-        expect(tube_rack.all_requests.map(&:id)).to match_array([request1.id, request2.id])
+        expect(tube_rack.all_requests.map(&:id)).to contain_exactly(request1.id, request2.id)
       end
     end
   end
@@ -96,21 +99,26 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
   end
 
   describe '#model_name' do
-    it 'returns an instance of ActiveModel::Name with the correct parameters' do
-      tube_rack = described_class.new
-      model_name = tube_rack.model_name
+    let(:tube_rack) { described_class.new }
+    let(:model_name) { tube_rack.model_name }
 
+    it 'returns an instance of ActiveModel::Name' do
       expect(model_name).to be_an_instance_of(ActiveModel::Name)
-      expect(model_name.name).to eq('Limber::TubeRack')
-      expect(model_name.singular).to eq('limber_tube_rack')
-      expect(model_name.plural).to eq('limber_tube_racks')
-      expect(model_name.element).to eq('tube_rack')
-      expect(model_name.human).to eq('Tube rack')
-      expect(model_name.collection).to eq('limber/tube_racks')
-      expect(model_name.param_key).to eq('limber_tube_rack')
-      expect(model_name.i18n_key).to eq(:'limber/tube_rack')
-      expect(model_name.route_key).to eq('limber_tube_racks')
-      expect(model_name.singular_route_key).to eq('limber_tube_rack')
+    end
+
+    it 'returns an instance with the correct parameters' do
+      expect(model_name).to have_attributes(
+        name: 'Limber::TubeRack',
+        singular: 'limber_tube_rack',
+        plural: 'limber_tube_racks',
+        element: 'tube_rack',
+        human: 'Tube rack',
+        collection: 'limber/tube_racks',
+        param_key: 'limber_tube_rack',
+        i18n_key: :'limber/tube_rack',
+        route_key: 'limber_tube_racks',
+        singular_route_key: 'limber_tube_rack'
+      )
     end
   end
 
@@ -140,12 +148,7 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
 
     it 'returns racked tubes sorted by coordinate' do
       sorted_racked_tubes = tube_rack1.racked_tubes_in_columns
-      expect(sorted_racked_tubes[0].tube).to eq(tube2)
-      expect(sorted_racked_tubes[1].tube).to eq(tube1)
-      expect(sorted_racked_tubes[2].tube).to eq(tube3)
-      expect(sorted_racked_tubes[3].tube).to eq(tube6)
-      expect(sorted_racked_tubes[4].tube).to eq(tube5)
-      expect(sorted_racked_tubes[5].tube).to eq(tube4)
+      expect(sorted_racked_tubes.map(&:tube)).to eq([tube2, tube1, tube3, tube6, tube5, tube4])
     end
 
     it 'memoizes the sorted racked tubes' do
@@ -157,12 +160,7 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
 
       it 'returns racked tubes sorted by coordinate' do
         sorted_racked_tubes = tube_rack1.racked_tubes_in_columns
-        expect(sorted_racked_tubes[0].tube).to eq(tube2)
-        expect(sorted_racked_tubes[1].tube).to eq(tube3)
-        expect(sorted_racked_tubes[2].tube).to eq(tube5)
-        expect(sorted_racked_tubes[3].tube).to eq(tube4)
-        expect(sorted_racked_tubes[4].tube).to eq(tube6)
-        expect(sorted_racked_tubes[5].tube).to eq(tube1)
+        expect(sorted_racked_tubes.map(&:tube)).to eq([tube2, tube3, tube5, tube4, tube6, tube1])
       end
     end
 
@@ -171,12 +169,7 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
 
       it 'returns racked tubes sorted by coordinate' do
         sorted_racked_tubes = tube_rack1.racked_tubes_in_columns
-        expect(sorted_racked_tubes[0].tube).to eq(tube2)
-        expect(sorted_racked_tubes[1].tube).to eq(tube3)
-        expect(sorted_racked_tubes[2].tube).to eq(tube5)
-        expect(sorted_racked_tubes[3].tube).to eq(tube4)
-        expect(sorted_racked_tubes[4].tube).to eq(tube6)
-        expect(sorted_racked_tubes[5].tube).to eq(tube1)
+        expect(sorted_racked_tubes.map(&:tube)).to eq([tube2, tube3, tube5, tube4, tube6, tube1])
       end
     end
   end

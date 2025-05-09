@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
+RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   include FeatureHelpers # Include methods for stubbing Sequencescape API requests.
   include RobotHelpers # Include methods for stubbing bed labware lookups.
   has_a_working_api # Add a mock Sequencescape API to the test context.
@@ -319,6 +319,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       context 'with a plate missing' do
         # We forgot to scan the plate.
         let(:scanned_layout) { { bed2_barcode => [tube_rack1_barcode], bed3_barcode => [tube_rack2_barcode] } }
+
         it { is_expected.not_to be_valid }
 
         it 'has correct error messages' do
@@ -331,6 +332,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       context 'with a child tube-rack missing' do
         # We forgot to scan the second tube-rack.
         let(:scanned_layout) { { bed1_barcode => [plate.human_barcode], bed2_barcode => [tube_rack1_barcode] } }
+
         it { is_expected.not_to be_valid }
 
         it 'has correct error messages' do
@@ -344,6 +346,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, robot: true do
       context 'with all child tube-racks missing' do
         # We forgot to scan all tube-racks.
         let(:scanned_layout) { { bed1_barcode => [plate.human_barcode] } }
+
         it { is_expected.not_to be_valid }
 
         # code knows by comparing to the labware store which specific tube racks are missing

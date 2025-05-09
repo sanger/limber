@@ -7,6 +7,7 @@ RSpec.describe Labels::PlateLabelQuadQc, type: :model do
 
   describe '#attributes' do
     subject(:attributes) { label.attributes }
+
     let(:labware) { create :v2_plate, barcode_number: 2 }
     let(:label) { described_class.new(labware) }
 
@@ -17,6 +18,7 @@ RSpec.describe Labels::PlateLabelQuadQc, type: :model do
 
   describe '#qc_label_definitions' do
     subject(:qc_label_definitions) { label.qc_label_definitions }
+
     let(:label) { described_class.new(labware) }
 
     context 'when creating the label of a full plate' do

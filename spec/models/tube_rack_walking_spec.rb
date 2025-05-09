@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe TubeRackWalking::Walker do
-  subject { TubeRackWalking::Walker.new(rack) }
+  subject { described_class.new(rack) }
 
   context 'A v2 rack' do
     let(:rack) { build :tube_rack, tubes: }

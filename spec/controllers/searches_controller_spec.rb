@@ -26,6 +26,7 @@ RSpec.describe SearchController, type: :controller do
 
     context 'for a plate' do
       let(:labware) { create :labware_plate, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_plate_path(uuid))
@@ -34,6 +35,7 @@ RSpec.describe SearchController, type: :controller do
 
     context 'for a tube' do
       let(:labware) { create :labware_tube, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_tube_path(uuid))
@@ -42,6 +44,7 @@ RSpec.describe SearchController, type: :controller do
 
     context 'for a tube rack' do
       let(:labware) { create :labware_tube_rack, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_tube_rack_path(uuid))
@@ -56,11 +59,13 @@ RSpec.describe SearchController, type: :controller do
       create(:tube_config, uuid: 'uuid-3')
       create(:tube_config, uuid: 'uuid-4')
     end
+
     let(:expected_search) { stub_search_and_multi_result(search_name, { 'search' => search_parameters }, [result]) }
 
     describe '#ongoing_plates' do
       let(:search_name) { 'Find plates' }
       let(:result) { associated :plate }
+
       context 'without parameters' do
         let(:search_parameters) do
           {
@@ -109,6 +114,7 @@ RSpec.describe SearchController, type: :controller do
     describe '#ongoing_tubes' do
       let(:search_name) { 'Find tubes' }
       let(:result) { associated :tube }
+
       context 'without parameters' do
         let(:search_parameters) do
           {

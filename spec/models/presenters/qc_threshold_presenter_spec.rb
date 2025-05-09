@@ -46,7 +46,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
       let(:configuration) { { molarity: { name: 'molarity', default_threshold: 20, max: 50, min: 5, units: 'nM' } } }
 
       it 'is disabled' do
-        expect(presenter.thresholds.first).to_not be_enabled
+        expect(presenter.thresholds.first).not_to be_enabled
       end
 
       it 'explains the problem' do
@@ -66,7 +66,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
       end
 
       it 'is disabled' do
-        expect(presenter.thresholds.first).to_not be_enabled
+        expect(presenter.thresholds.first).not_to be_enabled
       end
 
       it 'explains the problem' do
@@ -152,7 +152,7 @@ RSpec.describe Presenters::QcThresholdPresenter do
     end
 
     it 'returns nil if the key is not configured' do
-      expect(presenter.value_for(invalid_qc)).to eq nil
+      expect(presenter.value_for(invalid_qc)).to be_nil
     end
   end
 end

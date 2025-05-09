@@ -11,9 +11,9 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   has_a_working_api
 
   include FeatureHelpers
-  it_behaves_like 'it only allows creation from tubes'
-
   subject { described_class.new(api, form_attributes) }
+
+  it_behaves_like 'it only allows creation from tubes'
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }

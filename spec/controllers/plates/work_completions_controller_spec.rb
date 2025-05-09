@@ -26,7 +26,7 @@ RSpec.describe Plates::WorkCompletionsController, type: :controller do
       post :create, params: { limber_plate_id: plate_uuid }, session: { user_uuid: }
       expect(response).to redirect_to(limber_plate_path(plate_uuid))
       expect(work_completion_creation).to have_been_made.once
-      assert_equal ['Requests have been passed'], flash.notice
+      expect(flash.notice).to eq(['Requests have been passed'])
     end
   end
 end

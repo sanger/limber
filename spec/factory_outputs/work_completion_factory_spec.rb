@@ -36,7 +36,7 @@ RSpec.describe 'work completion factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Pooling multiple plates into a tube', js: true do
+RSpec.feature 'Pooling multiple plates into a tube', :js do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -120,7 +120,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     expect_transfer_creation
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
     scan_in('Plate 1', with: plate_barcode_1)
@@ -137,7 +137,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     stub_v2_plate(example_plate_3)
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
     scan_in('Plate 1', with: plate_barcode_1)
@@ -152,7 +152,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
     scan_in('Plate 3', with: '')
 
-    expect(page).to_not have_text(
+    expect(page).to have_no_text(
       'The scanned plate contains tags that would clash with those in other plates in the pool.'
     )
   end
