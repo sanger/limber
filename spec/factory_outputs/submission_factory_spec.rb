@@ -17,7 +17,7 @@ RSpec.describe 'submission factories' do
         }'
     end
 
-    it 'should match the expected json' do
+    it 'matches the expected json' do
       expect(JSON.parse(subject)).to eq JSON.parse(json_content)
     end
   end

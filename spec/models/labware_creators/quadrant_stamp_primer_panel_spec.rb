@@ -54,12 +54,12 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on new' do
+    subject { described_class.new(api, form_attributes) }
+
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
 
-    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes) }
-
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::QuadrantStampPrimerPanel
+      expect(subject).to be_a described_class
     end
 
     it 'renders the "multi_stamp" page' do
@@ -72,7 +72,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on create' do
-    subject { LabwareCreators::QuadrantStampPrimerPanel.new(api, form_attributes.merge(user_uuid: user.uuid)) }
+    subject { described_class.new(api, form_attributes.merge(user_uuid: user.uuid)) }
 
     let(:form_attributes) do
       {
@@ -285,7 +285,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: [parent1_uuid, parent2_uuid], user_uuid: user.uuid }]
     end
 
-    context '#save!' do
+    describe '#save!' do
       it 'creates a plate!' do
         expect_custom_metadatum_collection_creation
         expect_pooled_plate_creation

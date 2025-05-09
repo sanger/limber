@@ -261,7 +261,7 @@ RSpec.describe PipelineList do
       let(:pipeline_names) { ['Pipeline A'] }
       let(:expected_result) { ['Purpose 1', 'Purpose 2', 'Purpose 3'] }
 
-      it 'should error' do
+      it 'errors' do
         expect { model.combine_and_order_pipelines(pipeline_names) }.to raise_error(
           "Pipeline config can't be flattened into a list of purposes"
         )

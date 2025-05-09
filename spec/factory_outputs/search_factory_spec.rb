@@ -21,7 +21,7 @@ RSpec.describe 'search factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)['search']).to eq JSON.parse(json_content)['search']
   end
 end

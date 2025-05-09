@@ -16,14 +16,14 @@ RSpec.describe LabwareCreators do
   end
 
   it 'can lookup form for a given purpose' do
-    expect(LabwareCreators.class_for(basic_purpose)).to eq(LabwareCreators::StampedPlate)
+    expect(described_class.class_for(basic_purpose)).to eq(LabwareCreators::StampedPlate)
   end
 
   it 'can lookup form for another purpose' do
-    expect(LabwareCreators.class_for(tagged_purpose)).to eq(LabwareCreators::TaggedPlate)
+    expect(described_class.class_for(tagged_purpose)).to eq(LabwareCreators::TaggedPlate)
   end
 
   it 'can handle partially configured purposes' do
-    expect(LabwareCreators.class_for(partial_purpose)).to eq(LabwareCreators::Uncreatable)
+    expect(described_class.class_for(partial_purpose)).to eq(LabwareCreators::Uncreatable)
   end
 end

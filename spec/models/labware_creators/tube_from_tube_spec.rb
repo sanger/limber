@@ -13,11 +13,13 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
       context 'with a tube' do
         let(:parent) { build :tube }
+
         it { is_expected.to be true }
       end
 
       context 'with a plate' do
         let(:parent) { build :plate }
+
         it { is_expected.to be false }
       end
     end

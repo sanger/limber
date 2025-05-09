@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::TubeRackPresenter do
+  subject(:presenter) { described_class.new(labware:) }
+
   let(:purpose_name) { 'TR96' }
   let(:tube_purpose_name) { 'Tube purpose' }
   let(:title) { "#{purpose_name} : #{tube_purpose_name}" }
@@ -46,8 +48,6 @@ RSpec.describe Presenters::TubeRackPresenter do
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
-  subject(:presenter) { described_class.new(labware:) }
-
   it_behaves_like 'a labware presenter'
 
   describe '#priority' do
@@ -65,6 +65,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'everything failed' do
       let(:states) { %w[failed failed failed] }
+
       it 'returns failed' do
         expect(presenter.state).to eq('failed')
       end
@@ -72,6 +73,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of passed and failed' do
       let(:states) { %w[passed failed failed] }
+
       it 'returns passed' do
         expect(presenter.state).to eq('passed')
       end
@@ -79,6 +81,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of passed and cancelled' do
       let(:states) { %w[passed cancelled cancelled] }
+
       it 'returns passed' do
         expect(presenter.state).to eq('passed')
       end
@@ -86,6 +89,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of failed and cancelled' do
       let(:states) { %w[failed cancelled cancelled] }
+
       it 'returns failed' do
         expect(presenter.state).to eq('failed')
       end
@@ -93,6 +97,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of other states' do
       let(:states) { %w[passed pending started] }
+
       it 'returns mixed' do
         expect(presenter.state).to eq('mixed')
       end

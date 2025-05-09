@@ -8,6 +8,8 @@ require_relative 'shared_examples'
 # Adds the controls to randomised well locations on the child plate, potentially displacing samples
 # that would otherwise have been stamped across.
 RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
+  subject { described_class.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
@@ -108,11 +110,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
-  subject { LabwareCreators::StampedPlateAddingRandomisedControls.new(api, form_attributes) }
-
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::StampedPlateAddingRandomisedControls
+      expect(subject).to be_a described_class
     end
   end
 
@@ -130,7 +130,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         expect_plate_creation
         expect_transfer_request_collection_creation
 
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
     end
   end
@@ -254,7 +254,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[H1 G1] }
 
         it 'returns false' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq false
+          expect(subject.validate_control_rules(control_well_locations)).to be false
         end
       end
 
@@ -262,7 +262,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 C2] }
 
         it 'returns true' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq true
+          expect(subject.validate_control_rules(control_well_locations)).to be true
         end
       end
     end
@@ -282,7 +282,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 H12] }
 
         it 'returns false' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq false
+          expect(subject.validate_control_rules(control_well_locations)).to be false
         end
       end
 
@@ -290,7 +290,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 C2] }
 
         it 'returns true' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq true
+          expect(subject.validate_control_rules(control_well_locations)).to be true
         end
       end
     end
@@ -384,11 +384,13 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   describe '#create_control_sample_name' do
     let(:plate_size) { 96 }
-    let(:control) { double('Control', name_prefix: 'CONTROL_POS_') } # Replace OpenStruct with a test double
+    let(:control) { instance_double('Control', name_prefix: 'CONTROL_POS_') }
     let(:well_location) { 'B5' }
     let(:child_barcode) { 'CHILD-12345' }
 
     before do
+      RSpec::Mocks.configuration.allow_message_expectations_on_nil = true
+      # subject.@child is created at initialisation, so is expected to be nil at this point - therefore allow it
       allow(subject.instance_variable_get(:@child)).to receive_message_chain(:labware_barcode, :human).and_return(
         child_barcode
       )
@@ -401,9 +403,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     it 'includes the control name prefix, child barcode, and well location' do
       sample_name = subject.send(:create_control_sample_name, control, well_location)
-      expect(sample_name).to include(control.name_prefix)
-      expect(sample_name).to include(child_barcode)
-      expect(sample_name).to include(well_location)
+      expect(sample_name).to include(control.name_prefix, child_barcode, well_location)
     end
   end
 end

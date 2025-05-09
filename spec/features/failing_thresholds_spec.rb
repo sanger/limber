@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Failing thresholds', js: true do
+RSpec.feature 'Failing thresholds', :js do
   has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
@@ -74,6 +74,6 @@ RSpec.feature 'Failing thresholds', js: true do
     fill_in 'Molarity', with: 15
     click_on('Fail selected wells')
 
-    expect(find('#flashes')).to have_content('Selected wells have been failed')
+    expect(find_by_id('flashes')).to have_content('Selected wells have been failed')
   end
 end

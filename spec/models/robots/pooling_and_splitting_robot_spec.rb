@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
+RSpec.describe Robots::PoolingAndSplittingRobot, :robots do
   include RobotHelpers
 
   has_a_working_api
@@ -73,7 +73,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
   end
   let(:target_plate_2) { create :v2_plate, target_plate_2_attributes }
 
-  let(:robot) { Robots::PoolingAndSplittingRobot.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
 
   let(:robot_spec) do
     {
@@ -171,6 +171,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, robots: true do
 
         context 'but unrelated plates' do
           let(:transfer_source_plates) { [create(:v2_plate, barcode_number: 4)] }
+
           it { is_expected.not_to be_valid }
         end
       end

@@ -6,6 +6,8 @@ require_relative 'shared_examples'
 # In this test, we are testing that the pipeline filters are applied
 # and the right requests are associated with the converted tag plate.
 RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
+  subject { described_class.new(api, form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
 
   has_a_working_api # Setup API V1 for the test
@@ -116,8 +118,6 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
     # It will receive the parent plate.
     allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(parent)
   end
-
-  subject { described_class.new(api, form_attributes) }
 
   context 'on new' do
     # Test that the labware creator in new action is initialised with the

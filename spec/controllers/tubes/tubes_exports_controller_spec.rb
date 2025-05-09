@@ -22,7 +22,7 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Tube)
       expect(assigns(:tube)).to be_a(Sequencescape::Api::V2::Tube)
       expect(response).to render_template(expected_template)
-      assert_equal content_type, @response.content_type
+      expect(@response.content_type).to eq(content_type)
       expect(@response.get_header('Content-Disposition')).to include(tube_barcode)
     end
   end

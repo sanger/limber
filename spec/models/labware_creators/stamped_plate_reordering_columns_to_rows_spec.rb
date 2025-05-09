@@ -5,6 +5,8 @@ require 'spec_helper'
 RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
   has_a_working_api
 
+  subject { described_class.new(api, form_attributes) }
+
   let(:user_uuid) { 'user-uuid' }
 
   let(:parent_purpose_uuid) { 'parent-purpose' }
@@ -34,8 +36,6 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
-
-  subject { described_class.new(api, form_attributes) }
 
   before do
     # Create the purpose config to be able to test the validation for number of source wells.

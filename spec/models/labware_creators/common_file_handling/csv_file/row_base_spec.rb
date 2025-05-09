@@ -4,19 +4,18 @@ require_dependency 'well_helpers'
 
 RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
   # This is an abstract class, and we need to override the initialize_context_specific_fields method
-  before { allow_any_instance_of(described_class).to receive(:initialize_context_specific_fields) }
-
   subject { described_class.new(1, row_data) }
 
-  let(:row_position) { 'A1' }
-  let(:row_barcode) { 'AB10000001' }
-  let(:row_data) { [row_position, row_barcode] }
-
   before do
+    allow_any_instance_of(described_class).to receive(:initialize_context_specific_fields)
     subject.instance_variable_set(:@row_data, row_data)
     allow(subject).to receive(:expected_number_of_columns).and_return(2)
     allow(subject).to receive(:to_s).and_return('row 1 [A1]')
   end
+
+  let(:row_position) { 'A1' }
+  let(:row_barcode) { 'AB10000001' }
+  let(:row_data) { [row_position, row_barcode] }
 
   # Testing the validation for invalid characters
   describe '#check_for_invalid_characters' do

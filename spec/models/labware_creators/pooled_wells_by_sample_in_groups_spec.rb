@@ -8,6 +8,8 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   # In these tests, sample uuid and well state are modified at specific
   # wells for setup.
 
+  subject { described_class.new(api, form_attributes) }
+
   let(:user_uuid) { 'user-uuid' }
   let(:parent_plate_uuid) { 'parent-plate-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
@@ -27,8 +29,6 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
 
   # Child plate assumed to be created
   let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
-
-  subject { described_class.new(api, form_attributes) }
 
   before do
     # Create a purpose config for the plate (number_of_source_wells is 2)
@@ -71,6 +71,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         expect(wells[1].location).to eq('H1')
       end
     end
+
     context 'when wells are not ordered between columns' do
       before do
         # Swap wells between columns so that they are not in correct order
@@ -213,7 +214,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       # Assume A1 to A1 transfer
       expect(request[:source_asset]).to eq(source_well.uuid)
       expect(request[:target_asset]).to eq(child_plate.wells.first.uuid)
-      expect(request[:merge_equivalent_aliquots]).to eq(true)
+      expect(request[:merge_equivalent_aliquots]).to be(true)
       expect(request[:submission_id]).to eq(submission_id)
     end
   end
@@ -221,6 +222,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   describe '#transfer_request_attributes' do
     context 'when there is no passed source well' do
       before { parent_plate.wells.map { |well| well.state = 'failed' } }
+
       it 'returns empty list' do
         expect(subject.transfer_request_attributes(child_plate)).to eq([])
       end
@@ -243,7 +245,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         # Source wells: A1, B1, C1, D1
         requests.each_with_index do |request, index|
           expect(request[:source_asset]).to eq(parent_plate.wells[index].uuid)
-          expect(request[:merge_equivalent_aliquots]).to eq(true)
+          expect(request[:merge_equivalent_aliquots]).to be(true)
         end
 
         # Destination wells: A1, A1, B1, C1

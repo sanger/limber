@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Plate transfer', js: true, robots: true do
+RSpec.feature 'Plate transfer', :js, :robots do
   include RobotHelpers
 
   has_a_working_api
@@ -107,19 +107,19 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan bed', with: '580000004838'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
     end
     scan_in 'Scan robot', with: robot_barcode
     within('#robot') do
-      expect(page).not_to have_content('123')
+      expect(page).to have_no_content('123')
       expect(page).to have_content(robot_barcode.to_s)
     end
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_2
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
       expect(page).to have_content("Labware: #{plate_barcode_2}")
@@ -148,7 +148,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end
@@ -173,7 +173,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end

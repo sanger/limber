@@ -5,9 +5,10 @@ require 'rails_helper'
 # Includes nested tests for Pool/Subpool
 
 RSpec.describe Sequencescape::Api::V2::Plate::Pools do
+  subject(:pools) { Sequencescape::Api::V2::Plate::Pools.new(plate.wells) }
+
   let(:plate) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
   let(:number_of_pools) { 2 }
-  subject(:pools) { Sequencescape::Api::V2::Plate::Pools.new(plate.wells) }
 
   describe '#number_of_pools' do
     it 'returns the number of pools' do

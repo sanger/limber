@@ -3,7 +3,7 @@
 # require 'rails_helper'
 
 RSpec.describe BarcodeLabelsHelper do
-  include BarcodeLabelsHelper
+  include described_class
 
   describe '#barcode_printing_form' do
     has_a_working_api

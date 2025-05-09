@@ -16,14 +16,14 @@ RSpec.describe LabwareCreators::Base do
   end
 
   context 'with a custom transfer-template' do
+    subject { described_class.new(nil, purpose_uuid: 'test-purpose') }
+
     before do
       create :purpose_config, transfer_template: 'Custom transfer template', uuid: 'test-purpose'
 
       # Note this next change is persisted across the whole test run
       Settings.transfer_templates['Custom transfer template'] = 'custom-template-uuid'
     end
-
-    subject { LabwareCreators::Base.new(nil, purpose_uuid: 'test-purpose') }
 
     it 'can lookup form for another purpose' do
       expect(subject.transfer_template_uuid).to eq('custom-template-uuid')

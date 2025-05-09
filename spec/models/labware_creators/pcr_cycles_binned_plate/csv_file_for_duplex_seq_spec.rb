@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with: :uploader do
+  subject { described_class.new(file, csv_file_config, 'DN2T') }
+
   let(:purpose_config) { create :duplex_seq_customer_csv_file_upload_purpose_config }
   let(:csv_file_config) { purpose_config.fetch(:csv_file_upload) }
-
-  subject { described_class.new(file, csv_file_config, 'DN2T') }
 
   context 'Valid files' do
     let(:expected_well_details) do
@@ -130,13 +130,13 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
       end
 
       describe '#valid?' do
-        it 'should be valid' do
+        it 'is valid' do
           expect(subject.valid?).to be true
         end
       end
 
       describe '#well_details' do
-        it 'should parse the expected well details' do
+        it 'parses the expected well details' do
           expect(subject.well_details).to eq expected_well_details
         end
       end
@@ -148,13 +148,13 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
       end
 
       describe '#valid?' do
-        it 'should be valid' do
+        it 'is valid' do
           expect(subject.valid?).to be true
         end
       end
 
       describe '#well_details' do
-        it 'should parse the expected well details' do
+        it 'parses the expected well details' do
           expect(subject.well_details).to eq expected_well_details
         end
       end
@@ -169,7 +169,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
     before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -189,7 +189,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -246,7 +246,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
     let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -272,7 +272,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -291,7 +291,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForDuplexSeq, with:
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 

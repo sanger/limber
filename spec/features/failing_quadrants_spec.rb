@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Failing quadrants', js: true do
+RSpec.feature 'Failing quadrants', :js do
   has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
@@ -69,6 +69,6 @@ RSpec.feature 'Failing quadrants', js: true do
     click_on('Select Quadrant 4')
 
     click_on('Fail selected wells')
-    expect(find('#flashes')).to have_content('Selected wells have been failed')
+    expect(find_by_id('flashes')).to have_content('Selected wells have been failed')
   end
 end

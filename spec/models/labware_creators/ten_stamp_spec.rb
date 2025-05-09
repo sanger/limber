@@ -6,13 +6,13 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::TenStamp do
   has_a_working_api
 
+  subject { described_class.new(api, form_attributes) }
+
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
 
   let(:parent1_uuid) { 'parent1-plate-uuid' }
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
-
-  subject { LabwareCreators::TenStamp.new(api, form_attributes) }
 
   context 'when purpose_config[:creator_class] is a string' do
     let!(:purpose_config) do

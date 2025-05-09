@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 # CreationForm is the base class for our forms
-RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
+RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
   has_a_working_api
 
   # :tag_layout_template_by_row
@@ -24,6 +24,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
   shared_examples 'a tag layout' do
     describe '#generate_tag_layout' do
       subject { tag_layout_template.coerce.generate_tag_layout(plate) }
+
       it { is_expected.to eq expected_layout }
     end
   end
@@ -131,6 +132,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [2, 96]
       }
     end
+
     it_behaves_like 'a tag layout'
   end
 
@@ -236,6 +238,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [1, 1]
       }
     end
+
     it_behaves_like 'a tag layout'
   end
 
@@ -352,6 +355,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [2, 96]
       }
     end
+
     it_behaves_like 'a tag layout'
   end
 
@@ -457,6 +461,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [2, 96]
       }
     end
+
     it_behaves_like 'a tag layout'
   end
 
@@ -562,6 +567,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [1, 1]
       }
     end
+
     it_behaves_like 'a tag layout'
   end
 
@@ -667,6 +673,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [2, 8]
       }
     end
+
     it_behaves_like 'a tag layout'
   end
 
@@ -771,16 +778,22 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [2, 24]
       }
     end
+
     context 'in columns then rows' do
       let(:template_factory) { :tag_layout_template_by_quadrant }
+
       it_behaves_like 'a tag layout'
     end
+
     context 'in columns' do
       let(:template_factory) { :tag_layout_template_by_quadrant_in_columns }
+
       it_behaves_like 'a tag layout'
     end
+
     context 'in columns then columns' do
       let(:template_factory) { :tag_layout_template_by_quadrant_in_columns_then_columns }
+
       it_behaves_like 'a tag layout'
     end
   end
@@ -898,6 +911,7 @@ RSpec.describe Limber::TagLayoutTemplate, tag_plate: true do
         'H12' => [2, 24]
       }
     end
+
     it_behaves_like 'a tag layout'
   end
 end
