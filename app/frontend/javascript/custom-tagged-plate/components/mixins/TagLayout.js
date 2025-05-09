@@ -79,15 +79,6 @@ export default {
     tag2Group() {
       return this.tagGroupsList?.[this.tag2GroupId] || this.nullTagGroup // holds the tag group 2 once selected
     },
-    coreTagGroupOptions() {
-      return Object.values(this.tagGroupsList)
-        .map((tagGroup) => {
-          return { value: tagGroup.id, text: tagGroup.name }
-        })
-        .sort((a, b) => {
-          return a.text.localeCompare(b.text)
-        })
-    },
 
     coreTagSetOptions() {
       return Object.values(this.tagSetList)
@@ -97,12 +88,6 @@ export default {
         .sort((a, b) => {
           return a.text.localeCompare(b.text)
         })
-    },
-    tag1GroupOptions() {
-      return [{ value: null, text: 'Please select an i7 Tag 1 group...' }].concat(this.coreTagGroupOptions.slice())
-    },
-    tag2GroupOptions() {
-      return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
     },
     tagSetOptions() {
       return [{ value: null, text: 'Please select a Tagset...' }].concat(this.coreTagSetOptions.slice())
