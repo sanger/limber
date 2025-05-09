@@ -105,7 +105,7 @@ LRC TR Bank Seq:
   # fixed for TubeRacks (this needs to be done in Sequencescape). So, for now,
   # we are using the TubeRackStateChanger for Manual Transfers.
   # See: https://github.com/sanger/limber/issues/2074
-  :state_changer_class: StateChangers::TubeRackStateChanger
+  :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
   :file_links:
     - name: Download Racked Tube Concentrations (ng/ul) CSV
@@ -129,7 +129,7 @@ LRC TR Bank Spare:
   # fixed for TubeRacks (this needs to be done in Sequencescape). So, for now,
   # we are using the TubeRackStateChanger for Manual Transfers.
   # See: https://github.com/sanger/limber/issues/2074
-  :state_changer_class: StateChangers::TubeRackStateChanger
+  :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
   :file_links:
     - name: Download Tube Rack Concentrations (ng/ul) CSV

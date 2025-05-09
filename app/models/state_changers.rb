@@ -126,22 +126,16 @@ module StateChangers
     # @param reason [String, nil] the reason for the state change (optional)
     #
     # Iterates over the tubes and passes them individually.
-    def move_to!(state, reason = nil, _customer_accepts_responsibility = nil)
+    def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
       return if state.nil? || labware.nil? # We have nothing to do
-
-      labware
-        .racked_tubes
-        .select { |racked_tube| ACCEPTED_STATES.include?(racked_tube.tube.state) }
-        .each { |racked_tube| change_tube_state(racked_tube.tube, state, reason) }
-    end
-
-    private
-
-    # Changes the state of the tube to the target state.
-    # This method is using the StateChangers lookup to determine the correct state changer for the tube.
-    def change_tube_state(tube, target_state, reason)
-      state_changer = StateChangers.lookup_for(tube.purpose.uuid)
-      state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, reason)
+      Sequencescape::Api::V2::StateChange.create!(
+        contents: nil,
+        customer_accepts_responsibility: customer_accepts_responsibility,
+        reason: reason,
+        target_state: state,
+        target_uuid: labware_uuid,
+        user_uuid: user_uuid
+      )
     end
   end
 
@@ -185,11 +179,6 @@ module StateChangers
     def labware
       @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
-
-    def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
-      super
-      complete_outstanding_requests
-    end
   end
 
   # The Plate State changer is used by the vast majority of plates. It creates
@@ -225,6 +214,7 @@ module StateChangers
 
   # The tube state changer is used by Tubes. It works the same way as the default
   # plate state changer but does not need to handle a subset of wells like the plate.
+  # Use this where you don't want work completion to occur.
   class TubeStateChanger < BaseStateChanger
     # Tubes have no wells so contents is always empty
     def contents_for(_target_state)

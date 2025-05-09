@@ -75,7 +75,9 @@ module Sequencescape::Api::V2
 
   def self.tube_rack_for_completion(uuid)
     TubeRack
-      .includes('racked_tubes.tube.receptacle.aliquots.request.submission,receptacle.aliquots.request.request_type')
+      .includes(
+        'racked_tubes.tube.receptacle.aliquots.request.submission,tube_receptacles.aliquots.request.request_type'
+      )
       .find(uuid:)
       .first
   end
