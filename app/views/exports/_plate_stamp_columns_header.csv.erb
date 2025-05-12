@@ -1,4 +1,5 @@
-<%= CSV.generate_line [
+<%# raw allows us the render the content "as is" preventing escaping for charcters like ' in our csv workflows. %>
+<%= raw CSV.generate_line [
                         'Workflow',
                         @workflow
                       ],
