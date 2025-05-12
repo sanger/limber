@@ -1,16 +1,16 @@
 <%= content_for(:title, @presenter.document_title) %>
 
-<%= page(:'tube-show-page', :'show-page') do %>
-  <%= content do %>
-    <%= card without_block: true do %>
-      <%= render 'content_header', presenter: @presenter, type: 'tube' %>
-      <%= render 'warnings', presenter: @presenter %>
+<%= content_for(:page_id, :'tube-show-page') %>
 
-      <div id="labware-summary">
-        <%= render partial: 'labware/tube', locals: { tube: @presenter.labware, presenter: @presenter } %>
-      </div>
-    <% end %>
-  <% end %>
+<%= content_for(:labware_content) do %>
+  <%= render 'content_header', presenter: @presenter, type: 'tube' %>
+  <%= render 'warnings', presenter: @presenter %>
+  <%= render 'info', presenter: @presenter %>
+  <div id="labware-summary">
+    <%= render partial: 'labware/tube', locals: { tube: @presenter.labware, presenter: @presenter } %>
+  </div>
+<% end %>
 
+<%= content_for(:labware_sidebar) do %>
   <%= render partial: "tubes/sidebars/#{@presenter.sidebar_partial}", locals: { presenter: @presenter } %>
 <% end %>
