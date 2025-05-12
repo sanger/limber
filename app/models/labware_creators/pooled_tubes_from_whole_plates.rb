@@ -21,7 +21,9 @@ module LabwareCreators
           .create!(
             child_purpose_uuids: [purpose_uuid],
             parent_uuids: [parents.first.uuid],
-            tube_attributes: [{ name: "#{stock_plate_barcode}+" }],
+            # NB. name is overridden in the after_create method in Transfer::FromPlateToTube
+            # in Sequencescape, to use the stock plate barcode and well range, so not set here
+            tube_attributes: [{}],
             user_uuid: user_uuid
           )
           .children
@@ -33,10 +35,6 @@ module LabwareCreators
 
     def barcodes=(input)
       @barcodes = (input || []).map(&:strip).compact_blank
-    end
-
-    def stock_plate_barcode
-      "#{parents.first.stock_plate.barcode.prefix}#{parents.first.stock_plate.barcode.number}"
     end
 
     def redirection_target
