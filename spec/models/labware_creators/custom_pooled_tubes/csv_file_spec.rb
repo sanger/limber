@@ -74,6 +74,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
 
     describe '#valid?' do
       subject { described_class.new(file).valid? }
+
       it { is_expected.to be false }
 
       let(:row2_error) do

@@ -3,9 +3,9 @@
 require 'spec_helper'
 
 RSpec.describe PlateHelper do
-  include PlateHelper
+  include described_class
 
-  context '#sorted_pre_cap_pool_json' do
+  describe '#sorted_pre_cap_pool_json' do
     # create 3 pre-cap pools with ids not in sequential order
     let(:pre_cap_pool_1) { build :pre_capture_pool, id: 123, uuid: 'pre-cap-pool-1' }
     let(:pre_cap_pool_2) { build :pre_capture_pool, id: 122, uuid: 'pre-cap-pool-2' }

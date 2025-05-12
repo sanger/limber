@@ -7,9 +7,9 @@ RSpec.describe Labels::PlateLabelHumanBarcode, type: :model do
 
   context 'when creating the label of a plate with a human readable barcode' do
     let(:labware) { create :v2_plate }
-    let(:label) { Labels::PlateLabelHumanBarcode.new(labware) }
+    let(:label) { described_class.new(labware) }
 
-    context '#attributes' do
+    describe '#attributes' do
       it 'has the correct attributes' do
         attributes = label.attributes
         expect(attributes[:top_left]).to eq Time.zone.today.strftime('%e-%^b-%Y')

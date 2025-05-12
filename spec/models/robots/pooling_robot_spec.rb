@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots::PoolingRobot, robots: true do
+RSpec.describe Robots::PoolingRobot, :robots do
   include RobotHelpers
 
   has_a_working_api
@@ -48,7 +48,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
   let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: }
   let(:metadata) { { 'other_key' => 'value' } }
 
-  let(:robot) { Robots::PoolingRobot.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
 
   let(:robot_spec) do
     {
@@ -122,6 +122,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
     context 'a simple robot' do
       context 'with an unknown plate' do
         before { bed_plate_lookup_with_barcode('dodgy_barcode', [], [:purpose, { wells: :upstream_plates }]) }
+
         let(:scanned_layout) { { 'bed1_barcode' => ['dodgy_barcode'] } }
 
         it { is_expected.not_to be_valid }
@@ -142,6 +143,7 @@ RSpec.describe Robots::PoolingRobot, robots: true do
 
         context 'but unrelated plates' do
           let(:transfer_source_plates) { [create(:v2_plate)] }
+
           it { is_expected.not_to be_valid }
         end
       end

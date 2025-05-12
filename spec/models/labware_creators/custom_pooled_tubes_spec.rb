@@ -10,11 +10,11 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   has_a_working_api
 
-  it_behaves_like 'it only allows creation from charged and passed plates'
-
   subject { described_class.new(api, form_attributes) }
 
-  it 'should have page' do
+  it_behaves_like 'it only allows creation from charged and passed plates'
+
+  it 'has page' do
     expect(described_class.page).to eq 'custom_pooled_tubes'
   end
 
@@ -37,11 +37,11 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
 
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::CustomPooledTubes
+      expect(subject).to be_a described_class
     end
   end
 
-  context '#save' do
+  describe '#save' do
     let(:file_contents) do
       contents = file.read
       file.rewind

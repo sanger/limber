@@ -14,9 +14,9 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
     let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: [aliquot]) }
     let(:labware) { create :v2_plate, wells: [well_c6] }
 
-    let(:label) { Labels::PlateLabel96Lysate.new(labware) }
+    let(:label) { described_class.new(labware) }
 
-    context '#attributes' do
+    describe '#attributes' do
       it 'has the correct attributes' do
         attributes = label.attributes
         expect(attributes[:top_left]).to eq Time.zone.today.strftime('%e-%^b-%Y')
@@ -27,7 +27,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
       end
     end
 
-    context '#additional_label_definitions' do
+    describe '#additional_label_definitions' do
       let(:expected_partner_id) { 'ABCD-123-SDC' }
 
       context 'when the partner id is a normal length' do
@@ -60,7 +60,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
         it 'creates a label without the partner id shown' do
           additional_label_definitions = label.additional_label_definitions[0]
           expect(additional_label_definitions[:bottom_right]).to eq expected_message
-          expect(additional_label_definitions[:barcode]).to eq nil
+          expect(additional_label_definitions[:barcode]).to be_nil
         end
       end
 

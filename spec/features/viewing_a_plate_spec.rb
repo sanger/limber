@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Viewing a plate', js: true do
+RSpec.feature 'Viewing a plate', :js do
   has_a_working_api
 
   let(:user) { create :user }
@@ -42,16 +42,17 @@ RSpec.feature 'Viewing a plate', js: true do
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+    expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.state-badge')).to have_content('Pending')
     find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
   end
 
   context 'with a custom csv' do
     let(:purpose_config) { create :purpose_config, csv_template: 'show_extended', uuid: purpose_uuid }
+
     scenario 'of a recognised type' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
       expect(find('.state-badge')).to have_content('Pending')
       find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
       find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
@@ -60,9 +61,10 @@ RSpec.feature 'Viewing a plate', js: true do
 
   context 'a passed plate' do
     let(:state) { 'passed' }
+
     scenario 'creation of a child is allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
       expect(find('.state-badge')).to have_content('Passed')
       expect(page).to have_button('Add an empty Child Purpose 0 plate')
     end
@@ -70,11 +72,12 @@ RSpec.feature 'Viewing a plate', js: true do
 
   context 'a started plate' do
     let(:state) { 'started' }
+
     scenario 'if a plate is started creation of a child is not allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('#plate-show-page')).to have_content('Limber Cherrypicked')
+      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
       expect(find('.state-badge')).to have_content('Started')
-      expect(page).not_to have_button('Add an empty Limber Example Purpose plate')
+      expect(page).to have_no_button('Add an empty Limber Example Purpose plate')
     end
   end
 
@@ -82,10 +85,12 @@ RSpec.feature 'Viewing a plate', js: true do
     let(:wells_collection) do
       %w[A1 B1].map { |loc| create(:v2_well, state: state, location: loc, aliquot_factory: :v2_suboptimal_aliquot) }
     end
+
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content('Wells contain suboptimal aliquots')
     end
+
     scenario 'the well is flagged as suboptimal' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(page).to have_css('#aliquot_A1.suboptimal')
@@ -95,11 +100,12 @@ RSpec.feature 'Viewing a plate', js: true do
   feature 'without a suboptimal well' do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('#plate-show-page')).not_to have_content('Wells contain suboptimal aliquots')
+      expect(find_by_id('plate-show-page')).to have_no_content('Wells contain suboptimal aliquots')
     end
+
     scenario 'the well is flagged as suboptimal' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('#plate-show-page')).not_to have_css('#aliquot_A1.suboptimal')
+      expect(find_by_id('plate-show-page')).to have_no_css('#aliquot_A1.suboptimal')
     end
   end
 
@@ -117,9 +123,10 @@ RSpec.feature 'Viewing a plate', js: true do
   feature 'with a tagged plate' do
     let(:purpose_config) { create :tagged_purpose_config, uuid: purpose_uuid }
     let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_tagged_well, location: loc) } }
+
     scenario 'it shows tags' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('#aliquot_A1')).to have_content('1')
+      expect(find_by_id('aliquot_A1')).to have_content('1')
     end
   end
 

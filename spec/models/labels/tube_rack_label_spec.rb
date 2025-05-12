@@ -9,7 +9,7 @@ RSpec.describe Labels::TubeRackLabel, type: :model do
     let(:labware) { create :tube_rack, barcode_number: 2 }
     let(:label) { described_class.new(labware) }
 
-    context '#attributes' do
+    describe '#attributes' do
       it 'has the correct attributes' do
         attributes = label.attributes
         expect(attributes[:top_left]).to eq Time.zone.today.strftime('%e-%^b-%Y')

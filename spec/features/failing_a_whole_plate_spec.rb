@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Failing a whole plate', js: true do
+RSpec.feature 'Failing a whole plate', :js do
   has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
@@ -65,7 +65,7 @@ RSpec.feature 'Failing a whole plate', js: true do
 
     click_on('Fail Labware')
 
-    expect(find('#flashes')).to have_content(
+    expect(find_by_id('flashes')).to have_content(
       "Labware: #{plate_barcode} has been changed to a state of Failed. The customer will still be charged."
     )
   end

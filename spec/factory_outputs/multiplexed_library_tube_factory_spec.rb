@@ -65,7 +65,7 @@ RSpec.describe 'multiplexed_library_tube factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
     # rubocop:todo Layout/LineLength
     #  expect(JSON.parse(subject)['multiplexed_library_tube']).to eq JSON.parse(json_content)['multiplexed_library_tube']

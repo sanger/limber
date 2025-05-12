@@ -5,6 +5,8 @@ require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::NormalisedBinningCalculator do
   context 'when computing values for normalised binning' do
+    subject { described_class.new(dilutions_config) }
+
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
@@ -84,8 +86,6 @@ RSpec.describe Utility::NormalisedBinningCalculator do
         ]
       }
     end
-
-    subject { Utility::NormalisedBinningCalculator.new(dilutions_config) }
 
     describe '#normalisation_details' do
       context 'for all wells in the parent plate' do
@@ -256,7 +256,7 @@ RSpec.describe Utility::NormalisedBinningCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
 
@@ -321,7 +321,7 @@ RSpec.describe Utility::NormalisedBinningCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
     end
