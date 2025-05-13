@@ -55,4 +55,4 @@ BGE Blend:
     BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
     BGE Blended Cap Lib Pool: BGE Lib Pool Norm
     # 1:1 transfer here, not a pool as such
-    BGE Lib Pool Norm: BGE Custom pool
+    BGE Lib Pool Norm: BGE Custom Pool
