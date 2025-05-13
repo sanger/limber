@@ -60,14 +60,7 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
   let(:child_tube) { create :v2_tube, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool tube' }
 
   let(:specific_tubes_attributes) do
-    [
-      {
-        uuid: child_tube.purpose.uuid,
-        parent_uuids: [parent_uuid],
-        child_tubes: [child_tube],
-        tube_attributes: [{}]
-      }
-    ]
+    [{ uuid: child_tube.purpose.uuid, parent_uuids: [parent_uuid], child_tubes: [child_tube], tube_attributes: [{}] }]
   end
 
   # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
