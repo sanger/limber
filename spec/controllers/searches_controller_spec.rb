@@ -26,6 +26,7 @@ RSpec.describe SearchController, type: :controller do
 
     context 'for a plate' do
       let(:labware) { create :labware_plate, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_plate_path(uuid))
@@ -34,6 +35,7 @@ RSpec.describe SearchController, type: :controller do
 
     context 'for a tube' do
       let(:labware) { create :labware_tube, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_tube_path(uuid))
@@ -42,6 +44,7 @@ RSpec.describe SearchController, type: :controller do
 
     context 'for a tube rack' do
       let(:labware) { create :labware_tube_rack, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
         expect(response).to redirect_to(limber_tube_rack_path(uuid))
@@ -91,6 +94,7 @@ RSpec.describe SearchController, type: :controller do
       create(:tube_config, name: 'tube-config-3', uuid: 'uuid-3')
       create(:tube_config, name: 'tube-config-4', uuid: 'uuid-4')
     end
+
     let(:expected_search) do
       stub_find_all_with_pagination(api_class, search_parameters, { page: 1, per_page: 30 }, [result])
     end
@@ -98,6 +102,7 @@ RSpec.describe SearchController, type: :controller do
     describe '#ongoing_plates' do
       let(:api_class) { :plates }
       let(:result) { create :v2_plate }
+
       context 'without parameters' do
         let(:search_parameters) do
           { state: %w[pending started passed qc_complete failed cancelled], purpose_name: [], include_used: false }
@@ -134,6 +139,7 @@ RSpec.describe SearchController, type: :controller do
     describe '#ongoing_tubes' do
       let(:api_class) { :tubes }
       let(:result) { create :v2_tube }
+
       context 'without parameters' do
         let(:search_parameters) do
           {

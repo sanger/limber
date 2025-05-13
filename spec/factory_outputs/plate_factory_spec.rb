@@ -173,7 +173,7 @@ RSpec.describe 'plate factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end
@@ -193,27 +193,31 @@ RSpec.describe 'v2_plate' do
     describe 'first aliquot' do
       let(:first_aliquot) { subject.wells.first.aliquots.first }
 
-      it 'should be a version 2 aliquot' do
+      it 'is a version 2 aliquot' do
         expect(first_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
       end
 
-      it 'should have a valid study' do
-        expect(first_aliquot.study).to be_kind_of(Sequencescape::Api::V2::Study)
+      it 'has a valid study' do
+        expect(first_aliquot.study).to be_a(Sequencescape::Api::V2::Study)
       end
-      it 'should have a valid study uuid' do
+
+      it 'has a valid study uuid' do
         expect(first_aliquot.study.uuid).to eq(study_uuid)
       end
-      it 'should have a valid study name' do
+
+      it 'has a valid study name' do
         expect(first_aliquot.study.name).to eq('Provided Study')
       end
 
-      it 'should have a valid project' do
-        expect(first_aliquot.project).to be_kind_of(Sequencescape::Api::V2::Project)
+      it 'has a valid project' do
+        expect(first_aliquot.project).to be_a(Sequencescape::Api::V2::Project)
       end
-      it 'should have a valid project uuid' do
+
+      it 'has a valid project uuid' do
         expect(first_aliquot.project.uuid).to eq(project_uuid)
       end
-      it 'should have a valid project name' do
+
+      it 'has a valid project name' do
         expect(first_aliquot.project.name).to eq('Provided Project')
       end
     end
@@ -235,27 +239,31 @@ RSpec.describe 'v2_plate_for_submission' do
     describe 'first aliquot' do
       let(:first_aliquot) { subject.wells.first.aliquots.first }
 
-      it 'should be a version 2 aliquot' do
+      it 'is a version 2 aliquot' do
         expect(first_aliquot.class).to eq(Sequencescape::Api::V2::Aliquot)
       end
 
-      it 'should have a valid study' do
-        expect(first_aliquot.study).to be_kind_of(Sequencescape::Api::V2::Study)
+      it 'has a valid study' do
+        expect(first_aliquot.study).to be_a(Sequencescape::Api::V2::Study)
       end
-      it 'should have a valid study uuid' do
+
+      it 'has a valid study uuid' do
         expect(first_aliquot.study.uuid).to eq(study_uuid)
       end
-      it 'should have a valid study name' do
+
+      it 'has a valid study name' do
         expect(first_aliquot.study.name).to eq('Provided Study')
       end
 
-      it 'should have a valid project' do
-        expect(first_aliquot.project).to be_kind_of(Sequencescape::Api::V2::Project)
+      it 'has a valid project' do
+        expect(first_aliquot.project).to be_a(Sequencescape::Api::V2::Project)
       end
-      it 'should have a valid project uuid' do
+
+      it 'has a valid project uuid' do
         expect(first_aliquot.project.uuid).to eq(project_uuid)
       end
-      it 'should have a valid project name' do
+
+      it 'has a valid project name' do
         expect(first_aliquot.project.name).to eq('Provided Project')
       end
     end

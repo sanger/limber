@@ -9,11 +9,11 @@ require_relative 'shared_examples'
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   include FeatureHelpers
-  it_behaves_like 'it only allows creation from tagged plates'
-
   subject { described_class.new(api, form_attributes) }
 
-  it 'should have page' do
+  it_behaves_like 'it only allows creation from tagged plates'
+
+  it 'has page' do
     expect(described_class.page).to eq 'pooled_tubes_from_whole_plates'
   end
 
@@ -58,7 +58,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
           uuid: purpose_uuid,
           parent_uuids: [parent_uuid],
           child_tubes: [child_tube],
-          tube_attributes: [{ name: 'DN2+' }]
+          tube_attributes: [{}]
         }
       ]
     end

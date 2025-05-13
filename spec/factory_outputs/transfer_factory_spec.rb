@@ -34,7 +34,7 @@ RSpec.describe 'transfer_between_tubes_by_submission factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end
@@ -85,7 +85,7 @@ RSpec.describe 'transfer_to_mx_tubes_by_submission' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)).to include_json(JSON.parse(json_content))
   end
 end

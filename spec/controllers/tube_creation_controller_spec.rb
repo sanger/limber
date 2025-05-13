@@ -17,7 +17,7 @@ RSpec.describe TubeCreationController, type: :controller do
   let(:child_uuid) { 'child_uuid' }
 
   context 'for a tube with an automatic form' do
-    setup do
+    before do
       create :purpose_config, creator_class: 'LabwareCreators::PooledTubesBySubmission', uuid: child_purpose_uuid
     end
 
@@ -40,7 +40,7 @@ RSpec.describe TubeCreationController, type: :controller do
     end
 
     describe '#create' do
-      setup do
+      before do
         expect_any_instance_of(LabwareCreators::PooledTubesBySubmission).to receive(:save).and_return(true)
         expect_any_instance_of(LabwareCreators::PooledTubesBySubmission).to receive(:redirection_target).and_return(
           build(:tube, uuid: child_uuid)

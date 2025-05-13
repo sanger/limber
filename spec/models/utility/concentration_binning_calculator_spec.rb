@@ -5,6 +5,8 @@ require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::ConcentrationBinningCalculator do
   context 'when computing values for concentration binning' do
+    subject { described_class.new(dilutions_config) }
+
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
@@ -80,8 +82,6 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
         ]
       }
     end
-
-    subject { Utility::ConcentrationBinningCalculator.new(dilutions_config) }
 
     describe '#source_multiplication_factor' do
       it 'calculates the value correctly' do
@@ -169,7 +169,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
 
@@ -229,7 +229,7 @@ RSpec.describe Utility::ConcentrationBinningCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate, filtered_wells)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
     end
