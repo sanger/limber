@@ -4443,8 +4443,8 @@ ROBOT_CONFIG =
     )
 
     custom_robot(
-      'bravo-rvig-lig-bind-to-rvig-lib-pcr',
-      name: 'Bravo RVIG Lig Bind => RVIG Lib PCR',
+      'hamilton-rvig-lig-bind-to-rvig-lib-pcr',
+      name: 'Hamilton RVIG Lig Bind => RVIG Lib PCR',
       beds: {
         bed(5).barcode => {
           purpose: 'RVIG Lig Bind',
