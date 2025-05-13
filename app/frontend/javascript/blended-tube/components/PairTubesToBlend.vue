@@ -458,14 +458,21 @@ export default {
         return null
       }
 
-      const singleAncestor = tubeWithSingleAncestor.labware.ancestors[0]
+      // Find the ancestor matching the expected purpose
+      const ancestorLabware = tubeWithSingleAncestor.labware.ancestors.find(
+        (ancestor) => ancestor.purpose.name === this.ancestorLabwarePurposeName,
+      )
+
+      if (!ancestorLabware) {
+        return null
+      }
 
       // Check if the other tube in the pair has the same ancestor
       const otherTubeAncestors = this.pairedTubes
         .filter((tube) => tube !== tubeWithSingleAncestor)
         .flatMap((tube) => tube.labware.ancestors)
 
-      return otherTubeAncestors.find((ancestor) => ancestor.id === singleAncestor.id) || null
+      return otherTubeAncestors.find((ancestor) => ancestor.id === ancestorLabware.id) || null
     },
   },
 }
