@@ -44,15 +44,15 @@ BGE ISC MX:
   pipeline_group: BGE
   filters:
     request_type_key: limber_multiplexing_bge_isc
-  library_pass: BGE Cap Lib Pool Norm
   relationships:
     BGE Cap Lib PCR XP: BGE Cap Lib Pool
     BGE Cap Lib Pool: BGE Cap Lib Pool Norm
-# TODO (Y24-368): Enable BGE Blend pipeline configuration
-# BGE Blend:
-#   pipeline_group: BGE
-#   relationships:
-#     BGE Lib Pool: BGE Blended Cap Lib Pool
-#     BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
-#     BGE Blended Cap Lib Pool: BGE Lib Pool Norm
-#     BGE Lib Pool Norm: BGE Custom pool
+
+BGE Blend:
+  pipeline_group: BGE
+  relationships:
+    BGE Lib Pool: BGE Blended Cap Lib Pool
+    BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
+    BGE Blended Cap Lib Pool: BGE Lib Pool Norm
+    # 1:1 transfer here, not a pool as such
+    BGE Lib Pool Norm: BGE Custom Pool
