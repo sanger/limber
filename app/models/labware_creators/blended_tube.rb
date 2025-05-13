@@ -79,7 +79,7 @@ module LabwareCreators
     end
 
     def parents
-      Sequencescape::Api::V2::Tube.find_all(uuid: parent_uuids_from_transfers, includes: 'receptacle,aliquots')
+      Sequencescape::Api::V2::Tube.find_all({ uuid: parent_uuids_from_transfers }, includes: 'receptacle,aliquots')
     end
 
     def transfer_request_attributes
