@@ -95,6 +95,9 @@ import TagLayoutManipulations from './TagLayoutManipulations.vue'
 import TagLayoutManipulationsMultiple from './TagLayoutManipulationsMultiple.vue'
 import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
 import WellModal from './WellModal.vue'
+import { baseTransferCreator } from '@/javascript/shared/transfersCreators.js'
+import { transfersFromRequests } from '@/javascript/shared/transfersLayouts.js'
+import { requestIsActive, requestsFromPlates } from '@/javascript/shared/requestHelpers.js'
 
 /**
  * Provides a custom tagged plate setup view which allows a user to select and
@@ -607,6 +610,21 @@ export default {
           this.creationRequestSuccessful = false
         })
     },
+    requestsWithPlates() {
+      const requestsFromPlatesArray = requestsFromPlates([{ plate: this.parentPlate, index: 0 }])
+      const requestsWithPlatesArray = []
+      for (let i = 0; i < requestsFromPlatesArray.length; i++) {
+        if (requestIsActive(requestsFromPlatesArray[i].request)) {
+          requestsWithPlatesArray.push(requestsFromPlatesArray[i])
+        }
+      }
+      return requestsWithPlatesArray
+    },
+
+    apiTransfers() {
+      const transfers = transfersFromRequests(this.requestsWithPlates(), 'sequential')
+      return baseTransferCreator(transfers.valid)
+    },
     createPlatePayload() {
       // initial tag is zero-based index of tag within its tag group, and is equal to
       // offset adjusted by the tags per well number
@@ -632,6 +650,7 @@ export default {
             template_uuid: null,
             state: null,
           },
+          transfers: this.apiTransfers(),
         },
       }
 

@@ -11,7 +11,7 @@ module LabwareCreators
     include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate
-    attr_accessor :tag_layout
+    attr_accessor :tag_layout, :transfers
 
     self.page = 'custom_tagged_plate'
     self.attributes += [
@@ -27,9 +27,11 @@ module LabwareCreators
           :initial_tag,
           :tags_per_well,
           { substitutions: {} }
-        ]
+        ],
+        transfers: [[:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]]
       }
     ]
+    validates :transfers, presence: true
     self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
@@ -106,6 +108,41 @@ module LabwareCreators
       create_plate! do |plate_uuid|
         Sequencescape::Api::V2::TagLayout.create!(tag_layout_attributes.merge(plate_uuid:, user_uuid:))
       end
+    end
+
+    def create_plate_with_standard_transfer!
+      plate_creation = create_plate_from_parent!
+      @child = plate_creation.child
+      yield(@child) if block_given?
+      after_transfer!
+      true
+    end
+
+    # Returns: a list of passed wells passed_parent_wells
+    def passed_parent_wells
+      parent.wells.select { |well| well.state == 'passed' }
+    end
+
+    def transfer_material_from_parent!(child_uuid)
+      dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
+      Sequencescape::Api::V2::TransferRequestCollection.create!(
+        transfer_requests_attributes: transfer_request_attributes(dest_plate),
+        user_uuid: user_uuid
+      )
+      true
+    end
+
+    def transfer_request_attributes(child_plate)
+      transfers.map { |transfer| request_hash(transfer, child_plate) }
+    end
+
+    def request_hash(transfer, child_plate)
+      {
+        source_asset: transfer[:source_asset],
+        target_asset:
+          child_plate.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
+        outer_request: transfer[:outer_request]
+      }
     end
   end
 end
