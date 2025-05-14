@@ -22,9 +22,16 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
   let(:user_uuid) { 'user-uuid' }
 
+  let(:child_plate) { create(:v2_plate, uuid: 'example-child-uuid') }
+
   before do
     create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
     stub_v2_plate(plate)
+    stub_api_v2_post('StateChange')
+    stub_api_v2_post('PooledPlateCreation')
+    stub_api_v2_post('TransferRequestCollection')
+    stub_api_v2_post('TagLayout')
+    allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_plate.uuid).and_return(child_plate)
   end
 
   context 'on new' do
@@ -141,6 +148,18 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
       )
     end
 
+    def expect_transfer_request_collection_creation
+      expect_api_v2_posts(
+        'TransferRequestCollection',
+        [
+          hash_including(
+            transfer_requests_attributes:
+              array_including(hash_including(source_asset: anything, outer_request: anything, target_asset: anything)),
+            user_uuid: user_uuid
+          )
+        ]
+      )
+    end
     context 'Providing simple options' do
       let(:tag_plate_state) { 'available' }
 
@@ -168,6 +187,9 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
         }
       end
 
+      let(:parent_plate) { create(:v2_plate, uuid: plate_uuid) }
+      let(:child_plate) { create(:v2_plate, uuid: 'bcad7d16-1592-420c-9052-71e345b4fad0') }
+
       it 'can be created' do
         expect(subject).to be_a described_class
       end
@@ -182,15 +204,14 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
             expect_pooled_plate_creation
             expect_state_change_creation
             expect_tag_layout_creation
-            expect_transfer_creation
-
+            expect_transfer_request_collection_creation
             expect(subject.save).to be true
           end
 
           it 'has the correct child (and uuid)' do
             stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
+            stub_api_v2_post('TransferRequestCollection')
             stub_api_v2_post('StateChange')
 
             expect(subject.save).to be true
@@ -204,7 +225,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
               expect_pooled_plate_creation
               expect_state_change_creation
               expect_tag_layout_creation
-              expect_transfer_creation
+              expect_transfer_request_collection_creation
 
               expect(subject.save).to be true
             end
@@ -219,7 +240,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
             expect_tag_layout_creation
 
             expect_pooled_plate_creation
-            expect_transfer_creation
+            expect_transfer_request_collection_creation
             expect(Sequencescape::Api::V2::StateChange).not_to receive(:create!)
 
             expect(subject.save).to be true
@@ -228,7 +249,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           it 'has the correct child (and uuid)' do
             stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
+            stub_api_v2_post('TransferRequestCollection')
 
             expect(subject.save).to be true
 
@@ -245,7 +266,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           it 'creates a tag plate' do
             expect_pooled_plate_creation
             expect_tag_layout_creation
-            expect_transfer_creation
+            expect_transfer_request_collection_creation
             expect(Sequencescape::Api::V2::StateChange).not_to receive(:create!)
 
             expect(subject.save).to be true
@@ -254,7 +275,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           it 'has the correct child (and uuid)' do
             stub_v2_pooled_plate_creation
             stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
+            stub_api_v2_post('TransferRequestCollection')
 
             expect(subject.save).to be true
             expect(subject.child.uuid).to eq(child_plate.uuid)

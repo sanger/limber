@@ -11,7 +11,8 @@ module LabwareCreators
     include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate
-    attr_accessor :tag_layout, :transfers
+    attr_accessor :tag_layout
+    # , :transfers
 
     self.page = 'custom_tagged_plate'
     self.attributes += [
@@ -27,11 +28,11 @@ module LabwareCreators
           :initial_tag,
           :tags_per_well,
           { substitutions: {} }
-        ],
-        transfers: [[:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]]
+        ]
+        # transfers: [[:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]]
       }
     ]
-    validates :transfers, presence: true
+    # validates :transfers, presence: true
     self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
@@ -68,7 +69,6 @@ module LabwareCreators
         # at the same time
         Rails.logger.warn(e.message)
       end
-
       true
     end
 
@@ -110,39 +110,99 @@ module LabwareCreators
       end
     end
 
-    def create_plate_with_standard_transfer!
-      plate_creation = create_plate_from_parent!
-      @child = plate_creation.child
-      yield(@child) if block_given?
-      after_transfer!
-      true
-    end
-
-    # Returns: a list of passed wells passed_parent_wells
-    def passed_parent_wells
-      parent.wells.select { |well| well.state == 'passed' }
-    end
-
+    #
+    # Transfers material from the parent plate to the specified child plate.
+    # This method generates transfer requests and ensures that they are unique
+    # based on the combination of `source_asset` and `target_asset`.
+    # It then creates a transfer request collection via the Sequencescape API.
+    #
+    # @param [String] child_uuid The UUID of the child plate to which material will be transferred.
+    #
+    # @raise [RuntimeError] If the destination plate (child plate) cannot be found for the given `child_uuid`.
+    #   Error message: "Destination plate not found for UUID: #{child_uuid}".
+    #
+    # @return [Boolean] Returns `true` if the transfer requests are successfully created.
+    #
     def transfer_material_from_parent!(child_uuid)
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
+      raise "Destination plate not found for UUID: #{child_uuid}" unless dest_plate
+
+      transfer_requests =
+        create_requests_and_transfers(dest_plate).uniq { |transfer| [transfer[:source_asset], transfer[:target_asset]] }
+
+      # TransferRequestCollection is a collection of transfer requests
+      # created in the Sequencescape API.
+      #
+      # The `transfer_requests_attributes` parameter is an array of hashes,
+      # where each hash represents a transfer request with the following keys:
+      #   - `:source_asset` [String]: The UUID of the source asset (well) from the parent plate.
+      #   - `:target_asset` [String]: The UUID of the target asset (well) in the child plate.
+      #   - `:outer_request` [String]: The UUID of the outer request associated with the transfer.
+      #
+      # The `transfer_requests_attributes` parameter is required when transferring
+      # specific request types from the parent plate to the destination plate. This is
+      # particularly useful in cases where multiple request types exist in the parent plate,
+      # and only a specific type needs to be transferred to the child plate.
+      #
+      # This is utilized within the `transfer_material_from_parent!` method to ensure
+      # that the correct transfer requests are created and grouped for processing.
       Sequencescape::Api::V2::TransferRequestCollection.create!(
-        transfer_requests_attributes: transfer_request_attributes(dest_plate),
+        transfer_requests_attributes: transfer_requests,
         user_uuid: user_uuid
       )
       true
     end
 
-    def transfer_request_attributes(child_plate)
-      transfers.map { |transfer| request_hash(transfer, child_plate) }
+    #
+    # Fetches all unique requests associated with a specific well.
+    # This method combines requests where the well is the source and requests associated with aliquots in the well.
+    #
+    # @param [Sequencescape::Api::V2::Well] well The well object for which requests are being fetched.
+    #
+    # @return [Array<Sequencescape::Api::V2::Request>] An array of unique requests associated with the well.
+    #
+    def requests_for_well(well)
+      (well.requests_as_source + well.aliquots.map(&:request)).compact.uniq(&:id)
     end
 
-    def request_hash(transfer, child_plate)
-      {
-        source_asset: transfer[:source_asset],
-        target_asset:
-          child_plate.wells.detect { |child_well| child_well.location == transfer.dig(:new_target, :location) }&.uuid,
-        outer_request: transfer[:outer_request]
-      }
+    # rubocop:disable Metrics/AbcSize
+    #
+    # Generates transfer requests for the specified child plate.
+    # This method maps each well in the parent plate to its corresponding request and target asset in the child plate.
+    #
+    # @param [Sequencescape::Api::V2::Plate] child_plate The destination plate object for the transfers.
+    #
+    # @return [Array<Hash>] An array of hashes, where each hash represents a transfer request with the following keys:
+    #   - `:source_asset` [String]: The UUID of the source asset (well) from the parent plate.
+    #   - `:outer_request` [String]: The UUID of the outer request associated with the transfer.
+    #   - `:target_asset` [String, nil]: The UUID of the target asset (well) in the child plate, or `nil` if not found.
+    #
+    # @example Example Output
+    #   [
+    #     {
+    #       source_asset: "source-uuid-1",
+    #       outer_request: "request-uuid-1",
+    #       target_asset: "target-uuid-1"
+    #     },
+    #     {
+    #       source_asset: "source-uuid-2",
+    #       outer_request: "request-uuid-2",
+    #       target_asset: "target-uuid-2"
+    #     }
+    #   ]
+    #
+    def create_requests_and_transfers(child_plate)
+      parent
+        .wells
+        .flat_map { |well| requests_for_well(well).map { |request| { request:, well: } } }
+        .map do |transfer|
+          {
+            source_asset: transfer[:well].uuid,
+            outer_request: transfer[:request].uuid,
+            target_asset: child_plate.wells.find { |child_well| child_well.location == transfer[:well].location }&.uuid
+          }
+        end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
