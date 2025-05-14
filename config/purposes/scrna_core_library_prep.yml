@@ -116,9 +116,12 @@ LRC GEM-X 5p CITE SUP:
   :input_plate: false
 LRC GEM-X 5p CITE SUP XP:
   :asset_type: plate
-  :stock_plate: true # Uploaded via sample manifest.
-  :input_plate: true # Passed when submission is built.
-  :presenter_class: Presenters::StockPlatePresenter # Display as stock plate.
+  :stock_plate: false
+  :input_plate:
+    false # Passed when submission is built.
+    # close off the submission when the plate is created
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: ['limber_scrna_core_cdna_prep_gem_x_5p_gems_input', 'limber_scrna_core_cdna_pcr_cite']
 LRC GEM-X 5p CITE SUP Input:
   :asset_type: plate
   :stock_plate: true # Uploaded via sample manifest.
