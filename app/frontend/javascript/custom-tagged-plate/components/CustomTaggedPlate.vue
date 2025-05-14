@@ -611,7 +611,6 @@ export default {
         })
     },
     requestsWithPlates() {
-      debugger
       const requestsFromPlatesArray = requestsFromPlates([{ plate: this.parentPlate, index: 0 }])
       const requestsWithPlatesArray = []
       for (let i = 0; i < requestsFromPlatesArray.length; i++) {
