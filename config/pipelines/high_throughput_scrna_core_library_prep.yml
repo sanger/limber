@@ -35,7 +35,7 @@ scRNA Core Chromium GEM-X 5p MX:
 scRNA Core Chromium GEM-X 5p MX Norm:
   pipeline_group: scRNA Core Library Prep
   filters:
-    request_type_key: limber_multiplexing
+    request_type_key: limber_multiplexing_norm
   relationships:
     LRC GEM-X 5p GE PCR 2XP: LRC GEM-X 5p GE GLibPS
     LRC GEM-X 5p GE GLibPS: LRC GEM-X 5p GE Pool Norm
