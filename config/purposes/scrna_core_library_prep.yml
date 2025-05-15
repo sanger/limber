@@ -117,9 +117,8 @@ LRC GEM-X 5p CITE SUP:
 LRC GEM-X 5p CITE SUP XP:
   :asset_type: plate
   :stock_plate: false
-  :input_plate:
-    false
-    # close off the submission when the plate is created
+  :input_plate: false
+  # close off the submission when the plate is created
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_scrna_core_cdna_pcr_cite'
 LRC GEM-X 5p CITE SUP Input:
