@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Multi plate pooling', js: true do
+RSpec.feature 'Multi plate pooling', :js do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -91,12 +91,12 @@ RSpec.feature 'Multi plate pooling', js: true do
     expect_pooled_plate_creation
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('Pooled example')
     click_on('Add an empty Pool Plate plate')
     scan_in('Plate 1', with: plate_barcode_1)
     expect(page).to have_content('DN1: A1')
-    expect(page).not_to have_content('DN1: A1, B1')
+    expect(page).to have_no_content('DN1: A1, B1')
     scan_in('Plate 2', with: plate_barcode_2)
     expect(page).to have_content('DN2: A1, B1')
     click_on('Make Pre-Cap pool Plate')

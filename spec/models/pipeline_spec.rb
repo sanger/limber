@@ -52,7 +52,7 @@ RSpec.describe Pipeline do
         let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
 
         it 'returns true' do
-          expect(model.active_for?(labware)).to eq true
+          expect(model.active_for?(labware)).to be true
         end
       end
 
@@ -60,7 +60,7 @@ RSpec.describe Pipeline do
         let(:labware) { create :v2_stock_plate }
 
         it 'returns false' do
-          expect(model.active_for?(labware)).to eq false
+          expect(model.active_for?(labware)).to be false
         end
       end
     end
@@ -80,7 +80,7 @@ RSpec.describe Pipeline do
       let(:labware) { create :v2_tube }
 
       it 'returns true always' do
-        expect(model.active_for?(labware)).to eq true
+        expect(model.active_for?(labware)).to be true
       end
     end
   end
