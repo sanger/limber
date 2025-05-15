@@ -15,7 +15,7 @@ module Sequencescape::Api::V2::Shared
     # @note Plate has its own active_requests method which overrides this one and
     #       works out active requests on a per-well basis.
     def active_requests
-      incomplete_requests.presence || complete_requests
+      (incomplete_requests.presence || complete_requests).uniq(&:id)
     end
 
     def incomplete_requests
