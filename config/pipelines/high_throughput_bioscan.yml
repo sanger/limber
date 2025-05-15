@@ -22,6 +22,7 @@ Bioscan Library Prep:
     - LBSN-384 PCR 2
   relationships:
     LBSN-96 Lysate: LBSN-384 PCR 1
+    LBSN-96 Lysate Input: LBSN-384 PCR 1
     LBSN-384 PCR 1: LBSN-384 PCR 2
     LBSN-384 PCR 2: LBSN-384 PCR 2 Pool
     LBSN-384 PCR 2 Pool: LBSN-9216 Lib PCR Pool
