@@ -12,8 +12,6 @@ module LabwareCreators
 
     attr_reader :child, :tag_plate
     attr_accessor :tag_layout
-    # , :transfers
-
     self.page = 'custom_tagged_plate'
     self.attributes += [
       {
@@ -29,10 +27,8 @@ module LabwareCreators
           :tags_per_well,
           { substitutions: {} }
         ]
-        # transfers: [[:source_plate, :source_asset, :outer_request, :pool_index, { new_target: :location }]]
       }
     ]
-    # validates :transfers, presence: true
     self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
@@ -127,9 +123,6 @@ module LabwareCreators
       dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
       raise "Destination plate not found for UUID: #{child_uuid}" unless dest_plate
 
-      transfer_requests =
-        create_requests_and_transfers(dest_plate).uniq { |transfer| [transfer[:source_asset], transfer[:target_asset]] }
-
       # TransferRequestCollection is a collection of transfer requests
       # created in the Sequencescape API.
       #
@@ -147,26 +140,12 @@ module LabwareCreators
       # This is utilized within the `transfer_material_from_parent!` method to ensure
       # that the correct transfer requests are created and grouped for processing.
       Sequencescape::Api::V2::TransferRequestCollection.create!(
-        transfer_requests_attributes: transfer_requests,
+        transfer_requests_attributes: build_transfer_requests_attributes(dest_plate),
         user_uuid: user_uuid
       )
       true
     end
 
-    #
-    # Fetches all unique requests associated with a specific well.
-    # This method combines requests where the well is the source and requests associated with aliquots in the well.
-    #
-    # @param [Sequencescape::Api::V2::Well] well The well object for which requests are being fetched.
-    #
-    # @return [Array<Sequencescape::Api::V2::Request>] An array of unique requests associated with the well.
-    #
-    def requests_for_well(well)
-      (well.requests_as_source + well.aliquots.map(&:request)).compact.uniq(&:id)
-    end
-
-    # rubocop:disable Metrics/AbcSize
-    #
     # Generates transfer requests for the specified child plate.
     # This method maps each well in the parent plate to its corresponding request and target asset in the child plate.
     #
@@ -190,19 +169,19 @@ module LabwareCreators
     #       target_asset: "target-uuid-2"
     #     }
     #   ]
+    # This assumes a 'straight stamp' from source to destination plate,
+    # meaning well A1 goes to well A1, A2 to A2, etc.
     #
-    def create_requests_and_transfers(child_plate)
-      parent
-        .wells
-        .flat_map { |well| requests_for_well(well).map { |request| { request:, well: } } }
-        .map do |transfer|
-          {
-            source_asset: transfer[:well].uuid,
-            outer_request: transfer[:request].uuid,
-            target_asset: child_plate.wells.find { |child_well| child_well.location == transfer[:well].location }&.uuid
-          }
-        end
+
+    def build_transfer_requests_attributes(child_plate)
+      parent.wells.filter_map do |well|
+        # We've got to assume there's only one relevant request to be processed here,
+        # because we wouldn't know what to do with more than one.
+        next unless (request = well.active_requests.first)
+
+        target_asset = child_plate.wells.find { |child_well| child_well.location == well.location }&.uuid
+        { source_asset: well.uuid, outer_request: request.uuid, target_asset: target_asset }
+      end
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end
