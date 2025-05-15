@@ -15,6 +15,9 @@ class LabwareCreators::WellFilterAllowingPartials < LabwareCreators::WellFilter
   end
 
   def filter_requests(requests, well)
+    # We suspect requests_as_source is used (instead of requests) because we should only be taking partial stamps
+    # from the start of a pipeline, from the submitted plate. We shouldn't be leaving wells behind In the middle
+    # of a pipeline (unless there is a failure). In the case we do, we should be using a specifc filter and creator.
     return nil if well.requests_as_source.empty?
 
     filtered_requests_by_rt = filter_by_request_type(requests)

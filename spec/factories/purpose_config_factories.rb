@@ -117,6 +117,23 @@ FactoryBot.define do
       end
     end
 
+    # Sets up the configuration required for a Concentration Binned Full plate
+    factory :concentration_binning_stamp_purpose_config do
+      presenter_class { 'Presenters::ConcentrationBinnedPlatePresenter' }
+      creator_class { 'LabwareCreators::ConcentrationBinnedFullPlate' }
+      dilutions do
+        {
+          source_volume: 10,
+          diluent_volume: 25,
+          bins: [
+            { colour: 1, pcr_cycles: 16, max: 25 },
+            { colour: 2, pcr_cycles: 12, min: 25, max: 500 },
+            { colour: 3, pcr_cycles: 8, min: 500 }
+          ]
+        }
+      end
+    end
+
     # Sets up the configuration required for a Normalized plate
     factory :fixed_normalisation_purpose_config do
       creator_class { 'LabwareCreators::FixedNormalisedPlate' }
