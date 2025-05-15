@@ -46,7 +46,6 @@ require 'capybara/rspec'
 require 'webmock/rspec'
 require 'selenium/webdriver'
 require 'csv'
-require 'syslog/logger'
 
 begin
   require 'pry'
