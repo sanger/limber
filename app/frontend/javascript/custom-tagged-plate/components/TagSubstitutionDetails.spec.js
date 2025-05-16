@@ -1,17 +1,15 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import TagSubstitutionDetails from './TagSubstitutionDetails.vue'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 // Here are some Jasmine 2.0 tests, though you can
 // use any test runner / assertion library combo you prefer
 describe('TagSubstitutionDetails', () => {
   const wrapperFactory = function () {
-    return shallowMount(TagSubstitutionDetails, {
-      propsData: {
+    return mount(TagSubstitutionDetails, {
+      props: {
         tagSubstitutions: { 2: '5', 3: '6' },
       },
-      localVue,
     })
   }
 
@@ -65,7 +63,6 @@ describe('TagSubstitutionDetails', () => {
   describe('#integration tests', () => {
     it('emits a call to the parent on clicking a remove substitution button', () => {
       const wrapper = wrapperFactory()
-      const emitted = wrapper.emitted()
 
       expect(wrapper.find('#remove_tag_id_2_submit_button').exists()).toBe(true)
 
@@ -74,6 +71,7 @@ describe('TagSubstitutionDetails', () => {
       // cannot click button in test for some reason...
       wrapper.vm.removeSubstitution('2')
 
+      const emitted = wrapper.emitted()
       expect(emitted.removetagsubstitution.length).toBe(1)
       expect(emitted.removetagsubstitution[0]).toEqual(['2'])
     })

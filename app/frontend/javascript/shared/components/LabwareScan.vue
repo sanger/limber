@@ -130,6 +130,7 @@ export default {
       default: 'Great!',
     },
   },
+  emits: ['change'],
   data() {
     uid += 1
     return {

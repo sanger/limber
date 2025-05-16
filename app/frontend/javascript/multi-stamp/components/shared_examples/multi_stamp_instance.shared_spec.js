@@ -3,8 +3,7 @@
 // run as a test suite itself.
 
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
+import { mount } from '@vue/test-utils'
 import { plateFactory, wellFactory, requestFactory } from '@/javascript/test_support/factories.js'
 
 const sharedSpecs = (args) => {
@@ -15,8 +14,8 @@ const sharedSpecs = (args) => {
     const wrapperFactory = function (options = {}) {
       // Not ideal using mount here, but having massive trouble
       // triggering change events on unmounted components
-      return shallowMount(subject, {
-        propsData: {
+      return mount(subject, {
+        props: {
           targetRows: '16',
           targetColumns: '24',
           sourcePlates: '4',
@@ -28,7 +27,12 @@ const sharedSpecs = (args) => {
           transfersCreator: 'multi-stamp',
           ...options,
         },
-        localVue,
+        global: {
+          stubs: {
+            LbPlate: true,
+            PlateSummary: true,
+          },
+        },
       })
     }
 
@@ -66,7 +70,7 @@ const sharedSpecs = (args) => {
 
       wrapper.setData({ requestsWithPlatesFiltered: [] })
 
-      expect(wrapper.find('b-button-stub').element.getAttribute('disabled')).toEqual('true')
+      expect(wrapper.findComponent({ name: 'b-button' }).vm.disabled).toEqual(true)
     })
 
     it('disables creation when there are some invalid plates', () => {
@@ -185,8 +189,8 @@ const sharedSpecs = (args) => {
         const wrapperFactory = function (options = {}) {
           // Not ideal using mount here, but having massive trouble
           // triggering change events on unmounted components
-          return shallowMount(subject, {
-            propsData: {
+          return mount(subject, {
+            props: {
               targetRows: '16',
               targetColumns: '24',
               sourcePlates: '4',
@@ -199,7 +203,11 @@ const sharedSpecs = (args) => {
               defaultVolume: '34',
               ...options,
             },
-            localVue,
+            global: {
+              stubs: {
+                LbPlate: true,
+              },
+            },
           })
         }
 
