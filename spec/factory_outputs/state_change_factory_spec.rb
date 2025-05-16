@@ -27,7 +27,7 @@ RSpec.describe 'state change factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)['state_change']).to eq JSON.parse(json_content)['state_change']
   end
 end

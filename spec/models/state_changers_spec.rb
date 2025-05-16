@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe StateChangers::DefaultStateChanger do
   has_a_working_api
 
+  subject { described_class.new(api, plate_uuid, user_uuid) }
+
   let(:plate_uuid) { SecureRandom.uuid }
   let(:plate) { create(:v2_plate, uuid: plate_uuid, state: plate_state) }
   let(:failed_wells) { [] }
@@ -24,8 +26,6 @@ RSpec.describe StateChangers::DefaultStateChanger do
     ]
   end
 
-  subject { StateChangers::DefaultStateChanger.new(api, plate_uuid, user_uuid) }
-
   describe '#move_to!' do
     before do
       expect_state_change_creation
@@ -43,6 +43,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
       let(:plate_state) { 'pending' }
       let(:target_state) { 'passed' }
       let(:wells_to_pass) { nil }
+
       it_behaves_like 'a state changer'
     end
 
@@ -70,20 +71,16 @@ RSpec.describe StateChangers::DefaultStateChanger do
     end
 
     context 'on use of an automated plate state changer' do
+      subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
+
       let(:plate_state) { 'pending' }
       let!(:plate) { create :v2_plate_for_aggregation, uuid: plate_uuid, state: plate_state }
       let(:target_state) { 'passed' }
       let(:wells_to_pass) { nil }
       let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
-      let(:work_completion_request) do
-        { 'work_completion' => { target: plate_uuid, submissions: %w[pool-1-uuid pool-2-uuid], user: user_uuid } }
+      let(:work_completions_attributes) do
+        [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
       end
-      let(:work_completion) { json :work_completion }
-      let!(:work_completion_creation) do
-        stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
-      end
-
-      subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
 
       before { stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, plate_uuid]) }
 
@@ -91,9 +88,9 @@ RSpec.describe StateChangers::DefaultStateChanger do
         before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
 
         it 'changes plate state and triggers a work completion' do
-          subject.move_to!(target_state, reason, customer_accepts_responsibility)
+          expect_work_completion_creation
 
-          expect(work_completion_creation).to have_been_made.once
+          subject.move_to!(target_state, reason, customer_accepts_responsibility)
         end
       end
 
@@ -107,8 +104,6 @@ RSpec.describe StateChangers::DefaultStateChanger do
 
         it 'changes plate state but does not trigger a work completion' do
           subject.move_to!(target_state, reason, customer_accepts_responsibility)
-
-          expect(work_completion_creation).to_not have_been_made
         end
       end
 
@@ -124,9 +119,9 @@ RSpec.describe StateChangers::DefaultStateChanger do
         end
 
         it 'changes plate state and triggers a work completion' do
-          subject.move_to!(target_state, reason, customer_accepts_responsibility)
+          expect_work_completion_creation
 
-          expect(work_completion_creation).to have_been_made.once
+          subject.move_to!(target_state, reason, customer_accepts_responsibility)
         end
       end
     end

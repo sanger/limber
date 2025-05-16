@@ -3,6 +3,7 @@ require 'rails_helper'
 
 RSpec.describe ViteInlineSvgFileLoader do
   let(:path) { '/images/test.svg' }
+
   describe '.named' do
     let(:manifest) { instance_double(ViteRuby::Manifest) }
     let(:vite_instance) { instance_double(ViteRuby) }

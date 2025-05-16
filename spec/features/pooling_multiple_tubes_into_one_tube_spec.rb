@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Pooling multiple tubes into a tube', js: true do
+RSpec.feature 'Pooling multiple tubes into a tube', :js do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -64,18 +64,17 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      include_used: false,
-      purpose_name: ['example-purpose'],
-      includes: 'purpose',
-      paginate: {
-        size: 30,
-        number: 1
-      }
+      {
+        include_used: false,
+        purpose_name: ['example-purpose'],
+        state: %w[pending started passed qc_complete failed cancelled]
+      },
+      { includes: 'purpose', paginate: { page: 1, per_page: 30 } }
     ).and_return([example_tube, example_tube_2])
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      barcode: [tube_barcode_1, tube_barcode_2],
+      { barcode: [tube_barcode_1, tube_barcode_2] },
       includes: []
     ).and_return([example_tube, example_tube_2])
   end
@@ -103,9 +102,10 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       include_used: false,
       purpose_name: ['example-purpose'],
       includes: 'purpose',
+      state: %w[pending started passed qc_complete failed cancelled],
       paginate: {
-        size: 30,
-        number: 1
+        per_page: 30,
+        page: 1
       }
     ).and_return([example_tube, example_tube_2])
 
@@ -131,7 +131,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       expect_tube_from_tube_creation
 
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
-      tube_title = find('#tube-title')
+      tube_title = find_by_id('tube-title')
       expect(tube_title).to have_text(parent_purpose_name)
       click_on('Add an empty Pool tube tube')
       scan_in('Tube 1', with: tube_barcode_1)
@@ -147,7 +147,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
     scenario 'detects tag clash' do
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
-      tube_title = find('#tube-title')
+      tube_title = find_by_id('tube-title')
       expect(tube_title).to have_text('example-purpose')
       click_on('Add an empty Pool tube tube')
       scan_in('Tube 1', with: tube_barcode_1)
@@ -162,7 +162,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
       scan_in('Tube 2', with: '')
 
-      expect(page).to_not have_text(
+      expect(page).to have_no_text(
         'The scanned tube contains tags that would clash with those in other tubes in the pool.'
       )
     end

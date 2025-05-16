@@ -10,6 +10,9 @@ group :default do
   gem 'rake'
   gem 'state_machines'
 
+  # Packages removed from the standard Ruby library
+  gem 'csv' # removed from Ruby 3.4.0
+
   # Build dependencies
   gem 'vite_rails'
   gem 'vite_ruby'
@@ -66,8 +69,11 @@ end
 group :lint do
   gem 'erb_lint', require: false
   gem 'rubocop', require: false
+  gem 'rubocop-capybara', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec_rails', require: false
 
   # Ruby dependencies specifically requested by prettier/plugin-ruby v4
   # https://github.com/prettier/plugin-ruby

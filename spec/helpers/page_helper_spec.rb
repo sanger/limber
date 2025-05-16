@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe PageHelper do
-  include PageHelper
+  include described_class
 
   describe '::count_badge' do
     it 'returns a grey (secondary) badge for 0 counts' do

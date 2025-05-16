@@ -3,6 +3,8 @@
 # This test checks well selection for different number of ancestor tubes and
 # specifications of the number of wells to select.
 RSpec.describe Utility::CellCountSpotChecking do
+  subject { described_class.new(plate) }
+
   let(:number_of_tubes) { 4 }
 
   let(:ancestor_tubes) do
@@ -41,8 +43,6 @@ RSpec.describe Utility::CellCountSpotChecking do
       .values
   end
 
-  subject { described_class.new(plate) }
-
   describe '#initialize' do
     it 'sets the plate and ancestor tubes' do
       # Using attribute readers
@@ -62,12 +62,14 @@ RSpec.describe Utility::CellCountSpotChecking do
         expect(result).to eq(selected_wells)
       end
     end
+
     context 'when a first replicate is failed' do
       before do
         # Well state is set for testing purposes. In the actual code, the state
         # is a computed property; there is no way to set it directly.
         plate.wells_in_columns.first.state = 'failed' # Fail A1
       end
+
       it 'returns the second replicate as the first replicate' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
@@ -99,6 +101,7 @@ RSpec.describe Utility::CellCountSpotChecking do
         # is a computed property; there is no way to set it directly.
         plate.wells_in_columns.second.state = 'failed' # Fail B1
       end
+
       it 'returns the following replicate as the second replicate' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
