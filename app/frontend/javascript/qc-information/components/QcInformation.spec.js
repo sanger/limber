@@ -9,36 +9,34 @@ describe('QcInformation', () => {
       props: {
         assetUuid: 'test',
       },
-      global: {
-        stubs: {
-          'lb-qc-field': true,
-        },
-      },
     })
   }
 
-  it('updates its data as values change', () => {
+  it('updates its data as values change', async () => {
     let wrapper = wrapperFactory()
 
     let volumeAttributes = {
       value: '1.5',
-      assay_type: 'Volume Check',
+      assay_type: 'Estimated', // This is the default asset type for QcField
       units: 'ul',
       key: 'volume',
       assay_version: 'manual',
+      uuid: 'test',
     }
     let molarityAttributes = {
       value: '10',
       assay_type: 'Estimated',
       units: 'nM',
       key: 'molarity',
+      uuid: 'test',
       assay_version: 'manual',
     }
-    wrapper.find('lb-qc-field-stub[name="volume"]').trigger('change', volumeAttributes)
-    wrapper.find('lb-qc-field-stub[name="molarity"]').trigger('change', molarityAttributes)
 
-    expect(wrapper.vm.qcResults.volume).toEqual(expect.objectContaining(volumeAttributes))
-    expect(wrapper.vm.qcResults.molarity).toEqual(expect.objectContaining(molarityAttributes))
+    await wrapper.find('#qc-field-volume-value').setValue('1.5')
+    await wrapper.find('#qc-field-molarity-value').setValue('10')
+
+    expect(wrapper.vm.qcResults.volume).toEqual(volumeAttributes)
+    expect(wrapper.vm.qcResults.molarity).toEqual(molarityAttributes)
   })
 
   it('filters empty values', () => {
