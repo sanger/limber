@@ -81,4 +81,4 @@ LRC GEM-X 5p BCR Pool Norm:
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
   :state_changer_class: StateChangers::AutomaticTubeStateChanger
-  :work_completion_request_type: 'limber_multiplexing_norm'
+  :work_completion_request_type: 'scrna_core_pool_norm'
