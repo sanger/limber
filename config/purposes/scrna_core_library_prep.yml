@@ -110,6 +110,8 @@ LRC GEM-X 5p GE Pool Norm:
   :type: IlluminaHtp::InitialStockTubePurpose
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'limber_multiplexing_norm'
 LRC GEM-X 5p CITE SUP:
   :asset_type: plate
   :stock_plate: false
@@ -152,3 +154,5 @@ LRC GEM-X 5p CITE Pool Norm:
   :type: IlluminaHtp::InitialStockTubePurpose
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'limber_multiplexing_norm'
