@@ -32,7 +32,7 @@ scRNA Core Chromium GEM-X 5p MX:
     LRC GEM-X 5p GE PCR 2XP: LRC GEM-X 5p GE GLibPS
     LRC GEM-X 5p GE GLibPS: LRC GEM-X 5p GE Pool Norm
     LRC GEM-X 5p GE Pool Norm: LB Lib Pool Norm
-scRNA Core Chromium GEM-X 5p MX Norm:
+scRNA Core Chromium GEM-X 5p Pool Norm:
   pipeline_group: scRNA Core Library Prep
   filters:
     request_type_key: scrna_core_pool_norm
@@ -63,7 +63,7 @@ scRNA Core Chromium GEM-X 5p CITE MX:
     LRC GEM-X 5p CITE Lib PCR-XP: LRC GEM-X 5p CITE Lib Pool Stock
     LRC GEM-X 5p CITE Lib Pool Stock: LRC GEM-X 5p CITE Pool Norm
     LRC GEM-X 5p CITE Pool Norm: LB Lib Pool Norm
-scRNA Core Chromium GEM-X 5p CITE MX Norm:
+scRNA Core Chromium GEM-X 5p CITE Pool Norm:
   pipeline_group: scRNA Core Library Prep
   filters:
     request_type_key: scrna_core_pool_norm
