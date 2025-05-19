@@ -6,7 +6,6 @@ require_relative 'shared_examples'
 # In this test, we are testing that the pipeline filters are applied
 # and the right requests are associated with the converted tag plate.
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 # rubocop:disable RSpec/HooksBeforeExamples
 RSpec.describe LabwareCreators::PartialWellFilteredCustomTaggedPlateCreator do
   subject { described_class.new(api, form_attributes) }

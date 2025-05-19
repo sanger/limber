@@ -97,7 +97,11 @@ module LabwareCreators
       purpose_config.fetch(:tag_group_adapter_type_name_filter, nil)
     end
 
-    # Define the filters method
+    # Define the filters method for the CustomTaggedPlate labware creator for
+    # compatibility with the PartialWellFilteredCustomTaggedPlateCreator. The
+    # filters is the pipeline filters for the latter labware creator.
+    #
+    # @return [Hash] the default empty filters
     def filters
       {}
     end
