@@ -131,7 +131,7 @@ LRC GEM-X 5p CITE Ligation:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
-  :creator_class: LabwareCreators::CustomTaggedPlate
+  :creator_class: LabwareCreators::PartialWellFilteredCustomTaggedPlateCreator
   :tags_per_well: 1
 LRC GEM-X 5p CITE Lib PCR-XP:
   :asset_type: plate
