@@ -87,17 +87,32 @@ RSpec/ContextWording:
     - with
     - without
 
+RSpec/DescribeClass:
+  # Exclude files like exports that do not have a specific class.
+  Exclude:
+    - spec/factory_outputs/**/*.rb
+    - spec/views/**/*exports/**/*.rb
+
 RSpec/DescribedClass:
   EnforcedStyle: described_class
   SkipBlocks: true # Addresses a known caveat with rspec-rails’s ‘controller` helper that runs its
   # block in a different context
 
 RSpec/ExampleLength:
+  inherit_mode:
+    merge:
+      - Exclude
   CountAsOne:
     - array
     - hash
     - heredoc
     - method_call
+  # Disable for features, as we might want to step through long processes
+  Exclude:
+    - 'spec/features/**/*'
+
+RSpec/IndexedLet:
+  Enabled: false # We have a lot of indexed lets in our specs, mostly based on wells or racked tubes
 
 RSpec/LetBeforeExamples:
   Enabled: false # It can be helpful to have the let variables just before the relevant example
@@ -107,9 +122,7 @@ RSpec/ScatteredLet:
   # being unreliable (see https://github.com/rubocop/rubocop-rspec/issues/1167).
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 13 # Default is 5, but we have a lot of memoized helpers in our specs, I'm inclined to
-  # disable this, but I think it's better to just increase the limit for now - 15 lets is a bit much
-  # and probably indicates a deeper problem. If this happens, make another context group.
+  Enabled: false # We have a lot of memoized helpers in our specs, not sure how best to work around this, so disabling
 
 RSpec/NestedGroups:
   Max: 5 # Default is 3, but we have a lot of nested groups in our specs

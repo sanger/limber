@@ -1104,10 +1104,10 @@ axios@^0.21.0:
   dependencies:
     follow-redirects "^1.14.0"
 
-axios@^1.8.4:
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.4.tgz#78990bb4bc63d2cae072952d374835950a82f447"
-  integrity sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==
+axios@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.9.0.tgz#25534e3b72b54540077d33046f77e3b8d7081901"
+  integrity sha512-re4CqKTJaURpzbLHtIi6XpDv20/CnpXOtjRY5/CU32L8gU8ek9UIivcfvSWvmKEngmVbrUtPpdDwWDWL7DNHvg==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -1385,10 +1385,10 @@ cytoscape-popper@^2.0.0:
   dependencies:
     "@popperjs/core" "^2.0.0"
 
-cytoscape@^3.31.2:
-  version "3.31.2"
-  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.31.2.tgz#94d5b86d142599a2d6e750f6b2f3102518c7d48e"
-  integrity sha512-/eOXg2uGdMdpGlEes5Sf6zE+jUG+05f3htFNQIxLxduOH/SsaUZiPBfAwP1btVIVzsnhiNOdi+hvDRLYfMZjGw==
+cytoscape@^3.32.0:
+  version "3.32.0"
+  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.32.0.tgz#34bc2402c9bc7457ab7d9492745f034b7bf47644"
+  integrity sha512-5JHBC9n75kz5851jeklCPmZWcg3hUe6sjqJvyk3+hVqFaKcHwHgxsjeN1yLmggoUc6STbtm9/NQyabQehfjvWQ==
 
 data-urls@^5.0.0:
   version "5.0.0"
