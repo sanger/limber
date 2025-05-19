@@ -13,6 +13,7 @@ module LabwareCreators
     attr_reader :child, :tag_plate
     attr_accessor :tag_layout
     self.page = 'custom_tagged_plate'
+    # Used for permitting all the parameters in the controller
     self.attributes += [
       {
         tag_plate: %i[asset_uuid template_uuid state],
@@ -29,6 +30,8 @@ module LabwareCreators
         ]
       }
     ]
+    class_attribute :should_populate_wells_with_pool
+
     self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
@@ -94,6 +97,11 @@ module LabwareCreators
       purpose_config.fetch(:tag_group_adapter_type_name_filter, nil)
     end
 
+    # Define the filters method
+    def filters
+      {}
+    end
+
     private
 
     def tag_layout_attributes
@@ -103,84 +111,6 @@ module LabwareCreators
     def create_labware!
       create_plate! do |plate_uuid|
         Sequencescape::Api::V2::TagLayout.create!(tag_layout_attributes.merge(plate_uuid:, user_uuid:))
-      end
-    end
-
-    #
-    # Transfers material from the parent plate to the specified child plate.
-    # This method generates transfer requests and ensures that they are unique
-    # based on the combination of `source_asset` and `target_asset`.
-    # It then creates a transfer request collection via the Sequencescape API.
-    #
-    # @param [String] child_uuid The UUID of the child plate to which material will be transferred.
-    #
-    # @raise [RuntimeError] If the destination plate (child plate) cannot be found for the given `child_uuid`.
-    #   Error message: "Destination plate not found for UUID: #{child_uuid}".
-    #
-    # @return [Boolean] Returns `true` if the transfer requests are successfully created.
-    #
-    def transfer_material_from_parent!(child_uuid)
-      dest_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
-      raise "Destination plate not found for UUID: #{child_uuid}" unless dest_plate
-
-      # TransferRequestCollection is a collection of transfer requests
-      # created in the Sequencescape API.
-      #
-      # The `transfer_requests_attributes` parameter is an array of hashes,
-      # where each hash represents a transfer request with the following keys:
-      #   - `:source_asset` [String]: The UUID of the source asset (well) from the parent plate.
-      #   - `:target_asset` [String]: The UUID of the target asset (well) in the child plate.
-      #   - `:outer_request` [String]: The UUID of the outer request associated with the transfer.
-      #
-      # The `transfer_requests_attributes` parameter is required when transferring
-      # specific request types from the parent plate to the destination plate. This is
-      # particularly useful in cases where multiple request types exist in the parent plate,
-      # and only a specific type needs to be transferred to the child plate.
-      #
-      # This is utilized within the `transfer_material_from_parent!` method to ensure
-      # that the correct transfer requests are created and grouped for processing.
-      Sequencescape::Api::V2::TransferRequestCollection.create!(
-        transfer_requests_attributes: build_transfer_requests_attributes(dest_plate),
-        user_uuid: user_uuid
-      )
-      true
-    end
-
-    # Generates transfer requests for the specified child plate.
-    # This method maps each well in the parent plate to its corresponding request and target asset in the child plate.
-    #
-    # @param [Sequencescape::Api::V2::Plate] child_plate The destination plate object for the transfers.
-    #
-    # @return [Array<Hash>] An array of hashes, where each hash represents a transfer request with the following keys:
-    #   - `:source_asset` [String]: The UUID of the source asset (well) from the parent plate.
-    #   - `:outer_request` [String]: The UUID of the outer request associated with the transfer.
-    #   - `:target_asset` [String, nil]: The UUID of the target asset (well) in the child plate, or `nil` if not found.
-    #
-    # @example Example Output
-    #   [
-    #     {
-    #       source_asset: "source-uuid-1",
-    #       outer_request: "request-uuid-1",
-    #       target_asset: "target-uuid-1"
-    #     },
-    #     {
-    #       source_asset: "source-uuid-2",
-    #       outer_request: "request-uuid-2",
-    #       target_asset: "target-uuid-2"
-    #     }
-    #   ]
-    # This assumes a 'straight stamp' from source to destination plate,
-    # meaning well A1 goes to well A1, A2 to A2, etc.
-    #
-
-    def build_transfer_requests_attributes(child_plate)
-      parent.wells.filter_map do |well|
-        # We've got to assume there's only one relevant request to be processed here,
-        # because we wouldn't know what to do with more than one.
-        next unless (request = well.active_requests.first)
-
-        target_asset = child_plate.wells.find { |child_well| child_well.location == well.location }&.uuid
-        { source_asset: well.uuid, outer_request: request.uuid, target_asset: target_asset }
       end
     end
   end
