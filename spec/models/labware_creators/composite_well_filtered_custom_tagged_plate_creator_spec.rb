@@ -7,7 +7,7 @@ require_relative 'shared_examples'
 # and the right requests are associated with the converted tag plate.
 
 # rubocop:disable RSpec/HooksBeforeExamples
-RSpec.describe LabwareCreators::PartialWellFilteredCustomTaggedPlateCreator do
+RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
   subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
