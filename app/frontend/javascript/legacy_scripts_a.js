@@ -34,22 +34,25 @@ let PlateViewModel = function (plateElement) {
 let limberPlateView = function (defaultTab) {
   let plateElement = $(this)
 
-  let control = $('#plate-view-control')
-
   let viewModel = new PlateViewModel(plateElement)
 
-  control.find('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-    let viewName = e.target.dataset.plateView
-    if (viewModel[viewName]) {
-      viewModel[viewName].activate()
-    }
+  let tabs = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
+  tabs.forEach((tab) => { 
+    tab.addEventListener('show.bs.tab', function (e) {
+      let viewName = e.target.dataset.plateView
+      if (viewModel[viewName]) {
+        viewModel[viewName].activate()
+      }
+    })
   })
 
-  control.find('a[data-bs-toggle="tab"]').on('hide.bs.tab', function (e) {
-    let viewName = e.target.dataset.plateView
-    if (viewModel[viewName]) {
-      viewModel[viewName].deactivate()
-    }
+  tabs.forEach((tab) => { 
+    tab.addEventListener('hide.bs.tab', function (e) {
+      let viewName = e.target.dataset.plateView
+      if (viewModel[viewName]) {
+        viewModel[viewName].deactivate()
+      }
+    })
   })
 
   // Activate the default tab from the URL hash
@@ -64,7 +67,7 @@ let limberPlateView = function (defaultTab) {
   }
 
   plateElement.on('click', '.aliquot', function (event) {
-    control.find('a[data-plate-view="pools-view"]').show()
+    new Tab(document.querySelector('a[data-plate-view="pools-view"]')).show()
 
     let pool = $(event.currentTarget).data('pool')
 
