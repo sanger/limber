@@ -37,7 +37,7 @@ let limberPlateView = function (defaultTab) {
   let viewModel = new PlateViewModel(plateElement)
 
   let tabs = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
-  tabs.forEach((tab) => { 
+  tabs.forEach((tab) => {
     tab.addEventListener('show.bs.tab', function (e) {
       let viewName = e.target.dataset.plateView
       if (viewModel[viewName]) {
@@ -46,7 +46,7 @@ let limberPlateView = function (defaultTab) {
     })
   })
 
-  tabs.forEach((tab) => { 
+  tabs.forEach((tab) => {
     tab.addEventListener('hide.bs.tab', function (e) {
       let viewName = e.target.dataset.plateView
       if (viewModel[viewName]) {
