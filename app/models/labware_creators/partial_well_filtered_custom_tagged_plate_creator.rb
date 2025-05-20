@@ -25,7 +25,7 @@ module LabwareCreators
 
   # @see LabwareCreators::CustomTaggedPlate
   # @see LabwareCreators::WellFilterAllowingPartials
-  class PartialWellFilteredCustomTaggedPlateCreator < CustomTaggedPlate
+  class CompositeWellFilteredCustomTaggedPlateCreator < CustomTaggedPlate
     include LabwareCreators::WellFilterBehaviour
     self.page = 'custom_tagged_plate'
     self.should_populate_wells_with_pool = false # parent is a V2 plate
@@ -35,7 +35,7 @@ module LabwareCreators
     #
     # @return [WellFilter] The WellFilter instance.
     def well_filter
-      @well_filter ||= LabwareCreators::WellFilterAllowingPartials.new(creator: self)
+      @well_filter ||= LabwareCreators::WellFilterComposite.new(creator: self)
     end
   end
 end
