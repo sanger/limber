@@ -37,4 +37,83 @@ RSpec.describe Labels::Plate384SingleLabel, type: :model do
       end
     end
   end
+
+  describe '#first_of_configured_purpose' do
+    let(:labware) { create :v2_plate, purpose_name: 'Plate Purpose', barcode_number: '123' }
+    let(:label) { described_class.new(labware) }
+    let(:ancestor1) { create :v2_plate, purpose_name: 'Purpose1', barcode_number: '456' }
+    let(:ancestor2) { create :v2_plate, purpose_name: 'Purpose2', barcode_number: '789' }
+    let(:ancestor3) { create :v2_plate, purpose_name: 'Purpose3', barcode_number: '101' }
+
+    # Create a mock ancestors collection that responds to where
+    let(:ancestors_relation) { instance_double(ActiveRecord::Relation) }
+
+    before do
+      # Replace the array of ancestors with a mock relation object
+      allow(labware).to receive(:ancestors).and_return(ancestors_relation)
+
+      # Set up the where method to return appropriate collections based on purpose name
+      allow(ancestors_relation).to receive(:where).with(purpose_name: 'Purpose1').and_return([ancestor1])
+      allow(ancestors_relation).to receive(:where).with(purpose_name: 'Purpose2').and_return([ancestor2])
+      allow(ancestors_relation).to receive(:where).with(purpose_name: 'Purpose3').and_return([ancestor3])
+      allow(ancestors_relation).to receive(:where).with(purpose_name: 'NonExistentPurpose').and_return([])
+      allow(ancestors_relation).to receive(:where).with(purpose_name: 'AlsoNonExistent').and_return([])
+    end
+
+    context 'when alternative_workline_identifier_purpose is blank' do
+      before { allow(SearchHelper).to receive(:alternative_workline_reference_name).with(labware).and_return(nil) }
+
+      it 'returns nil' do
+        expect(label.send(:first_of_configured_purpose)).to be_nil
+      end
+    end
+
+    context 'when alternative_workline_identifier_purpose is a string' do
+      before do
+        allow(SearchHelper).to receive(:alternative_workline_reference_name).with(labware).and_return('Purpose2')
+      end
+
+      it 'returns the first ancestor with the matching purpose name' do
+        expect(label.send(:first_of_configured_purpose)).to eq(ancestor2)
+      end
+    end
+
+    context 'when alternative_workline_identifier_purpose is an array' do
+      context 'when the first purpose in the array is found' do
+        before do
+          allow(SearchHelper).to receive(:alternative_workline_reference_name).with(labware).and_return(
+            %w[Purpose1 Purpose2]
+          )
+        end
+
+        it 'returns the first matching ancestor' do
+          expect(label.send(:first_of_configured_purpose)).to eq(ancestor1)
+        end
+      end
+
+      context 'when only the second purpose in the array is found' do
+        before do
+          allow(SearchHelper).to receive(:alternative_workline_reference_name).with(labware).and_return(
+            %w[NonExistentPurpose Purpose3]
+          )
+        end
+
+        it 'returns the matching ancestor' do
+          expect(label.send(:first_of_configured_purpose)).to eq(ancestor3)
+        end
+      end
+
+      context 'when no purpose in the array is found' do
+        before do
+          allow(SearchHelper).to receive(:alternative_workline_reference_name).with(labware).and_return(
+            %w[NonExistentPurpose AlsoNonExistent]
+          )
+        end
+
+        it 'returns nil' do
+          expect(label.send(:first_of_configured_purpose)).to be_nil
+        end
+      end
+    end
+  end
 end
