@@ -12,15 +12,6 @@ scRNA Core Chromium GEM-X 5p BCR:
     LRC GEM-X 5p BCR Enrich2 2XSPRI: LRC GEM-X 5p BCR Dil 2
     LRC GEM-X 5p BCR Dil 2: LRC GEM-X 5p BCR Post Lig 1XSPRI
     LRC GEM-X 5p BCR Post Lig 1XSPRI: LRC GEM-X 5p BCR Post PCR
-scRNA Core Chromium GEM-X 5p BCR MX:
-  pipeline_group: scRNA Core Library Prep
-  filters:
-    request_type_key:
-      - limber_multiplexing
-  relationships:
-    LRC GEM-X 5p BCR Post PCR: LRC GEM-X 5p BCR LibPS
-    LRC GEM-X 5p BCR LibPS: LRC GEM-X 5p BCR Pool Norm
-    LRC GEM-X 5p BCR Pool Norm: LB Lib Pool Norm
 scRNA Core Chromium GEM-X 5p BCR Pool Norm:
   pipeline_group: scRNA Core Library Prep
   filters:
