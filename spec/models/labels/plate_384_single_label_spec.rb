@@ -45,19 +45,20 @@ RSpec.describe Labels::Plate384SingleLabel, type: :model do
     let(:ancestor2) { create :v2_plate, purpose_name: 'Purpose2', barcode_number: '789' }
     let(:ancestor3) { create :v2_plate, purpose_name: 'Purpose3', barcode_number: '101' }
 
-    # Create a mock ancestors collection that responds to where
-    let(:ancestors_relation) { instance_double(ActiveRecord::Relation) }
-
     before do
-      # Replace the array of ancestors with a mock relation object
-      allow(labware).to receive(:ancestors).and_return(ancestors_relation)
+      # Use a more direct approach by stubbing the actual method rather than trying to mock the relation
+      allow(SearchHelper).to receive(:alternative_workline_reference_name)
 
-      # Set up the where method to return appropriate collections based on purpose name
-      allow(ancestors_relation).to receive(:where).with(purpose_name: 'Purpose1').and_return([ancestor1])
-      allow(ancestors_relation).to receive(:where).with(purpose_name: 'Purpose2').and_return([ancestor2])
-      allow(ancestors_relation).to receive(:where).with(purpose_name: 'Purpose3').and_return([ancestor3])
-      allow(ancestors_relation).to receive(:where).with(purpose_name: 'NonExistentPurpose').and_return([])
-      allow(ancestors_relation).to receive(:where).with(purpose_name: 'AlsoNonExistent').and_return([])
+      # Stub the individual where calls with their results
+      # rubocop:disable RSpec/MessageChain
+      allow(labware).to receive_message_chain(:ancestors, :where).with(purpose_name: 'Purpose1').and_return([ancestor1])
+      allow(labware).to receive_message_chain(:ancestors, :where).with(purpose_name: 'Purpose2').and_return([ancestor2])
+      allow(labware).to receive_message_chain(:ancestors, :where).with(purpose_name: 'Purpose3').and_return([ancestor3])
+      allow(labware).to receive_message_chain(:ancestors, :where).with(purpose_name: 'NonExistentPurpose').and_return(
+        []
+      )
+      allow(labware).to receive_message_chain(:ancestors, :where).with(purpose_name: 'AlsoNonExistent').and_return([])
+      # rubocop:enable RSpec/MessageChain
     end
 
     context 'when alternative_workline_identifier_purpose is blank' do
