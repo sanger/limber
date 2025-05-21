@@ -55,14 +55,6 @@ scRNA Core Chromium GEM-X 5p CITE SUP XP:
   relationships:
     LRC GEM-X 5p CITE SUP XP: LRC GEM-X 5p CITE Ligation
     LRC GEM-X 5p CITE Ligation: LRC GEM-X 5p CITE Lib PCR-XP
-scRNA Core Chromium GEM-X 5p CITE MX:
-  pipeline_group: scRNA Core Library Prep
-  filters:
-    request_type_key: limber_multiplexing
-  relationships:
-    LRC GEM-X 5p CITE Lib PCR-XP: LRC GEM-X 5p CITE Lib Pool Stock
-    LRC GEM-X 5p CITE Lib Pool Stock: LRC GEM-X 5p CITE Pool Norm
-    LRC GEM-X 5p CITE Pool Norm: LB Lib Pool Norm
 scRNA Core Chromium GEM-X 5p CITE Pool Norm:
   pipeline_group: scRNA Core Library Prep
   filters:
