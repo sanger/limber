@@ -169,7 +169,7 @@ module StateChangers
     end
 
     def v2_labware
-      @labware ||= Sequencescape::Api::V2::TubeRack.find({ uuid: labware_uuid }).first
+      @v2_labware ||= Sequencescape::Api::V2::TubeRack.find({ uuid: labware_uuid }).first
     end
   end
 
@@ -178,7 +178,7 @@ module StateChangers
     include AutomaticBehaviour
 
     def v2_labware
-      @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
+      @v2_labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
   end
 
@@ -200,7 +200,7 @@ module StateChangers
     end
 
     def v2_labware
-      @labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
+      @v2_labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
     end
   end
 
@@ -209,7 +209,7 @@ module StateChangers
     include AutomaticBehaviour
 
     def v2_labware
-      @labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
+      @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
     end
   end
 
@@ -223,7 +223,7 @@ module StateChangers
     end
 
     def v2_labware
-      @labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
+      @v2_labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
 
@@ -232,7 +232,7 @@ module StateChangers
     include AutomaticBehaviour
 
     def v2_labware
-      @labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
+      @v2_labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
     end
   end
 end
