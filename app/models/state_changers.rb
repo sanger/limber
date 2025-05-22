@@ -21,7 +21,7 @@ module StateChangers
   # This is the abstract behaviour.
   module AutomaticBehaviour
     def purpose_uuid
-      @purpose_uuid ||= labware.purpose.uuid
+      @purpose_uuid ||= v2_labware.purpose.uuid
     end
 
     def purpose_config
@@ -50,11 +50,15 @@ module StateChangers
     # rubocop:enable Style/OptionalBooleanParameter
 
     def complete_outstanding_requests
-      in_progress_submission_uuids =
-        labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
-      return if in_progress_submission_uuids.blank?
+      in_prog_submissions =
+        v2_labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
+      return if in_prog_submissions.blank?
 
-      api.work_completion.create!(submissions: in_progress_submission_uuids, target: labware.uuid, user: user_uuid)
+      Sequencescape::Api::V2::WorkCompletion.create!(
+        submission_uuids: in_prog_submissions,
+        target_uuid: v2_labware.uuid,
+        user_uuid: user_uuid
+      )
     end
   end
 
@@ -64,6 +68,10 @@ module StateChangers
     private :api
 
     FILTER_FAILS_ON = %w[qc_complete failed cancelled].freeze
+
+    def v2_labware
+      raise 'Implement in the child class'
+    end
 
     def initialize(api, labware_uuid, user_uuid)
       @api = api
@@ -108,18 +116,11 @@ module StateChangers
       raise 'Must be implemented on subclass' # pragma: no cover
     end
 
-    def labware
-      raise 'Must be implemented on subclass' # pragma: no cover
-    end
   end
 
   # Base class for tube racks
   class BaseTubeRackStateChanger < BaseStateChanger
     ACCEPTED_STATES = %w[pending].freeze
-
-    def labware
-      raise 'Implement in the child class'
-    end
 
     # Overrides the move_to! method to include the completion of outstanding requests.
     # @param state [String] the target state to move the labware to
@@ -127,7 +128,7 @@ module StateChangers
     #
     # Iterates over the tubes and passes them individually.
     def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
-      return if state.nil? || labware.nil? # We have nothing to do
+      return if state.nil? || v2_labware.nil? # We have nothing to do
       Sequencescape::Api::V2::StateChange.create!(
         contents: nil,
         customer_accepts_responsibility: customer_accepts_responsibility,
@@ -156,18 +157,18 @@ module StateChangers
 
       # determine list of tubes requiring the state change
       # TODO: why does this check specifically for 'failed' when the FILTER_FAILS_ON is a list with several states?
-      racked_tubes_locations_filtered = labware.racked_tubes.reject { |rt| rt.tube.state == 'failed' }.map(&:coordinate)
+      racked_tubes_locations_filtered = v2_labware.racked_tubes.reject { |rt| rt.tube.state == 'failed' }.map(&:coordinate)
 
       # if no tubes are in the target state then no need to send the contents subset (state changer assumes all
       #  will change)
-      return nil if racked_tubes_locations_filtered.length == labware.racked_tubes.count
+      return nil if racked_tubes_locations_filtered.length == v2_labware.racked_tubes.count
 
       # NB. if all tubes are already in the target state then this method will return an empty array
       # TODO: is this correct behaviour?
       racked_tubes_locations_filtered
     end
 
-    def labware
+    def v2_labware
       @labware ||= Sequencescape::Api::V2::TubeRack.find({ uuid: labware_uuid }).first
     end
   end
@@ -176,7 +177,7 @@ module StateChangers
   class AutomaticTubeRackStateChanger < BaseTubeRackStateChanger
     include AutomaticBehaviour
 
-    def labware
+    def v2_labware
       @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
   end
@@ -190,15 +191,15 @@ module StateChangers
       return nil unless FILTER_FAILS_ON.include?(target_state)
 
       # determine list of well locations requiring the state change
-      well_locations_filtered = labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
+      well_locations_filtered = v2_labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
 
       # if no wells are in failed state then no need to send the contents subset
-      return nil if well_locations_filtered.length == labware.wells.count
+      return nil if well_locations_filtered.length == v2_labware.wells.count
 
       well_locations_filtered
     end
 
-    def labware
+    def v2_labware
       @labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
     end
   end
@@ -207,7 +208,7 @@ module StateChangers
   class AutomaticPlateStateChanger < PlateStateChanger
     include AutomaticBehaviour
 
-    def labware
+    def v2_labware
       @labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
     end
   end
@@ -221,7 +222,7 @@ module StateChangers
       nil
     end
 
-    def labware
+    def v2_labware
       @labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
@@ -230,7 +231,7 @@ module StateChangers
   class AutomaticTubeStateChanger < TubeStateChanger
     include AutomaticBehaviour
 
-    def labware
+    def v2_labware
       @labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
     end
   end
