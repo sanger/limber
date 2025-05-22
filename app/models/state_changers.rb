@@ -115,7 +115,6 @@ module StateChangers
     def contents_for(_target_state)
       raise 'Must be implemented on subclass' # pragma: no cover
     end
-
   end
 
   # Base class for tube racks
@@ -157,7 +156,8 @@ module StateChangers
 
       # determine list of tubes requiring the state change
       # TODO: why does this check specifically for 'failed' when the FILTER_FAILS_ON is a list with several states?
-      racked_tubes_locations_filtered = v2_labware.racked_tubes.reject { |rt| rt.tube.state == 'failed' }.map(&:coordinate)
+      racked_tubes_locations_filtered =
+        v2_labware.racked_tubes.reject { |rt| rt.tube.state == 'failed' }.map(&:coordinate)
 
       # if no tubes are in the target state then no need to send the contents subset (state changer assumes all
       #  will change)
