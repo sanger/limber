@@ -9,20 +9,15 @@ LILYS-96 Stock:
   :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
-# LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot, or
-# it can be the start point of library prep if the Lysate plate was prepared manually.
+# LBSN-96 Lysate plate is the end result of lysis prep using the Beckman robot.
 # Once this plate is made we want to close off the lysate prep submission requests,
 # and we use the AutomaticPlateStateChanger for this.
 LBSN-96 Lysate:
   :asset_type: plate
-  # LYSATE plate can be starting plate as well. The following must be true.
-  :stock_plate: true
-  :cherrypickable_target: false
-  # LYSATE plate can be created from LILYS as well. The following must be false.
   :input_plate: false
-  :type: PlatePurpose::AdditionalInput
+  :stock_plate: false
+  :cherrypickable_target: false
   :label_template: plate_96_lysate
-  :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::StampedPlateAddingRandomisedControls
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_bioscan_lysate_prep'
@@ -44,6 +39,34 @@ LBSN-96 Lysate:
     - type: well_exclusions
       value:
         - H12
+  :presenter_class: Presenters::SubmissionWhenPassedPlatePresenter
+  :submission_options:
+    Bioscan Library Prep:
+      template_name: 'Limber-Htp - Bioscan Library Prep - Automated'
+      request_options:
+        library_type: 'Bioscan'
+        read_length: 150
+        fragment_size_required_from: '50'
+        fragment_size_required_to: '500'
+      allowed_extra_barcodes: false
+LBSN-96 Lysate Input:
+  :asset_type: plate
+  :input_plate: true
+  :stock_plate: true
+  :cherrypickable_target: false
+  :label_template: plate_96_lysate
+  :creator_class: LabwareCreators::Uncreatable
+  :size: 96
+  :presenter_class: Presenters::SubmissionPlatePresenter
+  :submission_options:
+    Bioscan Library Prep:
+      template_name: 'Limber-Htp - Bioscan Library Prep - Automated'
+      request_options:
+        library_type: 'Bioscan'
+        read_length: 150
+        fragment_size_required_from: '50'
+        fragment_size_required_to: '500'
+      allowed_extra_barcodes: false
 LBSN-384 PCR 1:
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantStamp
@@ -51,16 +74,26 @@ LBSN-384 PCR 1:
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_384_single
   :size: 384
-  # LYSATE plate barcode is shown on barcode label top-right
-  :alternative_workline_identifier: LBSN-96 Lysate
+  # LYSATE plate barcode is shown on barcode label top-right, user does not want
+  # to see the LILYS plate barcode here.
+  # This field indicates the purpose of the ancestor we want to find to show on
+  # the barcode label. We have 2 possible ancestors.
+  :alternative_workline_identifier:
+    - LBSN-96 Lysate
+    - LBSN-96 Lysate Input
 LBSN-384 PCR 2:
   :asset_type: plate
   :creator_class: LabwareCreators::TaggedPlate
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_384_single
   :size: 384
-  # LYSATE plate barcode is shown on barcode label top-right
-  :alternative_workline_identifier: LBSN-96 Lysate
+  # LYSATE plate barcode is shown on barcode label top-right, user does not want
+  # to see the LILYS plate barcode here.
+  # This field indicates the purpose of the ancestor we want to find to show on
+  # the barcode label. We have 2 possible ancestors.
+  :alternative_workline_identifier:
+    - LBSN-96 Lysate
+    - LBSN-96 Lysate Input
   # NB. will need to update this list to include new versions of the templates
   # as we generate new sets after changes from the scripts in Sequencescape
   :tag_layout_templates:
