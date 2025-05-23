@@ -106,9 +106,9 @@ RSpec.describe StateChangers do
       before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
 
       it 'changes plate state and triggers a work completion' do
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        expect_work_completion_creation
 
-        expect(work_completion_creation).to have_been_made.once
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
 
