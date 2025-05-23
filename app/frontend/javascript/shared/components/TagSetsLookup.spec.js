@@ -1,9 +1,7 @@
-import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { mount, flushPromises } from '@vue/test-utils'
 import TagSetsLookup from '@/javascript/shared/components/TagSetsLookup.vue'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 import mockApi from '@/javascript/test_support/mock_api.js'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 describe('TagSetsLookup', () => {
   const tagSetObject = {
@@ -95,7 +93,6 @@ describe('TagSetsLookup', () => {
         api: api.devour,
         resourceName: 'tag_set',
       },
-      localVue,
     })
   }
   const extractRelevantProperties = (array) =>

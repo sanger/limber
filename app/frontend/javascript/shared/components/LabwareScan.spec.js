@@ -2,19 +2,16 @@
 
 // Import the component being tested
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import LabwareScan from '@/javascript/shared/components/LabwareScan.vue'
 import { checkState } from '@/javascript/shared/components/tubeScanValidators.js'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 import mockApi from '@/javascript/test_support/mock_api.js'
 
-// create an extended `Vue` constructor
-import localVue from '@/javascript/test_support/base_vue.js'
-
 describe('LabwareScan', () => {
   const wrapperFactoryPlate = function (api = mockApi()) {
     return mount(LabwareScan, {
-      propsData: {
+      props: {
         labwareType: 'plate',
         label: 'My Plate',
         description: 'Scan it in',
@@ -22,13 +19,12 @@ describe('LabwareScan', () => {
         includes: '',
         colourIndex: 3,
       },
-      localVue,
     })
   }
 
   const wrapperFactoryTube = function (api = mockApi(), validators = undefined) {
     return mount(LabwareScan, {
-      propsData: {
+      props: {
         labwareType: 'tube',
         label: 'My Tube',
         description: 'Scan it in',
@@ -37,13 +33,12 @@ describe('LabwareScan', () => {
         colourIndex: 3,
         validators: validators,
       },
-      localVue,
     })
   }
 
   const wrapperFactoryTubeDisabled = function (api = mockApi()) {
     return mount(LabwareScan, {
-      propsData: {
+      props: {
         labwareType: 'tube',
         label: 'My Tube',
         description: 'Scan it in',
@@ -52,20 +47,18 @@ describe('LabwareScan', () => {
         colourIndex: 3,
         scanDisabled: true,
       },
-      localVue,
     })
   }
 
   const wrapperFactoryTubeNoColour = function (api = mockApi()) {
     return mount(LabwareScan, {
-      propsData: {
+      props: {
         labwareType: 'tube',
         label: 'My Tube',
         description: 'Scan it in',
         api: api.devour,
         includes: '',
       },
-      localVue,
     })
   }
 
@@ -84,7 +77,7 @@ describe('LabwareScan', () => {
   it('renders the provided description', () => {
     const wrapper = wrapperFactoryTube()
 
-    expect(wrapper.find('.text-muted').text()).toEqual('Scan it in')
+    expect(wrapper.find('.text-body-secondary').text()).toEqual('Scan it in')
   })
 
   it('renders the correct placeholder for a plate', () => {
@@ -182,9 +175,10 @@ describe('LabwareScan', () => {
       await flushPromises()
 
       expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find tube')
-      expect(wrapper.emitted()).toEqual({
-        change: [[{ state: 'searching', labware: null }], [{ state: 'invalid', labware: undefined }]],
-      })
+      expect(wrapper.emitted().change).toEqual([
+        [{ state: 'searching', labware: null }],
+        [{ state: 'invalid', labware: undefined }],
+      ])
     })
 
     it('is invalid if the tube is in the pending state', async () => {
@@ -275,9 +269,10 @@ describe('LabwareScan', () => {
       await flushPromises()
 
       expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
-      expect(wrapper.emitted()).toEqual({
-        change: [[{ state: 'searching', labware: null }], [{ state: 'invalid', labware: null }]],
-      })
+      expect(wrapper.emitted().change).toEqual([
+        [{ state: 'searching', labware: null }],
+        [{ state: 'invalid', labware: null }],
+      ])
     })
   })
 
@@ -290,13 +285,12 @@ describe('LabwareScan', () => {
 
     const wrapperFactoryPlate = function (api = mockApi()) {
       return mount(LabwareScan, {
-        propsData: {
+        props: {
           label: 'My Plate',
           description: 'Scan it in',
           api: api.devour,
           includes: 'wells.requests_as_source,wells.aliquots.request',
         },
-        localVue,
       })
     }
     it('is valid if it can find a plate', async () => {
@@ -355,9 +349,10 @@ describe('LabwareScan', () => {
       await flushPromises()
 
       expect(wrapper.find('.invalid-feedback').text()).toEqual('Could not find plate')
-      expect(wrapper.emitted()).toEqual({
-        change: [[{ state: 'searching', plate: null }], [{ state: 'invalid', plate: undefined }]],
-      })
+      expect(wrapper.emitted().change).toEqual([
+        [{ state: 'searching', plate: null }],
+        [{ state: 'invalid', plate: undefined }],
+      ])
     })
 
     it('is invalid if the plate is the wrong size', async () => {
@@ -440,9 +435,10 @@ describe('LabwareScan', () => {
       await flushPromises()
 
       expect(wrapper.find('.invalid-feedback').text()).toEqual('Not good: Very not good')
-      expect(wrapper.emitted()).toEqual({
-        change: [[{ state: 'searching', plate: null }], [{ state: 'invalid', plate: null }]],
-      })
+      expect(wrapper.emitted().change).toEqual([
+        [{ state: 'searching', plate: null }],
+        [{ state: 'invalid', plate: null }],
+      ])
     })
   })
 })

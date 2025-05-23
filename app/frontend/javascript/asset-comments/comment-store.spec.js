@@ -1,8 +1,6 @@
 // // Import the component being tested
 import commentStoreFactory from './comment-store.js'
-import flushPromises from 'flush-promises'
-import axios from 'axios'
-import MockAdapter from 'axios-mock-adapter'
+import { flushPromises } from '@vue/test-utils'
 import mockApi from '@/javascript/test_support/mock_api.js'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 import eventBus from '@/javascript/shared/eventBus.js'
@@ -68,27 +66,24 @@ describe('commentStore', () => {
 
   it('retrieves comments after adding a new comment', async () => {
     let api = mockApiFactory(comments)
-    let mock = new MockAdapter(axios)
-    let commentStore = commentStoreFactory(axios, api, '123', 'user_id')
+    let mock = vi.fn().mockResolvedValue({ data: {} })
+    let commentStore = commentStoreFactory(mock, api, '123', 'user_id')
 
     expect(commentStore.comments).toEqual(undefined)
-
-    mock.onPost().reply((_) => {
-      return [201, {}]
-    })
 
     commentStore.addComment('new title', 'new description')
 
     await flushPromises()
 
+    expect(mock).toHaveBeenCalledTimes(1)
     expect(commentStore.comments.length).toEqual(2)
     expect(mockEmit).toHaveBeenCalledWith('update-comments', { comments: commentStore.comments, assetId: '123' })
   })
 
   it('posts comments to the sequencescape api', async () => {
     let api = mockApiFactory(comments)
-    let mock = new MockAdapter(axios)
-    let commentStore = commentStoreFactory(axios, api, '123', 'user_id')
+    let mock = vi.fn().mockResolvedValue({ data: {} })
+    let commentStore = commentStoreFactory(mock, api, '123', 'user_id')
 
     const expectedPayload = {
       data: {
@@ -108,18 +103,15 @@ describe('commentStore', () => {
       },
     }
 
-    mock.onPost().reply((request) => {
-      // NB in practice the axios instance is configured to the sequencescape baseURL
-      // whereas the mock adapter doesn't expose this
-      expect(request.url).toEqual('comments')
-      expect(request.data).toEqual(JSON.stringify(expectedPayload))
-      return [201, {}]
-    })
-
     commentStore.addComment('new title', 'new description')
 
     await flushPromises()
 
-    expect(mock.history.post.length).toBe(1)
+    expect(mock).toHaveBeenCalledTimes(1)
+    expect(mock).toHaveBeenCalledWith({
+      method: 'post',
+      url: 'comments',
+      data: expectedPayload,
+    })
   })
 })

@@ -1,6 +1,5 @@
-import localVue from '@/javascript/test_support/base_vue.js'
 import TransferVolumes from './TransferVolumes.vue'
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { purposeConfigForTube } from '@/javascript/shared/tubeHelpers.js'
 vi.mock('@/javascript/shared/tubeHelpers.js')
@@ -20,13 +19,12 @@ describe('TransferVolumes', () => {
   const mockPurposeConfig = {}
 
   const wrapperFactory = function (options = {}) {
-    return shallowMount(TransferVolumes, {
-      propsData: {
+    return mount(TransferVolumes, {
+      props: {
         purposeConfigs: mockPurposeConfigs,
         tube: mockTube,
         ...options,
       },
-      localVue,
     })
   }
 
@@ -42,8 +40,8 @@ describe('TransferVolumes', () => {
 
     it('calls purposeConfigForTube with expected arguments', () => {
       expect(purposeConfigForTube.mock.calls.length).toBe(1)
-      expect(purposeConfigForTube.mock.calls[0][0]).toBe(mockTube)
-      expect(purposeConfigForTube.mock.calls[0][1]).toBe(mockPurposeConfigs)
+      expect(purposeConfigForTube.mock.calls[0][0]).toEqual(mockTube)
+      expect(purposeConfigForTube.mock.calls[0][1]).toEqual(mockPurposeConfigs)
     })
 
     it('returns the expected purpose config', () => {
@@ -64,7 +62,7 @@ describe('TransferVolumes', () => {
 
     it('calls purposeTargetVolumeParameter with expected arguments', () => {
       expect(tubeMostRecentMolarity.mock.calls.length).toBe(1)
-      expect(tubeMostRecentMolarity.mock.calls[0][0]).toBe(mockTube)
+      expect(tubeMostRecentMolarity.mock.calls[0][0]).toEqual(mockTube)
     })
 
     it('returns the expected target volume', () => {
@@ -145,7 +143,7 @@ describe('TransferVolumes', () => {
 
     it('calls tubeMostRecentMolarity with expected arguments', () => {
       expect(tubeMostRecentMolarity.mock.calls.length).toBe(1)
-      expect(tubeMostRecentMolarity.mock.calls[0][0]).toBe(mockTube)
+      expect(tubeMostRecentMolarity.mock.calls[0][0]).toEqual(mockTube)
     })
 
     it('calls purposeMinimumPickParameter with expected arguments', () => {

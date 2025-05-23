@@ -16,7 +16,7 @@
     <tbody>
       <tr v-for="row in rows" :key="row">
         <th class="first-col">
-          {{ row | toLetter }}
+          {{ rowHeader(row) }}
         </th>
         <td v-for="column in columns" :key="column">
           <lb-well
@@ -37,9 +37,6 @@ import { rowNumToLetter } from '@/javascript/shared/wellHelpers.js'
 
 export default {
   name: 'LbPlate',
-  filters: {
-    toLetter: rowNumToLetter,
-  },
   components: {
     'lb-well': LbWell,
   },
@@ -54,12 +51,16 @@ export default {
       },
     },
   },
+  emits: ['onwellclicked'],
   computed: {
     sizeClass: function () {
       return 'plate-' + this.columns * this.rows
     },
   },
   methods: {
+    rowHeader(row) {
+      return rowNumToLetter(row)
+    },
     tooltip_label: function (row, column) {
       return this.wellAt(row, column).human_barcode
     },

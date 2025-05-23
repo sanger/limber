@@ -1,4 +1,3 @@
-import localVue from '@/javascript/test_support/base_vue.js'
 import TubesToRack from './TubesToRack.vue'
 import { checkDuplicates, checkMatchingPurposes } from '@/javascript/shared/components/tubeScanValidators.js'
 import { shallowMount } from '@vue/test-utils'
@@ -9,11 +8,10 @@ vi.mock('@/javascript/shared/components/tubeScanValidators')
 describe('MultiStampTubes', () => {
   const wrapperFactory = function (options = {}) {
     return shallowMount(TubesToRack, {
-      propsData: {
+      props: {
         targetUrl: '',
         ...options,
       },
-      localVue,
     })
   }
 
