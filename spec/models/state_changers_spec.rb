@@ -122,9 +122,9 @@ RSpec.describe StateChangers do
       end
 
       it 'changes plate state but does not trigger a work completion' do
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        don_t_expect_work_completion_creation
 
-        expect(work_completion_creation).not_to have_been_made
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
 
@@ -140,9 +140,9 @@ RSpec.describe StateChangers do
       end
 
       it 'changes plate state and triggers a work completion' do
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        expect_work_completion_creation
 
-        expect(work_completion_creation).to have_been_made.once
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
   end
