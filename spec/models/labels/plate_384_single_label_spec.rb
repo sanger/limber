@@ -7,7 +7,7 @@ RSpec.describe Labels::Plate384SingleLabel, type: :model do
 
   context 'when creating the label of a plate' do
     let(:labware) { build :v2_plate, size: 384 }
-    let(:label) { Labels::Plate384SingleLabel.new(labware) }
+    let(:label) { described_class.new(labware) }
     let(:date_format) { /\A\s?\d{1,2}-[A-Z]{3}-\d{4}\z/ } # e.g., ' 4 JUL 2023' or '24 JUL 2023'
 
     before do
@@ -15,7 +15,7 @@ RSpec.describe Labels::Plate384SingleLabel, type: :model do
       allow(label).to receive(:first_of_last_purpose).and_return(labware.stock_plate)
     end
 
-    context '#attributes' do
+    describe '#attributes' do
       it 'has the correct attributes' do
         attributes = label.attributes
         expect(attributes[:top_left]).to match(date_format)
@@ -26,7 +26,7 @@ RSpec.describe Labels::Plate384SingleLabel, type: :model do
       end
     end
 
-    context '#sprint_attributes' do
+    describe '#sprint_attributes' do
       it 'has the correct attributes' do
         attributes = label.sprint_attributes
         expect(attributes[:top_left]).to match(date_format)

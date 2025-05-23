@@ -4,9 +4,9 @@ require 'spec_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::StockPlatePresenter do
-  let(:labware) { create :v2_stock_plate }
+  subject { described_class.new(labware:) }
 
-  subject { Presenters::StockPlatePresenter.new(labware:) }
+  let(:labware) { create :v2_stock_plate }
 
   let(:barcode_string) { labware.human_barcode }
 

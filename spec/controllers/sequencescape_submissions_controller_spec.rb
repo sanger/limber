@@ -58,7 +58,7 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
       expect_submission_creation
 
       post :create, params: request_parameters, session: { user_uuid: }
-      assert_equal ['Your submissions have been made and should be built shortly.'], flash.notice
+      expect(flash.notice).to eq(['Your submissions have been made and should be built shortly.'])
     end
   end
 end

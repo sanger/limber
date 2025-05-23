@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Cancelling a whole plate', js: true do
+RSpec.feature 'Cancelling a whole plate', :js do
   has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
@@ -70,6 +70,6 @@ RSpec.feature 'Cancelling a whole plate', js: true do
 
     click_on('Cancel Labware')
 
-    expect(find('#flashes')).to have_content("Labware: #{plate_barcode} has been changed to a state of Cancelled.")
+    expect(find_by_id('flashes')).to have_content("Labware: #{plate_barcode} has been changed to a state of Cancelled.")
   end
 end

@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 

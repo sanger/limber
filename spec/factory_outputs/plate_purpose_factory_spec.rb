@@ -32,7 +32,7 @@ RSpec.describe 'plate_purpose factory' do
     }'
   end
 
-  it 'should match the expected json' do
+  it 'matches the expected json' do
     expect(JSON.parse(subject)['plate_purpose']).to eq JSON.parse(json_content)['plate_purpose']
   end
 end

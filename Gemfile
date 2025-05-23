@@ -37,6 +37,7 @@ group :default do
 
   gem 'puma'
   gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
+  gem 'syslog'
 end
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -69,8 +70,11 @@ end
 group :lint do
   gem 'erb_lint', require: false
   gem 'rubocop', require: false
+  gem 'rubocop-capybara', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec_rails', require: false
 
   # Ruby dependencies specifically requested by prettier/plugin-ruby v4
   # https://github.com/prettier/plugin-ruby

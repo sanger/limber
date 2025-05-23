@@ -26,7 +26,7 @@ jobs:
           bundle config --local deployment false
           bundle update --group=lint
       - name: Correcting and ignoring
-        run: bundle exec rubocop --auto-correct --disable-uncorrectable
+        run: bundle exec rubocop --autocorrect --disable-uncorrectable
         # https://github.com/marketplace/actions/create-pull-request
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

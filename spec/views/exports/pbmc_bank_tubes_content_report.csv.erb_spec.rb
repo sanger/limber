@@ -268,6 +268,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
           ['DN1S:B3', '', 'NT2P', 'FX9G', created_at, 'Contingency', '', '', '125', study_name, 'Sanger']
         ]
       end
+
       it 'shows blanks in the missing columns, row by row' do
         CSV.parse(render).each { |row| expect(row).to eq(expected_content.shift) }
       end

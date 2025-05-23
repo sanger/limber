@@ -49,12 +49,12 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on new' do
+    subject { described_class.new(api, form_attributes) }
+
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_tube_uuid } }
 
-    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes) }
-
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::MultiStampTubes
+      expect(subject).to be_a described_class
     end
 
     it 'renders the "multi_stamp_tubes" page' do
@@ -67,7 +67,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {
@@ -121,6 +121,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           let!(:purpose_config) do
             create :multi_stamp_tubes_purpose_configs, name: child_purpose_name, uuid: child_purpose_uuid
           end
+
           it 'adds an error' do
             subject.send(:configured_params)
             expect(subject.errors.full_messages).to include('Expected only one submission')
@@ -130,17 +131,19 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         describe '#autodetect_studies' do
           it 'returns true when specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ autodetect_studies: true, request_options: {} })
-            expect(subject.send(:autodetect_studies)).to eq(true)
+            expect(subject.send(:autodetect_studies)).to be(true)
           end
+
           it 'returns false when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_studies: false, request_options: {} }
             )
-            expect(subject.send(:autodetect_studies)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to be(false)
           end
+
           it 'returns false if not specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ request_options: {} })
-            expect(subject.send(:autodetect_studies)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to be(false)
           end
         end
 
@@ -149,31 +152,33 @@ RSpec.describe LabwareCreators::MultiStampTubes do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_projects: true, request_options: {} }
             )
-            expect(subject.send(:autodetect_projects)).to eq(true)
+            expect(subject.send(:autodetect_projects)).to be(true)
           end
+
           it 'returns false when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_projects: false, request_options: {} }
             )
-            expect(subject.send(:autodetect_projects)).to eq(false)
+            expect(subject.send(:autodetect_projects)).to be(false)
           end
+
           it 'returns false if not specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ request_options: {} })
-            expect(subject.send(:autodetect_projects)).to eq(false)
+            expect(subject.send(:autodetect_projects)).to be(false)
           end
         end
       end
     end
 
-    context '#save!' do
-      setup do
+    describe '#save!' do
+      before do
         expect(subject).to receive(:parent_tubes).and_return([parent1, parent2])
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent1).and_return('outer-request-1')
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent2).and_return('outer-request-2')
       end
 
       context 'when sources are from multiple studies' do
-        setup do
+        before do
           expect('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).and_return(
             [multiple_study_submission]
           )
