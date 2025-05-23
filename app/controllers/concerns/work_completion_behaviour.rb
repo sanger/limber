@@ -17,7 +17,7 @@ module WorkCompletionBehaviour
   def create
     Sequencescape::Api::V2::WorkCompletion.create!(
       # Our pools keys are our submission uuids.
-      submission_uuids: labware.in_progress_submission_uuids,
+      submission_uuids: labware.in_progress_submission_uuids.compact,
       target_uuid: labware.uuid,
       user_uuid: current_user_uuid
     )
