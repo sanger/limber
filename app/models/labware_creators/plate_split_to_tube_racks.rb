@@ -763,7 +763,6 @@ module LabwareCreators
           well_uuid = well.uuid
           tube_barcodes_for_well = fetch_tube_barcodes_for_well(well_uuid)
 
-          binding.pry
           validate_tube_barcodes_for_well!(tube_barcodes_for_well, well)
 
           tube_barcodes_for_well.each do |tube_barcode_for_well|

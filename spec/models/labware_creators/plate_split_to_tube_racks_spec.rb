@@ -13,7 +13,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   it_behaves_like 'it only allows creation from plates'
 
   it 'has a custom page' do
-    expect(described_class.page).to eq 'plate_split_to_tube_racks'
+    expect(described_class.page).to eq 'tube_rack_creation/plate_split_to_tube_racks'
   end
 
   let(:user) { create :user }
