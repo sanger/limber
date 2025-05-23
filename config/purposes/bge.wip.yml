@@ -97,16 +97,35 @@ BGE Cap Lib Pool Norm:
   :creator_class: LabwareCreators::FinalTubeFromPlate
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
-# TODO (Y24-368): Enable BGE Blend pipeline configuration
-# BGE Blended Cap Lib Pool:
-#   :asset_type: tube
-#   :target: MultiplexedLibraryTube
-#   :type: IlluminaHtp::InitialStockTubePurpose
-#   :creator_class: LabwareCreators::PooledTubesFromWholeTubes
-#   :presenter_class: Presenters::SimpleTubePresenter
-# BGE Custom pool:
-#   :asset_type: tube
-#   :target: MultiplexedLibraryTube
-#   :type: IlluminaHtp::InitialStockTubePurpose
-#   :creator_class: LabwareCreators::TubeFromTube
-#   :presenter_class: Presenters::SimpleTubePresenter
+BGE Blended Cap Lib Pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class:
+    name: LabwareCreators::BlendedTube
+    args:
+      ancestor_labware_purpose_name: BGE Lib XP2
+      acceptable_parent_tube_purposes:
+        - BGE Lib Pool
+        - BGE Cap Lib Pool Norm
+      single_ancestor_parent_tube_purpose: BGE Lib Pool
+      preferred_purpose_name_when_deduplicating: BGE Cap Lib Pool Norm
+      list_of_aliquot_attributes_to_consider_a_duplicate:
+        - sample_id
+        - tag_id
+        - tag2_id
+  :presenter_class: Presenters::SimpleTubePresenter
+BGE Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+BGE Custom Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::CustomPooledTubes
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
