@@ -1,7 +1,7 @@
 <% unless resources.empty? %>
   <% button_id = SecureRandom.uuid %>
   <div role="d-grid w-100 gap-2">
-    <button id="<%= button_id %>" class="w-100 my-1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button id="<%= button_id %>" class="w-100 my-1 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Create <%= resource_type %>
     </button>
     <div class="dropdown-menu" aria-labelledby="<%= button_id %>">

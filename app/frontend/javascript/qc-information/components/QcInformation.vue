@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-grid gap-3">
     <lb-qc-field
       v-for="qcField in qcFields"
       :key="qcField.name"
@@ -7,11 +7,9 @@
       :asset-uuid="assetUuid"
       @change="updateResult(qcField.name, $event)"
     />
-    <div class="d-grid">
-      <b-button :disabled="disabled" :variant="buttonStyle" size="lg" @click="submit">
-        {{ buttonText }}
-      </b-button>
-    </div>
+    <b-button :disabled="disabled" :variant="buttonStyle" size="lg" @click="submit">
+      {{ buttonText }}
+    </b-button>
   </div>
 </template>
 
