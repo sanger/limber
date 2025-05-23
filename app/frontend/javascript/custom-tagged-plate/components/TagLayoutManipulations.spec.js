@@ -3,7 +3,6 @@ import { shallowMount } from '@vue/test-utils'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
 import localVue from '@/javascript/test_support/base_vue.js'
 import {
-  nullQcableData,
   exampleQcableData,
   exampleTagGroupsList,
   exampleTagSetList,
@@ -39,13 +38,11 @@ describe('TagLayoutManipulations', () => {
       })
     })
 
-    describe('tagGroupsDisabled:', () => {
+    describe('tagSetsDisabled:', () => {
       it('returns false if a tag plate has not been scanned', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({ tagPlate: null })
-
-        expect(wrapper.vm.tagGroupsDisabled).toBe(false)
         expect(wrapper.vm.tagSetsDisabled).toBe(false)
       })
 
@@ -53,8 +50,6 @@ describe('TagLayoutManipulations', () => {
         const wrapper = wrapperFactory()
 
         wrapper.setData({ tagPlate: exampleQcableData.plate })
-
-        expect(wrapper.vm.tagGroupsDisabled).toBe(true)
         expect(wrapper.vm.tagSetsDisabled).toBe(true)
       })
     })
@@ -67,21 +62,9 @@ describe('TagLayoutManipulations', () => {
       expect(wrapper.find('#tag_plate_scan').exists()).toBe(true)
     })
 
-    it('renders a tag1 group select dropdown', () => {
+    it('renders a tag set selection dropdown', () => {
       const wrapper = wrapperFactory()
-
-      expect(wrapper.find('#tag1_group_selection').exists()).toBe(true)
-    })
-
-    it('renders a tag2 group select dropdown', () => {
-      const wrapper = wrapperFactory()
-
-      expect(wrapper.find('#tag2_group_selection').exists()).toBe(true)
-    })
-
-    it('does not render a tag set selection dropdown if tagsets are not available', () => {
-      const wrapper = wrapperFactory()
-      expect(wrapper.find('#tag_set_selection').exists()).toBe(false)
+      expect(wrapper.find('#tag_set_selection').exists()).toBe(true)
     })
 
     it('renders a walking by select dropdown', () => {
@@ -98,10 +81,9 @@ describe('TagLayoutManipulations', () => {
   })
 
   describe('#integration tests:', () => {
-    it('sets selected on and disables the tag group selects when a tag plate is scanned', async () => {
+    it('sets selected on and disables the tag set selects when a tag plate is scanned', async () => {
       const wrapper = wrapperFactory()
-
-      wrapper.setData({ tagGroupsList: exampleTagGroupsList })
+      wrapper.setData({ tagSetList: exampleTagSetList })
 
       wrapper.vm.tagPlateScanned(exampleQcableData)
 
@@ -109,48 +91,7 @@ describe('TagLayoutManipulations', () => {
 
       // NB cannot check the vue bootstrap elements directly with shallowMount
       // wrapper
-      expect(wrapper.vm.tagGroupsDisabled).toBe(true)
       expect(wrapper.vm.tagSetsDisabled).toBe(true)
-    })
-
-    it('re-enables the tag group selects when the tag plate is cleared', () => {
-      const wrapper = wrapperFactory()
-
-      wrapper.setData({ tagGroupsList: exampleTagGroupsList })
-
-      wrapper.vm.tagPlateScanned(exampleQcableData)
-
-      // NB cannot check the vue bootstrap elements directly with shallowMount
-      // wrapper
-      expect(wrapper.vm.tagGroupsDisabled).toBe(true)
-      expect(wrapper.vm.tagSetsDisabled).toBe(true)
-
-      wrapper.vm.tagPlateScanned(nullQcableData)
-
-      expect(wrapper.vm.tagGroupsDisabled).toBe(false)
-      expect(wrapper.vm.tagSetsDisabled).toBe(false)
-
-      expect(wrapper.vm.tag1GroupId).toEqual(null)
-      expect(wrapper.vm.tag2GroupId).toEqual(null)
-      expect(wrapper.vm.tagSetId).toEqual(null)
-      expect(wrapper.vm.tagPlate).toEqual(null)
-    })
-
-    it('disables the tag plate scan input if a tag group 1 or 2 is selected', () => {
-      const wrapper = wrapperFactory()
-
-      wrapper.setData({ tagGroupsList: exampleTagGroupsList })
-
-      expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
-
-      // NB cannot check the vue bootstrap elements directly with shallowMount
-      // wrapper
-      wrapper.setData({ tag1GroupId: 1 })
-
-      wrapper.vm.tagGroupChanged()
-      wrapper.vm.tagGroupInput()
-
-      expect(wrapper.vm.tagPlateScanDisabled).toBe(true)
     })
 
     it('reenables the tag plate scan input if the tag group 1 and 2 is cleared', () => {
