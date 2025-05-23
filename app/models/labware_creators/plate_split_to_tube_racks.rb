@@ -44,7 +44,7 @@ module LabwareCreators
     include LabwareCreators::CustomPage
     include SupportParent::PlateOnly
 
-    self.page = 'plate_split_to_tube_racks'
+    self.page = 'tube_rack_creation/plate_split_to_tube_racks'
     self.attributes += %i[sequencing_file contingency_file]
 
     attr_accessor :sequencing_file, :contingency_file
@@ -52,10 +52,10 @@ module LabwareCreators
 
     validates_nested :well_filter
 
-    # Don't create the tubes until at least the contingency file has been uploaded
+    # Don't create the tubes until at least the sequencing file has been uploaded
     validate :validate_file_presence
 
-    # N.B. contingency file is required, sequencing file is optional
+    # N.B. sequencing file is required, contingency file is optional
     validates_nested :sequencing_csv_file, if: :sequencing_file
     validates_nested :contingency_csv_file, if: :contingency_file
 
@@ -161,9 +161,9 @@ module LabwareCreators
       )
     end
 
-    # We redirect to the contingency tube rack that we have just created.
+    # We redirect to the sequencing tube rack that we have just created.
     def redirection_target
-      child_tube_racks[SPR_TUBE_RACK_NAME]
+      child_tube_racks[SEQ_TUBE_RACK_NAME]
     end
 
     # Display the relatives tab on the child tube rack page.
