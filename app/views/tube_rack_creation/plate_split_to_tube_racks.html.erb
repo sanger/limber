@@ -26,17 +26,24 @@
   <% end %>
   <%= sidebar do %>
     <%= card title: 'Upload tube rack scan files' do %>
-      <p>For this parent plate with <b><%= @labware_creator.num_parent_unique_samples %></b> distinct samples and a total of <b><%= @labware_creator.num_parent_wells %></b> transferable wells, you will need <b><%= @labware_creator.num_parent_unique_samples %></b> sequencing and <b><%= @labware_creator.num_parent_wells - @labware_creator.num_parent_unique_samples %></b> contingency tubes.</p>
+      <% num_uniq_samples = @labware_creator.num_parent_unique_samples %>
+      <% num_parent_wells = @labware_creator.num_parent_wells%>
+      <% num_spare_samples = @labware_creator.num_parent_wells - @labware_creator.num_parent_unique_samples %>
+      <p>For this parent plate with <b><%= num_uniq_samples %></b> distinct samples and a total of <b><%= num_parent_wells %></b> transferable wells, you will need <b><%= num_uniq_samples %></b> sequencing and <b><%= num_spare_samples %></b> contingency tubes.</p>
       <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
         <%= f.hidden_field :purpose_uuid %>
         <h4>Sequencing tube rack scan file (required)</h4>
         <div class="form-group">
           <%= f.file_field :sequencing_file, accept: '.csv', required: true %>
         </div>
+        <% if num_spare_samples > 0 %>
         <h4>Contingency tube rack scan file (sequencing file is required to be uploaded)</h4>
         <div class="form-group">
           <%= f.file_field :contingency_file, accept: '.csv', required: false %>
         </div>
+        <% else %>
+        <h4>No Contingency tube rack scan file needed</h4>
+        <% end %>
         <%= f.submit class: 'btn btn-success' %>
       <% end %>
     <% end %>
