@@ -1,0 +1,11 @@
+---
+Kinnex Cherrypick:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::TubesFromPlateWell
+  :presenter_class: Presenters::SimpleTubePresenter
+  :label_template: plate_96_2d # TODO: Confirm if this is correct
+  :transfer_template: 'plate well to two tubes'
+#  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+#  :work_completion_request_type: 'scrna_core_pool_norm'
