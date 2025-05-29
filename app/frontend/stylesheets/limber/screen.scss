@@ -10,6 +10,15 @@ body {
   margin-bottom: 50px;
 }
 
+// Bootstrap v5 underlines links by default, so we need to restore the v4
+// setting of no underline to preserve the look of the application.
+a {
+  text-decoration: $link-decoration !important;
+  &:hover {
+    text-decoration: $link-hover-decoration !important;
+  }
+}
+
 /* Background colours for different environments */
 .bg-production {
   background-color: $production;
