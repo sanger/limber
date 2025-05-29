@@ -4442,6 +4442,8 @@ ROBOT_CONFIG =
       }
     )
 
+    # This is a custom robot for the RVIG Lig Bind to RVIG Lib PCR step.
+    # It allows 2 pairs of plates to be processed in parallel.
     custom_robot(
       'hamilton-rvig-lig-bind-to-rvig-lib-pcr',
       name: 'Hamilton RVIG Lig Bind => RVIG Lib PCR',
@@ -4451,11 +4453,23 @@ ROBOT_CONFIG =
           states: ['passed'],
           label: 'Bed 5'
         },
+        bed(12).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['pending'],
+          label: 'Bed 12',
+          parent: bed(5).barcode,
+          target_state: 'passed'
+        },
+        bed(10).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['passed'],
+          label: 'Bed 10'
+        },
         bed(13).barcode => {
           purpose: 'RVIG Lib PCR',
           states: ['pending'],
           label: 'Bed 13',
-          parent: bed(5).barcode,
+          parent: bed(10).barcode,
           target_state: 'passed'
         }
       }
