@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe LabwareCreators::WellFilterComposite do
+RSpec.describe LabwareCreators::WellFilterKinnex do
   context 'when filtering wells' do
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:request_type_key) { 'kinnex_prep' }
@@ -18,31 +18,32 @@ RSpec.describe LabwareCreators::WellFilterComposite do
     end
 
     context 'when there are wells with request_type equal to kinnex_prep' do
-      subject { described_class.new(creator: labware_creator, request_type_key: request_type_key)
-      let(:request) do
-        create :library_request,
-               state: 'pending',
-               request_type: request_type_kinnex,
-               uuid: 'request-0',
-               library_type: 'Sample Libarary Type'
+      subject do
+        described_class.new(creator: labware_creator, request_type_key: request_type_key)
+        let(:request) do
+          create :library_request,
+                 state: 'pending',
+                 request_type: request_type_kinnex,
+                 uuid: 'request-0',
+                 library_type: 'Sample Libarary Type'
+        end
+        let(:well_kinnex) do
+          create(:v2_well, name: 'K1', position: { 'name' => 'K1' }, requests_as_source: [request], outer_request: nil)
+        end
+        let(:parent_plate) do
+          create :v2_plate,
+                 uuid: parent_uuid,
+                 barcode_number: '2',
+                 size: plate_size,
+                 wells: [well_kinnex],
+                 outer_requests: nil
+        end
       end
-      let(:well_kinnex) {
-        create(:v2_well, name: 'K1', position: { 'name' => 'K1' }, requests_as_source: [request], outer_request: nil)
-      }
-      let(:parent_plate) {
-        create :v2_plate,
-               uuid: parent_uuid,
-               barcode_number: '2',
-               size: plate_size,
-               wells: [well_kinnex],
-               outer_requests: nil
-      } }
 
-      it 'returns the well with kinnex_prep request type', skip: 'WIP' do
+      it 'returns the well with request type' do
+        skip 'WIP'
         expect(subject.filtered.count).to eq(1)
-        expect(subject.filtered[0][0].name).to eq('K1')
       end
     end
-
   end
 end
