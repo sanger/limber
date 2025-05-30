@@ -50,8 +50,16 @@ class Pipeline
   # @param  labware  On load of plate / tube pages, is a Sequencescape::Api::V2::Plate / Sequencescape::Api::V2::Tube
   # @return [Boolean] returns true if labware meets the filter criteria or there are no filters
   def active_for?(labware)
+    # TODO: change this to filter by `purpose` too, as follows:
+
+    # 1. Check if labware.purpose is in the pipeline relationships
+    # 2. Return false if not
+    # 3. Otherwise, as before...
+    # N.B. The calling method `suggested_purpose_options` may have to be altered (but might be fine as is).
+
     return true if filters.blank?
 
+    # TODO: Test - does it still find the pipeline if the plate is cancelled?
     labware.active_requests.any? do |request|
       # For each attribute (eg. library_type) check that the matching property
       # on request is included in the list of permitted values.

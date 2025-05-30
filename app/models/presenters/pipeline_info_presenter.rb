@@ -113,6 +113,8 @@ class Presenters::PipelineInfoPresenter
     "#{array[0..max_listed - 1].join(separator)}, ...(#{array.size - max_listed} more)"
   end
 
+  # TODO: Could be covered by `pipeline_groups_by_requests` too, 
+  # if we modify `active_for?` to also filter by purpose.
   def pipeline_groups_by_purpose
     Settings
       .pipelines
@@ -121,10 +123,12 @@ class Presenters::PipelineInfoPresenter
       .uniq
   end
 
+  # TODO: Rename to pipeline_groups_by_requests_and_library, as `active_for?` already filters by library type
   def pipeline_groups_by_requests
     active_pipelines.map(&:pipeline_group).uniq
   end
 
+  # TODO: remove - already covered by `pipeline_groups_by_requests`
   def pipeline_groups_by_library
     return nil unless @labware.respond_to?(:pooling_metadata)
 
@@ -138,6 +142,11 @@ class Presenters::PipelineInfoPresenter
       .map(&:pipeline_group)
   end
 
+  # On `LB Lib Pool Norm` tubes, it's hard to find the correct pipeline,
+  # because the same purpose and request type is used in many pipelines.
+  # This looks at the parent labware, as this is normally specific to the pipeline.
+  # This approach could cause problems if the parent labware is in a different pipeline,
+  # however, in this case it is normally in the same pipeline *group*.
   def pipeline_groups_by_parent_purposes
     @labware
       .parents
