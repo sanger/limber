@@ -2,6 +2,8 @@
 
 # This class is used to create a well filter for Kinnex, allowing partial transfers.
 class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPartials
+  REQUEST_TYPE = %w[kinnex_prep].freeze
+
   # Returns an array of wells along with their filtered requests.
   # This method iterates through the wells and applies filtering logic to determine
   # which wells and their associated requests should be included in the result.
