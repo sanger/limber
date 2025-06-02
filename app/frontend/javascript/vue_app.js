@@ -14,7 +14,7 @@ import CustomTaggedPlate from '@/javascript/custom-tagged-plate/components/Custo
 import FileList from '@/javascript/file-list/components/FileList.vue'
 import LabwareCustomMetadataAddForm from '@/javascript/labware-custom-metadata/components/LabwareCustomMetadataAddForm.vue'
 import MultiStamp from '@/javascript/multi-stamp/components/MultiStamp.vue'
-import MultiStampLibrarySpliter from '@/javascript/multi-stamp/components/MultiStampLibrarySplitter.js'
+import MultiStampLibrarySplitter from '@/javascript/multi-stamp/components/MultiStampLibrarySplitter.js'
 import MultiStampTubes from '@/javascript/multi-stamp-tubes/components/MultiStampTubes.vue'
 import QcInformation from '@/javascript/qc-information/components/QcInformation.vue'
 import TubesToRack from '@/javascript/tubes-to-rack/components/TubesToRack.vue'
@@ -116,7 +116,7 @@ const elements = [
   },
   {
     id: 'multi-stamp-library-splitter-page',
-    component: MultiStampLibrarySpliter,
+    component: MultiStampLibrarySplitter,
   },
   {
     id: 'multi-stamp-tubes-page',
