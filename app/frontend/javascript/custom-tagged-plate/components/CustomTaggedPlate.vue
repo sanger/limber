@@ -2,7 +2,7 @@
   <lb-page>
     <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content v-if="parentPlate">
-      <div class="card-body">
+      <div class="card-body mb-2">
         <h2 id="plate-title" class="card-title">
           {{ childPurposeName }}
           <span class="state-badge pending">Pending</span>
@@ -251,7 +251,7 @@ export default {
         this.parentWellSubmissionDetails,
         this.tagLayout,
         this.tagSubstitutions,
-        this.tagGroupOligoStrings,
+        this.tagGroupOligoStrings
       )
     },
     createButtonDisabled() {
