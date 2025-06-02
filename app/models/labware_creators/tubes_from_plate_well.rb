@@ -8,6 +8,10 @@ module LabwareCreators
 
     attr_reader :tube_transfer
 
+    def self.support_parent?(parent)
+      parent.plate?
+    end
+
     def create_labware!
     end
 
@@ -34,7 +38,7 @@ module LabwareCreators
     # This method should be invoked in the `create_transfer!` method after the child tubes have been created.
     # It is responsible for handling the transfer process, ensuring that the material
     # from the parent plate wells is correctly transferred to the corresponding child tubes.
-    #       # subject.filtered returns a document as the following structure:
+    # @example Structure of `subject.filtered`
     #       # [
     #       #   [
     #       #     #<Sequencescape::Api::V2::Well: @attributes={
