@@ -189,8 +189,12 @@ module ApiUrlHelper
       )
     end
 
-    def expect_tubes_from_tube_creation
-      expect_api_v2_posts('TubeFromPlateCreation', tubes_from_plate_attributes)
+    def expect_tube_from_plate_creation
+      expect_api_v2_posts(
+        'TubeFromPlateCreation',
+        tubes_from_plate_attributes,
+        [instance_double(Sequencescape::Api::V2::TubeFromPlateCreation, child: child_tubes.first)]
+      )
     end
 
     def expect_work_completion_creation

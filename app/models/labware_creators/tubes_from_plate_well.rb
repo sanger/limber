@@ -9,7 +9,7 @@ module LabwareCreators
 
     REQUEST_TYPE = %w[kinnex_prep].freeze
 
-    attr_reader :tube_transfer
+    attr_reader :tube_transfer, :tubes
 
     # Creates tubes and transfers material from the parent plate to the child tubes.
     # This method should be invoked in the `create_transfer!` method after the child tubes have been created.
@@ -57,7 +57,6 @@ module LabwareCreators
     #       #     ]
     #       #   ]
     #       # ]
-    #  @return [boolean] Returns true if the labware was created successfully, otherwise false.
     def create_labware!
       # well_filter returns a 2D array of type filtered = [[Well, [Request]]].
       # Thus, filtered[0].first returns the first well and filtered[0][1] returns the requests for that well.

@@ -58,7 +58,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
         submission_pools: create_list(:v2_submission_pool, 1)
       )
     end
-    let(:child_tubes) { create_list(:tube, 2) }
+    let(:child_tubes) { create_list(:v2_tube, 2) }
     let(:transfer_template_uuid) { 'transfer-between-specific-tubes' } # Defined in spec_helper.rb
 
     let(:transfers_attributes) do
@@ -92,7 +92,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
       end
 
       it 'creates the child tubes' do
-        # expect_tubes_from_tube_creation
+        expect_tube_from_plate_creation
         expect_transfer_request_collection_creation
 
         subject.save!
