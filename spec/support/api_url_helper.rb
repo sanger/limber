@@ -189,6 +189,10 @@ module ApiUrlHelper
       )
     end
 
+    def expect_tubes_from_tube_creation
+      expect_api_v2_posts('TubeFromPlateCreation', tubes_from_plate_attributes)
+    end
+
     def expect_work_completion_creation
       expect_api_v2_posts('WorkCompletion', work_completions_attributes)
     end
