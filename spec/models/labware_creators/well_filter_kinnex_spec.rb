@@ -85,8 +85,11 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
       #     ]
       #   ]
       # ]
-      it 'returns correct well and request' do
+      it 'returns correct well' do
         expect(subject.filtered[0][0].name).to eq('K1')
+      end
+
+      it 'returns correct request type' do
         expect(subject.filtered[0][1][0].uuid).to include('request-0')
       end
     end
