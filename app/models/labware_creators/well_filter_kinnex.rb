@@ -18,12 +18,12 @@ class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPar
   #   - A hash of filtered requests (or `nil` if no valid requests are found).
   def well_transfers
     @well_transfers ||=
-      wells.each_with_object([]) do |well, transfers|
-        next unless valid_well?(well)
-
-        filtered_requests = filtered_requests_for_well(well)
-        transfers << [well, filtered_requests] if filtered_requests
-      end
+      wells
+        .select { |well| valid_well?(well) }
+        .each_with_object([]) do |well, transfers|
+          filtered_requests = filtered_requests_for_well(well)
+          transfers << [well, filtered_requests] if filtered_requests
+        end
   end
 
   def filter_requests(requests, _well)
@@ -46,7 +46,7 @@ class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPar
   private
 
   def valid_well?(well)
-    !well.empty? && well.passed? && well.active_requests&.any?
+    !well.empty? && well.active_requests&.any?
   end
 
   def filtered_requests_for_well(well)
