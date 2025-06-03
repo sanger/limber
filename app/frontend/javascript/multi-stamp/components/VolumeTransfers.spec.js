@@ -41,7 +41,9 @@ describe('VolumeTransfers', () => {
 
     // Not sure why 2 events are emitted
     // Potentially because setValue triggers an input event for each value
-    expect(emittedEvents).toHaveLength(2)
+    // Fix for Vue3 update made this 3 events; so the create button is enabled
+    // for multi_stamp_split_page with the default value of the volume input.
+    expect(emittedEvents).toHaveLength(3)
     expect(emittedEvents[0][0].isValid).toEqual(true)
     // This is not a nice way to check the events but because extraParams passes a function reference
     // It is easier to compare the output of the function rather than comparing the function references are the same
