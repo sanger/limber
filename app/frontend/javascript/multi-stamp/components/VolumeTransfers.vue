@@ -46,6 +46,8 @@ export default {
   },
   created() {
     this.volume = this.defaultVolume
+    // XXX: Ensure the initial value is emitted
+    this.emitVolumeChange()
   },
   methods: {
     emitVolumeChange() {
