@@ -34,9 +34,9 @@
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
         <% 4.times do |i| %>
-          <div class="labware-container scan-labware form-group row">
-            <label for="plate[<%= i %>]" class="plate-label col-2 form-label">Plate <%= i+1 %></label>
-            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control labware-box col-8" tabindex="1" data-position="<%= i %>">
+          <div class="labware-container scan-labware form-group row me-2">
+            <label for="plate[<%= i %>]" class="plate-label col-2 col-form-label">Plate <%= i+1 %></label>
+            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control labware-box col" tabindex="1" data-position="<%= i %>">
           </div>
         <% end %>
         <%= form.submit 'Make Pre-Cap pool Plate', class: 'btn btn-success btn-lg', id: 'create-labware', disabled: true %>
