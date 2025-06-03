@@ -44,6 +44,14 @@ export default {
       return !isNaN(Number.parseFloat(this.volume))
     },
   },
+  watch: {
+    volume: function () {
+      this.$emit('update:model-value', {
+        extraParams: this.transferFunc,
+        isValid: this.isValid,
+      })
+    },
+  },
   created() {
     this.volume = this.defaultVolume
   },
