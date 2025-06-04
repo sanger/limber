@@ -25,7 +25,7 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
       create :library_request,
              state: 'pending',
              request_type: request_type_non_kinnex,
-             uuid: 'request-0',
+             uuid: 'request-1',
              library_type: 'Sample Libarary Type'
     end
     let(:well_kinnex) do
@@ -71,48 +71,6 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
         expect(subject.filtered[1][1]).to be_empty
       end
 
-      # subject.filtered returns a document as the following structure: [[Well, [Request]]]
-      # [
-      #   [
-      #     #<Sequencescape::Api::V2::Well: @attributes={
-      #       "type" => "wells",
-      #       "uuid" => "c9b0bb3d-8c57-4b6f-a6e5-5633d9fbd1cc",
-      #       "name" => "K1",
-      #       "position" => { "name" => "K1" },
-      #       "state" => "passed",
-      #       "diluent_volume" => nil,
-      #       "pcr_cycles" => nil,
-      #       "submit_for_sequencing" => nil,
-      #       "sub_pool" => nil,
-      #       "coverage" => nil
-      #     }>,
-      #     [
-      #       #<Sequencescape::Api::V2::Request: @attributes={
-      #         "type" => "requests",
-      #         "uuid" => "request-0",
-      #         "id" => "2",
-      #         "role" => "WGS",
-      #         "priority" => 0,
-      #         "state" => "pending",
-      #         "options" => {
-      #           "pcr_cycles" => 10,
-      #           "fragment_size_required_from" => 100,
-      #           "fragment_size_required_to" => 200,
-      #           "library_type" => "Sample Library Type"
-      #         },
-      #         "request_type" => #<Sequencescape::Api::V2::RequestType: @attributes={
-      #           "type" => "request_types",
-      #           "name" => "Request Type",
-      #           "key" => "kinnex_prep",
-      #           "for_multiplexing" => false
-      #         }>,
-      #         "pre_capture_pool" => nil,
-      #         "submission" => nil,
-      #         "primer_panel" => nil
-      #       }>
-      #     ]
-      #   ]
-      # ]
       it 'returns correct well' do
         expect(subject.filtered[0][0].name).to eq('K1')
       end
