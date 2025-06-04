@@ -56,25 +56,30 @@ class Labels::Plate384SingleLabel < Labels::PlateLabelBase
   end
 
   # Returns the first stock plate of the configured purpose
-  # rubocop:disable Metrics/MethodLength
   def first_of_configured_purpose
     alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(labware)
     return if alternative_workline_identifier_purpose.blank?
 
     if alternative_workline_identifier_purpose.is_a?(Array)
-      # Try each purpose name in the array in order until we find a match
-      alternative_workline_identifier_purpose.each do |purpose_name|
-        reference = labware.ancestors.where(purpose_name:).first
-        return reference if reference.present?
-      end
-      # If no matches found in the array, return
-      nil
+      find_first_matching_purpose(alternative_workline_identifier_purpose)
     else
       # Original behavior for a single purpose name
-      labware.ancestors.where(purpose_name: alternative_workline_identifier_purpose).first
+      find_reference_by_purpose_name(alternative_workline_identifier_purpose)
     end
   end
-  # rubocop:enable Metrics/MethodLength
+
+  def find_first_matching_purpose(purpose_names)
+    # Try each purpose name in the array in order until we find a match
+    purpose_names.each do |purpose_name|
+      reference = find_reference_by_purpose_name(purpose_name)
+      return reference if reference.present?
+    end
+    nil
+  end
+
+  def find_reference_by_purpose_name(purpose_name)
+    labware.ancestors.where(purpose_name:).first
+  end
 
   # Returns the first stock plate of the last purpose
   def first_of_last_purpose(purpose_names)
