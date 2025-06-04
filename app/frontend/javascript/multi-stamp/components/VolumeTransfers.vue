@@ -4,13 +4,7 @@
       <b-col />
       <b-col>
         <b-input-group prepend="Volume" append="µL">
-          <b-form-input
-            id="input-volume"
-            v-model="volume"
-            type="number"
-            :number="true"
-            @update:model-value="emitVolumeChange"
-          />
+          <b-form-input id="input-volume" v-model="volume" type="number" :number="true" />
         </b-input-group>
       </b-col>
     </b-row>
@@ -54,14 +48,6 @@ export default {
   },
   created() {
     this.volume = this.defaultVolume
-  },
-  methods: {
-    emitVolumeChange() {
-      this.$emit('update:model-value', {
-        extraParams: this.transferFunc,
-        isValid: this.isValid,
-      })
-    },
   },
 }
 </script>
