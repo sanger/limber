@@ -71,8 +71,12 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
         expect(subject.filtered[1][1]).to be_empty
       end
 
-      it 'returns correct well' do
+      it 'returns correct kinnex well' do
         expect(subject.filtered[0][0].name).to eq('K1')
+      end
+
+      it 'returns correct non-kinnex well' do
+        expect(subject.filtered[1][0].name).to eq('K2')
       end
 
       it 'returns correct request type' do
