@@ -59,28 +59,30 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
     context 'when there are wells with request_type equal to kinnex_prep' do
       subject { described_class.new(creator: labware_creator, request_type_key: request_type_key) }
 
+      let!(:filtered) { subject.filtered }
+
       it 'returns the wells' do
-        expect(subject.filtered.count).to eq(2)
+        expect(filtered.count).to eq(2)
       end
 
       it 'returns the request for the well with the kinnex_prep requests' do
-        expect(subject.filtered[0][1][0].request_type_key).to eq(request_type_key)
+        expect(filtered[0][1][0].request_type_key).to eq(request_type_key)
       end
 
       it 'does not return requests for the well with non-kinnex requests' do
-        expect(subject.filtered[1][1]).to be_empty
+        expect(filtered[1][1]).to be_empty
       end
 
       it 'returns correct kinnex well' do
-        expect(subject.filtered[0][0].name).to eq('K1')
+        expect(filtered[0][0].name).to eq('K1')
       end
 
       it 'returns correct non-kinnex well' do
-        expect(subject.filtered[1][0].name).to eq('K2')
+        expect(filtered[1][0].name).to eq('K2')
       end
 
       it 'returns correct request type' do
-        expect(subject.filtered[0][1][0].uuid).to include('request-0')
+        expect(filtered[0][1][0].uuid).to include('request-0')
       end
     end
   end
