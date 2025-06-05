@@ -8,7 +8,6 @@ module LabwareCreators
     attr_reader :tube_transfer, :tubes
 
     # Creates tubes and transfers material from the parent plate to the child tubes.
-    # This method should be invoked in the `create_transfer!` method after the child tubes have been created.
     # It is responsible for handling the transfer process, ensuring that the material
     # from the parent plate wells is correctly transferred to the corresponding child tubes.
     #
@@ -21,7 +20,7 @@ module LabwareCreators
     #   same. Because of this, the user might not be able to see requests in the "Requests" tab of the SS UI for the
     #   second tube.
     def create_labware!
-      # 1. Create the tubes for each well in the plate.\
+      # 1. Create the tubes for each well in the plate
       well_filter.filtered.each do |well, additional_info|
         tubes =
           Array.new(2) do
