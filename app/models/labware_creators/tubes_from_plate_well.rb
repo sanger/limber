@@ -21,6 +21,7 @@ module LabwareCreators
     #   second tube.
     def create_labware!
       # 1. Create the tubes for each well in the plate
+      # In well_filter, we will be re-using filtering logic from `LabwareCreators::WellFilterAllowingPartials`.
       well_filter.filtered.each do |well, additional_info|
         tubes =
           Array.new(2) do
