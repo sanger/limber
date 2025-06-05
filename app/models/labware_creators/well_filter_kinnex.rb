@@ -11,7 +11,7 @@ class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPar
   # - Uses the `filter_requests` method to filter the active requests for each well.
   # - Only includes wells in the result if they have filtered requests.
   #
-  # @return [[Well, [Request]] An array of pairs, where each pair consists of:
+  # @return [[Well, Hash]] An array of pairs, where each pair consists of:
   #   - A `Well` object.
   #   - A hash of filtered requests (or `nil` if no valid requests are found).
   def well_transfers
