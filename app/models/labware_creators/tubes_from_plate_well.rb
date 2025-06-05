@@ -71,13 +71,16 @@ module LabwareCreators
         well, additional_parameters = well_record
         tubes = create_tubes!
         # 2. For each tube created, create a transfer request to transfer the material from the well to the tubes.
-        tubes.each do |tube|
-          transfer_material_from_parent!(well, tube, additional_parameters)
-        end
+        tubes.each { |tube| transfer_material_from_parent!(well, tube, additional_parameters) }
       end
       true
     end
 
+    # Creates two tubes for a given parent plate.
+    # Each tube is created using the `Sequencescape::Api::V2::TubeFromPlateCreation` API.
+    # The tubes are associated with the parent plate and are assigned a specific purpose and user.
+    #
+    # @return [Array<Sequencescape::Api::V2::Tube>] An array containing the created tubes.
     def create_tubes!
       Array.new(2) do
         Sequencescape::Api::V2::TubeFromPlateCreation.create!(
@@ -88,6 +91,13 @@ module LabwareCreators
       end
     end
 
+    # Creates a transfer request to move material from a source well to a destination tube.
+    # Additional parameters can be provided to customize the transfer request.
+    #
+    # @param well [Sequencescape::Api::V2::Well] The source well from which material is transferred.
+    # @param tube [Sequencescape::Api::V2::Tube] The destination tube to which material is transferred.
+    # @param additional_parameters [Hash] Optional parameters to include in the transfer request.
+    # @return [Sequencescape::Api::V2::TransferRequestCollection] The created transfer request collection.
     def transfer_material_from_parent!(well, tube, additional_parameters = {})
       Sequencescape::Api::V2::TransferRequestCollection.create!(
         transfer_requests_attributes: [request_hash(well, tube, additional_parameters)],
