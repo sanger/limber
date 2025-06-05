@@ -3,7 +3,7 @@
 # This class is used to create a well filter for Kinnex, allowing partial transfers.
 class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPartials
   # Returns an array of wells along with their filtered requests.
-  # This method iterates through the wells and applies filtering logic to determine
+  # This method iterate
   # which wells and their associated requests should be included in the result.
   #
   # Filtering criteria:
@@ -19,7 +19,7 @@ class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPar
       wells
         .select { |well| valid_well?(well) }
         .each_with_object([]) do |well, transfers|
-          filtered_requests = filtered_requests_for_well(well)
+          filtered_requests = filter_requests(well.active_requests&.uniq, well)
           transfers << [well, filtered_requests] if filtered_requests
         end
   end
@@ -28,9 +28,5 @@ class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPar
 
   def valid_well?(well)
     !well.empty? && well.active_requests&.any?
-  end
-
-  def filtered_requests_for_well(well)
-    filter_by_state(filter_by_request_type(well.active_requests&.uniq))
   end
 end

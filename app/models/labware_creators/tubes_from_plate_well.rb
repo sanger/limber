@@ -79,7 +79,7 @@ module LabwareCreators
         # 2. For each tube created, create a transfer request to transfer the material from the well to the tubes.
         tubes.each do |tube|
           Sequencescape::Api::V2::TransferRequestCollection.create!(
-            transfer_requests_attributes: [request_hash(well_record.first, tube, {})],
+            transfer_requests_attributes: [request_hash(well_record.first, tube, well_record.last)],
             user_uuid: user_uuid
           )
         end
