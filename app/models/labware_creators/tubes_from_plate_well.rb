@@ -15,49 +15,6 @@ module LabwareCreators
     # This method should be invoked in the `create_transfer!` method after the child tubes have been created.
     # It is responsible for handling the transfer process, ensuring that the material
     # from the parent plate wells is correctly transferred to the corresponding child tubes.
-    # @example Structure of `subject.filtered`
-    #       # [
-    #       #   [
-    #       #     #<Sequencescape::Api::V2::Well: @attributes={
-    #       #       "type" => "wells",
-    #       #       "uuid" => "c9b0bb3d-8c57-4b6f-a6e5-5633d9fbd1cc",
-    #       #       "name" => "K1",
-    #       #       "position" => { "name" => "K1" },
-    #       #       "state" => "passed",
-    #       #       "diluent_volume" => nil,
-    #       #       "pcr_cycles" => nil,
-    #       #       "submit_for_sequencing" => nil,
-    #       #       "sub_pool" => nil,
-    #       #       "coverage" => nil
-    #       #     }>,
-    #       #     [
-    #       #       #<Sequencescape::Api::V2::Request: @attributes={
-    #       #         "type" => "requests",
-    #       #         "uuid" => "request-0",
-    #       #         "id" => "2",
-    #       #         "role" => "WGS",
-    #       #         "priority" => 0,
-    #       #         "state" => "pending",
-    #       #         "options" => {
-    #       #           "pcr_cycles" => 10,
-    #       #           "fragment_size_required_from" => 100,
-    #       #           "fragment_size_required_to" => 200,
-    #       #           "library_type" => "Sample Library Type"
-    #       #         },
-    #       #         "request_type" => #<Sequencescape::Api::V2::RequestType: @attributes={
-    #       #           "type" => "request_types",
-    #       #           "name" => "Request Type",
-    #       #           "key" => "kinnex_prep",
-    #       #           "for_multiplexing" => false
-    #       #         }>,
-    #       #         "pre_capture_pool" => nil,
-    #       #         "submission" => nil,
-    #       #         "primer_panel" => nil
-    #       #       }>
-    #       #     ]
-    #       #   ]
-    #       # ]
-    #
     # @note We allow users to create more than two tubes per well, by clicking the "Add Tube" button in the UI.
     #   In case the user mistakenly clicks the "Add Tube" button multiple times, we assume that the user would
     #   cancel the additional tubes through the UI, so we do not handle that case here. If in case we need to
