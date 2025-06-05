@@ -62,27 +62,15 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
       let!(:filtered) { subject.filtered }
 
       it 'returns the wells' do
-        expect(filtered.count).to eq(2)
-      end
-
-      it 'returns the request for the well with the kinnex_prep requests' do
-        expect(filtered[0][1][0].request_type_key).to eq(request_type_key)
-      end
-
-      it 'does not return requests for the well with non-kinnex requests' do
-        expect(filtered[1][1]).to be_empty
+        expect(filtered.count).to eq(1)
       end
 
       it 'returns correct kinnex well' do
         expect(filtered[0][0].name).to eq('K1')
       end
 
-      it 'returns correct non-kinnex well' do
-        expect(filtered[1][0].name).to eq('K2')
-      end
-
-      it 'returns correct request type' do
-        expect(filtered[0][1][0].uuid).to include('request-0')
+      it 'returns the correct outer request for the well' do
+        expect(filtered[0][1]).to eq({ outer_request: 'request-0' })
       end
     end
   end

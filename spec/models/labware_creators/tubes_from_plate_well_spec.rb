@@ -46,7 +46,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
     let(:old_requests) do
       [create(:request, :uuid, request_type: request_type_first, library_type: library_type_first, state: 'pending')]
     end
-    let(:aliquots) { [create(:v2_aliquot, request: [old_requests[0]])] }
+    let(:aliquots) { [create(:v2_aliquot, request: [new_requests[0]])] }
     let(:wells) { [create(:v2_well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1')] }
     let(:parent) do
       create(
@@ -76,7 +76,9 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
     let(:tubes_from_plate_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
-    let(:transfer_requests_attributes) { [{ source_asset: wells[0].uuid, target_asset: child_tubes.first&.uuid }] }
+    let(:transfer_requests_attributes) do
+      [{ outer_request: new_requests[0].uuid, source_asset: wells[0].uuid, target_asset: child_tubes.first&.uuid }]
+    end
 
     it_behaves_like 'it has no custom page'
 

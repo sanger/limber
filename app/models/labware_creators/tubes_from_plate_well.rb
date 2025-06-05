@@ -64,9 +64,9 @@ module LabwareCreators
     #   handle that case, we need to track down the relationship between the tubes and the wells with `TransferRequest`
     #   model, where we have the `source_asset` and `target_asset` attributes along with the state.
     def create_labware!
-      # well_filter returns a 2D array of type filtered = [[Well, [Request]]].
+      # well_filter returns a 2D array of type filtered = [[Well, Hash]].
       # Thus, filtered[0].first returns the first well and filtered[0][1] returns the requests for that well.
-      # 1. Create the tubes for each well in the plate.
+      # 1. Create the tubes for each well in the plate.\
       well_filter.filtered.each do |well_record|
         tubes =
           Array.new(2) do
