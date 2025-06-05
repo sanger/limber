@@ -67,7 +67,7 @@ module LabwareCreators
       # well_filter returns a 2D array of type filtered = [[Well, Hash]].
       # Thus, filtered[0].first returns the first well and filtered[0][1] returns the requests for that well.
       # 1. Create the tubes for each well in the plate.\
-      well_filter.filtered.each do |well_record|
+      well_filter.filtered.each do |well, additional_info|
         tubes =
           Array.new(2) do
             Sequencescape::Api::V2::TubeFromPlateCreation.create!(
@@ -79,7 +79,7 @@ module LabwareCreators
         # 2. For each tube created, create a transfer request to transfer the material from the well to the tubes.
         tubes.each do |tube|
           Sequencescape::Api::V2::TransferRequestCollection.create!(
-            transfer_requests_attributes: [request_hash(well_record.first, tube, well_record.last)],
+            transfer_requests_attributes: [request_hash(well, tube, additional_info)],
             user_uuid: user_uuid
           )
         end
