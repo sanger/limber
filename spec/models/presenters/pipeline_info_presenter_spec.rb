@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-def stub_plate_find_all_barcode(plate)
-  allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with({ barcode: [plate.barcode] }).and_return([plate])
+def stub_plate_find_by_barcode(plate)
+  allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with({ barcode: [plate.barcode] }).and_return(plate)
 end
 
-def stub_tube_find_all_barcode(tube)
-  allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with({ barcode: [tube.barcode] }).and_return([tube])
+def stub_tube_find_by_barcode(tube)
+  allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with({ barcode: [tube.barcode] }).and_return(tube)
 end
 
 RSpec.describe Presenters::PipelineInfoPresenter do
@@ -405,9 +405,9 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           allow(labware_child).to receive_messages(parents: [labware_branching_parent])
           allow(labware_other_child).to receive_messages(parents: [labware_branching_parent])
 
-          stub_plate_find_all_barcode(labware_combining_child)
-          stub_plate_find_all_barcode(labware_branching_parent)
-          stub_plate_find_all_barcode(labware_parent)
+          stub_plate_find_by_barcode(labware_combining_child)
+          stub_plate_find_by_barcode(labware_branching_parent)
+          stub_plate_find_by_barcode(labware_parent)
         end
 
         let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
@@ -558,9 +558,9 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         allow(parent_plate).to receive_messages(parents: [grandparent_plate])
         allow(labware).to receive_messages(parents: [parent_plate])
 
-        stub_plate_find_all_barcode(great_grandparent_plate)
-        stub_plate_find_all_barcode(grandparent_plate)
-        stub_plate_find_all_barcode(parent_plate)
+        stub_plate_find_by_barcode(great_grandparent_plate)
+        stub_plate_find_by_barcode(grandparent_plate)
+        stub_plate_find_by_barcode(parent_plate)
       end
 
       it 'returns true' do
@@ -589,7 +589,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         allow(labware).to receive_messages(parents: [parent_tube])
         allow(parent_tube).to receive_messages(parents: [grandparent_tube])
 
-        stub_tube_find_all_barcode(parent_tube)
+        stub_tube_find_by_barcode(parent_tube)
       end
 
       it 'returns the grandparent purposes' do
@@ -614,7 +614,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       before do
         allow(labware).to receive_messages(parents: [parent_tube])
 
-        stub_tube_find_all_barcode(parent_tube)
+        stub_tube_find_by_barcode(parent_tube)
       end
 
       it 'returns the parent purposes' do
@@ -631,8 +631,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       before do
         allow(labware).to receive_messages(parents: [parent_tube_1, parent_tube_2])
 
-        stub_tube_find_all_barcode(parent_tube_1)
-        stub_tube_find_all_barcode(parent_tube_2)
+        stub_tube_find_by_barcode(parent_tube_1)
+        stub_tube_find_by_barcode(parent_tube_2)
       end
 
       it 'returns the parent purposes' do

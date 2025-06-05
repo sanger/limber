@@ -160,11 +160,11 @@ class Presenters::PipelineInfoPresenter
       .reduce(:&)
   end
   def find_plate(barcode)
-    Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }).first
+    Sequencescape::Api::V2::Plate.find_by({ barcode: [barcode] })
   end
 
   def find_tube(barcode)
-    Sequencescape::Api::V2::Tube.find_all({ barcode: [barcode] }).first
+    Sequencescape::Api::V2::Tube.find_by({ barcode: [barcode] })
   end
 
   def labware_from_asset(asset)
