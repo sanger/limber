@@ -29,9 +29,7 @@
 
   <% if @pipeline_info.child_purposes.present? %>
     <code><span class="text-muted">» <%= @pipeline_info.child_purposes %></span></code>
-  <% end %>
 
-  <% if @pipeline_info.grandchild_purposes? %>
     <code><span class="text-muted">» ...</span></code>
   <% end %>
 </div>

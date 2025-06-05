@@ -99,12 +99,6 @@ class Presenters::PipelineInfoPresenter
     join_up_to(2, suggested_purposes.map(&:name).uniq.sort)
   end
 
-  # Returns true if the labware purpose has any defined child of child relationships, false otherwise.
-  # return [Boolean] True if the labware has grandchild purposes
-  def grandchild_purposes?
-    false
-  end
-
   private
 
   def join_up_to(max_listed, array, separator = ', ')
