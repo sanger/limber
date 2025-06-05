@@ -5,10 +5,6 @@ module LabwareCreators
     include LabwareCreators::WellFilterBehaviour
     include SupportParent::PlateOnly
 
-    self.default_transfer_template_name = 'Transfer between specific tubes'
-
-    REQUEST_TYPE = %w[kinnex_prep].freeze
-
     attr_reader :tube_transfer, :tubes
 
     # Creates tubes and transfers material from the parent plate to the child tubes.
@@ -25,8 +21,6 @@ module LabwareCreators
     #   same. Because of this, the user might not be able to see requests in the "Requests" tab of the SS UI for the
     #   second tube.
     def create_labware!
-      # well_filter returns a 2D array of type filtered = [[Well, Hash]].
-      # Thus, filtered[0].first returns the first well and filtered[0][1] returns the requests for that well.
       # 1. Create the tubes for each well in the plate.\
       well_filter.filtered.each do |well, additional_info|
         tubes =
