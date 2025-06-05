@@ -171,6 +171,11 @@ export default {
       required: false,
       default: null,
     },
+    filters: {
+      // This is passed through to the tag groups lookup and filters that list if present
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
@@ -618,6 +623,7 @@ export default {
         plate: {
           purpose_uuid: this.purposeUuid,
           parent_uuid: this.parentUuid,
+          filters: this.filters,
           tag_layout: {
             tag_group_uuid: this.tag1GroupUuid,
             tag2_group_uuid: this.tag2GroupUuid,

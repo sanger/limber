@@ -12,8 +12,8 @@ module LabwareCreators
 
     attr_reader :child, :tag_plate
     attr_accessor :tag_layout
-
     self.page = 'custom_tagged_plate'
+    # Used for permitting all the parameters in the controller
     self.attributes += [
       {
         tag_plate: %i[asset_uuid template_uuid state],
@@ -30,6 +30,8 @@ module LabwareCreators
         ]
       }
     ]
+    class_attribute :should_populate_wells_with_pool
+
     self.default_transfer_template_name = 'Custom pooling'
 
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
@@ -66,7 +68,6 @@ module LabwareCreators
         # at the same time
         Rails.logger.warn(e.message)
       end
-
       true
     end
 
@@ -94,6 +95,15 @@ module LabwareCreators
     #
     def tag_group_adapter_type_name_filter
       purpose_config.fetch(:tag_group_adapter_type_name_filter, nil)
+    end
+
+    # Define the filters method for the CustomTaggedPlate labware creator for
+    # compatibility with the PartialWellFilteredCustomTaggedPlateCreator. The
+    # filters is the pipeline filters for the latter labware creator.
+    #
+    # @return [Hash] the default empty filters
+    def filters
+      {}
     end
 
     private
