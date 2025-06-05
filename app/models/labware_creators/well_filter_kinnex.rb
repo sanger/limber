@@ -19,7 +19,7 @@ class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPar
       wells
         .select { |well| valid_well?(well) }
         .each_with_object([]) do |well, transfers|
-          filtered_requests = filter_requests(well.active_requests, well)
+          filtered_requests = filter_requests(well.active_requests&.uniq, well)
           transfers << [well, filtered_requests] if filtered_requests
         end
   end

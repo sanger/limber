@@ -15,6 +15,49 @@ module LabwareCreators
     # This method should be invoked in the `create_transfer!` method after the child tubes have been created.
     # It is responsible for handling the transfer process, ensuring that the material
     # from the parent plate wells is correctly transferred to the corresponding child tubes.
+    # @example Structure of `subject.filtered`
+    #       # [
+    #       #   [
+    #       #     #<Sequencescape::Api::V2::Well: @attributes={
+    #       #       "type" => "wells",
+    #       #       "uuid" => "c9b0bb3d-8c57-4b6f-a6e5-5633d9fbd1cc",
+    #       #       "name" => "K1",
+    #       #       "position" => { "name" => "K1" },
+    #       #       "state" => "passed",
+    #       #       "diluent_volume" => nil,
+    #       #       "pcr_cycles" => nil,
+    #       #       "submit_for_sequencing" => nil,
+    #       #       "sub_pool" => nil,
+    #       #       "coverage" => nil
+    #       #     }>,
+    #       #     [
+    #       #       #<Sequencescape::Api::V2::Request: @attributes={
+    #       #         "type" => "requests",
+    #       #         "uuid" => "request-0",
+    #       #         "id" => "2",
+    #       #         "role" => "WGS",
+    #       #         "priority" => 0,
+    #       #         "state" => "pending",
+    #       #         "options" => {
+    #       #           "pcr_cycles" => 10,
+    #       #           "fragment_size_required_from" => 100,
+    #       #           "fragment_size_required_to" => 200,
+    #       #           "library_type" => "Sample Library Type"
+    #       #         },
+    #       #         "request_type" => #<Sequencescape::Api::V2::RequestType: @attributes={
+    #       #           "type" => "request_types",
+    #       #           "name" => "Request Type",
+    #       #           "key" => "kinnex_prep",
+    #       #           "for_multiplexing" => false
+    #       #         }>,
+    #       #         "pre_capture_pool" => nil,
+    #       #         "submission" => nil,
+    #       #         "primer_panel" => nil
+    #       #       }>
+    #       #     ]
+    #       #   ]
+    #       # ]
+    #
     # @note We allow users to create more than two tubes per well, by clicking the "Add Tube" button in the UI.
     #   In case the user mistakenly clicks the "Add Tube" button multiple times, we assume that the user would
     #   cancel the additional tubes through the UI, so we do not handle that case here. If in case we need to
@@ -23,43 +66,25 @@ module LabwareCreators
     def create_labware!
       # well_filter returns a 2D array of type filtered = [[Well, Hash]].
       # Thus, filtered[0].first returns the first well and filtered[0][1] returns the requests for that well.
-      # 1. Create the tubes for each well in the plate
+      # 1. Create the tubes for each well in the plate.\
       well_filter.filtered.each do |well_record|
-        well, additional_parameters = well_record
-        tubes = create_tubes!
+        tubes =
+          Array.new(2) do
+            Sequencescape::Api::V2::TubeFromPlateCreation.create!(
+              child_purpose_uuid: purpose_uuid,
+              parent_uuid: parent_uuid,
+              user_uuid: user_uuid
+            ).child
+          end
         # 2. For each tube created, create a transfer request to transfer the material from the well to the tubes.
-        tubes.each { |tube| transfer_material_from_parent!(well, tube, additional_parameters) }
+        tubes.each do |tube|
+          Sequencescape::Api::V2::TransferRequestCollection.create!(
+            transfer_requests_attributes: [request_hash(well_record.first, tube, well_record.last)],
+            user_uuid: user_uuid
+          )
+        end
       end
       true
-    end
-
-    # Creates two tubes for a given parent plate.
-    # Each tube is created using the `Sequencescape::Api::V2::TubeFromPlateCreation` API.
-    # The tubes are associated with the parent plate and are assigned a specific purpose and user.
-    #
-    # @return [Array<Sequencescape::Api::V2::Tube>] An array containing the created tubes.
-    def create_tubes!
-      Array.new(2) do
-        Sequencescape::Api::V2::TubeFromPlateCreation.create!(
-          child_purpose_uuid: purpose_uuid,
-          parent_uuid: parent_uuid,
-          user_uuid: user_uuid
-        ).child
-      end
-    end
-
-    # Creates a transfer request to move material from a source well to a destination tube.
-    # Additional parameters can be provided to customize the transfer request.
-    #
-    # @param well [Sequencescape::Api::V2::Well] The source well from which material is transferred.
-    # @param tube [Sequencescape::Api::V2::Tube] The destination tube to which material is transferred.
-    # @param additional_parameters [Hash] Optional parameters to include in the transfer request.
-    # @return [Sequencescape::Api::V2::TransferRequestCollection] The created transfer request collection.
-    def transfer_material_from_parent!(well, tube, additional_parameters = {})
-      Sequencescape::Api::V2::TransferRequestCollection.create!(
-        transfer_requests_attributes: [request_hash(well, tube, additional_parameters)],
-        user_uuid: user_uuid
-      )
     end
 
     def redirection_target
