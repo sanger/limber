@@ -45,18 +45,16 @@ class Pipeline
   # when there are more than one ancestors that are Stock plates
   attr_accessor :alternative_workline_identifier
 
-  # Checks if a piece of labware meets the filter criteria for a pipeline
-  # If there are no filter criteria, the pipeline could be active for any labware
-  # @param  labware  On load of plate / tube pages, is a Sequencescape::Api::V2::Plate / Sequencescape::Api::V2::Tube
-  # @return [Boolean] returns true if labware meets the filter criteria or there are no filters
+  # Checks if the given labware meets the purpose and filter criteria for this pipeline.
+  # If the labware's purpose is in the pipeline relationships, it will return true. If there are no
+  # filter criteria, the pipeline could be active for any labware, and will return true if the
+  # purpose is in the relationships. Otherwise, it will check if any of the active requests on the
+  # labware meet the filter criteria, returning true if any do.
+  #
+  # @param labware [Sequencescape::Api::V2::Plate, Sequencescape::Api::V2::Tube] The labware to check
+  # @return [Boolean] Returns true if the labware meets the criteria, false otherwise
   def active_for?(labware)
-    # TODO: change this to filter by `purpose` too, as follows:
-
-    # 1. Check if labware.purpose is in the pipeline relationships
-    # 2. Return false if not
-    # 3. Otherwise, as before...
-    # N.B. The calling method `suggested_purpose_options` may have to be altered (but might be fine as is).
-
+    return true if purpose_in_relationships?(labware.purpose)
     return true if filters.blank?
 
     # TODO: Test - does it still find the pipeline if the plate is cancelled?
@@ -87,5 +85,16 @@ class Pipeline
   # @return [Boolean] True if it should suggest passing
   def library_pass?(purpose)
     Array(library_pass).include?(purpose)
+  end
+
+  private
+
+  # Checks if a given purpose is present in the relationships of this pipeline.
+  #
+  # @param purpose [String] The purpose to look for.
+  #
+  # @return [Boolean] Returns true if the purpose is present in this pipeline, false otherwise.
+  def purpose_in_relationships?(purpose_name)
+    (relationships.keys + relationships.values).include?(purpose_name)
   end
 end
