@@ -27,16 +27,29 @@ RSpec.describe Presenters::PipelineInfoPresenter do
   end
 
   describe '#pipeline_groups' do
-    before { allow(Settings.pipelines).to receive(:list).and_return(pipelines_list) }
+    before { Settings.pipelines = PipelineList.new(pipelines_config) }
 
     context 'when pipelines match by purpose' do
-      let(:simplest_pipeline) do
-        instance_double(Pipeline, pipeline_group: 'Group A', relationships: { 'parent' => 'child' }, filters: {})
+      let(:pipelines_config) do
+        {
+          'simplest_pipeline' => {
+            pipeline_group: 'Group A',
+            relationships: {
+              'parent' => 'child'
+            },
+            filters: {
+            }
+          },
+          'wgs_purpose_pipeline' => {
+            pipeline_group: 'Group B',
+            relationships: {
+              'parent' => 'WGS Purpose'
+            },
+            filters: {
+            }
+          }
+        }
       end
-      let(:wgs_purpose_pipeline) do
-        instance_double(Pipeline, pipeline_group: 'Group B', relationships: { 'parent' => 'WGS Purpose' }, filters: {})
-      end
-      let(:pipelines_list) { [simplest_pipeline, wgs_purpose_pipeline] }
 
       it 'returns the pipeline groups matching the purpose' do
         expect(presenter.pipeline_groups).to eq(['Group B'])
@@ -44,9 +57,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when no pipelines match' do
-      let(:pipelines_list) { [] }
-
-      before { allow(Settings.pipelines).to receive_messages(select_pipelines_with_purpose: []) }
+      let(:pipelines_config) { {} }
 
       it 'returns nil' do
         expect(presenter.pipeline_groups).to be_nil
@@ -55,8 +66,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
 
     context 'when pipelines match by library type' do
       let(:wgs_purpose_and_unrelated_library_type_pipeline) do
-        instance_double(
-          Pipeline,
+        {
           pipeline_group: 'Group C',
           relationships: {
             'parent' => 'WGS Purpose'
@@ -64,11 +74,10 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           filters: {
             'library_type' => ['Unrelated']
           }
-        )
+        }
       end
       let(:wgs_purpose_and_library_type_pipeline) do
-        instance_double(
-          Pipeline,
+        {
           pipeline_group: 'Group D',
           relationships: {
             'parent' => 'WGS Purpose'
@@ -76,16 +85,21 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           filters: {
             'library_type' => ['WGS']
           }
-        )
+        }
       end
-      let(:pipelines_list) { [wgs_purpose_and_unrelated_library_type_pipeline, wgs_purpose_and_library_type_pipeline] }
+      let(:pipelines_config) do
+        {
+          'wgs_purpose_and_unrelated_library_type_pipeline' => wgs_purpose_and_unrelated_library_type_pipeline,
+          'wgs_purpose_and_library_type_pipeline' => wgs_purpose_and_library_type_pipeline
+        }
+      end
 
       it 'returns the pipeline groups matching the library type' do
         expect(presenter.pipeline_groups).to eq(['Group D'])
       end
     end
 
-    context 'when the scenario a linear config' do
+    context 'when the scenario is a linear config' do
       # simple_linear_config: a simple chain of 3 purposes in a row, belonging to the same pipeline group.
       #     All three should return the same pipeline group.
       #
@@ -112,10 +126,9 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a simple linear config' do
-        let(:pipelines_list) do
-          [
-            instance_double(
-              Pipeline,
+        let(:pipelines_config) do
+          {
+            'simple_linear_config' => {
               pipeline_group: 'Group A',
               relationships: {
                 'purpose-first' => 'purpose-middle',
@@ -123,8 +136,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
               },
               filters: {
               }
-            )
-          ]
+            }
+          }
         end
 
         context 'when inspecting the first purpose in the chain' do
@@ -153,27 +166,25 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a chained linear config' do
-        let(:pipelines_list) do
-          [
-            instance_double(
-              Pipeline,
+        let(:pipelines_config) do
+          {
+            'group_a' => {
               pipeline_group: 'Group A',
               relationships: {
                 'purpose-first' => 'purpose-middle'
               },
               filters: {
               }
-            ),
-            instance_double(
-              Pipeline,
+            },
+            'group_b' => {
               pipeline_group: 'Group B',
               relationships: {
                 'purpose-middle' => 'purpose-last'
               },
               filters: {
               }
-            )
-          ]
+            }
+          }
         end
 
         context 'when inspecting the first purpose in the chain' do
@@ -235,27 +246,25 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a branching config' do
-        let(:pipelines_list) do
-          [
-            instance_double(
-              Pipeline,
+        let(:pipelines_config) do
+          {
+            'group_a' => {
               pipeline_group: 'Group A',
               relationships: {
                 'purpose-parent' => 'purpose-child'
               },
               filters: {
               }
-            ),
-            instance_double(
-              Pipeline,
+            },
+            'group_b' => {
               pipeline_group: 'Group B',
               relationships: {
                 'purpose-parent' => 'purpose-other-child'
               },
               filters: {
               }
-            )
-          ]
+            }
+          }
         end
 
         context 'when inspecting the common parent purpose in the chain' do
@@ -284,27 +293,25 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a combining config' do
-        let(:pipelines_list) do
-          [
-            instance_double(
-              Pipeline,
+        let(:pipelines_config) do
+          {
+            'group_a' => {
               pipeline_group: 'Group A',
               relationships: {
                 'purpose-parent' => 'purpose-combining-child'
               },
               filters: {
               }
-            ),
-            instance_double(
-              Pipeline,
+            },
+            'group_b' => {
               pipeline_group: 'Group B',
               relationships: {
-                'purpose-other-parent' => 'purpose-combining-child'
+                'purpose-other-parent' => 'purpose-combining_child'
               },
               filters: {
               }
-            )
-          ]
+            }
+          }
         end
 
         context 'when inspecting the first parent purpose in the chain' do
@@ -327,13 +334,13 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           let(:labware) { labware_combining_child }
 
           it 'returns the correct pipeline group for the common child' do
-            expect(presenter.pipeline_groups).to be_nil
+            expect(presenter.pipeline_groups).to eq(['Group A', 'Group B'])
           end
         end
       end
 
       context 'when it is a combining, chained, and branching config' do
-        let(:pipelines_list) do
+        let(:pipelines_config) do
           # purpose-parent    purpose-other-parent
           #       \ A1                  / A2
           #       purpose-combining-child
@@ -341,53 +348,48 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           #       purpose-branching-parent
           #        / C1                 \ C2
           # purpose-child         purpose-other-child
-          [
-            instance_double(
-              Pipeline,
+          {
+            'Group A1 Combined' => {
               pipeline_group: 'Group A1 Combined',
               relationships: {
                 'purpose-parent' => 'purpose-combining-child'
               },
               filters: {
               }
-            ),
-            instance_double(
-              Pipeline,
+            },
+            'Group A2 Combined' => {
               pipeline_group: 'Group A2 Combined',
               relationships: {
                 'purpose-other-parent' => 'purpose-combining-child'
               },
               filters: {
               }
-            ),
-            instance_double(
-              Pipeline,
+            },
+            'Group B Chained' => {
               pipeline_group: 'Group B Chained',
               relationships: {
                 'purpose-combining-child' => 'purpose-branching-parent'
               },
               filters: {
               }
-            ),
-            instance_double(
-              Pipeline,
+            },
+            'Group C1 Branching' => {
               pipeline_group: 'Group C1 Branching',
               relationships: {
                 'purpose-branching-parent' => 'purpose-child'
               },
               filters: {
               }
-            ),
-            instance_double(
-              Pipeline,
+            },
+            'Group C2 Branching' => {
               pipeline_group: 'Group C2 Branching',
               relationships: {
                 'purpose-branching-parent' => 'purpose-other-child'
               },
               filters: {
               }
-            )
-          ]
+            }
+          }
         end
 
         let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
