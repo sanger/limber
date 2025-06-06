@@ -81,7 +81,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
             request_options: {
               'option' => 1
             },
-            asset_groups: [{ assets: wells_with_aliquots, autodetect_studies: true, autodetect_projects: true }]
+            asset_groups: [{ asset_uuids: wells_with_aliquots, autodetect_studies: true, autodetect_projects: true }]
           )
         )
       ],
@@ -93,7 +93,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
             request_options: {
               'option' => 2
             },
-            asset_groups: [{ assets: wells_with_aliquots, autodetect_studies: true, autodetect_projects: true }]
+            asset_groups: [{ asset_uuids: wells_with_aliquots, autodetect_studies: true, autodetect_projects: true }]
           )
         )
       ]

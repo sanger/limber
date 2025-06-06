@@ -1,5 +1,7 @@
 <%= sidebar do %>
   <%= render 'logged_out_warning' %>
+  <%= render 'rack_printing', presenter: %>
+  <%= render 'tube_printing', presenter: %>
 
   <%= render 'labware/qc_data_upload' %>
 

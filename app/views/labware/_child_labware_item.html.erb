@@ -13,5 +13,5 @@
 <% elsif labware.tube_rack? %>
   <%= render partial: 'labware/tube_rack', locals: { tube_rack: labware, open_in_new_window: open_in_new_window } %>
 <% else %>
-  <%= render partial: 'labware/basic_relative', locals: { labware: labware, open_in_new_window: open_in_new_window } %>
+  <%= render partial: 'labware/basic_relative', locals: { labware:, open_in_new_window: } %>
 <% end %>

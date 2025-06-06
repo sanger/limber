@@ -124,4 +124,55 @@ RSpec.describe Sequencescape::Api::V2::Plate do
       expect(plate.wells_in_columns.map(&:location)).to eq(locations_in_columns)
     end
   end
+
+  describe '#register_stock_for_plate' do
+    let(:plate) { described_class.new(id: '123') }
+    let(:url) { "#{described_class.site}/plates/123/register_stock_for_plate" }
+
+    context 'when the request is successful' do
+      before do
+        stub_request(:post, url).to_return(
+          status: 200,
+          body: {
+            data: {
+              type: 'plates',
+              id: '123',
+              attributes: {
+                message: 'Stock successfully registered for plate wells'
+              }
+            }
+          }.to_json,
+          headers: {
+            'Content-Type' => 'application/json'
+          }
+        )
+      end
+
+      it 'returns a successful response' do
+        response = plate.register_stock_for_plate
+        expect(response.first.attributes['message']).to match(/Stock successfully registered for plate wells/)
+      end
+    end
+
+    context 'when the request fails with 422' do
+      before do
+        stub_request(:post, url).to_return(
+          status: 422,
+          body: {
+            errors: [
+              { status: '422', title: 'Stock registration failed', detail: 'Something went wrong during registration.' }
+            ]
+          }.to_json,
+          headers: {
+            'Content-Type' => 'application/vnd.api+json'
+          }
+        )
+      end
+
+      it 'returns an error result' do
+        response = plate.register_stock_for_plate
+        expect(response.errors.first['title']).to match(/Stock registration failed/)
+      end
+    end
+  end
 end

@@ -177,8 +177,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent2).and_return('outer-request-2')
       end
 
-      let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
-
       context 'when sources are from multiple studies' do
         before do
           expect('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).and_return(
@@ -205,35 +203,35 @@ RSpec.describe LabwareCreators::MultiStampTubes do
                  aliquots: [aliquot2]
         end
 
-        let!(:order_request) do
-          stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
-          stub_api_post(
-            example_template_uuid,
-            'orders',
-            payload: {
-              order: {
-                assets: parent_receptacle_uuids,
-                request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
-                user: user_uuid,
-                autodetect_studies: false,
-                autodetect_projects: false
-              }
-            },
-            body: '{"order":{"uuid":"order-uuid"}}'
-          )
+        let(:orders_attributes) do
+          [
+            {
+              attributes: {
+                submission_template_uuid: example_template_uuid,
+                submission_template_attributes: {
+                  asset_uuids: parent_receptacle_uuids,
+                  request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
+                  user_uuid: user_uuid,
+                  autodetect_studies: false,
+                  autodetect_projects: false
+                }
+              },
+              uuid_out: 'order-uuid'
+            }
+          ]
         end
 
-        let!(:submission_request) do
-          stub_api_post(
-            'submissions',
-            payload: {
-              submission: {
-                orders: ['order-uuid'],
-                user: user_uuid
-              }
-            },
-            body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
-          )
+        let(:submissions_attributes) do
+          [
+            {
+              attributes: {
+                and_submit: true,
+                order_uuids: ['order-uuid'],
+                user_uuid: user_uuid
+              },
+              uuid_out: 'sub-uuid'
+            }
+          ]
         end
 
         let!(:multiple_study_submission) do

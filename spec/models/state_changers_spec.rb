@@ -2,8 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe StateChangers do
-  let(:labware_uuid) { SecureRandom.uuid }
+RSpec.describe StateChangers::DefaultStateChanger do
+  has_a_working_api
+
+  subject { described_class.new(api, plate_uuid, user_uuid) }
+
+  let(:plate_uuid) { SecureRandom.uuid }
+  let(:plate) { create(:v2_plate, uuid: plate_uuid, state: plate_state) }
+  let(:failed_wells) { [] }
   let(:user_uuid) { SecureRandom.uuid }
   let(:reason) { 'Because I want to' }
   let(:customer_accepts_responsibility) { false }

@@ -1,4 +1,4 @@
-<table  class="plate-view <%= css_class %>">
+<table class="plate-view <%= css_class %>">
   <caption></caption>
   <thead>
     <tr>
@@ -15,7 +15,7 @@
         <th class="first-col"><%= row_label %></th>
         <% (1..12).each do | index| %>
           <td>
-            <div class="well <%= "#{row_label}#{index}" %>" data-location="<%= "#{row_label}#{index}"%>">
+            <div class="well <%= "#{row_label}#{index}" %>" data-location="<%= "#{row_label}#{index}" %>">
             </div>
           </td>
         <% end %>
