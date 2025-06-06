@@ -72,7 +72,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             'parent' => 'WGS Purpose'
           },
           filters: {
-            'library_type' => ['Unrelated']
+            'library_type' => 'Unrelated'
           }
         }
       end
@@ -83,7 +83,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             'parent' => 'WGS Purpose'
           },
           filters: {
-            'library_type' => ['WGS']
+            'library_type' => 'Standard'
           }
         }
       end
@@ -93,6 +93,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           'wgs_purpose_and_library_type_pipeline' => wgs_purpose_and_library_type_pipeline
         }
       end
+      let(:labware) { create(:v2_plate_for_pooling, :has_pooling_metadata, purpose: wgs_purpose) }
 
       it 'returns the pipeline groups matching the library type' do
         expect(presenter.pipeline_groups).to eq(['Group D'])
@@ -107,7 +108,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             'parent' => 'WGS Purpose'
           },
           filters: {
-            'library_type' => ['Unrelated']
+            'library_type' => 'Unrelated'
           }
         }
       end
@@ -118,7 +119,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             'parent' => 'WGS Purpose'
           },
           filters: {
-            'library_type' => ['WGS']
+            'library_type' => 'Standard'
           }
         }
       end

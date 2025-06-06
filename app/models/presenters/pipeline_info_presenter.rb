@@ -33,8 +33,7 @@ class Presenters::PipelineInfoPresenter
     pipeline_groups = [
       pipeline_groups_by_purpose, # any matching pipeline MUST match the labware's purpose
       pipeline_groups_by_parent_purposes, # any matching pipeline MIGHT match the labware's parent purposes
-      pipeline_groups_by_requests, # any matching pipeline MIGHT match the active requests
-      pipeline_groups_by_library # any matching pipeline MIGHT match the library type
+      pipeline_groups_by_requests_and_libraries # any matching pipeline MIGHT match the active requests and library type
     ]
 
     # Remove nil values and empty arrays from the pipeline_groups array
@@ -117,23 +116,8 @@ class Presenters::PipelineInfoPresenter
       .uniq
   end
 
-  # TODO: Rename to pipeline_groups_by_requests_and_library, as `active_for?` already filters by library type
-  def pipeline_groups_by_requests
+  def pipeline_groups_by_requests_and_libraries
     active_pipelines.map(&:pipeline_group).uniq
-  end
-
-  # TODO: remove - already covered by `pipeline_groups_by_requests`
-  def pipeline_groups_by_library
-    return nil unless @labware.respond_to?(:pooling_metadata)
-
-    # Extract the library type name from pooling_metadata
-    labware_library_names =
-      @labware.pooling_metadata.values.filter_map { |details| details.dig('library_type', 'name') }
-
-    Settings
-      .pipelines
-      .select { |pipeline| pipeline.filters['library_type']&.intersect?(labware_library_names) }
-      .map(&:pipeline_group)
   end
 
   # On `LB Lib Pool Norm` tubes, it's hard to find the correct pipeline,
