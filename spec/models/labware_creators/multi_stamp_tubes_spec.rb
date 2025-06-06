@@ -238,25 +238,13 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           create(:v2_submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
         end
 
-        context 'creates a plate!' do
-          before do
-            expect_pooled_plate_creation
-            expect_transfer_request_collection_creation
+        it 'creates a plate!' do
+          expect_order_creation
+          expect_pooled_plate_creation
+          expect_submission_creation
+          expect_transfer_request_collection_creation
 
-            subject.save!
-          end
-
-          it 'creates an order' do
-            expect(order_request).to have_been_made.once
-          end
-
-          it 'creates a submission' do
-            expect(submission_request).to have_been_made.once
-          end
-
-          it 'submits the submission' do
-            expect(submission_submit).to have_been_made.once
-          end
+          subject.save!
         end
       end
     end

@@ -53,26 +53,12 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
       [{ attributes: { and_submit: true, order_uuids: ['order-uuid'], user_uuid: user_uuid }, uuid_out: 'sub-uuid' }]
     end
 
-    let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
+    it 'creates a submission' do
+      expect_order_creation
+      expect_submission_creation
 
-    context 'when a submission is created' do
-      before { post :create, params: request_parameters, session: { user_uuid: } }
-
-      it 'creates an order' do
-        expect(order_request).to have_been_made.once
-      end
-
-      it 'creates a submission' do
-        expect(submission_request).to have_been_made.once
-      end
-
-      it 'submits the submission' do
-        expect(submission_submit).to have_been_made.once
-      end
-
-      it 'returns a success message' do
-        expect(flash.notice).to eq(['Your submissions have been made and should be built shortly.'])
-      end
+      post :create, params: request_parameters, session: { user_uuid: }
+      expect(flash.notice).to eq(['Your submissions have been made and should be built shortly.'])
     end
   end
 end
