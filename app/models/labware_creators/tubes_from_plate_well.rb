@@ -59,8 +59,8 @@ module LabwareCreators
     # instance of `LabwareCreators::WellFilterKinnex` with the current creator.
     #
     # @note Why a separate `WellFilterKinnex`? This is because filter logic filters
-    #   wells based on the well state `!well.passed?`. However, because one if the input plates for
-    #   Kinnex is an input plate, the wells would not be in a passed state (in fact, their state would be 'unknown'),
+    #   wells based on the well state `!well.passed?`. However, because one of the plates where Kinnex starts
+    #   is an input plate, the wells would not be in a passed state (in fact, their state would be 'unknown'),
     #   so we need to use a different filter that does not rely on the well state.
     #
     # @return [LabwareCreators::WellFilterKinnex] The WellFilter instance
