@@ -99,6 +99,41 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
     end
 
+    context 'when pipelines match by library type, but there are no active requests' do
+      let(:wgs_purpose_and_unrelated_library_type_pipeline) do
+        {
+          pipeline_group: 'Group C',
+          relationships: {
+            'parent' => 'WGS Purpose'
+          },
+          filters: {
+            'library_type' => ['Unrelated']
+          }
+        }
+      end
+      let(:wgs_purpose_and_library_type_pipeline) do
+        {
+          pipeline_group: 'Group D',
+          relationships: {
+            'parent' => 'WGS Purpose'
+          },
+          filters: {
+            'library_type' => ['WGS']
+          }
+        }
+      end
+      let(:pipelines_config) do
+        {
+          'wgs_purpose_and_unrelated_library_type_pipeline' => wgs_purpose_and_unrelated_library_type_pipeline,
+          'wgs_purpose_and_library_type_pipeline' => wgs_purpose_and_library_type_pipeline
+        }
+      end
+
+      it 'returns the pipeline groups matching the library type' do
+        expect(presenter.pipeline_groups).to eq(['Group C', 'Group D'])
+      end
+    end
+
     context 'when the scenario is a linear config' do
       # simple_linear_config: a simple chain of 3 purposes in a row, belonging to the same pipeline group.
       #     All three should return the same pipeline group.
