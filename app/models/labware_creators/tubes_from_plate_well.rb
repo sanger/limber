@@ -58,6 +58,11 @@ module LabwareCreators
     # If the WellFilter instance does not already exist, it initializes a new
     # instance of `LabwareCreators::WellFilterKinnex` with the current creator.
     #
+    # @note Why a separate `WellFilterKinnex`? This is because filter logic filters
+    #   wells based on the well state `!well.passed?`. However, because one if the input plates for
+    #   Kinnex is an input plate, the wells would not be in a passed state (in fact, their state would be 'unknown'),
+    #   so we need to use a different filter that does not rely on the well state.
+    #
     # @return [LabwareCreators::WellFilterKinnex] The WellFilter instance
     def well_filter
       @well_filter ||= LabwareCreators::WellFilterKinnex.new(creator: self)
