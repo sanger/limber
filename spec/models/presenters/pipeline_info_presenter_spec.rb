@@ -27,6 +27,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
   end
 
   describe '#pipeline_groups' do
+    before { allow(Settings.pipelines).to receive(:list).and_return(pipelines_list) }
+
     context 'when pipelines match by purpose' do
       let(:simplest_pipeline) do
         instance_double(Pipeline, pipeline_group: 'Group A', relationships: { 'parent' => 'child' }, filters: {})
@@ -34,8 +36,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       let(:wgs_purpose_pipeline) do
         instance_double(Pipeline, pipeline_group: 'Group B', relationships: { 'parent' => 'WGS Purpose' }, filters: {})
       end
-
-      before { allow(Settings.pipelines).to receive(:list).and_return([simplest_pipeline, wgs_purpose_pipeline]) }
+      let(:pipelines_list) { [simplest_pipeline, wgs_purpose_pipeline] }
 
       it 'returns the pipeline groups matching the purpose' do
         expect(presenter.pipeline_groups).to eq(['Group B'])
@@ -43,7 +44,9 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when no pipelines match' do
-      before { allow(Settings.pipelines).to receive_messages(list: [], select_pipelines_with_purpose: []) }
+      let(:pipelines_list) { [] }
+
+      before { allow(Settings.pipelines).to receive_messages(select_pipelines_with_purpose: []) }
 
       it 'returns nil' do
         expect(presenter.pipeline_groups).to be_nil
@@ -75,11 +78,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           }
         )
       end
-
-      before do
-        pipelines = [wgs_purpose_and_unrelated_library_type_pipeline, wgs_purpose_and_library_type_pipeline]
-        allow(Settings.pipelines).to receive_messages(list: pipelines, select: pipelines)
-      end
+      let(:pipelines_list) { [wgs_purpose_and_unrelated_library_type_pipeline, wgs_purpose_and_library_type_pipeline] }
 
       it 'returns the pipeline groups matching the library type' do
         expect(presenter.pipeline_groups).to eq(['Group D'])
@@ -113,21 +112,19 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a simple linear config' do
-        before do
-          allow(Settings.pipelines).to receive(:list).and_return(
-            [
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group A',
-                relationships: {
-                  'purpose-first' => 'purpose-middle',
-                  'purpose-middle' => 'purpose-last'
-                },
-                filters: {
-                }
-              )
-            ]
-          )
+        let(:pipelines_list) do
+          [
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group A',
+              relationships: {
+                'purpose-first' => 'purpose-middle',
+                'purpose-middle' => 'purpose-last'
+              },
+              filters: {
+              }
+            )
+          ]
         end
 
         context 'when inspecting the first purpose in the chain' do
@@ -156,29 +153,27 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a chained linear config' do
-        before do
-          allow(Settings.pipelines).to receive(:list).and_return(
-            [
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group A',
-                relationships: {
-                  'purpose-first' => 'purpose-middle'
-                },
-                filters: {
-                }
-              ),
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group B',
-                relationships: {
-                  'purpose-middle' => 'purpose-last'
-                },
-                filters: {
-                }
-              )
-            ]
-          )
+        let(:pipelines_list) do
+          [
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group A',
+              relationships: {
+                'purpose-first' => 'purpose-middle'
+              },
+              filters: {
+              }
+            ),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group B',
+              relationships: {
+                'purpose-middle' => 'purpose-last'
+              },
+              filters: {
+              }
+            )
+          ]
         end
 
         context 'when inspecting the first purpose in the chain' do
@@ -240,29 +235,27 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a branching config' do
-        before do
-          allow(Settings.pipelines).to receive(:list).and_return(
-            [
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group A',
-                relationships: {
-                  'purpose-parent' => 'purpose-child'
-                },
-                filters: {
-                }
-              ),
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group B',
-                relationships: {
-                  'purpose-parent' => 'purpose-other-child'
-                },
-                filters: {
-                }
-              )
-            ]
-          )
+        let(:pipelines_list) do
+          [
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group A',
+              relationships: {
+                'purpose-parent' => 'purpose-child'
+              },
+              filters: {
+              }
+            ),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group B',
+              relationships: {
+                'purpose-parent' => 'purpose-other-child'
+              },
+              filters: {
+              }
+            )
+          ]
         end
 
         context 'when inspecting the common parent purpose in the chain' do
@@ -291,29 +284,27 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when there is a combining config' do
-        before do
-          allow(Settings.pipelines).to receive(:list).and_return(
-            [
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group A',
-                relationships: {
-                  'purpose-parent' => 'purpose-combining-child'
-                },
-                filters: {
-                }
-              ),
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group B',
-                relationships: {
-                  'purpose-other-parent' => 'purpose-combining-child'
-                },
-                filters: {
-                }
-              )
-            ]
-          )
+        let(:pipelines_list) do
+          [
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group A',
+              relationships: {
+                'purpose-parent' => 'purpose-combining-child'
+              },
+              filters: {
+              }
+            ),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group B',
+              relationships: {
+                'purpose-other-parent' => 'purpose-combining-child'
+              },
+              filters: {
+              }
+            )
+          ]
         end
 
         context 'when inspecting the first parent purpose in the chain' do
@@ -342,72 +333,61 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
 
       context 'when it is a combining, chained, and branching config' do
-        before do
-          allow(Settings.pipelines).to receive(:list).and_return(
-            # purpose-parent    purpose-other-parent
-            #       \ A1                  / A2
-            #       purpose-combining-child
-            #                  | B
-            #       purpose-branching-parent
-            #        / C1                 \ C2
-            # purpose-child         purpose-other-child
-            [
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group A1 Combined',
-                relationships: {
-                  'purpose-parent' => 'purpose-combining-child'
-                },
-                filters: {
-                }
-              ),
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group A2 Combined',
-                relationships: {
-                  'purpose-other-parent' => 'purpose-combining-child'
-                },
-                filters: {
-                }
-              ),
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group B Chained',
-                relationships: {
-                  'purpose-combining-child' => 'purpose-branching-parent'
-                },
-                filters: {
-                }
-              ),
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group C1 Branching',
-                relationships: {
-                  'purpose-branching-parent' => 'purpose-child'
-                },
-                filters: {
-                }
-              ),
-              instance_double(
-                Pipeline,
-                pipeline_group: 'Group C2 Branching',
-                relationships: {
-                  'purpose-branching-parent' => 'purpose-other-child'
-                },
-                filters: {
-                }
-              )
-            ]
-          )
-
-          allow(labware_combining_child).to receive_messages(parents: [labware_parent])
-          allow(labware_branching_parent).to receive_messages(parents: [labware_combining_child])
-          allow(labware_child).to receive_messages(parents: [labware_branching_parent])
-          allow(labware_other_child).to receive_messages(parents: [labware_branching_parent])
-
-          stub_plate_find_by_barcode(labware_combining_child)
-          stub_plate_find_by_barcode(labware_branching_parent)
-          stub_plate_find_by_barcode(labware_parent)
+        let(:pipelines_list) do
+          # purpose-parent    purpose-other-parent
+          #       \ A1                  / A2
+          #       purpose-combining-child
+          #                  | B
+          #       purpose-branching-parent
+          #        / C1                 \ C2
+          # purpose-child         purpose-other-child
+          [
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group A1 Combined',
+              relationships: {
+                'purpose-parent' => 'purpose-combining-child'
+              },
+              filters: {
+              }
+            ),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group A2 Combined',
+              relationships: {
+                'purpose-other-parent' => 'purpose-combining-child'
+              },
+              filters: {
+              }
+            ),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group B Chained',
+              relationships: {
+                'purpose-combining-child' => 'purpose-branching-parent'
+              },
+              filters: {
+              }
+            ),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group C1 Branching',
+              relationships: {
+                'purpose-branching-parent' => 'purpose-child'
+              },
+              filters: {
+              }
+            ),
+            instance_double(
+              Pipeline,
+              pipeline_group: 'Group C2 Branching',
+              relationships: {
+                'purpose-branching-parent' => 'purpose-other-child'
+              },
+              filters: {
+              }
+            )
+          ]
         end
 
         let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
@@ -423,6 +403,17 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         end
         let(:labware_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_child) }
         let(:labware_other_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_child) }
+
+        before do
+          allow(labware_combining_child).to receive_messages(parents: [labware_parent])
+          allow(labware_branching_parent).to receive_messages(parents: [labware_combining_child])
+          allow(labware_child).to receive_messages(parents: [labware_branching_parent])
+          allow(labware_other_child).to receive_messages(parents: [labware_branching_parent])
+
+          stub_plate_find_by_barcode(labware_combining_child)
+          stub_plate_find_by_barcode(labware_branching_parent)
+          stub_plate_find_by_barcode(labware_parent)
+        end
 
         context 'when inspecting the labware-parent' do
           let(:labware) { labware_parent }
