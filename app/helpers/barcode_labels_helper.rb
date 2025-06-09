@@ -4,6 +4,7 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
   def barcode_printing_form(
     labels:,
     redirection_url:,
+    source_location: nil,
     default_printer_name: @presenter.default_printer # rubocop:todo Rails/HelperInstanceVariable
   )
     # labels are Labels::PlateLabel or Labels::TubeLabel so you can get the
@@ -15,11 +16,12 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
       PrintJob.new(
         number_of_copies: Settings.printers[:default_count],
         printer_name: default_printer_name,
-        label_templates_by_service: JSON.generate(labels.first.label_templates_by_service)
+        label_templates_by_service: JSON.generate(labels.first.label_templates_by_service),
+        source_location: source_location
       )
 
     # Is redirection_url needed?
-    locals = { print_job:, printers:, labels:, redirection_url: }
+    locals = { print_job:, printers:, labels:, redirection_url:, source_location: }
     render(partial: 'labware/barcode_printing_form', locals: locals)
   end
 
