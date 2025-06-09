@@ -1,6 +1,5 @@
 <%= form_for(print_job, namespace: print_job.object_id, html: { method: :post, class: 'form-inline'}) do |f| %>
   <%= f.hidden_field :label_templates_by_service %>
-  <%= f.hidden_field :source_location %>
 
   <% labels.each do |label| %>
     <!-- main label for this plate -->

@@ -18,10 +18,10 @@ class PrintJobsController < ApplicationController
 
   private
 
-  def print_job_params # rubocop:todo Metrics/AbcSize
+  def print_job_params
     params
       .require(:print_job)
-      .permit(:printer_name, :label_templates_by_service, :number_of_copies, :source_location)
+      .permit(:printer_name, :label_templates_by_service, :number_of_copies)
       .tap do |permitted|
         # We want to permit ALL labels content, as it is an array of unstructured hashes.
         # While you can #permit arrays of 'scalars' you can't permit arrays of hashes.
@@ -29,7 +29,6 @@ class PrintJobsController < ApplicationController
         # future changes more painful.
         permitted[:labels] = params.require(:print_job)[:labels].map(&:permit!)
         permitted[:labels_sprint] = params.require(:print_job)[:labels_sprint].permit!
-        permitted[:source_location] = params.require(:print_job)[:source_location]
       end
   end
 

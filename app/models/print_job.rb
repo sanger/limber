@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
-class PrintJob # rubocop:todo Style/Documentation, Metrics/ClassLength
-  # This class is responsible for handling print jobs for different label types.
-  # It supports printing to PMB (PrintMyBarcode) and SPrint services.
-  # It includes validation for required attributes and methods to execute the print job.
+class PrintJob # rubocop:todo Style/Documentation
   include ActiveModel::Model
 
   attr_reader :number_of_copies
-  attr_accessor :printer, :printer_name, :label_templates_by_service, :labels, :labels_sprint, :source_location
+  attr_accessor :printer, :printer_name, :label_templates_by_service, :labels, :labels_sprint
 
   # Add printer/ labels_sprint below?
   validates :printer_name, :label_templates_by_service, :number_of_copies, :labels, presence: true
@@ -24,23 +21,6 @@ class PrintJob # rubocop:todo Style/Documentation, Metrics/ClassLength
       errors.add(:base, "Print service #{printer.print_service} not recognised.")
       false
     end
-  end
-
-  # Merges source locations into the `top_right` field of each label in the provided labels array.
-  #
-  # This method iterates through the given `labels` array and updates each label's `top_right` field
-  # by appending the `source_locations` value to its existing value. If `source_locations` is `nil`,
-  # the method returns the original `labels` array without modification.
-  #
-  # @param labels [Array<Hash>] An array of label hashes, where each hash represents a label with various fields.
-  # @param source_locations [String, nil] A string representing the source locations to be merged into the labels.
-  # @return [Array<Hash>] The updated array of labels with the `top_right` field modified.
-  def merge_source_location(labels, source_location)
-    return labels if source_location.blank?
-
-    labels.each { |label| label.merge!({ top_right: "#{label[:top_right]}:#{source_location}" }) }
-
-    labels
   end
 
   def print_to_pmb
@@ -109,8 +89,8 @@ class PrintJob # rubocop:todo Style/Documentation, Metrics/ClassLength
     # }
 
     label_template = get_label_template_by_service('SPrint')
+
     label_array = labels_sprint.values.flatten
-    merged_array = merge_source_location(label_array, source_location)
 
     # label_array:
     # [{
@@ -121,7 +101,7 @@ class PrintJob # rubocop:todo Style/Documentation, Metrics/ClassLength
     #   "extra_left_text"=>"10-NOV-2020"
     # }]
 
-    merge_fields_list = merged_array * number_of_copies
+    merge_fields_list = label_array * number_of_copies
 
     response = SPrintClient.send_print_request(printer_name, label_template, merge_fields_list)
 

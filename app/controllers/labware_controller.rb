@@ -9,7 +9,6 @@ class LabwareController < ApplicationController
   UUID = /\A[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}\z/
 
   before_action :locate_labware, only: :show
-  before_action :set_source_locations, only: :show
   before_action :find_printers, only: [:show]
   before_action :check_for_current_user!, only: [:update]
 
@@ -92,9 +91,5 @@ class LabwareController < ApplicationController
 
   def presenter_for(labware)
     Presenters.lookup_for(labware).new(labware:)
-  end
-
-  def set_source_locations
-    @source_location = params[:source_location].presence || []
   end
 end
