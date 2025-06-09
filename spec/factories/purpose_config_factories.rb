@@ -35,17 +35,6 @@ FactoryBot.define do
       input_plate { true }
     end
 
-    factory :kinnex_tube_config do
-      transient { uuid { 'kinnex-tube-purpose-uuid' } }
-      name { 'Kinnex Tube Purpose' }
-      asset_type { 'tube' }
-      default_printer_type { :tube }
-      presenter_class { 'Presenters::SimpleTubePresenter' }
-      state_changer_class { 'StateChangers::AutomaticTubeStateChanger' }
-      label_class { 'Labels::TubeLabelKinnex' }
-      printer_type { '96 Well Plate' }
-    end
-
     factory :stock_plate_with_info_config do
       transient { uuid { 'stock-plate-purpose-uuid' } }
       name { 'Limber Cherrypicked' }
