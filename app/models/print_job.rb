@@ -36,7 +36,7 @@ class PrintJob # rubocop:todo Style/Documentation, Metrics/ClassLength
   # @param source_locations [String, nil] A string representing the source locations to be merged into the labels.
   # @return [Array<Hash>] The updated array of labels with the `top_right` field modified.
   def merge_source_location(labels, source_location)
-    return labels if source_location.nil?
+    return labels if source_location.blank?
 
     labels.each { |label| label.merge!({ top_right: "#{label[:top_right]}:#{source_location}" }) }
 

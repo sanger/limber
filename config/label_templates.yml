@@ -105,3 +105,9 @@ templates:
     :printer_type: 96 Well Plate
     :pmb_template: sqsc_96plate_label_template_code39
     :sprint_template: plate_96_2d.yml.erb
+
+  kinnex_tube:
+    :label_class: Labels::TubeLabelKinnex
+    :printer_type: 96 Well Plate
+    :pmb_template: sqsc_96plate_label_template_code39
+    :sprint_template: plate_96_2d.yml.erb
