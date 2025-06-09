@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Labels::TubeLabelKinnex do
   it { expect(described_class).to be < Labels::Base }
 
-  context 'when creating the label of a plate' do
+  context 'when printing from tube presenter' do
     let(:labware) { create(:v2_tube, name: 'ABCD:A1') }
     let(:label) { described_class.new(labware) }
 
