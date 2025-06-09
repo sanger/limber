@@ -99,7 +99,7 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
     stub_v2_tube(tube1)
     stub_v2_tube(tube2)
 
-    allow(subject).to receive_messages(labware: tube_rack, user_uuid: user_uuid)
+    allow(subject).to receive_messages(labware: tube_rack, user_uuid: user_uuid) # rubocop:todo RSpec/SubjectStub
   end
 
   describe '#labware_created_with_robot' do

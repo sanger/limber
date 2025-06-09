@@ -188,7 +188,7 @@ RSpec.describe StateChangers do
       before { allow(labware).to receive(:racked_tubes).and_return([tube3_uuid]) }
 
       it 'does not call move_to' do
-        expect(subject).not_to receive(:move_to!)
+        expect(subject).not_to receive(:move_to!) # rubocop:todo RSpec/SubjectStub, RSpec/MessageSpies
       end
     end
 
