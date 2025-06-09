@@ -34,11 +34,10 @@ RSpec.describe StateChangers do
 
   describe StateChangers::PlateStateChanger do
     has_a_working_api
+
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
-
-    subject { described_class.new(api, labware_uuid, user_uuid) }
 
     let(:plate) { create :v2_plate, uuid: labware_uuid, state: plate_state }
     let(:failed_wells) { {} }
@@ -88,8 +87,6 @@ RSpec.describe StateChangers do
     include_context 'common setup'
 
     has_a_working_api
-
-    subject { described_class.new(api, labware_uuid, user_uuid) }
 
     let(:plate_state) { 'pending' }
     let!(:plate) { create :v2_plate_for_aggregation, uuid: labware_uuid, state: plate_state }
@@ -221,11 +218,10 @@ RSpec.describe StateChangers do
 
   describe StateChangers::TubeStateChanger do
     has_a_working_api
+
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
-
-    subject { described_class.new(api, labware_uuid, user_uuid) }
 
     let(:tube) { json :tube, uuid: labware_uuid, state: tube_state }
     let(:well_collection) { json :well_collection, default_state: tube_state, custom_state: failed_wells }
