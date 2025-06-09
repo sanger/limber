@@ -63,7 +63,7 @@ RSpec.feature 'Viewing an inbox', :js do
     expect(page).to have_content('DN3')
     check 'Show my plates only', allow_label_click: true
     click_on 'Update'
-    expect(page).not_to have_content('DN3')
+    expect(page).to have_no_content('DN3')
   end
 
   scenario 'ongoing tubes' do

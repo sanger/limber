@@ -458,7 +458,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
-  context '#must_have_correct_number_of_tubes_in_rack_files' do
+  describe '#must_have_correct_number_of_tubes_in_rack_files' do
     let(:num_parent_wells) { 96 }
     let(:num_parent_unique_samples) { 48 }
     let(:num_sequencing_tubes) { 48 }

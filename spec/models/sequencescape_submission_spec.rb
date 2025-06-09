@@ -103,6 +103,7 @@ RSpec.describe SequencescapeSubmission do
       obj = described_class.new(attributes)
       expect(obj.asset_groups_for_orders_creation).to eq(obj.asset_groups)
     end
+
     context 'when extra barcodes provided' do
       let(:plate) { create(:passed_plate) }
       let(:plate2) { create(:passed_plate) }

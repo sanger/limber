@@ -54,6 +54,8 @@ RSpec.feature 'Charge and pass libraries', :js do
     before do
       create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid'
       stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
+      stub_v2_tube(tube)
+      stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
     end
 
     let(:submission_uuids) { [] }
@@ -75,11 +77,6 @@ RSpec.feature 'Charge and pass libraries', :js do
         },
         body: '{"order":{"uuid":"order-uuid"}}'
       )
-    end
-
-    before do
-      stub_v2_tube(tube)
-      stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
     end
 
     let!(:submission_request) do
