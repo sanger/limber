@@ -63,6 +63,7 @@ RSpec.describe SearchController, type: :controller do
     let(:expected_search) do
       stub_find_all_with_pagination(api_class, search_parameters, { page: 1, per_page: 30 }, [result])
     end
+
     let(:expected_search) { stub_search_and_multi_result(search_name, { 'search' => search_parameters }, [result]) }
 
     describe '#ongoing_plates' do

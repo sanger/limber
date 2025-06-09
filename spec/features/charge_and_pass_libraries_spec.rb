@@ -63,7 +63,12 @@ RSpec.feature 'Charge and pass libraries', :js do
     let(:tube) { create :v2_tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
     let(:tube_barcode) { tube.labware_barcode.machine }
 
-    let!(:order_request) do
+    before do
+      create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid'
+      stub_v2_tube(tube)
+      stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
+
+      # Stub the API for order creation
       stub_api_get(template_uuid, body: json(:submission_template, uuid: template_uuid))
       stub_api_post(
         template_uuid,
@@ -95,7 +100,9 @@ RSpec.feature 'Charge and pass libraries', :js do
       [{ attributes: { and_submit: true, order_uuids: ['order-uuid'], user_uuid: user_uuid }, uuid_out: 'sub-uuid' }]
     end
 
-    let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
+      # Stub the API for submission submission
+      stub_api_post('sub-uuid', 'submit')
+    end
 
     scenario 'charge and pass libraries with submissions' do
       fill_in_swipecard_and_barcode user_swipecard, tube_barcode

@@ -23,20 +23,35 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
 
   let(:tube_rack_uuid) { tube_rack.uuid }
 
-  RSpec.shared_examples 'a csv view' do
-    it 'renders the view' do
-      get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::TubeRack)
-      expect(assigns(:tube_rack)).to be_a(Sequencescape::Api::V2::TubeRack)
-      expect(response).to render_template(expected_template)
-      expect(@response.content_type).to eq('text/csv; charset=utf-8')
+  RSpec.shared_examples 'a tube rack csv view' do
+    context 'when the tube rack is requested' do
+      before { get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv }
+
+      it 'returns a HTTP OK response' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'assigns the labware to a tube rack object' do
+        expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::TubeRack)
+      end
+
+      it 'assigns the tube rack to a tube rack object' do
+        expect(assigns(:tube_rack)).to be_a(Sequencescape::Api::V2::TubeRack)
+      end
+
+      it 'renders the template' do
+        expect(response).to render_template(expected_template)
+      end
+
+      it 'returns the correct content type' do
+        expect(response.content_type).to eq('text/csv; charset=utf-8')
+      end
     end
   end
 
-  context 'on generating a csv' do
+  context 'when generating a csv' do
     before do
-      expect(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+      allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
         includes,
         selects,
         uuid: tube_rack_uuid
@@ -49,7 +64,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       let(:csv_id) { 'tube_rack_concentrations_ngul' }
       let(:expected_template) { 'tube_rack_concentrations_ngul' }
 
-      it_behaves_like 'a csv view'
+      it_behaves_like 'a tube rack csv view'
     end
 
     context 'where csv id requested is tube_rack_concentrations_nm.csv' do
@@ -58,7 +73,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       let(:csv_id) { 'tube_rack_concentrations_nm' }
       let(:expected_template) { 'tube_rack_concentrations_nm' }
 
-      it_behaves_like 'a csv view'
+      it_behaves_like 'a tube rack csv view'
     end
   end
 
@@ -72,28 +87,31 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
     end
   end
 
-  context 'finding ancestor tubes' do
-    context 'ancestor_tube_purpose is not present' do
+  context 'when finding ancestor tubes' do
+    context 'when ancestor_tube_purpose is not present' do
       let(:csv_id) { 'tube_rack_concentrations_ngul' }
       let(:includes) { tube_rack_qc_includes }
       let(:selects) { nil }
+      let(:response) { get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv }
 
       before do
-        expect(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
           includes,
           selects,
           uuid: tube_rack_uuid
         ).and_return(tube_rack)
       end
 
-      it 'is nil' do
-        get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
+      it 'returns an HTTP OK response' do
         expect(response).to have_http_status(:ok)
+      end
+
+      it 'is nil' do
         expect(assigns(:ancestor_tubes)).to be_nil
       end
     end
 
-    context 'ancestor_tube_purpose is present and matching ancestors exist' do
+    context 'when ancestor_tube_purpose is present and matching ancestors exist' do
       let(:csv_id) { 'hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare' }
       let(:includes) { 'racked_tubes.tube' }
       let(:selects) { nil }
@@ -102,7 +120,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       let(:ancestor_tubes_sample_hash) { ancestor_tubes.index_by { |tube| tube.aliquots.first.sample.uuid } }
 
       before do
-        expect(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
           includes,
           selects,
           uuid: tube_rack_uuid
@@ -122,9 +140,13 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
         ).and_return(asset_ancestors)
       end
 
-      it 'returns the ancestors' do
+      it 'returns 200 OK' do
         get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
         expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the ancestors' do
+        get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
         expect(assigns(:ancestor_tubes)).to eq(ancestor_tubes_sample_hash)
       end
     end

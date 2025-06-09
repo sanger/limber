@@ -113,31 +113,41 @@ module StateChangers
     end
   end
 
-  # The Plate State changer is used by the vast majority of plates. It creates
-  # a simple StateChange record in Sequencescape, specifying the new 'target-state'
-  # As a result, Sequencescape will attempt to transition the entire plate, or the
-  # specified wells.
-  class PlateStateChanger < BaseStateChanger
-    def contents_for(target_state)
-      return nil unless FILTER_FAILS_ON.include?(target_state)
-
-      # determine list of well locations requiring the state change
-      well_locations_filtered = labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
-
-      # if no wells are in failed state then no need to send the contents subset
-      return nil if well_locations_filtered.length == labware.wells.count
-
-      well_locations_filtered
-    end
+  # Base class for tube racks
+  class BaseTubeRackStateChanger < BaseStateChanger
+    ACCEPTED_STATES = %w[pending].freeze
 
     def labware
-      @labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
+      raise 'Implement in the child class'
+    end
+
+    # Overrides the move_to! method to include the completion of outstanding requests.
+    # @param state [String] the target state to move the labware to
+    # @param reason [String, nil] the reason for the state change (optional)
+    #
+    # Iterates over the tubes and passes them individually.
+    def move_to!(state, reason = nil, _customer_accepts_responsibility = nil)
+      return if state.nil? || labware.nil? # We have nothing to do
+
+      labware
+        .racked_tubes
+        .select { |racked_tube| ACCEPTED_STATES.include?(racked_tube.tube.state) }
+        .each { |racked_tube| change_tube_state(racked_tube.tube, state, reason) }
+    end
+
+    private
+
+    # Changes the state of the tube to the target state.
+    # This method is using the StateChangers lookup to determine the correct state changer for the tube.
+    def change_tube_state(tube, target_state, reason)
+      state_changer = StateChangers.lookup_for(tube.purpose.uuid)
+      state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, reason)
     end
   end
 
   # The tube rack state changer is used by TubeRacks.
   # It contains racked tubes.
-  class TubeRackStateChanger < BaseStateChanger
+  class TubeRackStateChanger < BaseTubeRackStateChanger
     # This method determines the coordinates of tubes that require a state change based on the target state.
     # If the target state is not in the FILTER_FAILS_ON list, it returns nil.
     # It filters out tubes that are in the 'failed' state and collects their coordinates.
@@ -168,16 +178,39 @@ module StateChangers
     end
   end
 
-  # The tube state changer is used by Tubes. It works the same way as the default
-  # plate state changer but does not need to handle a subset of wells like the plate.
-  class TubeStateChanger < BaseStateChanger
-    # Tubes have no wells so contents is always empty
-    def contents_for(_target_state)
-      nil
+  # This version of the AutomaticLabwareStateChanger is used by TubeRacks.
+  class AutomaticTubeRackStateChanger < BaseTubeRackStateChanger
+    include AutomaticBehaviour
+
+    def labware
+      @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
+    end
+
+    def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
+      super
+      complete_outstanding_requests
+    end
+  end
+
+  # The Plate State changer is used by the vast majority of plates. It creates
+  # a simple StateChange record in Sequencescape, specifying the new 'target-state'
+  # As a result, Sequencescape will attempt to transition the entire plate, or the
+  # specified wells.
+  class PlateStateChanger < BaseStateChanger
+    def contents_for(target_state)
+      return nil unless FILTER_FAILS_ON.include?(target_state)
+
+      # determine list of well locations requiring the state change
+      well_locations_filtered = labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
+
+      # if no wells are in failed state then no need to send the contents subset
+      return nil if well_locations_filtered.length == labware.wells.count
+
+      well_locations_filtered
     end
 
     def labware
-      @labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
+      @labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
     end
   end
 
@@ -190,12 +223,16 @@ module StateChangers
     end
   end
 
-  # This version of the AutomaticLabwareStateChanger is used by TubeRacks.
-  class AutomaticTubeRackStateChanger < TubeRackStateChanger
-    include AutomaticBehaviour
+  # The tube state changer is used by Tubes. It works the same way as the default
+  # plate state changer but does not need to handle a subset of wells like the plate.
+  class TubeStateChanger < BaseStateChanger
+    # Tubes have no wells so contents is always empty
+    def contents_for(_target_state)
+      nil
+    end
 
     def labware
-      @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
+      @labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
 
