@@ -31,8 +31,6 @@ BGE Lib:
 BGE Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
-  # TODO (Y24-367): Customise the submission presenter for BGE Lib XP2.
-  # It uses the permissive submission presenter for now.
   :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
   # NOTE: We use automatic plate state changer rather than Charge and Pass.
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
