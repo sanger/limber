@@ -18,7 +18,6 @@ BGE Lib:
   :asset_type: plate
   :presenter_class: Presenters::PermissivePresenter
   :creator_class: LabwareCreators::TaggedPlate
-  # TODO: (Y24-367) Update the tag_layout_template_names for 'BGE Lib'
   :tag_layout_templates:
     - 'IDT for Illumina UDI v1'
     - 'IDT for Illumina UDI v2'
