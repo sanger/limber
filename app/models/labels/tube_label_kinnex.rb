@@ -13,8 +13,10 @@ class Labels::TubeLabelKinnex < Labels::PlateLabelBase # rubocop:todo Style/Docu
 
   private
 
-  # When printed from the parent plate's presenter, labware_sources is needed.
-  # When printed from the tube's presenter, transfer_requests_as_target is needed.
+  # When printed from the parent plate's presenter, labware_sources is needed because the labware
+  # is an instance of Presenters::TubesWithSources.
+  # When printed from the tube's presenter, transfer_requests_as_target is needed because the labware
+  # is an instance of Sequencescape::Api::V2::Tube.
   def workline_identifier
     if labware.respond_to?(:labware_sources)
       labware.labware_sources.first&.name
