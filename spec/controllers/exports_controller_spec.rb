@@ -125,6 +125,14 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
     end
 
+    context 'where csv id requested is kinnex_prep_plate_export.csv' do
+      let(:includes) { 'wells.downstream_tubes' }
+      let(:csv_id) { 'kinnex_prep_plate_export' }
+      let(:expected_template) { 'kinnex_prep_plate_export' }
+
+      it_behaves_like 'a csv view'
+    end
+
     context 'where template is for the hamilton robot' do
       let(:includes) { well_src_asset_includes }
 
