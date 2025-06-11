@@ -87,14 +87,12 @@ class Pipeline
     Array(library_pass).include?(purpose)
   end
 
-  private
-
   # Checks if a given purpose is present in the relationships of this pipeline.
   #
   # @param purpose [String] The purpose to look for.
   #
   # @return [Boolean] Returns true if the purpose is present in this pipeline, false otherwise.
-  def purpose_in_relationships?(purpose_name)
-    (relationships.keys + relationships.values).include?(purpose_name)
+  def purpose_in_relationships?(purpose)
+    (relationships.keys + relationships.values).include?(purpose.name)
   end
 end
