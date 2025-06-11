@@ -106,8 +106,6 @@ class Presenters::PipelineInfoPresenter
     "#{array[0..max_listed - 1].join(separator)}, ...(#{array.size - max_listed} more)"
   end
 
-  # TODO: Could be covered by `pipeline_groups_by_requests` too,
-  # if we modify `active_for?` to also filter by purpose.
   def pipeline_groups_by_purpose
     Settings
       .pipelines
