@@ -334,7 +334,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             'group_a' => {
               pipeline_group: 'Group A',
               relationships: {
-                'purpose-parent' => 'purpose-combining-child'
+                'purpose-parent' => 'purpose-child'
               },
               filters: {
               }
@@ -342,7 +342,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             'group_b' => {
               pipeline_group: 'Group B',
               relationships: {
-                'purpose-other-parent' => 'purpose-combining_child'
+                'purpose-other-parent' => 'purpose-child'
               },
               filters: {
               }
