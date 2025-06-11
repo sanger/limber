@@ -249,7 +249,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
     end
 
-    context 'when the scenario a non-linear config' do
+    context 'when the scenario is a non-linear config' do
       # branching_config: a common parent with two children, each with their own pipeline group.
       #     The children should return their own pipeline group, but the parent should return both groups?
       #
