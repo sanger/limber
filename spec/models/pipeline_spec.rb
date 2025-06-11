@@ -19,10 +19,10 @@ RSpec.describe Pipeline do
           name: 'Pipeline A'
         }
       end
+      # Specifying pool_sizes means the factory produces a plate where the wells have requests coming out of them.
+      let(:labware) { create :v2_stock_plate, purpose_name: 'Purpose 2', pool_sizes: [1] }
 
       context 'when there is a pipeline group' do
-        let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
-
         it 'sets the pipeline_group attribute provided' do
           expect(model.pipeline_group).to eq 'Group A'
         end
@@ -40,7 +40,6 @@ RSpec.describe Pipeline do
             name: 'Pipeline A'
           }
         end
-        let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
 
         it 'sets the pipeline_group to the pipeline name' do
           expect(model.pipeline_group).to eq 'Pipeline A'
@@ -48,16 +47,14 @@ RSpec.describe Pipeline do
       end
 
       context 'when the labware requests match the filters' do
-        # Specifying pool_sizes means the factory produces a plate where the wells have requests coming out of them.
-        let(:labware) { create :v2_stock_plate, pool_sizes: [1] }
-
         it 'returns true' do
           expect(model.active_for?(labware)).to be true
         end
       end
 
       context 'when the labware requests do not match the filters' do
-        let(:labware) { create :v2_stock_plate }
+        # Produce a plate with no requests from the wells
+        let(:labware) { create :v2_stock_plate, purpose_name: 'Purpose 2', pool_sizes: [0] }
 
         it 'returns false' do
           expect(model.active_for?(labware)).to be false
@@ -77,7 +74,7 @@ RSpec.describe Pipeline do
         }
       end
 
-      let(:labware) { create :v2_tube }
+      let(:labware) { create :v2_tube, purpose_name: 'Purpose 2' }
 
       it 'returns true always' do
         expect(model.active_for?(labware)).to be true
