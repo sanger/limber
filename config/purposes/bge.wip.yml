@@ -19,14 +19,7 @@ BGE Lib:
   :presenter_class: Presenters::PermissivePresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
-    - 'IDT for Illumina UDI v1'
     - 'IDT for Illumina UDI v2'
-    - 'NEXTflex-96 barcoded adapters tags in rows (first oligo: AACGTGAT)'
-    - 'PF_adapters_UDI_96_A'
-    - 'PF_adapters_UDI_96_B_ROWS'
-    - 'PF_adapters_UDI_96_B'
-    - 'PF_adapters_UDI_96_C'
-    - 'PF_adapters_UDI_96_D'
 # 'Limber-Htp - BGE Transition - Automated' submission is on BGE Lib XP2
 BGE Lib XP2:
   :asset_type: plate
