@@ -54,7 +54,7 @@ class Pipeline
   # @param labware [Sequencescape::Api::V2::Plate, Sequencescape::Api::V2::Tube] The labware to check
   # @return [Boolean] Returns true if the labware meets the criteria, false otherwise
   def active_for?(labware)
-    return true if purpose_in_relationships?(labware.purpose)
+    return false unless purpose_in_relationships?(labware.purpose)
     return true if filters.blank?
 
     # TODO: Test - does it still find the pipeline if the plate is cancelled?
