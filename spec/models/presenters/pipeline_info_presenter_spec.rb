@@ -13,19 +13,6 @@ RSpec.describe Presenters::PipelineInfoPresenter do
   let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
   let(:labware) { create(:v2_stock_plate, :has_pooling_metadata, purpose: wgs_purpose) }
 
-  before do
-    allow(labware).to receive_messages(
-      pooling_metadata: {
-        'key1' => {
-          'library_type' => {
-            'name' => 'WGS'
-          }
-        }
-      },
-      ancestors: []
-    )
-  end
-
   describe '#pipeline_groups' do
     before { Settings.pipelines = PipelineList.new(pipelines_config) }
 
@@ -65,73 +52,75 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when pipelines match by library type' do
-      let(:wgs_purpose_and_unrelated_library_type_pipeline) do
-        {
-          pipeline_group: 'Group C',
-          relationships: {
-            'parent' => 'WGS Purpose'
-          },
-          filters: {
-            'library_type' => 'Unrelated'
-          }
-        }
+      let(:request_type) { create(:request_type, key: 'WGS') }
+      let(:library_type) { 'WGS' }
+      let(:request) do
+        [create(:request, :uuid, request_type: request_type, library_type: library_type, state: request_state)]
       end
-      let(:wgs_purpose_and_library_type_pipeline) do
-        {
-          pipeline_group: 'Group D',
-          relationships: {
-            'parent' => 'WGS Purpose'
-          },
-          filters: {
-            'library_type' => 'Standard'
-          }
-        }
-      end
+      let(:aliquot) { [create(:v2_aliquot, request:)] }
+      let(:wells) { [create(:v2_well, aliquots: aliquot, location: 'A1')] }
+      let(:labware) { create(:v2_plate, :has_pooling_metadata, purpose: wgs_purpose, wells: wells) }
       let(:pipelines_config) do
         {
-          'wgs_purpose_and_unrelated_library_type_pipeline' => wgs_purpose_and_unrelated_library_type_pipeline,
-          'wgs_purpose_and_library_type_pipeline' => wgs_purpose_and_library_type_pipeline
-        }
-      end
-      let(:labware) { create(:v2_plate_for_pooling, :has_pooling_metadata, purpose: wgs_purpose) }
-
-      it 'returns the pipeline groups matching the library type' do
-        expect(presenter.pipeline_groups).to eq(['Group D'])
-      end
-    end
-
-    context 'when pipelines match by library type, but there are no active requests' do
-      let(:wgs_purpose_and_unrelated_library_type_pipeline) do
-        {
-          pipeline_group: 'Group C',
-          relationships: {
-            'parent' => 'WGS Purpose'
+          'wgs_purpose_and_unrelated_library_type_pipeline' => {
+            pipeline_group: 'Group C',
+            relationships: {
+              'parent' => 'WGS Purpose'
+            },
+            filters: {
+              'library_type' => 'Unrelated'
+            }
           },
-          filters: {
-            'library_type' => 'Unrelated'
+          'wgs_purpose_and_library_type_pipeline' => {
+            pipeline_group: 'Group D',
+            relationships: {
+              'parent' => 'WGS Purpose'
+            },
+            filters: {
+              'library_type' => 'WGS'
+            }
           }
         }
       end
-      let(:wgs_purpose_and_library_type_pipeline) do
-        {
-          pipeline_group: 'Group D',
-          relationships: {
-            'parent' => 'WGS Purpose'
-          },
-          filters: {
-            'library_type' => 'Standard'
-          }
-        }
-      end
-      let(:pipelines_config) do
-        {
-          'wgs_purpose_and_unrelated_library_type_pipeline' => wgs_purpose_and_unrelated_library_type_pipeline,
-          'wgs_purpose_and_library_type_pipeline' => wgs_purpose_and_library_type_pipeline
-        }
+
+      context 'with no requests' do
+        let(:request) { [] }
+
+        it 'returns both pipeline groups since there is no library type match' do
+          expect(presenter.pipeline_groups).to eq(['Group C', 'Group D'])
+        end
       end
 
-      it 'returns the pipeline groups matching the library type' do
-        expect(presenter.pipeline_groups).to eq(['Group C', 'Group D'])
+      context 'with active requests' do
+        let(:request_state) { 'pending' }
+
+        it 'returns the pipeline group matching the library type' do
+          expect(presenter.pipeline_groups).to eq(['Group D'])
+        end
+      end
+
+      context 'with completed requests' do
+        let(:request_state) { 'completed' }
+
+        it 'returns the pipeline groups matching the library type' do
+          expect(presenter.pipeline_groups).to eq(['Group D'])
+        end
+      end
+
+      context 'with cancelled requests' do
+        let(:request_state) { 'cancelled' }
+
+        it 'returns both pipeline groups since there is no library type match' do
+          expect(presenter.pipeline_groups).to eq(['Group C', 'Group D'])
+        end
+      end
+
+      context 'with failed requests' do
+        let(:request_state) { 'failed' }
+
+        it 'returns the pipeline groups matching the library type' do
+          expect(presenter.pipeline_groups).to eq(['Group D'])
+        end
       end
     end
 

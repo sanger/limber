@@ -57,7 +57,6 @@ class Pipeline
     return false unless purpose_in_relationships?(labware.purpose)
     return true if filters.blank?
 
-    # TODO: Test - does it still find the pipeline if the plate is cancelled?
     labware.active_requests.any? do |request|
       # For each attribute (eg. library_type) check that the matching property
       # on request is included in the list of permitted values.
