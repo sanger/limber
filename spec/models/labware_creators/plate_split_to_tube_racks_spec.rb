@@ -158,6 +158,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     tubes_hash.map do |uuid, child_tubes|
       {
         uuid: uuid,
+        parent_uuids: [parent_uuid],
         child_tubes: child_tubes,
         tube_attributes: child_tubes.map { |tube| { name: tube.name, foreign_barcode: tube.foreign_barcode } }
       }
