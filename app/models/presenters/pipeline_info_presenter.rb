@@ -31,7 +31,7 @@ class Presenters::PipelineInfoPresenter
   # the pipeline and pipeline group, in others the parent purpose might be used to determine the pipeline.
   def pipeline_groups
     pipeline_groups = [
-      pipeline_groups_by_purpose, # any matching pipeline MUST match the labware's purpose
+      pipeline_groups_by_purpose, # allows matching pipeline purposes with no active requests
       pipeline_groups_by_parent_purposes, # any matching pipeline MIGHT match the labware's parent purposes
       pipeline_groups_by_requests_and_libraries # any matching pipeline MIGHT match the active requests and library type
     ]
