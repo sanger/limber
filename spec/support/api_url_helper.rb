@@ -93,12 +93,27 @@ module ApiUrlHelper
         end
     end
 
+    def do_not_expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+      # Expects the specified `method` for any class beginning with
+      # 'Sequencescape::Api::V2::' to not be called with given arguments, in sequence.
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      args_list.zip(return_values).each { |_args, _| expect(receiving_class).not_to receive(method) }
+    end
+
     def expect_custom_metadatum_collection_creation
       expect_api_v2_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
     end
 
     def expect_bulk_transfer_creation
       expect_api_v2_posts('BulkTransfer', bulk_transfer_attributes)
+    end
+
+    def expect_order_creation
+      expect_api_v2_posts(
+        'Order',
+        orders_attributes.pluck(:attributes),
+        orders_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+      )
     end
 
     def expect_plate_conversion_creation
@@ -149,6 +164,14 @@ module ApiUrlHelper
       expect_api_v2_posts('StateChange', state_changes_attributes)
     end
 
+    def expect_submission_creation
+      expect_api_v2_posts(
+        'Submission',
+        submissions_attributes.pluck(:attributes),
+        submissions_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+      )
+    end
+
     def expect_tag_layout_creation
       expect_api_v2_posts('TagLayout', tag_layouts_attributes)
     end
@@ -172,11 +195,19 @@ module ApiUrlHelper
         [double(child: child_tube)] * tube_from_tubes_attributes.size
       )
     end
+
+    def expect_work_completion_creation
+      expect_api_v2_posts('WorkCompletion', work_completions_attributes)
+    end
+
+    def do_not_expect_work_completion_creation
+      do_not_expect_api_v2_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
+    end
   end
 
   # Stubs for the V2 API.
   # None of the methods here generate an expectation that the endpoint will be called.
-  # rubocop:disable Metrics/ModuleLength
+  # rubocop:todo Metrics/ModuleLength
   module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
@@ -225,6 +256,39 @@ module ApiUrlHelper
       end
     end
 
+    # rubocop:todo Metrics/AbcSize
+    def stub_v2_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
+      stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube_rack)
+      elsif custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+          custom_includes,
+          nil,
+          { uuid: tube_rack.uuid }
+        ).and_return(tube_rack)
+      else
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_for_presenter).with(uuid: tube_rack.uuid).and_return(
+          tube_rack
+        )
+      end
+
+      arguments = [{ uuid: tube_rack.uuid }]
+      allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([tube_rack])
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    def stub_v2_tube_rack_purpose(tube_rack_purpose)
+      arguments = [{ name: tube_rack_purpose[:name] }]
+      allow(Sequencescape::Api::V2::TubeRackPurpose).to receive(:find).with(*arguments).and_return([tube_rack_purpose])
+    end
+
+    def stub_v2_racked_tube(racked_tube)
+      arguments = [{ tube_rack: racked_tube.tube_rack.id, tube: racked_tube.tube.id }]
+      allow(Sequencescape::Api::V2::RackedTube).to receive(:find).with(*arguments).and_return(racked_tube)
+    end
+
     # Builds the basic v2 plate finding query.
     def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize
       stub_barcode_search(plate.barcode.machine, plate) if stub_search
@@ -259,6 +323,14 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::QcFile).to receive(:find).with(*arguments).and_return([qc_file])
     end
 
+    def stub_v2_qcable(qcable)
+      arguments = [{ barcode: qcable.labware.barcode.machine }]
+      query_builder = double
+
+      allow(Sequencescape::Api::V2::Qcable).to receive(:includes).and_return(query_builder)
+      allow(query_builder).to receive(:find).with(*arguments).and_return([qcable])
+    end
+
     def stub_v2_study(study)
       arguments = [{ name: study.name }]
       allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
@@ -271,55 +343,15 @@ module ApiUrlHelper
     end
 
     # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: false) # rubocop:todo Metrics/AbcSize
+    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: nil)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
 
       if custom_query
         allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube)
-      elsif custom_includes
-        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
-          custom_includes,
-          { uuid: tube.uuid }
-        ).and_return(tube)
-      else
-        allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with({ uuid: tube.uuid }).and_return(tube)
       end
 
+      stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes:)
       stub_v2_labware(tube)
-    end
-
-    # rubocop:disable Metrics/AbcSize
-    def stub_v2_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
-      stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
-
-      if custom_query
-        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube_rack)
-      elsif custom_includes
-        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
-          custom_includes,
-          nil,
-          { uuid: tube_rack.uuid }
-        ).and_return(tube_rack)
-      else
-        allow(Sequencescape::Api::V2).to receive(:tube_rack_for_presenter).with(uuid: tube_rack.uuid).and_return(
-          tube_rack
-        )
-      end
-
-      arguments = [{ uuid: tube_rack.uuid }]
-      allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([tube_rack])
-    end
-
-    # rubocop:enable Metrics/AbcSize
-
-    def stub_v2_tube_rack_purpose(tube_rack_purpose)
-      arguments = [{ name: tube_rack_purpose[:name] }]
-      allow(Sequencescape::Api::V2::TubeRackPurpose).to receive(:find).with(*arguments).and_return([tube_rack_purpose])
-    end
-
-    def stub_v2_racked_tube(racked_tube)
-      arguments = [{ tube_rack: racked_tube.tube_rack.id, tube: racked_tube.tube.id }]
-      allow(Sequencescape::Api::V2::RackedTube).to receive(:find).with(*arguments).and_return(racked_tube)
     end
 
     def stub_v2_user(user, swipecard = nil)
@@ -342,7 +374,6 @@ module ApiUrlHelper
       stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
     end
   end
-
   # rubocop:enable Metrics/ModuleLength
 end
 
