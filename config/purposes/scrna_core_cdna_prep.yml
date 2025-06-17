@@ -122,7 +122,7 @@ LRC GEM-X 5p cDNA PCR XP:
   :work_completion_request_type:
     ['limber_scrna_core_cdna_prep_gem_x_5p_gems_input', 'limber_scrna_core_cdna_prep_gem_x_5p']
   :file_links:
-    - name: 'Download Kinnex prep export file'
+    - name: 'Download well to Kinnex tube mapping file'
       id: kinnex_prep_plate_export
 # faculty input plate (alternate to LRC GEM-X 5p cDNA PCR XP intermediate plate)
 LRC GEM-X 5p cDNA Input:
@@ -134,7 +134,7 @@ LRC GEM-X 5p cDNA Input:
   # will not be creatable in Limber (created by manifest in Sequencescape)
   :creator_class: LabwareCreators::Uncreatable
   :file_links:
-    - name: 'Download Kinnex prep export file'
+    - name: 'Download well to Kinnex tube mapping file'
       id: kinnex_prep_plate_export
 LRC GEM-X 5p GEMs Input CITE:
   :asset_type: plate
