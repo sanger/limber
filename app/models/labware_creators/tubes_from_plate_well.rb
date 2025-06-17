@@ -76,7 +76,7 @@ module LabwareCreators
     #   arguments (e.g., conditionals required in SS) we can pass them in the `additional_parameters`.
     #
     # @param source_well [Sequencescape::Api::V2::Well] The source well.
-    # @param destination_tube [Sequencescape::Api::V2::Tube] The destination plate.
+    # @param destination_tube [Sequencescape::Api::V2::Tube] The destination tube.
     # @param additional_parameters [Hash] Additional parameters to include.
     # @return [Hash] A hash representing a transfer request.
     def request_hash(source_well, destination_tube, additional_parameters)

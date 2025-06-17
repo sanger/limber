@@ -7,7 +7,7 @@ class LabwareCreators::WellFilterKinnex < LabwareCreators::WellFilterAllowingPar
   # which wells and their associated requests should be included in the result.
   #
   # Filtering criteria:
-  # - Skips wells that are empty, not passed, or have no active requests.
+  # - Skips wells that are empty or have no active requests.
   # - Uses the `filter_requests` method to filter the active requests for each well.
   # - Only includes wells in the result if they have filtered requests.
   #
