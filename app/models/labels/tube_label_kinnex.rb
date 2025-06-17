@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class Labels::TubeLabelKinnex < Labels::TubeLabel # rubocop:todo Style/Documentation
-
   def first_line
-    labware.name if labware.name.present?
+    labware.name.presence
   end
 
   def second_line
