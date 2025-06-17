@@ -148,14 +148,21 @@ module StateChangers
     # If all tubes are in the 'failed' state, it returns nil.
     # Otherwise, it returns the coordinates of the tubes that are not in the 'failed' state.
     #
+    # It does this in order to collect a subset of tubes that need to be changed to the target state. If it
+    # does return nil, Sequencescape will assume that all tubes in the rack need to be changed.
+    #
     # @param target_state [String] the state to check against the FILTER_FAILS_ON list
     # @return [Array<String>, nil] an array of tube coordinates requiring the state change, or nil if no
     # change is needed
     def contents_for(target_state)
+      # It will only proceed if the target state is in the FILTER_FAILS_ON list.
       return nil unless FILTER_FAILS_ON.include?(target_state)
 
       # determine list of tubes requiring the state change
-      # TODO: why does this check specifically for 'failed' when the FILTER_FAILS_ON is a list with several states?
+      # Why does this check specifically for 'failed' when the FILTER_FAILS_ON is a list with several states?
+      #  - This is because the state changer is designed to filter out tubes that are already in a 'failed' state.
+      #  - In case the target state is for example 'qc_complete',
+      #    we only want to change tubes that are not already 'failed'.
       racked_tubes_locations_filtered =
         v2_labware.racked_tubes.reject { |rt| rt.tube.state == 'failed' }.map(&:coordinate)
 
@@ -163,8 +170,6 @@ module StateChangers
       #  will change)
       return nil if racked_tubes_locations_filtered.length == v2_labware.racked_tubes.count
 
-      # NB. if all tubes are already in the target state then this method will return an empty array
-      # TODO: is this correct behaviour?
       racked_tubes_locations_filtered
     end
 
