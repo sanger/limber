@@ -4,6 +4,8 @@
 # Contains query plans
 # :reek:UncommunicativeModuleName
 module Sequencescape::Api::V2
+  SsApiV2 = Sequencescape::Api::V2
+
   # transfer_request_as_target.source_asset is added to the includes to make
   # the source receptacles available in presenters.
   PLATE_PRESENTER_INCLUDES = [
