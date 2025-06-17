@@ -262,7 +262,6 @@ end
 
 RSpec.configure do |config|
   config.include ApiUrlHelper
-  config.include ApiUrlHelper::V1Helpers
   config.include ApiUrlHelper::V2Expectations
   config.include ApiUrlHelper::V2Stubs
 end
