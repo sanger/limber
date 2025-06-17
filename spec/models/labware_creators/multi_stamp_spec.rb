@@ -7,8 +7,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiStamp do
   it_behaves_like 'it only allows creation from plates'
 
-  has_a_working_api
-
   let(:parent1_uuid) { 'parent1-plate-uuid' }
   let(:parent2_uuid) { 'parent2-plate-uuid' }
 

@@ -10,8 +10,6 @@ RSpec.describe LabwareCreators::PartialStampedPlateWithoutDilution do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
-  has_a_working_api
-
   # The following table shows the library types for each well on the parent plate.
   # We will create a new plate with library-type-2.
   #

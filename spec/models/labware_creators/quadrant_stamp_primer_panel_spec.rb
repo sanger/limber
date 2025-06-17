@@ -8,8 +8,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   it_behaves_like 'it only allows creation from plates'
 
-  has_a_working_api
-
   let(:parent1_uuid) { 'example-plate-uuid' }
   let(:parent2_uuid) { 'example-plate2-uuid' }
   let(:requests) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }

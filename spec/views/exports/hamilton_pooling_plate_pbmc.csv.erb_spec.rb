@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
-  has_a_working_api
-
   let(:ancestor_plate_barcode) { 'ANCESTOR_PLATE' }
   let(:concentration_result) { create(:qc_result_concentration) }
   let(:live_cell_count_a1) { create(:qc_result, key: 'live_cell_count', value: '1000000', units: 'cells/ml') }

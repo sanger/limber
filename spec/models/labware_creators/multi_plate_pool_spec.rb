@@ -8,8 +8,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiPlatePool do
   it_behaves_like 'it only allows creation from tagged plates'
 
-  has_a_working_api
-
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:wells_in_column_order) { WellHelpers.column_order }

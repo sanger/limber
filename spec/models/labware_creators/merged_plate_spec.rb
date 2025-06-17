@@ -10,8 +10,6 @@ RSpec.describe LabwareCreators::MergedPlate do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has a custom page', 'merged_plate'
 
-  has_a_working_api
-
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
 

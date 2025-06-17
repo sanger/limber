@@ -41,14 +41,11 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
 
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_plates'
-    has_a_working_api
 
     let(:form_attributes) { { purpose_uuid:, parent_uuid: } }
   end
 
   describe '#save!' do
-    has_a_working_api
-
     let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: } }
 
     let(:child_tube) { create :v2_tube }

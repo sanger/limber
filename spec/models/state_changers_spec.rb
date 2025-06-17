@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe StateChangers::DefaultStateChanger do
-  has_a_working_api
-
   subject { described_class.new(api, plate_uuid, user_uuid) }
 
   let(:plate_uuid) { SecureRandom.uuid }

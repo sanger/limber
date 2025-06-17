@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.feature 'Plate transfer', :js, :robots do
   include RobotHelpers
 
-  has_a_working_api
-
   let(:user_uuid) { SecureRandom.uuid }
   let(:user) { create :user, uuid: user_uuid }
   let(:swipecard) { 'abcdef' }

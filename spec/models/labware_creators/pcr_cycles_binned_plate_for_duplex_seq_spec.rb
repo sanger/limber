@@ -251,8 +251,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   let(:user_uuid) { 'user-uuid' }
 
   context 'on new' do
-    has_a_working_api
-
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
@@ -261,8 +259,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
 
   describe '#save' do
-    has_a_working_api
-
     let(:form_attributes) do
       { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
     end

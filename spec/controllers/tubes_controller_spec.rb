@@ -4,8 +4,6 @@ require 'rails_helper'
 require './app/controllers/tubes_controller'
 
 RSpec.describe TubesController, type: :controller do
-  has_a_working_api
-
   let(:tube_uuid) { 'example-tube-uuid' }
   let(:tube_json) { json :tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
   let(:v2_tube) { create :v2_tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }

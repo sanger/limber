@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/targeted_nanoseq_al_lib_concentrations_for_customer.csv.erb' do
-  has_a_working_api
-
   let(:qc_result_options) { { value: 1.5, key: 'molarity', units: 'nM' } }
 
   let(:well_a1) do

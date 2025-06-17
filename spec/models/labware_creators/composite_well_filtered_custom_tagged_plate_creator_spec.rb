@@ -12,8 +12,6 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
 
   it_behaves_like 'it only allows creation from plates'
 
-  has_a_working_api # Setup API V1 for the test
-
   let(:user_uuid) { 'user-uuid' }
 
   # We want the first request type to get through the filters.

@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Robots::SplittingRobot, :robots do
   include FeatureHelpers
   include RobotHelpers
-  has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:plate_uuid) { SecureRandom.uuid }

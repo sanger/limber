@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Viewing an inbox', :js do
-  has_a_working_api
-
   let(:user) { create :user }
   let(:user_swipecard) { 'aaa' }
 

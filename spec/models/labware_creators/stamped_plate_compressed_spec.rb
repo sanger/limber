@@ -9,8 +9,6 @@ RSpec.describe LabwareCreators::StampedPlateCompressed do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
-  has_a_working_api
-
   # Our parent has the following wells with requests:
   #
   # A1:                    - empty

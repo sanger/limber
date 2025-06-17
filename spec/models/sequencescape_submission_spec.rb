@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe SequencescapeSubmission do
-  has_a_working_api
-
   subject(:submission) { described_class.new(attributes) }
 
   let(:asset_uuids) { ['asset-uuid'] }

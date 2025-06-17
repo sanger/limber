@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe Robots::PoolingAndSplittingRobot, :robots do
   include RobotHelpers
 
-  has_a_working_api
-
   # robot has at least one source, and can have multiple
   let(:source_plate_1_attributes) do
     {

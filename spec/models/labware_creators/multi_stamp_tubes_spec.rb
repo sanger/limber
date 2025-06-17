@@ -7,8 +7,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiStampTubes do
   it_behaves_like 'it only allows creation from tubes'
 
-  has_a_working_api
-
   let(:parent1_tube_uuid) { 'example-tube1-uuid' }
   let(:parent2_tube_uuid) { 'example-tube2-uuid' }
 

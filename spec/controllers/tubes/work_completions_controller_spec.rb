@@ -4,8 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Tubes::WorkCompletionsController, type: :controller do
   describe '#create' do
-    has_a_working_api
-
     let(:tube_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }
     let(:tube) { create(:v2_tube, uuid: tube_uuid) }

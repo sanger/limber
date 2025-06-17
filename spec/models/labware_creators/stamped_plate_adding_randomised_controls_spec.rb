@@ -13,8 +13,6 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
-  has_a_working_api
-
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
   let(:parent_plate) do

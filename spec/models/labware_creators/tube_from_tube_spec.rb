@@ -5,8 +5,6 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::TubeFromTube do
-  has_a_working_api
-
   context 'pre creation' do
     describe '#support_parent?' do
       subject { described_class.support_parent?(parent) }

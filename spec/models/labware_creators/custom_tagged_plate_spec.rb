@@ -9,8 +9,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
   it_behaves_like 'it only allows creation from plates'
 
-  has_a_working_api
-
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate) { create(:v2_plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }

@@ -9,8 +9,6 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
 
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
-  has_a_working_api
-
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:parent_uuid) { SecureRandom.uuid }

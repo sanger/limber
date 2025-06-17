@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe Robots::QuadrantRobot, :robots do
   include RobotHelpers
 
-  has_a_working_api
-
   let(:source_plate_attributes) do
     {
       uuid: plate_uuid,

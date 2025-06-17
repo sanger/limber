@@ -6,8 +6,6 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare.csv.erb
   include FeatureHelpers
 
   context 'when creating a hamilton driver file csv' do
-    has_a_working_api
-
     # samples
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }

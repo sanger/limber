@@ -289,8 +289,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
   context 'on new' do
-    has_a_working_api
-
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
@@ -299,8 +297,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
 
   describe '#save' do
-    has_a_working_api
-
     let(:form_attributes) do
       { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
     end

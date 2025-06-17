@@ -6,8 +6,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   include FeatureHelpers
 
-  has_a_working_api
-
   subject { described_class.new(api, form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'

@@ -35,8 +35,6 @@ RSpec.describe LabwareCreators::BaitedPlate do
   end
 
   context 'create plate' do
-    has_a_working_api
-
     let(:plate_creations_attributes) do
       [{ child_purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }]
     end

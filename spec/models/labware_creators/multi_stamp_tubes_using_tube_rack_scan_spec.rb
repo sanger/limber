@@ -7,8 +7,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploader do
   it_behaves_like 'it only allows creation from tubes'
 
-  has_a_working_api
-
   # samples
   let(:sample1_uuid) { SecureRandom.uuid }
   let(:sample2_uuid) { SecureRandom.uuid }

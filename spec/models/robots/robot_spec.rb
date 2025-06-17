@@ -4,7 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Robots::Robot, :robots do
   include RobotHelpers
-  has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:source_plate_barcode) { source_plate.human_barcode }

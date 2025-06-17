@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
-  has_a_working_api
-
   # In these tests, sample uuid and well state are modified at specific
   # wells for setup.
 

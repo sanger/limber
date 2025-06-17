@@ -10,8 +10,6 @@ RSpec.describe LabwareCreators::PlateWithTemplate do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
-  has_a_working_api
-
   let(:child_uuid) { 'child-uuid' }
   let(:child_plate) { create :v2_plate, uuid: child_uuid, purpose_uuid: child_purpose_uuid }
   let(:parent_uuid) { 'example-plate-uuid' }

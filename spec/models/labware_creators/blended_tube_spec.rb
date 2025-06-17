@@ -145,8 +145,6 @@ RSpec.describe LabwareCreators::BlendedTube do
 
   it_behaves_like 'it only allows creation from tubes'
 
-  has_a_working_api
-
   context 'when validating and transfers is not present' do
     subject { described_class.new(api, purpose_uuid: child_tube_purpose_uuid) }
 

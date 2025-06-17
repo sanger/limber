@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
-  has_a_working_api
-
   let(:labware) do
     outer_request = create :library_request, state: 'pending', priority: 0
     meta0 =

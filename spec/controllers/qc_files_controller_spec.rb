@@ -4,8 +4,6 @@ require 'rails_helper'
 require './app/controllers/qc_files_controller'
 
 RSpec.describe QcFilesController, type: :controller do
-  has_a_working_api
-
   let(:plate) { create(:v2_plate, uuid: 'plate-uuid', qc_files_count: 3) }
 
   before { stub_v2_plate(plate, stub_search: false) }
