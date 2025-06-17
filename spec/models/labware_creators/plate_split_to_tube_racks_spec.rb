@@ -13,7 +13,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   it_behaves_like 'it only allows creation from plates'
 
   it 'has a custom page' do
-    expect(described_class.page).to eq 'plate_split_to_tube_racks'
+    expect(described_class.page).to eq 'tube_rack_creation/plate_split_to_tube_racks'
   end
 
   let(:user) { create :user }
@@ -377,12 +377,17 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   describe '#redirection_target' do
-    let(:child_tube_racks) { { described_class::SPR_TUBE_RACK_NAME => contingency_tube_rack } }
+    let(:child_tube_racks) do
+      {
+        described_class::SEQ_TUBE_RACK_NAME => sequencing_tube_rack,
+        described_class::SPR_TUBE_RACK_NAME => contingency_tube_rack
+      }
+    end
 
     before { allow(subject).to receive(:child_tube_racks).and_return(child_tube_racks) }
 
-    it 'returns the parent object' do
-      expect(subject.redirection_target).to eq(contingency_tube_rack)
+    it 'redirects to the sequencing tube rack' do
+      expect(subject.redirection_target).to eq(sequencing_tube_rack)
     end
   end
 
