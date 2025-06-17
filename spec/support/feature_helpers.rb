@@ -15,21 +15,6 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
     end
   end
 
-  # Deprecated: replace with stub_find_all or stub_find_all_with_pagination
-  # TODO: Y24-190, remove this method and replace with stub_find_all or stub_find_all_with_pagination
-  def stub_search_and_multi_result(search, query, result)
-    search_uuid = search.downcase.tr(' ', '-')
-    Settings.searches[search] = search_uuid
-    stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
-    stub_api_post(
-      search_uuid,
-      'all',
-      status: 301,
-      payload: query,
-      body: { size: result.length, searches: result }.to_json
-    )
-  end
-
   def stub_find_all(klass, query, result)
     api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
     allow(api_class).to receive(:find_all).with(query).and_return(result)
@@ -58,12 +43,7 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
   end
 
   def stub_asset_v2_search(barcode, asset)
-    if asset.is_a?(Array)
-      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return(asset)
-    else
-      # TODO: Y24-190 to test
-      allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return([asset])
-    end
+    allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return(asset)
   end
 
   def stub_get_labware_metadata(barcode, labware_v1, metadata = nil)
