@@ -1,8 +1,19 @@
 # frozen_string_literal: true
 
-class Limber::TagLayoutTemplate < Sequencescape::TagLayoutTemplate # rubocop:todo Style/Documentation
+class Limber::TagLayoutTemplate # rubocop:todo Style/Documentation
   # Performs the coercion of this instance so that it behaves appropriately given the direction
   # and walking algorithm information.
+  attribute_reader :name, :direction, :walking_by
+  belongs_to :plate, class_name: 'Plate'
+  composed_of :tag_group, class_name: 'Tag::Group'
+  composed_of :tag2_group, class_name: 'Tag::Group'
+
+  has_create_action resource: 'tag_layout'
+
+  def dual_index?
+    tag2_group.present?
+  end
+
   def coerce
     extend("limber/tag_layout_template/in_#{direction.gsub(/\s+/, '_')}s".camelize.constantize)
     extend("limber/tag_layout_template/walk_#{walking_by.gsub(/\s+/, '_')}".camelize.constantize)
