@@ -122,7 +122,7 @@ RSpec.describe StateChangers do
       end
 
       it 'changes plate state but does not trigger a work completion' do
-        don_t_expect_work_completion_creation
+        do_not_expect_work_completion_creation
 
         subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end

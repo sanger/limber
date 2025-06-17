@@ -93,7 +93,7 @@ module ApiUrlHelper
         end
     end
 
-    def dont_expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+    def do_not_expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
       # 'Sequencescape::Api::V2::' to not be called with given arguments, in sequence.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
@@ -200,8 +200,8 @@ module ApiUrlHelper
       expect_api_v2_posts('WorkCompletion', work_completions_attributes)
     end
 
-    def don_t_expect_work_completion_creation
-      dont_expect_api_v2_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
+    def do_not_expect_work_completion_creation
+      do_not_expect_api_v2_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
     end
   end
 
