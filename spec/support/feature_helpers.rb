@@ -1,20 +1,6 @@
 # frozen_string_literal: true
 
 module FeatureHelpers
-  def stub_search_and_single_result(search, query, result = nil)
-    search_uuid = search.downcase.tr(' ', '-')
-    Settings.searches[search] = search_uuid
-    stub_api_get(search_uuid, body: json(:swipecard_search, uuid: search_uuid))
-    if result.present?
-      stub_api_post(search_uuid, 'first', status: 301, payload: query, body: result)
-    else
-      search_url = "http://example.com:3000/#{search_uuid}"
-      stub_request(:post, "#{search_url}/first").with(body: query.to_json).to_raise(
-        Sequencescape::Api::ResourceNotFound
-      )
-    end
-  end
-
   def stub_find_all(klass, query, result)
     api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
     allow(api_class).to receive(:find_all).with(query).and_return(result)
@@ -35,11 +21,7 @@ module FeatureHelpers
   end
 
   def stub_asset_search(barcode, asset)
-    if asset.is_a?(Array)
-      stub_search_and_multi_result('Find assets by barcode', { 'search' => { 'barcode' => barcode } }, asset)
-    else
-      stub_search_and_single_result('Find assets by barcode', { 'search' => { 'barcode' => barcode } }, asset)
-    end
+    stub_search_and_multi_result('Find assets by barcode', { 'search' => { 'barcode' => barcode } }, asset)
   end
 
   def stub_asset_v2_search(barcode, asset)

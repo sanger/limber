@@ -11,7 +11,9 @@ RSpec.describe LabwareMetadata do
   before { stub_v2_user(user) }
 
   it 'raises an exception if the barcode is invalid' do
-    error = Sequencescape::Api::ResourceNotFound.new('Not found')
+    # TODO: Y24-190 fix this test to use the correct error class
+    # error = Sequencescape::Api::ResourceNotFound.new('Not found')
+    error = ArgumentError.new('Not found')
     invalid_barcode = 'not_a_barcode'
     allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode: invalid_barcode).and_raise(error)
 
