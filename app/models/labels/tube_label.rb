@@ -31,7 +31,7 @@ class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
   private
 
   def first_line
-    labware.name[2..] if labware.name.present?
+    labware.name.presence
   end
 
   def second_line
