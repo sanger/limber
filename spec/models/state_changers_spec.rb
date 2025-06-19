@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe StateChangers do
+  let(:plate_uuid) { SecureRandom.uuid }
   let(:labware_uuid) { SecureRandom.uuid }
   let(:user_uuid) { SecureRandom.uuid }
   let(:reason) { 'Because I want to' }
@@ -88,7 +89,7 @@ RSpec.describe StateChangers do
     has_a_working_api
 
     let(:plate_state) { 'pending' }
-    let!(:plate) { create :v2_plate_for_aggregation, uuid: labware_uuid, state: plate_state }
+    let!(:plate) { create :v2_plate_for_aggregation, uuid: plate_uuid, state: plate_state }
     let(:target_state) { 'passed' }
     let(:coordinates_to_pass) { nil }
     let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
@@ -96,8 +97,8 @@ RSpec.describe StateChangers do
       { 'work_completion' => { target: labware_uuid, submissions: %w[pool-1-uuid pool-2-uuid], user: user_uuid } }
     end
     let(:work_completion) { json :work_completion }
-    let!(:work_completion_creation) do
-      stub_api_post('work_completions', payload: work_completion_request, body: work_completion)
+    let(:work_completions_attributes) do
+      [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
     end
 
     before { stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, labware_uuid]) }
@@ -106,9 +107,9 @@ RSpec.describe StateChangers do
       before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
 
       it 'changes plate state and triggers a work completion' do
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        expect_work_completion_creation
 
-        expect(work_completion_creation).to have_been_made.once
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
 
@@ -121,9 +122,9 @@ RSpec.describe StateChangers do
       end
 
       it 'changes plate state but does not trigger a work completion' do
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        do_not_expect_work_completion_creation
 
-        expect(work_completion_creation).not_to have_been_made
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
 
@@ -139,9 +140,9 @@ RSpec.describe StateChangers do
       end
 
       it 'changes plate state and triggers a work completion' do
-        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+        expect_work_completion_creation
 
-        expect(work_completion_creation).to have_been_made.once
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
       end
     end
   end
@@ -201,7 +202,7 @@ RSpec.describe StateChangers do
               customer_accepts_responsibility: customer_accepts_responsibility,
               reason: reason,
               target_state: target_state,
-              target_uuid: tube1_uuid,
+              target_uuid: labware_uuid,
               user_uuid: user_uuid
             }
           ]
