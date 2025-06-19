@@ -31,8 +31,18 @@ const requestsFromPlates = function (plateObjs) {
 
 const handleFailedRequest = function (request) {
   // generate an alert on the page
-  const title = request.response.data.message[1]
-  const messages = request.response.data.message[0].join(', ')
+  let title = 'Unexpected error'
+  let messages = 'Cannot determine error messages'
+
+  // Errors seem to have different formats, this is an attempt to handle several types
+  if (Array.isArray(request.response?.data?.message) && request.response.data.message.length > 1) {
+    title = request.response.data.message[1]
+    messages = request.response.data.message[0].join(', ')
+  } else if (request.response?.statusText != null) {
+    title = request.response?.statusText
+    messages = request.response?.data?.message || request.message || 'Cannot parse messages'
+  }
+
   eventBus.$emit('push-alert', {
     level: 'danger',
     title: title,

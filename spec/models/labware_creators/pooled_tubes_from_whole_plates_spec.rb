@@ -24,10 +24,11 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   let(:parent2_uuid) { SecureRandom.uuid }
   let(:parent3_uuid) { SecureRandom.uuid }
   let(:parent4_uuid) { SecureRandom.uuid }
-  let(:parent) { associated :plate, uuid: parent_uuid, barcode_number: 1 }
-  let(:parent2) { associated :plate, uuid: parent2_uuid, barcode_number: 2 }
-  let(:parent3) { associated :plate, uuid: parent3_uuid, barcode_number: 3 }
-  let(:parent4) { associated :plate, uuid: parent4_uuid, barcode_number: 4 }
+
+  let(:parent) { create :v2_plate, uuid: parent_uuid, barcode_number: 1 }
+  let(:parent2) { create :v2_plate, uuid: parent2_uuid, barcode_number: 2 }
+  let(:parent3) { create :v2_plate, uuid: parent3_uuid, barcode_number: 3 }
+  let(:parent4) { create :v2_plate, uuid: parent4_uuid, barcode_number: 4 }
 
   let(:barcodes) do
     [
@@ -52,7 +53,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
 
     let(:child_tube) { create :v2_tube }
     let(:specific_tubes_attributes) do
-      [{ uuid: purpose_uuid, child_tubes: [child_tube], tube_attributes: [{ name: 'DN2+' }] }]
+      [{ uuid: purpose_uuid, parent_uuids: [parent_uuid], child_tubes: [child_tube], tube_attributes: [{}] }]
     end
 
     let(:transfers_attributes) do
@@ -68,7 +69,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
       end
     end
 
-    before { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
+    before { stub_asset_v2_search(barcodes, [parent, parent2, parent3, parent4]) }
 
     context 'with compatible plates' do
       it 'pools from all the plates' do

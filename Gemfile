@@ -10,6 +10,9 @@ group :default do
   gem 'rake'
   gem 'state_machines'
 
+  # Packages removed from the standard Ruby library
+  gem 'csv' # removed from Ruby 3.4.0
+
   # Build dependencies
   gem 'vite_rails'
   gem 'vite_ruby'
@@ -34,6 +37,7 @@ group :default do
 
   gem 'puma'
   gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
+  gem 'syslog'
 end
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -64,6 +68,7 @@ group :development do
 end
 
 group :lint do
+  gem 'erb_lint', require: false
   gem 'rubocop', require: false
   gem 'rubocop-capybara', require: false
   gem 'rubocop-performance', require: false

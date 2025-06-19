@@ -78,6 +78,8 @@ FactoryBot.define do
       # Library request with primer panel information
       factory :gbs_library_request do
         primer_panel
+
+        after(:build) { |request, evaluator| request._cached_relationship(:primer_panel) { evaluator.primer_panel } }
       end
 
       # Library request with bait library information

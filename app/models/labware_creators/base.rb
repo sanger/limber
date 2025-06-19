@@ -14,11 +14,11 @@ module LabwareCreators
     extend NestedValidation
 
     attr_reader :api, :child
-    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params
+    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params, :limber_plate_id, :limber_tube_id
 
     class_attribute :default_transfer_template_name, :style_class, :state
 
-    self.attributes = %i[purpose_uuid parent_uuid user_uuid]
+    self.attributes = %i[purpose_uuid parent_uuid user_uuid limber_plate_id limber_tube_id]
     self.default_transfer_template_name = 'Transfer columns 1-12'
     self.style_class = 'creator'
 
@@ -113,11 +113,8 @@ module LabwareCreators
     end
 
     def create_plate_from_parent!
-      Sequencescape::Api::V2::PlateCreation.create!(
-        child_purpose_uuid: purpose_uuid,
-        parent_uuid: parent_uuid,
-        user_uuid: user_uuid
-      )
+      attributes = { child_purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }
+      Sequencescape::Api::V2::PlateCreation.create!(attributes)
     end
 
     def transfer!(attributes)

@@ -125,7 +125,24 @@ module LabwareCreators
       transfer_material_from_parent!
       yield(@child) if block_given?
       after_transfer!
+
+      # call stock register if there is register_stock_plate flag
+      register_stock_for_plate if @child_plate_v2.register_stock_plate?
+
       true
+    end
+
+    def register_stock_for_plate
+      # call Sequencescape::Api::V2::Plate register_stock_for_plate method
+      if @child_plate_v2.register_stock_for_plate
+        Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
+      else
+        Rails.logger.error(
+          "Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}"
+        )
+      end
+    rescue StandardError => e
+      Rails.logger.error("Stock registration error for plate #{@child.uuid}: #{e.message}")
     end
 
     # create the control samples in the chosen well locations in the child plate
@@ -229,9 +246,15 @@ module LabwareCreators
       create_aliquot_in_child_well(control_v2, child_well_v2, well_location)
     end
 
+    # create the name for the control
+    # NB. using child labware barcode in the name to ensure uniqueness when lab does repeat runs
+    def create_control_sample_name(control, well_location)
+      "#{control.name_prefix}#{child.labware_barcode.human}_#{well_location}"
+    end
+
     # create the control sample and metadata NB. sample_name cannot contain spaces!!
     def create_control_sample(control, well_location)
-      sample_name = "#{control.name_prefix}#{control_desc}_#{well_location}"
+      sample_name = create_control_sample_name(control, well_location)
 
       # sample name must not contain spaces, if it does replace with underscores
       sample_name.parameterize.underscore

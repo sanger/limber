@@ -148,7 +148,7 @@ module ApiUrlHelper
         specific_tubes_attributes.map do |attrs|
           {
             child_purpose_uuids: [attrs[:uuid]] * attrs[:child_tubes].size,
-            parent_uuids: [parent_uuid],
+            parent_uuids: attrs[:parent_uuids],
             tube_attributes: attrs[:tube_attributes],
             user_uuid: user_uuid
           }
