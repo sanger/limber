@@ -121,6 +121,9 @@ LRC GEM-X 5p cDNA PCR XP:
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type:
     ['limber_scrna_core_cdna_prep_gem_x_5p_gems_input', 'limber_scrna_core_cdna_prep_gem_x_5p']
+  :file_links:
+    - name: 'Download well to Kinnex tube mapping file'
+      id: kinnex_prep_plate_export
 # faculty input plate (alternate to LRC GEM-X 5p cDNA PCR XP intermediate plate)
 LRC GEM-X 5p cDNA Input:
   :asset_type: plate
@@ -130,6 +133,9 @@ LRC GEM-X 5p cDNA Input:
   :presenter_class: Presenters::StockPlatePresenter
   # will not be creatable in Limber (created by manifest in Sequencescape)
   :creator_class: LabwareCreators::Uncreatable
+  :file_links:
+    - name: 'Download well to Kinnex tube mapping file'
+      id: kinnex_prep_plate_export
 LRC GEM-X 5p GEMs Input CITE:
   :asset_type: plate
   :stock_plate: true

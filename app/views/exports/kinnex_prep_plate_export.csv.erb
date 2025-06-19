@@ -1,0 +1,30 @@
+<%#
+  Kinnex Prep Plate Export CSV
+
+  This template generates a CSV file for Kinnex Prep, with one row per well and downstream tube.
+  - Each row contains:
+    - Source plate barcode
+    - Source well position (e.g., "A1")
+    - Destination tube barcode
+  - Only wells that are not empty and have downstream tubes are included.
+  - For each downstream tube in a well, a separate row is generated.
+%>
+<%= CSV.generate_line(['Source plate barcode', 'Source well position', 'Destination tube barcode'], row_sep: '') %>
+<%
+  @plate.wells_in_columns.each do |well|
+    next if well.empty?
+    next if well.downstream_tubes.empty?
+
+    # Create a row for each downstream tube in the well
+    well.downstream_tubes.each do |destination_tube|
+      rows = [
+        @plate.barcode,           # Source plate barcode
+        well.position['name'],    # Source well position (e.g., "A1")
+        destination_tube.barcode  # Destination tube barcode
+      ]
+%>
+<%= CSV.generate_line(rows.map(&:to_s), row_sep: '').html_safe %>
+<%
+    end
+  end
+%>
