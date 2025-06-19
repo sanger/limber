@@ -243,7 +243,6 @@ RSpec.describe Presenters::SubmissionWhenPassedPlatePresenter do
     # If our requests have been failed, then we're back at square 1
 
     it_behaves_like 'a labware presenter'
-    # it_behaves_like 'a stock presenter'
 
     let(:labware) do
       create :v2_stock_plate,
@@ -278,6 +277,36 @@ RSpec.describe Presenters::SubmissionWhenPassedPlatePresenter do
       # We have submissions, but they are built. pending_submissions? controls aspects like the
       # refresh, that would be a nightmare if you were trying to set up a submission
       expect(presenter.pending_submissions?).to be false
+    end
+  end
+
+  describe '#asset_groups' do
+    subject(:asset_groups) { presenter.send(:asset_groups) }
+
+    let(:labware) { create(:v2_plate_empty) }
+
+    # This example is when a well is failed (aliquot.request failed) before a submission is made
+    context 'when the aliquot request is failed' do
+      let(:aliquot1) { create(:v2_aliquot, request: create(:request, state: 'passed')) }
+      let(:aliquot2) { create(:v2_aliquot, request: create(:request, state: 'failed')) }
+      let(:aliquot3) { create(:v2_aliquot, request: create(:request, state: 'passed')) }
+      let(:well1) { create(:v2_well, uuid: 'uuid1', order_group: 'group1', aliquots: [aliquot1]) }
+      let(:well2) { create(:v2_well, uuid: 'uuid2', order_group: 'group1', aliquots: [aliquot2]) }
+      let(:well3) { create(:v2_well, uuid: 'uuid3', order_group: 'group2', aliquots: [aliquot3]) }
+
+      before do
+        allow(labware).to receive(:wells).and_return([well1, well2, well3])
+        allow(well1).to receive(:requests_as_source).and_return(nil)
+        allow(well2).to receive(:requests_as_source).and_return(nil)
+        allow(well3).to receive(:requests_as_source).and_return(nil)
+      end
+
+      it 'filters out wells with failed aliquot requests' do
+        expect(asset_groups).to eq([
+          { assets: %w[uuid1], autodetect_studies: true, autodetect_projects: true },
+          { assets: %w[uuid3], autodetect_studies: true, autodetect_projects: true }
+        ])
+      end
     end
   end
 end
