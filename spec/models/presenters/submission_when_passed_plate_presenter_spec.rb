@@ -302,10 +302,12 @@ RSpec.describe Presenters::SubmissionWhenPassedPlatePresenter do
       end
 
       it 'filters out wells with failed aliquot requests' do
-        expect(asset_groups).to eq([
-          { assets: %w[uuid1], autodetect_studies: true, autodetect_projects: true },
-          { assets: %w[uuid3], autodetect_studies: true, autodetect_projects: true }
-        ])
+        expect(asset_groups).to eq(
+          [
+            { assets: %w[uuid1], autodetect_studies: true, autodetect_projects: true },
+            { assets: %w[uuid3], autodetect_studies: true, autodetect_projects: true }
+          ]
+        )
       end
     end
   end

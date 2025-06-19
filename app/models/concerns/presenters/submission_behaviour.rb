@@ -30,26 +30,29 @@ module Presenters::SubmissionBehaviour
 
   private
 
-  # Returns a list of asset groups, each containing a list of assets (wells)
-  # that are not empty, and do not have all their aliquot.request's failed.
   def asset_groups
     @asset_groups ||=
       labware
         .wells
-        .reject do |well|
-          empty_well = well.aliquots.blank?
-          all_aliquot_requests_failed =
-            well.aliquots.present? &&
-            well.aliquots.all? do |aliquot|
-              # check for no request on this aliquot
-              next if aliquot.request.nil?
-
-              aliquot.request.state == 'failed'
-            end
-          empty_well || all_aliquot_requests_failed
-        end
+        .reject { |well| reject_well?(well) }
         .group_by(&:order_group)
-        .map { |_, wells| { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true } }
+        .map { |_, wells| format_asset_group(wells) }
+  end
+
+  def reject_well?(well)
+    empty_well?(well) || all_aliquot_requests_failed?(well)
+  end
+
+  def empty_well?(well)
+    well.aliquots.blank?
+  end
+
+  def all_aliquot_requests_failed?(well)
+    well.aliquots.present? && well.aliquots.all? { |aliquot| aliquot.request&.state == 'failed' }
+  end
+
+  def format_asset_group(wells)
+    { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true }
   end
 
   def active_submissions?
