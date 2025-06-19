@@ -288,6 +288,19 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   # rubocop:enable Metrics/AbcSize
 
+  # Create attributes for the creation of specific tubes.
+  # @param tubes_hash [Hash] A hash with child UUIDs as keys and the child tubes as values.
+  def create_specific_tube_attributes(tubes_hash)
+    tubes_hash.map do |uuid, child_tubes|
+      {
+        uuid: uuid,
+        parent_uuids: [parent_uuid],
+        child_tubes: child_tubes,
+        tube_attributes: child_tubes.map { |tube| { name: tube.name, foreign_barcode: tube.foreign_barcode } }
+      }
+    end
+  end
+
   # {
   #   <barcode>: <uuid>,
   #   etc.
