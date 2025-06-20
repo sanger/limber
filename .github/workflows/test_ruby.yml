@@ -38,7 +38,7 @@ jobs:
 
       - name: Run rspec
         run: bundle exec rspec
-      
+
       - name: Upload coverage reports to Codecov
         uses: sanger/.github/.github/actions/tests/codecov@y25-107-4-migrate-actions
         with:
