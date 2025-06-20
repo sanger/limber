@@ -10,7 +10,8 @@ env:
   BRANCH_NAME: ${{ github.ref_name }}
 
 jobs:
-  Build:
+  compile:
+    name: Compile 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
