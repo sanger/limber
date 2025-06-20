@@ -1,8 +1,9 @@
 name: Test compilation
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - y25-107-6-migrate-actions
 
 env:
   BUNDLE_WITHOUT: 'test lint'
