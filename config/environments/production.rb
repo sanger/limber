@@ -10,5 +10,5 @@ Rails.application.configure do
 
   # Label printing services
   config.pmb_uri = ENV.fetch('PMB_URI', 'http://localhost:3002/v1/')
-  # config.sprint_uri = 'http://sprint.psd.sanger.ac.uk/graphql' # copied from development.rb
+  config.sprint_uri = 'http://sprint.psd.sanger.ac.uk/graphql' # copied from development.rb
 end
