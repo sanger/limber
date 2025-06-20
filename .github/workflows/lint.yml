@@ -27,7 +27,7 @@ jobs:
         run: yarn prettier --check .
 
   rubocop:
-    name: RuboCop
+    name: Rubocop
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
