@@ -20,10 +20,13 @@ jobs:
 
       - name: Node Information
         run: node --version
-      - name: Install
+
+      - name: Setup yarn
         run: yarn install
+
       - name: Run yarn test
         run: yarn coverage
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
@@ -32,4 +35,4 @@ jobs:
           fail_ci_if_error: true
           disable_search: true
           files: ${{ github.workspace }}/app/frontend/coverage/lcov.info
-          # Note: see codecov.yml for more additional settings
+
