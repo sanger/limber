@@ -42,7 +42,7 @@ jobs:
       - name: Publish code coverage to Code Climate
         uses: sanger/.github/.github/actions/tests/code-climate@y25-107-4-migrate-actions
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
+          CC-TEST-REPORTER-ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
       
       - name: Upload coverage reports to Codecov
         uses: sanger/.github/.github/actions/tests/codecov@y25-107-4-migrate-actions
