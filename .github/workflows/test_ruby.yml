@@ -34,12 +34,15 @@ jobs:
 
       - name: Additional setup
         run: bin/setup
+
       - name: Run rspec
         run: bundle exec rspec
+
       - name: Publish code coverage to Code Climate
         uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
+      
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
