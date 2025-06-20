@@ -36,4 +36,3 @@ jobs:
           flags: javascript,${{ github.event_name }}
           disable_search: true
           files: ${{ github.workspace }}/app/frontend/coverage/lcov.info
-
