@@ -30,14 +30,15 @@ jobs:
     name: RuboCop
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true # Runs bundle install and caches gems.
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
 
-      - name: Install Node dependencies
+      - name: Setup Ruby
+        uses: sanger/.github/.github/actions/setup/ruby@master
+
+      - name: Setup yarn
         run: yarn install
+
       - name: Run lint
         run: bundle exec rubocop --extra-details --display-style-guide --parallel
 
