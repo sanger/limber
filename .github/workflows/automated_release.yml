@@ -3,7 +3,8 @@ name: Automated build of project and release creation
 on:
   push:
     branches:
-     - y25-107-1-migrate-actions
+     - master
+     - develop
 
 env:
   BUNDLE_WITHOUT: 'test lint'
