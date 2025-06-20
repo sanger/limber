@@ -3,6 +3,9 @@ name: Build and release
 on:
   release:
     types: published
+  push:
+    branches:
+      - y25-107-2-migrate-actions
 
 env:
   BUNDLE_WITHOUT: 'test lint'
