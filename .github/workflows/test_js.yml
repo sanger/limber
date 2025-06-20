@@ -30,6 +30,7 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: sanger/.github/.github/actions/tests/codecov@master
         with:
+          name: ${{ github.run_id }}_${{ github.job }}_${{ github.event_name }}
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: javascript,${{ github.event_name }}
           fail_ci_if_error: true
