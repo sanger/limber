@@ -25,6 +25,9 @@ jobs:
       - name: Create Build
         run: ./compile-build
 
+      - name: Get release version
+        run: echo "RELEASE_VERSION=$(cat .release-version)" >> "$GITHUB_ENV"
+
       # Create a release tag based on the branch name and .release-version file
       - name: Set release tag
         uses: sanger/.github/.github/actions/release/set-release-tag@master
