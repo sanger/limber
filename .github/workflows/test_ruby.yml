@@ -9,31 +9,29 @@ env:
   BUNDLE_WITHOUT: 'development lint'
 
 jobs:
-  ruby_test:
+  rspec_tests:
+    name: RSpec Ruby tests
     runs-on: ubuntu-latest
     env:
       TZ: Europe/London
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache:
-            true # Runs bundle install and caches gems. See the ruby_test.yml
-            # example if you need more control over bundler.
-      - name: Remove image-bundled Chrome
-        run: sudo apt-get purge google-chrome-stable
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
+
+      - name: Setup Ruby
+        uses: sanger/.github/.github/actions/setup/ruby@master
+
+      - name: Setup Node
+        uses: sanger/.github/.github/actions/setup/node@master
+
       - name: Setup stable Chrome
-        uses: browser-actions/setup-chrome@v1
+        uses: sanger/.github/.github/actions/tests/setup-chrome@master
         with:
           chrome-version: 128
           install-chromedriver: true
           install-dependencies: true
+
       - name: Additional setup
         run: bin/setup
       - name: Run rspec
