@@ -1,4 +1,4 @@
-name: Ruby RSpec Tests
+name: Unit tests
 
 on:
   # Warning: changing run conditions could prevent coverage report in PR, see codecov.yml for `after_n_builds`
