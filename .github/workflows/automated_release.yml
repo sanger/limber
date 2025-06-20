@@ -30,7 +30,7 @@ jobs:
       # Create a release tag based on the branch name and .release-version file
       - name: Set release tag
         id: set_tag
-        uses: sanger/.github/.github/actions/release/set-release-tag@y25-107-1-migrate-actions
+        uses: sanger/.github/.github/actions/release/set-release-tag@master
         with:
           branch_name: ${{ env.BRANCH_NAME }}
           release_version: ${{ env.RELEASE_VERSION }}
