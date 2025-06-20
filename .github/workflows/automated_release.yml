@@ -41,7 +41,7 @@ jobs:
 
       # Create a GitHub release with the release asset as an artifact
       - name: Create release and upload release.tar.gz
-        uses: sanger/.github/.github/actions/release/create-release@master
+        uses: sanger/.github/.github/actions/release/create-release@y25-107-1-migrate-actions
         with:
           release_name: ${{ steps.set_tag.outputs.release_version_tag }}
           github_ref: ${{ github.ref }}
