@@ -6,6 +6,7 @@ on:
 
 env:
   BUNDLE_WITHOUT: 'test lint'
+  BRANCH_NAME: ${{ github.ref_name }}
 
 jobs:
   Build:
