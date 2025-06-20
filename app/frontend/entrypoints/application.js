@@ -40,7 +40,6 @@ try {
 
 // Import Libraries
 import 'bootstrap'
-// import 'popper.js'
 
 // Load all javascript files previously in the app/assets directory
 import '@/javascript/legacy_scripts_a.js'
