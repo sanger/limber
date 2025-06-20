@@ -46,13 +46,15 @@ jobs:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
+
       - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Install Node dependencies
+        uses: sanger/.github/.github/actions/setup/node@master
+
+      - name: Setup yarn
         run: yarn install
+
       - name: Run ESLint
         run: yarn lint
 
