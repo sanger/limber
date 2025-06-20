@@ -37,7 +37,7 @@ jobs:
 
       # Actually run our build
       - name: Create Build
-        run: ./compile-build '' v${{ env.RELEASE_VERSION }} ${env.BRANCH_NAME}
+        run: ./compile-build '' v${{ env.RELEASE_VERSION }} ${{ env.BRANCH_NAME }}
 
       # Create a GitHub release with the release asset as an artifact
       - name: Create release and upload release.tar.gz
