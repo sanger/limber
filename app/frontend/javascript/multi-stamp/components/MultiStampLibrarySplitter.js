@@ -9,7 +9,7 @@ import {
   checkSize,
 } from '@/javascript/shared/components/plateScanValidators'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
-import { baseTransferCreator } from '@/javascript/shared/transfersCreators.js'
+import { transferPlatesToPlatesCreator } from '@/javascript/shared/transfersCreators.js'
 import MultiStamp from './MultiStamp.vue'
 
 export default {
@@ -67,7 +67,7 @@ export default {
     apiTransfers() {
       return this.validTransfersByTargetPlate.reduce((memo, transfers) => {
         const library_type = transfers[0].request.library_type
-        memo[library_type] = baseTransferCreator(transfers, this.transfersCreatorObj.extraParams)
+        memo[library_type] = transferPlatesToPlatesCreator(transfers, this.transfersCreatorObj.extraParams)
         return memo
       }, {})
     },
