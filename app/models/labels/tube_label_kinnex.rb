@@ -1,8 +1,28 @@
 # frozen_string_literal: true
 
 class Labels::TubeLabelKinnex < Labels::TubeLabel # rubocop:todo Style/Documentation
+  attr_accessor :labware_with_custom_includes
+
+  CUSTOM_INCLUDES = [
+    :purpose,
+    'transfer_requests_as_target.source_asset',
+    'receptacle.aliquots.request.request_type',
+    'receptacle.requests_as_source.request_type'
+  ].freeze
+
+  # This function is used to fetch the labware with the necessary includes for the label.
+  # It uses the Sequencescape API to find the labware by its UUID and includes the custom includes defined above.
+  # The labware is already set for the `labware` variable but we want to fetch the `transfer_requests_as_target`
+  # association to get the source asset name for the second line of the label. This was not done at
+  # `app/sequencescape/sequencescape/api/v2/tube.rb` as it affects the performance of the API call.
+  #
+  # returns [Sequencescape::Api::V2::Tube] The labware with the necessary includes.
+  def labware_with_includes
+    @labware_with_includes ||= Sequencescape::Api::V2::Tube.includes(*CUSTOM_INCLUDES).find(uuid: labware.uuid).first
+  end
+
   def first_line
-    labware.name.presence
+    labware_with_includes.name.presence
   end
 
   def second_line
@@ -19,7 +39,7 @@ class Labels::TubeLabelKinnex < Labels::TubeLabel # rubocop:todo Style/Documenta
     if labware.respond_to?(:labware_sources)
       labware.labware_sources.first&.name
     else
-      labware.transfer_requests_as_target.first&.source_asset&.name
+      labware_with_includes.transfer_requests_as_target.first&.source_asset&.name
     end
   end
 end

@@ -10,7 +10,6 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   DEFAULT_INCLUDES = [
     :purpose,
-    'transfer_requests_as_target.source_asset',
     'receptacle.aliquots.request.request_type',
     'receptacle.requests_as_source.request_type'
   ].freeze
