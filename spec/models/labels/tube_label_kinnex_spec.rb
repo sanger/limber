@@ -13,6 +13,7 @@ RSpec.describe Labels::TubeLabelKinnex do
       allow(labware).to receive(:transfer_requests_as_target).and_return(
         [create(:v2_transfer_request, source_asset: labware)]
       )
+      allow(label).to receive(:labware_with_includes).and_return(labware)
     end
 
     describe '#attributes' do

@@ -80,12 +80,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   let(:tube_includes) do
-    [
-      :purpose,
-      'transfer_requests_as_target.source_asset',
-      'receptacle.aliquots.request.request_type',
-      'receptacle.requests_as_source.request_type'
-    ]
+    [:purpose, 'receptacle.aliquots.request.request_type', 'receptacle.requests_as_source.request_type']
   end
 
   # child plate
