@@ -155,7 +155,7 @@ GEM
     exception_notification (5.0.0)
       actionmailer (>= 7.1, < 9)
       activesupport (>= 7.1, < 9)
-    factory_bot (6.5.3)
+    factory_bot (6.5.4)
       activesupport (>= 6.1.0)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
