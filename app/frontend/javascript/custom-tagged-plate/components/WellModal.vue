@@ -20,7 +20,7 @@
               <b-form-input
                 id="original_tag_number_input"
                 type="number"
-                :value="wellModalDetails.originalTag"
+                :model-value="wellModalDetails.originalTag"
                 readonly
               />
             </b-form-group>

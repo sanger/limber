@@ -118,8 +118,6 @@ describe('TagLayoutManipulations', () => {
 
       wrapper.vm.tagPlateScanned(exampleQcableData)
 
-      // NB cannot check the vue bootstrap elements directly with shallowMount
-      // wrapper
       expect(wrapper.vm.tagGroupsDisabled).toBe(true)
       expect(wrapper.vm.tagSetsDisabled).toBe(true)
 
@@ -141,8 +139,6 @@ describe('TagLayoutManipulations', () => {
 
       expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
 
-      // NB cannot check the vue bootstrap elements directly with shallowMount
-      // wrapper
       wrapper.setData({ tag1GroupId: 1 })
 
       wrapper.vm.tagGroupChanged()
@@ -231,8 +227,6 @@ describe('TagLayoutManipulations', () => {
         },
       ]
 
-      // NB. cannot interact with vue bootstrap components when wrapper is
-      // shallowMounted
       wrapper.vm.updateTagParams()
       const emitted = wrapper.emitted()
 

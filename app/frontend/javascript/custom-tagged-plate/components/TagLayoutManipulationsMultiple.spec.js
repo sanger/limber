@@ -77,8 +77,6 @@ describe('TagLayoutManipulationsMultiple', () => {
         },
       ]
 
-      // NB. cannot interact with vue bootstrap components when wrapper is
-      // shallowMounted
       wrapper.vm.updateTagParams()
       const emitted = wrapper.emitted()
 
