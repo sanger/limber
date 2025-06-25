@@ -53,6 +53,8 @@ BGE Lib Pool:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'limber_multiplexing_bge_pcr_free'
 BGE Lib PCR:
   :asset_type: plate
 # 'Limber-Htp - BGE ISC' manual submission is on BGE Lib PCR XP
@@ -120,12 +122,5 @@ BGE Lib Pool Norm:
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
-  :presenter_class: Presenters::SimpleTubePresenter
-  :default_printer_type: :tube
-BGE Custom Pool:
-  :asset_type: tube
-  :target: StockMultiplexedLibraryTube
-  :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::CustomPooledTubes
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
