@@ -61,27 +61,10 @@ class Presenters::PipelineInfoPresenter
     'No Pipelines Found'
   end
 
-  # Returns true if the labware purpose has any defined parent of grand-parent relationships, false otherwise.
-  # return [Boolean] True if the labware has great-grandparent purposes
-  def great_grandparent_purposes?
-    @labware.parents.any? do |parent|
-      labware_from_asset(parent).parents.any? { |grandparent| labware_from_asset(grandparent).parents.any? }
-    end
-  end
-
-  # Returns a comma-separated list of the purposes of the labware's grandparents.
-  # If the labware has no grandparents, it returns an empty string.
-  # @return [String] Comma-separated list of grandparent purposes.
-  def grandparent_purposes
-    join_up_to(
-      2,
-      @labware
-        .parents
-        .map { |parent| labware_from_asset(parent).parents.map { |grandparent| grandparent.purpose.name } }
-        .flatten
-        .uniq
-        .sort
-    )
+  # Returns true if the labware purpose has any defined grandparent relationships, false otherwise.
+  # return [Boolean] True if the labware has grandparent purposes
+  def grandparent_purposes?
+    @labware.parents.any? { |parent| labware_from_asset(parent).parents.any? }
   end
 
   # Returns a comma-separated list of the purposes of the labware's parents.
