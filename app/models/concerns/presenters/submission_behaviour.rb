@@ -43,14 +43,6 @@ module Presenters::SubmissionBehaviour
     well.empty? || well.failed?
   end
 
-  def empty_well?(well)
-    well.aliquots.blank?
-  end
-
-  def all_aliquot_requests_failed?(well)
-    well.aliquots.present? && well.aliquots.all? { |aliquot| aliquot.request&.state == 'failed' }
-  end
-
   def format_asset_group(wells)
     { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true }
   end
