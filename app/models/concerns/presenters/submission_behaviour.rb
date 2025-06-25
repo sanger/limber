@@ -40,7 +40,7 @@ module Presenters::SubmissionBehaviour
   end
 
   def reject_well?(well)
-    empty_well?(well) || all_aliquot_requests_failed?(well)
+    well.empty? || well.failed?
   end
 
   def empty_well?(well)
