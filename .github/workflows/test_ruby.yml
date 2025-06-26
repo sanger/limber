@@ -1,52 +1,47 @@
-name: Ruby RSpec Tests
+name: Unit tests
 
 on:
-  # Warning: changing run conditions could prevent coverage report in PR, see codecov.yml for `after_n_builds`
-  - push
-  - pull_request
+  push:
+  pull_request:
 
 env:
   BUNDLE_WITHOUT: 'development lint'
 
 jobs:
-  ruby_test:
+  rspec_tests:
+    name: RSpec Ruby tests
     runs-on: ubuntu-latest
     env:
       TZ: Europe/London
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache:
-            true # Runs bundle install and caches gems. See the ruby_test.yml
-            # example if you need more control over bundler.
-      - name: Remove image-bundled Chrome
-        run: sudo apt-get purge google-chrome-stable
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
+
+      - name: Setup Ruby
+        uses: sanger/.github/.github/actions/setup/ruby@master
+
+      - name: Setup Node
+        uses: sanger/.github/.github/actions/setup/node@master
+
       - name: Setup stable Chrome
-        uses: browser-actions/setup-chrome@v1
+        uses: sanger/.github/.github/actions/tests/setup-chrome@master
         with:
           chrome-version: 128
           install-chromedriver: true
           install-dependencies: true
+
       - name: Additional setup
         run: bin/setup
+
       - name: Run rspec
         run: bundle exec rspec
-      - name: Publish code coverage to Code Climate
-        uses: paambaati/codeclimate-action@v5.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID || '1735fdb62543d410c5ed4469e402641a7986f1ebf62ff7398f3ab8ccc98069ef' }}
+
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
+        uses: sanger/.github/.github/actions/tests/codecov@master
         with:
+          name: ${{ github.run_id }}_${{ github.job }}_${{ github.event_name }}
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ruby,${{ github.event_name }}
-          fail_ci_if_error: true
-          disable_search: true
+          disable-search: true
           files: ${{ github.workspace }}/lcov.info

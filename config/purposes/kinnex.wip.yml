@@ -1,0 +1,10 @@
+---
+Kinnex Cherrypick:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::TubesFromPlateWell
+  :presenter_class: Presenters::SimpleTubePresenter
+  :label_template: kinnex_tube
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'kinnex_prep'

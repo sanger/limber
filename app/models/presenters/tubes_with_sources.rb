@@ -72,5 +72,9 @@ class Presenters::TubesWithSources
     @sources.sum { |well| well.aliquots.count }
   end
 
+  def labware_sources
+    @sources
+  end
+
   delegate_missing_to :tube
 end

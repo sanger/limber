@@ -282,3 +282,6 @@ hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig:
   csv: hamilton_plate_stamp
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: 10X GEM-X 5' VDJ Post Ligation SPRI
+kinnex_prep_plate_export:
+  csv: kinnex_prep_plate_export
+  plate_includes: wells.downstream_tubes

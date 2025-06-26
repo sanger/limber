@@ -99,3 +99,6 @@ lcmb_pcr_xp_concentrations_for_custom_pooling:
   csv: lcmb_pcr_xp_concentrations_for_custom_pooling
   plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
   ancestor_purpose: LCMB Cherrypick
+kinnex_prep_plate_export:
+  csv: kinnex_prep_plate_export
+  plate_includes: wells.downstream_tubes
