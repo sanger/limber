@@ -1,6 +1,5 @@
 inherit_from:
   - .rubocop_todo.yml
-  - node_modules/@prettier/plugin-ruby/rubocop.yml
 plugins:
   - rubocop-capybara
   - rubocop-performance
