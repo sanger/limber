@@ -188,9 +188,9 @@ module LabwareCreators
         pools
           .each_with_index
           .with_object({}) do |(pool, index), result|
-            dest_location = WellHelpers.well_at_column_index(index) # column order, 96 wells
-            pool.each { |source_well| result[source_well] = { dest_locn: dest_location } }
-          end
+          dest_location = WellHelpers.well_at_column_index(index) # column order, 96 wells
+          pool.each { |source_well| result[source_well] = { dest_locn: dest_location } }
+        end
     end
 
     # Returns a hash mapping each source well to its index in its pool plus one.
@@ -203,8 +203,8 @@ module LabwareCreators
         pools
           .each_with_index
           .with_object({}) do |(pool, _pool_index), hash|
-            pool.each_with_index { |well, index| hash[well] = (index + 1).to_s }
-          end
+          pool.each_with_index { |well, index| hash[well] = (index + 1).to_s }
+        end
     end
 
     # Builds the pools for the destination plate. The wells are first grouped
