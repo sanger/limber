@@ -15,6 +15,9 @@ AllCops:
     - vendor/**/*
   NewCops: enable
 
+Layout/LeadingCommentSpace:
+  AllowRBSInlineAnnotation: true
+
 Rails:
   Enabled: true
 # We're not actually using Rails methods here.
