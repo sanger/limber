@@ -214,7 +214,7 @@ module LabwareCreators
     def build_pools
       study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling)
 
-      # allocate_wells_to_pools returns an array of pools
+      # allocate_wells_to_pools returns an array of pools
       # We get one of these for every study/project group, and then 'flatten' to get a single array of pools
       built_pools = study_project_groups.flat_map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
 

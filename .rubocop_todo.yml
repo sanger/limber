@@ -6,14 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment, AllowRBSInlineAnnotation, AllowSteepAnnotation.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'app/models/labware_creators/donor_pooling_plate.rb'
-    - 'app/sequencescape/sequencescape/api/v2/shared/has_workline_identifier.rb'
-
 # Offense count: 63
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, IndentationWidth.
