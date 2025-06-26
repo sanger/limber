@@ -7,6 +7,7 @@ module Robots
   #
   class TubeRackWrapper
     attr_accessor :barcode, :parent, :tubes
+
     delegate :purpose_name, :purpose, :state, :uuid, to: :last_tube, allow_nil: true
 
     # Initializes a new instance of the class.
