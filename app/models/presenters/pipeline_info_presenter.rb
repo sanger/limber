@@ -135,6 +135,7 @@ class Presenters::PipelineInfoPresenter
       end
       .reduce(:&)
   end
+
   def find_plate(barcode)
     Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: 'purpose').first
   end
