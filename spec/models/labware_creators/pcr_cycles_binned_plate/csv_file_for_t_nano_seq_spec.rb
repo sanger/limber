@@ -305,7 +305,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlate::CsvFileForTNanoSeq, with: 
         subject.valid?
         expect(subject.errors.full_messages).to include(
           'Plate barcode header row plate barcode The plate barcode in the file (DN2T) does not match the ' \
-            'barcode of the plate being uploaded to (DN1S), please check you have the correct file.'
+          'barcode of the plate being uploaded to (DN1S), please check you have the correct file.'
         )
       end
     end

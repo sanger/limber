@@ -90,12 +90,12 @@ RSpec.describe Sequencescape::Api::V2::Plate do
           # This is a bit brittle, as it depends on the exact order.
           include:
             'purpose,child_plates.purpose,wells.downstream_tubes.purpose,' \
-              'wells.requests_as_source.request_type,wells.requests_as_source.primer_panel,' \
-              'wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,' \
-              'wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,' \
-              'wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,' \
-              'wells.aliquots.request.submission,' \
-              'wells.transfer_requests_as_target.source_asset'
+            'wells.requests_as_source.request_type,wells.requests_as_source.primer_panel,' \
+            'wells.requests_as_source.pre_capture_pool,wells.requests_as_source.submission,' \
+            'wells.aliquots.sample.sample_metadata,wells.aliquots.request.request_type,' \
+            'wells.aliquots.request.primer_panel,wells.aliquots.request.pre_capture_pool,' \
+            'wells.aliquots.request.submission,' \
+            'wells.transfer_requests_as_target.source_asset'
         },
         headers: {
           'Accept' => 'application/vnd.api+json',

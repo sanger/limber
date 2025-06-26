@@ -58,7 +58,7 @@ module Sequencescape::Api::V2
     TubeRack
       .includes(
         'racked_tubes.tube.purpose,' \
-          'racked_tubes.tube.receptacle.aliquots.request.request_type'
+        'racked_tubes.tube.receptacle.aliquots.request.request_type'
       )
       .find(query)
       .first

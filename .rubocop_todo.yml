@@ -6,48 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 63
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented
-Layout/LineEndStringConcatenationIndentation:
-  Exclude:
-    - 'app/models/concerns/labware_creators/donor_pooling_calculator.rb'
-    - 'app/models/concerns/labware_creators/donor_pooling_validator.rb'
-    - 'app/models/labware_creators/common_file_handling/csv_file/row_base.rb'
-    - 'app/models/labware_creators/custom_pooled_tubes/csv_file/row.rb'
-    - 'app/models/labware_creators/donor_pooling_plate.rb'
-    - 'app/models/labware_creators/final_tube.rb'
-    - 'app/models/labware_creators/merged_plate.rb'
-    - 'app/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan.rb'
-    - 'app/models/labware_creators/partial_stamped_plate.rb'
-    - 'app/models/labware_creators/pcr_cycles_binned_plate/csv_file/plate_barcode_header.rb'
-    - 'app/models/labware_creators/pcr_cycles_binned_plate_base.rb'
-    - 'app/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq.rb'
-    - 'app/models/labware_creators/stamped_plate_adding_randomised_controls.rb'
-    - 'app/models/presenters/tag_plate_384_presenter.rb'
-    - 'app/models/presenters/unknown_plate_presenter.rb'
-    - 'app/models/robots/robot.rb'
-    - 'app/models/sequencescape_submission.rb'
-    - 'app/models/validators/active_request_validator.rb'
-    - 'app/models/validators/failed_validator.rb'
-    - 'app/sequencescape/sequencescape/api/v2.rb'
-    - 'spec/features/pooling_multiple_plates_into_one_tube_spec.rb'
-    - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
-    - 'spec/features/viewing_a_minimal_plate_spec.rb'
-    - 'spec/models/concerns/labware_creators/donor_pooling_calculator_spec.rb'
-    - 'spec/models/labware_creators/common_file_handling/csv_file/row_base_spec.rb'
-    - 'spec/models/labware_creators/common_file_handling/csv_file_for_tube_rack_spec.rb'
-    - 'spec/models/labware_creators/common_file_handling/csv_file_for_tube_rack_with_rack_barcode_spec.rb'
-    - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
-    - 'spec/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan_spec.rb'
-    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_duplex_seq_spec.rb'
-    - 'spec/models/labware_creators/pcr_cycles_binned_plate/csv_file_for_t_nano_seq_spec.rb'
-    - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_t_nano_seq_spec.rb'
-    - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
-    - 'spec/models/robots/plate_to_tube_racks_robot_spec.rb'
-    - 'spec/sequencescape/api/v2/plate_spec.rb'
-
 # Offense count: 54
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, IndentationWidth.

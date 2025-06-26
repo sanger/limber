@@ -201,7 +201,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
     let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/common_file_handling/tube_rack_with_rack_barcode/' \
-          'tube_rack_scan_with_invalid_positions.csv',
+        'tube_rack_scan_with_invalid_positions.csv',
         'sequencescape/qc_file'
       )
     end
@@ -248,7 +248,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
         'Tube barcode AB10000003 not found in the LIMS. ' \
-          'Please check the tube barcodes in the scan file are valid tubes.'
+        'Please check the tube barcodes in the scan file are valid tubes.'
       )
     end
   end
@@ -269,7 +269,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
         'Tube barcode AB10000002 does not match to one of the expected tube purposes ' \
-          '(one of type(s): Parent Tube Purpose Type 1, Parent Tube Purpose Type 2)'
+        '(one of type(s): Parent Tube Purpose Type 1, Parent Tube Purpose Type 2)'
       )
     end
   end
@@ -289,7 +289,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
         'Tube barcode AB10000002 does not have an expected active request ' \
-          '(one of type(s): parent_tube_library_request_type)'
+        '(one of type(s): parent_tube_library_request_type)'
       )
     end
 
@@ -325,7 +325,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
         'Uploaded tube rack scan file does not work with ean13-barcoded tube ' \
-          "scanned on the previous page (#{source_tube_barcode})"
+        "scanned on the previous page (#{source_tube_barcode})"
       )
     end
   end
@@ -354,7 +354,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       expect(subject).not_to be_valid
       expect(subject.errors.full_messages).to include(
         'Uploaded tube rack scan file does not contain the tube scanned ' \
-          "on the previous page (#{source_tube_barcode})"
+        "on the previous page (#{source_tube_barcode})"
       )
     end
   end

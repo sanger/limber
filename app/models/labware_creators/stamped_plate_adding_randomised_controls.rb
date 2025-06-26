@@ -12,7 +12,7 @@ module LabwareCreators
   class StampedPlateAddingRandomisedControls < StampedPlate # rubocop:todo Metrics/ClassLength
     PARENT_PLATE_INCLUDES =
       'wells.requests_as_source,wells.requests_as_source.request_type,' \
-        'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+      'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
 
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
