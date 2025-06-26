@@ -3,7 +3,6 @@ Kinnex:
   pipeline_group: Kinnex
   filters:
     request_type_key: kinnex_prep
-  library_pass: Kinnex Cherrypick
   relationships:
     LRC GEM-X 5p cDNA PCR XP: Kinnex Cherrypick
     LRC GEM-X 5p cDNA Input: Kinnex Cherrypick
