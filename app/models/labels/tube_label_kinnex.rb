@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Labels::TubeLabelKinnex < Labels::TubeLabel # rubocop:todo Style/Documentation
-
   CUSTOM_INCLUDES = [
     :purpose,
     'transfer_requests_as_target.source_asset',
