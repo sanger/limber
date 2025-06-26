@@ -1,0 +1,35 @@
+<%# Renders the current labware in context with ancestor and descendent purposes. %>
+<%# Pipeline name(s) | ... > grandparent purpose > parent purpose > current purpose > child purpose ... %>
+
+<div class="mt-3 ml-3 mr-3">
+  <strong>
+    <%=
+      link_to_unless(
+        @pipeline_info.pipeline_group_name.nil?,
+        @pipeline_info.pipeline_group_names,
+        pipelines_path(:filter => @pipeline_info.pipeline_group_name),
+        {target: '_blank', rel: 'noopener'}
+      )
+    %>
+  </strong> |
+
+  <% if @pipeline_info.great_grandparent_purposes? %>
+    ... »
+  <% end %>
+
+  <% if @pipeline_info.grandparent_purposes.present? %>
+    <code><%= @pipeline_info.grandparent_purposes %></code> »
+  <% end %>
+
+  <% if @pipeline_info.parent_purposes.present? %>
+    <code><%= @pipeline_info.parent_purposes %></code> »
+  <% end %>
+
+  <code><strong><u><%= @labware.purpose.name %></u></strong></code>
+
+  <% if @pipeline_info.child_purposes.present? %>
+    <code><span class="text-muted">» <%= @pipeline_info.child_purposes %></span></code>
+
+    <code><span class="text-muted">» ...</span></code>
+  <% end %>
+</div>
