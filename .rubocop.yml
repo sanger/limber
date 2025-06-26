@@ -21,6 +21,9 @@ Layout/LeadingCommentSpace:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 Rails:
   Enabled: true
 # We're not actually using Rails methods here.
