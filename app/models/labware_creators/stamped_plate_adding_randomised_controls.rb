@@ -275,10 +275,10 @@ module LabwareCreators
 
     def update_control_sample_metadata(control_v2, well_location)
       if control_v2.sample_metadata.update(
-           supplier_name: control_v2.name,
-           cohort: control_cohort,
-           sample_description: control_desc
-         )
+        supplier_name: control_v2.name,
+        cohort: control_cohort,
+        sample_description: control_desc
+      )
         return
       end
 
