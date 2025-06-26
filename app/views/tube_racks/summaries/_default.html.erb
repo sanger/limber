@@ -1,5 +1,5 @@
 <div id="labware-summary-div">
-  <%= render partial: "tube_rack", locals: { tube_rack_presenter: presenter } %>
+  <%= render partial: 'tube_rack', locals: { tube_rack_presenter: presenter } %>
 </div>
 
 <div id="plate-view-control" class="card-header">
@@ -8,13 +8,13 @@
       <a class="nav-link active" href="#summary_tab" data-bs-toggle="tab" role="tab" data-plate-view="summary-view">Summary</a>
     </li>
     <% data_attributes = {
-        sequencescape_api: Limber::Application.config.api.v2.connection_options.js_url,
-        sequencescape_api_key: Limber::Application.config.api.v2.connection_options.authorisation,
-        asset_id: presenter.id
-    } %>
+         sequencescape_api: Limber::Application.config.api.v2.connection_options.js_url,
+         sequencescape_api_key: Limber::Application.config.api.v2.connection_options.authorisation,
+         asset_id: presenter.id
+       } %>
     <li class="nav-item">
       <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-bs-toggle="tab" role="tab" data-plate-view="comments-view">
-          Comments <%= tag.span(id: 'asset-comments-counter', data: data_attributes ) %>
+          Comments <%= tag.span(id: 'asset-comments-counter', data: data_attributes) %>
         </a>
     </li>
   </ul>
