@@ -220,7 +220,7 @@ module LabwareCreators
 
       unless VALID_POOL_COUNT_RANGE.cover?(built_pools.size)
         raise "Invalid requested number of pools: must be between #{VALID_POOL_COUNT_RANGE.min} " \
-                "and #{VALID_POOL_COUNT_RANGE.max}. Provided: #{built_pools.size}."
+              "and #{VALID_POOL_COUNT_RANGE.max}. Provided: #{built_pools.size}."
       end
 
       built_pools

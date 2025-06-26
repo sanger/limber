@@ -111,7 +111,7 @@ module LabwareCreators
 
         msg =
           "Tube barcode #{foreign_barcode} not found in the LIMS. " \
-            'Please check the tube barcodes in the scan file are valid tubes.'
+          'Please check the tube barcodes in the scan file are valid tubes.'
         errors.add(:base, msg)
       end
     end
@@ -147,7 +147,7 @@ module LabwareCreators
       errors.add(
         :base,
         'Uploaded tube rack scan file does not work with ean13-barcoded ' \
-          "tube scanned on the previous page (#{labware.barcode.ean13})"
+        "tube scanned on the previous page (#{labware.barcode.ean13})"
       )
     end
 

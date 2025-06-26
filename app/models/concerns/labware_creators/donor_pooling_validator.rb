@@ -19,15 +19,15 @@ module LabwareCreators::DonorPoolingValidator
 
   SOURCE_PLATES_MUST_EXIST =
     'Source plates not found: %s. ' \
-      'Please check you scanned the correct source plates. '
+    'Please check you scanned the correct source plates. '
 
   WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID =
     'All samples must have the donor_id specified. ' \
-      'Wells missing donor_id (on sample metadata): %s'
+    'Wells missing donor_id (on sample metadata): %s'
 
   WELLS_WITH_ALIQUOTS_MUST_HAVE_CELL_COUNT =
     'All wells must have cell count data unless they are failed. ' \
-      'Wells missing cell count data: %s'
+    'Wells missing cell count data: %s'
 
   # Validates that at least one source barcode has been entered. If no barcodes
   # are entered, an error is added to the :source_barcodes attribute.

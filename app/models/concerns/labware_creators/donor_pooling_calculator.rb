@@ -49,7 +49,7 @@ module LabwareCreators::DonorPoolingCalculator
   def validate_pool_sizes!(pools)
     if pools.any? { |pool| !VALID_POOL_SIZE_RANGE.cover?(pool.size) }
       raise 'Invalid distribution: Each pool must have ' \
-              "between #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
+            "between #{VALID_POOL_SIZE_RANGE.min} and #{VALID_POOL_SIZE_RANGE.max} wells."
     end
 
     pool_sizes = pools.map(&:size)
@@ -214,7 +214,7 @@ module LabwareCreators::DonorPoolingCalculator
     if cells_per_chip_well.blank?
       raise StandardError,
             "No request found for source well at #{source_well.location}, cannot fetch cells per chip " \
-              'well metadata for allowance band calculations'
+            'well metadata for allowance band calculations'
     end
 
     cells_per_chip_well
@@ -238,7 +238,7 @@ module LabwareCreators::DonorPoolingCalculator
     if allowance_band.blank?
       raise StandardError,
             "No request found for source well at #{source_well.location}, cannot fetch allowance band " \
-              'well metadata for allowance band calculations'
+            'well metadata for allowance band calculations'
     end
 
     allowance_band
@@ -274,7 +274,7 @@ module LabwareCreators::DonorPoolingCalculator
       raise(
         StandardError,
         "No allowance value found for allowance band #{allowance_band} and sample count " \
-          "#{count_of_samples_in_pool}"
+        "#{count_of_samples_in_pool}"
       )
   end
 
@@ -342,7 +342,7 @@ module LabwareCreators::DonorPoolingCalculator
 
     raise StandardError,
           "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
-            "did not save on destination well at location #{dest_well.location}"
+          "did not save on destination well at location #{dest_well.location}"
   end
 end
 # rubocop:enable Metrics/ModuleLength
