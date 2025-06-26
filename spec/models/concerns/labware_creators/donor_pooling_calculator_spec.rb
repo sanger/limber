@@ -24,8 +24,8 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
         expect do
           instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)
         end.to raise_error StandardError,
-                    'No request found for source well at A1, cannot fetch ' \
-                      'cells per chip well metadata for allowance band calculations'
+                           'No request found for source well at A1, cannot fetch ' \
+                             'cells per chip well metadata for allowance band calculations'
       end
     end
 
@@ -73,8 +73,8 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
         expect do
           instance_of_test_pooling_class.send(:allowance_band_from_request, pool)
         end.to raise_error StandardError,
-                    'No request found for source well at A1, cannot fetch ' \
-                      'allowance band well metadata for allowance band calculations'
+                           'No request found for source well at A1, cannot fetch ' \
+                             'allowance band well metadata for allowance band calculations'
       end
     end
 
@@ -271,7 +271,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           expect do
             instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
           end.to raise_error StandardError,
-                      'No allowance value found for allowance band 1 pool attempt, 2 counts and sample count 6'
+                             'No allowance value found for allowance band 1 pool attempt, 2 counts and sample count 6'
         end
       end
 
