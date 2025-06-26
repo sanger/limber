@@ -19,18 +19,18 @@
 
     <%= sidebar do %>
       <%= card title: 'Tag plate addition', id: 'tag-help' do %>
-        <%= t("#{@labware_creator.help}_html", scope: [:tagged_plate, :help]) %>
+        <%= t("#{@labware_creator.help}_html", scope: %i[tagged_plate help]) %>
       <% end %>
 
-      <%= card title:'Set up tags' do %>
+      <%= card title: 'Set up tags' do %>
         <%= f.hidden_field :purpose_uuid %>
         <%= f.hidden_field :parent_uuid %>
         <%= f.label :tag_plate_barcode %>
         <%= f.text_field :tag_plate_barcode,
                          data: {
-                           'info-panel'=>'tag-plate-info',
-                           'qcable-type'=>'tag plate',
-                           'approved-list'=>'tag_plates_list',
+                           'info-panel' => 'tag-plate-info',
+                           'qcable-type' => 'tag plate',
+                           'approved-list' => 'tag_plates_list',
                            'requires-dual-indexing' => @labware_creator.requires_tag2?
                          },
                          class: 'form-control', required: true %>

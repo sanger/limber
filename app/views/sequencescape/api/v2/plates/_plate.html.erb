@@ -2,7 +2,7 @@
 <%= link_to(plate, id: "plate_#{plate.barcode.ean13}", class: "#{plate.role} list-group-item-action") do %>
 <li class="labware">
     <% if plate.priority > 0 %>
-       <%= vite_image_tag("images/icon_#{plate.priority}_flag.png", size: "64x64", class: 'pull-sm-right') %>
+       <%= vite_image_tag("images/icon_#{plate.priority}_flag.png", size: '64x64', class: 'pull-sm-right') %>
     <% end %>
     <h3 class="barcode list-group-item-heading"><%= useful_barcode(plate.barcode) %> <%= state_badge(plate.state) %></h3>
     <% if plate.stock_plate.present? %><p class="list-group-item-text"><span class="field-description">Input plate:</span> <%= useful_barcode(plate.stock_plate.barcode) %></p><% end %>
