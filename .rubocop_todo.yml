@@ -6,31 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 54
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented, indented_relative_to_receiver
-Layout/MultilineMethodCallIndentation:
-  Exclude:
-    - 'app/controllers/pipeline_work_in_progress_controller.rb'
-    - 'app/controllers/search_controller.rb'
-    - 'app/helpers/plate_helper.rb'
-    - 'app/models/concerns/presenters/submission_behaviour.rb'
-    - 'app/models/labels/plate_label_cellaca_qc.rb'
-    - 'app/models/labware_creators/baited_plate.rb'
-    - 'app/models/labware_creators/donor_pooling_plate.rb'
-    - 'app/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan.rb'
-    - 'app/models/labware_creators/pooled_tubes_from_whole_plates.rb'
-    - 'app/models/labware_creators/stamped_plate_reordering_columns_to_rows.rb'
-    - 'app/models/labware_creators/tagging/tag_collection.rb'
-    - 'app/models/limber/barcoded_asset.rb'
-    - 'app/models/presenters/pcr_cycles_binned_plate_using_request_metadata_presenter.rb'
-    - 'app/models/presenters/pcr_cycles_binned_plate_using_well_metadata_presenter.rb'
-    - 'app/models/presenters/plate_presenter.rb'
-    - 'app/sequencescape/sequencescape/api/v2/base.rb'
-    - 'lib/tasks/config.rake'
-    - 'spec/models/utility/cell_count_spot_checking_spec.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, IndentationWidth.

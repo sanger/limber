@@ -94,11 +94,11 @@ module LabwareCreators
         csv_file
           .position_details
           .each_with_object({}) do |(_tube_posn, details_hash), tubes|
-            foreign_barcode = details_hash['tube_barcode']
-            search_params = { barcode: foreign_barcode, includes: Sequencescape::Api::V2::Tube::DEFAULT_INCLUDES }
+          foreign_barcode = details_hash['tube_barcode']
+          search_params = { barcode: foreign_barcode, includes: Sequencescape::Api::V2::Tube::DEFAULT_INCLUDES }
 
-            tubes[foreign_barcode] = Sequencescape::Api::V2::Tube.find_by(**search_params)
-          end
+          tubes[foreign_barcode] = Sequencescape::Api::V2::Tube.find_by(**search_params)
+        end
     end
 
     # Validates that all parent tubes in the CSV file exist in the LIMS.

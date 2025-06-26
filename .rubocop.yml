@@ -18,6 +18,9 @@ AllCops:
 Layout/LeadingCommentSpace:
   AllowRBSInlineAnnotation: true
 
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 Rails:
   Enabled: true
 # We're not actually using Rails methods here.
