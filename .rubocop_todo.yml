@@ -625,14 +625,6 @@ Style/MultilineBlockChain:
   Exclude:
     - 'app/controllers/pipelines_controller.rb'
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Style/MultilineIfModifier:
-  Exclude:
-    - 'app/controllers/labware_controller.rb'
-    - 'app/models/labware_creators/pcr_cycles_binned_plate/csv_file_base.rb'
-    - 'app/models/labware_creators/plate_split_to_tube_racks.rb'
-
 # Offense count: 5
 # Configuration parameters: Max.
 Style/SafeNavigationChainLength:
