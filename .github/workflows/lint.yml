@@ -76,7 +76,7 @@ jobs:
       - name: Setup Ruby
         uses: sanger/.github/.github/actions/setup/ruby@master
 
-      - name: Setup Node
+      - name: Setup Node # ERB Lint has a Prettier dependency for formatting
         uses: sanger/.github/.github/actions/setup/node@master
 
       - name: Setup yarn
