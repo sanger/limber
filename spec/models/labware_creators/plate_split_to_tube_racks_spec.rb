@@ -211,7 +211,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         stub_search: false,
         custom_includes:
           'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
+          'wells.downstream_tubes.custom_metadatum_collection'
       )
       allow(subject).to receive(:num_sequencing_tubes).and_return(num_sequencing_tubes)
       allow(subject).to receive(:num_contingency_tubes).and_return(num_contingency_tubes)
@@ -335,7 +335,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         stub_search: false,
         custom_includes:
           'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
+          'wells.downstream_tubes.custom_metadatum_collection'
       )
     end
 
@@ -453,7 +453,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         stub_search: false,
         custom_includes:
           'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
+          'wells.downstream_tubes.custom_metadatum_collection'
       )
     end
 
@@ -647,7 +647,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         stub_search: false,
         custom_includes:
           'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,' \
-            'wells.downstream_tubes.custom_metadatum_collection'
+          'wells.downstream_tubes.custom_metadatum_collection'
       )
     end
 

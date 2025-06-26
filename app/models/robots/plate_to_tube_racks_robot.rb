@@ -109,9 +109,11 @@ module Robots
     #
     def prepare_labware_store(bed_labwares)
       return if labware_store.present?
+
       stripped_barcodes(bed_labwares).each do |barcode|
         plate = find_plate(barcode)
         next if plate.blank?
+
         add_plate_to_labware_store(plate)
         add_tube_racks_to_labware_store(plate)
       end
@@ -228,6 +230,7 @@ module Robots
         .sort_by(&well_order)
         .each_with_object([]) do |well, racks|
           next if well.downstream_tubes.blank?
+
           well.downstream_tubes.each do |tube|
             barcode = tube.custom_metadatum_collection.metadata[:tube_rack_barcode]
             find_or_create_tube_rack_wrapper(racks, barcode, plate).push_tube(tube)
@@ -245,6 +248,7 @@ module Robots
     def find_or_create_tube_rack_wrapper(racks, barcode, plate)
       rack = racks.detect { |tube_rack| tube_rack.barcode.human == barcode }
       return rack if rack.present?
+
       labware_barcode = LabwareBarcode.new(human: barcode, machine: barcode)
       racks.push(TubeRackWrapper.new(labware_barcode, plate)).last
     end

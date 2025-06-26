@@ -346,7 +346,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       it 'fails due to pool sizing constraints (5 to 25)' do
         expected_message =
           'Invalid distribution: Each pool must have between ' \
-            '5 and 25 wells.'
+          '5 and 25 wells.'
 
         expect { subject.build_pools }.to raise_error(expected_message)
       end

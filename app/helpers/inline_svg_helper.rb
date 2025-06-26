@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative '../../lib/vite_inline_svg_file_loader'
 
 # This helper adds role=img to the <svg> element and also accepts an optional

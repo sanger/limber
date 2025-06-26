@@ -61,6 +61,7 @@ class ExportsController < ApplicationController
     # polymorphic results to fetch the plates.
     ids = @plate.ancestors.where(purpose_name: export.ancestor_purpose).map(&:id)
     return [] if ids.empty?
+
     Sequencescape::Api::V2::Plate.includes(include_parameters).find({ id: ids })
   end
 

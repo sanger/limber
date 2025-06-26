@@ -42,6 +42,7 @@ class RobotsController < ApplicationController
   def update_all_labware_metadata(robot_barcode)
     @robot.beds.each_value do |bed|
       next unless bed.transitions? && bed.labware
+
       update_bed_labware_metadata(bed, robot_barcode)
     end
   end
@@ -55,6 +56,7 @@ class RobotsController < ApplicationController
   #
   def update_bed_labware_metadata(bed, robot_barcode)
     return bed.labware_created_with_robot(robot_barcode) if bed.respond_to?(:labware_created_with_robot)
+
     labware_barcode = bed.labware.barcode.machine
     labware_created_with_robot(labware_barcode, robot_barcode)
   end

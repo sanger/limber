@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This was refactored as a concern so that it could be included in the Tube model (as well as Plae),
+# This was refactored as a concern so that it could be included in the Tube model (as well as Plae),
 # because one tube used a plate label and needed to use the alternative_workline_identifier config option.
 module Sequencescape::Api::V2::Shared
   # Include in API endpoints that have barcodes to add a few standard methods

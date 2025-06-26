@@ -144,6 +144,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .each_with_index
         .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
+
           {
             source_asset: "2-well-#{well_name}",
             target_asset: "3-well-#{well_name}",
@@ -171,6 +172,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .each_with_index
         .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
+
           {
             source_asset: "2-well-#{well_name}",
             target_asset: "3-well-#{well_name}",
