@@ -138,3 +138,6 @@ RSpec/NestedGroups:
 
 RSpec/NamedSubject:
   EnforcedStyle: named_only
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
