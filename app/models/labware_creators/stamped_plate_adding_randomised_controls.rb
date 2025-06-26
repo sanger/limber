@@ -49,6 +49,7 @@ module LabwareCreators
 
         # check control locations selected pass rules, otherwise we retry with new locations
         return control_locations if validate_control_rules(control_locations)
+
         retries_count += 1
       end
 
