@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Labels::TubeLabelKinnex < Labels::TubeLabel # rubocop:todo Style/Documentation
-  attr_accessor :labware_with_custom_includes
 
   CUSTOM_INCLUDES = [
     :purpose,
