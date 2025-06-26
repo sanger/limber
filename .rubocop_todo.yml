@@ -6,25 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 23
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLineAfterGuardClause:
-  Exclude:
-    - 'app/controllers/exports_controller.rb'
-    - 'app/controllers/robots_controller.rb'
-    - 'app/helpers/application_helper.rb'
-    - 'app/helpers/exports_helper.rb'
-    - 'app/models/concerns/labware_creators/donor_pooling_calculator.rb'
-    - 'app/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan.rb'
-    - 'app/models/labware_creators/plate_split_to_tube_racks.rb'
-    - 'app/models/labware_creators/stamped_plate_adding_randomised_controls.rb'
-    - 'app/models/labware_creators/well_filter.rb'
-    - 'app/models/presenters/pipeline_info_presenter.rb'
-    - 'app/models/robots/plate_to_tube_racks_robot.rb'
-    - 'app/models/validators/in_progress_validator.rb'
-    - 'app/sequencescape/sequencescape/api/v2/plate.rb'
-    - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
-
 # Offense count: 13
 # This cop supports safe autocorrection (--autocorrect).
 Layout/EmptyLineAfterMagicComment:

@@ -233,6 +233,7 @@ module LabwareCreators
     # Sets errors if there are insufficient or too many tubes.
     def must_have_correct_number_of_tubes_in_rack_files
       return unless files_valid?
+
       unless require_sequencing_tubes_only?
         add_error_if_wrong_number_of_tubes(
           :contingency_csv_file,

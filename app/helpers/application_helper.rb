@@ -34,6 +34,7 @@ module ApplicationHelper # rubocop:todo Style/Documentation
   # Return a list of unique pipeline group names
   def pipeline_groups
     return [] if Settings.pipelines.list.empty?
+
     Settings.pipelines.map(&:pipeline_group).uniq.sort
   end
 

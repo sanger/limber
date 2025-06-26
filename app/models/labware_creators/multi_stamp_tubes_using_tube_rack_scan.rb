@@ -143,6 +143,7 @@ module LabwareCreators
 
       # parent tube should be LRC Bank Seq or LRC Bank Spare barcoded SQ01125101 or similar
       return if labware.barcode.ean13.nil?
+
       errors.add(
         :base,
         'Uploaded tube rack scan file does not work with ean13-barcoded ' \
@@ -181,6 +182,7 @@ module LabwareCreators
         end
 
       return if contains_source_tube
+
       errors.add(
         :base,
         "Uploaded tube rack scan file does not contain the tube scanned on the previous page (#{parent_tube_barcode})"

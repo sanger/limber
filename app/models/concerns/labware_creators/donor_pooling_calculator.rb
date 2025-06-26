@@ -54,6 +54,7 @@ module LabwareCreators::DonorPoolingCalculator
 
     pool_sizes = pools.map(&:size)
     return unless pool_sizes.max - pool_sizes.min > 1
+
     raise 'Invalid distribution: Pool sizes differ by more than one.'
   end
 
@@ -153,6 +154,7 @@ module LabwareCreators::DonorPoolingCalculator
     pools.each_with_index do |pool, index|
       donor_ids = pool.map { |well| well.aliquots.first.sample.sample_metadata.donor_id }
       next unless donor_ids.uniq.size != donor_ids.size
+
       raise "Pool #{index + 1} contains duplicate donor IDs: #{donor_ids.tally.select { |_id, count| count > 1 }.keys}"
     end
   end

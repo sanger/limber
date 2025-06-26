@@ -146,6 +146,7 @@ class Presenters::PipelineInfoPresenter
   def labware_from_asset(asset)
     return find_plate(asset.barcode) if asset.plate?
     return find_tube(asset.barcode) if asset.tube?
+
     nil
   end
 end
