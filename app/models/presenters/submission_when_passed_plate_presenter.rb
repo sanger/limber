@@ -30,5 +30,10 @@ module Presenters
       'Input plate barcode' => :input_barcode,
       'Created on' => :created_on
     }
+
+    def well_failing_applicable?
+      # Do not show well failing option if we already made the submission
+      allow_well_failure_in_states.include?(state.to_sym) && !pending_submissions? && !active_submissions?
+    end
   end
 end
