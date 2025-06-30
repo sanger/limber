@@ -111,6 +111,31 @@ class Presenters::PipelineInfoPresenter
     active_pipelines.map(&:pipeline_group).uniq
   end
 
+  def parents_of(labware)
+    labware.ancestors.last
+  end
+
+  def find_all_labware_parents_with_purposes(labwares: nil) # rubocop:disable Metrics/MethodLength
+    labwares ||= [@labware]
+    fn_cache_key = "#{cache_key}/find_all_labware_parents_with_purposes/#{labwares.map(&:barcode).uniq.join}"
+    Rails
+      .cache
+      .fetch(fn_cache_key, expires_in: 1.minute) do
+        parent_barcodes = labwares.flat_map { |labware| parents_of(labware) }.compact.map(&:barcode).uniq
+        return [] if parent_barcodes.empty?
+
+        Sequencescape::Api::V2::Labware
+          .select(
+            { plates: %w[uuid purpose labware_barcode ancestors] },
+            { tubes: %w[uuid purpose labware_barcode ancestors] },
+            { purposes: 'name' }
+          )
+          .where(barcode: parent_barcodes)
+          .includes(:purpose, 'ancestors.purpose')
+          .all
+      end
+  end
+
   # On `LB Lib Pool Norm` tubes, it's hard to find the correct pipeline,
   # because the same purpose and request type is used in many pipelines.
   # This looks at the parent labware, as this is normally specific to the pipeline.
@@ -125,19 +150,4 @@ class Presenters::PipelineInfoPresenter
       .reduce(:&)
   end
 
-  def find_all_labware_parents_with_purposes(labwares: nil) # rubocop:disable Metrics/MethodLength
-    labwares ||= [@labware]
-    fn_cache_key = "#{cache_key}/find_all_labware_parents_with_purposes/#{labwares.map(&:barcode).uniq.join}"
-    Rails
-      .cache
-      .fetch(fn_cache_key, expires_in: 1.minute) do
-        parent_barcodes = labwares.flat_map(&:parents).map(&:barcode).uniq
-        return [] if parent_barcodes.empty?
-
-        parent_plates = Sequencescape::Api::V2::Plate.find_all({ barcode: parent_barcodes }, includes: 'purpose')
-        parent_tubes = Sequencescape::Api::V2::Tube.find_all({ barcode: parent_barcodes }, includes: 'purpose')
-
-        parent_plates + parent_tubes
-      end
-  end
 end
