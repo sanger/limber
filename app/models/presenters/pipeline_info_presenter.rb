@@ -127,18 +127,15 @@ class Presenters::PipelineInfoPresenter
 
   def find_all_labware_parents_with_purposes(labwares: nil) # rubocop:disable Metrics/MethodLength
     labwares ||= [@labware]
+    fn_cache_key = "#{cache_key}/find_all_labware_parents_with_purposes/#{labwares.map(&:barcode).uniq.join}"
     Rails
       .cache
-      .fetch(
-        "#{cache_key}/find_all_labware_parents_with_purposes/#{labwares.map(&:barcode).join}",
-        expires_in: 1.minute
-      ) do
-        parent_plate_barcodes = labwares.flat_map(&:parents).select(&:plate?).map(&:barcode)
-        parent_tube_barcodes = labwares.flat_map(&:parents).select(&:tube?).map(&:barcode)
+      .fetch(fn_cache_key, expires_in: 1.minute) do
+        parent_barcodes = labwares.flat_map(&:parents).map(&:barcode).uniq
+        return [] if parent_barcodes.empty?
 
-        parent_plates =
-          Sequencescape::Api::V2::Plate.find_all({ barcode: parent_plate_barcodes }, includes: 'purpose')
-        parent_tubes = Sequencescape::Api::V2::Tube.find_all({ barcode: parent_tube_barcodes }, includes: 'purpose')
+        parent_plates = Sequencescape::Api::V2::Plate.find_all({ barcode: parent_barcodes }, includes: 'purpose')
+        parent_tubes = Sequencescape::Api::V2::Tube.find_all({ barcode: parent_barcodes }, includes: 'purpose')
 
         parent_plates + parent_tubes
       end
