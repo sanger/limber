@@ -64,7 +64,7 @@ class Presenters::PipelineInfoPresenter
   # Returns true if the labware purpose has any defined grandparent relationships, false otherwise.
   # return [Boolean] True if the labware has grandparent purposes
   def grandparent_purposes?
-    @labware.parents.any? { |parent| labware_from_asset(parent).parents.any? }
+    @labware.parents.any? { |parent| return true if labware_from_asset(parent).parents.any? }
   end
 
   # Returns a comma-separated list of the purposes of the labware's parents.
