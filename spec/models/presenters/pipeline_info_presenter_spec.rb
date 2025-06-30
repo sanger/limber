@@ -13,6 +13,14 @@ def stub_labware_find_all_barcode(labwares)
 end
 
 RSpec.describe Presenters::PipelineInfoPresenter do
+  before do
+    # Ensure the Rails cache is not used during testing to prevent marshal errors
+    allow(Rails.cache).to receive(:fetch).and_wrap_original do |_m, *_args, &block|
+      block.call
+    end
+  end
+
+  # Define the presenter and labware for the tests
   let(:presenter) { described_class.new(labware) }
   let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
   let(:labware) { create(:v2_stock_plate, :has_pooling_metadata, purpose: wgs_purpose) }
