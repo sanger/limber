@@ -64,14 +64,17 @@ class Presenters::PipelineInfoPresenter
   # Returns true if the labware purpose has any defined grandparent relationships, false otherwise.
   # return [Boolean] True if the labware has grandparent purposes
   def grandparent_purposes?
-    @labware.parents.any? { |parent| return true if labware_from_asset(parent).parents.any? }
+    return false unless @labware.parents
+
+    find_all_parents_with_purposes.each { |parent| return true if parent.parents.any? }
   end
 
   # Returns a comma-separated list of the purposes of the labware's parents.
   # If the labware has no parents, it returns an empty string.
   # @return [String] Comma-separated list of parent purposes.
   def parent_purposes
-    join_up_to(2, @labware.parents.map { |parent| parent.purpose.name }.uniq.sort)
+    parent_purpose_names = find_all_parents_with_purposes.map { |parent| parent.purpose.name }.uniq.sort
+    join_up_to(2, parent_purpose_names)
   end
 
   # Returns a comma-separated list of potential child purposes for the labware.
@@ -84,7 +87,7 @@ class Presenters::PipelineInfoPresenter
   private
 
   def cache_key
-    'pipeline_info_presenter'
+    "pipeline_info_presenter/#{@labware.barcode}"
   end
 
   def join_up_to(max_listed, array, separator = ', ')
@@ -111,37 +114,29 @@ class Presenters::PipelineInfoPresenter
   # This approach could cause problems if the parent labware is in a different pipeline,
   # however, in this case it is normally in the same pipeline *group*.
   def pipeline_groups_by_parent_purposes
-    @labware
-      .parents
-      .map do |parent|
-        parent_labware = labware_from_asset(parent)
-        Settings
-          .pipelines
-          .select_pipelines_with_purpose(Settings.pipelines.list, parent_labware.purpose)
-          .map(&:pipeline_group)
+    find_all_parents_with_purposes
+      .map(&:purpose)
+      .map do |parent_purpose|
+        Settings.pipelines.select_pipelines_with_purpose(Settings.pipelines.list, parent_purpose).map(&:pipeline_group)
       end
       .reduce(:&)
   end
 
-  def find_plate(barcode)
+  def find_all_parents_with_purposes # rubocop:disable Metrics/MethodLength
     Rails
       .cache
-      .fetch("#{cache_key}/plate/#{barcode}", expires_in: 5.minutes) do
-        Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: 'purpose').first
-      end
-  end
+      .fetch("#{cache_key}/find_all_parents_with_purposes", expires_in: 1.minute) do
+        parent_plates = @labware.parents.select(&:plate?)
+        parent_tubes = @labware.parents.select(&:tube?)
 
-  def find_tube(barcode)
-    Rails
-      .cache
-      .fetch("#{cache_key}/tube/#{barcode}", expires_in: 5.minutes) do
-        Sequencescape::Api::V2::Tube.find_all({ barcode: [barcode] }, includes: 'purpose').first
-      end
-  end
+        parent_plate_barcodes = parent_plates.map(&:barcode)
+        parent_tube_barcodes = parent_tubes.map(&:barcode)
 
-  def labware_from_asset(asset)
-    return find_plate(asset.barcode) if asset.plate?
-    return find_tube(asset.barcode) if asset.tube?
-    nil
+        parent_plates =
+          Sequencescape::Api::V2::Plate.find_all({ barcode: [parent_plate_barcodes] }, includes: 'purpose')
+        parent_tubes = Sequencescape::Api::V2::Tube.find_all({ barcode: [parent_tube_barcodes] }, includes: 'purpose')
+
+        parent_plates + parent_tubes
+      end
   end
 end
