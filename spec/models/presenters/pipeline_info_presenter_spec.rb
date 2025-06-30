@@ -557,48 +557,12 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
   end
 
-  describe '#great_grandparent_purposes?' do
-    context 'when a plate has no great-grandparents' do
-      before { allow(labware).to receive(:parents).and_return([]) }
-
-      it 'returns false' do
-        expect(presenter.great_grandparent_purposes?).to be false
-      end
-    end
-
-    context 'when a plate has great-grandparents' do
-      let(:great_grandparent_purpose) { create(:v2_purpose, name: 'Great Grandparent Purpose') }
-      let(:grandparent_purpose) { create(:v2_purpose, name: 'Grandparent Purpose') }
-      let(:parent_purpose) { create(:v2_purpose, name: 'Parent Purpose') }
-
-      let(:great_grandparent_plate) do
-        create(:v2_stock_plate, purpose: great_grandparent_purpose, uuid: 'great-grandparent-plate-uuid')
-      end
-      let(:grandparent_plate) { create(:v2_stock_plate, purpose: grandparent_purpose, uuid: 'grandparent-plate-uuid') }
-      let(:parent_plate) { create(:v2_stock_plate, purpose: parent_purpose, uuid: 'parent-plate-uuid') }
-
-      before do
-        allow(grandparent_plate).to receive_messages(parents: [great_grandparent_plate])
-        allow(parent_plate).to receive_messages(parents: [grandparent_plate])
-        allow(labware).to receive_messages(parents: [parent_plate])
-
-        stub_plate_find_all_barcode(great_grandparent_plate)
-        stub_plate_find_all_barcode(grandparent_plate)
-        stub_plate_find_all_barcode(parent_plate)
-      end
-
-      it 'returns true' do
-        expect(presenter.great_grandparent_purposes?).to be true
-      end
-    end
-  end
-
-  describe '#grandparent_purposes' do
+  describe '#grandparent_purposes?' do
     context 'when a tube has no grandparents' do
       before { allow(labware).to receive(:parents).and_return([]) }
 
-      it 'returns an empty string' do
-        expect(presenter.grandparent_purposes).to eq('')
+      it 'returns false' do
+        expect(presenter.grandparent_purposes?).to be false
       end
     end
 
@@ -616,8 +580,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         stub_tube_find_all_barcode(parent_tube)
       end
 
-      it 'returns the grandparent purposes' do
-        expect(presenter.grandparent_purposes).to eq('Grandparent Purpose')
+      it 'returns true' do
+        expect(presenter.grandparent_purposes?).to be true
       end
     end
   end
