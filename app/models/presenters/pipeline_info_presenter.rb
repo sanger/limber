@@ -111,29 +111,20 @@ class Presenters::PipelineInfoPresenter
     active_pipelines.map(&:pipeline_group).uniq
   end
 
-  def parents_of(labware)
-    labware.ancestors.last
-  end
-
-  def find_all_labware_parents_with_purposes(labwares: nil) # rubocop:disable Metrics/MethodLength
+  def find_all_labware_parents_with_purposes(labwares: nil)
     labwares ||= [@labware]
     fn_cache_key = "#{cache_key}/find_all_labware_parents_with_purposes/#{labwares.map(&:barcode).uniq.join}"
-    Rails
-      .cache
-      .fetch(fn_cache_key, expires_in: 1.minute) do
-        parent_barcodes = labwares.flat_map { |labware| parents_of(labware) }.compact.map(&:barcode).uniq
-        return [] if parent_barcodes.empty?
+    Rails.cache.fetch(fn_cache_key, expires_in: 1.minute) { find_all_labware_parents_with_purposes_uncached(labwares) }
+  end
 
-        Sequencescape::Api::V2::Labware
-          .select(
-            { plates: %w[uuid purpose labware_barcode ancestors] },
-            { tubes: %w[uuid purpose labware_barcode ancestors] },
-            { purposes: 'name' }
-          )
-          .where(barcode: parent_barcodes)
-          .includes(:purpose, 'ancestors.purpose')
-          .all
-      end
+  def find_all_labware_parents_with_purposes_uncached(labwares)
+    parent_barcodes = labwares.flat_map(&:parents).compact.map(&:barcode).uniq
+    return [] if parent_barcodes.empty?
+
+    Sequencescape::Api::V2::Labware.find_all(
+      { barcode: parent_barcodes },
+      includes: %w[purpose parents parents.purpose]
+    )
   end
 
   # On `LB Lib Pool Norm` tubes, it's hard to find the correct pipeline,
@@ -149,5 +140,4 @@ class Presenters::PipelineInfoPresenter
       end
       .reduce(:&)
   end
-
 end
