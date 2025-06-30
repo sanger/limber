@@ -83,6 +83,10 @@ class Presenters::PipelineInfoPresenter
 
   private
 
+  def cache_key
+    'pipeline_info_presenter'
+  end
+
   def join_up_to(max_listed, array, separator = ', ')
     return array.join(separator) if array.size <= max_listed
 
@@ -118,12 +122,21 @@ class Presenters::PipelineInfoPresenter
       end
       .reduce(:&)
   end
+
   def find_plate(barcode)
-    Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: 'purpose').first
+    Rails
+      .cache
+      .fetch("#{cache_key}/plate/#{barcode}", expires_in: 5.minutes) do
+        Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: 'purpose').first
+      end
   end
 
   def find_tube(barcode)
-    Sequencescape::Api::V2::Tube.find_all({ barcode: [barcode] }, includes: 'purpose').first
+    Rails
+      .cache
+      .fetch("#{cache_key}/tube/#{barcode}", expires_in: 5.minutes) do
+        Sequencescape::Api::V2::Tube.find_all({ barcode: [barcode] }, includes: 'purpose').first
+      end
   end
 
   def labware_from_asset(asset)
