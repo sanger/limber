@@ -27,6 +27,7 @@ LBSN-96 Lysate:
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_bioscan_lysate_prep'
   :size: 96
+  :register_stock_plate: true
   :controls:
     - control_type: pcr positive
       name_prefix: CONTROL_POS_

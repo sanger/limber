@@ -21,7 +21,7 @@ RSpec.describe ExportsController, type: :controller do
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
       expect(response).to render_template(expected_template)
-      assert_equal 'text/csv; charset=utf-8', @response.content_type
+      expect(@response.content_type).to eq('text/csv; charset=utf-8')
     end
   end
 
@@ -121,6 +121,14 @@ RSpec.describe ExportsController, type: :controller do
       let(:includes) { 'wells.qc_results,wells.aliquots,wells.aliquots.sample' }
       let(:csv_id) { 'lcmb_pcr_xp_concentrations_for_custom_pooling' }
       let(:expected_template) { 'lcmb_pcr_xp_concentrations_for_custom_pooling' }
+
+      it_behaves_like 'a csv view'
+    end
+
+    context 'where csv id requested is kinnex_prep_plate_export.csv' do
+      let(:includes) { 'wells.downstream_tubes' }
+      let(:csv_id) { 'kinnex_prep_plate_export' }
+      let(:expected_template) { 'kinnex_prep_plate_export' }
 
       it_behaves_like 'a csv view'
     end
@@ -251,6 +259,54 @@ RSpec.describe ExportsController, type: :controller do
 
         it_behaves_like 'a hamilton fixed volume dilutions view'
       end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_dil_1_to_lrc_gemx_5p_bcr_enrich1.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_dil_1_to_lrc_gemx_5p_bcr_enrich1' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_enrich1_to_lrc_gemx_5p_bcr_enrich2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_enrich1_to_lrc_gemx_5p_bcr_enrich2' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_enrich2_to_lrc_gemx_5p_bcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_enrich2_to_lrc_gemx_5p_bcr_dil_2' }
+
+        it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_bcr_dil_2_to_lrc_gemx_5p_bcr_post_lig.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_bcr_dil_2_to_lrc_gemx_5p_bcr_post_lig' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_dil_1_to_lrc_gemx_5p_tcr_enrich1.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_dil_1_to_lrc_gemx_5p_tcr_enrich1' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_enrich1_to_lrc_gemx_5p_tcr_enrich2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_enrich1_to_lrc_gemx_5p_tcr_enrich2' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_enrich2_to_lrc_gemx_5p_tcr_dil_2.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_enrich2_to_lrc_gemx_5p_tcr_dil_2' }
+
+        it_behaves_like 'a hamilton fixed volume dilutions view'
+      end
+
+      context 'where csv id requested is hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig.csv' do
+        let(:csv_id) { 'hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig' }
+
+        it_behaves_like 'a hamilton plate stamp view'
+      end
     end
 
     context 'where csv id requested is cellaca_input_file.csv' do
@@ -277,7 +333,7 @@ RSpec.describe ExportsController, type: :controller do
           @response.headers['Content-Disposition'].include?(
             "filename=\"cellaca_input_file_#{plate_barcode}_#{page + 1}.csv\""
           )
-        ).to eq(true)
+        ).to be(true)
       end
     end
   end

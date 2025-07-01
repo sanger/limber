@@ -5,8 +5,12 @@ RSpec.shared_examples 'a labware presenter' do
     expect(subject.labware).to eq(labware)
   end
 
-  it 'provides a title' do
-    expect(subject.title).to eq(title)
+  it 'provides a document title' do
+    expect(subject.document_title).to eq("#{purpose_name} (#{labware.human_barcode})")
+  end
+
+  it 'provides a content title' do
+    expect(subject.content_title).to eq(title)
   end
 
   it 'has a state' do

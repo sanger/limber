@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::PlatePresenter do
+  subject(:presenter) { described_class.new(labware:) }
+
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -37,8 +39,6 @@ RSpec.describe Presenters::PlatePresenter do
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
 
-  subject(:presenter) { Presenters::PlatePresenter.new(labware:) }
-
   describe '#custom_metadata_fields' do
     context 'with custom_metadata_fields' do
       before { create(:plate_with_custom_metadata_fields_config) }
@@ -47,6 +47,7 @@ RSpec.describe Presenters::PlatePresenter do
         expect(presenter.custom_metadata_fields).to eq('["IDX DFD Syringe lot Number","Another"]')
       end
     end
+
     context 'with empty custom_metadata_fields' do
       before { create(:plate_with_empty_custom_metadata_fields_config) }
 
@@ -54,6 +55,7 @@ RSpec.describe Presenters::PlatePresenter do
         expect(presenter.custom_metadata_fields).to eq('[]')
       end
     end
+
     context 'without custom_metadata_fields' do
       it 'returns a JSON string with a empty object when no custom_metadata_fields config exists' do
         expect(presenter.custom_metadata_fields).to eq('[]')
@@ -210,6 +212,7 @@ RSpec.describe Presenters::PlatePresenter do
 
   describe '#pools' do
     let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
+
     it 'returns a pool per submission' do
       expect(presenter.pools).to be_a Sequencescape::Api::V2::Plate::Pools
       expect(presenter.pools.number_of_pools).to eq(2)
@@ -221,7 +224,7 @@ RSpec.describe Presenters::PlatePresenter do
     let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
 
     it 'reports as invalid' do
-      expect(presenter).to_not be_valid
+      expect(presenter).not_to be_valid
     end
 
     it 'reports the error' do
@@ -261,6 +264,36 @@ RSpec.describe Presenters::PlatePresenter do
 
     it 'reports as valid' do
       expect(presenter).to be_valid
+    end
+  end
+
+  context 'a plate with duplicated samples per well' do
+    let(:labware) { create :v2_plate, barcode_number: '2', wells: wells }
+    let(:request_a) { create :library_request, id: 1 }
+    let(:request_b) { create :library_request, id: 2 }
+    let(:request_c) { create :library_request, id: 3 }
+    let(:request_d) { create :library_request, id: 4 }
+    let(:wells) do
+      [
+        create(
+          :v2_stock_well,
+          uuid: '2-well-A1',
+          location: 'A1',
+          aliquot_count: 1,
+          requests_as_source: [request_a, request_a, request_b]
+        ),
+        create(
+          :v2_stock_well,
+          uuid: '2-well-B1',
+          location: 'B1',
+          aliquot_count: 1,
+          requests_as_source: [request_c, request_d]
+        )
+      ]
+    end
+
+    it 'returns unique active requests' do
+      expect(labware.active_requests).to contain_exactly(request_a, request_b, request_c, request_d)
     end
   end
 
@@ -335,7 +368,7 @@ RSpec.describe Presenters::PlatePresenter do
     let(:warnings) { { 'pcr_cycles_not_in' => ['6'] } }
 
     it 'reports as invalid' do
-      expect(presenter).to_not be_valid
+      expect(presenter).not_to be_valid
     end
 
     it 'reports the error' do
@@ -386,7 +419,7 @@ RSpec.describe Presenters::PlatePresenter do
     end
   end
 
-  context 'returns csv links ' do
+  context 'returns csv links' do
     context 'with a default plate' do
       let(:expected_default_csv_links) do
         [

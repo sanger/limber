@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Pooling multiple plates into a tube', js: true do
+RSpec.feature 'Pooling multiple plates into a tube', :js do
   has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -22,7 +22,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_listed) { associated(*example_plate_args) }
+  let(:example_plate_listed) { create(*example_plate_args) }
 
   let(:plate_barcode_2) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode }
   let(:plate_uuid_2) { 'plate-2' }
@@ -38,7 +38,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_2_listed) { associated(*example_plate2_args) }
+  let(:example_plate_2_listed) { create(*example_plate2_args) }
 
   let(:plate_barcode_3) { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).human_barcode }
   let(:plate_uuid_3) { 'plate-3' }
@@ -54,18 +54,18 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_3_listed) { associated(*example_plate3_args) }
+  let(:example_plate_3_listed) { create(*example_plate3_args) }
 
   let(:parent_uuid) { plate_uuid }
   let(:child_tube) { create :v2_tube, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool tube' }
 
   let(:specific_tubes_attributes) do
-    [{ uuid: child_tube.purpose.uuid, child_tubes: [child_tube], tube_attributes: [{ name: 'DN2+' }] }]
+    [{ uuid: child_tube.purpose.uuid, parent_uuids: [parent_uuid], child_tubes: [child_tube], tube_attributes: [{}] }]
   end
 
   # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
   let!(:stub_barcode_searches) do
-    stub_asset_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
+    stub_asset_v2_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
   end
 
   let(:transfers_attributes) do
@@ -84,7 +84,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
   let(:well_set_a) { json(:well_collection, aliquot_factory: :tagged_aliquot) }
 
   background do
-    create :purpose_config, uuid: 'example-purpose-uuid'
+    create :purpose_config, uuid: 'example-purpose-uuid', name: 'purpose-config'
     create :pooled_tube_from_plates_purpose_config, uuid: 'child-purpose-0'
     create :pipeline, relationships: { 'example-purpose' => 'Pool tube' }
 
@@ -94,17 +94,9 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     # We'll look up both plates.
 
     # We have a basic inbox search running
-    stub_search_and_multi_result(
-      'Find plates',
-      {
-        'search' => {
-          states: ['passed'],
-          plate_purpose_uuids: ['example-purpose-uuid'],
-          show_my_plates_only: false,
-          include_used: false,
-          page: 1
-        }
-      },
+    stub_find_all(
+      :plates,
+      { state: ['passed'], purpose_name: ['purpose-config'], include_used: false },
       [example_plate_listed, example_plate_2_listed]
     )
 
@@ -120,7 +112,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     expect_transfer_creation
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
     scan_in('Plate 1', with: plate_barcode_1)
@@ -137,7 +129,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     stub_v2_plate(example_plate_3)
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on('Add an empty Pool tube tube')
     scan_in('Plate 1', with: plate_barcode_1)
@@ -152,7 +144,7 @@ RSpec.feature 'Pooling multiple plates into a tube', js: true do
     # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
     scan_in('Plate 3', with: '')
 
-    expect(page).to_not have_text(
+    expect(page).to have_no_text(
       'The scanned plate contains tags that would clash with those in other plates in the pool.'
     )
   end

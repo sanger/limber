@@ -101,6 +101,14 @@ module ApiUrlHelper
       expect_api_v2_posts('BulkTransfer', bulk_transfer_attributes)
     end
 
+    def expect_order_creation
+      expect_api_v2_posts(
+        'Order',
+        orders_attributes.pluck(:attributes),
+        orders_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+      )
+    end
+
     def expect_plate_conversion_creation
       expect_api_v2_posts(
         'PlateConversion',
@@ -133,7 +141,7 @@ module ApiUrlHelper
         specific_tubes_attributes.map do |attrs|
           {
             child_purpose_uuids: [attrs[:uuid]] * attrs[:child_tubes].size,
-            parent_uuids: [parent_uuid],
+            parent_uuids: attrs[:parent_uuids],
             tube_attributes: attrs[:tube_attributes],
             user_uuid: user_uuid
           }
@@ -147,6 +155,14 @@ module ApiUrlHelper
 
     def expect_state_change_creation
       expect_api_v2_posts('StateChange', state_changes_attributes)
+    end
+
+    def expect_submission_creation
+      expect_api_v2_posts(
+        'Submission',
+        submissions_attributes.pluck(:attributes),
+        submissions_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+      )
     end
 
     def expect_tag_layout_creation
@@ -171,6 +187,18 @@ module ApiUrlHelper
         tube_from_tubes_attributes,
         [double(child: child_tube)] * tube_from_tubes_attributes.size
       )
+    end
+
+    def expect_tube_from_plate_creation
+      expect_api_v2_posts(
+        'TubeFromPlateCreation',
+        tubes_from_plate_attributes,
+        [instance_double(Sequencescape::Api::V2::TubeFromPlateCreation, child: child_tubes.first)]
+      )
+    end
+
+    def expect_work_completion_creation
+      expect_api_v2_posts('WorkCompletion', work_completions_attributes)
     end
   end
 
@@ -256,6 +284,14 @@ module ApiUrlHelper
     def stub_v2_qc_file(qc_file)
       arguments = [{ uuid: qc_file.uuid }]
       allow(Sequencescape::Api::V2::QcFile).to receive(:find).with(*arguments).and_return([qc_file])
+    end
+
+    def stub_v2_qcable(qcable)
+      arguments = [{ barcode: qcable.labware.barcode.machine }]
+      query_builder = double
+
+      allow(Sequencescape::Api::V2::Qcable).to receive(:includes).and_return(query_builder)
+      allow(query_builder).to receive(:find).with(*arguments).and_return([qcable])
     end
 
     def stub_v2_study(study)

@@ -3674,7 +3674,7 @@ ROBOT_CONFIG =
       name: 'Hamilton LRC GEM-X 5p GEMs(or Input) => LRC GEM-X 5p cDNA PCR',
       beds: {
         bed(13).barcode => {
-          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input', 'LRC GEM-X 5p GEMs Input CITE'],
+          purpose: ['LRC GEM-X 5p GEMs', 'LRC GEM-X 5p GEMs Input'],
           states: ['passed'],
           label: 'Bed 13'
         },
@@ -3690,20 +3690,122 @@ ROBOT_CONFIG =
 
     # scRNA pipeline
     # Hamilton bed verification
-    # LRC GEM-X 5p cDNA PCR to LRC GEM-X 5p cDNA PCR XP
+    # LRC GEM-X 5p GEMs Input CITE to LRC GEM-X 5p cDNA PCR CITE
     # Transfers 1:1
     custom_robot(
-      'hamilton-lrc-gem-x-cdna-pcr-to-lrc-gem-x-5p-cdna-pcr-xp',
+      'hamilton-lrc-gem-x-5p-gems-cite-to-lrc-gem-x-5p-cdna-pcr-cite',
+      name: 'Hamilton LRC GEM-X 5p GEMs Input CITE => LRC GEM-X 5p cDNA PCR CITE',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p GEMs Input CITE',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(5).barcode => {
+          purpose: 'LRC GEM-X 5p cDNA PCR CITE',
+          states: ['pending'],
+          label: 'Bed 5',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton bed verification
+    # LRC GEM-X 5p cDNA PCR to LRC GEM-X 5p cDNA PCR XP
+    custom_robot(
+      'hamilton-lrc-gem-x-cdna-pcr-to-lrc-gem-x-cdna-pcr-xp',
       name: 'Hamilton LRC GEM-X 5p cDNA PCR => LRC GEM-X 5p cDNA PCR XP',
       require_robot: true,
       beds: {
         bed(13).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR',
+          purpose: ['LRC GEM-X 5p cDNA PCR'],
           states: ['passed'],
           label: 'Bed 13'
         },
         bed(3).barcode => {
           purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton bed verification
+    # LRC GEM-X 5p cDNA PCR CITE to LRC GEM-X 5p cDNA PCR XP and LRC GEM-X 5p CITE SUP
+    # Enforces both destination plates (LRC GEM-X 5p cDNA PCR XP and LRC GEM-X 5p CITE SUP)
+    # to be available for bed verification
+    custom_robot(
+      'hamilton-lrc-gem-x-cdna-cite-to-lrc-gem-x-cdna-pcr-xp-and-cite-sup',
+      name: 'Hamilton LRC GEM-X 5p cDNA PCR CITE => LRC GEM-X 5p cDNA PCR XP and CITE SUP',
+      require_robot: true,
+      beds: {
+        bed(13).barcode => {
+          purpose: ['LRC GEM-X 5p cDNA PCR CITE'],
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        },
+        bed(9).barcode => {
+          purpose: 'LRC GEM-X 5p CITE SUP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton bed verification
+    # LRC GEM-X 5p CITE SUP to LRC GEM-X 5p CITE SUP XP
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-gem-x-cite-sup-to-lrc-gem-x-cite-sup-xp',
+      name: 'Hamilton LRC GEM-X 5p CITE SUP => LRC GEM-X 5p CITE SUP XP',
+      require_robot: true,
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p CITE SUP',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p CITE SUP XP',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton bed verification
+    # LRC GEM-X 5p CITE Ligation to LRC GEM-X 5p CITE Lib PCR-XP
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-lrc-gem-x-cite-ligation-to-lrc-gem-x-cite-lib-pcr-xp',
+      name: 'Hamilton LRC GEM-X 5p CITE Ligation => LRC GEM-X 5p CITE Lib PCR-XP',
+      require_robot: true,
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p CITE Ligation',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p CITE Lib PCR-XP',
           states: ['pending'],
           label: 'Bed 3',
           parent: bed(13).barcode,
@@ -4253,4 +4355,593 @@ ROBOT_CONFIG =
       from 'BGE Cap Lib PCR', bed(1)
       to 'BGE Cap Lib PCR XP', bed(9)
     end
+
+    # GSLP RVI Bait Capture Library prep pipeline bed verifications
+    custom_robot(
+      'bravo-rvi-cherrypick-to-rvig-rt',
+      name: 'Bravo RVI Cherrypick => RVIG RT',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVI Cherrypick',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(6).barcode => {
+          purpose: 'RVIG RT',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(4).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'mosquito-rvig-rt',
+      name: 'Mosquito RVIG RT Random Primers',
+      beds: {
+        bed(3).barcode => {
+          purpose: 'RVIG RT',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'processed_1'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-rt-1',
+      name: 'Bravo RVIG RT Mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG RT',
+          states: ['processed_1'],
+          label: 'Bed 8',
+          target_state: 'processed_2'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-rt-2',
+      name: 'Bravo RVIG RT First Strand Mix',
+      beds: {
+        bed(6).barcode => {
+          purpose: 'RVIG RT',
+          states: ['processed_2'],
+          label: 'Bed 6',
+          target_state: 'processed_3'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-rt-3',
+      name: 'Bravo RVIG RT Second Strand Mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG RT',
+          states: ['processed_3'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-rt-to-rvig-cdna-xp',
+      name: 'Hamilton RVIG RT => RVIG cDNA XP',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG RT',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['pending'],
+          label: 'Bed 13',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG RT',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(12).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['pending'],
+          label: 'Bed 12',
+          parent: bed(9).barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-cdna-xp-frag-mix',
+      name: 'Bravo RVIG cDNA XP Frag mix',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['started'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-cdna-xp-to-rvig-lig',
+      name: 'Bravo RVIG cDNA XP => RVIG Lig',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG cDNA XP',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(6).barcode => {
+          purpose: 'RVIG Lig',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-lig-to-rvig-lig-bind',
+      name: 'Hamilton RVIG Lig => RVIG Lig Bind',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG Lig',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(3).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['pending'],
+          label: 'Bed 3',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG Lig',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(8).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['pending'],
+          label: 'Bed 8',
+          parent: bed(9).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # This is a custom robot for the RVIG Lig Bind to RVIG Lib PCR step.
+    # It allows 2 pairs of plates to be processed in parallel.
+    custom_robot(
+      'hamilton-rvig-lig-bind-to-rvig-lib-pcr',
+      name: 'Hamilton RVIG Lig Bind => RVIG Lib PCR',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(12).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['pending'],
+          label: 'Bed 12',
+          parent: bed(5).barcode,
+          target_state: 'passed'
+        },
+        bed(10).barcode => {
+          purpose: 'RVIG Lig Bind',
+          states: ['passed'],
+          label: 'Bed 10'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['pending'],
+          label: 'Bed 13',
+          parent: bed(10).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-lib-pcr-to-rvig-lib-pcr-xp',
+      name: 'Hamilton RVIG Lib PCR => RVIG Lib PCR XP',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(10).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 10',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG Lib PCR',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(15).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 15',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'beckman-rvig-lib-pcr-xp-to-rvig-lib-prepool',
+      name: 'Beckman RVIG Lib PCR XP => RVIG Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: 'RVIG Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG Lib PrePool',
+          states: %w[pending],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    custom_robot(
+      'bravo-rvig-hyb-to-rvig-cap-lib',
+      name: 'Bravo RVIG Hyb => RVIG Cap Lib',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG Hyb',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,3').barcode => {
+          purpose: 'RVIG Cap Lib',
+          states: ['pending'],
+          label: 'Carousel 1,3',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'bravo-rvig-cap-lib-to-rvig-cap-lib-pcr',
+      name: 'Bravo RVIG Cap Lib => RVIG Cap Lib PCR',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'RVIG Cap Lib',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('4,5').barcode => {
+          purpose: 'RVIG Cap Lib PCR',
+          states: ['pending'],
+          label: 'Carousel 4,5',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-rvig-cap-lib-pcr-to-rvig-cap-lib-pcr-xp',
+      name: 'Hamilton RVIG Cap Lib PCR => RVIG Cap Lib PCR XP',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'RVIG Cap Lib PCR',
+          states: ['passed'],
+          label: 'Bed 8'
+        },
+        bed(10).barcode => {
+          purpose: 'RVIG Cap Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 10',
+          parent: bed(8).barcode,
+          target_state: 'passed'
+        },
+        bed(13).barcode => {
+          purpose: 'RVIG Cap Lib PCR',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(15).barcode => {
+          purpose: 'RVIG Cap Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 15',
+          parent: bed(13).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    custom_robot(
+      'beckman-rvig-cap-lib-pcr-xp-to-rvig-cap-lib-pool',
+      name: 'Beckman RVIG Cap Lib PCR XP => RVIG Cap Lib Pool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVIG Cap Lib PCR XP',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(9).barcode => {
+          purpose: 'RVIG Cap Lib Pool',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(5).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA Core pipeline
+    # scRNA core library prep chromium bespoke BCR
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-bcr-dil-1',
+      name: 'hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p BCR Dil 1',
+      beds: {
+        bed(1).barcode => {
+          purpose: 'LRC GEM-X 5p Cherrypick',
+          states: ['passed'],
+          label: 'Bed 1'
+        },
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Dil 1',
+          states: ['pending'],
+          label: 'Bed 13',
+          target_state: 'passed',
+          parent: bed(1).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-bcr-dil-1-to-lrc-gem-x-5p-bcr-enrich1-2xspri',
+      name: 'hamilton LRC GEM-X 5p BCR Dil 1 => LRC GEM-X 5p BCR Enrich1 2XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Dil 1',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Enrich1 2XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-bcr-enrich1-2xspri-to-lrc-gem-x-5p-bcr-enrich2-2xspri',
+      name: 'hamilton LRC GEM-X 5p BCR Enrich1 2XSPRI => LRC GEM-X 5p BCR Enrich2 2XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Enrich1 2XSPRI',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Enrich2 2XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-bcr-enrich2-2xspri-to-lrc-gem-x-5p-bcr-dil-2',
+      name: 'hamilton LRC GEM-X 5p BCR Enrich2 2XSPRI => LRC GEM-X 5p BCR Dil 2',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Enrich2 2XSPRI',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Dil 2',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-bcr-dil-2-to-lrc-gem-x-5p-bcr-post-lig-1xspri',
+      name: 'hamilton LRC GEM-X 5p BCR Dil 2 => LRC GEM-X 5p BCR Post Lig 1XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Dil 2',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Post Lig 1XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-bcr-post-lig-1xspir-to-lrc-gem-x-5p-bcr-post-pcr',
+      name: 'hamilton LRC GEM-X 5p BCR Post Lig 1XSPRI => LRC GEM-X 5p BCR Post PCR',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Post Lig 1XSPRI',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(10).barcode => {
+          purpose: 'LRC GEM-X 5p BCR Post PCR',
+          states: ['pending'],
+          label: 'Bed 10',
+          target_state: 'passed',
+          parent: bed(7).barcode
+        }
+      }
+    )
+
+    # scRNA Core pipeline
+    # scRNA core library prep chromium bespoke TCR
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-cherrypick-to-lrc-gem-x-5p-tcr-dil-1',
+      name: 'hamilton LRC GEM-X 5p Cherrypick => LRC GEM-X 5p TCR Dil 1',
+      beds: {
+        bed(1).barcode => {
+          purpose: 'LRC GEM-X 5p Cherrypick',
+          states: ['passed'],
+          label: 'Bed 1'
+        },
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 1',
+          states: ['pending'],
+          label: 'Bed 13',
+          target_state: 'passed',
+          parent: bed(1).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-dil-1-to-lrc-gem-x-5p-tcr-enrich1-2xspri',
+      name: 'hamilton LRC GEM-X 5p TCR Dil 1 => LRC GEM-X 5p TCR Enrich1 2XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 1',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich1 2XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-enrich1-2xspri-to-lrc-gem-x-5p-tcr-enrich2-2xspri',
+      name: 'hamilton LRC GEM-X 5p TCR Enrich1 2XSPRI => LRC GEM-X 5p TCR Enrich2 2XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich1 2XSPRI',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich2 2XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-enrich2-2xspri-to-lrc-gem-x-5p-tcr-dil-2',
+      name: 'hamilton LRC GEM-X 5p TCR Enrich2 2XSPRI => LRC GEM-X 5p TCR Dil 2',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Enrich2 2XSPRI',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 2',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-dil-2-to-lrc-gem-x-5p-tcr-post-lig-1xspri',
+      name: 'hamilton LRC GEM-X 5p TCR Dil 2 => LRC GEM-X 5p TCR Post Lig 1XSPRI',
+      beds: {
+        bed(13).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Dil 2',
+          states: ['passed'],
+          label: 'Bed 13'
+        },
+        bed(3).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Post Lig 1XSPRI',
+          states: ['pending'],
+          label: 'Bed 3',
+          target_state: 'passed',
+          parent: bed(13).barcode
+        }
+      }
+    )
+
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-tcr-post-lig-1xspir-to-lrc-gem-x-5p-tcr-post-pcr',
+      name: 'hamilton LRC GEM-X 5p TCR Post Lig 1XSPRI => LRC GEM-X 5p TCR Post PCR',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Post Lig 1XSPRI',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(10).barcode => {
+          purpose: 'LRC GEM-X 5p TCR Post PCR',
+          states: ['pending'],
+          label: 'Bed 10',
+          target_state: 'passed',
+          parent: bed(7).barcode
+        }
+      }
+    )
   end

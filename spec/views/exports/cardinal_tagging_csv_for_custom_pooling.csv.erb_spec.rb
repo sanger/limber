@@ -42,7 +42,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
     let(:aliquot) { create(:v2_aliquot) }
     let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [aliquot]) }
 
-    it "gives nil values for a1's tag indices", aggregate_failures: true do
+    it "gives nil values for a1's tag indices", :aggregate_failures do
       parsed_csv = CSV.parse(render)
       expect(parsed_csv.size).to eq 3
       expect(parsed_csv[0]).to eq expected_headers
@@ -59,7 +59,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   context 'well a1 is empty' do
     let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquot_count: 0) }
 
-    it 'skips empty wells', aggregate_failures: true do
+    it 'skips empty wells', :aggregate_failures do
       parsed_csv = CSV.parse(render)
       expect(parsed_csv.size).to eq 2
       expect(parsed_csv[0]).to eq expected_headers
@@ -78,7 +78,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
       create(:v2_well, position: { 'name' => 'A1' }, aliquot_count: 2, aliquot_factory: :v2_tagged_aliquot)
     end
 
-    it 'includes all wells, still', aggregate_failures: true do
+    it 'includes all wells, still', :aggregate_failures do
       parsed_csv = CSV.parse(render)
       expect(parsed_csv.size).to eq 3
       expect(parsed_csv[0]).to eq expected_headers
@@ -99,7 +99,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
     let(:aliquot_2) { create(:v2_aliquot, tag_oligo: 'TAT', tag_index: 7, tag2_oligo: 'GAG', tag2_index: 10) }
     let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_2]) }
 
-    it 'does not include well a1 in the CSV file', aggregate_failures: true do
+    it 'does not include well a1 in the CSV file', :aggregate_failures do
       parsed_csv = CSV.parse(render)
       expect(parsed_csv.size).to eq 2
       expect(parsed_csv[0]).to eq expected_headers
@@ -118,7 +118,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
     let(:aliquot_2) { create(:v2_aliquot, tag_oligo: 'CAT', tag_index: 5, tag2_oligo: 'TAC', tag2_index: 8) }
     let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_2]) }
 
-    it 'does not include well a1 in the CSV file', aggregate_failures: true do
+    it 'does not include well a1 in the CSV file', :aggregate_failures do
       parsed_csv = CSV.parse(render)
       expect(parsed_csv.size).to eq 2
       expect(parsed_csv[0]).to eq expected_headers

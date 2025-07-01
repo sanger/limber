@@ -53,9 +53,7 @@ class Presenters::TubesWithSources
     @sources = []
   end
 
-  def <<(well)
-    @sources << well
-  end
+  delegate :<<, to: :@sources
 
   # Returns the pool id based on the shared submission between the wells
   def pool_id
@@ -72,6 +70,10 @@ class Presenters::TubesWithSources
 
   def pool_size
     @sources.sum { |well| well.aliquots.count }
+  end
+
+  def labware_sources
+    @sources
   end
 
   delegate_missing_to :tube

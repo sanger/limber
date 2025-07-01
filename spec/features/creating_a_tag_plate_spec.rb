@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
+RSpec.feature 'Creating a tag plate', :js, :tag_plate do
   has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
@@ -20,13 +20,16 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       purpose_uuid: 'stock-plate-purpose-uuid'
     )
   end
-
-  let(:tag_plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:tag_plate_qcable_uuid) { 'tag-plate-qcable' }
   let(:tag_plate_uuid) { 'tag-plate-uuid' }
-  let(:tag_plate_qcable) { json :tag_plate_qcable, uuid: tag_plate_qcable_uuid, lot_uuid: 'lot-uuid' }
   let(:tag_template_uuid) { 'tag-layout-template-0' }
-  let(:transfer_template_uuid) { 'custom-pooling' }
+
+  let(:qcable_template) { create :v2_tag_layout_template, uuid: tag_template_uuid }
+  let(:qcable_lot) { create :v2_lot, template: qcable_template }
+  let(:qcable_labware) { create :v2_plate, uuid: tag_plate_uuid }
+  let(:qcable) { create :v2_qcable, lot: qcable_lot, labware: qcable_labware, uuid: tag_plate_qcable_uuid }
+
+  let(:tag_plate_barcode) { qcable_labware.labware_barcode.machine }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
   let(:enforce_uniqueness) { true }
 
@@ -59,7 +62,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
           user_uuid: user_uuid,
           source_uuid: parent_plate.uuid,
           destination_uuid: tag_plate_uuid,
-          transfer_template_uuid: transfer_template_uuid,
+          transfer_template_uuid: 'custom-pooling',
           transfers: expected_transfers
         }
       }
@@ -68,7 +71,6 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
   let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
 
-  let(:tag_lot_number) { 'tag_lot_number' }
   let(:enforce_same_template_within_pool) { false }
 
   # Setup stubs
@@ -91,14 +93,8 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
     stub_v2_tag_layout_templates(templates)
 
-    # TODO: {Y24-190} Get rid of these v1 stubs after tag_layout_templates are moved to v2 in tagged_plate.rb
-    stub_api_get(tag_template_uuid, body: json(:tag_layout_template, uuid: tag_template_uuid))
-    stub_api_post(tag_template_uuid, body: json(:tag_layout_template, uuid: tag_template_uuid))
-
-    # API v1 UUID requests for a qcable via qcable_presenter.
-    stub_api_get(tag_plate_qcable_uuid, body: tag_plate_qcable)
-    stub_api_get('lot-uuid', body: json(:tag_lot, lot_number: tag_lot_number, template_uuid: tag_template_uuid))
-    stub_api_get('tag-lot-type-uuid', body: json(:tag_lot_type))
+    # API v2 requests for the qcable
+    stub_v2_qcable(qcable)
   end
 
   shared_examples 'it supports the plate' do
@@ -110,42 +106,35 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
 
       stub_v2_plate(create(:v2_plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
       stub_api_v2_post('StateChange')
+      stub_v2_qcable(qcable)
     end
 
     scenario 'creation with the plate' do
       expect_plate_conversion_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')
-      expect(find('#tag-help')).to have_content(help_text)
-      stub_search_and_single_result(
-        'Find qcable by barcode',
-        { 'search' => { 'barcode' => tag_plate_barcode } },
-        tag_plate_qcable
-      )
+      expect(find_by_id('tag-help')).to have_content(help_text)
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
-      expect(page).to have_content(tag_lot_number)
-      expect(find('#well_A2')).to have_content(a2_tag)
+      expect(page).to have_content(qcable_lot.lot_number)
+      expect(find_by_id('well_A2')).to have_content(a2_tag)
       click_on('Create Plate')
       expect(page).to have_content('New empty labware added to the system.')
     end
   end
 
   shared_examples 'it rejects the candidate plate' do
+    before { stub_v2_qcable(qcable) }
+
     scenario 'rejects the candidate plate' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
       expect(page).to have_content('Tag plate addition')
-      stub_search_and_single_result(
-        'Find qcable by barcode',
-        { 'search' => { 'barcode' => tag_plate_barcode } },
-        tag_plate_qcable
-      )
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
       expect(page).to have_button('Create Plate', disabled: true)
       expect(page).to have_content(tag_error)
@@ -160,6 +149,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:submission_pools) { create_list(:v2_dual_submission_pool, 1) }
         let(:help_text) { 'This plate is part of a larger pool and must be indexed with UDI plates.' }
         let(:tag_error) { 'Pool is spread across multiple plates. UDI plates must be used.' }
+
         it_behaves_like 'it rejects the candidate plate'
       end
 
@@ -170,6 +160,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:submission_pools) { create_list(:v2_submission_pool, 1) }
         let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
         let(:enforce_uniqueness) { false }
+
         it_behaves_like 'it supports the plate'
       end
 
@@ -179,6 +170,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         end
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         let(:tag_error) { 'Pool is spread across multiple plates. UDI plates must be used.' }
+
         it_behaves_like 'it rejects the candidate plate'
       end
     end
@@ -190,6 +182,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         let(:enforce_uniqueness) { false }
         let(:submission_pools) { create_list(:v2_submission_pool, 1) }
         let(:help_text) { 'This plate is part of a larger pool and must be indexed with UDI plates.' }
+
         it_behaves_like 'it supports the plate'
       end
 
@@ -198,6 +191,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
           create_list(:v2_dual_submission_pool, 1, used_template_uuids: ['tag-layout-template-1'])
         end
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
+
         it_behaves_like 'it supports the plate'
       end
 
@@ -207,6 +201,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
         end
         let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         let(:tag_error) { 'This template has already been used.' }
+
         it_behaves_like 'it rejects the candidate plate'
       end
 
@@ -228,12 +223,14 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
           # with configured templates - and matching scanned template: expected to find text "2" in ""
           # with no configured templates: expected to find text "9" in ""
           let(:used_template_uuid) { 'tag-layout-template-0' }
+
           it_behaves_like 'it supports the plate'
         end
 
         context 'when the pool has been tagged by plates' do
           let(:used_template_uuid) { 'tag-layout-template-1' }
           let(:tag_error) { 'It doesn\'t match those already used for other plates in this submission pool.' }
+
           it_behaves_like 'it rejects the candidate plate'
         end
       end
@@ -276,6 +273,7 @@ RSpec.feature 'Creating a tag plate', js: true, tag_plate: true do
       let(:template_factory) { :v2_dual_index_tag_layout_template }
       let(:tag_template_uuid) { 'unrecognised template' }
       let(:tag_error) { 'It is not approved for use with this pipeline.' }
+
       it_behaves_like 'it rejects the candidate plate'
     end
   end

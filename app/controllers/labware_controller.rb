@@ -14,7 +14,10 @@ class LabwareController < ApplicationController
 
   rescue_from Presenters::UnknownLabwareType, with: :unknown_type
 
+  layout 'labware'
+
   def show # rubocop:todo Metrics/AbcSize
+    @pipeline_info = Presenters::PipelineInfoPresenter.new(@labware)
     @presenter = presenter_for(@labware)
 
     response.headers['Vary'] = 'Accept'
@@ -33,7 +36,7 @@ class LabwareController < ApplicationController
   def update # rubocop:todo Metrics/AbcSize
     state_changer.move_to!(*update_params)
 
-    notice = +"Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
+    notice = "Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
     notice << ' The customer will still be charged.' if update_params[2]
 
     respond_to { |format| format.html { redirect_to(search_path, notice:) } }

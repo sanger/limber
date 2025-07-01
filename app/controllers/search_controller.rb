@@ -8,44 +8,42 @@ class SearchController < ApplicationController
   def new
   end
 
-  def ongoing_plates # rubocop:todo Metrics/AbcSize
-    plate_search = api.search.find(Settings.searches.fetch('Find plates'))
+  def ongoing_plates
     @purpose_options = helpers.purpose_options('plate')
-    @search_options = OngoingPlate.new(ongoing_plate_search_params)
-
-    @search_options.page = params['page'].to_i if params['page'].present?
-    @search_results = plate_search.all(Limber::Plate, @search_options.search_parameters)
-    @search_options.total_results = @search_results.size
+    @search_options = OngoingPlate.new(ongoing_plate_search_params.merge(page: params['page']&.to_i).compact)
+    @search_results =
+      Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
+    pagination_metadata(@search_results)
   end
 
-  def ongoing_tubes # rubocop:todo Metrics/AbcSize
-    tube_search = api.search.find(Settings.searches.fetch('Find tubes'))
+  def ongoing_tubes
     @purpose_options = helpers.purpose_options('tube')
-    @search_options = OngoingTube.new(ongoing_tube_search_params)
-    @search_options.page = params['page'].to_i if params['page'].present?
-
-    @search_results = tube_search.all(Limber::Tube, @search_options.search_parameters)
-    @search_options.total_results = @search_results.size
+    @search_options = OngoingTube.new(ongoing_tube_search_params.merge(page: params['page']&.to_i).compact)
+    @search_results =
+      Sequencescape::Api::V2::Tube.find_all(@search_options.search_parameters, paginate: @search_options.pagination)
+    pagination_metadata(@search_results)
   end
 
+  # Receives AJAX requests when creating tag plates, returns the
+  # plate information eg. lot number, template
+  # The front end makes a decision regarding suitability
   def qcables
-    respond_to { |format| format.json { redirect_to find_qcable(qcable_barcode) } }
-  rescue Sequencescape::Api::ResourceNotFound, ActionController::ParameterMissing, InputError => e
+    respond_to { |format| format.json { render json: { 'qcable' => find_qcable(qcable_barcode) } } }
+  rescue ActionController::ParameterMissing, InputError => e
     render json: { 'error' => e.message }
   end
 
-  def create # rubocop:todo Metrics/AbcSize
+  def create
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
 
-    respond_to { |format| format.html { redirect_to find_labware(params[:plate_barcode]) } }
-  rescue StandardError => e
-    flash.now[:error] = e.message
+    result = find_labware(params[:plate_barcode])
 
-    # rendering new without re-searching for the ongoing plates...
     respond_to do |format|
-      format.html { render :new }
-      format.json { render json: { error: e.message }, status: :not_found }
+      format.html { redirect_to result }
+      format.json { redirect_to result }
     end
+  rescue StandardError => e
+    handle_create_error(e)
   end
 
   def find_labware(barcode)
@@ -55,9 +53,16 @@ class SearchController < ApplicationController
   end
 
   def find_qcable(barcode)
-    api.search.find(Settings.searches['Find qcable by barcode']).first(barcode:)
-  rescue Sequencescape::Api::ResourceNotFound => e
-    raise e, "Sorry, could not find qcable with the barcode '#{barcode}'."
+    includes = [:labware, { lot: [{ lot_type: :target_purpose }, :template] }].freeze
+
+    qcable_resource =
+      Sequencescape::Api::V2::Qcable
+        .includes(*includes)
+        .find(barcode: qcable_barcode)
+        .first
+        .tap { |qcable| raise InputError, "Sorry, could not find qcable with the barcode '#{barcode}'." if qcable.nil? }
+
+    Presenters::QcablePresenter.new(qcable_resource)
   end
 
   private
@@ -67,10 +72,26 @@ class SearchController < ApplicationController
   end
 
   def ongoing_plate_search_params
-    params.fetch(:ongoing_plate, {}).permit(:show_my_plates_only, :include_used, purposes: [])
+    params.fetch(:ongoing_plate, {}).permit(:include_used, purposes: [])
   end
 
   def ongoing_tube_search_params
     params.fetch(:ongoing_tube, {}).permit(:include_used, purposes: [])
+  end
+
+  def pagination_metadata(search_results)
+    # Other possible pagination metadata from <JsonApiClient::ResultSet> includes:
+    # current_page, total_entries, total_results
+    # See the attributes returned by Sequencescape::Api::V2::Plate.find({state:'pending'})
+    @search_options.total_pages = search_results.total_pages
+  end
+
+  def handle_create_error(error)
+    flash.now[:error] = error.message
+
+    respond_to do |format|
+      format.html { render :new, status: :not_found }
+      format.json { render json: { error: error.message }, status: :not_found }
+    end
   end
 end

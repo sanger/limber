@@ -1,45 +1,45 @@
-name: Linting
+name: Lint
+
 env:
   BUNDLE_WITHOUT: 'test development default'
 
 on:
-  - push
-  - pull_request
+  push:
+  pull_request:
 
 jobs:
   prettier:
     name: Prettier
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby # Prettier has a Ruby dependency
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true # Runs bundle install and caches gems.
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
+
+      - name: Setup Ruby
+        uses: sanger/.github/.github/actions/setup/ruby@master
+
       - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Install Node dependencies
+        uses: sanger/.github/.github/actions/setup/node@master
+
+      - name: Setup yarn
         run: yarn install
+
       - name: Run prettier
         run: yarn prettier --check .
 
   rubocop:
-    name: RuboCop
+    name: Rubocop
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true # Runs bundle install and caches gems.
-      - name: Setup Node # RuboCop has a Prettier dependency for formatting
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Install Node dependencies
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
+
+      - name: Setup Ruby
+        uses: sanger/.github/.github/actions/setup/ruby@master
+
+      - name: Setup yarn
         run: yarn install
+
       - name: Run lint
         run: bundle exec rubocop --extra-details --display-style-guide --parallel
 
@@ -47,12 +47,33 @@ jobs:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
+
       - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - name: Install Node dependencies
+        uses: sanger/.github/.github/actions/setup/node@master
+
+      - name: Setup yarn
         run: yarn install
+
       - name: Run ESLint
         run: yarn lint
+
+  erb_lint:
+    name: ERB Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: sanger/.github/.github/actions/setup/checkout@master
+
+      - name: Setup Ruby
+        uses: sanger/.github/.github/actions/setup/ruby@master
+
+      - name: Setup Node # ERB Lint has a Prettier dependency for formatting
+        uses: sanger/.github/.github/actions/setup/node@master
+
+      - name: Setup yarn
+        run: yarn install
+
+      - name: Run ERB Lint
+        run: bundle exec erb_lint --format json --lint-all
