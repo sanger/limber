@@ -32,7 +32,7 @@
     </b-row>
     <b-row class="form-group form-row">
       <b-col>
-        <b-form-group id="tag_set_selection_group" horizontal label="Select Tagset:" label-for="tag_set_selection">
+        <b-form-group id="tag_set_selection_group" horizontal label="Select Tag Set:" label-for="tag_set_selection">
           <b-form-select
             id="tag_set_selection"
             v-model="tagSetId"

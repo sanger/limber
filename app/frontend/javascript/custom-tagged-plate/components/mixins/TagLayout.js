@@ -90,7 +90,7 @@ export default {
         })
     },
     tagSetOptions() {
-      return [{ value: null, text: 'Please select a Tagset...' }].concat(this.coreTagSetOptions.slice())
+      return [{ value: null, text: 'Please select a Tag Set...' }].concat(this.coreTagSetOptions.slice())
     },
   },
   methods: {
