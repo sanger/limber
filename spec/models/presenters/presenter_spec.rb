@@ -18,18 +18,19 @@ RSpec.describe Presenters::Presenter, type: :model do
     end
 
     context 'when there are parents' do
-      let(:parent_labware) { create(:labware) }
+      let(:parent_labware1) { create(:labware) }
+      let(:parent_labware2) { create(:labware) }
 
       before do
-        allow(presenter.labware).to receive(:parents).and_return([parent_labware])
+        allow(presenter.labware).to receive(:parents).and_return([parent_labware1, parent_labware2])
         allow(Sequencescape::Api::V2::Labware).to receive(:find_all).with(
-          { uuid: [parent_labware.uuid] },
+          { uuid: [parent_labware1.uuid, parent_labware2.uuid] },
           includes: %w[purpose]
-        ).and_return([parent_labware])
+        ).and_return([parent_labware1, parent_labware2])
       end
 
-      it 'returns the parent labwares with purposes' do
-        expect(presenter.parent_labwares).to eq([parent_labware])
+      it 'returns the parent labwares' do
+        expect(presenter.parent_labwares).to eq([parent_labware1, parent_labware2])
       end
     end
   end
