@@ -102,10 +102,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     parent_barcodes = labware.parents.compact.map(&:barcode).uniq
     return [] if parent_barcodes.empty?
 
-    Sequencescape::Api::V2::Labware.find_all(
-      { barcode: parent_barcodes },
-      includes: %w[purpose]
-    )
+    Sequencescape::Api::V2::Labware.find_all({ barcode: parent_barcodes }, includes: %w[purpose])
   end
 
   def child_assets
