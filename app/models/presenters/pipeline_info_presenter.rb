@@ -61,34 +61,23 @@ class Presenters::PipelineInfoPresenter
     'No Pipelines Found'
   end
 
-  # Returns true if the labware purpose has any defined parent of grand-parent relationships, false otherwise.
-  # return [Boolean] True if the labware has great-grandparent purposes
-  def great_grandparent_purposes?
-    @labware.parents.any? do |parent|
-      labware_from_asset(parent).parents.any? { |grandparent| labware_from_asset(grandparent).parents.any? }
-    end
-  end
+  # Returns true if the labware purpose has any defined grandparent relationships, false otherwise.
+  # return [Boolean] True if the labware has grandparent purposes
+  def grandparent_purposes?
+    return false if @labware.parents.empty?
 
-  # Returns a comma-separated list of the purposes of the labware's grandparents.
-  # If the labware has no grandparents, it returns an empty string.
-  # @return [String] Comma-separated list of grandparent purposes.
-  def grandparent_purposes
-    join_up_to(
-      2,
-      @labware
-        .parents
-        .map { |parent| labware_from_asset(parent).parents.map { |grandparent| grandparent.purpose.name } }
-        .flatten
-        .uniq
-        .sort
-    )
+    parent_labwares = find_all_labware_parents_with_purposes
+    grandparent_labwares = find_all_labware_parents_with_purposes(labwares: parent_labwares)
+
+    true unless grandparent_labwares.empty?
   end
 
   # Returns a comma-separated list of the purposes of the labware's parents.
   # If the labware has no parents, it returns an empty string.
   # @return [String] Comma-separated list of parent purposes.
   def parent_purposes
-    join_up_to(2, @labware.parents.map { |parent| parent.purpose.name }.uniq.sort)
+    parent_purpose_names = find_all_labware_parents_with_purposes.map { |parent| parent.purpose.name }.uniq.sort
+    join_up_to(2, parent_purpose_names)
   end
 
   # Returns a comma-separated list of potential child purposes for the labware.
@@ -99,6 +88,10 @@ class Presenters::PipelineInfoPresenter
   end
 
   private
+
+  def cache_key
+    "pipeline_info_presenter/#{@labware.barcode}"
+  end
 
   def join_up_to(max_listed, array, separator = ', ')
     return array.join(separator) if array.size <= max_listed
@@ -118,34 +111,33 @@ class Presenters::PipelineInfoPresenter
     active_pipelines.map(&:pipeline_group).uniq
   end
 
+  def find_all_labware_parents_with_purposes(labwares: nil)
+    labwares ||= [@labware]
+    fn_cache_key = "#{cache_key}/find_all_labware_parents_with_purposes/#{labwares.map(&:barcode).uniq.join}"
+    Rails.cache.fetch(fn_cache_key, expires_in: 1.minute) { find_all_labware_parents_with_purposes_uncached(labwares) }
+  end
+
+  def find_all_labware_parents_with_purposes_uncached(labwares)
+    parent_barcodes = labwares.flat_map(&:parents).compact.map(&:barcode).uniq
+    return [] if parent_barcodes.empty?
+
+    Sequencescape::Api::V2::Labware.find_all(
+      { barcode: parent_barcodes },
+      includes: %w[purpose parents parents.purpose]
+    )
+  end
+
   # On `LB Lib Pool Norm` tubes, it's hard to find the correct pipeline,
   # because the same purpose and request type is used in many pipelines.
   # This looks at the parent labware, as this is normally specific to the pipeline.
   # This approach could cause problems if the parent labware is in a different pipeline,
   # however, in this case it is normally in the same pipeline *group*.
   def pipeline_groups_by_parent_purposes
-    @labware
-      .parents
-      .map do |parent|
-        parent_labware = labware_from_asset(parent)
-        Settings
-          .pipelines
-          .select_pipelines_with_purpose(Settings.pipelines.list, parent_labware.purpose)
-          .map(&:pipeline_group)
+    find_all_labware_parents_with_purposes
+      .map(&:purpose)
+      .map do |parent_purpose|
+        Settings.pipelines.select_pipelines_with_purpose(Settings.pipelines.list, parent_purpose).map(&:pipeline_group)
       end
       .reduce(:&)
-  end
-  def find_plate(barcode)
-    Sequencescape::Api::V2::Plate.find_all({ barcode: [barcode] }, includes: 'purpose').first
-  end
-
-  def find_tube(barcode)
-    Sequencescape::Api::V2::Tube.find_all({ barcode: [barcode] }, includes: 'purpose').first
-  end
-
-  def labware_from_asset(asset)
-    return find_plate(asset.barcode) if asset.plate?
-    return find_tube(asset.barcode) if asset.tube?
-    nil
   end
 end
