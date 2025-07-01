@@ -12,8 +12,8 @@
         <fieldset>
           <legend class="col-form-label">Change state to</legend>
           <% transitions.each do |transition| %>
-            <div class="custom-control custom-radio custom-control-inline form-group">
-              <%= radio_button_tag :state, transition.to, false, required: true , class: 'custom-control-input' %>
+            <div class="custom-control custom-radio d-inline-flex me-4 form-group">
+              <%= radio_button_tag :state, transition.to, false, required: true , class: 'custom-control-input me-2' %>
               <%= label_tag "state_#{transition.to}", transition.human_to_name, class: 'custom-control-label' %>
             </div>
           <% end %>
@@ -30,7 +30,9 @@
               associated library requests. You will be able to return to an earlier plate in the process, and continue
               work.
             </div>
-            <%= cancelled.submit 'Cancel Labware', class: 'btn btn-lg btn-danger btn-block form-group', data: { disable_with: 'Cancelling...' } %>
+            <div class="d-grid gap-2">
+              <%= cancelled.submit 'Cancel Labware', class: 'btn btn-lg btn-danger form-group', data: { disable_with: 'Cancelling...' } %>
+            </div>
           <% end %>
         </div>
 
@@ -49,7 +51,9 @@
               reversible and will prevent any further work being carried out on parent plates. <b>Note:</b> This action will
               also remove all downstream aliquots unless there is a sequencing batch downstream already.
             </div>
-            <%= failed.submit 'Fail Labware', class: 'btn btn-lg btn-danger btn-block', data: { disable_with: 'Failing...' } %>
+            <div class="d-grid gap-2">
+              <%= failed.submit 'Fail Labware', class: 'btn btn-lg btn-danger', data: { disable_with: 'Failing...' } %>
+            </div>
           <% end %>
         </div>
       </div>

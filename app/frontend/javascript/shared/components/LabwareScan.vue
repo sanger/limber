@@ -9,7 +9,7 @@
             </div>
           </div>
         </b-col>
-        <b-col cols="9">
+        <b-col class="mb-2">
           <b-form-group
             :label="label"
             :label-cols="labelColumnSpan"
@@ -71,7 +71,7 @@ export default {
       default: 'Plate',
     },
     labelColumnSpan: {
-      // The number of columns for the label to span (out of 9)
+      // The number of columns for the label to span
       type: Number,
       default: 2,
     },
@@ -130,6 +130,7 @@ export default {
       default: 'Great!',
     },
   },
+  emits: ['change'],
   data() {
     uid += 1
     return {

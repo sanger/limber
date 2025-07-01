@@ -15,7 +15,7 @@ describe('Well', () => {
 
   const wrapperWithoutAliquot = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: { position: 'A1', colour_index: 1 },
+    props: { position: 'A1', colour_index: 1 },
   })
 
   it('renders a well', () => {
@@ -28,7 +28,7 @@ describe('Well', () => {
 
   const wrapperWithAliquot = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: {
+    props: {
       position: 'A1',
       colour_index: 2,
       tagMapIds: [10],
@@ -45,12 +45,11 @@ describe('Well', () => {
   })
 
   it('emits a well clicked event', () => {
-    const emitted = wrapperWithAliquot.emitted()
-
     expect(wrapperWithAliquot.find('span').exists()).toBe(true)
 
     const input = wrapperWithAliquot.find('span')
     input.trigger('click')
+    const emitted = wrapperWithAliquot.emitted()
 
     expect(emitted.onwellclicked.length).toBe(1)
     expect(emitted.onwellclicked[0]).toEqual(['A1'])
@@ -63,14 +62,14 @@ describe('Well', () => {
   it('renders a tooltip with the specified label', () => {
     const wrapperWithTooltipLabel = shallowMount(Well, {
       attachTo: createContainer(),
-      propsData: { position: 'A1', tooltip_label: 'Test', colour_index: 1 },
+      props: { position: 'A1', tooltip_label: 'Test', colour_index: 1 },
     })
     expect(wrapperWithTooltipLabel.vm.tooltipText).toEqual('A1 - Test')
   })
 
   const wrapperWithTagMapIds = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: { position: 'A1', colour_index: 1, tagMapIds: [5] },
+    props: { position: 'A1', colour_index: 1, tagMapIds: [5] },
   })
 
   it('renders a well with Tag Map Id displayed', () => {
@@ -79,7 +78,7 @@ describe('Well', () => {
 
   const wrapperWithPosition = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: { position: 'B3', colour_index: 1 },
+    props: { position: 'B3', colour_index: 1 },
   })
 
   it('renders a well with tag name', () => {
@@ -88,7 +87,7 @@ describe('Well', () => {
 
   const wrapperWithTagClash = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: {
+    props: {
       position: 'A1',
       colour_index: 1,
       tagMapIds: [5],
@@ -106,7 +105,7 @@ describe('Well', () => {
 
   const wrapperWithInvalidTag = shallowMount(Well, {
     attachTo: createContainer(),
-    propsData: {
+    props: {
       position: 'A1',
       colour_index: 1,
       tagMapIds: [-1],
@@ -121,7 +120,7 @@ describe('Well', () => {
   it('renders a well with multiple Tag Map Ids displayed according to the value of tagIndex', async () => {
     const wrapperWithMultipleAliquots = shallowMount(Well, {
       attachTo: createContainer(),
-      propsData: {
+      props: {
         position: 'A1',
         colour_index: 1,
         tagMapIds: [1, 2, 3, 4],

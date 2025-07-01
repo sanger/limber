@@ -44,7 +44,7 @@
               v-model="tag1GroupId"
               :options="tag1GroupOptions"
               :disabled="tagGroupsDisabled"
-              @input="tagGroupInput"
+              @update:model-value="tagGroupInput"
               @change="tagGroupChanged"
             />
           </b-form-group>
@@ -63,7 +63,7 @@
               v-model="tag2GroupId"
               :options="tag2GroupOptions"
               :disabled="tagGroupsDisabled"
-              @input="tagGroupInput"
+              @update:model-value="tagGroupInput"
               @change="tagGroupChanged"
             />
           </b-form-group>
@@ -79,17 +79,17 @@
               v-model="tagSetId"
               :options="tagSetOptions"
               :disabled="tagSetsDisabled"
-              @input="tagSetInput"
+              @update:model-value="tagGroupInput"
               @change="tagSetChanged"
             />
           </b-form-group>
         </b-col>
       </b-row>
       <b-row v-if="tag1GroupName" id="tag1_name_label" class="form-group form-row">
-        <b-label>i7 Tag 1 Group</b-label> : {{ tag1GroupName }}
+        <label class="form-label">i7 Tag 1 Group</label> : {{ tag1GroupName }}
       </b-row>
       <b-row v-if="tag2GroupName" id="tag2_name_label" class="form-group form-row mb-2">
-        <b-label>i5 Tag 2 Group</b-label> : {{ tag2GroupName }}</b-row
+        <label class="form-label">i5 Tag 2 Group</label> : {{ tag2GroupName }}</b-row
       >
     </template>
     <!-- TAG SETS -->
@@ -101,7 +101,7 @@
             id="walking_by_options"
             v-model="walkingBy"
             :options="walkingByOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -111,7 +111,7 @@
             id="direction_options"
             v-model="direction"
             :options="directionOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -129,7 +129,7 @@
       </b-col>
       <b-col>
         <b-form-group id="tags_per_well_group" label="Tags per well:" label-for="tags_per_well">
-          <b-form-input id="tags_per_well" type="number" :value="tagsPerWell" :disabled="true" />
+          <b-form-input id="tags_per_well" type="number" :model-value="tagsPerWell" :disabled="true" />
         </b-form-group>
       </b-col>
     </b-row>
@@ -276,7 +276,7 @@ export default {
           this.tagPlateScanDisabled = false
         }
       }
-      this.updateTagParams(null)
+      this.updateTagParams()
     },
     tagGroupLookupFilter() {
       if (this.tagGroupAdapterTypeNameFilter) {

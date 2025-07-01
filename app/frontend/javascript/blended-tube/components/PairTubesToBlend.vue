@@ -143,6 +143,7 @@ export default {
       required: true,
     },
   },
+  emits: ['change'],
   data() {
     return {
       pairedTubes: buildTubeObjs(2),
@@ -342,7 +343,7 @@ export default {
   },
   methods: {
     updateTube(index, data) {
-      this.$set(this.pairedTubes, index, { ...data, index: index })
+      this.pairedTubes[index] = { ...data, index: index }
     },
     performPairingValidations() {
       this.errorMessages = []

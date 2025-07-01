@@ -1,7 +1,6 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import TagLayoutManipulations from './TagLayoutManipulations.vue'
-import localVue from '@/javascript/test_support/base_vue.js'
 import {
   nullQcableData,
   exampleQcableData,
@@ -10,23 +9,22 @@ import {
 } from '@/javascript/custom-tagged-plate/testData/customTaggedPlateTestData.js'
 import { expect } from 'vitest'
 
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('TagLayoutManipulations', () => {
   const wrapperFactory = function () {
-    return shallowMount(TagLayoutManipulations, {
-      propsData: {
+    return mount(TagLayoutManipulations, {
+      props: {
         api: {},
         numberOfTags: 10,
         numberOfTargetWells: 10,
         tagsPerWell: 1,
       },
-      stubs: {
-        'lb-plate-scan': true,
-        'lb-tag-groups-lookup': true,
-        'lb-tag-offset': true,
+      global: {
+        stubs: {
+          'lb-plate-scan': true,
+          TagGroupsLookup: true,
+          'lb-tag-offset': true,
+        },
       },
-      localVue,
     })
   }
 
@@ -120,8 +118,6 @@ describe('TagLayoutManipulations', () => {
 
       wrapper.vm.tagPlateScanned(exampleQcableData)
 
-      // NB cannot check the vue bootstrap elements directly with shallowMount
-      // wrapper
       expect(wrapper.vm.tagGroupsDisabled).toBe(true)
       expect(wrapper.vm.tagSetsDisabled).toBe(true)
 
@@ -143,8 +139,6 @@ describe('TagLayoutManipulations', () => {
 
       expect(wrapper.vm.tagPlateScanDisabled).toBe(false)
 
-      // NB cannot check the vue bootstrap elements directly with shallowMount
-      // wrapper
       wrapper.setData({ tag1GroupId: 1 })
 
       wrapper.vm.tagGroupChanged()
@@ -211,7 +205,6 @@ describe('TagLayoutManipulations', () => {
 
     it('emits a call to the parent container on a change of the form data', () => {
       const wrapper = wrapperFactory()
-      const emitted = wrapper.emitted()
 
       wrapper.setData({ walkingBy: 'manual by plate' })
 
@@ -234,9 +227,8 @@ describe('TagLayoutManipulations', () => {
         },
       ]
 
-      // NB. cannot interact with vue bootstrap components when wrapper is
-      // shallowMounted
       wrapper.vm.updateTagParams()
+      const emitted = wrapper.emitted()
 
       expect(emitted.tagparamsupdated.length).toBe(1)
       expect(emitted.tagparamsupdated[0]).toEqual(expectedEmitted)
