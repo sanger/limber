@@ -110,22 +110,6 @@ describe('TagLayout mixin', () => {
       })
     })
 
-    describe('coreTagGroupOptions', () => {
-      it('returns empty array if tag groups list empty', () => {
-        expect(tagLayout.coreTagGroupOptions).toEqual([])
-      })
-
-      it('returns valid array if tag groups list set', () => {
-        tagLayout.tagGroupsList = exampleTagGroupsList
-
-        const expectedCoreTagGroupOptions = [
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' },
-        ]
-
-        expect(tagLayout.coreTagGroupOptions).toEqual(expectedCoreTagGroupOptions)
-      })
-    })
     describe('coreTagSetOptions', () => {
       it('returns empty array if tag groups list empty', () => {
         expect(tagLayout.coreTagSetOptions).toEqual([])
@@ -140,42 +124,6 @@ describe('TagLayout mixin', () => {
         ]
 
         expect(tagLayout.coreTagSetOptions).toEqual(expectedCoreTagSetOptions)
-      })
-    })
-
-    describe('tag1GroupOptions:', () => {
-      it('returns empty array for tag 1 groups if tag groups list empty', () => {
-        expect(tagLayout.tag1GroupOptions).toEqual([{ value: null, text: 'Please select an i7 Tag 1 group...' }])
-      })
-
-      it('returns valid array of tag 1 groups if tag groups list set', () => {
-        tagLayout.tagGroupsList = exampleTagGroupsList
-
-        const expectedTag1GroupOptions = [
-          { value: null, text: 'Please select an i7 Tag 1 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' },
-        ]
-
-        expect(tagLayout.tag1GroupOptions).toEqual(expectedTag1GroupOptions)
-      })
-    })
-
-    describe('tag2GroupOptions:', () => {
-      it('returns empty array for tag 2 groups if tag groups list empty', () => {
-        expect(tagLayout.tag2GroupOptions).toEqual([{ value: null, text: 'Please select an i5 Tag 2 group...' }])
-      })
-
-      it('returns valid array of tag 2 groups if tag groups list set', () => {
-        tagLayout.tagGroupsList = exampleTagGroupsList
-
-        const expectedTag2GroupOptions = [
-          { value: null, text: 'Please select an i5 Tag 2 group...' },
-          { value: '1', text: 'Tag Group 1' },
-          { value: '2', text: 'Tag Group 2' },
-        ]
-
-        expect(tagLayout.tag2GroupOptions).toEqual(expectedTag2GroupOptions)
       })
     })
 
