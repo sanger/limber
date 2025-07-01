@@ -101,7 +101,8 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   #
   # @return [Array<Sequencescape::Api::V2::Labware>] Array of parent labwares with purposes.
   def parent_labwares
-    parent_uuids = labware.parents.compact.map(&:uuid).uniq
+    parents = labware.parents || []
+    parent_uuids = parents.compact.map(&:uuid).uniq
     return [] if parent_uuids.empty?
 
     Sequencescape::Api::V2::Labware.find_all({ uuid: parent_uuids }, includes: %w[purpose])
@@ -112,7 +113,8 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   #
   # @return [Array<Sequencescape::Api::V2::Labware>] Array of child labwares with purposes.
   def children_labwares
-    child_uuids = labware.children.compact.map(&:uuid).uniq
+    children = labware.children || []
+    child_uuids = children.compact.map(&:uuid).uniq
     return [] if child_uuids.empty?
 
     Sequencescape::Api::V2::Labware.find_all({ uuid: child_uuids }, includes: %w[purpose])

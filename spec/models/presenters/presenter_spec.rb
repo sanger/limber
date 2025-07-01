@@ -10,7 +10,7 @@ RSpec.describe Presenters::Presenter, type: :model do
 
   describe '#parent_labwares' do
     context 'when there are no parents' do
-      before { allow(presenter.labware).to receive(:parents).and_return([]) }
+      before { allow(presenter.labware).to receive(:parents).and_return(nil) }
 
       it 'returns an empty array' do
         expect(presenter.parent_labwares).to eq([])
@@ -37,7 +37,7 @@ RSpec.describe Presenters::Presenter, type: :model do
 
   describe '#children_labwares' do
     context 'when there are no children' do
-      before { allow(presenter.labware).to receive(:children).and_return([]) }
+      before { allow(presenter.labware).to receive(:children).and_return(nil) }
 
       it 'returns an empty array' do
         expect(presenter.children_labwares).to eq([])
