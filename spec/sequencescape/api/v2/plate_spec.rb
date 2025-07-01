@@ -88,21 +88,21 @@ RSpec.describe Sequencescape::Api::V2::Plate do
             uuid: '8681e102-b737-11ec-8ace-acde48001122'
           },
           # This is a bit brittle, as it depends on the exact order.
-          include: [
-            'purpose',
-            'child_plates.purpose',
-            'wells.qc_results',
-            'wells.downstream_tubes.purpose',
-            'wells.requests_as_source.request_type',
-            'wells.requests_as_source.primer_panel',
-            'wells.requests_as_source.pre_capture_pool',
-            'wells.requests_as_source.submission',
-            'wells.aliquots.sample.sample_metadata',
-            'wells.aliquots.request.request_type',
-            'wells.aliquots.request.primer_panel',
-            'wells.aliquots.request.pre_capture_pool',
-            'wells.aliquots.request.submission',
-            'wells.transfer_requests_as_target.source_asset'
+          include: %w[
+            purpose
+            child_plates.purpose
+            wells.qc_results
+            wells.downstream_tubes.purpose
+            wells.requests_as_source.request_type
+            wells.requests_as_source.primer_panel
+            wells.requests_as_source.pre_capture_pool
+            wells.requests_as_source.submission
+            wells.aliquots.sample.sample_metadata
+            wells.aliquots.request.request_type
+            wells.aliquots.request.primer_panel
+            wells.aliquots.request.pre_capture_pool
+            wells.aliquots.request.submission
+            wells.transfer_requests_as_target.source_asset
           ].join(',')
         },
         headers: {
