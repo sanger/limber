@@ -105,7 +105,7 @@ export default {
       return [{ value: null, text: 'Please select an i5 Tag 2 group...' }].concat(this.coreTagGroupOptions.slice())
     },
     tagSetOptions() {
-      return [{ value: null, text: 'Please select a Tagset...' }].concat(this.coreTagSetOptions.slice())
+      return [{ value: null, text: 'Please select a Tag Set...' }].concat(this.coreTagSetOptions.slice())
     },
   },
   methods: {
