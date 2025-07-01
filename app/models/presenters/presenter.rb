@@ -99,10 +99,10 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   # A collection of parents for this labware including purposes.
   # Returns an empty array if there are no parents.
   def parent_labwares
-    parent_barcodes = labware.parents.compact.map(&:barcode).uniq
-    return [] if parent_barcodes.empty?
+    parent_uuids = labware.parents.compact.map(&:uuid).uniq
+    return [] if parent_uuids.empty?
 
-    Sequencescape::Api::V2::Labware.find_all({ barcode: parent_barcodes }, includes: %w[purpose])
+    Sequencescape::Api::V2::Labware.find_all({ uuid: parent_uuids }, includes: %w[purpose])
   end
 
   def child_assets
