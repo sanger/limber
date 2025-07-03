@@ -1,7 +1,7 @@
 <%# locals: (presenter:) %>
 <%
-  valid_parents = presenter.labware.parents&.filter{ |parent| parent.purpose.present? } || []
-  valid_children = presenter.labware.children&.filter{ |child| child.purpose.present? } || []
+  valid_parents = presenter.parent_labwares
+  valid_children = presenter.children_labwares
 %>
 <div id="relatives-information" class="list-group list-group-flush">
 
@@ -11,10 +11,10 @@
   </div>
 
   <div id="parents-list" class="border-bottom">
-    <% if valid_parents %>
-      <%= render partial: 'labware/parent_labware_item', collection: valid_parents, as: :labware %>
-    <% else %>
+    <% if valid_parents.empty? %>
       <div class="list-group-item text-muted">No parents found</div>
+    <% else %>
+      <%= render partial: 'labware/parent_labware_item', collection: valid_parents, as: :labware %>
     <% end %>
   </div>
 
@@ -24,10 +24,10 @@
   </div>
 
   <div id="children-list" class="rounded-bottom">
-    <% if valid_children %>
-      <%= render partial: 'labware/child_labware_item', collection: valid_children, as: :labware, locals: { presenter: presenter, open_in_new_window: true } %>
-    <% else %>
+    <% if valid_children.empty? %>
       <div class="list-group-item text-muted">No children found</div>
+    <% else %>
+      <%= render partial: 'labware/child_labware_item', collection: valid_children, as: :labware, locals: { presenter: presenter, open_in_new_window: true } %>
     <% end %>
   </div>
 
