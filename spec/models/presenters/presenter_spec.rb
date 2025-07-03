@@ -14,7 +14,6 @@ RSpec.describe Presenters::Presenter, type: :model do
 
     before do
       allow(presenter.labware).to receive(:parents).and_return(parent_labwares)
-
       allow(Sequencescape::Api::V2::Labware).to receive(:find_all).with(
         { uuid: parent_labware_uuids },
         includes: %w[purpose]
@@ -30,12 +29,22 @@ RSpec.describe Presenters::Presenter, type: :model do
     end
 
     context 'when there are parents' do
-      let(:parent_labware1) { create(:labware) }
-      let(:parent_labware2) { create(:labware) }
+      let(:purpose) { create(:v2_purpose) }
+      let(:parent_labware1) { create(:labware, purpose:) }
+      let(:parent_labware2) { create(:labware, purpose:) }
       let(:parent_labwares) { [parent_labware1, parent_labware2] }
 
       it 'returns the parent labwares' do
         expect(presenter.parent_labwares).to eq([parent_labware1, parent_labware2])
+      end
+
+      context 'where some parents do not have a purpose' do
+        let(:parent_labware3) { create(:labware, purpose: nil) }
+        let(:parent_labwares) { [parent_labware1, parent_labware2, parent_labware3] }
+
+        it 'returns only the parents with a purpose' do
+          expect(presenter.parent_labwares).to eq([parent_labware1, parent_labware2])
+        end
       end
     end
   end
@@ -60,12 +69,22 @@ RSpec.describe Presenters::Presenter, type: :model do
     end
 
     context 'when there are children' do
-      let(:child_labware1) { create(:labware) }
-      let(:child_labware2) { create(:labware) }
+      let(:purpose) { create(:v2_purpose) }
+      let(:child_labware1) { create(:labware, purpose:) }
+      let(:child_labware2) { create(:labware, purpose:) }
       let(:child_labwares) { [child_labware1, child_labware2] }
 
       it 'returns the child labwares' do
         expect(presenter.children_labwares).to eq([child_labware1, child_labware2])
+      end
+
+      context 'where some children do not have a purpose' do
+        let(:child_labware3) { create(:labware, purpose: nil) }
+        let(:child_labwares) { [child_labware1, child_labware2, child_labware3] }
+
+        it 'returns only the children with a purpose' do
+          expect(presenter.children_labwares).to eq([child_labware1, child_labware2])
+        end
       end
     end
   end
