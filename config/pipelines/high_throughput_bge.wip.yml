@@ -50,9 +50,10 @@ BGE ISC MX:
 
 BGE Blend:
   pipeline_group: BGE
+  # NB. no filters here as no submission is used for this section
+  # The multiplexing requests are closed off on the two parents of the
+  # Blended Cap Lib Pool before being nerged here.
   relationships:
     BGE Lib Pool: BGE Blended Cap Lib Pool
     BGE Cap Lib Pool Norm: BGE Blended Cap Lib Pool
     BGE Blended Cap Lib Pool: BGE Lib Pool Norm
-    # 1:1 transfer here, not a pool as such
-    BGE Lib Pool Norm: BGE Custom Pool
