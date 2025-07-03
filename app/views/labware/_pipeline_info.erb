@@ -13,12 +13,8 @@
     %>
   </strong> |
 
-  <% if @pipeline_info.great_grandparent_purposes? %>
+  <% if @pipeline_info.grandparent_purposes? %>
     ... »
-  <% end %>
-
-  <% if @pipeline_info.grandparent_purposes.present? %>
-    <code><%= @pipeline_info.grandparent_purposes %></code> »
   <% end %>
 
   <% if @pipeline_info.parent_purposes.present? %>
