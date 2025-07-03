@@ -49,7 +49,7 @@ RSpec.describe Presenters::Presenter, type: :model do
     end
   end
 
-  describe '#children_labwares' do
+  describe '#child_labwares' do
     let(:child_labware_uuids) { (child_labwares || []).map(&:uuid) }
 
     before do
@@ -64,7 +64,7 @@ RSpec.describe Presenters::Presenter, type: :model do
       let(:child_labwares) { nil }
 
       it 'returns an empty array' do
-        expect(presenter.children_labwares).to eq([])
+        expect(presenter.child_labwares).to eq([])
       end
     end
 
@@ -75,7 +75,7 @@ RSpec.describe Presenters::Presenter, type: :model do
       let(:child_labwares) { [child_labware1, child_labware2] }
 
       it 'returns the child labwares' do
-        expect(presenter.children_labwares).to eq([child_labware1, child_labware2])
+        expect(presenter.child_labwares).to eq([child_labware1, child_labware2])
       end
 
       context 'where some children do not have a purpose' do
@@ -83,7 +83,7 @@ RSpec.describe Presenters::Presenter, type: :model do
         let(:child_labwares) { [child_labware1, child_labware2, child_labware3] }
 
         it 'returns only the children with a purpose' do
-          expect(presenter.children_labwares).to eq([child_labware1, child_labware2])
+          expect(presenter.child_labwares).to eq([child_labware1, child_labware2])
         end
       end
     end

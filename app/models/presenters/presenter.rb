@@ -111,11 +111,11 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     parent_labwares.filter { |labware| labware.purpose.present? }
   end
 
-  # A collection of children labwares for this labware including purposes.
+  # A collection of child labwares for this labware including purposes.
   # Returns an empty array if there are no children.
   #
   # @return [Array<Sequencescape::Api::V2::Labware>] Array of child labwares with purposes.
-  def children_labwares
+  def child_labwares
     children = labware.children || []
     child_uuids = children.compact.map(&:uuid).uniq
     return [] if child_uuids.empty?
