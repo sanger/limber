@@ -60,7 +60,25 @@ class Labels::Plate384SingleLabel < Labels::PlateLabelBase
     alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(labware)
     return if alternative_workline_identifier_purpose.blank?
 
-    labware.ancestors.where(purpose_name: alternative_workline_identifier_purpose).first
+    if alternative_workline_identifier_purpose.is_a?(Array)
+      find_first_matching_purpose(alternative_workline_identifier_purpose)
+    else
+      # Original behavior for a single purpose name
+      find_reference_by_purpose_name(alternative_workline_identifier_purpose)
+    end
+  end
+
+  def find_first_matching_purpose(purpose_names)
+    # Try each purpose name in the array in order until we find a match
+    purpose_names.each do |purpose_name|
+      reference = find_reference_by_purpose_name(purpose_name)
+      return reference if reference.present?
+    end
+    nil
+  end
+
+  def find_reference_by_purpose_name(purpose_name)
+    labware.ancestors.where(purpose_name:).first
   end
 
   # Returns the first stock plate of the last purpose
