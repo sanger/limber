@@ -4,8 +4,8 @@
     <li data-pool="<%= pool.id %>" class='list-group-item pool-colours'>
       <div class="pool-data">
         <span class="pool_name colour-<%= pool.pool_index %> badge">Pool <%= pool.pool_index %></span>
-        <span class="badge bg-light text-black well-count"><%= pool.well_count %> wells</span>
-        <span class="badge bg-light text-black well-count"><%= pool.lane_count %> lanes</span>
+        <span class="badge bg-light text-dark well-count"><%= pool.well_count %> wells</span>
+        <span class="badge bg-light text-dark well-count"><%= pool.lane_count %> lanes</span>
       </div>
 
       <% pool.subpools.each do |subpool| %>
