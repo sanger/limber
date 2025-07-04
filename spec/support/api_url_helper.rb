@@ -79,6 +79,7 @@ module ApiUrlHelper
 
   # Expectations for the V2 API.
   # All methods here generate an expectation that the endpoint will be called with the correct arguments.
+  # rubocop:todo Metrics/ModuleLength
   module V2Expectations
     def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
@@ -212,6 +213,7 @@ module ApiUrlHelper
       do_not_expect_api_v2_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
     end
   end
+  # rubocop:enable Metrics/ModuleLength
 
   # Stubs for the V2 API.
   # None of the methods here generate an expectation that the endpoint will be called.
