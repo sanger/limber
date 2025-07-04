@@ -12,10 +12,10 @@ scRNA Core Cell Extraction Seq:
     request_type_key: limber_scrna_core_cell_extraction
   relationships:
     LRC Blood Bank: LRC PBMC Bank
-    LRC PBMC Bank: LRC Bank Seq
+    LRC PBMC Bank: LRC TR Bank Seq
 # This branch allows creation of extra tubes (back ups)
 scRNA Core Cell Extraction Spare:
   pipeline_group: scRNA Core Cell Extraction
   filters: *scrna_core_cell_extraction_filters
   relationships:
-    LRC PBMC Bank: LRC Bank Spare
+    LRC PBMC Bank: LRC TR Bank Spare

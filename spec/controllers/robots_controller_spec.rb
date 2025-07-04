@@ -34,9 +34,7 @@ RSpec.describe RobotsController, :robots, type: :controller do
 
     before do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
-      create :purpose_config,
-             uuid: 'target_plate_purpose_uuid',
-             state_changer_class: 'StateChangers::DefaultStateChanger'
+      create :purpose_config, uuid: 'target_plate_purpose_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
       stub_v2_user(user)
       stub_v2_plate(plate)
       bed_labware_lookup(plate)

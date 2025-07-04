@@ -261,6 +261,7 @@ nav.robots-list {
 .robots-button,
 .create-plate-button,
 .create-tube-button,
+.create-tube_rack-button,
 .csv-link,
 .create-submission-button {
   @extend .btn;
@@ -278,6 +279,7 @@ nav.robots-list {
 .other-actions {
   .work-completion-button,
   .create-plate-button,
+  .create-tube_rack-button,
   .create-tube-button {
     @extend .btn-secondary;
   }
@@ -285,7 +287,8 @@ nav.robots-list {
 .suggested-actions {
   .work-completion-button,
   .create-plate-button,
-  .create-tube-button {
+  .create-tube-button,
+  .create-tube_rack-button {
     @extend .btn-success;
   }
 }
@@ -406,6 +409,12 @@ dl#samples-information {
 }
 .state-badge.failed {
   @extend .list-group-item-danger;
+}
+.state-badge.mixed {
+  @extend.badge-secondary;
+}
+.state-badge.empty {
+  @extend.badge-dark;
 }
 
 .flash {

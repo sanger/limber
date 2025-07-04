@@ -79,6 +79,7 @@ module ApiUrlHelper
 
   # Expectations for the V2 API.
   # All methods here generate an expectation that the endpoint will be called with the correct arguments.
+  # rubocop:todo Metrics/ModuleLength
   module V2Expectations
     def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
@@ -91,6 +92,13 @@ module ApiUrlHelper
           ret ||= true
           expect(receiving_class).to receive(method).with(args).and_return(ret)
         end
+    end
+
+    def do_not_expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+      # Expects the specified `method` for any class beginning with
+      # 'Sequencescape::Api::V2::' to not be called with given arguments, in sequence.
+      receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
+      args_list.zip(return_values).each { |_args, _| expect(receiving_class).not_to receive(method) }
     end
 
     def expect_custom_metadatum_collection_creation
@@ -200,10 +208,16 @@ module ApiUrlHelper
     def expect_work_completion_creation
       expect_api_v2_posts('WorkCompletion', work_completions_attributes)
     end
+
+    def do_not_expect_work_completion_creation
+      do_not_expect_api_v2_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
+    end
   end
+  # rubocop:enable Metrics/ModuleLength
 
   # Stubs for the V2 API.
   # None of the methods here generate an expectation that the endpoint will be called.
+  # rubocop:todo Metrics/ModuleLength
   module V2Stubs
     def stub_api_v2_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
@@ -250,6 +264,39 @@ module ApiUrlHelper
       [{ barcode: labware.barcode.machine }, { uuid: labware.uuid }].each do |query|
         allow(Sequencescape::Api::V2::Labware).to receive(:find).with(query).and_return([labware])
       end
+    end
+
+    # rubocop:todo Metrics/AbcSize
+    def stub_v2_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
+      stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
+
+      if custom_query
+        allow(Sequencescape::Api::V2).to receive(custom_query.first).with(*custom_query.last).and_return(tube_rack)
+      elsif custom_includes
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
+          custom_includes,
+          nil,
+          { uuid: tube_rack.uuid }
+        ).and_return(tube_rack)
+      else
+        allow(Sequencescape::Api::V2).to receive(:tube_rack_for_presenter).with(uuid: tube_rack.uuid).and_return(
+          tube_rack
+        )
+      end
+
+      arguments = [{ uuid: tube_rack.uuid }]
+      allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([tube_rack])
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    def stub_v2_tube_rack_purpose(tube_rack_purpose)
+      arguments = [{ name: tube_rack_purpose[:name] }]
+      allow(Sequencescape::Api::V2::TubeRackPurpose).to receive(:find).with(*arguments).and_return([tube_rack_purpose])
+    end
+
+    def stub_v2_racked_tube(racked_tube)
+      arguments = [{ tube_rack: racked_tube.tube_rack.id, tube: racked_tube.tube.id }]
+      allow(Sequencescape::Api::V2::RackedTube).to receive(:find).with(*arguments).and_return(racked_tube)
     end
 
     # Builds the basic v2 plate finding query.
@@ -337,6 +384,7 @@ module ApiUrlHelper
       stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
     end
   end
+  # rubocop:enable Metrics/ModuleLength
 end
 
 RSpec.configure do |config|
