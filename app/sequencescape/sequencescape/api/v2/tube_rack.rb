@@ -18,8 +18,4 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
 
   # Other relationships
   # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
-
-  def model_name
-    ::ActiveModel::Name.new(Sequencescape::Api::V2::TubeRack, false, 'Limber::TubeRack')
-  end
 end
