@@ -15,10 +15,6 @@ class TubeProxy
     self
   end
 
-  def model_name
-    ::ActiveModel::Name.new(Limber::Tube, false)
-  end
-
   def persisted?
     true
   end
