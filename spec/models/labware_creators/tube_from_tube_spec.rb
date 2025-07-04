@@ -10,13 +10,13 @@ RSpec.describe LabwareCreators::TubeFromTube do
       subject { described_class.support_parent?(parent) }
 
       context 'with a tube' do
-        let(:parent) { build :tube }
+        let(:parent) { build :v2_tube }
 
         it { is_expected.to be true }
       end
 
       context 'with a plate' do
-        let(:parent) { build :plate }
+        let(:parent) { build :v2_plate }
 
         it { is_expected.to be false }
       end
@@ -35,7 +35,7 @@ RSpec.describe LabwareCreators::TubeFromTube do
     let(:parent_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }
     let(:transfer_template_uuid) { 'transfer-between-specific-tubes' } # Defined in spec_helper.rb
-    let(:child_tube) { create(:tube) }
+    let(:child_tube) { create(:v2_tube) }
 
     let(:transfers_attributes) do
       [

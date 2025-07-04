@@ -6,7 +6,7 @@ RSpec.shared_examples 'it only allows creation from tubes' do
       subject { described_class.support_parent?(parent) }
 
       context 'with a tube' do
-        let(:parent) { build :tube }
+        let(:parent) { build :v2_tube }
 
         it { is_expected.to be true }
       end
@@ -58,13 +58,13 @@ RSpec.shared_examples 'it only allows creation from plates' do
       subject { described_class.support_parent?(parent) }
 
       context 'with a tube' do
-        let(:parent) { build :tube }
+        let(:parent) { build :v2_tube }
 
         it { is_expected.to be false }
       end
 
       context 'with a plate' do
-        let(:parent) { build :plate }
+        let(:parent) { build :v2_plate }
 
         it { is_expected.to be true }
       end
@@ -78,13 +78,13 @@ RSpec.shared_examples 'it only allows creation from tagged plates' do
       subject { described_class.support_parent?(parent) }
 
       context 'with a tube' do
-        let(:parent) { build :tube }
+        let(:parent) { build :v2_tube }
 
         it { is_expected.to be false }
       end
 
       context 'with a plate' do
-        let(:parent) { build :plate }
+        let(:parent) { build :v2_plate }
 
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -110,13 +110,13 @@ RSpec.shared_examples 'it does not allow creation' do
       subject { described_class.support_parent?(parent) }
 
       context 'with a tube' do
-        let(:parent) { build :tube }
+        let(:parent) { build :v2_tube }
 
         it { is_expected.to be false }
       end
 
       context 'with a plate' do
-        let(:parent) { build :plate }
+        let(:parent) { build :v2_plate }
 
         before { allow(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -142,7 +142,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       subject { described_class.support_parent?(parent) }
 
       context 'with a tube' do
-        let(:parent) { build :tube }
+        let(:parent) { build :v2_tube }
 
         it { is_expected.to be false }
       end
@@ -166,7 +166,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       end
 
       context 'with a previously passed library and a new repool' do
-        let(:parent) { build :plate, pools: }
+        let(:parent) { build :v2_plate, pools: }
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -226,7 +226,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
       subject { described_class.support_parent?(parent) }
 
       context 'with a tube' do
-        let(:parent) { build :tube }
+        let(:parent) { build :v2_tube }
 
         it { is_expected.to be false }
       end
