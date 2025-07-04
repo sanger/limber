@@ -17,7 +17,7 @@ describe('QcInformation', () => {
 
     let volumeAttributes = {
       value: '1.5',
-      assay_type: 'Estimated', // This is the default asset type for QcField
+      assay_type: 'Estimated', // This is the default assay type for QcField
       units: 'ul',
       key: 'volume',
       assay_version: 'manual',
