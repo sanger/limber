@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Robots
   # This wrapper class is for tube racks that are not actual recorded labware.
   # The instance acts as a labware wrapper and provides access to the tubes.
@@ -6,6 +7,7 @@ module Robots
   #
   class TubeRackWrapper
     attr_accessor :barcode, :parent, :tubes
+
     delegate :purpose_name, :purpose, :state, :uuid, to: :last_tube, allow_nil: true
 
     # Initializes a new instance of the class.

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module LabwareCreators
   # This class is used to transfer samples from a plate well into two tubes, each for a well.
   class TubesFromPlateWell < Base

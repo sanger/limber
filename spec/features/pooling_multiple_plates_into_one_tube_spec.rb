@@ -137,7 +137,7 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
 
     expect(page).to have_text(
       'The scanned plate contains tags that would clash with those in other plates in the pool. ' \
-        'Tag clashes found between: DN1 (DN1S) and DN3 (DN3U)'
+      'Tag clashes found between: DN1 (DN1S) and DN3 (DN3U)'
     )
 
     # removes the error message if another scan is made (NB. currently validation and messages relate to

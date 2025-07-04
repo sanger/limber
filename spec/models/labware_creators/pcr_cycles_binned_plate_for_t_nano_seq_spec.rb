@@ -1513,7 +1513,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
           expect(subject.errors.messages[:base].count).to eq(1)
           expect(subject.errors.messages[:base][0]).to eq(
             'Parent plate should only contain active requests of type (limber_targeted_nanoseq_isc_prep), ' \
-              'found unexpected types (limber_wgs)'
+            'found unexpected types (limber_wgs)'
           )
         end
       end
