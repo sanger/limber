@@ -136,6 +136,7 @@ export default {
       }
 
       this.$emit('tagparamsupdated', updatedData)
+      window._eventEmitted = true
     },
   },
 }
