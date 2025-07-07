@@ -1,9 +1,21 @@
 
-
 // Variable overrides first
-$primary: #900;
-$enable-shadows: true;
-$prefix: "mo-";
+
+// Colours
+$blue:    #007aff !default;
+$green:   #27a844 !default;
+$cyan:    #17a2b7 !default;
+
+// Options
+$enable-validation-icons: false;
+
+//Links
+$link-decoration: none;
+$link-hover-decoration: none;
+
+// Components
+$btn-border-radius: 0 !important;
+$input-border-radius: 0 !important;
 
 // Then import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
