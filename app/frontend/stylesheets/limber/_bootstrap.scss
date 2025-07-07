@@ -8,6 +8,10 @@ $blue:    #007aff;
 $green:   #27a844;
 $cyan:    #17a2b7;
 
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio:   3;
+
 // Options
 $enable-validation-icons: false;
 
