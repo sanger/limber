@@ -21,7 +21,7 @@ module LabwareCreators
     BARCODE_LABEL_TEXT = 'Plate Barcode'
     BARCODE_NOT_MATCHING =
       'The plate barcode in the file (%s) does not match the barcode of ' \
-        'the plate being uploaded to (%s), please check you have the correct file.'
+      'the plate being uploaded to (%s), please check you have the correct file.'
     NOT_FOUND = 'could not be found in: '
 
     validates :barcode_lbl_index, presence: { message: ->(object, _data) { "#{NOT_FOUND}'#{object}'" } }

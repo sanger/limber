@@ -14,7 +14,7 @@ module Validators
         presenter.errors.add(
           :wells,
           "on this plate (#{affected_range}) have #{error}. You should not carry out further work. " \
-            'Any further work conducted from this plate will run into issues at the end of the pipeline.'
+          'Any further work conducted from this plate will run into issues at the end of the pipeline.'
         )
       end
     end

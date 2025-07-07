@@ -12,13 +12,13 @@ module LabwareCreators # rubocop:todo Style/Documentation
 
     MISSING_SOURCE =
       'is blank in %s but a destination has been specified. ' \
-        'Either supply a source, or remove the destination.'
+      'Either supply a source, or remove the destination.'
     MISSING_VOLUME =
       'is blank in %s but a destination has been specified. ' \
-        'Either supply a positive volume, or remove the destination.'
+      'Either supply a positive volume, or remove the destination.'
     NEGATIVE_VOLUME =
       'is %%{value} in %s but a destination has been specified. ' \
-        'Either supply a positive volume, or remove the destination.'
+      'Either supply a positive volume, or remove the destination.'
 
     attr_reader :header, :source, :destination, :volume, :index
 

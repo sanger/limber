@@ -5,9 +5,9 @@
 
   <%= render 'labware/qc_data_upload' %>
 
-  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+  <%= card title: 'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.csv_file_links.each do |link_name, link_target| %>
-      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+      <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
     <% end %>
   <% end %>
 
