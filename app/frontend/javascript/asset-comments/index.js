@@ -2,7 +2,6 @@
 
 import { createApp, h } from 'vue'
 import { createBootstrap } from 'bootstrap-vue-next'
-import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 import AssetComments from './components/AssetComments.vue'
 import AssetCommentsCounter from './components/AssetCommentsCounter.vue'
