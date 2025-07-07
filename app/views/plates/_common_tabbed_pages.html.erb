@@ -21,7 +21,9 @@
         asset_id: presenter.id
     } %>
     <li class="nav-item">
-      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-bs-toggle="tab" role="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter',data_attributes) %></a>
+      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-bs-toggle="tab" role="tab" data-plate-view="comments-view">
+          Comments <%= tag.span( id: 'asset-comments-counter', data: data_attributes ) %>
+        </a>
     </li>
   </ul>
 </nav>
