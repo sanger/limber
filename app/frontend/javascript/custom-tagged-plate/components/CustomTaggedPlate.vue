@@ -1,7 +1,7 @@
 <template>
   <lb-page>
     <lb-loading-modal v-if="loading" :message="progressMessage" />
-    <lb-main-content v-if="parentPlate">
+    <lb-main-content v-if="parentPlate" :key="domKey">
       <div class="card-body">
         <h2 id="plate-title" class="card-title">
           {{ childPurposeName }}
@@ -529,6 +529,7 @@ export default {
       this.walkingBy = updatedFormData.walkingBy
       this.direction = updatedFormData.direction
       this.offsetTagsBy = updatedFormData.offsetTagsBy
+      this.domKey++
       console.log('Tag params updated:', updatedFormData)
     },
     calcNumTagsForPooledPlate() {
