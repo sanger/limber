@@ -1,10 +1,12 @@
 
 // Variable overrides first
+// For full list of variables, see:
+// https://github.com/twbs/bootstrap/blob/v5.3.3/scss/_variables.scss
 
-// Colours
-$blue:    #007aff !default;
-$green:   #27a844 !default;
-$cyan:    #17a2b7 !default;
+// Colour system
+$blue:    #007aff;
+$green:   #27a844;
+$cyan:    #17a2b7;
 
 // Options
 $enable-validation-icons: false;
