@@ -16,8 +16,8 @@ $link-decoration: none;
 $link-hover-decoration: none;
 
 // Components
-$btn-border-radius: 0 !important;
-$input-border-radius: 0 !important;
+$btn-border-radius: 0;
+$input-border-radius: 0;
 
 // Then import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
