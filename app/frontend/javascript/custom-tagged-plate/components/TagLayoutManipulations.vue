@@ -290,7 +290,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 input:invalid + span:after {
   content: '✖';
   padding-left: 5px;
