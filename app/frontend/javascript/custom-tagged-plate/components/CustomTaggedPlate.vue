@@ -529,6 +529,7 @@ export default {
       this.walkingBy = updatedFormData.walkingBy
       this.direction = updatedFormData.direction
       this.offsetTagsBy = updatedFormData.offsetTagsBy
+      console.log('Tag params updated:', updatedFormData)
     },
     calcNumTagsForPooledPlate() {
       let poolTotals = {}
