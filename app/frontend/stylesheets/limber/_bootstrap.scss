@@ -1,16 +1,15 @@
-
 // Variable overrides first
 // For full list of variables, see:
 // https://github.com/twbs/bootstrap/blob/v5.3.3/scss/_variables.scss
 
 // Colour system
-$blue:    #007aff;
-$green:   #27a844;
-$cyan:    #17a2b7;
+$blue: #007aff;
+$green: #27a844;
+$cyan: #17a2b7;
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
-$min-contrast-ratio:   3;
+$min-contrast-ratio: 3;
 
 // Options
 $enable-validation-icons: false;
@@ -24,4 +23,4 @@ $btn-border-radius: 0;
 $input-border-radius: 0;
 
 // Then import Bootstrap
-@import "../node_modules/bootstrap/scss/bootstrap";
+@import '../node_modules/bootstrap/scss/bootstrap';
