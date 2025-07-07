@@ -21,17 +21,7 @@
               title="Find other labware with the same metadata in Sequencescape"
               variant="outline-primary"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24px"
-                viewBox="0 -960 960 960"
-                width="24px"
-                fill="#007aff"
-              >
-                <path
-                  d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"
-                />
-              </svg>
+              <BoxArrowUpRight color="#007aff" />
             </b-button>
           </b-col>
         </b-row>
@@ -59,9 +49,12 @@
 // onSubmit remove any fields that have no data
 // Send a patch or post request, depending whether metadata already exists
 // All metadata should be either created or overwrited
-
+import BoxArrowUpRight from '@/javascript/icons/BoxArrowUpRight.vue'
 export default {
   name: 'LabwareCustomMetadataAddForm',
+  components: {
+    BoxArrowUpRight,
+  },
   props: {
     labwareId: {
       type: String,
