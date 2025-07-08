@@ -74,6 +74,15 @@ module LabwareCreators
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
+    def transfer_hash
+      compute_well_transfers(well_filter.filtered_wells)
+    end
+
+    def compute_well_transfers(filtered_wells)
+      well_amounts = compute_well_amounts(filtered_wells)
+      build_transfer_hash(well_amounts)
+    end
+
     def transfer_material_from_parent!(child_uuid)
       child_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
       Sequencescape::Api::V2::TransferRequestCollection.create!(
@@ -84,9 +93,7 @@ module LabwareCreators
 
     def build_transfer_hash(well_amounts)
       well_amounts.each_with_object({}) do |(well_locn, amount), transfers_hash|
-        # Calculate the diluted concentration for the target well
-        diluted_concentration = (amount / (purpose_config['dilution_factor'] || 10)).to_s
-        transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => diluted_concentration }
+        transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => amount.to_s }
       end
     end
 
