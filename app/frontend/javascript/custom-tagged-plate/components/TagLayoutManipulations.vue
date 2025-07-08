@@ -293,11 +293,11 @@ export default {
 <style scoped>
 input:invalid + span:after {
   content: '✖';
-  padding-left: 5px;
+  padding-left: '5px';
 }
 
 input:valid + span:after {
   content: '✓';
-  padding-left: 5px;
+  padding-left: '5px';
 }
 </style>
