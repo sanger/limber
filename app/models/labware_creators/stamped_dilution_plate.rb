@@ -74,15 +74,6 @@ module LabwareCreators
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-    def transfer_hash
-      compute_well_transfers(well_filter.filtered_wells)
-    end
-
-    def compute_well_transfers(filtered_wells)
-      well_amounts = compute_well_amounts(filtered_wells)
-      build_transfer_hash(well_amounts)
-    end
-
     def transfer_material_from_parent!(child_uuid)
       child_plate = Sequencescape::Api::V2::Plate.find_by(uuid: child_uuid)
       Sequencescape::Api::V2::TransferRequestCollection.create!(
@@ -91,26 +82,35 @@ module LabwareCreators
       )
     end
 
-    def build_transfer_hash(well_amounts)
-      well_amounts.each_with_object({}) do |(well_locn, amount), transfers_hash|
-        transfers_hash[well_locn] = { 'dest_locn' => well_locn, 'dest_conc' => amount.to_s }
-      end
-    end
-
     def transfer_request_attributes(child_plate)
       well_filter.filtered.map { |well, additional_parameters| request_hash(well, child_plate, additional_parameters) }
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def request_hash(source_well, child_plate, additional_parameters)
-      # Dilute the concentration of the source well and assign it to the target well
-      {
-        source_asset: source_well.uuid,
-        target_asset:
-          child_plate
-            .wells
-            .detect { |child_well| child_well.location == transfer_hash[source_well.location]['dest_locn'] }
-            &.uuid
-      }.merge(additional_parameters)
+      # Dilute the source well concentration by the dilution factor and update the child well
+      dilution_factor = purpose_config['dilution_factor'] || 10
+      dilution_factor = 10 if dilution_factor.zero?
+
+      child_well = child_plate.wells.detect { |child_well| child_well.location == source_well.location }
+
+      if child_well && source_well.latest_concentration.present?
+        diluted_conc = source_well.latest_concentration.value.to_f / dilution_factor
+
+        # Find the latest concentration QC result
+        concentration_qc =
+          child_well
+            .qc_results
+            .to_a
+            .select { |qc| qc.key.casecmp('concentration').zero? }
+            .select { |qc| qc.units.casecmp('ng/ul').zero? }
+            .max_by(&:created_at)
+
+        # Set the value if the QC result exists
+        concentration_qc.value = diluted_conc if concentration_qc
+      end
+      { source_asset: source_well.uuid, target_asset: child_well&.uuid }.merge(additional_parameters)
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   end
 end
