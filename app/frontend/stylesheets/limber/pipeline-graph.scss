@@ -4,6 +4,7 @@
 #filter-bar {
   @extend .card;
   @extend .bg-dark;
+  @extend .rounded-0;
 
   #filter {
     width: 100%;
@@ -11,7 +12,6 @@
     @extend .text-light;
     @extend .form-control;
     @extend .form-control-lg;
-    @extend .rounded;
     @extend .border-0;
 
     // add search icon
