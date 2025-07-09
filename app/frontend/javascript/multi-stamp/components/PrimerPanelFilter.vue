@@ -10,6 +10,7 @@ export default {
   props: {
     requestsWithPlates: { type: Array, required: true },
   },
+  emits: ['change'],
   data() {
     return {
       primerPanel: null,

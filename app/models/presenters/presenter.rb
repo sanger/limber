@@ -96,6 +96,36 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     "<#{self.class.name} labware:#{labware.uuid} ...>"
   end
 
+  # A collection of parents for this labware including purposes.
+  # Returns an empty array if there are no parents.
+  #
+  # @return [Array<Sequencescape::Api::V2::Labware>] Array of parent labwares with purposes.
+  def parent_labwares
+    parents = labware.parents || []
+    parent_uuids = parents.compact.map(&:uuid).uniq
+    return [] if parent_uuids.empty?
+
+    parent_labwares = Sequencescape::Api::V2::Labware.find_all({ uuid: parent_uuids }, includes: %w[purpose])
+
+    # some old or 'lane' labwares may not have a purpose, so filter those out
+    parent_labwares.filter { |labware| labware.purpose.present? }
+  end
+
+  # A collection of child labwares for this labware including purposes.
+  # Returns an empty array if there are no children.
+  #
+  # @return [Array<Sequencescape::Api::V2::Labware>] Array of child labwares with purposes.
+  def child_labwares
+    children = labware.children || []
+    child_uuids = children.compact.map(&:uuid).uniq
+    return [] if child_uuids.empty?
+
+    child_labwares = Sequencescape::Api::V2::Labware.find_all({ uuid: child_uuids }, includes: %w[purpose])
+
+    # some old or 'lane' labwares may not have a purpose, so filter those out
+    child_labwares.filter { |labware| labware.purpose.present? }
+  end
+
   def child_assets
     nil
   end

@@ -154,7 +154,14 @@ RSpec.describe Presenters::StandardPresenter do
 
     describe '#control_library_passing' do
       before do
-        create :pipeline, filters: { 'request_type_key' => suggest_passes }, library_pass: 'Example purpose'
+        create :pipeline,
+               relationships: {
+                 'Example purpose' => 'Next example purpose'
+               },
+               filters: {
+                 'request_type_key' => suggest_passes
+               },
+               library_pass: 'Example purpose'
         create(:purpose_config, name: 'Example purpose', uuid: 'test-purpose')
       end
 
@@ -206,7 +213,14 @@ RSpec.describe Presenters::StandardPresenter do
     describe '#control_suggested_library_passing' do
       let(:aliquot_type) { :v2_tagged_aliquot }
       before do
-        create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
+        create :pipeline,
+               relationships: {
+                 'Example purpose' => 'Next example purpose'
+               },
+               filters: {
+                 request_type_key: suggest_passes
+               },
+               library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
 

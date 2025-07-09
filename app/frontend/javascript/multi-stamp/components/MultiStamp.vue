@@ -27,7 +27,7 @@
             @change="updatePlate(i, $event)"
           />
         </b-form-group>
-        <b-alert :show="transfersError !== ''" variant="danger">
+        <b-alert :model-value="transfersError !== ''" variant="danger">
           {{ transfersError }}
         </b-alert>
         <component
@@ -39,7 +39,7 @@
           :is="transfersCreatorComponent"
           :default-volume="defaultVolumeNumber"
           :valid-transfers="validTransfers"
-          @change="transfersCreatorObj = $event"
+          @update:model-value="transfersCreatorObj = $event"
         />
         <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>
       </b-card>
@@ -279,7 +279,7 @@ export default {
   },
   methods: {
     updatePlate(index, data) {
-      this.$set(this.plates, index - 1, { ...data, index: index - 1 })
+      this.plates[index - 1] = { ...data, index: index - 1 }
     },
     apiTransfers() {
       return transferPlatesToPlatesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
