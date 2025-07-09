@@ -70,12 +70,6 @@ Rails.application.routes.draw do
   get '/limber_tubes(/*all)', to: redirect(path: '/tubes/%{all}')
   get '/limber_tube_racks(/*all)', to: redirect(path: '/tube_racks/%{all}')
 
-  # limber_multiplexed_library_tube routes have been removed, and instead
-  # mx tubes behave like standard tubes for the purposes of routing/url generation
-  # Keeping this redirect here to handle bookmarks. The other routes weren't
-  # actively being used.
-  get '/limber_multiplexed_library_tube/:uuid', to: redirect('/limber_tubes/%<uuid>s')
-
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do
     get 'individual', action: 'individual', as: :print_individual_label
