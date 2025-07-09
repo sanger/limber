@@ -9,8 +9,6 @@
 #           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class CreationController < ApplicationController
   before_action :check_for_current_user!
-  rescue_from Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid, with: :creation_failed
-  rescue_from Sequencescape::Api::ConnectionFactory::Actions::ServerError, with: :sequencescape_api_server_error
 
   def new
     params[:parent_uuid] ||= parent_uuid
