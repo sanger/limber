@@ -164,11 +164,7 @@ RSpec.describe Presenters::TubeRackPresenter do
         expect(presenter.csv_file_links).to include(
           [
             'Second type CSV',
-            [
-              :limber_tube_rack,
-              :export,
-              { format: :csv, id: 'second_csv_id', limber_tube_rack_id: labware.human_barcode }
-            ]
+            [:tube_rack, :export, { format: :csv, id: 'second_csv_id', tube_rack_id: labware.human_barcode }]
           ]
         )
       end

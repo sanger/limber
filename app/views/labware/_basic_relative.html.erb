@@ -1,7 +1,7 @@
 <%# A simple representation of any labware type not currently handled otherwise -%>
 <%# locals: (labware:, open_in_new_window: false) -%>
 <%
-  labware_path = "#{limber_plate_path(labware.uuid)}#relatives"
+  labware_path = "#{plate_path(labware.uuid)}#relatives"
 %>
 <div class="relative-item">
     <%= labware.purpose.name %> - <%= link_to labware_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %>

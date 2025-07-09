@@ -125,7 +125,7 @@ RSpec.describe Presenters::TubePresenter do
           [
             [
               'Download MBrave UMI file',
-              [:limber_tube, :tubes_export, { id: 'bioscan_mbrave', limber_tube_id: 'NT6T', format: 'tsv' }]
+              [:tube, :tubes_export, { id: 'bioscan_mbrave', tube_id: 'NT6T', format: 'tsv' }]
             ]
           ]
         )
