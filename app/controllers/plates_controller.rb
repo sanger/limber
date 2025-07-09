@@ -10,7 +10,7 @@ class PlatesController < LabwareController
   def fail_wells # rubocop:todo Metrics/AbcSize
     if wells_to_fail.empty?
       redirect_to(
-        limber_plate_path(params[:id]),
+        plate_path(params[:id]),
         notice: 'No wells were selected to fail' # rubocop:todo Rails/I18nLocaleTexts
       )
     else
@@ -23,7 +23,7 @@ class PlatesController < LabwareController
         user_uuid: current_user_uuid
       )
       redirect_to(
-        limber_plate_path(params[:id]),
+        plate_path(params[:id]),
         notice: 'Selected wells have been failed' # rubocop:todo Rails/I18nLocaleTexts
       )
     end

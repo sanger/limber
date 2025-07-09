@@ -16,7 +16,7 @@ RSpec.describe QcFilesController, type: :controller do
     before { stub_v2_qc_file(qc_file) }
 
     it 'returns a file' do
-      get :show, params: { id: qc_file.uuid, limber_plate_id: plate.uuid }
+      get :show, params: { id: qc_file.uuid, plate_id: plate.uuid }
 
       expect(response.body).to eq('example,file,content')
       expect(response.get_header('Content-Disposition')).to include(qc_file.filename)
@@ -52,7 +52,7 @@ RSpec.describe QcFilesController, type: :controller do
     it 'posts the file to the appropriate labware' do
       expect_qc_file_creation
 
-      post :create, params: { qc_file: file, limber_plate_id: plate.uuid }
+      post :create, params: { qc_file: file, plate_id: plate.uuid }
 
       expect(flash.notice).to eq('Your file has been uploaded and is available from the file tab')
     end
@@ -85,7 +85,7 @@ RSpec.describe QcFilesController, type: :controller do
     end
 
     it 'returns the qc files as json' do
-      get :index, params: { limber_plate_id: plate.uuid }, format: 'json'
+      get :index, params: { plate_id: plate.uuid }, format: 'json'
       expect(response.parsed_body).to eq(expected_response)
     end
   end

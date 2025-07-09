@@ -27,11 +27,11 @@
       </div>
       <div class="card-body">
       <%= form_for(
-            @labware_creator,
-            url: limber_plate_children_path(@labware_creator.parent_uuid),
-            as: :plate,
-            html: { method: :post }
-          ) do |form| %>
+        @labware_creator,
+        url: plate_child_plate_creation_path(@labware_creator.parent_uuid),
+        as: :plate,
+        html: { method: :post }
+      ) do |form| %>
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>

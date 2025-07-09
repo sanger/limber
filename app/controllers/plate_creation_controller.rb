@@ -9,7 +9,7 @@
 #           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class PlateCreationController < CreationController
   def redirection_path(form)
-    limber_plate_path(form.redirection_target.uuid, anchor: form.anchor)
+    plate_path(form.redirection_target.uuid, anchor: form.anchor)
   end
 
   private

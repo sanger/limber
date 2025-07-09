@@ -91,7 +91,7 @@ RSpec.describe PlatesController, type: :controller do
 
       post :fail_wells, params: { id: plate_uuid, plate: { wells: { 'A1' => 1, 'B1' => 0 } } }, session: { user_uuid: }
 
-      expect(response).to redirect_to(limber_plate_path(plate_uuid))
+      expect(response).to redirect_to(plate_path(plate_uuid))
     end
   end
 end
