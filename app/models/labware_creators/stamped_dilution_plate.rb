@@ -40,11 +40,10 @@ module LabwareCreators
 
     def request_hash(source_well, child_plate, additional_parameters)
       child_well = child_plate.wells.detect { |child_well| child_well.location == source_well.location }
-
       if child_well
         diluted_conc = source_well.latest_concentration.value.to_f / dilution_factor
         return(
-          { source_asset: source_well.uuid, target_asset: child_well&.uuid, concentration: diluted_conc }.merge(
+          { source_asset: source_well.uuid, target_asset: child_well.uuid, concentration: diluted_conc }.merge(
             additional_parameters
           )
         )
