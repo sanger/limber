@@ -23,7 +23,7 @@ class CreationController < ApplicationController
   end
 
   def labware_creator(form_attributes)
-    creator_class.new(api, form_attributes.permit(permitted_attributes).merge(params_for_creator_build))
+    creator_class.new(form_attributes.permit(permitted_attributes).merge(params_for_creator_build))
   end
 
   def creation_failed(exception)

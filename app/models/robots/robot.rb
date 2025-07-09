@@ -9,8 +9,7 @@ module Robots
     include Form
 
     attr_reader :beds
-    attr_accessor :api,
-                  :user_uuid,
+    attr_accessor :user_uuid,
                   :layout,
                   :name,
                   :id,

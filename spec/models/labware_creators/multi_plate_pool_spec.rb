@@ -20,7 +20,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   before { create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid }
 
   context 'on new' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
 
@@ -38,7 +38,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   end
 
   context 'on create' do
-    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
     let(:plate_b_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }

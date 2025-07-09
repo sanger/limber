@@ -44,7 +44,7 @@ RSpec.describe Robots::QuadrantRobot, :robots do
   let(:custom_metadatum_collection) { create :custom_metadatum_collection, metadata: }
   let(:metadata) { { 'other_key' => 'value' } }
 
-  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(user_uuid:)) }
 
   let(:robot_spec) do
     {

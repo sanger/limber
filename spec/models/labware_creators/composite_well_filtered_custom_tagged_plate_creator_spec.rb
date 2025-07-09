@@ -8,7 +8,7 @@ require_relative 'shared_examples'
 
 # rubocop:disable RSpec/HooksBeforeExamples
 RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 

@@ -6,7 +6,7 @@ require_relative 'shared_examples'
 # In this test, we are testing that the pipeline filters are applied
 # and the right requests are associated with the converted tag plate.
 RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 

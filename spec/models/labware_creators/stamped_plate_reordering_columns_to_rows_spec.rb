@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   let(:user_uuid) { 'user-uuid' }
 
