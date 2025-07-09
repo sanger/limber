@@ -31,8 +31,8 @@ Rails.application.routes.draw do
   resources :qcables, controller: :tag_plates, only: [:show]
 
   resources :plates, controller: :plates do
-    resources :children, controller: :plate_creation
-    resources :tubes, controller: :tube_creation
+    resources :child_plate_creation, controller: :plate_creation
+    resources :child_tube_creation, controller: :tube_creation
     resources :qc_files
     resources :exports, only: :show
     resources :work_completions, only: :create, module: :plates
@@ -43,8 +43,8 @@ Rails.application.routes.draw do
   resources :qc_files, only: :show
 
   resources :tubes, controller: :tubes do
-    resources :children, controller: :plate_creation
-    resources :tubes, controller: :tube_creation
+    resources :child_plate_creation, controller: :plate_creation
+    resources :child_tube_creation, controller: :tube_creation
     resources :qc_files, controller: :qc_files
     resources :tubes_exports, only: :show, module: :tubes
     resources :work_completions, only: :create, module: :tubes
