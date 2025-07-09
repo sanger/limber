@@ -11,7 +11,7 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
     let!(:request_type_non_kinnex) { create :request_type, key: non_kinnex_request_type_key }
     let!(:basic_purpose) { 'test-purpose' }
     let!(:labware_creator) do
-      LabwareCreators::TubesFromPlateWell.new(nil, purpose_uuid: 'test-purpose', parent_uuid: parent_uuid)
+      LabwareCreators::TubesFromPlateWell.new(purpose_uuid: 'test-purpose', parent_uuid: parent_uuid)
     end
     let!(:plate_size) { 96 }
     let(:request) do
