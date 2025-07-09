@@ -1,4 +1,5 @@
 import { renderVueComponent, missingUserIdError } from './vue_app.js'
+import { h } from 'vue'
 import * as cookieJarLib from '@/javascript/shared/cookieJar.js'
 
 describe('renderVueComponent', () => {
@@ -7,12 +8,18 @@ describe('renderVueComponent', () => {
   beforeEach(() => {
     component = {
       name: 'TestComponent',
-      render(h) {
+      render() {
         return h('div', 'Test string')
       },
     }
     props = { propA: 'valueA' }
     selector = 'test-selector'
+    // Mock the CRSF token so the axios header can be set
+    const meta = document.createElement('meta')
+    meta.name = 'csrf-token'
+    meta.content = 'mocked_csrf_token'
+    document.head.appendChild(meta)
+
     element = document.createElement('div')
     element.id = selector
     document.body.appendChild(element)
@@ -27,7 +34,7 @@ describe('renderVueComponent', () => {
   it('renders the Vue component when element is found', () => {
     const app = renderVueComponent(selector, component, props, userIdRequired)
     expect(app).toBeDefined()
-    expect(app.$el.innerHTML).toContain('Test string')
+    expect(document.body.innerHTML).toContain('Test string')
   })
 
   it('does not render the Vue component when element is not found', () => {
@@ -44,12 +51,12 @@ describe('renderVueComponent', () => {
   it('renders missingUserIdError when userId is required but not found', () => {
     vi.spyOn(cookieJarLib, 'default').mockReturnValue({ user_id: null })
     userIdRequired = true
-    const app = renderVueComponent(selector, component, props, userIdRequired)
-    expect(app.$el.innerHTML).toContain(missingUserIdError)
+    renderVueComponent(selector, component, props, userIdRequired)
+    expect(document.body.innerHTML).toContain(missingUserIdError)
   })
   it('renders the Vue component when userId is not required and not found', () => {
     vi.spyOn(cookieJarLib, 'default').mockReturnValue({ user_id: null })
-    const app = renderVueComponent(selector, component, props, userIdRequired)
-    expect(app.$el.innerHTML).toContain('Test string')
+    renderVueComponent(selector, component, props, userIdRequired)
+    expect(document.body.innerHTML).toContain('Test string')
   })
 })

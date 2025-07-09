@@ -7,7 +7,7 @@ describe('Alert.vue', () => {
     const title = 'Test Title'
     const message = 'Test Message'
     const wrapper = shallowMount(Alert, {
-      propsData: { level, title, message },
+      props: { level, title, message },
     })
 
     expect(wrapper.classes()).toContain(`alert-${level}`)
@@ -26,7 +26,7 @@ describe('Alert.vue', () => {
     const wrapper = shallowMount(Alert)
     expect(wrapper.emitted('close')).toBeUndefined() // check that the event has not been emitted yet
 
-    await wrapper.find('button.close').trigger('click')
+    await wrapper.find('button.btn-close').trigger('click')
 
     expect(wrapper.emitted('close')).toHaveLength(1)
   })

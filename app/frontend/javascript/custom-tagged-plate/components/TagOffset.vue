@@ -16,7 +16,7 @@
       step="1"
       :placeholder="offsetTagsByPlaceholder"
       :state="offsetTagsByState"
-      @input="offsetTagChanged"
+      @update:model-value="offsetTagChanged"
     />
     <b-form-text>
       <strong> Tags will start from {{ offsetTagsByAsNumber + 1 }} </strong>
@@ -54,6 +54,7 @@ export default {
       default: 1,
     },
   },
+  emits: ['tagoffsetchanged'],
   data() {
     return {
       offsetTagsByMin: 0, // holds the tag offset minimum value

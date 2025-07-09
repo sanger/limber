@@ -1,17 +1,17 @@
 
   <div class="bed-scanner card card-inverse">
    <div class="card-body">
-       <div class="input-group">
-        <label for="robot_scan" class="bed-label input-group-addon">Scan robot</label>
-        <input type="text" id="robot_scan" name="robot_scan" placeholder="Robot barcode" tabindex="1" class="bed form-control" />
+       <div class="row mb-2 me-2">
+        <label for="robot_scan" class="bed-label col-3 col-form-label">Scan robot</label>
+        <input type="text" id="robot_scan" name="robot_scan" placeholder="Robot barcode" tabindex="1" class="bed col form-control" />
       </div>
-      <div class="input-group">
-        <label for="bed_scan" class="bed-label input-group-addon">Scan bed</label>
-        <input type="text" id="bed_scan" name="bed_scan" placeholder="Bed barcode" tabindex="2" class="bed form-control" />
+      <div class="row mb-2 me-2">
+        <label for="bed_scan" class="bed-label col-3 col-form-label">Scan bed</label>
+        <input type="text" id="bed_scan" name="bed_scan" placeholder="Bed barcode" tabindex="2" class="bed col form-control" />
       </div>
-      <div class="input-group">
-        <label for="plate_scan" class="bed-label input-group-addon">Scan plate</label>
-        <input type="text" id="plate_scan" name="plate_scan" placeholder="Plate barcode" tabindex="3" class="bed form-control" />
+      <div class="row me-2">
+        <label for="plate_scan" class="bed-label col-3 col-form-label">Scan plate</label>
+        <input type="text" id="plate_scan" name="plate_scan" placeholder="Plate barcode" tabindex="3" class="bed col form-control" />
       </div>
     </div>
   </div>
@@ -25,5 +25,6 @@
     <ul id='bed_list' class="list-group list-group-flush">
     </ul>
   <%- end %>
-
-  <a href="#" class="btn btn-lg btn-primary btn-block" id="validate_layout">Validate Layout</a>
+  <div class="d-grid">
+    <a href="#" class="btn btn-lg btn-primary" id="validate_layout">Validate Layout</a>
+  </div>
