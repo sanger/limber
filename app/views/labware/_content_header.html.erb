@@ -10,7 +10,7 @@
       <%= vite_image_tag("images/icon_#{presenter.priority}_flag.png",
             size: "32x32",
             title: "Labware Priority: #{priorities[presenter.priority].to_s.titleize}",
-            data: { toggle: 'tooltip' }
+            data: { "bs-toggle": 'tooltip' }
           ) %>
     <% end %>
   </h2>

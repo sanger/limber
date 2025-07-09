@@ -42,7 +42,7 @@ export default {
       this.addAlert(data)
     })
   },
-  beforeDestroy() {
+  beforeUnmount() {
     // removing eventBus listener
     eventBus.$off('push-alert')
   },
