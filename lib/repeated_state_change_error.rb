@@ -3,7 +3,6 @@
 # This class rescues any exceptions where the source and target states are the same
 # but the transition is invalid.
 class RepeatedStateChangeError < StandardError
-
   # rescue automatically uses the match operator (===) to identify exceptions to rescue
   def self.===(other)
     other.is_a?(RepeatedStateChangeError) && repeated_state_change_error?(other)

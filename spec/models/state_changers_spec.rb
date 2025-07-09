@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe StateChangers::DefaultStateChanger do
-  subject { described_class.new(api, plate_uuid, user_uuid) }
+  subject { described_class.new(plate_uuid, user_uuid) }
 
   let(:plate_uuid) { SecureRandom.uuid }
   let(:plate) { create(:v2_plate, uuid: plate_uuid, state: plate_state) }
@@ -69,7 +69,7 @@ RSpec.describe StateChangers::DefaultStateChanger do
     end
 
     context 'on use of an automated plate state changer' do
-      subject { StateChangers::AutomaticPlateStateChanger.new(api, plate_uuid, user_uuid) }
+      subject { StateChangers::AutomaticPlateStateChanger.new(plate_uuid, user_uuid) }
 
       let(:plate_state) { 'pending' }
       let!(:plate) { create :v2_plate_for_aggregation, uuid: plate_uuid, state: plate_state }

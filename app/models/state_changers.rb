@@ -11,13 +11,11 @@ module StateChangers
   # As a result, Sequencescape will attempt to transition the entire plate, or the
   # specified wells.
   class DefaultStateChanger
-    attr_reader :labware_uuid, :api, :user_uuid
-    private :api
+    attr_reader :labware_uuid, :user_uuid
 
     FILTER_FAILS_ON = %w[qc_complete failed cancelled].freeze
 
-    def initialize(api, labware_uuid, user_uuid)
-      @api = api
+    def initialize(labware_uuid, user_uuid)
       @labware_uuid = labware_uuid
       @user_uuid = user_uuid
     end

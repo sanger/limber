@@ -10,7 +10,7 @@ RSpec.describe Robots, :robots do
   before { Settings.robots = settings[:robots] }
 
   describe '::find' do
-    subject { described_class.find(id: robot_id, api: api, user_uuid: user_uuid) }
+    subject { described_class.find(id: robot_id, user_uuid: user_uuid) }
 
     let(:user_uuid) { SecureRandom.uuid }
 

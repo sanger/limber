@@ -9,10 +9,6 @@
 class SequencescapeSubmission
   include ActiveModel::Model
 
-  # Sets the api through which objects will be created
-  # @return [Sequencescape::Api] api A functional Sequencescape::Api object
-  attr_accessor :api
-
   # Controls the user who is recorded as having made the submission
   # @return [String] user: The uuid of the user who is making the submission
   attr_accessor :user
@@ -36,7 +32,7 @@ class SequencescapeSubmission
 
   attr_accessor :allowed_extra_barcodes, :extra_barcodes, :num_extra_barcodes, :labware_barcode, :submission_uuid
 
-  validates :api, :user, :assets, :template_uuid, :request_options, presence: true
+  validates :user, :assets, :template_uuid, :request_options, presence: true
   validate :check_extra_barcodes
 
   #
