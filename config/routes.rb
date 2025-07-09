@@ -30,9 +30,9 @@ Rails.application.routes.draw do
 
   resources :print_jobs, only: [:create]
 
-  resources :limber_qcables, controller: :tag_plates, only: [:show]
+  resources :qcables, controller: :tag_plates, only: [:show]
 
-  resources :limber_plates, controller: :plates do
+  resources :plates, controller: :plates do
     resources :children, controller: :plate_creation
     resources :tubes, controller: :tube_creation
     resources :tube_racks, controller: :tube_rack_creation
@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
   resources :qc_files, only: :show
 
-  resources :limber_tubes, controller: :tubes do
+  resources :tubes, controller: :tubes do
     resources :children, controller: :plate_creation
     resources :tubes, controller: :tube_creation
     resources :tube_racks, controller: :tube_rack_creation
@@ -56,13 +56,20 @@ Rails.application.routes.draw do
 
   resources :validate_paired_tubes, only: :index, module: :tubes
 
-  resources :limber_tube_racks, controller: :tube_racks do
+  resources :tube_racks, controller: :tube_racks do
     resources :children, controller: :plate_creation
     resources :qc_files, controller: :qc_files
     resources :tube_racks_exports, only: :show, module: :tube_racks
     # TODO: need to add work completion code for tube racks
     # resources :tube_rack_work_completions, only: :create, module: :tube_racks
   end
+
+  # Add redirect to handle bookmarks and in-progress work.
+  # These routes were changed as part of the SS API v2 migration.
+  get '/limber_qcables(/*all)', to: redirect(path: '/qcables/%{all}')
+  get '/limber_plates(/*all)', to: redirect(path: '/plates/%{all}')
+  get '/limber_tubes(/*all)', to: redirect(path: '/tubes/%{all}')
+  get '/limber_tube_racks(/*all)', to: redirect(path: '/tube_racks/%{all}')
 
   # limber_multiplexed_library_tube routes have been removed, and instead
   # mx tubes behave like standard tubes for the purposes of routing/url generation

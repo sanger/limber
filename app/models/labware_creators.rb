@@ -37,12 +37,12 @@ module LabwareCreators # rubocop:todo Style/Documentation
       false
     end
 
-    # limber_plate_children (Plate -> Plate) (plate_creation#create)
-    # limber_plate_tubes (Plate -> Tube) (tube_creation#create)
-    # limber_plate_tube_racks (Plate -> TubeRack) (tube_rack_creation#create)
-    # limber_tube_children (Tube -> Plate) (nothing - want to be plate_creation#create)
-    # limber_tube_tubes (Tube -> Tube) (tube_creation#create)
-    # limber_tube_tube_racks (Tube -> TubeRack) (tube_rack_creation#create)
+    # plate_children (Plate -> Plate) (plate_creation#create)
+    # plate_tubes (Plate -> Tube) (tube_creation#create)
+    # plate_tube_racks (Plate -> TubeRack) (tube_rack_creation#create)
+    # tube_children (Tube -> Plate) (nothing - want to be plate_creation#create)
+    # tube_tubes (Tube -> Tube) (tube_creation#create)
+    # tube_tube_racks (Tube -> TubeRack) (tube_rack_creation#create)
 
     # Returns the ActiveModel::Name instance for the given type.
     # This method maps the type to the corresponding model class and returns an ActiveModel::Name instance.
@@ -53,11 +53,11 @@ module LabwareCreators # rubocop:todo Style/Documentation
       case type
       # TODO: can we rename 'child' to 'plate' please? see routes.rb
       when 'plate'
-        ::ActiveModel::Name.new(Limber::Plate, nil, 'child')
+        ::ActiveModel::Name.new(Plate, nil, 'plate')
       when 'tube'
-        ::ActiveModel::Name.new(Limber::Tube, nil, 'tube')
+        ::ActiveModel::Name.new(Tube, nil, 'tube')
       when 'tube_rack'
-        ::ActiveModel::Name.new(Limber::TubeRack, nil, 'tube_rack')
+        ::ActiveModel::Name.new(TubeRack, nil, 'tube_rack')
       else
         raise StandardError, "Unknown type #{type}"
       end

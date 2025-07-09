@@ -25,16 +25,16 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   #
   # Plates and tubes are handled by different URLs. This allows us to redirect
   # to the expected endpoint.
-  # @return [ActiveModel::Name] The resource behaves like a Limber::Tube/Limber::Plate/Limber::TubeRack
+  # @return [ActiveModel::Name] The resource behaves like a a Plate, Tube, or TubeRack
   #
   def model_name
     case type
     when 'tubes'
-      ::ActiveModel::Name.new(Limber::Tube, false)
+      ::ActiveModel::Name.new(Tube, false)
     when 'plates'
-      ::ActiveModel::Name.new(Limber::Plate, false)
+      ::ActiveModel::Name.new(Plate, false)
     when 'tube_racks'
-      ::ActiveModel::Name.new(Limber::TubeRack, false)
+      ::ActiveModel::Name.new(TubeRack, false)
     else
       raise "Can't view #{type} in limber"
     end
