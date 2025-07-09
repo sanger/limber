@@ -21,36 +21,6 @@ FactoryBot.define do
       tag_layout_template._cached_relationship(:tag2_group) { evaluator.tag2_group } if evaluator.tag2_group
     end
 
-    factory :v2_dual_index_tag_layout_template do
-      transient { tag2_group { create :v2_tag_group_with_tags } }
-    end
-  end
-
-  # API V1 tag layout template. The inheriting factories set up the patterns
-  # commonly seen by Limber
-  factory :tag_layout_template, class: TagLayoutTemplates, traits: [:api_object] do
-    skip_create
-
-    json_root { 'tag_layout_template' }
-    resource_actions { %w[read create] }
-
-    direction { 'column' }
-    walking_by { 'wells of plate' }
-
-    transient { size { 96 } }
-
-    name { 'Test tag layout' }
-
-    tag_group do
-      {
-        'name' => 'Tag group 1',
-        'tags' =>
-          (1..size).each_with_object({}) do |i, hash|
-            hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
-          end
-      }
-    end
-
     factory :tag_layout_template_by_row do
       direction { 'row' }
     end
@@ -81,16 +51,8 @@ FactoryBot.define do
       direction { 'combinatorial by row' }
     end
 
-    factory :dual_index_tag_layout_template do
-      tag2_group do
-        {
-          'name' => 'Tag group 2',
-          'tags' =>
-            (1..size).each_with_object({}) do |i, hash|
-              hash[i.to_s] = i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G')
-            end
-        }
-      end
+    factory :v2_dual_index_tag_layout_template do
+      transient { tag2_group { create :v2_tag_group_with_tags } }
     end
   end
 
