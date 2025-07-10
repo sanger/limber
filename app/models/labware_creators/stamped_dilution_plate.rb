@@ -34,8 +34,7 @@ module LabwareCreators
         end
       end
       return false if errors.any?
-      super
-      update_qc_results!
+      super { |child_plate| update_qc_results!(child_plate) }
     end
 
     # Returns the dilution factor from the purpose configuration.
@@ -47,8 +46,8 @@ module LabwareCreators
       dilution_factor.zero? ? 10 : dilution_factor
     end
 
-    def update_qc_results!
-      !Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay).nil?
+    def update_qc_results!(child_plate)
+      !Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay(child_plate)).nil?
     end
 
     # Prepares QC assay data for each well on the plate.
@@ -56,11 +55,13 @@ module LabwareCreators
     # and returns an array of hashes containing QC result information.
     #
     # @return [Array<Hash>] QC assay results for all wells
-    def qc_assay
+    def qc_assay(child_plate)
       parent
         .wells
-        .each_with_object([]) do |well, qc_results|
-          diluted_concentration = well.latest_molarity / dilution_factor
+        .each_with_object([]) do |source_well, qc_results|
+          well = child_plate.wells.detect { |child_well| child_well.location == source_well.location }
+          next unless well
+          diluted_concentration = source_well.latest_molarity.value.to_f / dilution_factor
           qc_results << { key: 'molarity', value: diluted_concentration, units: 'nM', uuid: well.uuid }
         end
     end
