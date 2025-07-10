@@ -43,7 +43,7 @@ module LabwareCreators
     #
     # @return [Integer] the dilution factor to use for calculations
     def dilution_factor
-      dilution_factor = purpose_config['dilution_factor'] || 10
+      dilution_factor = purpose_config['dilution']['factor'] || 10
       dilution_factor.zero? ? 10 : dilution_factor
     end
 
@@ -65,11 +65,33 @@ module LabwareCreators
       parent
         .wells
         .each_with_object([]) do |source_well, qc_results|
-          well = child_plate.wells.detect { |child_well| child_well.location == source_well.location }
+          well = find_matching_well(child_plate, source_well)
           next unless well
-          diluted_concentration = source_well.latest_molarity.value.to_f / dilution_factor
-          qc_results << { key: 'molarity', value: diluted_concentration, units: 'nM', uuid: well.uuid }
+          qc_results << build_qc_result_hash(source_well, well)
         end
+    end
+
+    # Finds the well in the child plate that matches the location of the source well.
+    #
+    # @param child_plate [Sequencescape::Api::V2::Plate] The child plate to search
+    # @param source_well [Sequencescape::Api::V2::Well] The source well whose location is used for matching
+    # @return [Sequencescape::Api::V2::Well, nil] The matching well in the child plate, or nil if not found
+    def find_matching_well(child_plate, source_well)
+      child_plate.wells.detect { |child_well| child_well.location == source_well.location }
+    end
+
+    # Builds a hash representing the QC result for a given source and child well.
+    #
+    # @param source_well [Sequencescape::Api::V2::Well] The well from the parent plate
+    # @param well [Sequencescape::Api::V2::Well] The corresponding well from the child plate
+    # @return [Hash] The QC result hash containing key, value, units, and uuid
+    def build_qc_result_hash(source_well, well)
+      {
+        key: purpose_config['dilution']['type'],
+        value: source_well.latest_molarity.value.to_f / dilution_factor,
+        units: purpose_config['dilution']['unit'],
+        uuid: well.uuid
+      }
     end
   end
 end
