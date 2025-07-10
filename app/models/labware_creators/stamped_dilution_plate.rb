@@ -20,18 +20,22 @@ module LabwareCreators
 
     private
 
-    # Overriding the create_plate_with_standard_transfer! method for validation and
-    # custom behaviour specific to dilution plates.
+    # Validates that all wells with samples on the parent plate have a concentration value.
+    # If any well is missing a concentration, adds an error and stops the process.
+    # Otherwise, performs the standard plate transfer and updates QC results.
+    #
+    # @return [Boolean] false if validation fails, otherwise proceeds with transfer and QC update
     def create_plate_with_standard_transfer!
       # Check if the parent plate has wells with concentrations
       # First. take the wells with samples
       parent.wells.each do |well|
-        if well.aliquots.sample.present? && well.latest_concentration.nil?
+        if well.aliquots.sample.present? && well.latest_molarity.nil?
           errors.add(:base, "Well #{well.location} on the parent plate does not have a concentration value.")
         end
       end
       return false if errors.any?
       super
+      update_qc_results!
     end
 
     # Returns the dilution factor from the purpose configuration.
@@ -43,17 +47,22 @@ module LabwareCreators
       dilution_factor.zero? ? 10 : dilution_factor
     end
 
-    def request_hash(source_well, child_plate, additional_parameters)
-      child_well = child_plate.wells.detect { |child_well| child_well.location == source_well.location }
-      if child_well
-        diluent_molarity = source_well.latest_molarity.value.to_f / dilution_factor
-        return(
-          { source_asset: source_well.uuid, target_asset: child_well.uuid, diluent_molarity: diluent_molarity }.merge(
-            additional_parameters
-          )
-        )
-      end
-      { source_asset: source_well.uuid, target_asset: child_well&.uuid }.merge(additional_parameters)
+    def update_qc_results!
+      !Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay).nil?
+    end
+
+    # Prepares QC assay data for each well on the plate.
+    # Calculates the diluted molarity for each well using the dilution factor,
+    # and returns an array of hashes containing QC result information.
+    #
+    # @return [Array<Hash>] QC assay results for all wells
+    def qc_assay
+      plate
+        .wells
+        .each_with_object([]) do |well, qc_results|
+          diluted_concentration = well.latest_molarity / dilution_factor
+          qc_results << { key: 'molarity', value: diluted_concentration, units: 'nM', uuid: well.uuid }
+        end
     end
   end
 end
