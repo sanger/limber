@@ -87,9 +87,9 @@ module LabwareCreators
     # @return [Hash] The QC result hash containing key, value, units, and uuid
     def build_qc_result_hash(source_well, well)
       {
-        key: purpose_config['dilution']['type'],
+        key: purpose_config['dilution']['type'] || 'molarity',
         value: source_well.latest_molarity.value.to_f / dilution_factor,
-        units: purpose_config['dilution']['unit'],
+        units: purpose_config['dilution']['unit'] || 'nM',
         uuid: well.uuid
       }
     end
