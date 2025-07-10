@@ -57,7 +57,7 @@ module LabwareCreators
     #
     # @return [Array<Hash>] QC assay results for all wells
     def qc_assay
-      plate
+      parent
         .wells
         .each_with_object([]) do |well, qc_results|
           diluted_concentration = well.latest_molarity / dilution_factor
