@@ -409,10 +409,10 @@ dl#samples-information {
   @extend .list-group-item-danger;
 }
 .state-badge.mixed {
-  @extend.badge-secondary;
+  @extend.bg-secondary;
 }
 .state-badge.empty {
-  @extend.badge-dark;
+  @extend.bg-dark;
 }
 
 .flash {
