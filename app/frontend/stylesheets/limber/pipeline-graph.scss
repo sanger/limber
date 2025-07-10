@@ -1,9 +1,10 @@
-@import 'bootstrap';
+@import '_bootstrap';
 @import 'icons';
 
 #filter-bar {
   @extend .card;
   @extend .bg-dark;
+  @extend .rounded-0;
 
   #filter {
     width: 100%;
@@ -11,7 +12,6 @@
     @extend .text-light;
     @extend .form-control;
     @extend .form-control-lg;
-    @extend .rounded;
     @extend .border-0;
 
     // add search icon
@@ -55,13 +55,13 @@
 
       #pipelines-key-text {
         @extend .flex-grow-1;
-        @extend .font-weight-bold;
-        @extend .mr-1;
+        @extend .fw-bold;
+        @extend .me-1;
       }
 
       #show-pipeline-groups {
         @extend .icon-pipeline_stack-light;
-        @extend .mr-1;
+        @extend .me-1;
       }
       #show-pipeline-groups:hover {
         @extend .icon-pipeline_single-light;
@@ -70,7 +70,7 @@
 
       #show-pipelines {
         @extend .icon-pipeline_single-light;
-        @extend .mr-1;
+        @extend .me-1;
       }
       #show-pipelines:hover {
         @extend .icon-pipeline_stack-light;
@@ -79,7 +79,7 @@
 
       #pipelines-back {
         @extend .icon-arrowleft-light;
-        @extend .ml-1;
+        @extend .ms-1;
         height: 1.5em;
         width: 1.5em;
         background-size: 1.5em;
@@ -98,6 +98,7 @@
       li {
         @extend .list-group-item;
         @extend .bg-dark;
+        @extend .text-light;
       }
       li:hover {
         @extend .text-light, :hover;
@@ -115,7 +116,7 @@
   .graph-tooltip-inner {
     @extend .tooltip-inner;
     @extend .rounded;
-    @extend .text-left;
+    @extend .text-start;
 
     ul {
       @extend .mb-0;

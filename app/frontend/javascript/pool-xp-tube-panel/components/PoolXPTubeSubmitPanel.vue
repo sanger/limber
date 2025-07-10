@@ -5,8 +5,8 @@
       :class="['p-2', 'mt-2', stateStyles.text]"
       :style="{ fontSize: '1.0rem', display: 'flex', alignItems: 'center' }"
     >
-      <b-spinner v-show="displaySpinner" id="progress_spinner" small type="border" class="mr-2" />
-      <component :is="statusIcon" id="status_icon" class="mr-1" :color="stateStyles.icon" />
+      <b-spinner v-show="displaySpinner" id="progress_spinner" small type="border" class="me-2" />
+      <component :is="statusIcon" id="status_icon" class="me-1" :color="stateStyles.icon" />
       {{ statusText }}
     </label>
 

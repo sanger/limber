@@ -1,5 +1,5 @@
 <template>
-  <span :class="['badge', 'badge-pill', badgeClass]">{{ commentCount }}</span>
+  <span :class="['badge', 'rounded-pill', badgeClass]">{{ commentCount }}</span>
 </template>
 
 <script>
@@ -41,9 +41,9 @@ export default {
     },
     badgeClass() {
       if (this.comments?.length > 0) {
-        return 'badge-success'
+        return 'bg-success'
       } else {
-        return 'badge-secondary'
+        return 'bg-secondary'
       }
     },
   },
@@ -57,7 +57,7 @@ export default {
     await this.commentFactory.refreshComments()
     this.comments = this.commentFactory.comments
   },
-  beforeDestroy() {
+  beforeUnmount() {
     removeCommentFactory(this.assetId)
     eventBus.$off('update-comments')
   },
