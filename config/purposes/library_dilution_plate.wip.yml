@@ -1,0 +1,8 @@
+Library Stock Dil Plate:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+  :creator_class: LabwareCreators::StampedDilutionPlate
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_multiplexing'
+  :dilution_factor: 10

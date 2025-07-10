@@ -30,9 +30,14 @@ module LabwareCreators
           errors.add(:base, "Well #{well.location} on the parent plate does not have a concentration value.")
         end
       end
+      return false if errors.any?
       super
     end
 
+    # Returns the dilution factor from the purpose configuration.
+    # Defaults to 10 if the configuration is missing or set to zero.
+    #
+    # @return [Integer] the dilution factor to use for calculations
     def dilution_factor
       dilution_factor = purpose_config['dilution_factor'] || 10
       dilution_factor.zero? ? 10 : dilution_factor
@@ -41,9 +46,9 @@ module LabwareCreators
     def request_hash(source_well, child_plate, additional_parameters)
       child_well = child_plate.wells.detect { |child_well| child_well.location == source_well.location }
       if child_well
-        diluted_conc = source_well.latest_concentration.value.to_f / dilution_factor
+        diluent_molarity = source_well.latest_molarity.value.to_f / dilution_factor
         return(
-          { source_asset: source_well.uuid, target_asset: child_well.uuid, concentration: diluted_conc }.merge(
+          { source_asset: source_well.uuid, target_asset: child_well.uuid, diluent_molarity: diluent_molarity }.merge(
             additional_parameters
           )
         )
