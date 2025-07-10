@@ -11,11 +11,8 @@ module LabwareCreators
   # across in a direct stamp. (ie. The location of a sample on the source plate
   # is the same as the location on the destination plate.)
   class StampedDilutionPlate < StampedPlate
-    PLATE_INCLUDES =
-      'wells.aliquots,wells.qc_results,wells.requests_as_source.request_type,wells.aliquots.request.request_type'
-
     def parent
-      @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PLATE_INCLUDES, uuid: parent_uuid)
+      @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
     end
 
     private
@@ -26,15 +23,23 @@ module LabwareCreators
     #
     # @return [Boolean] false if validation fails, otherwise proceeds with transfer and QC update
     def create_plate_with_standard_transfer!
-      # Check if the parent plate has wells with concentrations
-      # First. take the wells with samples
+      validate_wells_with_aliquots_must_have_concentrations
+      return false if errors.any?
+      super do |child_plate|
+        unless update_qc_results!(child_plate)
+          errors.add(:base, 'Failed to update QC results for the child plate.')
+          return false
+        end
+      end
+    end
+
+    # Check if the parent plate has wells with concentrations
+    def validate_wells_with_aliquots_must_have_concentrations
       parent.wells.each do |well|
         if well.aliquots.sample.present? && well.latest_molarity.nil?
           errors.add(:base, "Well #{well.location} on the parent plate does not have a concentration value.")
         end
       end
-      return false if errors.any?
-      super { |child_plate| update_qc_results!(child_plate) }
     end
 
     # Returns the dilution factor from the purpose configuration.
@@ -46,6 +51,11 @@ module LabwareCreators
       dilution_factor.zero? ? 10 : dilution_factor
     end
 
+    # Creates QC assay records for the given child plate by submitting the prepared QC assay data.
+    # Returns true if the QC assay creation is successful.
+    #
+    # @param child_plate [Sequencescape::Api::V2::Plate] The plate for which QC results are being created
+    # @return [Boolean] true if QC assay creation succeeds, false otherwise
     def update_qc_results!(child_plate)
       !Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay(child_plate)).nil?
     end
