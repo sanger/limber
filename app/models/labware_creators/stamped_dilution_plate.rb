@@ -11,10 +11,6 @@ module LabwareCreators
   # across in a direct stamp. (ie. The location of a sample on the source plate
   # is the same as the location on the destination plate.)
   class StampedDilutionPlate < StampedPlate
-    def parent
-      @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
-    end
-
     private
 
     # Validates that all wells with samples on the parent plate have a concentration value.
