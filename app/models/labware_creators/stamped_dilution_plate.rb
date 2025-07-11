@@ -21,13 +21,21 @@ module LabwareCreators
       super { |child_plate| return update_qc_results!(child_plate) }
     end
 
-    # Check if the parent plate has wells with concentrations
+    # Validates that all wells with samples (aliquots) on the parent plate have a concentration value.
+    # If any such well is missing a concentration, its coordinate is added to the error message.
+    #
+    # @return [void]
     def validate_wells_with_aliquots_must_have_concentrations
-      parent.wells.each do |well|
-        if well.aliquots.sample.present? && well.latest_molarity.nil?
-          errors.add(:base, "Well #{well.location} on the parent plate does not have a concentration value.")
-        end
-      end
+      invalid_wells =
+        parent
+          .wells
+          .each_with_object([]) do |well, erroneous_wells|
+            # Add the well's coordinate if it contains a sample but has no concentration value
+            erroneous_wells << well.coordinate if well.aliquots.sample.present? && well.latest_molarity.nil?
+          end
+      # Only add an error if there are invalid wells
+      return unless invalid_wells.empty?
+      errors.add(:base, "Wells #{invalid_wells.join(', ')} on the parent plate does not have a concentration value.")
     end
 
     # Returns the dilution factor from the purpose configuration.
