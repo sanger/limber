@@ -39,10 +39,10 @@ class QcFilesController < ApplicationController
 
   def find_assets
     %w[plate tube tube_rack].each do |klass|
-      next if params["limber_#{klass}_id"].nil?
+      next if params["#{klass}_id"].nil?
 
-      @asset_path = send(:"limber_#{klass}_path", params["limber_#{klass}_id"])
-      @asset = Sequencescape::Api::V2::Labware.find(uuid: params["limber_#{klass}_id"]).first
+      @asset_path = send(:"#{klass}_path", params["#{klass}_id"])
+      @asset = Sequencescape::Api::V2::Labware.find(uuid: params["#{klass}_id"]).first
       return true
     end
     false

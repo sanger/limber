@@ -1,0 +1,44 @@
+<%= page(:'plate-split-to-tube-racks') do -%>
+  <%= content do %>
+    <%= card title: 'Help' do %>
+      <p>Upload the tube rack scan csv file(s) describing the tube rack barcode, tube positions and tube barcodes of the tubes. A 'contingency' tube rack file is required, but a 'sequencing' file is optional.</p>
+      <p>An example is shown below:</p>
+      <table class='table table-sm'>
+        <tbody>
+          <tr><td>TR00000001</td><td>A1</td><td>AB00000001</td></tr>
+          <tr><td>TR00000001</td><td>B1</td><td>AB00000002</td></tr>
+          <tr><td>TR00000001</td><td>C1</td><td>AB00000003</td></tr>
+          <tr><td>TR00000001</td><td>D1</td><td>AB00000004</td></tr>
+          <tr><td>TR00000001</td><td>E1</td><td>AB00000005</td></tr>
+          <tr><td>TR00000001</td><td>F1</td><td>AB00000006</td></tr>
+          <tr><td>TR00000001</td><td>G1</td><td>AB00000007</td></tr>
+          <tr><td>TR00000001</td><td>H1</td><td>AB00000008</td></tr>
+          <tr><td>TR00000001</td><td>A2</td><td>AB00000009</td></tr>
+          <tr><td>TR00000001</td><td>B2</td><td>AB00000010</td></tr>
+          <tr><td>TR00000001</td><td>C2</td><td>AB00000011</td></tr>
+          <tr><td>TR00000001</td><td>D2</td><td>NO READ</td></tr>
+          <tr><td>TR00000001</td><td>E2</td><td>AB00000013</td></tr>
+          <tr><td>etc...</td><td></td></tr>
+        </tbody>
+      </table>
+      <p>NB. NO READ, NOSCAN or EMPTY are also valid values for the second column. This is interpreted as meaning that the tube rack scanner was not able to read a tube barcode in that position. The system will ignore these tubes when deciding which tubes to pool samples into.</p>
+    <% end %>
+  <% end %>
+  <%= sidebar do %>
+    <%= card title: 'Upload tube rack scan files' do %>
+      <p>For this parent plate with <b><%= @labware_creator.num_parent_unique_samples %></b> distinct samples and a total of <b><%= @labware_creator.num_parent_wells %></b> transferable wells, you will need <b><%= @labware_creator.num_parent_unique_samples %></b> sequencing and <b><%= @labware_creator.num_parent_wells - @labware_creator.num_parent_unique_samples %></b> contingency tubes.</p>
+      <%= form_for(@labware_creator, as: :tube, url: plate_child_tube_creations_path(@labware_creator.parent)) do |f| %>
+        <%= f.hidden_field :purpose_uuid %>
+        <h4>Sequencing tube rack scan file (required)</h4>
+        <div class="form-group">
+          <%= f.file_field :sequencing_file, accept: '.csv', required: true %>
+        </div>
+        <h4>Contingency tube rack scan file (sequencing file is required to be uploaded)</h4>
+        <div class="form-group">
+          <%= f.file_field :contingency_file, accept: '.csv', required: false %>
+        </div>
+        <%= f.submit class: 'btn btn-success' %>
+      <% end %>
+    <% end %>
+  <% end %>
+<%- end -%>
