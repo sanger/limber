@@ -53,7 +53,7 @@ module LabwareCreators
     # @param child_plate [Sequencescape::Api::V2::Plate] The plate for which QC results are being created
     # @return [Boolean] true if QC assay creation succeeds, false otherwise
     def update_qc_results!(child_plate)
-      Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay(child_plate)).nil
+      Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay(child_plate))
       true
     rescue StandardError => e
       Rails.logger.error('Error in updating QC results: ', e.message)
