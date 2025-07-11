@@ -43,11 +43,10 @@ module LabwareCreators # rubocop:todo Style/Documentation
     # tube_tubes (Tube -> Tube) (tube_creation#create)
     def model_name
       case type
-      # TODO: can we rename 'child' to 'plate' please? see routes.rb
       when 'plate'
-        ::ActiveModel::Name.new(Plate, nil, 'plate')
+        ::ActiveModel::Name.new(Plate, nil, 'child_plate_creation')
       when 'tube'
-        ::ActiveModel::Name.new(Tube, nil, 'tube')
+        ::ActiveModel::Name.new(Tube, nil, 'child_tube_creation')
       else
         raise StandardError, "Unknown type #{type}"
       end
