@@ -169,8 +169,8 @@ const StateData = {
   [StateEnum.FAILURE_TUBE_CHECK_AFTER_EXPORT]: {
     statusText:
       'The export process to Traction has been initiated. Verification may take a few seconds to complete, depending on factors like network speed. Please revisit or refresh the page after 10 minutes.',
-    buttonText: 'Try again',
-    styles: { button: 'danger', text: 'text-black', icon: 'blue' },
+    buttonText: 'Refresh',
+    styles: { button: 'danger', text: 'text-black', icon: 'red' },
     icon: ErrorIcon,
   },
   [StateEnum.FAILURE_EXPORT_TUBE]: {
