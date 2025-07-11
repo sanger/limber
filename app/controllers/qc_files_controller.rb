@@ -38,7 +38,7 @@ class QcFilesController < ApplicationController
   end
 
   def find_assets
-    %w[plate tube multiplexed_library_tube tube_rack].each do |klass|
+    %w[plate tube tube_rack].each do |klass|
       next if params["limber_#{klass}_id"].nil?
 
       @asset_path = send(:"limber_#{klass}_path", params["limber_#{klass}_id"])
