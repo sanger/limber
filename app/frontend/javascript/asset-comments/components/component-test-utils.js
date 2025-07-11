@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
 import * as commentStoreHelpers from '@/javascript/asset-comments/comment-store-helpers.js'
 import eventBus from '@/javascript/shared/eventBus.js'
 
@@ -10,7 +9,7 @@ const commentProps = {
   userId: 'user_id',
 }
 
-const mountWithCommentFactory = function (Component, comments, propsData = {}) {
+const mountWithCommentFactory = function (Component, comments, props = {}) {
   const mockRefreshComments = vi.fn().mockResolvedValue()
   const mockCommentFactory = {
     refreshComments: mockRefreshComments,
@@ -22,15 +21,15 @@ const mountWithCommentFactory = function (Component, comments, propsData = {}) {
   vi.spyOn(commentStoreHelpers, 'createCommentFactory').mockReturnValue(mockCommentFactory)
   vi.spyOn(commentStoreHelpers, 'removeCommentFactory').mockImplementation(removeCommentFactoryMockFn)
   const wrapper = mount(Component, {
-    localVue,
-    propsData: { ...commentProps, ...propsData },
+    props: { ...commentProps, ...props },
   })
+
   return { wrapper, mockCommentFactory, removeCommentFactoryMockFn }
 }
 
-function testCommentFactoryInitAndDestroy(Component, mockComments, propsData) {
+function testCommentFactoryInitAndDestroy(Component, mockComments, props) {
   it('should initialize commentFactory and update comments on mount', async () => {
-    const { wrapper, mockCommentFactory } = mountWithCommentFactory(Component, mockComments, propsData)
+    const { wrapper, mockCommentFactory } = mountWithCommentFactory(Component, mockComments, props)
 
     await wrapper.vm.$nextTick()
 
@@ -39,10 +38,10 @@ function testCommentFactoryInitAndDestroy(Component, mockComments, propsData) {
     expect(wrapper.vm.comments).toEqual(mockComments)
   })
 
-  it('removes eventBus listener on destroy', () => {
+  it('removes eventBus listener on unmount', () => {
     vi.spyOn(eventBus, '$off')
-    const { wrapper, removeCommentFactoryMockFn } = mountWithCommentFactory(Component, mockComments, propsData)
-    wrapper.destroy()
+    const { wrapper, removeCommentFactoryMockFn } = mountWithCommentFactory(Component, mockComments, props)
+    wrapper.unmount()
     expect(eventBus.$off).toHaveBeenCalledWith('update-comments')
     expect(removeCommentFactoryMockFn).toHaveBeenCalled()
   })

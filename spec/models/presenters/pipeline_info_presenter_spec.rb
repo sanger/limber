@@ -1,20 +1,26 @@
 # frozen_string_literal: true
 
-def stub_plate_find_all_barcode(plate)
-  allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
-    { barcode: [plate.barcode] },
-    includes: 'purpose'
-  ).and_return([plate])
-end
-
-def stub_tube_find_all_barcode(tube)
-  allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-    { barcode: [tube.barcode] },
-    includes: 'purpose'
-  ).and_return([tube])
+# Stubs:
+# Sequencescape::Api::V2::Labware.find_all(
+#   { barcode: parent_barcodes },
+#   includes: %w[purpose parents parents.purpose]
+# )
+def stub_labware_find_all_barcode(labwares)
+  allow(Sequencescape::Api::V2::Labware).to receive(:find_all).with(
+    { barcode: labwares.map(&:barcode) },
+    includes: %w[purpose parents parents.purpose]
+  ).and_return(labwares)
 end
 
 RSpec.describe Presenters::PipelineInfoPresenter do
+  before do
+    # Ensure the Rails cache is not used during testing to prevent marshal errors
+    allow(Rails.cache).to receive(:fetch).and_wrap_original do |_m, *_args, &block|
+      block.call
+    end
+  end
+
+  # Define the presenter and labware for the tests
   let(:presenter) { described_class.new(labware) }
   let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
   let(:labware) { create(:v2_stock_plate, :has_pooling_metadata, purpose: wgs_purpose) }
@@ -443,9 +449,9 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           allow(labware_child).to receive_messages(parents: [labware_branching_parent])
           allow(labware_other_child).to receive_messages(parents: [labware_branching_parent])
 
-          stub_plate_find_all_barcode(labware_combining_child)
-          stub_plate_find_all_barcode(labware_branching_parent)
-          stub_plate_find_all_barcode(labware_parent)
+          stub_labware_find_all_barcode([labware_combining_child])
+          stub_labware_find_all_barcode([labware_branching_parent])
+          stub_labware_find_all_barcode([labware_parent])
         end
 
         context 'when inspecting the labware-parent' do
@@ -557,48 +563,12 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
   end
 
-  describe '#great_grandparent_purposes?' do
-    context 'when a plate has no great-grandparents' do
-      before { allow(labware).to receive(:parents).and_return([]) }
-
-      it 'returns false' do
-        expect(presenter.great_grandparent_purposes?).to be false
-      end
-    end
-
-    context 'when a plate has great-grandparents' do
-      let(:great_grandparent_purpose) { create(:v2_purpose, name: 'Great Grandparent Purpose') }
-      let(:grandparent_purpose) { create(:v2_purpose, name: 'Grandparent Purpose') }
-      let(:parent_purpose) { create(:v2_purpose, name: 'Parent Purpose') }
-
-      let(:great_grandparent_plate) do
-        create(:v2_stock_plate, purpose: great_grandparent_purpose, uuid: 'great-grandparent-plate-uuid')
-      end
-      let(:grandparent_plate) { create(:v2_stock_plate, purpose: grandparent_purpose, uuid: 'grandparent-plate-uuid') }
-      let(:parent_plate) { create(:v2_stock_plate, purpose: parent_purpose, uuid: 'parent-plate-uuid') }
-
-      before do
-        allow(grandparent_plate).to receive_messages(parents: [great_grandparent_plate])
-        allow(parent_plate).to receive_messages(parents: [grandparent_plate])
-        allow(labware).to receive_messages(parents: [parent_plate])
-
-        stub_plate_find_all_barcode(great_grandparent_plate)
-        stub_plate_find_all_barcode(grandparent_plate)
-        stub_plate_find_all_barcode(parent_plate)
-      end
-
-      it 'returns true' do
-        expect(presenter.great_grandparent_purposes?).to be true
-      end
-    end
-  end
-
-  describe '#grandparent_purposes' do
+  describe '#grandparent_purposes?' do
     context 'when a tube has no grandparents' do
       before { allow(labware).to receive(:parents).and_return([]) }
 
-      it 'returns an empty string' do
-        expect(presenter.grandparent_purposes).to eq('')
+      it 'returns false' do
+        expect(presenter.grandparent_purposes?).to be false
       end
     end
 
@@ -613,11 +583,12 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         allow(labware).to receive_messages(parents: [parent_tube])
         allow(parent_tube).to receive_messages(parents: [grandparent_tube])
 
-        stub_tube_find_all_barcode(parent_tube)
+        stub_labware_find_all_barcode([parent_tube])
+        stub_labware_find_all_barcode([grandparent_tube])
       end
 
-      it 'returns the grandparent purposes' do
-        expect(presenter.grandparent_purposes).to eq('Grandparent Purpose')
+      it 'returns true' do
+        expect(presenter.grandparent_purposes?).to be true
       end
     end
   end
@@ -638,7 +609,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       before do
         allow(labware).to receive_messages(parents: [parent_tube])
 
-        stub_tube_find_all_barcode(parent_tube)
+        stub_labware_find_all_barcode([parent_tube])
       end
 
       it 'returns the parent purposes' do
@@ -655,8 +626,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       before do
         allow(labware).to receive_messages(parents: [parent_tube_1, parent_tube_2])
 
-        stub_tube_find_all_barcode(parent_tube_1)
-        stub_tube_find_all_barcode(parent_tube_2)
+        stub_labware_find_all_barcode([parent_tube_1, parent_tube_2])
       end
 
       it 'returns the parent purposes' do
