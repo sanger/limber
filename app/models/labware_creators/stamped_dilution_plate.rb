@@ -3,9 +3,6 @@
 require_dependency 'form'
 require_dependency 'labware_creators'
 
-# TODO: Here, we need to find the parent well concentrations,
-# read from the configurations the dilution factor,
-# and then create the child plate with the diluted concentrations.
 module LabwareCreators
   # Simply creates a new plate of the specified purpose and transfers material
   # across in a direct stamp. (ie. The location of a sample on the source plate
@@ -21,12 +18,7 @@ module LabwareCreators
     def create_plate_with_standard_transfer!
       validate_wells_with_aliquots_must_have_concentrations
       return false if errors.any?
-      super do |child_plate|
-        unless update_qc_results!(child_plate)
-          errors.add(:base, 'Failed to update QC results for the child plate.')
-          return false
-        end
-      end
+      super { |child_plate| return update_qc_results!(child_plate) }
     end
 
     # Check if the parent plate has wells with concentrations
@@ -53,7 +45,12 @@ module LabwareCreators
     # @param child_plate [Sequencescape::Api::V2::Plate] The plate for which QC results are being created
     # @return [Boolean] true if QC assay creation succeeds, false otherwise
     def update_qc_results!(child_plate)
-      !Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay(child_plate)).nil?
+      Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay(child_plate)).nil
+      true
+    rescue StandardError => e
+      Rails.logger.error('Error in updating QC results: ', e.message)
+      errors.add(:base, 'Failed to update the QC results...')
+      false
     end
 
     # Prepares QC assay data for each well on the plate.
