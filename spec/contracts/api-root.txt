@@ -88,11 +88,6 @@ Content-Type: application/json
       "read": "http://example.com:3000/multiplexed_library_creation_requests"
     }
   },
-  "multiplexed_library_tubes": {
-    "actions": {
-      "read": "http://example.com:3000/multiplexed_library_tubes"
-    }
-  },
   "order_templates": {
     "actions": {
       "read": "http://example.com:3000/order_templates"
