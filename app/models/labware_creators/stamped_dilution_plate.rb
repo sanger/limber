@@ -56,7 +56,7 @@ module LabwareCreators
       Sequencescape::Api::V2::QcAssay.create!(qc_results: qc_assay(child_plate))
       true
     rescue StandardError => e
-      Rails.logger.error('Error in updating QC results: ', e.message)
+      Rails.logger.error("Error in updating QC results: #{e.message}")
       errors.add(:base, 'Failed to update the QC results...')
       false
     end
