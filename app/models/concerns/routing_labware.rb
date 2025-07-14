@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # A concern to encapsulate Rails routing proxy behaviour for labware models that use a Sequencescape API.
+# See the route definitions in `config/routes.rb` for the `resources` to `controller` mapping.
 module RoutingLabware
   extend ActiveSupport::Concern
 
@@ -22,5 +23,19 @@ module RoutingLabware
 
   def to_model
     self
+  end
+
+  # Returns the ActiveModel::Name instance for the current class.
+  # This is used by Rails for routing and form helpers to determine the model name.
+  # @return [ActiveModel::Name] The model name for the class
+  def model_name
+    ::ActiveModel::Name.new(self.class, nil)
+  end
+
+  # Indicates that the labware object is considered persisted.
+  # This is required by Rails form and routing helpers to treat the object as saved in the database.
+  # @return [Boolean] Always returns true
+  def persisted?
+    true
   end
 end

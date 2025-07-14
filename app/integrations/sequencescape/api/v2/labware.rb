@@ -30,11 +30,11 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   def model_name
     case type
     when 'tubes'
-      ::ActiveModel::Name.new(Tube, false)
+      ::ActiveModel::Name.new(Sequencescape::Api::V2::Tube, false, 'Tube')
     when 'plates'
-      ::ActiveModel::Name.new(Plate, false)
+      ::ActiveModel::Name.new(Sequencescape::Api::V2::Plate, false, 'Plate')
     when 'tube_racks'
-      ::ActiveModel::Name.new(TubeRack, false)
+      ::ActiveModel::Name.new(Sequencescape::Api::V2::TubeRack, false, 'TubeRack')
     else
       raise "Can't view #{type} in limber"
     end
