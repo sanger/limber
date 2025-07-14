@@ -7,9 +7,7 @@ require 'spec_helper'
 # 3. Create Submission
 
 RSpec.describe LabwareCreators::CardinalPoolsPlate, :cardinal do
-  has_a_working_api
-
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   let(:dest_purpose_uuid) { 'dest-purpose' }
   let(:parent_uuid) { 'example-parent-uuid' }

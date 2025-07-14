@@ -8,8 +8,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   it_behaves_like 'it only allows creation from plates'
 
-  has_a_working_api
-
   let(:parent1_uuid) { 'example-plate-uuid' }
   let(:parent2_uuid) { 'example-plate2-uuid' }
   let(:requests) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
@@ -54,7 +52,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on new' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
 
@@ -72,7 +70,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
 
   context 'on create' do
-    subject { described_class.new(api, form_attributes.merge(user_uuid: user.uuid)) }
+    subject { described_class.new(form_attributes.merge(user_uuid: user.uuid)) }
 
     let(:form_attributes) do
       {

@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe SearchController, type: :controller do
   include FeatureHelpers
 
-  has_a_working_api
-
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
@@ -29,7 +27,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_plate_path(uuid))
+        expect(response).to redirect_to(plate_path(uuid))
       end
     end
 
@@ -38,7 +36,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_path(uuid))
+        expect(response).to redirect_to(tube_path(uuid))
       end
     end
 
@@ -47,7 +45,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_rack_path(uuid))
+        expect(response).to redirect_to(tube_rack_path(uuid))
       end
     end
   end

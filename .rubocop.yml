@@ -79,6 +79,7 @@ Naming/VariableNumber:
 
 RSpec/ContextWording:
   Prefixes:
+    - by
     - for
     - if
     - unless
