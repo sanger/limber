@@ -15,9 +15,10 @@ Loading of yaml files is handled by {ConfigLoader::PipelinesLoader} which
 loads all files, detects potential duplicates, and populates the {PipelineList}.
 
 > **TIP**
-> It is suggested that you create a new file for each new 'pipeline'. In most
-> cases this file will actually contain a handful of internal 'pipelines'
-> reflecting branches, or different stages of the process.
+> It is suggested that you create a new file for each new customer 'pipeline'. In
+> most cases this file will actually contain a handful of internal 'pipelines'
+> reflecting branches, or different stages of the process. For example, sample prep
+> followed by library prep.
 
 ## An example file
 
@@ -27,6 +28,7 @@ pipeline.
 ```yaml
 ---
 WGS: # Top of the pipeline (Library Prep)
+  pipeline_group: WGS
   filters:
     request_type_key:
       - limber_wgs
@@ -41,6 +43,7 @@ WGS: # Top of the pipeline (Library Prep)
     LB End Prep: LB Lib PCR
     LB Lib PCR: LB Lib PCR-XP
 WGS MX: # Bottom of the pipeline (Pooling and normalization)
+  pipeline_group: WGS
   filters:
     request_type_key:
       - limber_multiplexing
@@ -76,6 +79,7 @@ to set the pipeline's name.
 
 ```yaml
 WGS: # Top of the pipeline (Library Prep)
+  pipeline_group: WGS
   filters:
     request_type_key:
       - limber_wgs
@@ -95,19 +99,18 @@ The other keys are detailed below.
 
 #### pipeline_group
 
-This groups several Limber pipelines together that are part of the same real world pipeline.
+This groups several Limber pipelines together that are part of the same real world pipeline. 'WGS' in the example above.
 
-For instance, 'Heron-384 Tailed A V2' and 'Heron-384 Tailed B V2' - the split here is purely for technical reasons, to allow branching. In reality, they are both part of the Heron pipeline.
+For example, pipelines named 'Heron-384 Tailed A V2' and 'Heron-384 Tailed B V2' share
+the same pipeline group 'Heron-384 Tailed V2' - the split here is due to the branching PCR chemistry in the pipeline, and there is re-merge of the samples downstream. They are both part of the same Heron customer 'pipeline'.
 
-Another example is when there are separate Limber pipelines for sequential stages. For instance, 'pWGS-384' (the library prep part) and 'pWGS-384 MX' (the multiplexing part). In reality, these are both part of the same pipeline, so they both have the pipeline group 'pWGS-384'.
+Another example is when there are separate Limber pipelines for sequential stages. For instance, 'pWGS-384' (the library prep part) and 'pWGS-384 MX' (the multiplexing part). These are both part of the same overall customer 'pipeline', so they both have the pipeline group 'pWGS-384'.
 
 The pipeline group is used in the 'Work in progress' pages and the 'Pipelines overview' page.
 
 #### filters
 
-Filters are the way in which a pipeline works out if it is in progress. It
-consists of a series of keys, and their acceptable values. Keys should be
-attributes on {Sequencescape::Api::V2::Request request} (eg. library_type)
+Filters are use by the code to determine which pipeline a specific instance of Labware is in. This in turn informs the decision on what suggested actions to show the user next. The filters consists of a series of keys, and their acceptable values. Keys should be attributes on {Sequencescape::Api::V2::Request request} (eg. library_type)
 whereas values are either an array of acceptable values, or a single acceptable
 value.
 
@@ -124,7 +127,9 @@ Indicates that this pipeline can be used for requests with a request type of 'li
 
 The most common keys to filter on are request_type and library_type.
 
-All filters must be fulfilled for a pipeline to be considered valid.
+All filters must be fulfilled for a pipeline to be considered valid for the specific instance of Labware in question. Note that the labware must also have a purpose that matches to one of those listed in the relationships section of the pipeline yaml. This is partly why we now try to prefix purpose keys with pipeline specific characters, use request types specific to pipeline submission templates, and use library types specific to their library prep pipelines where ever possible.
+
+NB. Care should be taken when choosing purpose names and assigning filters. If you are not careful then a user can be presented with extra green suggested next action buttons in Limber, which are inappropriate for the pipeline they are running. This can cause confusion and potentially support issues if they choose an incorrect option and create the wrong child labware.
 
 For branching pipelines with identical filters, you are strongly encouraged to
 use yaml anchors to share the filter between pipelines. See the relationships
@@ -229,4 +234,22 @@ Heron-384 B: # Heron 384-well pipeline specific to PCR 2 plate (uses above relat
   relationships:
     LHR-384 RT: LHR-384 PCR 2
     LHR-384 PCR 2: LHR-384 cDNA
+```
+
+> **TIP**
+> The keys in the yaml must be unique, but the values need not be. In the example
+> below two types of plate (Input and PCR XP) are able to lead into the Aggregate
+> plate and will both display the suggested action to create that Aggregate child
+> plate.
+> In this example the Input and PCR XP are versions of the samples prepared to the
+> same state (cleaned DNA ready for aggregation).
+> The difference is one (the Input) is created by faculty off LIMS and created by a
+> manifest, whereas the other (PCR XP) has been created from an earlier step within
+> LIMS.
+
+```yaml
+  relationships:
+    LRC GEM-X 5p cDNA Input: LRC GEM-X 5p Aggregate
+    LRC GEM-X 5p cDNA PCR XP: LRC GEM-X 5p Aggregate
+    LRC GEM-X 5p Aggregate: LRC GEM-X 5p Cherrypick
 ```
