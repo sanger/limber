@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Base < JsonApiClient::Resource # rubocop:todo Style/Documentation
-  class_attribute :plate, :tube
+  class_attribute :plate, :tube, :tube_rack
 
   # Adjusts the parameters used for pagination. We create a custom
   # class to avoid mutating the global JsonApiClient::Paginating::Paginator object
@@ -20,5 +20,6 @@ class Sequencescape::Api::V2::Base < JsonApiClient::Resource # rubocop:todo Styl
     .authorisation
   self.plate = false
   self.tube = false
+  self.tube_rack = false
   self.paginator = SequencescapePaginator
 end
