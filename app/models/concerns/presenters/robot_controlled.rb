@@ -44,19 +44,31 @@ module Presenters
         .present?
     end
 
-    # Recursively searches for all nested hashes (or Hashie::Mash objects) that contain a `parent` key.
-    #
+    # Finds all immediate nested hashes (or Hashie::Mash objects) within the given object
+    # that contain a `parent` key.
     # @param obj [Hash, Hashie::Mash] The object to search through.
-    # @return [Array<Hash, Hashie::Mash>] An array of all nested objects containing a `parent` key.
+    #   Example input:
+    #   {
+    #     robot-1: {
+    #        bed: bed-1,
+    #        purpose: 'purpose 1',
+    #        parent: {
+    #           robot-2 {
+    #              bed: bed-2,
+    #              purpose: 'purpose 2',
+    #           }
+    #        }
+    #     }
+    #  }
+    #
+    # @return [Array<Hash, Hashie::Mash>] An array of immediate values that contain a `parent` key.
+    #   Example return value:
+    #     [
+    #       {robot-2: { bed: bed-2, purpose: 'purpose 2' }}
+    #     ]
     def find_robots_with_parent_property(obj)
       return [] unless obj.is_a?(Hash) || obj.is_a?(Hashie::Mash)
-
-      obj.each_with_object([]) do |(_, value), results|
-        if value.is_a?(Hash) || value.is_a?(Hashie::Mash)
-          results << value if value.key?('parent')
-          results.concat(find_robots_with_parent_property(value))
-        end
-      end
+      obj.values.select { |value| (value.is_a?(Hash) || value.is_a?(Hashie::Mash)) && value.key?('parent') }
     end
 
     def multiple_robots?
