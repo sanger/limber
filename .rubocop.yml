@@ -81,6 +81,10 @@ Metrics/MethodLength:
     - hash
     - heredoc
 
+# There is so much existing inconsistent code that it is not worth enforcing this cop
+Naming/PredicateMethod:
+  Enabled: false
+
 Naming/VariableNumber:
   CheckSymbols:
     false # Rubocop gets annoyed about our states. I'm disabling globally
@@ -138,6 +142,10 @@ RSpec/NestedGroups:
 
 RSpec/NamedSubject:
   EnforcedStyle: named_only
+
+# This cop doesn't always increase clarity
+Style/CollectionQuerying:
+  Enabled: false
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
