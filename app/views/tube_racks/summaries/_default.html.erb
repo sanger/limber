@@ -12,11 +12,11 @@
     </li>
     <li class="nav-item">
       <% data_attributes = {
-          sequencescape_api: Limber::Application.config.api.v2.connection_options.js_url,
-          sequencescape_api_key: Limber::Application.config.api.v2.connection_options.authorisation,
-          asset_id: presenter.id
-      } %>
-      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-toggle="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter',data_attributes) %></a>
+           sequencescape_api: Limber::Application.config.api.v2.connection_options.js_url,
+           sequencescape_api_key: Limber::Application.config.api.v2.connection_options.authorisation,
+           asset_id: presenter.id
+         } %>
+      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-toggle="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter', data_attributes) %></a>
     </li>
   </ul>
 </div>

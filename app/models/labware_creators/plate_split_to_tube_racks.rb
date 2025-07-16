@@ -138,6 +138,7 @@ module LabwareCreators
       @tube_rack_attributes = []
       tube_rack_attributes << generate_sequencing_tube_rack_attributes(tube_rack_attributes)
       return if require_sequencing_tubes_only?
+
       tube_rack_attributes << generate_contingency_tube_rack_attributes(tube_rack_attributes)
     end
 
@@ -812,6 +813,7 @@ module LabwareCreators
       if tube_uuid.blank?
         raise "Unable to identify the newly created child tube for parent well '#{well.position[:name]}'"
       end
+
       tube_uuid
     end
 
