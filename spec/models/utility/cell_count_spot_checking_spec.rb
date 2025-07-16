@@ -132,9 +132,9 @@ RSpec.describe Utility::CellCountSpotChecking do
           plate
             .wells
             .select do |well|
-              sample = well.aliquots.first.sample
-              sample.sample_metadata.supplier_name == ancestor_tubes.values.first.barcode.human
-            end
+            sample = well.aliquots.first.sample
+            sample.sample_metadata.supplier_name == ancestor_tubes.values.first.barcode.human
+          end
             .drop(1)
         plate.wells.reject! { |well| second_replicates_to_remove.include?(well) }
       end

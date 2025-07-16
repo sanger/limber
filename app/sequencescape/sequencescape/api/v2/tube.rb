@@ -28,7 +28,9 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
 
   has_one :custom_metadatum_collection
-  has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
+
+  has_one :racked_tube, class_name: 'Sequencescape::Api::V2::RackedTube'
+  has_one :tube_rack, through: :racked_tube, class_name: 'Sequencescape::Api::V2::TubeRack'
 
   property :created_at, type: :time
   property :updated_at, type: :time

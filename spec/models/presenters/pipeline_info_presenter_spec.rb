@@ -36,16 +36,14 @@ RSpec.describe Presenters::PipelineInfoPresenter do
             relationships: {
               'parent' => 'child'
             },
-            filters: {
-            }
+            filters: {}
           },
           'wgs_purpose_pipeline' => {
             pipeline_group: 'Group B',
             relationships: {
               'parent' => 'WGS Purpose'
             },
-            filters: {
-            }
+            filters: {}
           }
         }
       end
@@ -171,8 +169,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
                 'purpose-first' => 'purpose-middle',
                 'purpose-middle' => 'purpose-last'
               },
-              filters: {
-              }
+              filters: {}
             }
           }
         end
@@ -210,16 +207,14 @@ RSpec.describe Presenters::PipelineInfoPresenter do
               relationships: {
                 'purpose-first' => 'purpose-middle'
               },
-              filters: {
-              }
+              filters: {}
             },
             'group_b' => {
               pipeline_group: 'Group B',
               relationships: {
                 'purpose-middle' => 'purpose-last'
               },
-              filters: {
-              }
+              filters: {}
             }
           }
         end
@@ -290,16 +285,14 @@ RSpec.describe Presenters::PipelineInfoPresenter do
               relationships: {
                 'purpose-parent' => 'purpose-child'
               },
-              filters: {
-              }
+              filters: {}
             },
             'group_b' => {
               pipeline_group: 'Group B',
               relationships: {
                 'purpose-parent' => 'purpose-other-child'
               },
-              filters: {
-              }
+              filters: {}
             }
           }
         end
@@ -337,16 +330,14 @@ RSpec.describe Presenters::PipelineInfoPresenter do
               relationships: {
                 'purpose-parent' => 'purpose-child'
               },
-              filters: {
-              }
+              filters: {}
             },
             'group_b' => {
               pipeline_group: 'Group B',
               relationships: {
                 'purpose-other-parent' => 'purpose-child'
               },
-              filters: {
-              }
+              filters: {}
             }
           }
         end
@@ -391,40 +382,35 @@ RSpec.describe Presenters::PipelineInfoPresenter do
               relationships: {
                 'purpose-parent' => 'purpose-combining-child'
               },
-              filters: {
-              }
+              filters: {}
             },
             'Group A2 Combined' => {
               pipeline_group: 'Group A2 Combined',
               relationships: {
                 'purpose-other-parent' => 'purpose-combining-child'
               },
-              filters: {
-              }
+              filters: {}
             },
             'Group B Chained' => {
               pipeline_group: 'Group B Chained',
               relationships: {
                 'purpose-combining-child' => 'purpose-branching-parent'
               },
-              filters: {
-              }
+              filters: {}
             },
             'Group C1 Branching' => {
               pipeline_group: 'Group C1 Branching',
               relationships: {
                 'purpose-branching-parent' => 'purpose-child'
               },
-              filters: {
-              }
+              filters: {}
             },
             'Group C2 Branching' => {
               pipeline_group: 'Group C2 Branching',
               relationships: {
                 'purpose-branching-parent' => 'purpose-other-child'
               },
-              filters: {
-              }
+              filters: {}
             }
           }
         end

@@ -28,6 +28,8 @@ class Export
                 :filename,
                 :tube_includes,
                 :tube_selects,
+                :tube_rack_includes,
+                :tube_rack_selects,
                 :ancestor_tube_purpose,
                 :file_extension
 
