@@ -15,4 +15,8 @@ class Limber::Tube < Sequencescape::Tube # rubocop:todo Style/Documentation
   def tube?
     true
   end
+
+  def tube_rack?
+    false
+  end
 end

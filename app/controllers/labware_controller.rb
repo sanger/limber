@@ -35,18 +35,13 @@ class LabwareController < ApplicationController
     end
   end
 
-  def update # rubocop:todo Metrics/AbcSize
+  def update
     state_changer.move_to!(*update_params)
 
     notice = "Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
     notice << ' The customer will still be charged.' if update_params[2]
 
     respond_to { |format| format.html { redirect_to(search_path, notice:) } }
-  rescue StateChangers::StateChangeError => e
-    respond_to do |format|
-      format.html { redirect_to(search_path, alert: e.message) }
-      format.csv
-    end
   end
 
   private
