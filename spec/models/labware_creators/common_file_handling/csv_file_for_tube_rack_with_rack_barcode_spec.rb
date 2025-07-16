@@ -10,7 +10,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRackWithRackBa
     let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/common_file_handling/' \
-          'tube_rack_with_rack_barcode/tube_rack_scan_with_different_rack_barcodes.csv',
+        'tube_rack_with_rack_barcode/tube_rack_scan_with_different_rack_barcodes.csv',
         'sequencescape/qc_file'
       )
     end

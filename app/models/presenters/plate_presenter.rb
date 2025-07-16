@@ -112,15 +112,15 @@ module Presenters
           .fetch(:file_links, [])
           .select { |link| can_be_enabled?(link&.states) }
           .map do |link|
+          [
+            link.name,
             [
-              link.name,
-              [
-                :limber_plate,
-                :export,
-                { id: link.id, limber_plate_id: human_barcode, format: :csv, **link.params || {} }
-              ]
+              :limber_plate,
+              :export,
+              { id: link.id, limber_plate_id: human_barcode, format: :csv, **link.params || {} }
             ]
-          end
+          ]
+        end
       links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
       links
     end

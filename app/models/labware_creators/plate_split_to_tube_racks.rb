@@ -138,6 +138,7 @@ module LabwareCreators
       @tube_rack_attributes = []
       tube_rack_attributes << generate_sequencing_tube_rack_attributes(tube_rack_attributes)
       return if require_sequencing_tubes_only?
+
       tube_rack_attributes << generate_contingency_tube_rack_attributes(tube_rack_attributes)
     end
 
@@ -176,8 +177,10 @@ module LabwareCreators
     # @return [CsvFile, nil] A CsvFile object for the sequencing tube rack scan CSV file, or nil if the file
     # doesn't exist.
     def sequencing_csv_file
+      return unless sequencing_file
+
       @sequencing_csv_file ||=
-        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(sequencing_file) if sequencing_file
+        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(sequencing_file)
     end
 
     # Returns a CsvFile object for the contingency tube rack scan CSV file, or nil if the file doesn't exist.
@@ -185,8 +188,10 @@ module LabwareCreators
     # @return [CsvFile, nil] A CsvFile object for the contingency tube rack scan CSV file, or nil if the file
     # doesn't exist.
     def contingency_csv_file
+      return unless contingency_file
+
       @contingency_csv_file ||=
-        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(contingency_file) if contingency_file
+        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(contingency_file)
     end
 
     # Returns the number of unique sample UUIDs for the parent wells after applying the current well filter.
@@ -254,6 +259,7 @@ module LabwareCreators
     # Sets errors if there are insufficient or too many tubes.
     def must_have_correct_number_of_tubes_in_rack_files
       return unless files_valid?
+
       unless require_sequencing_tubes_only?
         add_error_if_wrong_number_of_tubes(
           :contingency_csv_file,
@@ -807,6 +813,7 @@ module LabwareCreators
       if tube_uuid.blank?
         raise "Unable to identify the newly created child tube for parent well '#{well.position[:name]}'"
       end
+
       tube_uuid
     end
 

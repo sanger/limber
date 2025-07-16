@@ -25,16 +25,16 @@ module Presenters
         current_plate
           .wells
           .each_with_object({}) do |well, details|
-            next if well.aliquots.empty?
+          next if well.aliquots.empty?
 
-            # Should be a value by this point in order to have calculated the binning
-            # NB. poly_metadata are stored as strings so need to convert to integer
-            pcr_cycles =
-              well.aliquots.first.request.poly_metadata.find { |md| md.key == 'pcr_cycles' }&.value.to_i || nil
-            raise "No pcr_cycles metadata found for well #{well.location}" if pcr_cycles.nil?
+          # Should be a value by this point in order to have calculated the binning
+          # NB. poly_metadata are stored as strings so need to convert to integer
+          pcr_cycles =
+            well.aliquots.first.request.poly_metadata.find { |md| md.key == 'pcr_cycles' }&.value.to_i || nil # rubocop:todo Lint/UselessOr
+          raise "No pcr_cycles metadata found for well #{well.location}" if pcr_cycles.nil?
 
-            details[well.location] = { 'pcr_cycles' => pcr_cycles }
-          end
+          details[well.location] = { 'pcr_cycles' => pcr_cycles }
+        end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
   end

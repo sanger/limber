@@ -512,7 +512,7 @@ export default {
           if (data.state === 'valid') {
             this.parentPlate = { ...data.results }
           } else {
-            ;(this.progressMessage = 'Parent plate lookup error: '), data.state
+            this.progressMessage = 'Parent plate lookup error: ' + data.state
           }
           this.loading = false
         }

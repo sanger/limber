@@ -166,6 +166,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     wells.each do |well|
       pool = pooled_wells.find { |wells| wells.include?(well.location) }
       next if pool.nil?
+
       well.pool = pool
     end
   end
