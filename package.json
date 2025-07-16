@@ -19,7 +19,7 @@
   "devDependencies": {
     "@prettier/plugin-ruby": "^4.0.0",
     "@vitejs/plugin-vue": "^5.2.1",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^3.2.4",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.0.0",
@@ -39,7 +39,7 @@
     "unplugin-vue-components": "^28.4.1",
     "vite": "^5.4.19",
     "vite-plugin-ruby": "^5.1.1",
-    "vitest": "^2.1.9",
+    "vitest": "^3.2.4",
     "vue-template-compiler": "^2.7.0"
   },
   "_comment": "Required to address https://github.com/npm/cli/issues/4828",
