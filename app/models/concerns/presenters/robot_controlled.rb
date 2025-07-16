@@ -69,6 +69,7 @@ module Presenters
     #     ]
     def find_robots_with_parent_property(obj)
       return [] unless obj.is_a?(Hash) || obj.is_a?(Hashie::Mash)
+
       obj.values.select { |value| (value.is_a?(Hash) || value.is_a?(Hashie::Mash)) && value.key?('parent') }
     end
 
