@@ -79,7 +79,7 @@ RSpec.feature 'Plate transfer', :js, :robots do
       message: ''
     )
 
-    create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
+    create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
 
     bed_labware_lookup(example_plate)
     stub_v2_plate(example_plate)

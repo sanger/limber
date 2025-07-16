@@ -1,7 +1,7 @@
 <template>
   <div :class="['alert', `alert-${level}`, 'alert-dismissible', 'show']" role="alert">
     <strong>{{ title }}:</strong> {{ message }}
-    <button type="button" class="close" aria-label="Close" @click="$emit('close')">
+    <button type="button" class="btn-close" aria-label="Close" @click="$emit('close')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -15,5 +15,6 @@ export default {
     title: { type: String, default: '' },
     message: { type: String, default: '' },
   },
+  emits: ['close'],
 }
 </script>

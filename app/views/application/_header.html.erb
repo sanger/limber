@@ -1,26 +1,28 @@
 <header class="limber-header">
 <nav>
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#headernavigation" aria-controls="headernavigation" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <%= link_to 'Limber', :root, class: 'limber-logo' %><span class="environment"><%= Rails.env %></span>
-  <div class="collapse navbar-collapse" id="headernavigation">
-    <%= form_tag perform_search_path, class: 'plate-search-form form-inline', 'data-ajax': 'false', method: 'post' do %>
-      <%= label_tag :header_plate_barcode, 'Plate or Tube Barcode', class: 'sr-only' %>
-      <%= text_field_tag :plate_barcode, params[:plate_barcode], class: 'plate-barcode form-control', placeholder: 'e.g. 1220012345855 or DN12345', id: 'header_plate_barcode' %>
-    <% end %>
-    <ul class="navbar-nav mr-auto mt-2 mt-md-0">
-      <!-- No nav items -->
-    </ul>
-      <% if logged_in? %>
-        <span class="icon icon-user mr-1"></span>
-        <span class='navbar-text mr-sm-2'>
-          <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span>
-        </span>
-        <%= session_switcher %>
-      <% else %>
-        <span class='navbar-text'>Not logged in</span>
+  <div class="container-fluid">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-target="#headernavigation" aria-controls="headernavigation" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <%= link_to 'Limber', :root, class: 'limber-logo' %><span class="environment"><%= Rails.env %></span>
+    <div class="collapse navbar-collapse" id="headernavigation">
+      <%= form_tag perform_search_path, class: 'plate-search-form', 'data-ajax': 'false', method: 'post' do %>
+        <%= label_tag :header_plate_barcode, 'Plate or Tube Barcode', class: 'visually-hidden' %>
+        <%= text_field_tag :plate_barcode, params[:plate_barcode], class: 'plate-barcode form-control', placeholder: 'e.g. 1220012345855 or DN12345', id: 'header_plate_barcode' %>
       <% end %>
+      <ul class="navbar-nav me-auto mt-2 mt-md-0">
+        <!-- No nav items -->
+      </ul>
+        <% if logged_in? %>
+          <span class="icon icon-user me-1"></span>
+          <span class='navbar-text me-sm-2'>
+            <span class="user_name_placeholder"><strong><%= user_name.titlecase %></strong></span>
+          </span>
+          <%= session_switcher %>
+        <% else %>
+          <span class='navbar-text'>Not logged in</span>
+        <% end %>
+    </div>
   </div>
 </nav>
 </header>

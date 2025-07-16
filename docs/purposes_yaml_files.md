@@ -110,7 +110,7 @@ LPL Example:
   :input_plate: false
   :size: 96
   :presenter_class: Presenters::StandardPresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
+  :state_changer_class: StateChangers::PlateStateChanger
   :creator_class: LabwareCreators::TaggedPlate
   :default_printer_type: :plate_a
 ```
@@ -238,15 +238,15 @@ purpose. State changers are used on updating labware state, either via a
 {LabwareController#update}. In the vast majority of cases this can be left as
 the default option.
 
-Valid options are subclasses of {StateChangers::DefaultStateChanger}.
+Valid options are subclasses of {StateChangers::PlateStateChanger}.
 
 {file:docs/state_changers.md Full list of state changers and their behaviour}
 
 ```yaml
-:state_changer_class: StateChangers::DefaultStateChanger
+:state_changer_class: StateChangers::PlateStateChanger
 ```
 
-Default: `StateChangers::DefaultStateChanger`
+Default: `StateChangers::PlateStateChanger`
 
 #### :work_completion_request_type
 Used in combination with the state_changer_class this applies a filter that limits the state change to complete (pass) only those requests with the supplied key.
