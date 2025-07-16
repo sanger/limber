@@ -36,11 +36,16 @@ RSpec.describe PlateCreationController do
     end
 
     describe '#create' do
+      let(:parent) { build(:v2_plate, uuid: parent_uuid) }
+      let(:child) { build(:v2_plate, uuid: child_uuid) }
+
       before do
-        expect_any_instance_of(LabwareCreators::StampedPlate).to receive(:save).and_return(true)
-        expect_any_instance_of(LabwareCreators::StampedPlate).to receive(:redirection_target).and_return(
-          build(:v2_plate, uuid: child_uuid)
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(parent)
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child)
+        allow(Sequencescape::Api::V2::PlateCreation).to receive(:create!).and_return(
+          instance_double(Sequencescape::Api::V2::PlateCreation, child:)
         )
+        allow(Sequencescape::Api::V2::TransferRequestCollection).to receive(:create!)
       end
 
       context 'from a plate parent' do
