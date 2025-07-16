@@ -21,23 +21,27 @@
     </div>
   <% end %>
 
-  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+  <%= card title: 'Suggested Actions', css_class: 'suggested-actions' do %>
     <% presenter.control_suggested_library_passing do %>
-      <%= render partial: 'work_completion_form', locals:  { presenter: } %>
+      <%= render partial: 'work_completion_form', locals: { presenter: } %>
     <% end %>
     <% @presenter.control_additional_creation do -%>
       <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
     <% end %>
     <% presenter.csv_file_links.each do |link_name, link_target| %>
-      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+      <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
     <% end %>
     <% if presenter.transfer_volumes? %>
-      <%= link_to "Validate tubes to view transfer volumes", validate_paired_tubes_path, class: 'btn btn-primary btn-lg btn-block' %>
+      <div class="d-grid gap-2">
+        <%= link_to 'Validate tubes to view transfer volumes', validate_paired_tubes_path, class: 'btn btn-primary btn-lg' %>
+      </div>
     <% end %>
     <% if presenter.robot? %>
-      <% @presenter.each_robot do |robot_id, robot_name| %>
-        <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
-      <% end %>
+      <div class="d-grid gap-2">
+        <% @presenter.each_robot do |robot_id, robot_name| %>
+          <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg' %>
+        <% end %>
+      </div>
     <% else %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>
@@ -64,7 +68,7 @@
     </div>
   <% end %>
 
-  <%= card title:'Other Actions', css_class: 'other-actions logged_in_only' do %>
+  <%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
     <% if presenter.robot? %>
       <%= simple_state_change_form(@presenter) %>
     <% end %>

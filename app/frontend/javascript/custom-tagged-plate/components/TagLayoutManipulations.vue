@@ -38,7 +38,7 @@
             v-model="tagSetId"
             :options="tagSetOptions"
             :disabled="tagSetsDisabled"
-            @input="tagSetInput"
+            @update:model-value="tagGroupInput"
             @change="tagSetChanged"
           />
         </b-form-group>
@@ -58,7 +58,7 @@
             id="walking_by_options"
             v-model="walkingBy"
             :options="walkingByOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -68,7 +68,7 @@
             id="direction_options"
             v-model="direction"
             :options="directionOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -86,7 +86,7 @@
       </b-col>
       <b-col>
         <b-form-group id="tags_per_well_group" label="Tags per well:" label-for="tags_per_well">
-          <b-form-input id="tags_per_well" type="number" :value="tagsPerWell" :disabled="true" />
+          <b-form-input id="tags_per_well" type="number" :model-value="tagsPerWell" :disabled="true" />
         </b-form-group>
       </b-col>
     </b-row>
@@ -230,7 +230,7 @@ export default {
           this.tagPlateScanDisabled = false
         }
       }
-      this.updateTagParams(null)
+      this.updateTagParams()
     },
     tagGroupLookupFilter() {
       if (this.tagGroupAdapterTypeNameFilter) {
@@ -244,14 +244,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 input:invalid + span:after {
   content: '✖';
-  padding-left: 5px;
+  padding-left: '5px';
 }
 
 input:valid + span:after {
   content: '✓';
-  padding-left: 5px;
+  padding-left: '5px';
 }
 </style>

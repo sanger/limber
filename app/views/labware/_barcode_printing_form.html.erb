@@ -1,4 +1,4 @@
-<%= form_for(print_job, namespace: print_job.object_id, html: { method: :post, class: 'form-inline'}) do |f| %>
+<%= form_for(print_job, namespace: print_job.object_id, html: { method: :post }) do |f| %>
   <%= f.hidden_field :label_templates_by_service %>
 
   <% labels.each do |label| %>
@@ -43,10 +43,14 @@
     <% end %>
   <% end %>
 
-  <%= f.label :printer_name, 'Barcode Printer', class: 'col-2' %>
-  <!-- pass the whole printer object through here, if poss, (instead of :name) or just the id and then re-query the printer through API -->
-  <%= f.collection_select :printer_name, printers, :name, :name, {}, class: 'custom-select col-3' %>
-  <%= f.number_field :number_of_copies,  min: 1, max: @presenter.printer_limit, step: 1, class: 'form-control col-2' %>
-  <%= f.submit 'Print Label', class: 'print-button btn btn-success col-3' %>
+  <div class="container">
+    <div class="row">
+      <%= f.label :printer_name, 'Barcode Printer', class: 'col' %>
+      <!-- pass the whole printer object through here, if poss, (instead of :name) or just the id and then re-query the printer through API -->
+      <%= f.collection_select :printer_name, printers, :name, :name, {}, class: 'form-select col' %>
+      <%= f.number_field :number_of_copies, min: 1, max: @presenter.printer_limit, step: 1, class: 'form-control col' %>
+      <%= f.submit 'Print Label', class: 'print-button btn btn-success col' %>
+    </div>
+  </div>
 
 <% end %>
