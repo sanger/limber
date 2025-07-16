@@ -265,13 +265,11 @@ FactoryBot.define do
         {
           'Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {
-            }
+            'request_options' => {}
           },
           'Another Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {
-            }
+            'request_options' => {}
           }
         }
       end

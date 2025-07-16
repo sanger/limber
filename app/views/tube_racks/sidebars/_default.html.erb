@@ -3,7 +3,7 @@
 
   <%= render 'labware/qc_data_upload' %>
 
-  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+  <%= card title: 'Suggested Actions', css_class: 'suggested-actions' do %>
     <%# TODO: add render work_completion_form for tube_racks %>
 
     <%# See CreationController for more information %>
@@ -14,7 +14,7 @@
 
     <%# TODO: checking with users if this is needed, may need Quanthub changes %>
     <% presenter.csv_file_links.each do |link_name, link_target| %>
-      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+      <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
     <% end %>
 
     <% if presenter.robot? %>
@@ -36,7 +36,7 @@
     </div>
   <% end %>
 
-  <%= card title:'Other Actions', css_class: 'other-actions logged_in_only' do %>
+  <%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
     <% if presenter.robot? %>
       <%= simple_state_change_form(presenter) %>
     <% end %>

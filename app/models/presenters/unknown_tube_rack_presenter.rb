@@ -22,7 +22,7 @@ module Presenters
       errors.add(
         :tube_rack,
         "type '#{labware.purpose_name}' is not a limber tube rack. " \
-          'Perhaps you are using the wrong pipeline application?'
+        'Perhaps you are using the wrong pipeline application?'
       )
     end
 

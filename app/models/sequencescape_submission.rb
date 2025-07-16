@@ -159,7 +159,7 @@ class SequencescapeSubmission
       errors.add(
         :submission,
         'Any scanned additional barcodes should not include the barcode of the current plate - ' \
-          'that will automatically be included'
+        'that will automatically be included'
       )
     end
   end
