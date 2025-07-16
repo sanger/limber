@@ -50,21 +50,22 @@ module Presenters
     #   Example input:
     #   {
     #     robot-1: {
-    #        bed: bed-1,
+    #        label: bed-1,
     #        purpose: 'purpose 1',
-    #        parent: {
-    #           robot-2 {
-    #              bed: bed-2,
-    #              purpose: 'purpose 2',
-    #           }
-    #        }
+    #        states: ['state x'],
+    #     }
+    #     robot-2: {
+    #        label: bed-2,
+    #        purpose: 'purpose 2',
+    #        states: ['state y'],
+    #        parent: 'robot-1'
     #     }
     #  }
     #
     # @return [Array<Hash, Hashie::Mash>] An array of immediate values that contain a `parent` key.
     #   Example return value:
     #     [
-    #       {robot-2: { bed: bed-2, purpose: 'purpose 2' }}
+    #       { label: bed-2, purpose: 'purpose 2', states: ['state y'], parent: 'robot-1' }
     #     ]
     def find_robots_with_parent_property(obj)
       return [] unless obj.is_a?(Hash) || obj.is_a?(Hashie::Mash)
