@@ -50,6 +50,7 @@ Describes the bed verifications, defining which labware purposes are valid for a
 {file:docs/robots_file.md}
 
 ### `config/exports.yml` and `app/views/exports/*.erb`
+
 Describes the files that can be downloaded from labware purposes, defining their format and what information they contain. Typically QC data and robot driver files, but can be anything the pipeline step requires.
 {file:docs/exports_files.md}
 
