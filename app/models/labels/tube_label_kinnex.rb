@@ -20,7 +20,7 @@ class Labels::TubeLabelKinnex < Labels::TubeLabel # rubocop:todo Style/Documenta
   end
 
   def first_line
-    labware_with_includes.name.presence
+    "#{labware.barcode.prefix}#{labware.barcode.number}"
   end
 
   def second_line
