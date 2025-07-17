@@ -238,18 +238,35 @@ purpose. State changers are used on updating labware state, either via a
 {LabwareController#update}. In the vast majority of cases this can be left as
 the default option.
 
-Valid options are subclasses of {StateChangers::PlateStateChanger}.
-
-{file:docs/state_changers.md Full list of state changers and their behaviour}
+Valid options are subclasses of {StateChangers}.
+See `app/models/state_changers.rb`
 
 ```yaml
 :state_changer_class: StateChangers::PlateStateChanger
 ```
+There are variants for different types of Labwares (plates, tubes and tube racks).
+And there are automatic versions of each, these are used when you want to automatically complete the related submission requests when you change the state.
 
-Default: `StateChangers::PlateStateChanger`
+Hierarchy:
+- {StateChangers::BaseStateChanger}
+  - {StateChangers::PlateStateChanger}
+    - {StateChangers::AutomaticPlateStateChanger} [includes AutomaticBehaviour]
+  - {StateChangers::TubeRackStateChanger}
+    - {StateChangers::AutomaticTubeRackStateChanger} [includes AutomaticBehaviour]
+  - {StateChangers::TubeStateChanger}
+    - {StateChangers::AutomaticTubeStateChanger} [includes AutomaticBehaviour]
+
 
 #### :work_completion_request_type
-Used in combination with the state_changer_class this applies a filter that limits the state change to complete (pass) only those requests with the supplied key.
+
+Optional line used in combination with the state_changer_class which applies a filter that limits the state change to complete (pass) only those requests with the supplied key. It is prudent to include this line to prevent completion of the wrong requests by accident.
+
+The request type key will be the same key used in the pipelines filter, which is in turn the same key used for the submission template for the portion of the pipeline being completed.
+
+```yaml
+:work_completion_request_type: limber_targeted_nanoseq_isc_prep
+```
+
 This is used instead of the manual 'Charge and Pass' button to automatically close a submission at the end of a pipeline section. e.g. it might be used to  close off the sample preparation part of a pipeline before beginning the library prep section.
 
 #### :creator_class
@@ -259,9 +276,9 @@ purpose. {LabwareCreators} are the home of a significant proportion of Limber's
 business logic, and determine the way in which labware with this particular
 purpose will be created from its parent.
 
-If you want to have purpose configuration parameters that are used in the labware creator, there are two ways to include these:
+If you want to have purpose configuration parameters that are used in the labware creator, there are two ways to include these in the purpose config yaml:
 
-As arguments under the labware creator (the advantage of this method is they are kept together with the creator_class section of the yaml):
+As arguments under the labware creator line (note the name is specifically defined then the arguments). The main advantage of this method is they are kept together with the creator_class section of the yaml, so you know what they apply to:
 e.g.
 ```yaml
 :creator_class:
@@ -278,7 +295,7 @@ def default_volume
 end
 ```
 
-Alternatively, you can put the parameters anywhere in the purpose yaml (valid but perhaps harder to read as not clear they are used by the labware creator):
+Alternatively, you can put the parameters anywhere in the purpose yaml. This is valid but perhaps harder to read as not clear they are used by the labware creator class:
 e.g.
 ```yaml
 :creator_class: LabwareCreators::MyLabwareCreator
@@ -310,6 +327,23 @@ of all material from the parent tube to the new child tube.
 Default (plate): `LabwareCreators::StampedPlate`
 
 Default (tube): `LabwareCreators::TubeFromTube`
+
+#### :custom_metadata_fields
+
+List of custom metadata fields for which you want to allow the user to enter values for on this labware. This will appear as entry fields on the right of the GUI on the labware view page.
+
+```yaml
+:custom_metadata_fields:
+    - My Custom Field 1
+    - My Custom Field 2
+```
+
+See `app/views/plates/sidebars/_default.html.erb`
+and `app/views/tubes/sidebars/_default.html.erb`
+where there is a card for 'Adding Custom Metadata'.
+
+This is using VueJS to write the metadata values to the Sequencescape database, see:
+`app/frontend/javascript/labware-custom-metadata/components/*`
 
 #### :default_printer_type
 
