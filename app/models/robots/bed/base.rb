@@ -20,7 +20,7 @@ module Robots::Bed
               }
     validates :labware,
               presence: {
-                message: lambda { |bed, _data| "Could not find a labware with the barcode '#{bed.barcode}'." }
+                message: ->(bed, _data) { "Could not find a labware with the barcode '#{bed.barcode}'." }
               },
               if: :barcode
     validate :correct_labware_purpose, if: :labware

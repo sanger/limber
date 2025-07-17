@@ -128,6 +128,7 @@ module StateChangers
     # Iterates over the tubes and passes them individually.
     def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
       return if state.nil? || v2_labware.nil? # We have nothing to do
+
       Sequencescape::Api::V2::StateChange.create!(
         contents: nil,
         customer_accepts_responsibility: customer_accepts_responsibility,

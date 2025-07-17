@@ -54,16 +54,16 @@ module PlateHelper # rubocop:todo Style/Documentation
       current_plate
         .wells_in_columns
         .each_with_object({}) do |well, pool_store|
-          next unless well.passed?
+        next unless well.passed?
 
-          well.incomplete_requests.each do |request|
-            next unless request.pre_capture_pool
+        well.incomplete_requests.each do |request|
+          next unless request.pre_capture_pool
 
-            pool_id = request.pre_capture_pool.id
-            pool_store[pool_id] ||= { pool_id: pool_id, order_id: request.order_id, wells: [] }
-            pool_store[pool_id][:wells] << well.location
-          end
+          pool_id = request.pre_capture_pool.id
+          pool_store[pool_id] ||= { pool_id: pool_id, order_id: request.order_id, wells: [] }
+          pool_store[pool_id][:wells] << well.location
         end
+      end
         .values
 
     # sort the pool hashes by Order id

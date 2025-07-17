@@ -94,7 +94,7 @@ module LabwareCreators
         errors.add(
           :base,
           "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been " \
-            'prevented from getting this far.'
+          'prevented from getting this far.'
         )
         valid = false
       end
@@ -103,7 +103,7 @@ module LabwareCreators
       errors.add(
         :base,
         "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have " \
-          'been prevented from getting this far.'
+        'been prevented from getting this far.'
       )
       false
     end

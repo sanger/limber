@@ -391,7 +391,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
         it 'has correct error messages' do
           errors = [
             "Bed 1 - Labware #{plate.barcode.human} is a #{plate_purpose_name} " \
-              "not a #{config_plate_purpose} labware."
+            "not a #{config_plate_purpose} labware."
           ]
           errors.each { |error| expect(subject.message).to include(error) }
         end
