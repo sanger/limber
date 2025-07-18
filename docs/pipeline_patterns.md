@@ -230,6 +230,12 @@ LBC TCR Post Lig 1XSPRI:
   :tags_per_well: 1
 ```
 
+This version you do not specify a list of specific tag layout templates that are allowed, it is flexible (so they can try experimental tag plates).
+Optionally though, you can set a filter for the tag groups you will see to limit the lists:
+```yaml
+:tag_group_adapter_type_name_filter: 'Chromium'
+```
+
 This version was developed where there were partial sample plates and the users wished to be able to re-use the same tag plate and offset the start point. e.g. one sample plate uses the first three columns of tags, the second uses the 4th-6th columns, and so on.
 It was also used by the Bespoke and R&D teams to test tags, where they needed that flexibility.
 
