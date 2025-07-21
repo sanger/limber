@@ -26,6 +26,7 @@ module LabwareCreators
     #
     # @return [void]
     def validate_wells_with_aliquots_must_have_concentrations
+      # Finds wells having samples without concentration values
       invalid_wells =
         parent
           .wells
@@ -33,8 +34,9 @@ module LabwareCreators
             # Add the well's coordinate if it contains a sample but has no concentration value
             erroneous_wells << well.coordinate if well.aliquots.sample.present? && well.latest_molarity.nil?
           end
-      # Only add an error if there are invalid wells
-      return unless invalid_wells.empty?
+      # Return if we can't find invalid wells.
+      return if invalid_wells.empty?
+      # Add an error if not.
       errors.add(:base, "Wells #{invalid_wells.join(', ')} on the parent plate does not have a concentration value.")
     end
 
