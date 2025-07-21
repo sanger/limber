@@ -184,7 +184,7 @@ describe('LabwareScan', () => {
     it('is invalid if the tube is in the pending state', async () => {
       const api = mockApi()
       const validators = [checkState(['passed'])]
-      const wrapper = wrapperFactoryTube(validators)
+      const wrapper = wrapperFactoryTube(api, validators)
 
       api.mockGet(
         'tubes',
