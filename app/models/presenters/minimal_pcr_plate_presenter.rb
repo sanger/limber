@@ -18,5 +18,14 @@ module Presenters
       'PCR Cycles' => :requested_pcr_cycles,
       'Created on' => :created_on
     }
+
+    # Check for optional purpose config option to control manual transfer button by state
+    def manual_transfer_state_conditional_met?
+      if purpose_config[:manual_transfer_allowed_states].present?
+        purpose_config[:manual_transfer_allowed_states].include?(state)
+      else
+        true
+      end
+    end
   end
 end
