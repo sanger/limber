@@ -2,8 +2,8 @@
   <h1>Work In Progress - Pipeline "<%= @pipeline_group_name -%>"</h1>
 
   <!-- filters - reload the page with a new param -->
-  <%= link_to 'All time', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Date.new(1970,1,1)), method: :get, class: "filter-button" %>
-  <%= link_to 'Last month', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Time.zone.today.prev_month), method: :get, class: "filter-button" %>
+  <%= link_to 'All time', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Date.new(1970, 1, 1)), method: :get, class: 'filter-button' %>
+  <%= link_to 'Last month', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Time.zone.today.prev_month), method: :get, class: 'filter-button' %>
 
   <!-- one column per purpose, containing cards for each plate / tube -->
   <div class="row">
@@ -19,7 +19,7 @@
               <%= link_to labware.labware_barcode&.human.to_s, url_for(labware) %><br />
               <%= labware.input_barcode %><br />
               <%= labware_data[:state] %><br />
-              <%= "updated #{labware.updated_at.strftime("%d/%m/%y")}" %>
+              <%= "updated #{labware.updated_at.strftime('%d/%m/%y')}" %>
             <% end %>
           <% end %>
         <% end %>

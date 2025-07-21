@@ -1,41 +1,39 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
-import flushPromises from 'flush-promises'
-import MockAdapter from 'axios-mock-adapter'
+import { mount } from '@vue/test-utils'
+import { flushPromises } from '@vue/test-utils'
 
 import QcInformation from './QcInformation.vue'
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('QcInformation', () => {
   const wrapperFactory = function () {
-    return shallowMount(QcInformation, {
-      propsData: {
+    return mount(QcInformation, {
+      props: {
         assetUuid: 'test',
       },
-      localVue,
     })
   }
 
-  it('updates its data as values change', () => {
+  it('updates its data as values change', async () => {
     let wrapper = wrapperFactory()
 
     let volumeAttributes = {
       value: '1.5',
-      assay_type: 'Volume Check',
+      assay_type: 'Estimated', // This is the default assay type for QcField
       units: 'ul',
       key: 'volume',
       assay_version: 'manual',
+      uuid: 'test',
     }
     let molarityAttributes = {
       value: '10',
       assay_type: 'Estimated',
       units: 'nM',
       key: 'molarity',
+      uuid: 'test',
       assay_version: 'manual',
     }
-    wrapper.find('lb-qc-field-stub[name="volume"]').vm.$emit('change', volumeAttributes)
-    wrapper.find('lb-qc-field-stub[name="molarity"]').vm.$emit('change', molarityAttributes)
+
+    await wrapper.find('#qc-field-volume-value').setValue('1.5')
+    await wrapper.find('#qc-field-molarity-value').setValue('10')
 
     expect(wrapper.vm.qcResults.volume).toEqual(volumeAttributes)
     expect(wrapper.vm.qcResults.molarity).toEqual(molarityAttributes)
@@ -100,12 +98,8 @@ describe('QcInformation', () => {
       },
     }
 
-    let mock = new MockAdapter(wrapper.vm.axiosInstance)
-
-    mock.onPost().reply((request) => {
-      expect(request.url).toEqual('qc_assays')
-      expect(request.data).toEqual(JSON.stringify(expectedPayload))
-      return [201, {}]
+    wrapper.vm.axiosInstance = vi.fn().mockResolvedValue({
+      data: {},
     })
 
     wrapper.setData({
@@ -117,8 +111,12 @@ describe('QcInformation', () => {
 
     await flushPromises()
 
-    expect(mock.history.post.length).toBe(1)
-
+    expect(wrapper.vm.axiosInstance).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.axiosInstance).toHaveBeenCalledWith({
+      method: 'post',
+      url: 'qc_assays',
+      data: expectedPayload,
+    })
     expect(wrapper.vm.buttonStyle).toEqual('success')
   })
 })

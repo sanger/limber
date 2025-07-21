@@ -152,6 +152,6 @@ module FeatureHelpers # rubocop:todo Metrics/ModuleLength
   # @return [Capybara::Node::Element] The element found
   #
   def find_with_tooltip(tooltip, type: 'div')
-    find("#{type}[data-original-title='#{tooltip}']")
+    find("#{type}[data-bs-original-title='#{tooltip}']")
   end
 end

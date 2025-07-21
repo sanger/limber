@@ -145,14 +145,10 @@ export default {
     updateTubePair(data) {
       if (data.state === 'valid') {
         this.isPairingValid = true
-        this.$set(
-          this,
-          'parentTubes',
-          data.pairedTubes.map((tube) => tube.labware),
-        )
+        this.parentTubes = data.pairedTubes.map((tube) => tube.labware)
       } else {
         this.isPairingValid = false
-        this.$set(this, 'parentTubes', [])
+        this.parentTubes = []
       }
     },
     apiTransfers() {

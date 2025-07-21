@@ -11,15 +11,22 @@ module Sequencescape::Api::V2
     { child_plates: :purpose },
     {
       wells: [
+        :qc_results,
         {
           downstream_tubes: 'purpose',
           requests_as_source: %w[request_type primer_panel pre_capture_pool submission],
           aliquots: ['sample.sample_metadata', { request: %w[request_type primer_panel pre_capture_pool submission] }],
-          qc_results: [],
           transfer_requests_as_target: %w[source_asset]
         }
       ]
     }
+  ].freeze
+
+  # NB. a receptacle can have many aliquots, and aliquot.request is an array (for some reason)
+  # Sequencescape::Api::V2::TubeRack.last.racked_tubes.first.tube.receptacle.aliquots.first.request.first.request_type
+  TUBE_RACK_PRESENTER_INCLUDES = [
+    :purpose,
+    { racked_tubes: [{ tube: [:purpose, { receptacle: [{ aliquots: [{ request: [:request_type] }] }] }] }] }
   ].freeze
 
   #
@@ -55,13 +62,7 @@ module Sequencescape::Api::V2
   end
 
   def self.tube_rack_for_presenter(query)
-    TubeRack
-      .includes(
-        'racked_tubes.tube.purpose,' \
-          'racked_tubes.tube.receptacle.aliquots.request.request_type'
-      )
-      .find(query)
-      .first
+    TubeRack.includes(*TUBE_RACK_PRESENTER_INCLUDES).find(query).first
   end
 
   def self.plate_for_completion(uuid)
@@ -72,12 +73,25 @@ module Sequencescape::Api::V2
     Tube.includes('receptacle.aliquots.request.submission,receptacle.aliquots.request.request_type').find(uuid:).first
   end
 
+  def self.tube_rack_for_completion(uuid)
+    TubeRack
+      .includes(
+        'racked_tubes.tube.receptacle.aliquots.request.submission,tube_receptacles.aliquots.request.request_type'
+      )
+      .find(uuid:)
+      .first
+  end
+
   def self.plate_with_custom_includes(include_params, search_params)
     Plate.includes(include_params).find(search_params).first
   end
 
   def self.tube_with_custom_includes(include_params, select_params, search_params)
     Tube.includes(include_params).select(select_params).find(search_params).first
+  end
+
+  def self.tube_rack_with_custom_includes(include_params, select_params, search_params)
+    TubeRack.includes(include_params).select(select_params).find(search_params).first
   end
 
   # Retrieves results of query builder (JsonApiClient::Query::Builder) page by page

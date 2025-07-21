@@ -1,38 +1,40 @@
 <%= sidebar do %>
-  <div class="btn-group btn-block" role="group">
-    <button id="btnGroupWip" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Work in progress
-    </button>
+  <div class="d-grid gap-2">
+    <div role="group">
+      <button id="btnGroupWip" type="button" class="w-100" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Work in progress
+      </button>
 
-    <nav class="inbox-list dropdown-menu" aria-labelledby="btnGroupWip" id="wip-list">
-      <% pipeline_groups.each do |pipeline_group_id| %>
-        <%= link_to pipeline_group_id, pipeline_work_in_progress_path(pipeline_group_id) %>
-      <% end %>
-    </nav>
+      <nav class="inbox-list dropdown-menu" aria-labelledby="btnGroupWip" id="wip-list">
+        <% pipeline_groups.each do |pipeline_group_id| %>
+          <%= link_to pipeline_group_id, pipeline_work_in_progress_path(pipeline_group_id) %>
+        <% end %>
+      </nav>
+    </div>
+
+    <div role="group">
+      <button id="btnGroupInboxes" type="button" class="w-100" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Inboxes
+      </button>
+      <nav class="inbox-list dropdown-menu" aria-labelledby="btnGroupInboxes">
+      <%= link_to 'New Input Plates', ongoing_plates_path(ongoing_plate: { purposes: stock_plate_uuids }) %>
+      <%= link_to 'All Ongoing Plates', ongoing_plates_path %>
+      <%= link_to 'GBS plates', ongoing_plates_path(ongoing_plate: { purposes: [Settings.purpose_uuids['GBS Stock']] }) %>
+      <%= link_to 'All Ongoing Tubes', ongoing_tubes_path %>
+      </nav>
+    </div>
+
+    <div role="group">
+      <button id="btnGroupRobots" type="button" class="w-100" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Robots
+      </button>
+      <nav class="robots-list dropdown-menu" aria-labelledby="btnGroupRobots" id="robots-list">
+        <% each_robot do |robot_id,robot_name| %>
+          <%= link_to robot_name, robot_path(robot_id) %>
+        <% end %>
+      </nav>
+    </div>
+
+    <%= link_to 'Pipelines overview', pipelines_path, id: 'btnPipelinesOverview' %>
   </div>
-
-  <div class="btn-group btn-block" role="group">
-    <button id="btnGroupInboxes" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Inboxes
-    </button>
-    <nav class="inbox-list dropdown-menu" aria-labelledby="btnGroupInboxes">
-     <%= link_to 'New Input Plates', ongoing_plates_path(ongoing_plate: { purposes: stock_plate_uuids }) %>
-     <%= link_to 'All Ongoing Plates', ongoing_plates_path %>
-     <%= link_to 'GBS plates', ongoing_plates_path(ongoing_plate: { purposes: [Settings.purpose_uuids["GBS Stock"]] }) %>
-     <%= link_to 'All Ongoing Tubes', ongoing_tubes_path %>
-    </nav>
-  </div>
-
-  <div class="btn-group btn-block" role="group">
-   <button id="btnGroupRobots" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     Robots
-   </button>
-   <nav class="robots-list dropdown-menu" aria-labelledby="btnGroupRobots" id="robots-list">
-     <% each_robot do |robot_id,robot_name| %>
-       <%= link_to robot_name, robot_path(robot_id) %>
-     <% end %>
-   </nav>
- </div>
-
-  <%= link_to "Pipelines overview", pipelines_path, id: "btnPipelinesOverview" %>
 <% end %>

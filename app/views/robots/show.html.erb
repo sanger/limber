@@ -1,4 +1,4 @@
-<%= page(:"robot-verification-bed") do %>
+<%= page(:'robot-verification-bed') do %>
   <%= vite_javascript_tag 'entrypoints/pages/bed_verification.js', defer: true %>
   <%= content do %>
     <%= card title: robot.name do %>
@@ -13,9 +13,9 @@
           </dl>
         </div>
         <div class="instructions">
-          <h4><%= t(robot.id, scope: [:robots, :instruction_summary ], default: :default ) %></h4>
+          <h4><%= t(robot.id, scope: %i[robots instruction_summary], default: :default) %></h4>
           <ol>
-            <%= t(robot.id, scope: [:robots, :instructions ], default: :default ).html_safe %>
+            <%= t(robot.id, scope: %i[robots instructions], default: :default).html_safe %>
           </ol>
         </div>
       </div>
@@ -24,13 +24,15 @@
 
   <%= sidebar do %>
     <%= form_for :robot, url: start_robot_path(robot.id) do |form| %>
-      <%= render partial: 'bed', locals: {robot:, form: } %>
-      <%= submit_tag robot.start_button_message,
-        name: nil,
-        class: "submit btn btn-lg btn-success btn-block",
-        id: 'start-robot',
-        disabled: true,
-        data: { disable_with: 'Starting...' } %>
+      <%= render partial: 'bed', locals: { robot:, form: } %>
+      <div class="d-grid py-2">
+        <%= submit_tag robot.start_button_message,
+                       name: nil,
+                       class: 'submit btn btn-lg btn-success',
+                       id: 'start-robot',
+                       disabled: true,
+                       data: { disable_with: 'Starting...' } %>
+      </div>
     <% end # of form %>
   <% end # of sidebar %>
 <% end # of page %>

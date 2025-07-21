@@ -11,7 +11,7 @@
     <% end %>
   <% end %>
   <%= f.submit "Add an empty #{creator_button.name} #{creator_button.type}",
-                 name:  nil,
-                 class: "create-#{creator_button.type}-button logged_in_only",
-                 data: { disable_with: 'Creating...' } %>
+               name: nil,
+               class: "create-#{creator_button.type}-button logged_in_only",
+               data: { disable_with: 'Creating...' } %>
 <% end %>
