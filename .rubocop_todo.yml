@@ -46,7 +46,7 @@ Metrics/MethodLength:
     - 'spec/support/factory_bot_extensions.rb'
     - 'spec/support/with_pmb_stubbed.rb'
 
-# Offense count: 10
+# Offense count: 9
 RSpec/AnyInstance:
   Exclude:
     - 'spec/controllers/robots_controller_spec.rb'
@@ -57,12 +57,13 @@ RSpec/AnyInstance:
     - 'spec/models/labware_creators/common_file_handling/csv_file/row_base_spec.rb'
     - 'spec/support/api_url_helper.rb'
 
-# Offense count: 280
+# Offense count: 282
 # Configuration parameters: Prefixes, AllowedPatterns.
 # Prefixes: when, with, without
 RSpec/ContextWording:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/plate_creation_controller_spec.rb'
     - 'spec/controllers/searches_controller_spec.rb'
     - 'spec/controllers/tube_creation_controller_spec.rb'
     - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
@@ -194,7 +195,7 @@ RSpec/ExampleWording:
   Exclude:
     - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
 
-# Offense count: 23
+# Offense count: 22
 RSpec/ExpectInHook:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
@@ -319,11 +320,12 @@ RSpec/MultipleDescribes:
     - 'spec/models/utility/normalised_binning_calculator_spec.rb'
     - 'spec/models/utility/pcr_cycles_binning_calculator_spec.rb'
 
-# Offense count: 239
+# Offense count: 243
 # Configuration parameters: Max.
 RSpec/MultipleExpectations:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
+    - 'spec/controllers/plate_creation_controller_spec.rb'
     - 'spec/controllers/plates/work_completions_controller_spec.rb'
     - 'spec/controllers/plates_controller_spec.rb'
     - 'spec/controllers/qc_files_controller_spec.rb'
@@ -507,7 +509,7 @@ RSpec/SpecFilePathSuffix:
   Exclude:
     - 'spec/lib/labware_barcode.rb'
 
-# Offense count: 32
+# Offense count: 31
 RSpec/StubbedMock:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
@@ -543,7 +545,7 @@ RSpec/VariableName:
   Exclude:
     - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_duplex_seq_spec.rb'
 
-# Offense count: 9
+# Offense count: 7
 # This cop supports unsafe autocorrection (--autocorrect-all).
 RSpec/VerifiedDoubleReference:
   Exclude:
