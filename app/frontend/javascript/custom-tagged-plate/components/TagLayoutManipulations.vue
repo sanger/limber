@@ -44,13 +44,18 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row v-if="tag1GroupName" id="tag1_name_label" class="form-group form-row">
-      <b-label>i7 Tag 1 Group</b-label> : {{ tag1GroupName }}
+    <b-row v-if="tag1GroupName">
+      <b-form-group id="tag1_name_label" label="i7 Tag 1 Group:" label-for="tag1_name">
+        <b-form-input id="tag1_name" :model-value="tag1GroupName" :disabled="true" />
+      </b-form-group>
     </b-row>
-    <b-row v-if="tag2GroupName" id="tag2_name_label" class="form-group form-row mb-2">
-      <b-label>i5 Tag 2 Group</b-label> : {{ tag2GroupName }}</b-row
-    >
-
+    <b-row v-if="tag2GroupName">
+      <b-col>
+        <b-form-group id="tag2_name_label" label="i5 Tag 2 Group:" label-for="tag2_name">
+          <b-form-input id="tag2_name" :model-value="tag2GroupName" :disabled="true" />
+        </b-form-group>
+      </b-col>
+    </b-row>
     <b-row class="form-group form-row">
       <b-col>
         <b-form-group id="walking_by_options_group" label="Walking By Options:" label-for="walking_by_options">
