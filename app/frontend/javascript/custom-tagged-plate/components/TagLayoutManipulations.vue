@@ -13,7 +13,7 @@
       :includes="tagSetLookupIncludes"
       @change="tagSetsLookupUpdated($event)"
     />
-    <b-row class="form-group form-row">
+    <b-row class="mb-3">
       <b-col>
         <b-form-group id="tag_plate_scan_group" label="Scan in the tag plate you wish to use here...">
           <lb-plate-scan
@@ -30,7 +30,7 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row class="form-group form-row">
+    <b-row class="mb-3">
       <b-col>
         <b-form-group id="tag_set_selection_group" horizontal label="Select Tag Set:" label-for="tag_set_selection">
           <b-form-select
@@ -45,9 +45,11 @@
       </b-col>
     </b-row>
     <b-row v-if="tag1GroupName">
-      <b-form-group id="tag1_name_label" label="i7 Tag 1 Group:" label-for="tag1_name">
-        <b-form-input id="tag1_name" :model-value="tag1GroupName" :disabled="true" />
-      </b-form-group>
+      <b-col>
+        <b-form-group id="tag1_name_label" label="i7 Tag 1 Group:" label-for="tag1_name">
+          <b-form-input id="tag1_name" :model-value="tag1GroupName" :disabled="true" />
+        </b-form-group>
+      </b-col>
     </b-row>
     <b-row v-if="tag2GroupName">
       <b-col>
@@ -56,7 +58,7 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row class="form-group form-row">
+    <b-row class="mb-3">
       <b-col>
         <b-form-group id="walking_by_options_group" label="Walking By Options:" label-for="walking_by_options">
           <b-form-select
@@ -78,7 +80,7 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row class="form-group form-row">
+    <b-row class="mb-3">
       <b-col>
         <lb-tag-offset
           id="tag_offset_input"
