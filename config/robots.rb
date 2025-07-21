@@ -1143,11 +1143,6 @@ ROBOT_CONFIG =
       to 'LB End Prep', car('1,4')
     end
 
-    simple_robot('mosquito', transition_to: 'started') do
-      from 'GBS PCR1', bed(1)
-      to 'GBS PCR2', bed(2)
-    end
-
     custom_robot(
       'mosquito-gbs-pcr1-to-gbs-pcr2',
       name: 'mosquito GBS PCR1 => GBS PCR2',
