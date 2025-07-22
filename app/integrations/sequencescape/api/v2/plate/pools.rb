@@ -48,8 +48,8 @@ class Sequencescape::Api::V2::Plate::Pools
     @pools_hash.present? && ready_for_custom_pooling?
   end
 
-  # Custom pooling is a little more flexible. Than automatic pooling, in that it DOESNT
-  # require downstream submission and is completely happy with empty pools
+  # Custom pooling is a little more flexible than automatic pooling, in that it DOESN'T
+  # require a downstream submission and is completely happy with empty pools
   def ready_for_custom_pooling?
     @pools_hash.empty? || @pools_hash.any?(&:ready_for_custom_pooling?)
   end
