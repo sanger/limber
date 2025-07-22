@@ -42,7 +42,7 @@ module LabwareCreators
   # rubocop:disable Metrics/ClassLength
   class PlateSplitToTubeRacks < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     self.page = 'tube_rack_creation/plate_split_to_tube_racks'
     self.attributes += %i[sequencing_file contingency_file]

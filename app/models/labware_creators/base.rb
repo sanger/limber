@@ -28,7 +28,7 @@ module LabwareCreators
     validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :transfer_template_name, presence: true
 
     # The base creator is abstract, and is not intended to be used directly
-    def self.support_parent?(_parent)
+    def self.creatable_from?(_parent)
       false
     end
 
