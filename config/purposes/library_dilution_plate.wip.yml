@@ -2,8 +2,4 @@ Library Stock Dil Plate:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
-  :creator_class: LabwareCreators::StampedDilutionPlate
-  :dilution:
-    factor: 10
-    unit: 'nM'
-    type: 'molarity'
+  :creator_class: LabwareCreators::StampedPlate
