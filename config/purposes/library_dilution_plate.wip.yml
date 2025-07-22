@@ -3,8 +3,6 @@ Library Stock Dil Plate:
   :stock_plate: false
   :input_plate: false
   :creator_class: LabwareCreators::StampedDilutionPlate
-  :state_changer_class: StateChangers::PlateStateChanger
-  :work_completion_request_type: 'limber_multiplexing'
   :dilution:
     factor: 10
     unit: 'nM'
