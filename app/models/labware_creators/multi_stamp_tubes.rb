@@ -3,7 +3,7 @@
 module LabwareCreators
   class MultiStampTubes < Base # rubocop:todo Style/Documentation, Metrics/ClassLength
     include LabwareCreators::CustomPage
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
 
     attr_accessor :transfers, :parents
 

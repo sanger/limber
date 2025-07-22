@@ -10,7 +10,7 @@ module LabwareCreators
   # state will be transferred to the destination plate. The destination wells
   # are compressed to top left by column on the plate.
   class PooledWellsBySampleInGroups < Base
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     # Number of source wells with the same sample to be pooled.
     def number_of_source_wells

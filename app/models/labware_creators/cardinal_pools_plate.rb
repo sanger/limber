@@ -15,7 +15,7 @@
 module LabwareCreators
   # This class is used for creating Cardinal pools into destination plate
   class CardinalPoolsPlate < Base
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     include LabwareCreators::RequireWellsWithCollectedBy
 

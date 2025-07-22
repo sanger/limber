@@ -5,7 +5,7 @@ module LabwareCreators
   # During this process wells are pooled according to the pre-capture
   # pools specified at submission.
   class MultiPlatePool < Base
-    include SupportParent::TaggedPlateOnly
+    include CreatableFrom::TaggedPlateOnly
     include LabwareCreators::CustomPage
 
     attr_accessor :transfers

@@ -10,7 +10,7 @@ module LabwareCreators
   # 4) Applies the tag template that was associated with the tag plate
   class TaggedPlate < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
     include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate

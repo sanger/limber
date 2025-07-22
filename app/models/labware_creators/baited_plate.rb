@@ -9,7 +9,7 @@ module LabwareCreators
   # Applies the bait library to the aliquots of the plate in accordance with the
   # baits specified at submission.
   class BaitedPlate < StampedPlate
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
     include LabwareCreators::CustomPage
 
     self.page = 'baited_plate'

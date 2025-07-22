@@ -14,7 +14,7 @@ module LabwareCreators
   # may be removed in future. Essentially, as used currently, the tubes are
   # ACTUALLY part of the previous plate, so are already filled by this stage.
   class FinalTubeFromPlate < Base
-    include SupportParent::PlateReadyForPoolingOnly
+    include CreatableFrom::PlateReadyForPoolingOnly
 
     attr_reader :tube_transfer
 

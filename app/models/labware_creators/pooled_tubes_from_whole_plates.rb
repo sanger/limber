@@ -3,7 +3,7 @@
 module LabwareCreators
   # Pools one or more plates into a single tube. Useful for MiSeqQC
   class PooledTubesFromWholePlates < Base
-    include SupportParent::TaggedPlateOnly
+    include CreatableFrom::TaggedPlateOnly
     include LabwareCreators::CustomPage
     attr_reader :tube_transfer, :child, :barcodes
 

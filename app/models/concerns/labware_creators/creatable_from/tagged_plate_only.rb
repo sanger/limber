@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module LabwareCreators::SupportParent
+module LabwareCreators::CreatableFrom
   module TaggedPlateOnly # rubocop:todo Style/Documentation
     extend ActiveSupport::Concern
     class_methods do
-      def support_parent?(parent)
+      def creatable_from?(parent)
         parent.plate? && parent.tagged?
       end
     end

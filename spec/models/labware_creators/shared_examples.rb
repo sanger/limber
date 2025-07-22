@@ -2,8 +2,8 @@
 
 RSpec.shared_examples 'it only allows creation from tubes' do
   context 'pre creation' do
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :v2_tube }
@@ -54,8 +54,8 @@ end
 
 RSpec.shared_examples 'it only allows creation from plates' do
   context 'pre creation' do
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :v2_tube }
@@ -74,8 +74,8 @@ end
 
 RSpec.shared_examples 'it only allows creation from tagged plates' do
   context 'pre creation' do
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :v2_tube }
@@ -106,8 +106,8 @@ end
 
 RSpec.shared_examples 'it does not allow creation' do
   context 'pre creation' do
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :v2_tube }
@@ -138,8 +138,8 @@ end
 
 RSpec.shared_examples 'it only allows creation from charged and passed plates with defined downstream pools' do
   context 'pre creation' do
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :v2_tube }
@@ -222,8 +222,8 @@ end
 
 RSpec.shared_examples 'it only allows creation from charged and passed plates' do
   context 'pre creation' do
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :v2_tube }

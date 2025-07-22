@@ -36,7 +36,7 @@ module LabwareCreators
   # rubocop:disable Metrics/ClassLength
   class MultiStampTubesUsingTubeRackScan < Base
     include LabwareCreators::CustomPage
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
 
     self.page = 'multi_stamp_tubes_using_tube_rack_scan'
     self.attributes += [:file]
