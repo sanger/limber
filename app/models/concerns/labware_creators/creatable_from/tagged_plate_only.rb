@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 module LabwareCreators::CreatableFrom
-  module TaggedPlateOnly # rubocop:todo Style/Documentation
+  # Only plates with tags are suitable parents for this creator.
+  #
+  # This uses `.creatable_from?` to determine whether we should render the link to create a child.
+  module TaggedPlateOnly
     extend ActiveSupport::Concern
+
     class_methods do
       def creatable_from?(parent)
         parent.plate? && parent.tagged?
