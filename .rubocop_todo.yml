@@ -57,15 +57,13 @@ RSpec/AnyInstance:
     - 'spec/models/labware_creators/common_file_handling/csv_file/row_base_spec.rb'
     - 'spec/support/api_url_helper.rb'
 
-# Offense count: 282
+# Offense count: 265
 # Configuration parameters: Prefixes, AllowedPatterns.
 # Prefixes: when, with, without
 RSpec/ContextWording:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
-    - 'spec/controllers/plate_creation_controller_spec.rb'
     - 'spec/controllers/searches_controller_spec.rb'
-    - 'spec/controllers/tube_creation_controller_spec.rb'
     - 'spec/controllers/tubes/tubes_exports_controller_spec.rb'
     - 'spec/features/charge_and_pass_libraries_spec.rb'
     - 'spec/features/pooling_multiple_tubes_into_one_tube_spec.rb'
@@ -101,7 +99,6 @@ RSpec/ContextWording:
     - 'spec/models/labware_creators/plate_with_template_spec.rb'
     - 'spec/models/labware_creators/quadrant_split_plate_spec.rb'
     - 'spec/models/labware_creators/quadrant_stamp_primer_panel_spec.rb'
-    - 'spec/models/labware_creators/shared_examples.rb'
     - 'spec/models/labware_creators/stamped_plate_adding_randomised_controls_spec.rb'
     - 'spec/models/labware_creators/stamped_plate_compressed_spec.rb'
     - 'spec/models/labware_creators/stamped_plate_spec.rb'
