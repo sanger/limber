@@ -18,6 +18,7 @@ module LabwareCreators
     def create_plate_with_standard_transfer!
       validate_wells_with_aliquots_must_have_concentrations
       return false if errors.any?
+
       super { |child_plate| return update_qc_results!(child_plate) }
     end
 
@@ -36,6 +37,7 @@ module LabwareCreators
           end
       # Return if we can't find invalid wells.
       return if invalid_wells.empty?
+
       # Add an error if not.
       errors.add(:base, "Wells #{invalid_wells.join(', ')} on the parent plate does not have a concentration value.")
     end
@@ -74,6 +76,7 @@ module LabwareCreators
         .each_with_object([]) do |source_well, qc_results|
           well = find_matching_well(child_plate, source_well)
           next unless well
+
           qc_results << build_qc_result_hash(source_well, well)
         end
     end
