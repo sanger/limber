@@ -403,10 +403,10 @@ dl#samples-information {
   @extend.bg-success;
 }
 .state-badge.cancelled {
-  @extend .list-group-item-danger;
+  @extend .bg-danger;
 }
 .state-badge.failed {
-  @extend .list-group-item-danger;
+  @extend .bg-danger;
 }
 .state-badge.mixed {
   @extend.bg-secondary;
