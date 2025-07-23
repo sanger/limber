@@ -6,7 +6,7 @@
   <%= render 'content_header', presenter: @presenter, type: 'plate' %>
   <%= render 'warnings', presenter: @presenter %>
   <%= render 'info', presenter: @presenter %>
-  <%= render 'pooling_info', presenter: @presenter %> 
+  <%= render 'pooling_info', presenter: @presenter %>
 
   <% if @presenter.well_failing_applicable? %>
     <div id="labware-well-failing" class='well-fail-toggle collapse'>
