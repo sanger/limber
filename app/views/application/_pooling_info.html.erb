@@ -1,0 +1,40 @@
+<% if @presenter %>
+  <style>
+    .asset-info h3 {
+      white-space: nowrap;       /* Prevent wrapping */
+      margin-bottom: 10px;
+    }
+
+    .asset-info th,
+    .asset-info td {
+      text-align: center;
+      vertical-align: middle;
+    }
+  </style>
+
+  <div class="asset-info">
+    <h3 class="n">Pooling Information</h3>
+    <div class="row">
+      <table cellspacing="20" cellpadding="5" border="0">
+        <thead>
+          <tr>
+            <th>Study / Project Group</th>
+            <th>No. Samples Per Pool</th>
+            <th>Source Wells</th>
+            <th>Cells Per Chip Well</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% presenter.study_project_groups_from_wells.each do |group| %>
+            <tr>
+              <td><%= group[0] %></td>
+              <td><%= presenter.num_samples_per_pool(group[1])%></td>
+              <td><%= presenter.get_source_wells(group[1])%></td>
+              <td>90,000</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
