@@ -7,7 +7,6 @@ module Presenters
   class DonorPoolingPlatePresenter < StandardPresenter
     # The pooling tab is not relevant for this presenter as the wells are already pooled (tab shows future pooling
     # by submission strategy)
-    #
     self.pooling_tab = ''
 
     # A clone of the default 'show' page, but with the pooling information displayed
