@@ -30,7 +30,7 @@
               <td><%= group[0] %></td>
               <td><%= presenter.num_samples_per_pool(group[1])%></td>
               <td><%= presenter.get_source_wells(group[1])%></td>
-              <td>90,000</td>
+              <td><%= presenter.cells_per_chip_well(group[1])%></td>
             </tr>
           <% end %>
         </tbody>
