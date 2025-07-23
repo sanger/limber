@@ -214,7 +214,7 @@ Within each bed:
   ```
 
 ## An example of multiple pairs of parallel transfers
-Sometimes the liquid handler deck is large enough to accommadate two or more sets of transfers in parallel (aids throughput in the lab).
+Sometimes the liquid handler deck is large enough to accommodate two or more sets of transfers in parallel (aids throughput in the lab).
 This example contains two pairs of beds (7 with 9, and 12 with 14). Note that the lab does not have to use both pairs, the bed verification code will validate just one pair if that's what they choose to use.
 But validation will fail if you use a mismatched pair. e.g. bed 7 with 14 here.
 
