@@ -36,6 +36,14 @@ module Presenters
 
     private
 
+    # Groups wells by a key generated from each well's study and project.
+    #
+    # Iterates over all wells, selecting only those that are valid according to `valid_well?`.
+    # For each valid well, computes a grouping key using `study_project_key(well)` and adds the well
+    # to an array associated with that key in the resulting hash.
+    #
+    # @return [Hash] a hash where each key is the result of `study_project_key(well)` and each value
+    # is an array of wells sharing that key.
     def grouped_wells
       wells.each_with_object(Hash.new { |h, k| h[k] = [] }) do |well, groups|
         next unless valid_well?(well)
