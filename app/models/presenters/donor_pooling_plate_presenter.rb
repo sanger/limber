@@ -11,16 +11,7 @@ module Presenters
     self.pooling_tab = ''
 
     def study_project_groups_from_wells
-      groups = Hash.new { |h, k| h[k] = [] }
-
-      wells.compact
-        .reject { |well| well.aliquots.empty? }
-        .each do |well|
-        key = "#{well.aliquots.first.study.name} / #{well.aliquots.first.project.name}"
-        groups[key] << well # Store the well itself
-      end
-
-      groups.to_a
+      grouped_wells.each.to_a
     end
 
     def num_samples_per_pool(group)
@@ -28,8 +19,27 @@ module Presenters
     end
 
     def get_source_wells(group)
-      binding.pry
       group.map { |well| well.position['name'] || 'Unknown' }.join(', ')
+    end
+
+    private
+
+    def grouped_wells
+      wells.each_with_object(Hash.new { |h, k| h[k] = [] }) do |well, groups|
+        next unless valid_well?(well)
+
+        key = study_project_key(well)
+        groups[key] << well
+      end
+    end
+
+    def valid_well?(well)
+      well && !well.aliquots.empty?
+    end
+
+    def study_project_key(well)
+      aliquot = well.aliquots.first
+      "#{aliquot.study.name} / #{aliquot.project.name}"
     end
 
     self.page = 'show_pooling_info'
