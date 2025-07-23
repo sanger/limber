@@ -365,9 +365,8 @@ dl#samples-information {
   li.state-passed {
     @extend .list-group-item-success;
   }
-  // TODO: Update to primary when bootstrap updated
-  li.state-qc_completed {
-    @extend .list-group-item-success;
+  li.state-qc_complete {
+    @extend .list-group-item-primary;
   }
   li.state-cancelled {
     @extend .list-group-item-danger;
@@ -399,8 +398,8 @@ dl#samples-information {
 .state-badge.passed {
   @extend.bg-success;
 }
-.state-badge.qc_completed {
-  @extend.bg-success;
+.state-badge.qc_complete {
+  @extend.bg-primary;
 }
 .state-badge.cancelled {
   @extend .bg-danger;
