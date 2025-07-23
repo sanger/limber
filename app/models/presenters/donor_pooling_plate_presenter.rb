@@ -28,6 +28,13 @@ module Presenters
       group.map { |well| well.position['name'] || 'Unknown' }.join(', ')
     end
 
+    def cells_per_chip_well(group)
+      value = group.first.aliquots.first.request&.request_metadata&.cells_per_chip_well
+
+      # The cleanest way I could find to format numbers
+      value.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse if value
+    end
+
     private
 
     def grouped_wells
