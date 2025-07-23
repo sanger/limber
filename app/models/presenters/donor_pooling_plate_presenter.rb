@@ -10,6 +10,12 @@ module Presenters
     #
     self.pooling_tab = ''
 
+    # A clone of the default 'show' page, but with the pooling information displayed
+    self.page = 'show_pooling_info'
+
+    # Override the samples tab to display additional sample information for the pooled wells
+    self.samples_partial = 'plates/pooled_wells_samples_tab'
+
     def study_project_groups_from_wells
       grouped_wells.each.to_a
     end
@@ -41,9 +47,5 @@ module Presenters
       aliquot = well.aliquots.first
       "#{aliquot.study.name} / #{aliquot.project.name}"
     end
-
-    self.page = 'show_pooling_info'
-    # Override the samples tab to display additional sample information for the pooled wells
-    self.samples_partial = 'plates/pooled_wells_samples_tab'
   end
 end
