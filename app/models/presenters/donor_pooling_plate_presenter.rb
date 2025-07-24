@@ -19,12 +19,12 @@ module Presenters
       grouped_wells
     end
 
-    def num_samples_per_pool(well)
-      well.map { |well| well&.aliquots&.size }.join(', ')
+    def num_samples_per_pool(wells)
+      wells.map { |well| well&.aliquots&.size }.join(', ')
     end
 
-    def get_source_wells(well)
-      well.map { |well| well.position['name'] || 'Unknown' }.join(', ')
+    def get_source_wells(wells)
+      wells.map { |well| well.position['name'] || 'Unknown' }.join(', ')
     end
 
     def cells_per_chip_well(well)
