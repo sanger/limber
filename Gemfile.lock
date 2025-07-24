@@ -430,7 +430,7 @@ GEM
     sprint_client (0.1.0)
     state_machines (0.30.0)
     stringio (3.1.7)
-    syntax_tree (6.2.0)
+    syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
     syntax_tree-haml (4.0.3)
       haml (>= 5.2)
