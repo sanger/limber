@@ -25,12 +25,12 @@
           </tr>
         </thead>
         <tbody>
-          <% presenter.study_project_groups_from_wells.each do |group| %>
+           <% presenter.study_project_groups_from_wells.each do |key, wells| %>
             <tr>
-              <td><%= group[0] %></td>
-              <td><%= presenter.num_samples_per_pool(group[1]) %></td>
-              <td><%= presenter.get_source_wells(group[1]) %></td>
-              <td><%= presenter.cells_per_chip_well(group[1]) %></td>
+              <td><%= key %></td>
+              <td><%= presenter.num_samples_per_pool(wells) %></td>
+              <td><%= presenter.get_source_wells(wells) %></td>
+              <td><%= presenter.cells_per_chip_well(wells[0]) %></td>
             </tr>
           <% end %>
         </tbody>
