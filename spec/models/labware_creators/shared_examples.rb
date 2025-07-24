@@ -197,9 +197,8 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
 
         let(:pools) do
-          # rubocop:todo Layout/LineLength
-          # Taken from actual problem plate. Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
-          # rubocop:enable Layout/LineLength
+          # Taken from actual problem plate.
+          # Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
           {
             'pool-we-want-to-use-1' => {
               'wells' => %w[B3 C9 H10],
