@@ -16,19 +16,19 @@ module Presenters
     self.samples_partial = 'plates/pooled_wells_samples_tab'
 
     def study_project_groups_from_wells
-      grouped_wells.each.to_a
+      grouped_wells
     end
 
-    def num_samples_per_pool(group)
-      group.map { |well| well&.aliquots&.size }.join(', ')
+    def num_samples_per_pool(well)
+      well.map { |well| well&.aliquots&.size }.join(', ')
     end
 
-    def get_source_wells(group)
-      group.map { |well| well.position['name'] || 'Unknown' }.join(', ')
+    def get_source_wells(well)
+      well.map { |well| well.position['name'] || 'Unknown' }.join(', ')
     end
 
-    def cells_per_chip_well(group)
-      value = group.first.aliquots.first.request&.request_metadata&.cells_per_chip_well
+    def cells_per_chip_well(well)
+      value = well.aliquots.first.request&.request_metadata&.cells_per_chip_well
 
       # The cleanest way I could find to format numbers
       value.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse if value
@@ -46,12 +46,15 @@ module Presenters
     # is an array of wells sharing that key.
     #
     def grouped_wells
-      wells.each_with_object(Hash.new { |h, k| h[k] = [] }) do |well, groups|
-        next unless valid_well?(well)
-
-        key = study_project_key(well)
-        groups[key] << well
-      end
+      wells
+        .select { |well| valid_well?(well) }
+        .group_by { |well| study_project_key(well) }
+        .flat_map do |key, group|
+          group
+            .group_by { |well| cells_per_chip_well(well) }
+            .values
+            .map { |subgroup| [key, subgroup] }
+        end
     end
 
     def valid_well?(well)
