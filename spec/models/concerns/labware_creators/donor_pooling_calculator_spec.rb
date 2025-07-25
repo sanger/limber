@@ -117,7 +117,16 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     it 'calculates the value correctly' do
-      expect(instance_of_test_pooling_class.send(:calculate_total_cells_in_300ul, count_of_samples_in_pool)).to eq(
+      expect(described_class.calculate_total_cells_in_300ul(count_of_samples_in_pool)).to eq(
+        expected_volume
+      )
+    end
+
+    it 'calculates the value correctly when the wastage_factor is above 13' do
+      count_of_samples_in_pool = 15
+      expected_volume = count_of_samples_in_pool * num_cells_per_sample * wastage_factor.call(count_of_samples_in_pool)
+
+      expect(described_class.calculate_total_cells_in_300ul(count_of_samples_in_pool)).to eq(
         expected_volume
       )
     end
