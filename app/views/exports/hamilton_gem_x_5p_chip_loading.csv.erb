@@ -54,7 +54,7 @@
     # calculations
 
     # calculate volume we believe is remaining in the source well
-    resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor).to_f / desired_chip_loading_concentration
+    resuspension_volume = (number_of_samples * required_number_of_cells_per_sample_in_pool * wastage_factor.call(number_of_samples)).to_f / desired_chip_loading_concentration
     source_well_volume = resuspension_volume - volume_taken_for_cell_counting
 
     # calculate volume of the source sample well to take to load onto the chip

@@ -27,7 +27,7 @@
   filtered_wells.each do | src_well |
     samples_in_pool = src_well.aliquots.size
 
-    source_well_volume = (samples_in_pool * required_number_of_cells_per_sample_in_pool * wastage_factor) / desired_chip_loading_concentration
+    source_well_volume = (samples_in_pool * required_number_of_cells_per_sample_in_pool * wastage_factor.call(samples_in_pool)) / desired_chip_loading_concentration
     row = [
       @plate.labware_barcode.human,
       src_well.location,

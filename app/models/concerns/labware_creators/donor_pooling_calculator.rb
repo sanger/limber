@@ -177,8 +177,8 @@ module LabwareCreators::DonorPoolingCalculator
     # fetch allowance band from the request metadata of the first aliquot in the first source well
     allowance_band = allowance_band_from_request(pool)
 
-    # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 8
-    if count_of_samples_in_pool.between?(5, 8)
+    # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 10
+    if count_of_samples_in_pool.between?(5, 10)
       # check and adjust number of cells per chip well if needed
       number_of_cells_per_chip_well =
         adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well, allowance_band)
@@ -288,7 +288,7 @@ module LabwareCreators::DonorPoolingCalculator
     scrna_config = Rails.application.config.scrna_config
 
     (count_of_samples_in_pool * scrna_config[:required_number_of_cells_per_sample_in_pool]) *
-      scrna_config[:wastage_factor]
+      scrna_config[:wastage_factor].call(count_of_samples_in_pool)
   end
 
   # This method calculates the chip loading volume for a given pool of samples.
