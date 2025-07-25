@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
-  # requires shallow path otherwise get a resource not found issue
+  # requires shallow path otherwise get a resource not found issue TODO: where/when do we get this?
   belongs_to :request, shallow_path: true
   has_one :sample
   has_one :study
