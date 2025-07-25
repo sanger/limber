@@ -9,11 +9,12 @@ This file attempts to describe some common pipeline patterns and how you would d
 ## Branching and Re-Merging
 This pattern of branching is for when aliquots are split out and later re-merged.
 
-For example, in the Heron pipeline the library prep pipeline branches into two paths for PCR 1 and 2 processes, then re-merges at the Lib PCR pool plate. In this scenario the filters are the same for both branches, and we use the MergedPlate labware creator to merge the split aliquots back together again (the aliquots are mergeable as they share the same sample ids, request ids and library types).
+For example, in the former Heron pipeline the library prep pipeline split into two paths for PCR 1 and 2 processes, then re-merged at the Lib PCR pool plate.
+In this scenario the filters are the same for both paths, and we use the {MergedPlate} labware creator to merge the split aliquots back together again (the aliquots from the split paths are mergeable as they share the same sample ids, request ids and library types).
 
-pipeline configuration for the branching:
+This is the pipeline configuration for the split (at the LTHR-384 RT-Q plate) and re-merge (to create the LTHR-384 Lib PCR pool plate):
 ```yaml
-Heron-384 Tailed A V2: # Heron 384-well pipeline specific to PCR 1 plate
+Heron-384 Tailed A V2:
   pipeline_group: Heron-384 V2
   filters: &heron_tailed_filters
     request_type_key: limber_heron_lthr_v2
@@ -38,7 +39,10 @@ Heron-384 Tailed B V2:
     LTHR-384 Lib PCR 2: LTHR-384 Lib PCR pool
 ```
 
-purpose configuration for the merge plate:
+Note there are two pipeline definitions, sharing the same pipeline_group and filters, and the split and merge labware purposes.
+Note the initial relationship steps to get to the branch LTHR-384 RT-Q plate are only defined once. As are the steps after the re-merge at the LTHR-384 Lib PCR pool plate.
+
+This is purpose configuration for the merge plate:
 ```yaml
 LTHR-384 Lib PCR pool:
   :asset_type: plate
@@ -50,9 +54,7 @@ LTHR-384 Lib PCR pool:
     help_text: 'Here we are merging the two Lib PCR plates, creating a new library plate.'
 ```
 
-Note the two pipeline definitions, sharing the same pipeline_group and filters.
-Note the initial relationship steps to get to the branch LTHR-384 RT-Q plate are only defined once. As are the steps after the re-merge at the LTHR-384 Lib PCR pool plate.
-Note the purpose configuration defines the use of the MergedPlate creator and limits it's source purposes to the two plates we intend to merge, the Lib PCR 1 and 2 plates.
+Note the purpose configuration defines the use of the {MergedPlate} creator and limits it's source purposes to the two plates we intend to merge, the Lib PCR 1 and 2 plates.
 
 The end results are single aliquot libraries.
 

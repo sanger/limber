@@ -371,6 +371,6 @@ verify_robot: true,
 ```
 (The downside of this is if the lab staff entered a string for the robot barcode in the first bed verification that they cannot then remember for the second, they are blocked from continuing. There have been support issues where that has happened. There is no way to verify that the string entered is a valid robot barcode or name, as not all robots are persisted in Sequencescape.)
 
-## Tips and Tricks
+> [!TIP]
 > When developing just set the bed barcodes to any numbers if you don't yet have the real numbers (often the lab is still testing the liquid handler steps and doesn't finalise all the locations).
 > Note that you can use state to control when bed verification buttons appear on the Limber view. This helps to avoid confusion for the lab staff, it leads them through the sequence in the correct order. For example, you could have a series of bed verifications that transition a plate through a series of states, e.g. pending to started, then started to processed_1, then processed_1 to processed_2, and finally processed_2 to passed. The buttons for each transition will only appear when the plate is in the valid starting state for the next transition.

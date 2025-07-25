@@ -32,7 +32,8 @@ And in these locations in Sequencescape:
 2. And for older pipelines in the `limber.rake` task in Sequencescape
 
 ### Patterns
-See {file:docs/pipeline_patterns.md for some common issues and how to resolve them.
+
+See [`docs/pipeline_patterns.md`](./pipeline_patterns.md) for some common issues and how to resolve them.
  for examples of how to do more complex functionality in pipelines like splitting and re-merging, branching, automated submissions, etc.
 
 ## Limber
@@ -40,34 +41,34 @@ See {file:docs/pipeline_patterns.md for some common issues and how to resolve th
 ### `config/purposes/*.yml`
 
 Describes each purpose in the pipeline, and how it behaves.
-See {file:docs/purposes_yaml_files.md for some common issues and how to resolve them.
+See [`docs/purposes_yaml_files.md`](./purposes_yaml_files.md) for some common issues and how to resolve them.
 
 
 Labware creators specified in the purposes configuration are responsible for creating new labwares.
-See {file:docs/creators.md for some common issues and how to resolve them.
+See [`docs/creators.md`](./creators.md) for some common issues and how to resolve them.
 
 
 Presenters specified in the purposes configuration are responsible for displaying the labwares.
-See {file:docs/presenters.md for some common issues and how to resolve them.
+See [`docs/presenters.md`](./presenters.md) for some common issues and how to resolve them.
 
 
 ### `config/pipelines/*.yml`
 
 Describes how the purposes link together, and how you know which pipeline you
 are following.
-See {file:docs/pipelines_yaml_files.md for some common issues and how to resolve them.
+See [`docs/pipelines_yaml_files.md`](./pipelines_yaml_files.md) for some common issues and how to resolve them.
 
 
 ### `config/robots.rb`
 
 Describes the bed verifications, defining which labware purposes are valid for a specific transfer. These are used to prevent mistakes loading liquid handler robots.
-See {file:docs/robots_file.md for some common issues and how to resolve them.
+See [`docs/robots_file.md`](./robots_file.md) for some common issues and how to resolve them.
 
 
 ### `config/exports.yml` and `app/views/exports/*.erb`
 
 Describes the files that can be downloaded from labware purposes, defining their format and what information they contain. Typically QC data and robot driver files, but can be anything the pipeline step requires.
-See {file:docs/exports_files.md for some common issues and how to resolve them.
+See [`docs/exports_files.md`](./exports_files.md) for some common issues and how to resolve them.
 
 
 ## Sequencescape
@@ -110,4 +111,4 @@ They are less useful for volume testing, non-standard route testing, and for set
 ## Troubleshooting configuration issues
 
 It can be frustrating to debug issues with Sequencescape and Limber pipeline configuration.
-See {file:docs/troubleshooting.md} for some common issues and how to resolve them.
+See [`docs/troubleshooting.md`](./troubleshooting.md) for some common issues and how to resolve them.

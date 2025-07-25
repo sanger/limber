@@ -20,7 +20,7 @@ Filenames, and the grouping of purposes within files, have no functional relevan
 
 Loading of yaml files is handled by {ConfigLoader::PurposesLoader} which loads all files and detects potential duplicates.
 
-> **TIP**
+> [!TIP]
 > It is suggested that when you create a new pipeline, you create a purposes.yml file to match that pipeline.
 > However, be aware that purposes can be shared between different pipelines.
 
@@ -89,7 +89,8 @@ The key will be used to set the {Sequencescape::Api::V2::Purpose#name}, this is
 displayed extensively throughout Limber and Sequencescape, and also appears on
 the plate label. Due to space constraints on labels, it is a good idea if
 purpose names are kept short. This key is also used to identify plate purposes
-in the {file:docs/pipelines_yaml_files.md pipeline configuration}.
+in the pipeline configuration.
+See [`docs/pipelines_yaml_files.md`](./pipelines_yaml_files.md)
 
 Recently we have taken to prefixing purpose keys with a short 3 or 4 character pipeline identifier, to more easily see what pipeline a purpose belongs to. This helps to keep the purposes unique, whilst still using common naming for similar steps in different pipelines. The prefix usually also starts with an 'L' to denote a Limber pipeline.
 e.g. LPL1 PCR XP and LPL2 PCR XP for similar steps in two pipelines.
@@ -219,7 +220,8 @@ different stages or ensure tag information gets shown.
 
 If you don't need any special behaviour, the defaults should be just fine.
 
-{file:docs/presenters.md Description of presenters and their behaviour}
+Description of presenters and their behaviour:
+See [`docs/presenters.md`](./presenters.md)
 
 ```yaml
 :presenter_class: Presenters::StockPlatePresenter
@@ -319,7 +321,8 @@ wells are not transferred.
 The default tube creator {LabwareCreators::TubeFromTube} handles the transfer
 of all material from the parent tube to the new child tube.
 
-{file:docs/creators.md description of labware creators and their behaviours}
+Description of labware creators and their behaviours:
+See [`docs/creators.md`](./creators.md)
 
 ```yaml
 :creator_class: LabwareCreators::TaggedPlate
@@ -403,8 +406,8 @@ Default (Plate): [{ name: 'Download Concentration (nM) CSV', id: 'concentrations
 
 Default (Tube): []
 
-See {file:docs/exports_files.md} for more information on exports.
-See {file:docs/exports_yaml_files.md} for more details on the config yaml file for exports.
+See [`docs/exports_files.md`](./exports_files.md) for more information on exports.
+See [`docs/exports_yaml_files.md`](./exports_yaml_files.md) for more details on the config yaml file for exports.
 
 #### :csv_template
 
@@ -435,7 +438,7 @@ This attribute defines this plate purpose as an alternative labware that could b
 
 String, used to select an alternative {Labels::Base label} template, such as for
 printing QC labels. A list of valid label templates can be found in
-{file:config/label_templates.yml}
+[`config/label_templates.yml`](../config/label_templates.yml)
 
 A label template is a configuration that combines a {Labels::Base label class},
 which describes the specific fields (barcode, date, user, etc...) which will be
@@ -443,7 +446,8 @@ displayed on a Plate/Tube label, and a print my barcode template, which
 describes how those fields are physically laid out on the label.
 
 If unspecified, falls back on the default label template for the given printer type
-specified in the defaults_by_printer_type section in {file:config/label_templates.yml}.
+specified in the defaults_by_printer_type section.
+See [`config/label_templates.yml`](../config/label_templates.yml)
 
 ```yaml
 :label_template: plate_xp

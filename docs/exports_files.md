@@ -24,7 +24,7 @@ my_file_export_key:
   some_other_parameter: A value
 ```
 
-See {file:docs/exports_yaml_files.md} for a more detailed description of this file.
+See [`docs/exports_yaml_files.md`](./exports_yaml_files.md) for a more detailed description of this file.
 
 # Export file formatting
 See `app/views/exports/*.erb`

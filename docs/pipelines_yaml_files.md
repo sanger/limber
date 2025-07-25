@@ -14,11 +14,8 @@ relevance, and are intended for organizational reasons.
 Loading of yaml files is handled by {ConfigLoader::PipelinesLoader} which
 loads all files, detects potential duplicates, and populates the {PipelineList}.
 
-> **TIP**
-> It is suggested that you create a new file for each new customer 'pipeline'. In
-> most cases this file will actually contain a handful of internal 'pipelines'
-> reflecting branches, or different stages of the process. For example, sample prep
-> followed by library prep.
+> [!TIP]
+> - It is suggested that you create a new file for each new customer 'pipeline'. In most cases this file will actually contain a handful of internal 'pipelines' reflecting branches, or different stages of the process. For example, sample prep followed by library prep.
 
 ## An example file
 
@@ -156,25 +153,14 @@ library_pass:
   - LB Cap Lib Pool
 ```
 
-> **TIP**
-> library_pass usually occurs on the last plate of the pipeline, immediately
-> prior to multiplexing and normalization. This is the point at which the
-> pipeline transitions from the library creation request (eg. limber_wgs)
-> to the multiplexing request (eg. limber_multiplexing). You'll see this
-> reflected in the example above, with the 'WGS' and 'WGS MX' pipelines.
->
-> This split ensures that customers can request re-pools of existing libraries,
-> without incurring further charges for library creation.
->
-> It is common, although not necessary, to specify both library_creation and
-> multiplexing sections of a pipeline in the same file.
->
-> library_pass is not specified for the final tube in the WGS MX pipeline
-> because:
->
-> - The behaviour is already handled by passing the tube itself
-> - Multiplexing is not charged for, and rarely failed, so an explicit
->   step is unnecessary and confusing.
+> [!TIP]
+> library_pass usually occurs on the last plate of the pipeline, immediately prior to multiplexing and normalization. This is the point at which the pipeline transitions from the library creation request (eg. limber_wgs) to the multiplexing request (eg. limber_multiplexing). You'll see this reflected in the example above, with the 'WGS' and 'WGS MX' pipelines.
+> - This split ensures that customers can request re-pools of existing libraries, without incurring further charges for library creation.
+> - It is common, although not necessary, to specify both library_creation and multiplexing sections of a pipeline in the same file.
+
+> library_pass is not specified for the final tube in the WGS MX pipeline because:
+> - The behaviour is already handled by passing the tube itself.
+> - Multiplexing is not charged for, and rarely failed, so an explicit step is unnecessary and confusing.
 
 #### relationships
 
@@ -195,14 +181,9 @@ The above shows a transition from 'LB Cherrypick' to 'LB Shear', 'LB Shear' to '
 
 Note that generally each relationship leads from one to the next, with the child of one relationship being the parent of the next on the following line. They don't need to be in order like this, but it is easier to understand the flow of the pipeline if it is.
 
-> **TIP**
-> In most Limber pipelines, the final multiplex library tube is created
-> upfront by the limber_multiplexing request. This allows the SSRs to access
-> the sequencing requests easily prior to the completion of library creation,
-> allowing for the addition of removal of requests. A side effect of this is
-> that any Limber pipelines using the standard limber_multiplexing request
-> share the final tube purpose, 'LB Lib Pool Norm'. This is defined in:
-> {file:config/purposes/final_tube.yml}
+> [!TIP]
+> In most Limber pipelines, the final multiplex library tube is created upfront by the limber_multiplexing request. This allows the SSRs to access the sequencing requests easily prior to the completion of library creation, allowing for the addition of removal of requests. A side effect of this is that any Limber pipelines using the standard limber_multiplexing request share the final tube purpose, 'LB Lib Pool Norm'.
+> - This is defined in: [`config/purposes/final_tube.yml`](../config/purposes/final_tube.yml)
 
 It should be noted that because the above structure is a hash, it is not possible
 to reflect a branching pipeline. Instead, each branch of the pipeline can be
@@ -211,13 +192,9 @@ represented by a separate pipeline within the same file.
 For example, the heron pipeline has A and B forks, representing the PCR 1 and
 PCR 2 routes.
 
-> **TIP**
-> Note the use of &heron_filters and *heron_filters in the example below.
-> This allows a filter to be share between two branches of the pipeline.
-> You are *strongly\* encouraged to use this approach when dealing with branched
-> pipelines with identical filters. In the past there have been several
-> occasions where failure to follow this pattern has resulted in a library type
-> only getting added to one branch of the pipeline by mistake.
+> [!TIP]
+> - Note the use of &heron_filters and *heron_filters in the example below. This allows a filter to be share between two branches of the pipeline.
+> - You are *strongly\* encouraged to use this approach when dealing with branched pipelines with identical filters. In the past there have been several occasions where failure to follow this pattern has resulted in a library type only getting added to one branch of the pipeline by mistake.
 
 ```yaml
 ---
@@ -240,16 +217,10 @@ Heron-384 B: # Heron 384-well pipeline specific to PCR 2 plate (uses above relat
     LHR-384 PCR 2: LHR-384 cDNA
 ```
 
-> **TIP**
-> The keys in the yaml must be unique, but the values need not be. In the example
-> below two types of plate (Input and PCR XP) are able to lead into the Aggregate
-> plate and will both display the suggested action to create that Aggregate child
-> plate.
-> In this example the Input and PCR XP are versions of the samples prepared to the
-> same state (cleaned DNA ready for aggregation).
-> The difference is one (the Input) is created by faculty off LIMS and created by a
-> manifest, whereas the other (PCR XP) has been created from an earlier step within
-> LIMS.
+> [!TIP]
+> The keys in the yaml must be unique, but the values need not be. In the example below two types of plate (Input and PCR XP) are able to lead into the Aggregate plate and will both display the suggested action to create that Aggregate child plate.
+> In this example the Input and PCR XP are versions of the samples prepared to the same state (cleaned DNA ready for aggregation).
+> The difference is one (the Input) is created by faculty off LIMS and created by a manifest, whereas the other (PCR XP) has been created from an earlier step within LIMS.
 
 ```yaml
   relationships:
