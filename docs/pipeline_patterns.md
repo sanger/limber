@@ -6,7 +6,7 @@
 # Description
 This file attempts to describe some common pipeline patterns and how you would define those in your configuration files.
 
-## Branching and Re-Merging
+## Splitting and Re-Merging
 This pattern of branching is for when aliquots are split out and later re-merged.
 
 For example, in the former Heron pipeline the library prep pipeline split into two paths for PCR 1 and 2 processes, then re-merged at the Lib PCR pool plate.
@@ -141,7 +141,7 @@ Technically semi-automatic, this allow the lab staff to press a button in the la
 
 This is useful in high volume pipelines where the submission options don't change.
 
-A prime example of this is in the Heron (Covid) pipeline. In this pipeline the lab staff were working all hours including at weekends, so SSR support to manually create submissions was not always available. Plus the submissions were identical, which lends itself to an automated solution.
+A prime example of this is in the former Heron (Covid) pipeline. In this pipeline the lab staff were working all hours including at weekends, so SSR support to manually create submissions was not always available. Plus the submissions were identical, which lends itself to an automated solution.
 
 In the purpose configuration for the plate, use the SubmissionPlatePresenter and set the submission_options parameter. For example in Heron we display a choice of 2 green submission option buttons for the user when they view the Cherrypick plate in Limber. These submissions start the library prep pipelines; one pipeline is for a 96-well plate version, the other for 384-well plates, each with different library types:
 
@@ -185,6 +185,8 @@ In this pattern your purpose configuration includes the labware creator {Labware
 It allows the user to flexibly create pool tubes.
 An SSR can then submit the pool tube for sequencing. Or the user can select 'request additional sequencing' on the tube in Sequencescape.
 
+For example, the custom pool tube from the Duplex Seq pipeline:
+
 ```yaml
 LDS Custom Pool:
   :asset_type: tube
@@ -201,8 +203,10 @@ Tag plates are usually prepared in advance before being used in a pipeline.
 At the step in the pipeline where the DNA samples are to be tagged, the user scans one of these pre-prepared tag plates and (if valid) the DNA samples are transfered into that tag plate (ie. the labware creator in this case is not creating a new plate, it is re-purposing an existing tag plate).
 The tag plate becomes the child plate. Part of this process involves connecting the tag plate as the valid child plate of the parent, and another part is changing the purpose of the plate to the one it needs to be from the pipeline configuration.
 
+There are two forms of tagging labware creator, standard and custom.
+
 ### Standard tagging
-There are two forms of tagging labware creator, this first is the standard one which does a straight stamp (A1 to A1, B1 to B1 etc). It uses the {LabwareCreators::TaggedPlate}, and you set the valid list of tag_layout_templates the tag plate is allowed to be made from:
+Standard tagging does a straight stamp (A1 to A1, B1 to B1 etc). It uses the {LabwareCreators::TaggedPlate}, and you set the valid list of tag_layout_templates the tag plate is allowed to be made from:
 
 ```yaml
 LDS Lib PCR:
@@ -220,7 +224,7 @@ LDS Lib PCR:
 ```
 
 ### Custom tagging
-This form uses the {LabwareCreators::CustomTaggedPlate} labware creator. This has a more flexible Vue JS screen that allows you to manipulate how the tags are to be laid out.
+Custom tagging uses the {LabwareCreators::CustomTaggedPlate} labware creator. This has a more flexible Vue JS screen that allows you to modify how the tags are to be laid out.
 
 You can apply offset, walking by and direction algorithms. You can also set for either 1 or 4 tags per well.
 
@@ -232,12 +236,12 @@ LBC TCR Post Lig 1XSPRI:
   :tags_per_well: 1
 ```
 
-This version you do not specify a list of specific tag layout templates that are allowed, it is flexible (so they can try experimental tag plates).
+For custom tagging you do not specify a list of specific tag layout templates that are allowed, it is flexible (so they can try experimental tag plates).
 Optionally though, you can set a filter for the tag groups you will see to limit the lists:
 ```yaml
 :tag_group_adapter_type_name_filter: 'Chromium'
 ```
 
-This version was developed where there were partial sample plates and the users wished to be able to re-use the same tag plate and offset the start point. e.g. one sample plate uses the first three columns of tags, the second uses the 4th-6th columns, and so on.
-It was also used by the Bespoke and R&D teams to test tags, where they needed that flexibility.
+This version was developed where there were partial sample plates and the users wished to be able to re-use the same tag plate and offset the start point. e.g. one sample plate uses the first three columns of tags from a tag plate, then the second uses the 4th-6th columns, and so on.
 
+It has also been used by the Bespoke and R&D teams to test tags, where they needed that flexibility to test new processes.

@@ -50,6 +50,6 @@ For examples, see {LabwareCreators::MergedPlate} which merges the aliquots in co
 Where multiple samples from a parent labware are pooled together into a child labware according to specific strategies.
 For examples, see {LabwareCreators::PooledTubesBySample} which pools together those wells with the same sample, from multiple plate wells into a child tube for each sample, {LabwareCreators::PooledTubesBySubmission} which is similar but pools together plate wells with samples that have the same submission and places them in child tubes, and {LabwareCreators::PooledWellsBySampleInGroups} which pools together wells with the same samples into wells on a child plate.
 
-> [!TIP]
+> [TIP]
 > - When trying to determine whether you need to create a new labware creator or can re-use an existing one it is useful to first try and identify if there is a similar step in an existing pipeline.
 > - If necessary you can refactor an existing labware creator to make it more flexible. For example by using optional parameters with different values for the new use case. Or extend an existing labware creator with a new subclass that holds the additional functionality you need.

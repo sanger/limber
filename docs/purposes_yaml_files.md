@@ -20,9 +20,9 @@ Filenames, and the grouping of purposes within files, have no functional relevan
 
 Loading of yaml files is handled by {ConfigLoader::PurposesLoader} which loads all files and detects potential duplicates.
 
-> [!TIP]
-> It is suggested that when you create a new pipeline, you create a purposes.yml file to match that pipeline.
-> However, be aware that purposes can be shared between different pipelines.
+> [TIP]
+> - It is suggested that when you create a new pipeline, you create a `purposes.yml` file to match that pipeline.
+> - Be aware that purposes can be shared between different pipelines. This is valid, but means you must be more careful using these purposes in pipeline configurations and have explicit filters.
 
 ## An example file
 

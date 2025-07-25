@@ -14,7 +14,7 @@ relevance, and are intended for organizational reasons.
 Loading of yaml files is handled by {ConfigLoader::PipelinesLoader} which
 loads all files, detects potential duplicates, and populates the {PipelineList}.
 
-> [!TIP]
+> [TIP]
 > - It is suggested that you create a new file for each new customer 'pipeline'. In most cases this file will actually contain a handful of internal 'pipelines' reflecting branches, or different stages of the process. For example, sample prep followed by library prep.
 
 ## An example file
@@ -125,14 +125,14 @@ Indicates that this pipeline can be used for requests with a request type of 'li
 The most common keys to filter on are request_type and library_type.
 
 All filters must be fulfilled for a pipeline to be considered valid for the specific instance of Labware in question.
+
 Note that the labware must also have a purpose that matches to one of those listed in the relationships section of the pipeline yaml.
-This is partly why we now try to prefix purpose keys with pipeline specific characters, use request types specific to pipeline submission templates, and use library types specific to their library prep pipelines where ever possible.
 
-NB. Care should be taken when choosing purpose names and assigning filters. If you are not careful then a user can be presented with extra green suggested next action buttons in Limber, which are inappropriate for the pipeline they are running. This can cause confusion and potentially support issues if they choose an incorrect option and create the wrong child labware.
+To make filters more explicit we now try to prefix purpose keys with pipeline specific characters (e.g. LDS for Limber Duplex Seq), use request types specific to pipeline submission templates (e.g. limber_wgs for Whole Genome Sequencing), and use library types specific to their library prep pipelines where ever possible (e.g. Chromium single cell 3 prime v3).
 
-For branching pipelines with identical filters, you are strongly encouraged to
-use yaml anchors to share the filter between pipelines. See the relationships
-section below for more details, and an example.
+NB. Care should be taken when choosing purpose names and assigning filters. If you are not careful then a user can be presented with extra suggested next action buttons in Limber, which are inappropriate for the pipeline they are running. This can cause confusion and potentially support issues if they choose an incorrect option and create the wrong child labware.
+
+For branching pipelines with identical filters, you are strongly encouraged to use yaml anchors to share the filter between pipelines. See the relationships section below for more details, and an example.
 
 #### library_pass
 
@@ -153,7 +153,7 @@ library_pass:
   - LB Cap Lib Pool
 ```
 
-> [!TIP]
+> [TIP]
 > library_pass usually occurs on the last plate of the pipeline, immediately prior to multiplexing and normalization. This is the point at which the pipeline transitions from the library creation request (eg. limber_wgs) to the multiplexing request (eg. limber_multiplexing). You'll see this reflected in the example above, with the 'WGS' and 'WGS MX' pipelines.
 > - This split ensures that customers can request re-pools of existing libraries, without incurring further charges for library creation.
 > - It is common, although not necessary, to specify both library_creation and multiplexing sections of a pipeline in the same file.
@@ -181,7 +181,7 @@ The above shows a transition from 'LB Cherrypick' to 'LB Shear', 'LB Shear' to '
 
 Note that generally each relationship leads from one to the next, with the child of one relationship being the parent of the next on the following line. They don't need to be in order like this, but it is easier to understand the flow of the pipeline if it is.
 
-> [!TIP]
+> [TIP]
 > In most Limber pipelines, the final multiplex library tube is created upfront by the limber_multiplexing request. This allows the SSRs to access the sequencing requests easily prior to the completion of library creation, allowing for the addition of removal of requests. A side effect of this is that any Limber pipelines using the standard limber_multiplexing request share the final tube purpose, 'LB Lib Pool Norm'.
 > - This is defined in: [`config/purposes/final_tube.yml`](../config/purposes/final_tube.yml)
 
@@ -192,7 +192,7 @@ represented by a separate pipeline within the same file.
 For example, the heron pipeline has A and B forks, representing the PCR 1 and
 PCR 2 routes.
 
-> [!TIP]
+> [TIP]
 > - Note the use of &heron_filters and *heron_filters in the example below. This allows a filter to be share between two branches of the pipeline.
 > - You are *strongly\* encouraged to use this approach when dealing with branched pipelines with identical filters. In the past there have been several occasions where failure to follow this pattern has resulted in a library type only getting added to one branch of the pipeline by mistake.
 
@@ -217,10 +217,10 @@ Heron-384 B: # Heron 384-well pipeline specific to PCR 2 plate (uses above relat
     LHR-384 PCR 2: LHR-384 cDNA
 ```
 
-> [!TIP]
-> The keys in the yaml must be unique, but the values need not be. In the example below two types of plate (Input and PCR XP) are able to lead into the Aggregate plate and will both display the suggested action to create that Aggregate child plate.
-> In this example the Input and PCR XP are versions of the samples prepared to the same state (cleaned DNA ready for aggregation).
-> The difference is one (the Input) is created by faculty off LIMS and created by a manifest, whereas the other (PCR XP) has been created from an earlier step within LIMS.
+> [TIP]
+> - The keys in the yaml must be unique, but the values need not be. In the example below two types of plate (Input and PCR XP) are able to lead into the Aggregate plate and will both display the suggested action to create that Aggregate child plate.
+> - In this example the Input and PCR XP are versions of the samples prepared to the same state (cleaned DNA ready for aggregation).
+> - The difference is that one (the Input) is created by faculty off LIMS and created by a manifest, whereas the other (PCR XP) has been created from an earlier step within LIMS.
 
 ```yaml
   relationships:
