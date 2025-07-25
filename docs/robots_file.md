@@ -162,7 +162,7 @@ Each bed definition is keyed on a bed barcode e.g. bed(2).barcode.
 
 Within each bed:
   `purpose:`
-  The purpose key (or keys) that are valid for this bed.
+  The purpose key (or keys) that are valid labwares for this bed. If the labware is not of this type it will be rejected.
   e.g.
   ```code
   purpose: 'LB Lib PCR'
@@ -175,14 +175,14 @@ Within each bed:
   ```
 
   `states`
-  The list of states that are valid for the labware in this bed. Prevents the users transferring from or into plates that are in the wrong state. Usually will contain just one state.
+  The list of states that are valid for the labware in this bed. Prevents the users transferring from or into plates that are in the wrong state. Usually will contain just one state. If the labware is not in one of these states it will be rejected.
   e.g.
   ```code
   states: ['passed']
   ```
 
   `child`
-  Indicates which bed definition is the child of this bed. Used for relationship validation.
+  Indicates which other bed definition is the child of this bed. Used for relationship validation. The child bed specified must be defined in the same beds hash. Optional, child is not needed if the bed verification does not need to check a relationship exists.
   e.g.
   ```code
   child: bed(4).barcode
@@ -194,7 +194,7 @@ Within each bed:
   ```
 
   `parent`
-  Indicates which bed is the parent of this bed. Used for relationship validation.
+  Indicates which other bed is the parent of this bed. Used for relationship validation. The parent bed specified must be defined in the same beds hash. Optional, parent or parents is not needed if the bed verification does not need to check a relationship exists.
   e.g.
   ```code
   parent: bed(7).barcode

@@ -8,6 +8,7 @@
 There are a number of `*.yml` files located in `config/purposes/`. These files define the creation and display behaviour of the instances of labware made with these purposes, so they do the correct things for that step in their pipeline.
 
 The purpose configurations do not describe how they are connected together to make a pipeline, that is the job of the `config/pipelines/` files.
+Note that all purposes configured here should also have an entry in the relationships section of one of the pipeline yaml files. Without this relationship link, Limber will not be able to determine any suggested actions for labwares created with this purpose.
 
 Limber automatically loads all `.yml` files within this directory into the {Settings} when you run `rake config:generate`. It is likely this will be refactored to use a PurposeConfig object in future, to bring it more in line with the {Pipeline} behaviour.
 

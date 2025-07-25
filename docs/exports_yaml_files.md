@@ -5,11 +5,8 @@
 
 # Exports yaml files
 
-There are a number of `*.yml` files located in `config/exports` these
-configure the exports via the {ExportsController}. Limber automatically
-loads all `.yml` files within this directory into {Export}.
-Filenames, and the grouping of pipelines within files, have no functional
-relevance, and are intended for organizational reasons.
+The `config/exports/exports.yml` file configures the exports via the {ExportsController}. Limber automatically loads all `.yml` files within this directory into {Export}.
+Filenames, and the grouping of pipelines within files, have no functional relevance, and are intended for organizational reasons.
 
 Loading of yaml files is handled by {ConfigLoader::ExportsLoader} which
 loads all files, detects potential duplicates, and is loaded by {Export}.

@@ -127,7 +127,9 @@ Indicates that this pipeline can be used for requests with a request type of 'li
 
 The most common keys to filter on are request_type and library_type.
 
-All filters must be fulfilled for a pipeline to be considered valid for the specific instance of Labware in question. Note that the labware must also have a purpose that matches to one of those listed in the relationships section of the pipeline yaml. This is partly why we now try to prefix purpose keys with pipeline specific characters, use request types specific to pipeline submission templates, and use library types specific to their library prep pipelines where ever possible.
+All filters must be fulfilled for a pipeline to be considered valid for the specific instance of Labware in question.
+Note that the labware must also have a purpose that matches to one of those listed in the relationships section of the pipeline yaml.
+This is partly why we now try to prefix purpose keys with pipeline specific characters, use request types specific to pipeline submission templates, and use library types specific to their library prep pipelines where ever possible.
 
 NB. Care should be taken when choosing purpose names and assigning filters. If you are not careful then a user can be presented with extra green suggested next action buttons in Limber, which are inappropriate for the pipeline they are running. This can cause confusion and potentially support issues if they choose an incorrect option and create the wrong child labware.
 
@@ -190,6 +192,8 @@ relationships:
 ```
 
 The above shows a transition from 'LB Cherrypick' to 'LB Shear', 'LB Shear' to 'LB Post Shear' and so on.
+
+Note that generally each relationship leads from one to the next, with the child of one relationship being the parent of the next on the following line. They don't need to be in order like this, but it is easier to understand the flow of the pipeline if it is.
 
 > **TIP**
 > In most Limber pipelines, the final multiplex library tube is created

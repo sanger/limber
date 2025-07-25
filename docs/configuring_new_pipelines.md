@@ -31,30 +31,47 @@ And in these locations in Sequencescape:
 1. `config/default_records/*.yml` Record loader files in Sequencescape
 2. And for older pipelines in the `limber.rake` task in Sequencescape
 
+### Patterns
+See {file:docs/pipeline_patterns.md for some common issues and how to resolve them.
+ for examples of how to do more complex functionality in pipelines like splitting and re-merging, branching, automated submissions, etc.
 
 ## Limber
+
 ### `config/purposes/*.yml`
 
 Describes each purpose in the pipeline, and how it behaves.
-{file:docs/purposes_yaml_files.md}
+See {file:docs/purposes_yaml_files.md for some common issues and how to resolve them.
+
+
+Labware creators specified in the purposes configuration are responsible for creating new labwares.
+See {file:docs/creators.md for some common issues and how to resolve them.
+
+
+Presenters specified in the purposes configuration are responsible for displaying the labwares.
+See {file:docs/presenters.md for some common issues and how to resolve them.
+
 
 ### `config/pipelines/*.yml`
 
 Describes how the purposes link together, and how you know which pipeline you
 are following.
-{file:docs/pipelines_yaml_files.md}
+See {file:docs/pipelines_yaml_files.md for some common issues and how to resolve them.
+
 
 ### `config/robots.rb`
 
 Describes the bed verifications, defining which labware purposes are valid for a specific transfer. These are used to prevent mistakes loading liquid handler robots.
-{file:docs/robots_file.md}
+See {file:docs/robots_file.md for some common issues and how to resolve them.
+
 
 ### `config/exports.yml` and `app/views/exports/*.erb`
 
 Describes the files that can be downloaded from labware purposes, defining their format and what information they contain. Typically QC data and robot driver files, but can be anything the pipeline step requires.
-{file:docs/exports_files.md}
+See {file:docs/exports_files.md for some common issues and how to resolve them.
+
 
 ## Sequencescape
+
 Limber is used to process the requests created in Sequencescape when the SSR makes a Submission for work on a customers behalf. A Submission can contain many Orders, and each Order can contain many Requests. These Requests identify what work is requested through a combination of key, request_type and library_type (for library prep Submissions). They may also specify other customer requested variables, such as primer_panels or bait libraries.
 
 One issue with the configuration of Submissions and Requests in Sequencescape is that it requires any Labware purposes it references to have been created in the database first. e.g. a request type definition needs to include a set of 'allowed purposes' on which it may be submitted. And typically we deploy Sequencescape before Limber so the purpose may not exist yet.
@@ -66,9 +83,31 @@ This configuration duplication is the subject of technical backlog stories to re
 Pipeline configuration in Sequencescape is persisted into the database in two ways, either by using Record Loader or in the limber.rake task.
 
 ### Record Loader files
+
 Using Record Loader is now the prefered way to set up submission templates, request types, and initial labware purposes (amongst other configuration data).
 See `https://github.com/sanger/record_loader`
 
 ### limber.rake task
+
 The limber.rake task defines some request types and library types, and helps set up some of the submission templates that the SSRs use to generate submissions. This is the deprecated way that configuration used to be set up in Sequencescape for pipelines.
 Record Loader is preferred for any new configuration going forward.
+
+## Testing a Limber Pipeline
+
+Integration testing for a Limber pipeline is done in the Integration Suite repository.
+See `https://gitlab.internal.sanger.ac.uk/psd/integration-suite`
+
+This is an RSpec based series of tests that use Capybara and Playwright to run through the Limber pipelines clicking on buttons and entering values in a similar way that a user would.
+
+There is one test per pipeline, which typically tests the main path through that pipeline. The tests do not necessarily check every possible route through the pipeline, or all the error handling, and usually use a simple submission and minimal numbers of samples for speed.
+
+These tests are very useful during pipeline development, and one should be created in parallel as you develop any new pipeline.
+
+The tests are also very useful for demos to users, for support purposes to get to specific steps, and for data setup when doing UAT's of new functionality or fixes at certain steps.
+
+They are less useful for volume testing, non-standard route testing, and for setting up more complex test data (e.g. complex pooling submissions).
+
+## Troubleshooting configuration issues
+
+It can be frustrating to debug issues with Sequencescape and Limber pipeline configuration.
+See {file:docs/troubleshooting.md} for some common issues and how to resolve them.
