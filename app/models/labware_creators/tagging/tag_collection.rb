@@ -89,7 +89,7 @@ module LabwareCreators::Tagging
     # Returns true if the given template is in the approved list
     # or the approved list is empty. Returns false otherwise.
     #
-    # @param [Limber::TagLayoutTemplate] template The template to check
+    # @param [TagLayoutTemplates] template The template to check
     #
     # @return [Bool] true if the template is acceptable
     #
