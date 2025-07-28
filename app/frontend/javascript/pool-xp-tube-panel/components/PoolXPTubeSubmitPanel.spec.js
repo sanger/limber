@@ -201,13 +201,15 @@ const verifyComponentState = (wrapper, state) => {
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
       expect(exportButton.element.disabled).toBe(false)
-      expect(exportButton.classes()).toContain('btn-danger')
-      expect(statusLabel.classes()).toContain('text-danger')
-      expect(statusLabel.text()).toBe('The export cannot be verified. Try again')
-      expect(exportButton.text()).toBe('Try again')
+      expect(exportButton.classes()).toContain('btn-primary')
+      expect(statusLabel.classes()).toContain('text-primary')
+      expect(statusLabel.text()).toBe(
+        'The export process to Traction has been initiated. Verification may take a few seconds to complete, depending on factors like network speed. Please revisit or refresh the page after 10 minutes.',
+      )
+      expect(exportButton.text()).toBe('Refresh')
       const iconComponent = statusIcon.findComponent(ErrorIcon)
       expect(iconComponent.exists()).toBe(true)
-      expect(iconComponent.props().color).toContain('red')
+      expect(iconComponent.props().color).toContain('blue')
       break
     }
 
