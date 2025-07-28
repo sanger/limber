@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'limber/user'
-
 # Handles log in / log out
 class SessionsController < ApplicationController
   def create
