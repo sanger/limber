@@ -34,7 +34,6 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::PlateStateChanger do
-
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
@@ -85,8 +84,6 @@ RSpec.describe StateChangers do
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
-
-
 
     let(:plate_state) { 'pending' }
     let!(:plate) { create :v2_plate_for_aggregation, uuid: plate_uuid, state: plate_state }
@@ -148,8 +145,6 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::TubeRackStateChanger do
-
-
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     let(:tube_starting_state) { 'pending' }
@@ -217,7 +212,6 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::TubeStateChanger do
-
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     include_context 'common setup'
