@@ -253,6 +253,8 @@ See {file:docs/configuring_new_pipelines.md Configuring new pipelines}
 
 This file is the start point for a set of files documenting how pipelines are configured in Limber.
 
+In Visual Code you can right click on the md files and Open Preview to see them with their markup formatting.
+
 ## Running Specs
 
 ### RSpec
