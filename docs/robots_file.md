@@ -152,7 +152,7 @@ This is the name that will appear on the button in the Limber view
 The user will be required to scan an identifying barcode on the liquid handler robot.
 
 `verify_robot: true`
-The user will be required to scan an identifying barcode on the liquid handler robot, and the system will verify that the same robot barcode was scanned as in the previous bed verification. This can be used to chain a sequence of bed verifications and ensure the same plates are used on the same liquid handler robor. Useful when a plate leaves the liquid handler deck for some purpose (e.g. PCR) and then returns for the next step. NB. This can block the user continuing if they entered a spurious string for the first bed verification that they cannot remember for the second. There is currently no way to validate the scanned robot barcode against anything, any string is accepted.
+The user will be required to scan an identifying barcode on the liquid handler robot, and the system will verify that the same robot barcode was scanned as in the previous bed verification. This can be used to chain a sequence of bed verifications and ensure the same plates are used on the same liquid handler robot. Useful when a plate leaves the liquid handler deck for some purpose (e.g. PCR) and then returns for the next step. NB. This can block the user continuing if they entered a spurious string for the first bed verification that they cannot remember for the second. There is currently no way to validate the scanned robot barcode against anything, any string is accepted.
 
 `beds:`
 Hash of bed definitions for this bed verification.
