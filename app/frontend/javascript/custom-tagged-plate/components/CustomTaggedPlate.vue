@@ -173,7 +173,10 @@ export default {
     filters: {
       // This is passed through to the tag groups lookup and filters that list if present
       type: Object,
-      required: true,
+      required: false,
+      default: () => {
+        return {}
+      },
     },
   },
   data() {
@@ -512,7 +515,7 @@ export default {
           if (data.state === 'valid') {
             this.parentPlate = { ...data.results }
           } else {
-            ;(this.progressMessage = 'Parent plate lookup error: '), data.state
+            this.progressMessage = 'Parent plate lookup error: ' + data.state
           }
           this.loading = false
         }

@@ -80,22 +80,6 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     let(:dest_aliquot5) { create(:v2_aliquot, sample: sample2) }
     let(:dest_aliquot6) { create(:v2_aliquot, sample: sample2) }
 
-    # metadata for destination tubes
-    let(:dest_tube1_metadata) { { 'tube_rack_barcode' => 'TR00000001', 'tube_rack_position' => 'A1' } }
-    let(:dest_tube2_metadata) { { 'tube_rack_barcode' => 'TR00000002', 'tube_rack_position' => 'A1' } }
-    let(:dest_tube3_metadata) { { 'tube_rack_barcode' => 'TR00000002', 'tube_rack_position' => 'B1' } }
-    let(:dest_tube4_metadata) { { 'tube_rack_barcode' => 'TR00000001', 'tube_rack_position' => 'B1' } }
-    let(:dest_tube5_metadata) { { 'tube_rack_barcode' => 'TR00000002', 'tube_rack_position' => 'C1' } }
-    let(:dest_tube6_metadata) { { 'tube_rack_barcode' => 'TR00000002', 'tube_rack_position' => 'D1' } }
-
-    # custom metadata collections for destination tubes
-    let(:dest_tube1_custom_metadata) { create(:custom_metadatum_collection, metadata: dest_tube1_metadata) }
-    let(:dest_tube2_custom_metadata) { create(:custom_metadatum_collection, metadata: dest_tube2_metadata) }
-    let(:dest_tube3_custom_metadata) { create(:custom_metadatum_collection, metadata: dest_tube3_metadata) }
-    let(:dest_tube4_custom_metadata) { create(:custom_metadatum_collection, metadata: dest_tube4_metadata) }
-    let(:dest_tube5_custom_metadata) { create(:custom_metadatum_collection, metadata: dest_tube5_metadata) }
-    let(:dest_tube6_custom_metadata) { create(:custom_metadatum_collection, metadata: dest_tube6_metadata) }
-
     # destination tube uuids
     let(:dest_tube1_uuid) { SecureRandom.uuid }
     let(:dest_tube2_uuid) { SecureRandom.uuid }
@@ -111,74 +95,68 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     # destination tubes
     let(:dest_tube1) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_seq,
         uuid: dest_tube1_uuid,
         barcode_prefix: 'FX',
         barcode_number: 4,
         aliquots: [dest_aliquot1],
-        name: 'SEQ:NT1O:A1',
-        custom_metadatum_collection: dest_tube1_custom_metadata
+        name: 'SEQ:NT1O:A1'
       )
     end
     let(:dest_tube2) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube2_uuid,
         barcode_prefix: 'FX',
         barcode_number: 5,
         aliquots: [dest_aliquot2],
-        name: 'SPR:NT1O:A1',
-        custom_metadatum_collection: dest_tube2_custom_metadata
+        name: 'SPR:NT1O:A1'
       )
     end
     let(:dest_tube3) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube3_uuid,
         barcode_prefix: 'FX',
         barcode_number: 6,
         aliquots: [dest_aliquot3],
-        name: 'SPR:NT1O:B1',
-        custom_metadatum_collection: dest_tube3_custom_metadata
+        name: 'SPR:NT1O:B1'
       )
     end
     let(:dest_tube4) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_seq,
         uuid: dest_tube4_uuid,
         barcode_prefix: 'FX',
         barcode_number: 7,
         aliquots: [dest_aliquot4],
-        name: 'SEQ:NT2P:B1',
-        custom_metadatum_collection: dest_tube4_custom_metadata
+        name: 'SEQ:NT2P:B1'
       )
     end
     let(:dest_tube5) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube5_uuid,
         barcode_prefix: 'FX',
         barcode_number: 8,
         aliquots: [dest_aliquot5],
-        name: 'SPR:NT2P:C1',
-        custom_metadatum_collection: dest_tube5_custom_metadata
+        name: 'SPR:NT2P:C1'
       )
     end
     let(:dest_tube6) do
       create(
-        :v2_tube_with_metadata,
+        :v2_tube,
         purpose: lrc_bank_spare,
         uuid: dest_tube6_uuid,
         barcode_prefix: 'FX',
         barcode_number: 9,
         aliquots: [dest_aliquot6],
-        name: 'SPR:NT2P:D1',
-        custom_metadatum_collection: dest_tube6_custom_metadata
+        name: 'SPR:NT2P:D1'
       )
     end
 
@@ -217,18 +195,6 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
       assign(:ancestor_tubes, ancestor_tubes)
       assign(:plate, src_labware)
       assign(:workflow, workflow_name)
-
-      # stub the v2 child tube lookups
-      custom_includes = 'custom_metadatum_collection'
-      dest_tubes = [dest_tube1, dest_tube2, dest_tube3, dest_tube4, dest_tube5, dest_tube6]
-
-      dest_tubes.each do |dest_tube|
-        allow(Sequencescape::Api::V2).to receive(:tube_with_custom_includes).with(
-          custom_includes,
-          nil,
-          barcode: dest_tube.barcode.machine
-        ).and_return(dest_tube)
-      end
     end
 
     it 'renders the expected content row by row' do
@@ -281,194 +247,6 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
       let(:src_well_b1) { create(:v2_well, location: 'B1', aliquots: [src_aliquot1_s2], downstream_tubes: []) }
       let(:src_well_b2) { create(:v2_well, location: 'B2', aliquots: [src_aliquot2_s2], downstream_tubes: []) }
       let(:src_well_b3) { create(:v2_well, location: 'B3', aliquots: [src_aliquot3_s2], downstream_tubes: []) }
-
-      let(:expected_content) do
-        [
-          ['Workflow', workflow_name],
-          [],
-          [
-            'Well name',
-            'Donor ID',
-            'Stock barcode',
-            'FluidX barcode',
-            'Extraction and freeze date',
-            'Sequencing or contingency',
-            'Total cell count (cells/ml)',
-            'Viability (%)',
-            'Volume (µl)',
-            'Study name',
-            'Collection site'
-          ]
-        ]
-      end
-
-      it 'does not show sample rows' do
-        expect(CSV.parse(render)).to eq(expected_content)
-      end
-    end
-
-    context 'when destination tubes have no custom metadatum collection' do
-      let(:dest_tube1) do
-        create(
-          :v2_tube,
-          uuid: dest_tube1_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 4,
-          aliquots: [dest_aliquot1],
-          name: 'SEQ:NT1O:A1',
-          custom_metadatum_collection: nil
-        )
-      end
-      let(:dest_tube2) do
-        create(
-          :v2_tube,
-          uuid: dest_tube2_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 5,
-          aliquots: [dest_aliquot2],
-          name: 'SPR:NT1O:A1',
-          custom_metadatum_collection: nil
-        )
-      end
-      let(:dest_tube3) do
-        create(
-          :v2_tube,
-          uuid: dest_tube3_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 6,
-          aliquots: [dest_aliquot3],
-          name: 'SPR:NT1O:B1',
-          custom_metadatum_collection: nil
-        )
-      end
-      let(:dest_tube4) do
-        create(
-          :v2_tube,
-          uuid: dest_tube4_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 7,
-          aliquots: [dest_aliquot4],
-          name: 'SEQ:NT2P:B1',
-          custom_metadatum_collection: nil
-        )
-      end
-      let(:dest_tube5) do
-        create(
-          :v2_tube,
-          uuid: dest_tube5_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 8,
-          aliquots: [dest_aliquot5],
-          name: 'SPR:NT2P:C1',
-          custom_metadatum_collection: nil
-        )
-      end
-      let(:dest_tube6) do
-        create(
-          :v2_tube,
-          uuid: dest_tube6_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 9,
-          aliquots: [dest_aliquot6],
-          name: 'SPR:NT2P:D1',
-          custom_metadatum_collection: nil
-        )
-      end
-
-      let(:expected_content) do
-        [
-          ['Workflow', workflow_name],
-          [],
-          [
-            'Well name',
-            'Donor ID',
-            'Stock barcode',
-            'FluidX barcode',
-            'Extraction and freeze date',
-            'Sequencing or contingency',
-            'Total cell count (cells/ml)',
-            'Viability (%)',
-            'Volume (µl)',
-            'Study name',
-            'Collection site'
-          ]
-        ]
-      end
-
-      it 'does not show sample rows' do
-        expect(CSV.parse(render)).to eq(expected_content)
-      end
-    end
-
-    context 'when destination tubes have inappropriate metadata' do
-      let(:useless_custom_metadata) { create(:custom_metadatum_collection, metadata: { 'somekey' => 'somevalue' }) }
-
-      let(:dest_tube1) do
-        create(
-          :v2_tube_with_metadata,
-          uuid: dest_tube1_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 4,
-          aliquots: [dest_aliquot1],
-          name: 'SEQ:NT1O:A1',
-          custom_metadatum_collection: useless_custom_metadata
-        )
-      end
-      let(:dest_tube2) do
-        create(
-          :v2_tube_with_metadata,
-          uuid: dest_tube2_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 5,
-          aliquots: [dest_aliquot2],
-          name: 'SPR:NT1O:A1',
-          custom_metadatum_collection: useless_custom_metadata
-        )
-      end
-      let(:dest_tube3) do
-        create(
-          :v2_tube_with_metadata,
-          uuid: dest_tube3_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 6,
-          aliquots: [dest_aliquot3],
-          name: 'SPR:NT1O:B1',
-          custom_metadatum_collection: useless_custom_metadata
-        )
-      end
-      let(:dest_tube4) do
-        create(
-          :v2_tube_with_metadata,
-          uuid: dest_tube4_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 7,
-          aliquots: [dest_aliquot4],
-          name: 'SEQ:NT2P:B1',
-          custom_metadatum_collection: useless_custom_metadata
-        )
-      end
-      let(:dest_tube5) do
-        create(
-          :v2_tube_with_metadata,
-          uuid: dest_tube5_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 8,
-          aliquots: [dest_aliquot5],
-          name: 'SPR:NT2P:C1',
-          custom_metadatum_collection: useless_custom_metadata
-        )
-      end
-      let(:dest_tube6) do
-        create(
-          :v2_tube_with_metadata,
-          uuid: dest_tube6_uuid,
-          barcode_prefix: 'FX',
-          barcode_number: 9,
-          aliquots: [dest_aliquot6],
-          name: 'SPR:NT2P:D1',
-          custom_metadatum_collection: useless_custom_metadata
-        )
-      end
 
       let(:expected_content) do
         [

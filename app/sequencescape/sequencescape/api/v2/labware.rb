@@ -18,9 +18,6 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
   has_many :state_changes
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
 
-  # Other relationships
-  # has_one :purpose via Sequencescape::Api::V2::Shared::HasPurpose
-
   def self.find_all(options, includes: DEFAULT_INCLUDES)
     Sequencescape::Api::V2::Labware.includes(*includes).where(options).all
   end
@@ -54,6 +51,10 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
 
   def tube?
     type == 'tubes'
+  end
+
+  def tube_rack?
+    type == 'tube_racks'
   end
 
   # ===== stock plate / input plate barcode ======

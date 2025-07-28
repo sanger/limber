@@ -39,14 +39,24 @@ module LabwareCreators # rubocop:todo Style/Documentation
 
     # plate_children (Plate -> Plate) (plate_creation#create)
     # plate_tubes (Plate -> Tube) (tube_creation#create)
+    # plate_tube_racks (Plate -> TubeRack) (tube_rack_creation#create)
     # tube_children (Tube -> Plate) (nothing - want to be plate_creation#create)
     # tube_tubes (Tube -> Tube) (tube_creation#create)
+    # tube_tube_racks (Tube -> TubeRack) (tube_rack_creation#create)
+
+    # Returns the ActiveModel::Name instance for the given type.
+    # This method maps the type to the corresponding model class and returns an ActiveModel::Name instance.
+    #
+    # @return [ActiveModel::Name] the ActiveModel::Name instance for the given type.
+    # @raise [StandardError] if the type is unknown.
     def model_name
       case type
       when 'plate'
         ::ActiveModel::Name.new(Plate, nil, 'child_plate_creation')
       when 'tube'
         ::ActiveModel::Name.new(Tube, nil, 'child_tube_creation')
+      when 'tube_rack'
+        ::ActiveModel::Name.new(TubeRack, nil, 'child_tube_rack_creation')
       else
         raise StandardError, "Unknown type #{type}"
       end

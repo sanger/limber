@@ -30,7 +30,7 @@ module Presenters
           # Should be a value by this point in order to have calculated the binning
           # NB. poly_metadata are stored as strings so need to convert to integer
           pcr_cycles =
-            well.aliquots.first.request.poly_metadata.find { |md| md.key == 'pcr_cycles' }&.value.to_i || nil
+            well.aliquots.first.request.poly_metadata.find { |md| md.key == 'pcr_cycles' }&.value.to_i || nil # rubocop:todo Lint/UselessOr
           raise "No pcr_cycles metadata found for well #{well.location}" if pcr_cycles.nil?
 
           details[well.location] = { 'pcr_cycles' => pcr_cycles }

@@ -67,7 +67,7 @@ class CreationController < ApplicationController
   end
 
   def parent_uuid
-    params[:tube_id] || params[:plate_id]
+    params[:tube_id] || params[:plate_id] || params[:tube_rack_id]
   end
 
   def extract_error_messages_from_api_exception(api_message)
