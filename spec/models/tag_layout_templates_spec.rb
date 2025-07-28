@@ -251,15 +251,14 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
         :has_pooling_metadata,
         uuid: plate_uuid,
         state: 'passed',
-        pool_sizes: [47, 47],
-        empty_wells: %w[A1 H12],
+        pool_sizes: [47, 47], # Wells H6 and H12 are empty
         &:assign_pools_to_wells
       )
     end
     let(:template_factory) { :v2_tag_layout_template }
     let(:expected_layout) do
       {
-        # A1 is missing, but H12 is shown. Not sure we actually care...
+        'A1' => [1, 1],
         'A2' => [1, 9],
         'A3' => [1, 17],
         'A4' => [1, 25],
@@ -348,7 +347,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
         'H3' => [1, 24],
         'H4' => [1, 32],
         'H5' => [1, 40],
-        'H6' => [1, 48],
+        'H6' => [2, 48],
         'H7' => [2, 56],
         'H8' => [2, 64],
         'H9' => [2, 72],
@@ -807,15 +806,15 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
         :has_pooling_metadata,
         uuid: plate_uuid,
         state: 'passed',
-        pool_sizes: [47, 47],
-        empty_wells: %w[A1 H12],
+        pool_sizes: [47, 47], # Wells H6 and H12 are empty
         &:assign_pools_to_wells
       )
     end
+
     let(:template_factory) { :tag_layout_template_by_quadrant }
     let(:expected_layout) do
       {
-        # A1 is missing, but H12 is shown. Not sure we actually care...
+        'A1' => [1, 1],
         'A2' => [1, 1],
         'A3' => [1, 5],
         'A4' => [1, 5],
@@ -904,7 +903,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
         'H3' => [1, 8],
         'H4' => [1, 8],
         'H5' => [1, 12],
-        'H6' => [1, 12],
+        'H6' => [2, 12],
         'H7' => [2, 16],
         'H8' => [2, 16],
         'H9' => [2, 20],
