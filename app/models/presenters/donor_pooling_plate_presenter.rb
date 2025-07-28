@@ -28,7 +28,11 @@ module Presenters
     end
 
     def cells_per_chip_well(well)
-      value = well.aliquots.first.request&.request_metadata&.cells_per_chip_well
+      pm = well.poly_metadata.detect do |pm|
+        pm.key == 'scrna_core_pbmc_donor_pooling_number_of_cells_per_chip_well'
+      end
+
+      value = pm&.value
 
       # The cleanest way I could find to format numbers
       value.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse if value
