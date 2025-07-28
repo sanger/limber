@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# Handle Sequencescape "combinatorial by row" tag layour template direction
-module Limber::TagLayoutTemplate::InCombinatorialByRows
+module TagLayoutTemplates::InRows # rubocop:todo Style/Documentation
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
       WellHelpers.row_order(plate.size).map { |row_column| well_location_pool_pair.call(row_column) }
@@ -20,7 +19,9 @@ module Limber::TagLayoutTemplate::InCombinatorialByRows
   # @param _width [Integer] The number of columns on a plate (unused)
   #
   # @return [Integer] The index of the tag to use for the well
-  def primary_index(row, _column, _scale, _height, _width)
-    row
+  def primary_index(row, column, scale, _height, width)
+    tag_col = (column / scale)
+    tag_row = (row / scale)
+    tag_col + (width / scale * tag_row)
   end
 end

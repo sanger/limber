@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-module Limber::TagLayoutTemplate::InInverseColumns # rubocop:todo Style/Documentation
+module TagLayoutTemplates::InInverseRows # rubocop:todo Style/Documentation
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
-      WellHelpers.column_order(plate.size).reverse.map { |row_column| well_location_pool_pair.call(row_column) }
+      WellHelpers.row_order(plate.size).reverse.map { |row_column| well_location_pool_pair.call(row_column) }
     end
   end
-  private :group_wells_of_plate
 
   # Returns the tag index for the primary (i7) tag
-  # That is the one laid out in inverse columns (H12 -> A1) with four copies of each
+  # That is the one laid out in inverse rows (H12 -> A1) with four copies of each
   # i5 follows the same pattern, but isn't actually shown in limber
   #
   # @param row [Integer] Zero indexed row co-ordinate of the well
@@ -23,6 +22,6 @@ module Limber::TagLayoutTemplate::InInverseColumns # rubocop:todo Style/Document
   def primary_index(row, column, scale, height, width)
     tag_col = (column / scale)
     tag_row = (row / scale)
-    ((height / scale) * (width / scale)) - (tag_row + (height / scale * tag_col)) - 1
+    ((height / scale) * (width / scale)) - (tag_col + (width / scale * tag_row)) - 1
   end
 end

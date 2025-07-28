@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 # CreationForm is the base class for our forms
-RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
+RSpec.describe TagLayoutTemplates, :tag_plate do
   # :tag_layout_template_by_row
   # :tag_layout_template_by_quadrant
 
