@@ -249,7 +249,9 @@ Yard will also try and document the installed gems: [http://localhost:8808/docs]
 
 ## Configuring pipelines
 
-{file:docs/configuring_new_pipelines.md Configuring new pipelines}
+See {file:docs/configuring_new_pipelines.md Configuring new pipelines}
+
+This file is the start point for a set of files documenting how pipelines are configured in Limber.
 
 ## Running Specs
 
