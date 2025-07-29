@@ -25,6 +25,26 @@ module PlateHelper # rubocop:todo Style/Documentation
     WellFailingPresenter.new(form, presenter)
   end
 
+  class WellMarkingPresenter < BasicObject
+    def initialize(form, presenter)
+      @form = form
+      @_presenter = presenter
+    end
+
+    def aliquot_partial
+      'well_marking_aliquot'
+    end
+
+    delegate_missing_to :_presenter
+    attr_reader :form, :_presenter
+  end
+
+  # rubocop:enable Rails/HelperInstanceVariable
+
+  def mark_wells_presenter_from(form, presenter)
+    WellMarkingPresenter.new(form, presenter)
+  end
+
   # Returns an array of all pre-capture pools for a plate, with wells sorted
   # into plate well column order. We rely on the fact that hashes maintain
   # insert order, and walk the wells in column order. Each time we see a
