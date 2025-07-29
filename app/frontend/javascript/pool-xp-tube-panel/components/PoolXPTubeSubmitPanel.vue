@@ -167,9 +167,10 @@ const StateData = {
     icon: ErrorIcon,
   },
   [StateEnum.FAILURE_TUBE_CHECK_AFTER_EXPORT]: {
-    statusText: 'The export cannot be verified. Try again',
-    buttonText: 'Try again',
-    styles: { button: 'danger', text: 'text-danger', icon: 'red' },
+    statusText:
+      'The export process to Traction has been initiated. Verification may take a few seconds to complete, depending on factors like network speed. Please revisit or refresh the page after 10 minutes.',
+    buttonText: 'Refresh',
+    styles: { button: 'primary', text: 'text-primary', icon: 'blue' },
     icon: ErrorIcon,
   },
   [StateEnum.FAILURE_EXPORT_TUBE]: {
