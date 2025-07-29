@@ -33,6 +33,31 @@ class PlatesController < LabwareController
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
   end
 
+  def mark_under_represented_wells
+    if wells_to_mark.empty?
+      redirect_to(
+        limber_plate_path(params[:id]),
+        notice: 'No wells were selected to mark as under-represented'
+      )
+    else
+      Sequencescape::Api::V2::StateChange.create!(
+        contents: wells_to_mark,
+        reason: 'Marked as under-represented',
+        target_state: 'under_represented',
+        target_uuid: params[:id],
+        user_uuid: current_user_uuid
+      )
+      redirect_to(
+        limber_plate_path(params[:id]),
+        notice: 'Selected wells have been marked as under-represented'
+      )
+    end
+  end
+
+  def wells_to_mark
+    params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
+  end
+
   private
 
   def locate_labware_identified_by_id
