@@ -20,7 +20,8 @@ module Presenters
     end
 
     def num_samples_per_pool(wells)
-      wells.map { |well| well&.aliquots&.size }.join(', ')
+      counts = wells.filter_map { |well| well&.aliquots&.size }
+      counts.uniq.size == 1 ? counts.first.to_s : counts.join(', ')
     end
 
     def get_source_wells(wells)
