@@ -142,12 +142,6 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     false
   end
 
-  def manual_transfer_state_conditional_met?
-    # This method checks if the labware is in a state that allows manual transfer.
-    # It should be overridden in subclasses to provide specific conditions.
-    true
-  end
-
   private
 
   def active_pipelines
