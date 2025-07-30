@@ -848,6 +848,7 @@ describe('CustomTaggedPlate', () => {
 
       const expectedPayload = {
         plate: {
+          filters: {},
           purpose_uuid: 'purpose-uuid',
           parent_uuid: 'parent-plate-uuid',
           tag_layout: {
