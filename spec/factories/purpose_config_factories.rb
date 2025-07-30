@@ -366,7 +366,7 @@ FactoryBot.define do
     factory :purpose_config_with_manual_transfer_allowed_states do
       transient { allowed_states { %w[started] } }
       presenter_class { 'Presenters::MinimalPCRPlatePresenter' }
-      manual_transfer_allowed_states { allowed_states }
+      manual_transfer { { states: allowed_states } }
     end
 
     # Basic tube purpose configuration

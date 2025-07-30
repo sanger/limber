@@ -3,6 +3,8 @@
 module Presenters
   class MinimalPcrPlatePresenter < MinimalPlatePresenter # rubocop:todo Style/Documentation
     include HasPrimerPanel
+    include Presenters::Statemachine::FeatureInStates
+
     self.summary_partial = 'labware/plates/pcr_summary'
     self.state_transition_name_scope = :pcr
 
@@ -21,11 +23,7 @@ module Presenters
 
     # Check for optional purpose config option to control manual transfer button by state
     def manual_transfer_state_conditional_met?
-      if purpose_config[:manual_transfer_allowed_states].present?
-        purpose_config[:manual_transfer_allowed_states].include?(state)
-      else
-        true
-      end
+      can_be_enabled?(purpose_config[:manual_transfer][:states])
     end
   end
 end
