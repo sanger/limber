@@ -177,8 +177,8 @@ module LabwareCreators::DonorPoolingCalculator
     # fetch allowance band from the request metadata of the first aliquot in the first source well
     allowance_band = allowance_band_from_request(pool)
 
-    # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 8
-    if count_of_samples_in_pool.between?(5, 8)
+    # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 10
+    if count_of_samples_in_pool.between?(5, 10)
       # check and adjust number of cells per chip well if needed
       number_of_cells_per_chip_well =
         adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well, allowance_band)
@@ -192,6 +192,19 @@ module LabwareCreators::DonorPoolingCalculator
       number_of_cells_per_chip_well,
       dest_well
     )
+  end
+
+  # This method calculates the total cells in 300ul for a given pool of samples.
+  # It uses the configuration values from the scrna_config to determine the required
+  # number of cells per sample in the pool and the wastage factor.
+  #
+  # @param count_of_samples_in_pool [Integer] the number of samples in the pool
+  # @return [Float] the total cells in 300ul
+  def self.calculate_total_cells_in_300ul(count_of_samples_in_pool)
+    scrna_config = Rails.application.config.scrna_config
+
+    (count_of_samples_in_pool * scrna_config[:required_number_of_cells_per_sample_in_pool]) *
+      scrna_config[:wastage_factor].call(count_of_samples_in_pool)
   end
 
   private
@@ -253,7 +266,7 @@ module LabwareCreators::DonorPoolingCalculator
   # @return [Integer] the adjusted number of cells per chip well
   def adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well, allowance_band)
     # calculate total cells in 300ul for the pool
-    total_cells_in_300ul = calculate_total_cells_in_300ul(count_of_samples_in_pool)
+    total_cells_in_300ul = LabwareCreators::DonorPoolingCalculator.calculate_total_cells_in_300ul(count_of_samples_in_pool)
 
     # calculate final suspension volume
     final_suspension_volume =
@@ -276,19 +289,6 @@ module LabwareCreators::DonorPoolingCalculator
         "No allowance value found for allowance band #{allowance_band} and sample count " \
         "#{count_of_samples_in_pool}"
       )
-  end
-
-  # This method calculates the total cells in 300ul for a given pool of samples.
-  # It uses the configuration values from the scrna_config to determine the required
-  # number of cells per sample in the pool and the wastage factor.
-  #
-  # @param count_of_samples_in_pool [Integer] the number of samples in the pool
-  # @return [Float] the total cells in 300ul
-  def calculate_total_cells_in_300ul(count_of_samples_in_pool)
-    scrna_config = Rails.application.config.scrna_config
-
-    (count_of_samples_in_pool * scrna_config[:required_number_of_cells_per_sample_in_pool]) *
-      scrna_config[:wastage_factor]
   end
 
   # This method calculates the chip loading volume for a given pool of samples.
