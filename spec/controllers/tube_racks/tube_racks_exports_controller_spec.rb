@@ -25,7 +25,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
 
   RSpec.shared_examples 'a tube rack csv view' do
     context 'when the tube rack is requested' do
-      before { get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv }
+      before { get :show, params: { id: csv_id, tube_rack_id: tube_rack_uuid }, as: :csv }
 
       it 'returns a HTTP OK response' do
         expect(response).to have_http_status(:ok)
@@ -82,7 +82,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
 
     it 'returns 404 with unknown templates' do
       expect do
-        get :show, params: { id: 'not_a_template', limber_tube_rack_id: tube_rack_uuid }, as: :csv
+        get :show, params: { id: 'not_a_template', tube_rack_id: tube_rack_uuid }, as: :csv
       end.to raise_error(ActionController::RoutingError, 'Unknown template not_a_template')
     end
   end
@@ -92,7 +92,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       let(:csv_id) { 'tube_rack_concentrations_ngul' }
       let(:includes) { tube_rack_qc_includes }
       let(:selects) { nil }
-      let(:response) { get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv }
+      let(:response) { get :show, params: { id: csv_id, tube_rack_id: tube_rack_uuid }, as: :csv }
 
       before do
         allow(Sequencescape::Api::V2).to receive(:tube_rack_with_custom_includes).with(
@@ -141,12 +141,12 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       end
 
       it 'returns 200 OK' do
-        get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
+        get :show, params: { id: csv_id, tube_rack_id: tube_rack_uuid }, as: :csv
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns the ancestors' do
-        get :show, params: { id: csv_id, limber_tube_rack_id: tube_rack_uuid }, as: :csv
+        get :show, params: { id: csv_id, tube_rack_id: tube_rack_uuid }, as: :csv
         expect(assigns(:ancestor_tubes)).to eq(ancestor_tubes_sample_hash)
       end
     end
