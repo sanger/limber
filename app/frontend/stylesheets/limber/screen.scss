@@ -347,11 +347,32 @@ dl#samples-information {
 }
 
 // Add this for mark well mode
-.well-marking {
-  input[type='checkbox']:checked + label .aliquot {
-    background-color: rgb(182, 134, 227);
-  }
+// .well-marking {
+//   input[type='checkbox']:checked + label .aliquot {
+//     background-color: rgb(182, 134, 227);
+//   }
+// }
+.well-marking .well input[type='checkbox'] {
+  display: none;
 }
+
+.well-marking .well input[type='checkbox']:checked ~ label .aliquot {
+  background-color: rgb(182, 134, 227);
+}
+
+
+.well-marking .well input[type='checkbox']:disabled ~ label .aliquot {
+  opacity: 0.5;
+}
+
+.well-marking .well label {
+  font-size: small;
+}
+
+.well-marking .well .pool-print-information {
+  display: none;
+}
+
 
 .inbox-results {
   @extend .list-group;
