@@ -1,0 +1,9 @@
+Multiplexing_Dil:
+  pipeline_group: Multiplexing
+  filters:
+    request_type_key:
+      - limber_multiplexing
+  relationships:
+    Library Stock Plate: Library Stock Dil Plate
+    Library Stock Dil Plate: LB Lib Pool
+    LB Lib Pool: LB Lib Pool Norm
