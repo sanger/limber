@@ -64,8 +64,7 @@ module StateChangers
 
   # The Base state changer that contains common behaviour for all state changers.
   class BaseStateChanger
-    attr_reader :labware_uuid, :api, :user_uuid
-    private :api
+    attr_reader :labware_uuid, :user_uuid
 
     FILTER_FAILS_ON = %w[qc_complete failed cancelled].freeze
 
@@ -73,8 +72,7 @@ module StateChangers
       raise 'Implement in the child class'
     end
 
-    def initialize(api, labware_uuid, user_uuid)
-      @api = api
+    def initialize(labware_uuid, user_uuid)
       @labware_uuid = labware_uuid
       @user_uuid = user_uuid
     end
