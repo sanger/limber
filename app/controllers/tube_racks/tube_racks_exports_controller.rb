@@ -41,7 +41,7 @@ class TubeRacks::TubeRacksExportsController < ApplicationController
         Sequencescape::Api::V2.tube_rack_with_custom_includes(
           include_parameters,
           select_parameters,
-          uuid: params[:limber_tube_rack_id]
+          uuid: params[:tube_rack_id]
         )
   end
 
