@@ -43,7 +43,8 @@ class PlatesController < LabwareController
       Sequencescape::Api::V2::StateChange.create!(
         contents: wells_to_mark,
         reason: 'Marked as under-represented',
-        target_state: 'under_represented',
+        # target_state: 'under_represented',
+        target_state: 'failed',
         target_uuid: params[:id],
         user_uuid: current_user_uuid
       )
