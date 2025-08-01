@@ -28,7 +28,7 @@
       <div class="card-body">
       <%= form_for(
             @labware_creator,
-            url: plates_child_plate_creation_path(@labware_creator.parent_uuid),
+            url: plate_child_plate_creations_path(@labware_creator.parent_uuid),
             as: :plate,
             html: { method: :post }
           ) do |form| %>
