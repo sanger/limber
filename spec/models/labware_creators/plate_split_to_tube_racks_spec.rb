@@ -998,21 +998,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
       before do
         stub_v2_user(user)
-
-        # stub the contingency file upload
-        stub_request(:post, api_url_for(parent_uuid, 'qc_files')).with(
-          body: contingency_file_content,
-          headers: {
-            'Content-Type' => 'sequencescape/qc_file',
-            'Content-Disposition' => 'form-data; filename="scrna_core_contingency_tube_rack_scan.csv"'
-          }
-        ).to_return(
-          status: 201,
-          body: json(:qc_file, filename: 'scrna_core_contingency_tube_rack_scan.csv'),
-          headers: {
-            'content-type' => 'application/json'
-          }
-        )
       end
 
       it 'creates the child tubes' do
