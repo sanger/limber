@@ -113,7 +113,7 @@ module ApiUrlHelper
       expect_api_v2_posts(
         'Order',
         orders_attributes.pluck(:attributes),
-        orders_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+        orders_attributes.map { |attributes| double('Order', uuid: attributes[:uuid_out]) }
       )
     end
 
@@ -121,7 +121,10 @@ module ApiUrlHelper
       expect_api_v2_posts(
         'PlateConversion',
         plate_conversions_attributes,
-        plate_conversions_attributes.map { |e| double(target: double(uuid: e[:target_uuid])) }
+        plate_conversions_attributes.map do |e|
+          double('plate_conversion_attributes',
+                 target: double('plate_conversion_attributes_target', uuid: e[:target_uuid]))
+        end
       )
     end
 
@@ -169,7 +172,7 @@ module ApiUrlHelper
       expect_api_v2_posts(
         'Submission',
         submissions_attributes.pluck(:attributes),
-        submissions_attributes.map { |attributes| double(uuid: attributes[:uuid_out]) }
+        submissions_attributes.map { |attributes| double('Submission', uuid: attributes[:uuid_out]) }
       )
     end
 
@@ -335,7 +338,7 @@ module ApiUrlHelper
 
     def stub_v2_qcable(qcable)
       arguments = [{ barcode: qcable.labware.barcode.machine }]
-      query_builder = double
+      query_builder = double('query_builder')
 
       allow(Sequencescape::Api::V2::Qcable).to receive(:includes).and_return(query_builder)
       allow(query_builder).to receive(:find).with(*arguments).and_return([qcable])
@@ -378,7 +381,7 @@ module ApiUrlHelper
 
     def stub_v2_pooled_plate_creation
       # Stubs the creation of a pooled plate by returning a double with a child attribute.
-      pooled_plate_creation = double
+      pooled_plate_creation = double('pooled_plate_creation')
       allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
 
       stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
