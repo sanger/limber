@@ -3,6 +3,8 @@
 module Presenters
   class MinimalPcrPlatePresenter < MinimalPlatePresenter # rubocop:todo Style/Documentation
     include HasPrimerPanel
+    include Presenters::Statemachine::FeatureInStates
+
     self.summary_partial = 'labware/plates/pcr_summary'
     self.state_transition_name_scope = :pcr
 
