@@ -12,8 +12,8 @@ RSpec.feature 'Viewing an inbox', :js do
   let(:plate_2) { create(:v2_plate, barcode_number: 2) }
   let(:plate_3) { create(:v2_plate, barcode_number: 3) }
 
-  let(:tube_1) { create(:tube, barcode_number: 1) }
-  let(:tube_2) { create(:tube, barcode_number: 2) }
+  let(:tube_1) { create(:v2_tube, barcode_number: 1) }
+  let(:tube_2) { create(:v2_tube, barcode_number: 2) }
 
   background do
     stub_swipecard_search(user_swipecard, user)
