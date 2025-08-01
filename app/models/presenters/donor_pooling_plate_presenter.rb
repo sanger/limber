@@ -9,7 +9,66 @@ module Presenters
     # by submission strategy)
     self.pooling_tab = ''
 
+    # A clone of the default 'show' page, but with the pooling information displayed
+    self.page = 'show_pooling_info'
+
     # Override the samples tab to display additional sample information for the pooled wells
     self.samples_partial = 'plates/pooled_wells_samples_tab'
+
+    def study_project_groups_from_wells
+      grouped_wells
+    end
+
+    def num_samples_per_pool(wells)
+      counts = wells.filter_map { |well| well&.aliquots&.size }
+      counts.uniq.size == 1 ? counts.first.to_s : counts.join(', ')
+    end
+
+    def get_source_wells(wells)
+      wells.map { |well| well.position['name'] || 'Unknown' }.join(', ')
+    end
+
+    def cells_per_chip_well(well)
+      pm = well.poly_metadata.detect do |pm|
+        pm.key == 'scrna_core_pbmc_donor_pooling_number_of_cells_per_chip_well'
+      end
+
+      value = pm&.value
+
+      # The cleanest way I could find to format numbers
+      value.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse if value
+    end
+
+    private
+
+    # Groups wells by a key generated from each well's study and project.
+    #
+    # Iterates over all wells, selecting only those that are valid according to `valid_well?`.
+    # For each valid well, computes a grouping key using `study_project_key(well)` and adds the well
+    # to an array associated with that key in the resulting hash.
+    #
+    # @return [Hash] a hash where each key is the result of `study_project_key(well)` and each value
+    # is an array of wells sharing that key.
+    #
+    def grouped_wells
+      wells
+        .select { |well| valid_well?(well) }
+        .group_by { |well| study_project_key(well) }
+        .flat_map do |key, group|
+          group
+            .group_by { |well| cells_per_chip_well(well) }
+            .values
+            .map { |subgroup| [key, subgroup] }
+        end
+    end
+
+    def valid_well?(well)
+      well && !well.aliquots.empty?
+    end
+
+    def study_project_key(well)
+      aliquot = well.aliquots.first
+      "#{aliquot.study.name} / #{aliquot.project.name}"
+    end
   end
 end
