@@ -16,7 +16,7 @@ module LabwareCreators
   # Tag depth index is added to aliquot attributes to avoid tag clashes.
   class DonorPoolingPlate < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     include LabwareCreators::DonorPoolingCalculator
     include LabwareCreators::DonorPoolingValidator

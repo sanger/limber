@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count.csv.erb' do
-  has_a_working_api
-
   let(:wells) do
     (1..12).map do |index| # one-based index
       supplier_name = "vac-tube-barcode-#{index}"

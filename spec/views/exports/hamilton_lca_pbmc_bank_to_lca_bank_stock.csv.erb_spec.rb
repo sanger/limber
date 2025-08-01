@@ -4,8 +4,6 @@ require 'spec_helper'
 
 RSpec.describe 'exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb' do
   context 'when creating a hamilton driver file csv' do
-    has_a_working_api
-
     # samples
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }

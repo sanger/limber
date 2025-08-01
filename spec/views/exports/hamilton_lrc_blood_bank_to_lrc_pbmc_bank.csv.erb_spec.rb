@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb' do
-  has_a_working_api
-
   # workflow
   let(:workflow) { 'workflow_name' }
 

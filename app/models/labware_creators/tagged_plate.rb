@@ -10,7 +10,7 @@ module LabwareCreators
   # 4) Applies the tag template that was associated with the tag plate
   class TaggedPlate < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
     include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate
@@ -34,7 +34,7 @@ module LabwareCreators
     class_attribute :should_populate_wells_with_pool
     self.should_populate_wells_with_pool = true # parent is a V1 plate
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
+    validates :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 

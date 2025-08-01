@@ -1,5 +1,5 @@
 <%# locals: (tube:, open_in_new_window: false) %>
-<% tube_path = "#{limber_tube_path(tube.uuid)}#relatives" %>
+<% tube_path = "#{tube_path(tube.uuid)}#relatives" %>
 <div class="relative-item">
   <div id="<%= "aliquot_#{tube.uuid}" %>" class="tube-svg colour-<%= 1 %> float-start">
     <%= inline_svg_tag 'images/tube.svg', height: '5.5em' %>

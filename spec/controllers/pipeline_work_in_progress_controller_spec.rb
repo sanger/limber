@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe PipelineWorkInProgressController, type: :controller do
-  has_a_working_api
-
   let(:controller) { described_class.new }
 
   describe 'GET show' do
