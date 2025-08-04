@@ -29,8 +29,9 @@ module Presenters
     end
 
     def cells_per_chip_well(well)
+      config_key = Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key]
       pm = well.poly_metadata.detect do |pm|
-        pm.key == 'scrna_core_pbmc_donor_pooling_number_of_cells_per_chip_well'
+        pm.key == config_key
       end
 
       value = pm&.value
