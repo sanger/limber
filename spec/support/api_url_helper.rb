@@ -122,8 +122,10 @@ module ApiUrlHelper
         'PlateConversion',
         plate_conversions_attributes,
         plate_conversions_attributes.map do |e|
+          new_plate = Plate.new(nil, e[:target_uuid])
           double('plate_conversion_attributes',
-                 target: double('plate_conversion_attributes_target', uuid: e[:target_uuid]))
+                 target: double('plate_conversion_attributes_target', uuid: e[:target_uuid],
+                                                                      to_model: new_plate))
         end
       )
     end
