@@ -1,7 +1,14 @@
 <%= page(yield(:page_id), :'show-page') do %>
   <%= content_tag(:div, class: 'col') do %>
 
-    <%= render 'pipeline_info', class: 'row' %>
+    <%= content_tag(:div, class: 'row') do %>
+      <%= content_tag :div, class: 'col-8' do %>
+        <%= render 'pipeline_info' %>
+      <% end %>
+      <%= content_tag :div, class: 'col-4 text-end' do %>
+        <%= render 'request_info' %>
+      <% end %>
+    <% end %>
 
     <div class="row">
       <%= content do %>
