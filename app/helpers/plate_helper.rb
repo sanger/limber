@@ -90,4 +90,22 @@ module PlateHelper # rubocop:todo Style/Documentation
     sorted = unsorted.sort_by { |k| k[:order_id] }
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
   end
+
+  def well_under_represented?(plate_id, well_location)
+    plate = Sequencescape::Api::V2.plate_with_custom_includes(
+      ['wells.aliquots.request.poly_metadata'],
+      uuid: plate_id
+    )
+
+    well = plate.wells.index_by(&:location)[well_location]
+    return false unless well
+
+    aliquot = well.aliquots.first
+    return false unless aliquot
+
+    request = Array(aliquot.request).first
+    return false unless request && request.respond_to?(:poly_metadata)
+
+    request.poly_metadata.any? { |pm| pm.key == 'under_represented' && pm.value == 'true' }
+  end
 end
