@@ -9,7 +9,8 @@ Create the general effect of square boxes queued in a row with distinctive colou
     render using content_tag the html: <span class="badge text-bg-primary">[request_name: request_state | count]</span>
    %>
    <%= @request_info.grouped_active_requests.map do |(request_name, request_state), count|
-     content_tag :span, class: "badge state-badge fw-bold #{request_state.to_s.downcase}" do
+     content_tag :span, class: "badge state-badge fw-bold #{request_state.to_s.downcase}",
+      data: { bs_toggle: "tooltip", bs_original_title: "Request types and states" }  do
      "#{request_name} · #{count} #{request_state}"
      end
    end.join(' ').html_safe %>
