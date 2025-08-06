@@ -2,8 +2,12 @@
   <%= content_tag(:div, class: 'col') do %>
 
     <%= content_tag(:div, class: 'row') do %>
-      <%= render 'pipeline_info', class: 'col-9' %>
-      <%= render 'request_info', class: 'col-3' %>
+      <%= content_tag :div, class: 'col-8' do %>
+        <%= render 'pipeline_info' %>
+      <% end %>
+      <%= content_tag :div, class: 'col-4 text-end' do %>
+        <%= render 'request_info' %>
+      <% end %>
     <% end %>
 
     <div class="row">
