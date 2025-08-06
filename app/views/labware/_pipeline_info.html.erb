@@ -7,8 +7,8 @@
       link_to_unless(
         @pipeline_info.pipeline_group_name.nil?,
         @pipeline_info.pipeline_group_names,
-        pipelines_path(:filter => @pipeline_info.pipeline_group_name),
-        {target: '_blank', rel: 'noopener'}
+        pipelines_path(filter: @pipeline_info.pipeline_group_name),
+        { target: '_blank', rel: 'noopener' }
       )
     %>
   </strong> |
