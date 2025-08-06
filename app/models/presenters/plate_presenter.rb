@@ -156,7 +156,7 @@ module Presenters
     def mark_under_represented_wells?
       purpose_config.fetch(:mark_under_represented_wells, false)
     end
-    
+
     def qc_thresholds
       @qc_thresholds ||= Presenters::QcThresholdPresenter.new(labware, purpose_config.fetch(:qc_thresholds, {}))
     end

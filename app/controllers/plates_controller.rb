@@ -22,6 +22,25 @@ class PlatesController < LabwareController
         target_uuid: params[:id],
         user_uuid: current_user_uuid
       )
+      # if the well is under-represented, we need to remove the poly metadatum
+      # puts "Removing under-represented poly metadata for wells: #{wells_to_fail.join(', ')}"
+      # plate = Sequencescape::Api::V2.plate_with_custom_includes(['wells.aliquots.request'], uuid: params[:id])
+      # wells_by_location = plate.wells.index_by(&:location)
+
+      # wells_to_fail.each do |well_location|
+      #   well = wells_by_location[well_location]
+      #   next unless well
+
+      #   aliquot = well.aliquots.first
+      #   next unless aliquot
+
+      #   request = Array(aliquot.request).first
+      #   next unless request && request.respond_to?(:poly_metadata)
+      #   puts request.poly_metadata.inspect
+      #   request.poly_metadata.each do |pm|
+      #     pm.destroy if pm.key == 'under_represented'
+      #   end
+      # end
       redirect_to(
         limber_plate_path(params[:id]),
         notice: 'Selected wells have been failed' # rubocop:todo Rails/I18nLocaleTexts
@@ -35,17 +54,14 @@ class PlatesController < LabwareController
 
   def mark_under_represented_wells
     if wells_to_mark.empty?
-      redirect_to(
-        limber_plate_path(params[:id]),
-        notice: 'No wells were selected to mark as under-represented'
-      )
+      redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to mark as under-represented')
     else
-      # create record in poly metadata 
+      # create record in poly metadata
       # type: request, key: under_represented, value: true
-    
+
       plate = Sequencescape::Api::V2.plate_with_custom_includes(['wells.aliquots.request'], uuid: params[:id])
       wells_by_location = plate.wells.index_by(&:location)
-     
+
       # for each well, find the aliquot and then the request
       # create a new poly metadatum for the request
       well = wells_by_location[wells_to_mark.first]
@@ -55,22 +71,16 @@ class PlatesController < LabwareController
 
       # If request is an array, get the first one?
       request = Array(request).first
-    
+
       # Now `request` is the request object for that well
       # new a poly metadatum
-      poly_metadatum = Sequencescape::Api::V2::PolyMetadatum.new(
-        key: 'under_represented',
-        value: 'true'
-      )
+      poly_metadatum = Sequencescape::Api::V2::PolyMetadatum.new(key: 'under_represented', value: 'true')
       # set the metadatable, link it to the request
       poly_metadatum.relationships.metadatable = request
       # save it
       poly_metadatum.save
 
-      redirect_to(
-        limber_plate_path(params[:id]),
-        notice: 'Selected wells have been marked as under-represented'
-      )
+      redirect_to(limber_plate_path(params[:id]), notice: 'Selected wells have been marked as under-represented')
     end
   end
 
