@@ -16,6 +16,6 @@ Create the general effect of square boxes queued in a row with distinctive colou
        end.join(' ').html_safe %>
 
   <% if @labware.for_multiplexing %>
-    <%= content_tag :span, 'MX', class: 'text-muted fw-bold' %>
+    <%= content_tag :span, 'MX', class: 'text-muted fw-bold', title: 'Has an active multiplexing request', data: { 'bs-toggle': 'tooltip', 'bs-placement': 'bottom' } %>
   <% end %>
 </div>
