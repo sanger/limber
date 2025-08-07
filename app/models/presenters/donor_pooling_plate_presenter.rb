@@ -69,7 +69,7 @@ module Presenters
 
     def study_project_key(well)
       aliquot = well.aliquots.first
-      "#{aliquot.study.name} / #{aliquot.project.name}"
+      [aliquot.study.name, aliquot.project.name].join(' / ')
     end
   end
 end
