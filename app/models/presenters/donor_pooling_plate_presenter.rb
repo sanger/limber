@@ -9,9 +9,6 @@ module Presenters
     # by submission strategy)
     self.pooling_tab = ''
 
-    # A clone of the default 'show' page, but with the pooling information displayed
-    self.page = 'show'
-
     # Override the samples tab to display additional sample information for the pooled wells
     self.samples_partial = 'plates/pooled_wells_samples_tab'
 
