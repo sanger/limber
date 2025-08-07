@@ -24,11 +24,18 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:transfers_to_a1) { [transfer_request_a1, transfer_request_b1, transfer_request_c1, transfer_request_d1] }
 
   let(:dest_well_a1) do
+    poly_metadatum =
+      create(
+        :poly_metadatum,
+        key: scrna_config[:number_of_cells_per_chip_well_key],
+        value: '30000'
+      )
     create(
-      :v2_well_with_transfer_requests,
+      :v2_well_with_transfer_requests_and_polymetadata,
       location: 'A1',
       transfer_requests_as_target: transfers_to_a1,
-      plate_barcode: 'DN3U'
+      plate_barcode: 'DN3U',
+      poly_metadata: [poly_metadatum]
     )
   end
 
@@ -53,11 +60,18 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:transfers_to_b1) { [transfer_request_e1, transfer_request_f1, transfer_request_g1, transfer_request_h1] }
 
   let(:dest_well_b1) do
+    poly_metadatum =
+      create(
+        :poly_metadatum,
+        key: scrna_config[:number_of_cells_per_chip_well_key],
+        value: '30000'
+      )
     create(
-      :v2_well_with_transfer_requests,
+      :v2_well_with_transfer_requests_and_polymetadata,
       location: 'B1',
       transfer_requests_as_target: transfers_to_b1,
-      plate_barcode: 'DN3U'
+      plate_barcode: 'DN3U',
+      poly_metadata: [poly_metadatum]
     )
   end
 
@@ -120,9 +134,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   end
 
   it 'returns a delimited string for the cell count value' do
-    pm = double(key: scrna_config[:number_of_cells_per_chip_well_key], value: '12345') # rubocop:disable RSpec/VerifiedDoubles
-    allow(dest_well_a1).to receive(:poly_metadata).and_return([pm])
-    expect(subject.cells_per_chip_well(dest_well_a1)).to eq '12,345'
+    expect(subject.cells_per_chip_well(dest_well_a1)).to eq '30,000'
   end
 
   it 'returns nil if no matching poly_metadata is found' do
@@ -130,17 +142,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
     expect(subject.cells_per_chip_well(dest_well_a1)).to be_nil
   end
 
-  it 'returns the correct cells per chip well value' do
-    pm = double(key: scrna_config[:number_of_cells_per_chip_well_key], value: '3000') # rubocop:disable RSpec/VerifiedDoubles
-    allow(dest_well_a1).to receive(:poly_metadata).and_return([pm])
-    expect(subject.cells_per_chip_well(dest_well_a1)).to eq '3,000'
-  end
-
   it 'returns the correct study and project groups from wells' do
-    pm = double(key: scrna_config[:number_of_cells_per_chip_well_key], value: '3000') # rubocop:disable RSpec/VerifiedDoubles
-    allow(dest_well_a1).to receive(:poly_metadata).and_return([pm])
-    allow(dest_well_b1).to receive(:poly_metadata).and_return([pm])
-
     expected_groups = [['Well Study / Well Project', [dest_well_a1, dest_well_b1]]]
     expect(subject.study_project_groups_from_wells).to eq expected_groups
   end
