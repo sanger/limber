@@ -193,7 +193,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
 
       context 'from a previously passed library and a new repool' do
         # Checks that at least one request (versus all requests)
-        #  is a multiplexing request (including no requests in the all case).
+        # is a multiplexing request (including no requests in the all case).
         #
         # Setup: a complex plate with pools, containing passed library requests and started multiplexing requests
         # Inspired by spec/models/presenters/standard_presenter_spec.rb
