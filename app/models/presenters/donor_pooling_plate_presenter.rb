@@ -37,7 +37,7 @@ module Presenters
       end
 
       value = pm&.value
-      value&.to_i&.to_fs(:delimited)
+      value&.to_i&.to_fs(:delimited) # Adds thousands separator for better readability
     end
 
     private
