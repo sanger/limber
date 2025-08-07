@@ -586,27 +586,27 @@ footer.version-info {
   }
 }
 
-.wip-scroll-container {
+.scroll-container {
   overflow-x: auto;
   white-space: nowrap;
 }
-.wip-flex-row {
+.flex-row {
   display: flex;
   flex-wrap: nowrap;
   gap: 24px;
 }
-.wip-purpose-column {
+.purpose-column {
   flex-shrink: 0;
   display: inline-block;
   vertical-align: top;
   min-width: max-content;
 }
-.wip-labware-list {
+.labware-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-.wip-labware-details {
+.labware-details {
   width: max-content;
   min-width: 0;
 }

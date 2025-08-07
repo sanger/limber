@@ -6,18 +6,18 @@
   <%= link_to 'Last month', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Time.zone.today.prev_month), method: :get, class: 'filter-button' %>
 
   <!-- one column per purpose, containing cards for each plate / tube -->
-  <div class="wip-scroll-container">
-    <div class="wip-flex-row">
+  <div class="scroll-container">
+    <div class="flex-row">
       <% @ordered_purpose_list.each do |purpose_group| %>
-        <div class="wip-purpose-column">
+        <div class="purpose-column">
           <!-- card for the column, with purpose name -->
           <%= card title: "#{purpose_group} (#{@grouped[purpose_group].size})" do %>
-            <div class="wip-labware-list">
+            <div class="labware-list">
               <% @grouped[purpose_group].each do |labware_data| %>
                 <% labware = labware_data[:record] %>
                 <!-- plate / tube card -->
                 <%= card do %>
-                  <div class="wip-labware-details">
+                  <div class="labware-details">
                     <%= link_to labware.labware_barcode&.human.to_s, url_for(labware) %><br />
                     <%= labware.input_barcode %><br />
                     <%= labware_data[:state] %><br />
