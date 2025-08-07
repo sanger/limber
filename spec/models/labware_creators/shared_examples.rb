@@ -192,8 +192,11 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       end
 
       context 'from a previously passed library and a new repool' do
-        # create a complex plate with pools, containing passed library requests and started multiplexing requests
-        # setup inspired by spec/models/presenters/standard_presenter_spec.rb
+        # Checks that at least one request (versus all requests)
+        #  is a multiplexing request (including no requests in the all case).
+        #
+        # Setup: a complex plate with pools, containing passed library requests and started multiplexing requests
+        # Inspired by spec/models/presenters/standard_presenter_spec.rb
 
         let(:aliquot_type) { :v2_aliquot }
         let(:labware_state) { 'pending' }
@@ -201,22 +204,22 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
           [
             create(
               :v2_well,
-              requests_as_source: create_list(:mx_request, 1, priority: 1),
+              requests_as_source: create_list(:mx_request, 1, priority: 1), # multiplexing request
               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
             ),
             create(
               :v2_well,
-              requests_as_source: create_list(:mx_request, 1, priority: 1),
+              requests_as_source: create_list(:mx_request, 1, priority: 1), # multiplexing request
               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
             ),
             create(
               :v2_well,
-              requests_as_source: [],
+              requests_as_source: [], # NOT a multiplexing request
               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))
             ),
             create(
               :v2_well,
-              requests_as_source: create_list(:mx_request, 1, priority: 1),
+              requests_as_source: create_list(:library_request, 1, priority: 1), # NOT a multiplexing request
               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
             )
           ]
