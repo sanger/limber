@@ -15,6 +15,10 @@ module Presenters
     # Override the samples tab to display additional sample information for the pooled wells
     self.samples_partial = 'plates/pooled_wells_samples_tab'
 
+    def show_scrna_pooling?
+      true
+    end
+
     def study_project_groups_from_wells
       grouped_wells
     end
