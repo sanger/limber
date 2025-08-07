@@ -14,33 +14,24 @@ class PlatesController < LabwareController
         notice: 'No wells were selected to fail' # rubocop:todo Rails/I18nLocaleTexts
       )
     else
-      Sequencescape::Api::V2::StateChange.create!(
-        contents: wells_to_fail,
-        customer_accepts_responsibility: params[:customer_accepts_responsibility],
-        reason: 'Individual Well Failure',
-        target_state: 'failed',
-        target_uuid: params[:id],
-        user_uuid: current_user_uuid
-      )
-      # if the well is under-represented, we need to remove the poly metadatum
-      # puts "Removing under-represented poly metadata for wells: #{wells_to_fail.join(', ')}"
-      # plate = Sequencescape::Api::V2.plate_with_custom_includes(['wells.aliquots.request'], uuid: params[:id])
-      # wells_by_location = plate.wells.index_by(&:location)
-
-      # wells_to_fail.each do |well_location|
-      #   well = wells_by_location[well_location]
-      #   next unless well
-
-      #   aliquot = well.aliquots.first
-      #   next unless aliquot
-
-      #   request = Array(aliquot.request).first
-      #   next unless request && request.respond_to?(:poly_metadata)
-      #   puts request.poly_metadata.inspect
-      #   request.poly_metadata.each do |pm|
-      #     pm.destroy if pm.key == 'under_represented'
-      #   end
-      # end
+      begin
+        result = Sequencescape::Api::V2::StateChange.create!(
+          contents: wells_to_fail,
+          customer_accepts_responsibility: params[:customer_accepts_responsibility],
+          reason: 'Individual Well Failure',
+          target_state: 'failed',
+          target_uuid: params[:id],
+          user_uuid: current_user_uuid
+        )
+        Rails.logger.debug "StateChange result: #{result.inspect}"
+      rescue => e
+        Rails.logger.error "##########StateChange error: #{e.message}"
+        Rails.logger.error "StateChange backtrace: #{e.backtrace.join("\n")}" if e.respond_to?(:backtrace)
+        if e.respond_to?(:response) && e.response
+          Rails.logger.error "StateChange response body: #{e.response.body}"
+        end
+        raise
+      end
       redirect_to(
         limber_plate_path(params[:id]),
         notice: 'Selected wells have been failed' # rubocop:todo Rails/I18nLocaleTexts
