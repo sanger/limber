@@ -37,9 +37,7 @@ module Presenters
       end
 
       value = pm&.value
-
-      # The cleanest way I could find to format numbers
-      value.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse if value
+      value&.to_i&.to_fs(:delimited)
     end
 
     private
