@@ -183,6 +183,54 @@ FactoryBot.define do
         end
       end
     end
+
+    factory :v2_well_with_transfer_requests_and_polymetadata, parent: :v2_well do
+      transient do
+        # From :v2_well_with_transfer_requests
+        transfer_request_as_source_volume { 10.0 }
+        transfer_request_as_source_target_asset { :v2_well }
+        transfer_requests_as_source do
+          [
+            create(
+              :v2_transfer_request,
+              source_asset: nil,
+              target_asset: transfer_request_as_source_target_asset,
+              volume: transfer_request_as_source_volume
+            )
+          ]
+        end
+
+        transfer_request_as_target_volume { 10.0 }
+        transfer_request_as_target_source_asset { :v2_well }
+        transfer_requests_as_target do
+          [
+            create(
+              :v2_transfer_request,
+              source_asset: transfer_request_as_target_source_asset,
+              target_asset: nil,
+              volume: transfer_request_as_target_volume
+            )
+          ]
+        end
+
+        # From :v2_well_with_polymetadata
+        poly_metadata { [] }
+      end
+
+      after(:build) do |well, evaluator|
+        # Transfer request relationships
+        well._cached_relationship(:transfer_requests_as_source) { evaluator.transfer_requests_as_source || [] }
+        well._cached_relationship(:transfer_requests_as_target) { evaluator.transfer_requests_as_target || [] }
+
+        # Poly metadata setup
+        well.poly_metadata = []
+
+        evaluator.poly_metadata.each do |pm|
+          pm.relationships.metadatable = well
+          well.poly_metadata.push(pm)
+        end
+      end
+    end
   end
 
   # API V1 collection of wells, used mainly for setting up the well association on v1 plates
