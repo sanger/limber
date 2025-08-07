@@ -93,4 +93,59 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
       expect(subject).to be_valid # There are no warnings.
     end
   end
+
+  context 'when displaying the pooling info' do
+    it 'returns the correct count when all wells have the same number of aliquots' do
+      wells = [dest_well_a1, dest_well_b1]
+      expect(subject.num_samples_per_pool(wells)).to eq '1'
+    end
+
+    it 'returns a comma-separated list when wells have different numbers of aliquots' do
+      allow(dest_well_a1).to receive(:aliquots).and_return([double, double])
+      allow(dest_well_b1).to receive(:aliquots).and_return([double, double, double])
+      wells = [dest_well_a1, dest_well_b1]
+      expect(subject.num_samples_per_pool(wells)).to eq '2, 3'
+    end
+  end
+
+  it 'returns a comma-separated list of well positions' do
+    wells = [source_well_a1, source_well_b1, source_well_c1]
+    expect(subject.get_source_wells(wells)).to eq 'A1, B1, D1'
+  end
+
+  it 'returns "Unknown" for wells without a position name' do
+    allow(source_well_a1).to receive(:position).and_return({})
+    wells = [source_well_a1]
+    expect(subject.get_source_wells(wells)).to eq 'Unknown'
+  end
+
+  it 'returns a delimited string for the cell count value' do
+    pm = double(key: scrna_config[:number_of_cells_per_chip_well_key], value: '12345') # rubocop:disable RSpec/VerifiedDoubles
+    allow(dest_well_a1).to receive(:poly_metadata).and_return([pm])
+    expect(subject.cells_per_chip_well(dest_well_a1)).to eq '12,345'
+  end
+
+  it 'returns nil if no matching poly_metadata is found' do
+    allow(dest_well_a1).to receive(:poly_metadata).and_return([])
+    expect(subject.cells_per_chip_well(dest_well_a1)).to be_nil
+  end
+
+  it 'returns the correct cells per chip well value' do
+    pm = double(key: scrna_config[:number_of_cells_per_chip_well_key], value: '3000') # rubocop:disable RSpec/VerifiedDoubles
+    allow(dest_well_a1).to receive(:poly_metadata).and_return([pm])
+    expect(subject.cells_per_chip_well(dest_well_a1)).to eq '3,000'
+  end
+
+  it 'returns the correct study and project groups from wells' do
+    pm = double(key: scrna_config[:number_of_cells_per_chip_well_key], value: '3000') # rubocop:disable RSpec/VerifiedDoubles
+    allow(dest_well_a1).to receive(:poly_metadata).and_return([pm])
+    allow(dest_well_b1).to receive(:poly_metadata).and_return([pm])
+
+    expected_groups = [['Well Study / Well Project', [dest_well_a1, dest_well_b1]]]
+    expect(subject.study_project_groups_from_wells).to eq expected_groups
+  end
+
+  it 'returns true for show_scrna_pooling?' do
+    expect(subject.show_scrna_pooling?).to be true
+  end
 end
