@@ -190,6 +190,47 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
           expect(is_creatable_from).to be true
         end
       end
+
+      context 'from a previously passed library and a new repool' do
+        # create a complex plate with pools, containing passed library requests and started multiplexing requests
+        # setup inspired by spec/models/presenters/standard_presenter_spec.rb
+
+        let(:aliquot_type) { :v2_aliquot }
+        let(:labware_state) { 'pending' }
+        let(:wells) do
+          [
+            create(
+              :v2_well,
+              requests_as_source: create_list(:mx_request, 1, priority: 1),
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+            ),
+            create(
+              :v2_well,
+              requests_as_source: create_list(:mx_request, 1, priority: 1),
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+            ),
+            create(
+              :v2_well,
+              requests_as_source: [],
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))
+            ),
+            create(
+              :v2_well,
+              requests_as_source: create_list(:mx_request, 1, priority: 1),
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+            )
+          ]
+        end
+
+        let(:parent) { create :v2_plate, state: labware_state, wells: wells }
+        let(:tagged) { true }
+
+        before { expect(parent).to receive(:tagged?).and_return(tagged) }
+
+        it 'allows creation' do
+          expect(is_creatable_from).to be true
+        end
+      end
     end
   end
 end
