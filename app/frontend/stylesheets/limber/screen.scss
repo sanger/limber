@@ -349,11 +349,11 @@ dl#samples-information {
 // Add this for mark well mode
 #well-mark .well {
   // Format well marking interface
-  // input[type='checkbox'] {
-  //   display: none;
-  // }
+  input[type='checkbox'] {
+    display: none;
+  }
   input[type='checkbox']:checked + label .aliquot {
-    background-color: #ff00f2;
+    background-color: #ff9100;
   }
   input[type='checkbox']:disabled + label .aliquot {
     opacity: 0.5;

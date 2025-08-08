@@ -31,6 +31,10 @@
   .cancelled {
     background-color: $danger;
   }
+
+  .aliquot.failed.under_represented {
+    background-color: $danger;
+  }
 }
 
 @mixin labware-grid-view {
