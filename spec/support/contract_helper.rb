@@ -104,6 +104,14 @@ module ContractHelper
 
     def has_a_working_api(times: :any)
       expect_request_from('retrieve-api-root') { response('api-root', times:) }
+      let(:api) do
+        Sequencescape::Api.new(
+          url: 'http://example.com:3000/',
+          cookie: nil,
+          namespace: Limber,
+          authorisation: 'testing'
+        )
+      end
     end
   end
 end
