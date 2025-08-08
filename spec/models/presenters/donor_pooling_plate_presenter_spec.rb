@@ -121,11 +121,13 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
       end
     end
 
-    it 'returns a comma-separated list when wells have different numbers of aliquots' do
-      allow(dest_well_a1).to receive(:aliquots).and_return([double, double])
-      allow(dest_well_b1).to receive(:aliquots).and_return([double, double, double])
-      wells = [dest_well_a1, dest_well_b1]
-      expect(subject.num_samples_per_pool(wells)).to eq '2, 3'
+    context 'when wells have different numbers of aliquots' do
+      it 'returns a comma-separated list' do
+        allow(dest_well_a1).to receive(:aliquots).and_return([double, double])
+        allow(dest_well_b1).to receive(:aliquots).and_return([double, double, double])
+        wells = [dest_well_a1, dest_well_b1]
+        expect(subject.num_samples_per_pool(wells)).to eq '2, 3'
+      end
     end
 
     it 'returns a comma-separated list of well positions' do
