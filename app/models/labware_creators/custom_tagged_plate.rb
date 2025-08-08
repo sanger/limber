@@ -31,7 +31,6 @@ module LabwareCreators
         ]
       }
     ]
-    class_attribute :should_populate_wells_with_pool
 
     self.default_transfer_template_name = 'Custom pooling'
 

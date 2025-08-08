@@ -31,7 +31,6 @@ module LabwareCreators
   class CompositeWellFilteredCustomTaggedPlateCreator < CustomTaggedPlate
     include LabwareCreators::WellFilterBehaviour
     self.page = 'custom_tagged_plate'
-    self.should_populate_wells_with_pool = false # parent is a V2 plate
 
     # Creates if not exists and returns the WellFilter instance associated with
     # the labware creator.
