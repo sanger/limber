@@ -284,11 +284,11 @@ GEM
       date
       stringio
     public_suffix (6.0.1)
-    puma (6.6.0)
+    puma (6.6.1)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.16)
-    rack-mini-profiler (4.0.0)
+    rack-mini-profiler (4.0.1)
       rack (>= 1.2.0)
     rack-proxy (0.7.7)
       rack
