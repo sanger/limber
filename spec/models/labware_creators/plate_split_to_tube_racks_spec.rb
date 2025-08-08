@@ -146,8 +146,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
-  # coordinates of tubes in racks (matches files being uploaded)
-
   # tube racks
   let(:sequencing_tube_rack) do
     create(
@@ -933,8 +931,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         contingency_file.rewind
         content
       end
-
-      # body for stubbing the sequencing file upload
 
       # create the sequencing tubes
       let(:sequencing_tubes) do

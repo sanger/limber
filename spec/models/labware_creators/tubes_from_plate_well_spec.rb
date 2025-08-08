@@ -26,7 +26,6 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
     let(:parent_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }
     let(:parent_purpose_name) { 'Parent Purpose 1' }
-
     let(:request_type_first) { create(:request_type, key: 'request-type-1') }
     let(:library_type_first) { 'library-type-1' }
     let(:new_submission) { create(:v2_submission) }
@@ -42,7 +41,6 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
         )
       ]
     end
-
     let(:aliquots) { [create(:v2_aliquot, request: [new_requests[0]])] }
     let(:wells) { [create(:v2_well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1')] }
     let(:parent) do
@@ -56,7 +54,6 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
       )
     end
     let(:child_tubes) { create_list(:v2_tube, 2) }
-    # Defined in spec_helper.rb
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
     let(:tubes_from_plate_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }

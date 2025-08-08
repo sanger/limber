@@ -24,7 +24,6 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
       submission_pools_count: pools
     )
   end
-
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 

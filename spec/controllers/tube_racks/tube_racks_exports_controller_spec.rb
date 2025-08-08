@@ -4,11 +4,8 @@ require 'rails_helper'
 
 RSpec.describe TubeRacks::TubeRacksExportsController do
   let(:tube_rack_qc_includes) { 'racked_tubes.tube.receptacle.qc_results' }
-
   let(:labware_uuid) { SecureRandom.uuid }
-
-  let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
-
+  let(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
   let(:tube_rack_uuid) { tube_rack.uuid }
 
   RSpec.shared_examples 'a tube rack csv view' do

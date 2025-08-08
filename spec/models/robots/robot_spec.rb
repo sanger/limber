@@ -8,7 +8,6 @@ RSpec.describe Robots::Robot, :robots do
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:source_plate_barcode) { source_plate.human_barcode }
-
   let(:source_purpose_name) { 'source_plate_purpose' }
   let(:source_purpose_uuid) { SecureRandom.uuid }
   let(:source_plate_state) { 'passed' }

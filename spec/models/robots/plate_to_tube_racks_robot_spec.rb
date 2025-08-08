@@ -194,8 +194,6 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   # plate purpose
   let(:plate_purpose) { create(:v2_purpose, name: plate_purpose_name, uuid: plate_purpose_uuid) }
 
-  # plate uuid
-
   # plate state
   let(:plate_state) { 'passed' }
 

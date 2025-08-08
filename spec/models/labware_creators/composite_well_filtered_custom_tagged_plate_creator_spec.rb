@@ -157,7 +157,6 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     # Use the following as the tag plate.
 
     let(:tag_template_uuid) { 'tag-layout-template' }
-
     let(:tag_plate_uuid) { child_uuid }
     let(:tag_plate_state) { 'available' }
     let(:form_attributes) do

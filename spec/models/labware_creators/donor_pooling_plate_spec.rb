@@ -14,7 +14,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:user_uuid) { 'user-uuid' }
   let(:parent_1_plate_uuid) { 'parent-1-plate-uuid' }
   let(:parent_2_plate_uuid) { 'parent-2-plate-uuid' }
-
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
   let(:number_of_pools) { 8 }
@@ -327,7 +326,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:project) { create(:v2_project) }
       let(:donor_ids) { (1..32).to_a }
       let(:wells) { parent_1_plate.wells[0..31] }
-
       let(:number_of_pools) { 8 }
 
       before do
@@ -462,7 +460,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       # Only 10 unique donor ids, but 20 samples needed per pool - impossible to distribute correctly
       let(:donor_ids) { (1..10).to_a * 8 }
       let(:wells) { parent_1_plate.wells[0..79] }
-
       let(:number_of_pools) { 4 }
 
       before do

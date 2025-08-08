@@ -17,7 +17,6 @@ RSpec.describe LabwareCreators::FinalTube do
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }
     let(:user_uuid) { 'user-uuid' }
-
     let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
     let(:transfer) { create :v2_transfer }
     let(:transfers_attributes) do

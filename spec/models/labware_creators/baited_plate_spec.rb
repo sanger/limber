@@ -10,7 +10,6 @@ RSpec.describe LabwareCreators::BaitedPlate do
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-
   let(:parent_uuid) { 'parent-uuid' }
   let(:requests) do
     Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }

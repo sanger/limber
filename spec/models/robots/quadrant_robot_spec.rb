@@ -32,10 +32,8 @@ RSpec.describe Robots::QuadrantRobot, :robots do
   let(:plate_uuid) { SecureRandom.uuid }
   let(:target_plate_uuid) { SecureRandom.uuid }
   let(:source_barcode) { source_plate.human_barcode }
-
   let(:source_purpose_name) { 'Parent Purpose' }
   let(:source_purpose_uuid) { SecureRandom.uuid }
-
   let(:source_plate) { create :v2_plate, source_plate_attributes }
   let(:target_barcode) { target_plate.human_barcode }
   let(:target_purpose_name) { 'Child Purpose' }

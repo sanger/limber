@@ -70,8 +70,6 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:study_to_a1) { create(:study_with_poly_metadata, name: 'First Study', poly_metadata: []) } # empty poly_metadata
   let(:study_to_b1) { create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: []) } # empty poly_metadata
 
-  # Constants from config/initializers/scrna_config.rb
-
   before do
     Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }
     source_wells_to_a1.each { |well| allow(well.aliquots.first).to receive(:study).and_return(study_to_a1) }

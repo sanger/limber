@@ -93,7 +93,6 @@ RSpec.describe StateChangers do
     let(:target_state) { 'passed' }
     let(:coordinates_to_pass) { nil }
     let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
-
     let(:work_completions_attributes) do
       [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
     end
@@ -150,7 +149,6 @@ RSpec.describe StateChangers do
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     let(:tube_starting_state) { 'pending' }
-
     let(:tube_cancelled_state) { 'cancelled' }
 
     let(:target_state) { 'passed' }
