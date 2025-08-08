@@ -3,6 +3,7 @@
  * Using v14.75.2-16827067223-develop@062adb7
  * bundle exec rake devour:create_config"
  *
+ * Reverted removal of tag2_group to prevent tests from failing
  */
 
 /* Our configuration is essentially JSON, so we allow double quotes */
@@ -1002,6 +1003,20 @@ const resources = [
       }
     },
     "options": {}
+  },
+  {
+    "resource": "tag2_group",
+    "attributes": {
+      "uuid": "",
+      "name": "",
+      "tags": "",
+      "tag_group_adapter_type": {
+        "jsonApi": "hasOne",
+        "type": "tag_group_adapter_type"
+      }
+    },
+    "options": {
+    }
   },
   {
     "resource": "tag_layout_template",
