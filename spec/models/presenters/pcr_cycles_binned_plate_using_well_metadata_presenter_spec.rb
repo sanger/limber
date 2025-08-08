@@ -80,8 +80,8 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
 
   let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
-  let(:warnings) { {} }
-  let(:label_class) { 'Labels::PlateLabel' }
+  
+  
 
   before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 

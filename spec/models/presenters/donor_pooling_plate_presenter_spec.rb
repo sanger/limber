@@ -61,7 +61,7 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
     )
   end
 
-  let(:all_source_wells) { source_wells_to_a1 + source_wells_to_b1 }
+  
   let(:all_dest_wells) { [dest_well_a1, dest_well_b1] }
 
   let(:labware) { create :v2_plate, wells: all_dest_wells, barcode_number: 3 }
@@ -71,14 +71,12 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:study_to_a1) { create(:study_with_poly_metadata, name: 'First Study', poly_metadata: []) } # empty poly_metadata
   let(:study_to_b1) { create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: []) } # empty poly_metadata
 
-  let(:warning_template) do
-    Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS_PER_SAMPLE_PER_POOL
-  end
+  
 
   # Constants from config/initializers/scrna_config.rb
-  let(:scrna_config) { Rails.application.config.scrna_config }
+  
 
-  let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
+  
 
   before do
     Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }

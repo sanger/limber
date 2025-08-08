@@ -65,7 +65,7 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
     ]
   end
 
-  let(:number_of_wells) { 3 }
+  
 
   let(:aliquots) do
     [
