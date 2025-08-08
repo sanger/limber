@@ -368,8 +368,6 @@ RSpec.describe ExportsController, type: :controller do
     let(:config) { YAML.load_file(exports_path) }
     let(:export) { Export.new(config.fetch(csv_id)) } # csv_id specified by the individual test
 
-    # for exports/multiple_ancestor_plates.csv.erb
-
     before do
       # Make the controller to receive the plate.
       # NB. Uses plate_includes if specified in the export configuration.
