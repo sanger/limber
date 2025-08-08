@@ -201,9 +201,6 @@ RSpec.describe LabwareCreators::MergedPlate do
   end
 
   context 'with source plates from different parents but same requests' do
-    let(:different_requests) do
-      Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 2 }
-    end
     let(:different_parent) { create :v2_plate }
     let(:source_plate_3) do
       create :v2_plate,

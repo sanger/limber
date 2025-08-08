@@ -32,7 +32,6 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
     it_behaves_like 'it has no custom page'
 
-    let(:controller) { TubeCreationController.new }
     let(:child_purpose_uuid) { SecureRandom.uuid }
     let(:parent_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }

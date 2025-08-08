@@ -13,7 +13,6 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-  let(:purpose) { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid) { SecureRandom.uuid }
   let(:plate_size) { 384 }
   let(:requests) do

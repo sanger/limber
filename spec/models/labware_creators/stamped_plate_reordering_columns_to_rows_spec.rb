@@ -9,9 +9,6 @@ RSpec.describe LabwareCreators::StampedPlateReorderingColumnsToRows do
 
   let(:user_uuid) { 'user-uuid' }
 
-  let(:parent_purpose_uuid) { 'parent-purpose' }
-  let(:parent_purpose_name) { 'Parent Purpose' }
-
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
 

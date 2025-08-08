@@ -10,8 +10,6 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
-    let(:num_rows) { 8 }
-    let(:num_cols) { 12 }
 
     let(:well_a1) do
       create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))

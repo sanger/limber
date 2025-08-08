@@ -126,8 +126,6 @@ RSpec.describe Robots::PoolingAndSplittingRobot, :robots do
     }
   end
 
-  let(:robot_id) { 'pooling_and_splitting_robot_id' }
-
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name
     create :purpose_config, uuid: target_1_purpose_uuid, name: target_1_purpose_name

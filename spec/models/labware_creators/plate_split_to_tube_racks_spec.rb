@@ -146,10 +146,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
-  # coordinates of tubes in racks (matches files being uploaded)
-  let(:sequencing_file_coords) { %w[A1 B1] }
-  let(:contingency_file_coords) { %w[A1 B1 C1 E1 F1] }
-
   # tube racks
   let(:sequencing_tube_rack) do
     create(
@@ -936,13 +932,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         content
       end
 
-      # body for stubbing the sequencing file upload
-      let(:sequencing_file_content) do
-        content = sequencing_file.read
-        sequencing_file.rewind
-        content
-      end
-
       # create the sequencing tubes
       let(:sequencing_tubes) do
         prepare_created_child_tubes(
@@ -981,20 +970,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         fixture_file_upload(
           'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
           'sequencescape/qc_file'
-        )
-      end
-
-      let(:custom_metadatum_collections_attributes) do
-        create_custom_metadatum_collection_attributes(
-          'TR00000001' => sequencing_tubes,
-          'TR00000002' => contingency_tubes
-        )
-      end
-
-      let(:specific_tubes_attributes) do
-        create_specific_tube_attributes(
-          child_sequencing_tube_purpose_uuid => sequencing_tubes,
-          child_contingency_tube_purpose_uuid => contingency_tubes
         )
       end
 
@@ -1170,10 +1145,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      let(:custom_metadatum_collections_attributes) do
-        create_custom_metadatum_collection_attributes('TR00000001' => sequencing_tubes)
-      end
-
       # Only the sequencing file expected this time.
       let(:qc_files_attributes) do
         [
@@ -1215,10 +1186,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           ],
           sequencing_tube_rack
         )
-      end
-
-      let(:specific_tubes_attributes) do
-        create_specific_tube_attributes(child_sequencing_tube_purpose_uuid => sequencing_tubes)
       end
 
       let(:transfer_requests_attributes) do

@@ -6,8 +6,6 @@ RSpec.describe LabwareCreators::WellFilter do
   context 'when filtering wells' do
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
-    let(:num_rows) { 8 }
-    let(:num_cols) { 12 }
 
     let(:well_a1) do
       create(:v2_well, position: { 'name' => 'A1' }, requests_as_source: [request_a], outer_request: nil)

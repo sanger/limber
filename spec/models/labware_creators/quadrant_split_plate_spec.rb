@@ -165,8 +165,6 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
   end
 
   context '384 well plate' do
-    let(:plate_size) { 384 }
-
     let(:transfer_requests_attributes) do
       # Hardcoding this to be explicit
       [
