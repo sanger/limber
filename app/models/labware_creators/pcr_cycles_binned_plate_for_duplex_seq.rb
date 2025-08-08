@@ -33,14 +33,13 @@ module LabwareCreators
     CUSTOMER_FILENAME = 'duplex_seq_customer_file.csv'
 
     def after_transfer!
-      # called as part of the 'super' call in the 'save' method
-      # retrieve child plate through v2 api, using uuid got through v1 api
-      child_v2 = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
+      # re-request the child plate to include additional metadata
+      child_plate = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
       # update fields on each well with various metadata
       fields_to_update = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage]
 
-      child_wells_by_location = child_v2.wells.index_by(&:location)
+      child_wells_by_location = child_plate.wells.index_by(&:location)
 
       well_details.each do |parent_location, details|
         child_position = transfer_hash[parent_location]['dest_locn']

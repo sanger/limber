@@ -4,9 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::TenStamp do
-  has_a_working_api
-
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
 

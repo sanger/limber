@@ -7,7 +7,7 @@ module LabwareCreators
   # of behaviour.
   class CustomTaggedPlate < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
     include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate
@@ -31,11 +31,10 @@ module LabwareCreators
         ]
       }
     ]
-    class_attribute :should_populate_wells_with_pool
 
     self.default_transfer_template_name = 'Custom pooling'
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
+    validates :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate, presence: true
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 

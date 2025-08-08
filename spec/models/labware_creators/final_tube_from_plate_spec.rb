@@ -5,11 +5,9 @@ require_relative 'shared_examples'
 
 # CreationForm is the base class for our forms
 RSpec.describe LabwareCreators::FinalTubeFromPlate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
-
-  has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }

@@ -13,14 +13,4 @@ FactoryBot.define do
     first_name { 'Jane' }
     last_name { 'Doe' }
   end
-
-  # API V1 user
-  factory :v1_user, class: Sequencescape::User, traits: [:api_object] do
-    json_root { 'user' }
-    login { 'usr1' }
-    email { 'example@example.com' }
-    first_name { 'Jane' }
-    last_name { 'Doe' }
-    swipecard_code? { true }
-  end
 end

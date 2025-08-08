@@ -3,7 +3,7 @@
      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
      data-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
      data-children-library-type-to-purpose-mapping-json="<%= @labware_creator.children_library_type_to_purpose_mapping.to_json %>"
-     data-target-url="<%= limber_plate_children_path(@labware_creator.parent) %>"
+     data-target-url="<%= plate_child_plate_creations_path(@labware_creator.parent) %>"
      data-requests-filter="<%= @labware_creator.request_filter %>"
      data-transfers-layout="<%= @labware_creator.transfers_layout %>"
      data-transfers-creator="<%= @labware_creator.transfers_creator %>"

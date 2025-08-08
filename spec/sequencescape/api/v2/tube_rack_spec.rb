@@ -108,16 +108,16 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
 
     it 'returns an instance with the correct parameters' do
       expect(model_name).to have_attributes(
-        name: 'Limber::TubeRack',
-        singular: 'limber_tube_rack',
-        plural: 'limber_tube_racks',
+        name: 'TubeRack',
+        singular: 'tube_rack',
+        plural: 'tube_racks',
         element: 'tube_rack',
         human: 'Tube rack',
-        collection: 'limber/tube_racks',
-        param_key: 'limber_tube_rack',
-        i18n_key: :'limber/tube_rack',
-        route_key: 'limber_tube_racks',
-        singular_route_key: 'limber_tube_rack'
+        collection: 'tube_racks',
+        param_key: 'tube_rack',
+        i18n_key: :tube_rack,
+        route_key: 'tube_racks',
+        singular_route_key: 'tube_rack'
       )
     end
   end

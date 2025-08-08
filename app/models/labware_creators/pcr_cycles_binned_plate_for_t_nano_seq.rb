@@ -22,13 +22,12 @@ module LabwareCreators
     # @raise [StandardError] if a request cannot be identified for a child well
     # rubocop:disable Metrics/AbcSize
     def after_transfer!
-      # called as part of the 'super' call in the 'save' method
-      # retrieve child plate through v2 api, using uuid got through v1 api
-      child_v2_plate = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
+      # re-request the child plate to include additional metadata
+      child_plate = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
       # cycle through the child wells and for each get the related request and write some metadata
       # to it based on the details in the customer file
-      child_wells_by_location = child_v2_plate.wells.index_by(&:location)
+      child_wells_by_location = child_plate.wells.index_by(&:location)
 
       filtered_well_details_without_wells_flagged_to_be_ignored.each do |parent_location, details|
         child_well_location = transfer_hash[parent_location]['dest_locn']

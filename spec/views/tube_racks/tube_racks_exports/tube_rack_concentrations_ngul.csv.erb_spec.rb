@@ -4,8 +4,6 @@ require 'spec_helper'
 
 RSpec.describe 'tube_racks/tube_racks_exports/tube_rack_concentrations_ngul.csv.erb' do
   context 'with a filled rack' do
-    has_a_working_api
-
     let(:qc_result_options) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
 
     let(:labware_uuid) { SecureRandom.uuid }

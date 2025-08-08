@@ -2,10 +2,10 @@
 
 # This class rescues any exceptions where the source and target states are the same
 # but the transition is invalid.
-class RepeatedStateChangeError < Sequencescape::Api::ConnectionFactory::Actions::ServerError
+class RepeatedStateChangeError < StandardError
   # rescue automatically uses the match operator (===) to identify exceptions to rescue
   def self.===(other)
-    other.is_a?(Sequencescape::Api::ConnectionFactory::Actions::ServerError) && repeated_state_change_error?(other)
+    other.is_a?(RepeatedStateChangeError) && repeated_state_change_error?(other)
   end
 
   def self.repeated_state_change_error?(exception)

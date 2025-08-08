@@ -2,7 +2,7 @@
   <%= vite_javascript_tag 'entrypoints/pages/multi_tube_pooling.js', defer: true %>
   <% form_for(
        @labware_creator,
-       url: limber_tube_tubes_path(@labware_creator.parent),
+       url: tube_child_tube_creations_path(@labware_creator.parent),
        as: :tube,
        html: { method: :post }
      ) do |form| %>

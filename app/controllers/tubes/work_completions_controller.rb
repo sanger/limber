@@ -8,6 +8,6 @@ class Tubes::WorkCompletionsController < ApplicationController
   before_action :check_for_current_user!
 
   def labware
-    @labware ||= Sequencescape::Api::V2.tube_for_completion(params[:limber_tube_id])
+    @labware ||= Sequencescape::Api::V2.tube_for_completion(params[:tube_id])
   end
 end
