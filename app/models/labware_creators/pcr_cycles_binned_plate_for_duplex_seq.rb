@@ -34,12 +34,12 @@ module LabwareCreators
 
     def after_transfer!
       # re-request the child plate to include additional metadata
-      child = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
+      child_plate = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
       # update fields on each well with various metadata
       fields_to_update = %w[diluent_volume pcr_cycles submit_for_sequencing sub_pool coverage]
 
-      child_wells_by_location = child.wells.index_by(&:location)
+      child_wells_by_location = child_plate.wells.index_by(&:location)
 
       well_details.each do |parent_location, details|
         child_position = transfer_hash[parent_location]['dest_locn']
