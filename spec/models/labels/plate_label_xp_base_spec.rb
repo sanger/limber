@@ -4,10 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Labels::PlateLabelXp, type: :model do
   context 'when creating the label of a plate' do
-    
-    
-    
-
     before { allow(labware).to receive(:ancestors).and_return(ancestors_scope) }
 
     context 'when the plate has one stock plate' do

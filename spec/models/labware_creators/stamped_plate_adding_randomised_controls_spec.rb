@@ -76,13 +76,6 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
            sample_metadata: control_neg_sample_metadata
   end
 
-  
-  
-
-  
-
-  
-
   before do
     create(
       :stamp_with_randomised_controls_purpose_config,

@@ -12,9 +12,9 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  
+
   let(:plate) { create(:v2_plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
-  
+
   let(:transfer_template_uuid) { 'custom-pooling' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -32,13 +32,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
     # These values all describe the returned json.
     # They are used to prevent magic numbers from appearing in the specs
-    
-    
-    
-    
-
-    
-    
 
     it 'can be created' do
       expect(subject).to be_a described_class

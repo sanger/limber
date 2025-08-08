@@ -48,10 +48,8 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
   end
 
   # The number of samples is 2, so the sample volume is 8.75 µL ((2*30000*0.75)/2400 -10.0)
-  
 
   # The number of samples is 10, so the sample volume is 83.75 µL (((10*30000*0.75)/2400) -10.0)
-  
 
   before do
     assign(:workflow, workflow)

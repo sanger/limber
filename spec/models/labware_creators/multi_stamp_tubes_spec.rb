@@ -36,7 +36,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
-  
 
   let(:example_template_uuid) { SecureRandom.uuid }
 

@@ -10,9 +10,7 @@ RSpec.describe BarcodeLabelsHelper do
 
     let(:plate) { create(:v2_plate) }
     let!(:purpose_config) { create(:stock_plate_with_info_config, uuid: 'stock-plate-purpose-uuid') }
-    
-    
-    
+
     let(:labels) { [Labels::PlateLabel.new(plate, {})] }
     let(:redirection_url) { 'example_plate_url' }
     let(:default_printer_name) { 'example_printer_name' }

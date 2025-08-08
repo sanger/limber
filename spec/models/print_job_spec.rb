@@ -15,8 +15,6 @@ RSpec.describe PrintJob do
   let(:label_templates_by_service) do
     JSON.generate({ 'PMB' => label_template_name_pmb, 'SPrint' => label_template_name_sprint })
   end
-  
-  
 
   let(:expected_labels) { [{ 'label' => { 'test_attr' => 'test', 'barcode' => '12345' } }] }
   let(:expected_sprint_labels) do

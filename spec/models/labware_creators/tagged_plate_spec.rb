@@ -24,7 +24,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
       submission_pools_count: pools
     )
   end
-  
+
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
@@ -140,8 +140,6 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
     let(:tag_plate_barcode) { '1234567890' }
     let(:tag_plate_uuid) { 'tag-plate' }
     let(:tag_template_uuid) { 'tag-layout-template' }
-    
-    
 
     let(:plate_conversions_attributes) do
       [{ parent_uuid: plate_uuid, purpose_uuid: child_purpose_uuid, target_uuid: tag_plate_uuid, user_uuid: user_uuid }]

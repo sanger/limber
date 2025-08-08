@@ -93,8 +93,7 @@ RSpec.describe StateChangers do
     let(:target_state) { 'passed' }
     let(:coordinates_to_pass) { nil }
     let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
-    
-    
+
     let(:work_completions_attributes) do
       [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
     end
@@ -151,7 +150,7 @@ RSpec.describe StateChangers do
     subject { described_class.new(api, labware_uuid, user_uuid) }
 
     let(:tube_starting_state) { 'pending' }
-    
+
     let(:tube_cancelled_state) { 'cancelled' }
 
     let(:target_state) { 'passed' }
@@ -166,7 +165,6 @@ RSpec.describe StateChangers do
     let(:tube2) do
       create :v2_tube, uuid: tube2_uuid, state: tube_cancelled_state, barcode_number: 2, purpose_uuid: tube1_uuid
     end
-    
 
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
 
@@ -223,7 +221,6 @@ RSpec.describe StateChangers do
     let(:failed_wells) { {} }
 
     context 'on a fully pending tube' do
-      
       let(:target_state) { 'passed' }
       let(:coordinates_to_pass) { nil } # tubes don't have wells
 

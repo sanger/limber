@@ -10,8 +10,6 @@ RSpec.describe Utility::FixedNormalisationCalculator do
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
-    
-    
 
     let(:well_a1) do
       create(

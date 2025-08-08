@@ -4,22 +4,10 @@ require 'rails_helper'
 
 RSpec.describe TubeRacks::TubeRacksExportsController do
   let(:tube_rack_qc_includes) { 'racked_tubes.tube.receptacle.qc_results' }
-  
+
   let(:labware_uuid) { SecureRandom.uuid }
 
-  
-  
-  
-
-  
-  
-  
-
   let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
-
-  
-  
-  
 
   let(:tube_rack_uuid) { tube_rack.uuid }
 
@@ -78,8 +66,6 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
   end
 
   context 'where default' do
-    
-
     it 'returns 404 with unknown templates' do
       expect do
         get :show, params: { id: 'not_a_template', limber_tube_rack_id: tube_rack_uuid }, as: :csv

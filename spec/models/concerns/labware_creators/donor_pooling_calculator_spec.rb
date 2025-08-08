@@ -52,11 +52,6 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple aliquots in a source well' do
-      
-      
-      
-      
-
       it 'returns the number of cells per chip well from the first aliquot' do
         expect(instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(
           cells_per_chip_well
@@ -97,11 +92,6 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple aliquots in a source well' do
-      
-      
-      
-      
-
       it 'returns the allowance_band from the first aliquot' do
         expect(instance_of_test_pooling_class.send(:allowance_band_from_request, pool)).to eq(allowance_band)
       end

@@ -11,8 +11,6 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  
-  
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -43,9 +41,6 @@ RSpec.describe LabwareCreators::MultiPlatePool do
     subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
-    
-
-    
 
     let(:form_attributes) do
       {

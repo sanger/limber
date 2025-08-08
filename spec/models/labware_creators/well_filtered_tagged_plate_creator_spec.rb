@@ -65,8 +65,6 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
     ]
   end
 
-  
-
   let(:aliquots) do
     [
       create(:v2_aliquot, request: [old_requests[0]]),

@@ -13,7 +13,6 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   let(:robot_barcode) { 'robot_barcode' }
 
   # tube rack barcode
-  
 
   # tube uuids
   let(:tube1_uuid) { 'tube1_uuid' }

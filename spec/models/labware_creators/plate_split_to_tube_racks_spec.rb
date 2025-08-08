@@ -147,8 +147,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   # coordinates of tubes in racks (matches files being uploaded)
-  
-  
 
   # tube racks
   let(:sequencing_tube_rack) do
@@ -937,7 +935,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       # body for stubbing the sequencing file upload
-      
 
       # create the sequencing tubes
       let(:sequencing_tubes) do
@@ -979,10 +976,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           'sequencescape/qc_file'
         )
       end
-
-      
-
-      
 
       before do
         stub_v2_user(user)
@@ -1156,8 +1149,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      
-
       # Only the sequencing file expected this time.
       let(:qc_files_attributes) do
         [
@@ -1200,8 +1191,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
           sequencing_tube_rack
         )
       end
-
-      
 
       let(:transfer_requests_attributes) do
         [parent_well_a1, parent_well_b1].map.with_index do |parent_well, index|

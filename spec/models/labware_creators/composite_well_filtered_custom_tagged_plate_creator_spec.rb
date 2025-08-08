@@ -67,8 +67,6 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     ]
   end
 
-  
-
   let(:aliquots) do
     [
       create(:v2_aliquot, request: [old_requests[0]]),
@@ -159,7 +157,7 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     # Use the following as the tag plate.
 
     let(:tag_template_uuid) { 'tag-layout-template' }
-    
+
     let(:tag_plate_uuid) { child_uuid }
     let(:tag_plate_state) { 'available' }
     let(:form_attributes) do
@@ -209,13 +207,9 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
       allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child)
     end
 
-    
-
     let(:state_changes_attributes) do
       [{ reason: 'Used in Library creation', target_state: 'exhausted', target_uuid: child_uuid, user_uuid: user_uuid }]
     end
-
-    
 
     let(:transfer_requests_attributes) do
       [

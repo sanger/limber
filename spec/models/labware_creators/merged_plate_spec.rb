@@ -201,7 +201,6 @@ RSpec.describe LabwareCreators::MergedPlate do
   end
 
   context 'with source plates from different parents but same requests' do
-    
     let(:different_parent) { create :v2_plate }
     let(:source_plate_3) do
       create :v2_plate,

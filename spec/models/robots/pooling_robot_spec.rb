@@ -33,10 +33,10 @@ RSpec.describe Robots::PoolingRobot, :robots do
   let(:plate_uuid) { SecureRandom.uuid }
   let(:target_plate_uuid) { SecureRandom.uuid }
   let(:source_barcode) { source_plate.human_barcode }
-  
+
   let(:source_purpose_name) { 'Parent Purpose' }
   let(:source_purpose_uuid) { SecureRandom.uuid }
-  
+
   let(:target_plate_state) { 'pending' }
   let(:source_plate) { create :v2_plate, source_plate_attributes }
   let(:target_barcode) { target_plate.human_barcode }
@@ -45,8 +45,6 @@ RSpec.describe Robots::PoolingRobot, :robots do
   let(:target_plate) { create :v2_plate, target_plate_attributes }
 
   let(:target_plate_parents) { [source_plate] }
-  
-  
 
   let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
 
@@ -100,7 +98,6 @@ RSpec.describe Robots::PoolingRobot, :robots do
       'class' => 'Robots::PoolingRobot'
     }
   end
-  
 
   let(:transfer_source_plates) { [source_plate] }
 

@@ -7,7 +7,7 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
     has_a_working_api
 
     let(:user_uuid) { SecureRandom.uuid }
-    
+
     let(:request_options) do
       {
         'library_type' => 'Sanger_tailed_artic_v1_96',

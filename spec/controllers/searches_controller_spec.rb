@@ -7,9 +7,6 @@ RSpec.describe SearchController, type: :controller do
 
   has_a_working_api
 
-  
-  
-  
   let(:uuid) { SecureRandom.uuid }
 
   describe '#new' do
