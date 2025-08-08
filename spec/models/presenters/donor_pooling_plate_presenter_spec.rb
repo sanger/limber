@@ -114,9 +114,11 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   end
 
   context 'when displaying the pooling info' do
-    it 'returns the correct count when all wells have the same number of aliquots' do
-      wells = [dest_well_a1, dest_well_b1]
-      expect(subject.num_samples_per_pool(wells)).to eq '1'
+    context 'when all wells have the same number of aliquots' do
+      it 'returns the correct count' do
+        wells = [dest_well_a1, dest_well_b1]
+        expect(subject.num_samples_per_pool(wells)).to eq '1'
+      end
     end
 
     it 'returns a comma-separated list when wells have different numbers of aliquots' do
