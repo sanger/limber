@@ -6,6 +6,8 @@ require_relative '../support/factory_bot_extensions'
 FactoryBot.define do
   # Adds pooling_metadata equivalent to the v1 pools hash.
   # This data has been marked as "mostly legacy" since 2020, but still seems to be used.
+  # As of the removal of the v1 API from Limber, the pooling_metadata attribute is still used
+  # in Sequencescape::Api::V2::Plate to store some information about pools.
   trait :has_pooling_metadata do
     transient do
       extra_pool_info { {} }
