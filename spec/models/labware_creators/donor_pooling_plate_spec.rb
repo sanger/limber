@@ -812,9 +812,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     let(:transfer_requests_attributes) { subject.transfer_request_attributes(child_plate) }
 
-    before { stub_plate(child_plate) }
-
-    let!(:stub_metadata_creation) { stub_save('PolyMetadatum') }
+    before do
+      stub_plate(child_plate)
+      stub_save('PolyMetadatum')
+    end
 
     it 'posts transfer requests to Sequencescape' do
       expect_transfer_request_collection_creation
