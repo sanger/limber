@@ -12,7 +12,7 @@ RSpec.describe TubesController, type: :controller do
   describe '#show' do
     before do
       create :tube_config, uuid: 'stock-tube-purpose-uuid'
-      stub_v2_tube(v2_tube, stub_search: false)
+      stub_v2_tube(tube, stub_search: false)
       barcode_printers_request
     end
 
