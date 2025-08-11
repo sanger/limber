@@ -48,8 +48,6 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
   end
 
   context 'where default' do
-    let(:includes) { 'wells' }
-
     it 'returns 404 with unknown templates' do
       expect { get :show, params: { id: 'not_a_template', limber_tube_id: tube_barcode }, as: :csv }.to raise_error(
         ActionController::RoutingError,

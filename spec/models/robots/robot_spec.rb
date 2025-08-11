@@ -8,7 +8,6 @@ RSpec.describe Robots::Robot, :robots do
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:source_plate_barcode) { source_plate.human_barcode }
-  let(:source_plate_barcode_alt) { 'DN1S' }
   let(:source_purpose_name) { 'source_plate_purpose' }
   let(:source_purpose_uuid) { SecureRandom.uuid }
   let(:source_plate_state) { 'passed' }
@@ -593,8 +592,6 @@ RSpec.describe Robots::Robot, :robots do
 
         context 'and related plates' do
           before { bed_labware_lookup_with_barcode([source_plate_barcode, 'Other barcode'], [source_plate]) }
-
-          let(:target_plate_parents) { [source_plate] }
 
           it { is_expected.not_to be_valid }
         end

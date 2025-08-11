@@ -9,7 +9,6 @@ RSpec.feature 'Creating a plate with bait', :js do
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode) { example_plate.barcode.machine }
   let(:plate_uuid) { SecureRandom.uuid }
-  let(:child_purpose_uuid) { 'child-purpose-0' }
   let(:requests) do
     Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
@@ -17,17 +16,8 @@ RSpec.feature 'Creating a plate with bait', :js do
     create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests
   end
   let(:child_plate) { create :v2_plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3], barcode_number: 3 }
-  let(:transfer_template_uuid) { 'custom-pooling' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
-  let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
   let(:bait_library_layout) { create :bait_library_layout }
-
-  let(:transfer_requests_attributes) do
-    WellHelpers.column_order(96)[0, 6].map do |well_name|
-      { source_asset: "2-well-#{well_name}", target_asset: "3-well-#{well_name}", submission_id: '2' }
-    end
-  end
 
   background do
     create :purpose_config, uuid: 'example-purpose-uuid'
