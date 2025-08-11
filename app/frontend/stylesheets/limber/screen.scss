@@ -593,9 +593,16 @@ footer.version-info {
 
   h3 {
     @extend .col-xl-3;
+    white-space: nowrap;
+    margin-bottom: 10px;
   }
   ul {
     @extend .col-xl-9;
+  }
+  th,
+  td {
+    text-align: center;
+    vertical-align: middle;
   }
 }
 
