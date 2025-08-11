@@ -45,8 +45,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   let(:sample1_uuid) { SecureRandom.uuid }
   let(:sample2_uuid) { SecureRandom.uuid }
 
-  let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid) }
-  let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid) }
+  let(:sample1) { create(:sample, name: 'Sample1', uuid: sample1_uuid) }
+  let(:sample2) { create(:sample, name: 'Sample2', uuid: sample2_uuid) }
 
   # submission requests
   let(:request_type) { create :request_type, key: 'rt_1' }
@@ -57,18 +57,18 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   let(:request_e) { create :library_request, request_type: request_type, uuid: 'request-b2', submission_id: '2' }
 
   # parent aliquots
-  let(:parent_aliquot_sample1_aliquot1) { create(:v2_aliquot, sample: sample1, outer_request: request_a) }
-  let(:parent_aliquot_sample1_aliquot2) { create(:v2_aliquot, sample: sample1, outer_request: request_b) }
-  let(:parent_aliquot_sample1_aliquot3) { create(:v2_aliquot, sample: sample1, outer_request: request_c) }
+  let(:parent_aliquot_sample1_aliquot1) { create(:aliquot, sample: sample1, outer_request: request_a) }
+  let(:parent_aliquot_sample1_aliquot2) { create(:aliquot, sample: sample1, outer_request: request_b) }
+  let(:parent_aliquot_sample1_aliquot3) { create(:aliquot, sample: sample1, outer_request: request_c) }
 
-  let(:parent_aliquot_sample2_aliquot1) { create(:v2_aliquot, sample: sample2, outer_request: request_d) }
-  let(:parent_aliquot_sample2_aliquot2) { create(:v2_aliquot, sample: sample2, outer_request: request_e) }
+  let(:parent_aliquot_sample2_aliquot1) { create(:aliquot, sample: sample2, outer_request: request_d) }
+  let(:parent_aliquot_sample2_aliquot2) { create(:aliquot, sample: sample2, outer_request: request_e) }
 
   # parent well ancestor stock tubes
-  let(:ancestor_tube_1_aliquot) { create(:v2_aliquot, sample: sample1) }
+  let(:ancestor_tube_1_aliquot) { create(:aliquot, sample: sample1) }
   let(:ancestor_tube_1_v2) do
     create(
-      :v2_stock_tube,
+      :stock_tube,
       state: 'passed',
       purpose_name: ancestor_tube_purpose_name,
       aliquots: [ancestor_tube_1_aliquot],
@@ -76,10 +76,10 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
-  let(:ancestor_2_aliquot) { create(:v2_aliquot, sample: sample2) }
+  let(:ancestor_2_aliquot) { create(:aliquot, sample: sample2) }
   let(:ancestor_tube_2_v2) do
     create(
-      :v2_stock_tube,
+      :stock_tube,
       state: 'passed',
       purpose_name: ancestor_tube_purpose_name,
       aliquots: [ancestor_2_aliquot],
@@ -92,26 +92,26 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   # parent wells
   let(:parent_well_a1) do
-    create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'passed')
+    create(:well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'passed')
   end
   let(:parent_well_a2) do
-    create(:v2_well, location: 'A2', aliquots: [parent_aliquot_sample1_aliquot2], state: 'passed')
+    create(:well, location: 'A2', aliquots: [parent_aliquot_sample1_aliquot2], state: 'passed')
   end
   let(:parent_well_a3) do
-    create(:v2_well, location: 'A3', aliquots: [parent_aliquot_sample1_aliquot3], state: 'passed')
+    create(:well, location: 'A3', aliquots: [parent_aliquot_sample1_aliquot3], state: 'passed')
   end
 
   let(:parent_well_b1) do
-    create(:v2_well, location: 'B1', aliquots: [parent_aliquot_sample2_aliquot1], state: 'passed')
+    create(:well, location: 'B1', aliquots: [parent_aliquot_sample2_aliquot1], state: 'passed')
   end
   let(:parent_well_b2) do
-    create(:v2_well, location: 'B2', aliquots: [parent_aliquot_sample2_aliquot2], state: 'passed')
+    create(:well, location: 'B2', aliquots: [parent_aliquot_sample2_aliquot2], state: 'passed')
   end
 
   # parent plate
   let(:parent_plate) do
     create(
-      :v2_plate,
+      :plate,
       uuid: parent_uuid,
       wells: [parent_well_a1, parent_well_a2, parent_well_a3, parent_well_b1, parent_well_b2],
       barcode_number: 6,
@@ -187,7 +187,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       # create the tube
       child_tube =
         create(
-          :v2_tube,
+          :tube,
           name: tube_attrs[:name],
           purpose_uuid: tube_attrs[:purpose_uuid],
           purpose_name: tube_attrs[:purpose_name],
@@ -804,7 +804,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     let(:tube_rack_barcode) { child_sequencing_tube_rack_barcode }
     let(:tube_details) { { 'tube_barcode' => foreign_barcode, 'tube_rack_barcode' => tube_rack_barcode } }
     let(:msg_prefix) { 'Sequencing' }
-    let(:existing_tube) { create(:v2_tube, state: 'passed', barcode_number: 1, foreign_barcode: foreign_barcode) }
+    let(:existing_tube) { create(:tube, state: 'passed', barcode_number: 1, foreign_barcode: foreign_barcode) }
 
     before { allow(tube_rack_file).to receive(:position_details).and_return({ tube_posn => tube_details }) }
 
@@ -1000,7 +1000,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       context 'when a well has been failed' do
         # failing well A1
         let(:parent_well_a1) do
-          create(:v2_well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'failed')
+          create(:well, location: 'A1', aliquots: [parent_aliquot_sample1_aliquot1], state: 'failed')
         end
 
         let(:transfer_requests_attributes) do
@@ -1104,7 +1104,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     context 'with just a sequencing file and unique samples' do
       let(:parent_plate) do
         create(
-          :v2_plate,
+          :plate,
           uuid: parent_uuid,
           wells: [parent_well_a1, parent_well_b1],
           barcode_number: 6,

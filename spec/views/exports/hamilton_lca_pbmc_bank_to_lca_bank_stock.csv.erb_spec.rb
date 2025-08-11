@@ -8,37 +8,37 @@ RSpec.describe 'exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb' do
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }
 
-    let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid) }
-    let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid) }
+    let(:sample1) { create(:sample, name: 'Sample1', uuid: sample1_uuid) }
+    let(:sample2) { create(:sample, name: 'Sample2', uuid: sample2_uuid) }
 
     # ancestor vac tubes
-    let(:vac_aliquot1) { create(:v2_aliquot, sample: sample1) }
-    let(:vac_aliquot2) { create(:v2_aliquot, sample: sample2) }
+    let(:vac_aliquot1) { create(:aliquot, sample: sample1) }
+    let(:vac_aliquot2) { create(:aliquot, sample: sample2) }
 
-    let(:ancestor_vac_tube_1) { create(:v2_tube, barcode_number: 1, aliquots: [vac_aliquot1]) }
-    let(:ancestor_vac_tube_2) { create(:v2_tube, barcode_number: 2, aliquots: [vac_aliquot2]) }
+    let(:ancestor_vac_tube_1) { create(:tube, barcode_number: 1, aliquots: [vac_aliquot1]) }
+    let(:ancestor_vac_tube_2) { create(:tube, barcode_number: 2, aliquots: [vac_aliquot2]) }
 
     # ancestor tubes hash
     let(:ancestor_tubes) { { sample1_uuid => ancestor_vac_tube_1, sample2_uuid => ancestor_vac_tube_2 } }
 
     # source plate
-    let(:source_aliquot1) { create(:v2_aliquot, sample: sample1) }
-    let(:source_aliquot2) { create(:v2_aliquot, sample: sample2) }
+    let(:source_aliquot1) { create(:aliquot, sample: sample1) }
+    let(:source_aliquot2) { create(:aliquot, sample: sample2) }
 
     let(:source_well_a1) do
-      create(:v2_well, location: 'A1', aliquots: [source_aliquot1], downstream_tubes: [dest_tube1])
+      create(:well, location: 'A1', aliquots: [source_aliquot1], downstream_tubes: [dest_tube1])
     end
     let(:source_well_b1) do
-      create(:v2_well, location: 'B1', aliquots: [source_aliquot2], downstream_tubes: [dest_tube2])
+      create(:well, location: 'B1', aliquots: [source_aliquot2], downstream_tubes: [dest_tube2])
     end
 
-    let(:source_labware) { create(:v2_plate, wells: [source_well_a1, source_well_b1], barcode_number: 3) }
+    let(:source_labware) { create(:plate, wells: [source_well_a1, source_well_b1], barcode_number: 3) }
 
     # destination tube
-    let(:dest_aliquot1) { create(:v2_aliquot, sample: sample1) }
-    let(:dest_aliquot2) { create(:v2_aliquot, sample: sample2) }
-    let(:dest_tube1) { create(:v2_tube, barcode_number: 4, aliquots: [dest_aliquot1], name: 'DESTTUBE:A1') }
-    let(:dest_tube2) { create(:v2_tube, barcode_number: 5, aliquots: [dest_aliquot2], name: 'DESTTUBE:B1') }
+    let(:dest_aliquot1) { create(:aliquot, sample: sample1) }
+    let(:dest_aliquot2) { create(:aliquot, sample: sample2) }
+    let(:dest_tube1) { create(:tube, barcode_number: 4, aliquots: [dest_aliquot1], name: 'DESTTUBE:A1') }
+    let(:dest_tube2) { create(:tube, barcode_number: 5, aliquots: [dest_aliquot2], name: 'DESTTUBE:B1') }
 
     # workflow
     let(:workflow_name) { 'Test Workflow Name' }
@@ -71,8 +71,8 @@ RSpec.describe 'exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb' do
     end
 
     context 'when transfers are not done yet' do
-      let(:source_well_a1) { create(:v2_well, location: 'A1', aliquots: [source_aliquot1], downstream_tubes: []) }
-      let(:source_well_b1) { create(:v2_well, location: 'B1', aliquots: [source_aliquot2], downstream_tubes: []) }
+      let(:source_well_a1) { create(:well, location: 'A1', aliquots: [source_aliquot1], downstream_tubes: []) }
+      let(:source_well_b1) { create(:well, location: 'B1', aliquots: [source_aliquot2], downstream_tubes: []) }
 
       let(:expected_content) do
         [
@@ -95,8 +95,8 @@ RSpec.describe 'exports/hamilton_lca_pbmc_bank_to_lca_bank_stock.csv.erb' do
     end
 
     context 'when destination has no aliquots' do
-      let(:dest_tube1) { create(:v2_tube, barcode_number: 4, aliquots: [], name: 'DESTTUBE:A1') }
-      let(:dest_tube2) { create(:v2_tube, barcode_number: 5, aliquots: [], name: 'DESTTUBE:B1') }
+      let(:dest_tube1) { create(:tube, barcode_number: 4, aliquots: [], name: 'DESTTUBE:A1') }
+      let(:dest_tube2) { create(:tube, barcode_number: 5, aliquots: [], name: 'DESTTUBE:B1') }
 
       let(:expected_content) do
         [

@@ -14,8 +14,8 @@ RSpec.describe LabwareCreators::BaitedPlate do
   let(:requests) do
     Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
-  let(:parent_plate) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
-  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
+  let(:parent_plate) { create :plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
+  let(:child_plate) { create :plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 

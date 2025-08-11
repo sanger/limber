@@ -9,10 +9,10 @@ end
 RSpec.describe LabwareCreators::DonorPoolingCalculator do
   let(:instance_of_test_pooling_class) { TestPoolingClass.new }
   let(:pool) { [source_well1] }
-  let(:source_well1) { create :v2_well, aliquots: [aliquot1] }
-  let(:aliquot1) { create :v2_aliquot, request: request1 }
+  let(:source_well1) { create :well, aliquots: [aliquot1] }
+  let(:aliquot1) { create :aliquot, request: request1 }
   let(:request1) { create :scrna_customer_request, request_metadata: request_metadata1 }
-  let(:request_metadata1) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
+  let(:request_metadata1) { create :request_metadata, cells_per_chip_well:, allowance_band: }
   let(:cells_per_chip_well) { 37_500 }
   let(:allowance_band) { '2 pool attempts, 2 counts' }
 
@@ -38,10 +38,10 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple source wells' do
-      let(:source_well2) { create :v2_well, aliquots: [aliquot2] }
-      let(:aliquot2) { create :v2_aliquot, request: request2 }
+      let(:source_well2) { create :well, aliquots: [aliquot2] }
+      let(:aliquot2) { create :aliquot, request: request2 }
       let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-      let(:request_metadata2) { create :v2_request_metadata, cells_per_chip_well: }
+      let(:request_metadata2) { create :request_metadata, cells_per_chip_well: }
       let(:pool) { [source_well1, source_well2] }
 
       it 'returns the number of cells per chip well from the first source well' do
@@ -80,10 +80,10 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple source wells' do
-      let(:source_well2) { create :v2_well, aliquots: [aliquot2] }
-      let(:aliquot2) { create :v2_aliquot, request: request2 }
+      let(:source_well2) { create :well, aliquots: [aliquot2] }
+      let(:aliquot2) { create :aliquot, request: request2 }
       let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-      let(:request_metadata2) { create :v2_request_metadata, allowance_band: }
+      let(:request_metadata2) { create :request_metadata, allowance_band: }
       let(:pool) { [source_well1, source_well2] }
 
       it 'returns the allowance band from the first source well' do
@@ -198,17 +198,17 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
   describe '#check_pool_for_allowance_band' do
     # 2nd source well
-    let(:source_well2) { create :v2_well, aliquots: [aliquot2] }
-    let(:aliquot2) { create :v2_aliquot, request: request2 }
+    let(:source_well2) { create :well, aliquots: [aliquot2] }
+    let(:aliquot2) { create :aliquot, request: request2 }
     let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-    let(:request_metadata2) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
+    let(:request_metadata2) { create :request_metadata, cells_per_chip_well:, allowance_band: }
 
     # pool with 2 source wells
     let(:pool) { [source_well1, source_well2] }
 
     # destination plate and well
-    let(:dest_plate) { create :v2_plate, wells: [dest_well] }
-    let(:dest_well) { create :v2_well, uuid: 'dest_well_uuid', location: 'A1' }
+    let(:dest_plate) { create :plate, wells: [dest_well] }
+    let(:dest_well) { create :well, uuid: 'dest_well_uuid', location: 'A1' }
     let(:dest_well_location) { dest_well.location }
 
     context 'when the count of samples in pool is outside the range 5 to 10' do
@@ -225,28 +225,28 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
 
     context 'when the count of samples in pool is within the range 5 to 10' do
       # 3rd source well
-      let(:source_well3) { create :v2_well, aliquots: [aliquot3] }
-      let(:aliquot3) { create :v2_aliquot, request: request3 }
+      let(:source_well3) { create :well, aliquots: [aliquot3] }
+      let(:aliquot3) { create :aliquot, request: request3 }
       let(:request3) { create :scrna_customer_request, request_metadata: request_metadata3 }
-      let(:request_metadata3) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
+      let(:request_metadata3) { create :request_metadata, cells_per_chip_well:, allowance_band: }
 
       # 4th source well
-      let(:source_well4) { create :v2_well, aliquots: [aliquot4] }
-      let(:aliquot4) { create :v2_aliquot, request: request4 }
+      let(:source_well4) { create :well, aliquots: [aliquot4] }
+      let(:aliquot4) { create :aliquot, request: request4 }
       let(:request4) { create :scrna_customer_request, request_metadata: request_metadata4 }
-      let(:request_metadata4) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
+      let(:request_metadata4) { create :request_metadata, cells_per_chip_well:, allowance_band: }
 
       # 5th source well
-      let(:source_well5) { create :v2_well, aliquots: [aliquot5] }
-      let(:aliquot5) { create :v2_aliquot, request: request5 }
+      let(:source_well5) { create :well, aliquots: [aliquot5] }
+      let(:aliquot5) { create :aliquot, request: request5 }
       let(:request5) { create :scrna_customer_request, request_metadata: request_metadata5 }
-      let(:request_metadata5) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
+      let(:request_metadata5) { create :request_metadata, cells_per_chip_well:, allowance_band: }
 
       # 6th source well
-      let(:source_well6) { create :v2_well, aliquots: [aliquot6] }
-      let(:aliquot6) { create :v2_aliquot, request: request6 }
+      let(:source_well6) { create :well, aliquots: [aliquot6] }
+      let(:aliquot6) { create :aliquot, request: request6 }
       let(:request6) { create :scrna_customer_request, request_metadata: request_metadata6 }
-      let(:request_metadata6) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
+      let(:request_metadata6) { create :request_metadata, cells_per_chip_well:, allowance_band: }
 
       # pool with 6 source wells
       let(:pool) { [source_well1, source_well2, source_well3, source_well4, source_well5, source_well6] }

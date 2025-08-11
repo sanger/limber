@@ -96,7 +96,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe '#ongoing_plates' do
       let(:api_class) { :plates }
-      let(:result) { create :v2_plate }
+      let(:result) { create :plate }
 
       context 'without parameters' do
         let(:search_parameters) do
@@ -133,7 +133,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe '#ongoing_tubes' do
       let(:api_class) { :tubes }
-      let(:result) { create :v2_tube }
+      let(:result) { create :tube }
 
       context 'without parameters' do
         let(:search_parameters) do

@@ -50,7 +50,7 @@ RSpec.describe SequencescapeSubmission do
       { assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
-    let(:plate) { create :v2_plate }
+    let(:plate) { create :plate }
     let(:obj) { described_class.new(attributes.merge(extra_barcodes: %w[1234 5678])) }
 
     it 'raises error if barcodes not found in service' do

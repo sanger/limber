@@ -10,83 +10,83 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }
 
-    let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid) }
-    let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid) }
+    let(:sample1) { create(:sample, name: 'Sample1', uuid: sample1_uuid) }
+    let(:sample2) { create(:sample, name: 'Sample2', uuid: sample2_uuid) }
 
     # ancestor vac tubes
-    let(:vac_aliquot1) { create(:v2_aliquot, sample: sample1) }
-    let(:vac_aliquot2) { create(:v2_aliquot, sample: sample2) }
+    let(:vac_aliquot1) { create(:aliquot, sample: sample1) }
+    let(:vac_aliquot2) { create(:aliquot, sample: sample2) }
 
-    let(:ancestor_vac_tube_1) { create(:v2_tube, barcode_number: 1, aliquots: [vac_aliquot1]) }
-    let(:ancestor_vac_tube_2) { create(:v2_tube, barcode_number: 2, aliquots: [vac_aliquot2]) }
+    let(:ancestor_vac_tube_1) { create(:tube, barcode_number: 1, aliquots: [vac_aliquot1]) }
+    let(:ancestor_vac_tube_2) { create(:tube, barcode_number: 2, aliquots: [vac_aliquot2]) }
 
     # ancestor tubes hash
     let(:ancestor_tubes) { { sample1_uuid => ancestor_vac_tube_1, sample2_uuid => ancestor_vac_tube_2 } }
 
     # source aliquots
-    let(:source_aliquot1_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:source_aliquot2_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:source_aliquot3_s1) { create(:v2_aliquot, sample: sample1) }
-    let(:source_aliquot1_s2) { create(:v2_aliquot, sample: sample2) }
-    let(:source_aliquot2_s2) { create(:v2_aliquot, sample: sample2) }
-    let(:source_aliquot3_s2) { create(:v2_aliquot, sample: sample2) }
+    let(:source_aliquot1_s1) { create(:aliquot, sample: sample1) }
+    let(:source_aliquot2_s1) { create(:aliquot, sample: sample1) }
+    let(:source_aliquot3_s1) { create(:aliquot, sample: sample1) }
+    let(:source_aliquot1_s2) { create(:aliquot, sample: sample2) }
+    let(:source_aliquot2_s2) { create(:aliquot, sample: sample2) }
+    let(:source_aliquot3_s2) { create(:aliquot, sample: sample2) }
 
     # source wells
     let(:source_well_a1) do
-      create(:v2_well, location: 'A1', aliquots: [source_aliquot1_s1], downstream_tubes: [dest_tube1])
+      create(:well, location: 'A1', aliquots: [source_aliquot1_s1], downstream_tubes: [dest_tube1])
     end
     let(:source_well_a2) do
-      create(:v2_well, location: 'A2', aliquots: [source_aliquot2_s1], downstream_tubes: [dest_tube2])
+      create(:well, location: 'A2', aliquots: [source_aliquot2_s1], downstream_tubes: [dest_tube2])
     end
     let(:source_well_a3) do
-      create(:v2_well, location: 'A3', aliquots: [source_aliquot3_s1], downstream_tubes: [dest_tube3])
+      create(:well, location: 'A3', aliquots: [source_aliquot3_s1], downstream_tubes: [dest_tube3])
     end
 
     let(:source_well_b1) do
-      create(:v2_well, location: 'B1', aliquots: [source_aliquot1_s2], downstream_tubes: [dest_tube4])
+      create(:well, location: 'B1', aliquots: [source_aliquot1_s2], downstream_tubes: [dest_tube4])
     end
     let(:source_well_b2) do
-      create(:v2_well, location: 'B2', aliquots: [source_aliquot2_s2], downstream_tubes: [dest_tube5])
+      create(:well, location: 'B2', aliquots: [source_aliquot2_s2], downstream_tubes: [dest_tube5])
     end
     let(:source_well_b3) do
-      create(:v2_well, location: 'B3', aliquots: [source_aliquot3_s2], downstream_tubes: [dest_tube6])
+      create(:well, location: 'B3', aliquots: [source_aliquot3_s2], downstream_tubes: [dest_tube6])
     end
 
     # source plate
     let(:source_labware) do
       create(
-        :v2_plate,
+        :plate,
         wells: [source_well_a1, source_well_a2, source_well_a3, source_well_b1, source_well_b2, source_well_b3],
         barcode_number: 3
       )
     end
 
     # destination aliquots
-    let(:dest_aliquot1) { create(:v2_aliquot, sample: sample1) }
-    let(:dest_aliquot2) { create(:v2_aliquot, sample: sample1) }
-    let(:dest_aliquot3) { create(:v2_aliquot, sample: sample1) }
-    let(:dest_aliquot4) { create(:v2_aliquot, sample: sample2) }
-    let(:dest_aliquot5) { create(:v2_aliquot, sample: sample2) }
-    let(:dest_aliquot6) { create(:v2_aliquot, sample: sample2) }
+    let(:dest_aliquot1) { create(:aliquot, sample: sample1) }
+    let(:dest_aliquot2) { create(:aliquot, sample: sample1) }
+    let(:dest_aliquot3) { create(:aliquot, sample: sample1) }
+    let(:dest_aliquot4) { create(:aliquot, sample: sample2) }
+    let(:dest_aliquot5) { create(:aliquot, sample: sample2) }
+    let(:dest_aliquot6) { create(:aliquot, sample: sample2) }
 
     # destination tubes
     let(:dest_tube1) do
-      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 4, aliquots: [dest_aliquot1], name: 'SEQ:NT1O:A1')
+      create(:tube, barcode_prefix: 'FX', barcode_number: 4, aliquots: [dest_aliquot1], name: 'SEQ:NT1O:A1')
     end
     let(:dest_tube2) do
-      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 5, aliquots: [dest_aliquot2], name: 'SPR:NT1O:A1')
+      create(:tube, barcode_prefix: 'FX', barcode_number: 5, aliquots: [dest_aliquot2], name: 'SPR:NT1O:A1')
     end
     let(:dest_tube3) do
-      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 6, aliquots: [dest_aliquot3], name: 'SPR:NT1O:B1')
+      create(:tube, barcode_prefix: 'FX', barcode_number: 6, aliquots: [dest_aliquot3], name: 'SPR:NT1O:B1')
     end
     let(:dest_tube4) do
-      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7, aliquots: [dest_aliquot4], name: 'SEQ:NT2P:B1')
+      create(:tube, barcode_prefix: 'FX', barcode_number: 7, aliquots: [dest_aliquot4], name: 'SEQ:NT2P:B1')
     end
     let(:dest_tube5) do
-      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 8, aliquots: [dest_aliquot5], name: 'SPR:NT2P:C1')
+      create(:tube, barcode_prefix: 'FX', barcode_number: 8, aliquots: [dest_aliquot5], name: 'SPR:NT2P:C1')
     end
     let(:dest_tube6) do
-      create(:v2_tube, barcode_prefix: 'FX', barcode_number: 9, aliquots: [dest_aliquot6], name: 'SPR:NT2P:D1')
+      create(:tube, barcode_prefix: 'FX', barcode_number: 9, aliquots: [dest_aliquot6], name: 'SPR:NT2P:D1')
     end
 
     # Tube racks
@@ -161,13 +161,13 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
 
     context 'when transfers are not done yet' do
       # source wells
-      let(:source_well_a1) { create(:v2_well, location: 'A1', aliquots: [source_aliquot1_s1], downstream_tubes: []) }
-      let(:source_well_a2) { create(:v2_well, location: 'A2', aliquots: [source_aliquot2_s1], downstream_tubes: []) }
-      let(:source_well_a3) { create(:v2_well, location: 'A3', aliquots: [source_aliquot3_s1], downstream_tubes: []) }
+      let(:source_well_a1) { create(:well, location: 'A1', aliquots: [source_aliquot1_s1], downstream_tubes: []) }
+      let(:source_well_a2) { create(:well, location: 'A2', aliquots: [source_aliquot2_s1], downstream_tubes: []) }
+      let(:source_well_a3) { create(:well, location: 'A3', aliquots: [source_aliquot3_s1], downstream_tubes: []) }
 
-      let(:source_well_b1) { create(:v2_well, location: 'B1', aliquots: [source_aliquot1_s2], downstream_tubes: []) }
-      let(:source_well_b2) { create(:v2_well, location: 'B2', aliquots: [source_aliquot2_s2], downstream_tubes: []) }
-      let(:source_well_b3) { create(:v2_well, location: 'B3', aliquots: [source_aliquot3_s2], downstream_tubes: []) }
+      let(:source_well_b1) { create(:well, location: 'B1', aliquots: [source_aliquot1_s2], downstream_tubes: []) }
+      let(:source_well_b2) { create(:well, location: 'B2', aliquots: [source_aliquot2_s2], downstream_tubes: []) }
+      let(:source_well_b3) { create(:well, location: 'B3', aliquots: [source_aliquot3_s2], downstream_tubes: []) }
 
       let(:expected_content) do
         [
@@ -197,8 +197,8 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
         create(
           :tube_rack,
           tubes: {
-            A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
-            B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
+            A1: create(:tube, barcode_prefix: 'FX', barcode_number: 7),
+            B1: create(:tube, barcode_prefix: 'FX', barcode_number: 7)
           },
           parents: [source_labware]
         )
@@ -208,8 +208,8 @@ RSpec.describe 'tube_racks/tube_racks_exports/hamilton_lrc_pbmc_bank_to_lrc_bank
         create(
           :tube_rack,
           tubes: {
-            A1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7),
-            B1: create(:v2_tube, barcode_prefix: 'FX', barcode_number: 7)
+            A1: create(:tube, barcode_prefix: 'FX', barcode_number: 7),
+            B1: create(:tube, barcode_prefix: 'FX', barcode_number: 7)
           },
           parents: [source_labware]
         )

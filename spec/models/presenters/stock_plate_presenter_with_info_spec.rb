@@ -7,7 +7,7 @@ RSpec.describe Presenters::StockPlatePresenter do
   subject { described_class.new(labware:) }
 
   let!(:purpose_config) { create(:stock_plate_with_info_config, uuid: 'stock-plate-purpose-uuid') }
-  let(:labware) { create :v2_stock_plate }
+  let(:labware) { create :stock_plate }
 
   let(:barcode_string) { labware.human_barcode }
 

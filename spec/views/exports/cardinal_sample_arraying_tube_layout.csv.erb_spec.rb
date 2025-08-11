@@ -3,19 +3,19 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/cardinal_sample_arraying_tube_layout.csv.erb' do
-  let(:tube_a1) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 2) }
-  let(:tube_b1) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 3) }
-  let(:tube_c1) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 4) }
-  let(:tube_e7) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 5) }
-  let(:tube_g12) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 6) }
+  let(:tube_a1) { create(:stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 2) }
+  let(:tube_b1) { create(:stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 3) }
+  let(:tube_c1) { create(:stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 4) }
+  let(:tube_e7) { create(:stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 5) }
+  let(:tube_g12) { create(:stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 6) }
 
-  let(:well_a1) { create(:v2_stock_well, location: 'A1', state: 'passed', upstream_tubes: [tube_a1]) }
-  let(:well_b1) { create(:v2_stock_well, location: 'B1', state: 'passed', upstream_tubes: [tube_b1]) }
-  let(:well_c1) { create(:v2_stock_well, location: 'C1', state: 'passed', upstream_tubes: [tube_c1]) }
-  let(:well_e7) { create(:v2_stock_well, location: 'E7', state: 'passed', upstream_tubes: [tube_e7]) }
-  let(:well_g12) { create(:v2_stock_well, location: 'G12', state: 'passed', upstream_tubes: [tube_g12]) }
+  let(:well_a1) { create(:stock_well, location: 'A1', state: 'passed', upstream_tubes: [tube_a1]) }
+  let(:well_b1) { create(:stock_well, location: 'B1', state: 'passed', upstream_tubes: [tube_b1]) }
+  let(:well_c1) { create(:stock_well, location: 'C1', state: 'passed', upstream_tubes: [tube_c1]) }
+  let(:well_e7) { create(:stock_well, location: 'E7', state: 'passed', upstream_tubes: [tube_e7]) }
+  let(:well_g12) { create(:stock_well, location: 'G12', state: 'passed', upstream_tubes: [tube_g12]) }
 
-  let(:labware) { create(:v2_plate, barcode_number: 1, wells: [well_a1, well_b1, well_c1, well_e7, well_g12]) }
+  let(:labware) { create(:plate, barcode_number: 1, wells: [well_a1, well_b1, well_c1, well_e7, well_g12]) }
 
   before { assign(:plate, labware) }
 

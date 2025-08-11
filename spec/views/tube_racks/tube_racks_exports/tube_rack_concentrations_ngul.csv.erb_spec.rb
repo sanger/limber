@@ -12,9 +12,9 @@ RSpec.describe 'tube_racks/tube_racks_exports/tube_rack_concentrations_ngul.csv.
     let(:tube2_uuid) { SecureRandom.uuid }
     let(:tube3_uuid) { SecureRandom.uuid }
 
-    let!(:tube1) { create :v2_tube, uuid: tube1_uuid, barcode_number: 1, state: 'pending' }
-    let!(:tube2) { create :v2_tube, uuid: tube2_uuid, barcode_number: 2, state: 'pending' }
-    let!(:tube3) { create :v2_tube, uuid: tube3_uuid, barcode_number: 3, state: 'passed' }
+    let!(:tube1) { create :tube, uuid: tube1_uuid, barcode_number: 1, state: 'pending' }
+    let!(:tube2) { create :tube, uuid: tube2_uuid, barcode_number: 2, state: 'pending' }
+    let!(:tube3) { create :tube, uuid: tube3_uuid, barcode_number: 3, state: 'passed' }
 
     # NB. deliberately mixing up the tubes to check they are sorted in the file output
     let(:tubes) { { 'B1' => tube1, 'A1' => tube2, 'C1' => tube3 } }

@@ -6,7 +6,7 @@ RSpec.describe Labels::Plate384SingleLabel, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   context 'when creating the label of a plate' do
-    let(:labware) { build :v2_plate, size: 384 }
+    let(:labware) { build :plate, size: 384 }
     let(:label) { described_class.new(labware) }
     let(:date_format) { /\A\s?\d{1,2}-[A-Z]{3}-\d{4}\z/ } # e.g., ' 4 JUL 2023' or '24 JUL 2023'
 

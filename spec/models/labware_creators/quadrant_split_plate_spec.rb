@@ -28,7 +28,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:stock_plate) do
     create(
-      :v2_stock_plate_for_plate,
+      :stock_plate_for_plate,
       purpose_name: stock_purpose_name,
       barcode_number: stock_plate_barcode,
       uuid: stock_plate_uuid
@@ -53,7 +53,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:plate) do
     create(
-      :v2_plate,
+      :plate,
       uuid: parent_uuid,
       stock_plate: stock_plate,
       barcode_number: '2',
@@ -64,7 +64,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_a) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-a-uuid',
       barcode_number: '3',
       size: child_plate_size,
@@ -77,7 +77,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_b) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-b-uuid',
       barcode_number: '4',
       size: child_plate_size,
@@ -90,7 +90,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_c) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-c-uuid',
       barcode_number: '5',
       size: child_plate_size,
@@ -103,7 +103,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_d) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-d-uuid',
       barcode_number: '6',
       size: child_plate_size,

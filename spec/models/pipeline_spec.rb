@@ -20,7 +20,7 @@ RSpec.describe Pipeline do
         }
       end
       # Specifying pool_sizes means the factory produces a plate where the wells have requests coming out of them.
-      let(:labware) { create :v2_stock_plate, purpose_name: 'Purpose 2', pool_sizes: [1] }
+      let(:labware) { create :stock_plate, purpose_name: 'Purpose 2', pool_sizes: [1] }
 
       context 'when there is a pipeline group' do
         it 'sets the pipeline_group attribute provided' do
@@ -54,7 +54,7 @@ RSpec.describe Pipeline do
 
       context 'when the labware requests do not match the filters' do
         # Produce a plate with no requests from the wells
-        let(:labware) { create :v2_stock_plate, purpose_name: 'Purpose 2', pool_sizes: [0] }
+        let(:labware) { create :stock_plate, purpose_name: 'Purpose 2', pool_sizes: [0] }
 
         it 'returns false' do
           expect(model.active_for?(labware)).to be false
@@ -74,7 +74,7 @@ RSpec.describe Pipeline do
         }
       end
 
-      let(:labware) { create :v2_tube, purpose_name: 'Purpose 2' }
+      let(:labware) { create :tube, purpose_name: 'Purpose 2' }
 
       it 'returns true always' do
         expect(model.active_for?(labware)).to be true
@@ -83,7 +83,7 @@ RSpec.describe Pipeline do
   end
 
   describe '#purpose_in_relationships?' do
-    let(:purpose) { create(:v2_purpose, name: purpose_name) }
+    let(:purpose) { create(:purpose, name: purpose_name) }
 
     context 'when the purpose is in the relationships key' do
       let(:pipeline_config) do

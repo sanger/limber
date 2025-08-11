@@ -6,15 +6,15 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.
   let(:qc_result_options) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
 
   let(:well_a1) do
-    create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
+    create(:well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
   end
   let(:well_b1) do
-    create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
+    create(:well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
   end
 
   let(:ancestor_well_a1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A1'
       },
@@ -26,7 +26,7 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.
   end
   let(:ancestor_well_b1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'B1'
       },
@@ -34,8 +34,8 @@ RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.
       submit_for_sequencing: false
     )
   end
-  let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
-  let(:ancestor_labware) { create(:v2_plate, wells: [ancestor_well_a1, ancestor_well_b1], pool_sizes: [1, 1]) }
+  let(:labware) { create(:plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
+  let(:ancestor_labware) { create(:plate, wells: [ancestor_well_a1, ancestor_well_b1], pool_sizes: [1, 1]) }
 
   before do
     assign(:plate, labware)

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Sequencescape::Api::V2::Well do
   describe '#contains_control?' do
-    let(:well) { create :v2_well }
+    let(:well) { create :well }
 
     context 'with no control' do
       it 'returns false' do
@@ -22,7 +22,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
   end
 
   describe '#control_info_formatted' do
-    let(:well) { create :v2_well }
+    let(:well) { create :well }
 
     before { well.aliquots[0].sample.control = true }
 
@@ -84,7 +84,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a single concentration result' do
-      let(:well) { create(:v2_well, qc_results: [concentration_result]) }
+      let(:well) { create(:well, qc_results: [concentration_result]) }
 
       it 'returns nil' do
         expect(well.latest_live_cell_count).to be_nil
@@ -92,7 +92,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a single cell count result' do
-      let(:well) { create(:v2_well, qc_results: [earlier_live_cell_count]) }
+      let(:well) { create(:well, qc_results: [earlier_live_cell_count]) }
 
       it 'returns the correct QC result' do
         expect(well.latest_live_cell_count).to be(earlier_live_cell_count)
@@ -100,7 +100,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a two concentration results in date order' do
-      let(:well) { create(:v2_well, qc_results: [earlier_live_cell_count, later_live_cell_count]) }
+      let(:well) { create(:well, qc_results: [earlier_live_cell_count, later_live_cell_count]) }
 
       it 'returns the later QC result by creation date' do
         expect(well.latest_live_cell_count).to be(later_live_cell_count)
@@ -108,7 +108,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a two concentration results in reverse date order' do
-      let(:well) { create(:v2_well, qc_results: [later_live_cell_count, earlier_live_cell_count]) }
+      let(:well) { create(:well, qc_results: [later_live_cell_count, earlier_live_cell_count]) }
 
       it 'returns the later QC result by creation date' do
         expect(well.latest_live_cell_count).to be(later_live_cell_count)
@@ -117,7 +117,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
 
     context 'when well has a mixed concentration result' do
       let(:well) do
-        create(:v2_well, qc_results: [concentration_result, later_live_cell_count, earlier_live_cell_count])
+        create(:well, qc_results: [concentration_result, later_live_cell_count, earlier_live_cell_count])
       end
 
       it 'returns the later QC result for live cell count' do
@@ -153,7 +153,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a single concentration result' do
-      let(:well) { create(:v2_well, qc_results: [concentration_result]) }
+      let(:well) { create(:well, qc_results: [concentration_result]) }
 
       it 'returns nil' do
         expect(well.latest_total_cell_count).to be_nil
@@ -161,7 +161,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a single cell count result' do
-      let(:well) { create(:v2_well, qc_results: [earlier_total_cell_count]) }
+      let(:well) { create(:well, qc_results: [earlier_total_cell_count]) }
 
       it 'returns the correct QC result' do
         expect(well.latest_total_cell_count).to be(earlier_total_cell_count)
@@ -169,7 +169,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a two concentration results in date order' do
-      let(:well) { create(:v2_well, qc_results: [earlier_total_cell_count, later_total_cell_count]) }
+      let(:well) { create(:well, qc_results: [earlier_total_cell_count, later_total_cell_count]) }
 
       it 'returns the later QC result by creation date' do
         expect(well.latest_total_cell_count).to be(later_total_cell_count)
@@ -177,7 +177,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
     end
 
     context 'when well has a two concentration results in reverse date order' do
-      let(:well) { create(:v2_well, qc_results: [later_total_cell_count, earlier_total_cell_count]) }
+      let(:well) { create(:well, qc_results: [later_total_cell_count, earlier_total_cell_count]) }
 
       it 'returns the later QC result by creation date' do
         expect(well.latest_total_cell_count).to be(later_total_cell_count)
@@ -186,7 +186,7 @@ RSpec.describe Sequencescape::Api::V2::Well do
 
     context 'when well has a mixed concentration result' do
       let(:well) do
-        create(:v2_well, qc_results: [concentration_result, later_total_cell_count, earlier_total_cell_count])
+        create(:well, qc_results: [concentration_result, later_total_cell_count, earlier_total_cell_count])
       end
 
       it 'returns the later QC result for total cell count' do

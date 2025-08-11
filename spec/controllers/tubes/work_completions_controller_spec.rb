@@ -6,7 +6,7 @@ RSpec.describe Tubes::WorkCompletionsController, type: :controller do
   describe '#create' do
     let(:tube_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }
-    let(:tube) { create(:v2_tube, uuid: tube_uuid) }
+    let(:tube) { create(:tube, uuid: tube_uuid) }
     let(:work_completions_attributes) { [{ target_uuid: tube_uuid, user_uuid: user_uuid, submission_uuids: [] }] }
 
     it 'creates work_completion' do

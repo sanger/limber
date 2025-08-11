@@ -32,8 +32,8 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   let(:tube_purpose2_name) { 'tube_purpose2_name' }
 
   # tube purposes
-  let(:tube_purpose1) { create(:v2_purpose, name: tube_purpose1_name, uuid: tube_purpose1_uuid) }
-  let(:tube_purpose2) { create(:v2_purpose, name: tube_purpose2_name, uuid: tube_purpose2_uuid) }
+  let(:tube_purpose1) { create(:purpose, name: tube_purpose1_name, uuid: tube_purpose1_uuid) }
+  let(:tube_purpose2) { create(:purpose, name: tube_purpose2_name, uuid: tube_purpose2_uuid) }
 
   # tube states
   let(:tube1_state) { 'pending' }
@@ -46,7 +46,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   # tubes
   let(:tube1) do
     create(
-      :v2_tube_with_metadata,
+      :tube_with_metadata,
       uuid: tube1_uuid,
       barcode_prefix: 'FX',
       barcode_number: 4,
@@ -57,7 +57,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   end
   let(:tube2) do
     create(
-      :v2_tube_with_metadata,
+      :tube_with_metadata,
       uuid: tube2_uuid,
       barcode_prefix: 'FX',
       barcode_number: 5,
@@ -68,7 +68,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   end
   let(:tube3) do
     create(
-      :v2_tube_with_metadata,
+      :tube_with_metadata,
       uuid: tube3_uuid,
       barcode_prefix: 'FX',
       barcode_number: 6,
@@ -79,7 +79,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   end
   let(:tube4) do
     create(
-      :v2_tube_with_metadata,
+      :tube_with_metadata,
       uuid: tube4_uuid,
       barcode_prefix: 'FX',
       barcode_number: 7,
@@ -90,7 +90,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   end
   let(:tube5) do
     create(
-      :v2_tube_with_metadata,
+      :tube_with_metadata,
       uuid: tube5_uuid,
       barcode_prefix: 'FX',
       barcode_number: 8,
@@ -101,7 +101,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   end
   let(:tube6) do
     create(
-      :v2_tube_with_metadata,
+      :tube_with_metadata,
       uuid: tube6_uuid,
       barcode_prefix: 'FX',
       barcode_number: 9,
@@ -121,10 +121,10 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
 
   # tube rack purposes
   let(:tube_rack1_purpose) do
-    create(:v2_tube_rack_purpose, name: tube_rack1_purpose_name, uuid: tube_rack1_purpose_uuid)
+    create(:tube_rack_purpose, name: tube_rack1_purpose_name, uuid: tube_rack1_purpose_uuid)
   end
   let(:tube_rack2_purpose) do
-    create(:v2_tube_rack_purpose, name: tube_rack2_purpose_name, uuid: tube_rack2_purpose_uuid)
+    create(:tube_rack_purpose, name: tube_rack2_purpose_name, uuid: tube_rack2_purpose_uuid)
   end
 
   # tube rack uuids
@@ -180,9 +180,9 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   let(:tube6_custom_metadatum_collection) { create(:custom_metadatum_collection, metadata: tube6_metadata) }
 
   # wells
-  let(:well1) { create(:v2_well, location: 'A1', downstream_tubes: [tube1, tube4]) }
-  let(:well2) { create(:v2_well, location: 'B1', downstream_tubes: [tube2, tube5]) }
-  let(:well3) { create(:v2_well, location: 'C1', downstream_tubes: [tube3, tube6]) }
+  let(:well1) { create(:well, location: 'A1', downstream_tubes: [tube1, tube4]) }
+  let(:well2) { create(:well, location: 'B1', downstream_tubes: [tube2, tube5]) }
+  let(:well3) { create(:well, location: 'C1', downstream_tubes: [tube3, tube6]) }
 
   # plate purpose uuid
   let(:plate_purpose_uuid) { 'plate_purpose_uuid' }
@@ -191,14 +191,14 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   let(:plate_purpose_name) { 'plate_purpose_name' }
 
   # plate purpose
-  let(:plate_purpose) { create(:v2_purpose, name: plate_purpose_name, uuid: plate_purpose_uuid) }
+  let(:plate_purpose) { create(:purpose, name: plate_purpose_name, uuid: plate_purpose_uuid) }
 
   # plate state
   let(:plate_state) { 'passed' }
 
   # plate
   let(:plate) do
-    create(:v2_plate, wells: [well1, well2, well3], barcode_number: 3, purpose: plate_purpose, state: plate_state)
+    create(:plate, wells: [well1, well2, well3], barcode_number: 3, purpose: plate_purpose, state: plate_state)
   end
 
   # bed barcodes
@@ -398,9 +398,9 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
       # Parent plate has only one child tube-rack. We validate parent bed
       # (bed1) and one child bed (bed3).
       # wells
-      let(:well1) { create(:v2_well, location: 'A1', downstream_tubes: [tube4]) }
-      let(:well2) { create(:v2_well, location: 'B1', downstream_tubes: [tube5]) }
-      let(:well3) { create(:v2_well, location: 'C1', downstream_tubes: [tube6]) }
+      let(:well1) { create(:well, location: 'A1', downstream_tubes: [tube4]) }
+      let(:well2) { create(:well, location: 'B1', downstream_tubes: [tube5]) }
+      let(:well3) { create(:well, location: 'C1', downstream_tubes: [tube6]) }
 
       let(:tube_rack1) { nil }
 

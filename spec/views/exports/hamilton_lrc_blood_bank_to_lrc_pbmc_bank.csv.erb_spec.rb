@@ -10,53 +10,53 @@ RSpec.describe 'exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb' do
   let(:sample1_uuid) { 'sample1_uuid' }
   let(:sample2_uuid) { 'sample2_uuid' }
 
-  let(:sample1) { create(:v2_sample, name: 'sample1_name', uuid: sample1_uuid) }
-  let(:sample2) { create(:v2_sample, name: 'sample2_name', uuid: sample2_uuid) }
+  let(:sample1) { create(:sample, name: 'sample1_name', uuid: sample1_uuid) }
+  let(:sample2) { create(:sample, name: 'sample2_name', uuid: sample2_uuid) }
 
   # ancestor vac tubes
-  let(:vac_aliquot1) { create(:v2_aliquot, sample: sample1) }
-  let(:vac_aliquot2) { create(:v2_aliquot, sample: sample2) }
+  let(:vac_aliquot1) { create(:aliquot, sample: sample1) }
+  let(:vac_aliquot2) { create(:aliquot, sample: sample2) }
 
-  let(:ancestor_vac_tube_1) { create(:v2_tube, barcode_number: 1, aliquots: [vac_aliquot1]) }
-  let(:ancestor_vac_tube_2) { create(:v2_tube, barcode_number: 2, aliquots: [vac_aliquot2]) }
+  let(:ancestor_vac_tube_1) { create(:tube, barcode_number: 1, aliquots: [vac_aliquot1]) }
+  let(:ancestor_vac_tube_2) { create(:tube, barcode_number: 2, aliquots: [vac_aliquot2]) }
 
   # ancestor tubes hash
   let(:ancestor_tubes) { { sample1_uuid => ancestor_vac_tube_1, sample2_uuid => ancestor_vac_tube_2 } }
 
   # source plate
-  let(:source_aliquot1) { create(:v2_aliquot, sample: sample1) }
-  let(:source_aliquot2) { create(:v2_aliquot, sample: sample2) }
-  let(:source_aliquot3) { create(:v2_aliquot, sample: sample1) } # same sample as source_aliquot1
+  let(:source_aliquot1) { create(:aliquot, sample: sample1) }
+  let(:source_aliquot2) { create(:aliquot, sample: sample2) }
+  let(:source_aliquot3) { create(:aliquot, sample: sample1) } # same sample as source_aliquot1
 
-  let(:source_well_a1) { create(:v2_well, location: 'A1', aliquots: [source_aliquot1]) }
-  let(:source_well_b1) { create(:v2_well, location: 'B1', aliquots: [source_aliquot2]) }
-  let(:source_well_a2) { create(:v2_well, location: 'A2', aliquots: [source_aliquot3]) } # same row as source_well_a1
+  let(:source_well_a1) { create(:well, location: 'A1', aliquots: [source_aliquot1]) }
+  let(:source_well_b1) { create(:well, location: 'B1', aliquots: [source_aliquot2]) }
+  let(:source_well_a2) { create(:well, location: 'A2', aliquots: [source_aliquot3]) } # same row as source_well_a1
 
-  let(:source_plate) { create(:v2_plate, wells: [source_well_a1, source_well_b1, source_well_a2], barcode_number: 1) }
+  let(:source_plate) { create(:plate, wells: [source_well_a1, source_well_b1, source_well_a2], barcode_number: 1) }
 
   # transfer requests
-  let(:transfer_request1) { create(:v2_transfer_request, source_asset: source_well_a1, target_asset: nil) }
-  let(:transfer_request2) { create(:v2_transfer_request, source_asset: source_well_b1, target_asset: nil) }
+  let(:transfer_request1) { create(:transfer_request, source_asset: source_well_a1, target_asset: nil) }
+  let(:transfer_request2) { create(:transfer_request, source_asset: source_well_b1, target_asset: nil) }
 
   # transfer_request3 has the same target as transfer_request1 because
   # they have the same sample and the default number of sources config is 2
-  let(:transfer_request3) { create(:v2_transfer_request, source_asset: source_well_a2, target_asset: nil) }
+  let(:transfer_request3) { create(:transfer_request, source_asset: source_well_a2, target_asset: nil) }
 
   # destination plate
   let(:dest_well_a1) do
     # source: [A1, A2] -> target: A1
     create(
-      :v2_well_with_transfer_requests,
+      :well_with_transfer_requests,
       location: 'A1',
       transfer_requests_as_target: [transfer_request1, transfer_request3]
     )
   end
   let(:dest_well_b1) do
     # source: [B1] -> target: B1
-    create(:v2_well_with_transfer_requests, location: 'B1', transfer_requests_as_target: [transfer_request2])
+    create(:well_with_transfer_requests, location: 'B1', transfer_requests_as_target: [transfer_request2])
   end
 
-  let(:dest_plate) { create(:v2_plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 2) }
+  let(:dest_plate) { create(:plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 2) }
 
   let(:workflow_row) { ['Workflow', workflow] }
   let(:empty_row) { [] }

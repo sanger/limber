@@ -14,7 +14,7 @@ class SomeStockPlates
 end
 
 RSpec.describe Sequencescape::Api::V2::Tube do
-  subject(:tube) { create :v2_tube, barcode_number: 12_345 }
+  subject(:tube) { create :tube, barcode_number: 12_345 }
 
   let(:the_labware) { tube }
 
@@ -23,8 +23,8 @@ RSpec.describe Sequencescape::Api::V2::Tube do
   it { is_expected.not_to be_tube_rack }
 
   describe '#stock plate' do
-    let(:stock_plates) { create_list(:v2_stock_plate, 4) }
-    let(:tube_with_ancestors) { create :v2_tube, barcode_number: 12_345, ancestors: stock_plates }
+    let(:stock_plates) { create_list(:stock_plate, 4) }
+    let(:tube_with_ancestors) { create :tube, barcode_number: 12_345, ancestors: stock_plates }
 
     # I know this is a real hack but all we need to know is whether
     # it returns the last stock plate
