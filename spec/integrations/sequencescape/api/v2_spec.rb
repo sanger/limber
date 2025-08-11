@@ -12,7 +12,6 @@ RSpec.describe Sequencescape::Api::V2 do
     end
     let(:query_builder_page_1) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(1) }
     let(:query_builder_page_2) { Sequencescape::Api::V2::Labware.where(purpose_name: 'LTHR Cherrypick').page(2) }
-    let(:page_size) { 2 }
     let(:labware_list_page_1) { create_list :labware, 2 }
     let(:labware_list_page_2) { create_list :labware, 1 }
     let(:paginator) { instance_double(Sequencescape::Api::V2::Base::SequencescapePaginator, total_pages: 2) }

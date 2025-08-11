@@ -42,7 +42,6 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
 
   let(:plate_barcode_3) { SBCF::SangerBarcode.new(prefix: 'DN', number: 3).human_barcode }
   let(:plate_uuid_3) { 'plate-3' }
-  let(:example_plate3_args) { [:plate, { barcode_number: 3, state: 'passed', uuid: plate_uuid_3 }] }
 
   let(:example_plate_3) do
     create(
@@ -54,7 +53,6 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_3_listed) { create(*example_plate3_args) }
 
   let(:parent_uuid) { plate_uuid }
   let(:child_tube) { create :v2_tube, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool tube' }
@@ -80,8 +78,6 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
       }
     end
   end
-
-  let(:well_set_a) { json(:well_collection, aliquot_factory: :tagged_aliquot) }
 
   background do
     create :purpose_config, uuid: 'example-purpose-uuid', name: 'purpose-config'

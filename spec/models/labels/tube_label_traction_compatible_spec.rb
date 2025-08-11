@@ -7,7 +7,6 @@ RSpec.describe Labels::TubeLabelTractionCompatible, type: :model do
 
   let(:labware) { build :v2_tube, parents: [build(:v2_tube)] }
   let(:label) { described_class.new(labware) }
-  let(:date_format) { /\A\s?\d{1,2}-[A-Z]{3}-\d{4}\z/ } # e.g., ' 4 JUL 2023' or '24 JUL 2023'
 
   context 'when creating the label of a tube' do
     it 'has the correct attributes' do

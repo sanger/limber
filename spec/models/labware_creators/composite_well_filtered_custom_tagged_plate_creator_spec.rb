@@ -67,8 +67,6 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     ]
   end
 
-  let(:number_of_wells) { 3 }
-
   let(:aliquots) do
     [
       create(:v2_aliquot, request: [old_requests[0]]),
@@ -159,7 +157,6 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     # Use the following as the tag plate.
 
     let(:tag_template_uuid) { 'tag-layout-template' }
-    let(:tag_plate_barcode) { child.barcode.human }
     let(:tag_plate_uuid) { child_uuid }
     let(:tag_plate_state) { 'available' }
     let(:form_attributes) do
@@ -209,23 +206,8 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
       allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: child_uuid).and_return(child)
     end
 
-    let(:plate_conversions_attributes) do
-      [{ parent_uuid: parent_uuid, purpose_uuid: child_purpose_uuid, target_uuid: child_uuid, user_uuid: user_uuid }]
-    end
-
     let(:state_changes_attributes) do
       [{ reason: 'Used in Library creation', target_state: 'exhausted', target_uuid: child_uuid, user_uuid: user_uuid }]
-    end
-
-    let(:tag_layouts_attributes) do
-      [
-        {
-          enforce_uniqueness: false,
-          plate_uuid: child_uuid,
-          tag_layout_template_uuid: tag_template_uuid,
-          user_uuid: user_uuid
-        }
-      ]
     end
 
     let(:transfer_requests_attributes) do

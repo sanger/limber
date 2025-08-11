@@ -11,7 +11,6 @@ RSpec.describe LabwareCreators::BlendedTube do
   let(:sample1) { create(:v2_sample) }
   let(:sample2) { create(:v2_sample) }
 
-  let(:ancestor_plate_purpose_uuid) { 'ancestor-plate-purpose-uuid' }
   let(:ancestor_plate_purpose_name) { 'Ancestor Plate Purpose' }
 
   let(:tag_group1) { create(:v2_tag_group, name: 'blendedtg1') }
@@ -45,7 +44,6 @@ RSpec.describe LabwareCreators::BlendedTube do
 
   let(:parent1_receptacle_uuid) { 'parent-receptacle1-uuid' }
   let(:parent2_receptacle_uuid) { 'parent-receptacle2-uuid' }
-  let(:parent_receptacle_uuids) { [parent1_receptacle_uuid, parent2_receptacle_uuid] }
 
   let(:parent1_aliquot1) { create(:v2_aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
   let(:parent1_aliquot2) { create(:v2_aliquot, sample: sample2, tag: tag1s[1], tag2: tag2s[1]) }
@@ -88,7 +86,6 @@ RSpec.describe LabwareCreators::BlendedTube do
   let(:child_tube_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
-  let(:user) { json :user, uuid: user_uuid }
 
   let(:list_sample_attributes) { %w[sample_id tag1 tag2] }
 

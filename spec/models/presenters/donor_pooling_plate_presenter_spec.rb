@@ -24,11 +24,18 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:transfers_to_a1) { [transfer_request_a1, transfer_request_b1, transfer_request_c1, transfer_request_d1] }
 
   let(:dest_well_a1) do
+    poly_metadatum =
+      create(
+        :poly_metadatum,
+        key: scrna_config[:number_of_cells_per_chip_well_key],
+        value: '30000'
+      )
     create(
-      :v2_well_with_transfer_requests,
+      :v2_well_with_transfer_requests_and_polymetadata,
       location: 'A1',
       transfer_requests_as_target: transfers_to_a1,
-      plate_barcode: 'DN3U'
+      plate_barcode: 'DN3U',
+      poly_metadata: [poly_metadatum]
     )
   end
 
@@ -53,32 +60,38 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:transfers_to_b1) { [transfer_request_e1, transfer_request_f1, transfer_request_g1, transfer_request_h1] }
 
   let(:dest_well_b1) do
+    poly_metadatum =
+      create(
+        :poly_metadatum,
+        key: scrna_config[:number_of_cells_per_chip_well_key],
+        value: '30000'
+      )
     create(
-      :v2_well_with_transfer_requests,
+      :v2_well_with_transfer_requests_and_polymetadata,
       location: 'B1',
       transfer_requests_as_target: transfers_to_b1,
-      plate_barcode: 'DN3U'
+      plate_barcode: 'DN3U',
+      poly_metadata: [poly_metadatum]
     )
   end
 
-  let(:all_source_wells) { source_wells_to_a1 + source_wells_to_b1 }
   let(:all_dest_wells) { [dest_well_a1, dest_well_b1] }
 
   let(:labware) { create :v2_plate, wells: all_dest_wells, barcode_number: 3 }
 
   # Studies to assign to aliquots
 
-  let(:study_to_a1) { create(:study_with_poly_metadata, name: 'First Study', poly_metadata: []) } # empty poly_metadata
-  let(:study_to_b1) { create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: []) } # empty poly_metadata
-
-  let(:warning_template) do
-    Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS_PER_SAMPLE_PER_POOL
+  # empty poly_metadata
+  let(:study_to_a1) do
+    create(:study_with_poly_metadata, name: 'First Study', poly_metadata: [])
+  end
+  # empty poly_metadata
+  let(:study_to_b1) do
+    create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: [])
   end
 
   # Constants from config/initializers/scrna_config.rb
   let(:scrna_config) { Rails.application.config.scrna_config }
-
-  let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
 
   before do
     Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }
@@ -91,6 +104,53 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
 
     it 'does not warn the user about any study' do
       expect(subject).to be_valid # There are no warnings.
+    end
+  end
+
+  context 'when displaying the pooling info' do
+    context 'when all wells have the same number of aliquots' do
+      it 'returns the correct count' do
+        wells = [dest_well_a1, dest_well_b1]
+        expect(subject.num_samples_per_pool(wells)).to eq '1'
+      end
+    end
+
+    context 'when wells have different numbers of aliquots' do
+      it 'returns a comma-separated list' do
+        allow(dest_well_a1).to receive(:aliquots).and_return([double, double])
+        allow(dest_well_b1).to receive(:aliquots).and_return([double, double, double])
+        wells = [dest_well_a1, dest_well_b1]
+        expect(subject.num_samples_per_pool(wells)).to eq '2, 3'
+      end
+    end
+
+    it 'returns a comma-separated list of well positions' do
+      wells = [source_well_a1, source_well_b1, source_well_c1]
+      expect(subject.get_source_wells(wells)).to eq 'A1, B1, D1'
+    end
+
+    it 'returns "Unknown" for wells without a position name' do
+      allow(source_well_a1).to receive(:position).and_return({})
+      wells = [source_well_a1]
+      expect(subject.get_source_wells(wells)).to eq 'Unknown'
+    end
+
+    it 'returns a delimited string for the cell count value' do
+      expect(subject.cells_per_chip_well(dest_well_a1)).to eq '30,000'
+    end
+
+    it 'returns nil if no matching poly_metadata is found' do
+      allow(dest_well_a1).to receive(:poly_metadata).and_return([])
+      expect(subject.cells_per_chip_well(dest_well_a1)).to be_nil
+    end
+
+    it 'returns the correct study and project groups from wells' do
+      expected_groups = [['Well Study / Well Project', [dest_well_a1, dest_well_b1]]]
+      expect(subject.study_project_groups_from_wells).to eq expected_groups
+    end
+
+    it 'returns true for show_scrna_pooling?' do
+      expect(subject.show_scrna_pooling?).to be true
     end
   end
 end

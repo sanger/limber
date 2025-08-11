@@ -52,11 +52,6 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple aliquots in a source well' do
-      let(:aliquot2) { create :v2_aliquot, request: request2 }
-      let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-      let(:request_metadata2) { create :v2_request_metadata, cells_per_chip_well: }
-      let(:source_well) { create :v2_well, aliquots: [aliquot1, aliquot2] }
-
       it 'returns the number of cells per chip well from the first aliquot' do
         expect(instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(
           cells_per_chip_well
@@ -97,11 +92,6 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple aliquots in a source well' do
-      let(:aliquot2) { create :v2_aliquot, request: request2 }
-      let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-      let(:request_metadata2) { create :v2_request_metadata, allowance_band: }
-      let(:source_well) { create :v2_well, aliquots: [aliquot1, aliquot2] }
-
       it 'returns the allowance_band from the first aliquot' do
         expect(instance_of_test_pooling_class.send(:allowance_band_from_request, pool)).to eq(allowance_band)
       end
