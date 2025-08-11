@@ -69,9 +69,4 @@ class CreationController < ApplicationController
   def parent_uuid
     params[:tube_id] || params[:plate_id] || params[:tube_rack_id]
   end
-
-  def extract_error_messages_from_api_exception(api_message)
-    api_errors_hash = JSON.parse(api_message) || {}
-    api_errors_hash.key?('general') ? api_errors_hash['general'] : [api_message]
-  end
 end
