@@ -8,9 +8,8 @@ class PlatesController < LabwareController
   before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
 
   def fail_wells # rubocop:todo Metrics/AbcSize
-    
     return redirect_to(limber_plate_path(params[:id]), notice: t('notices.no_wells_selected')) if selected_wells.empty?
-    
+
     begin
       Sequencescape::Api::V2::StateChange.create!(
         contents: selected_wells,
@@ -25,7 +24,7 @@ class PlatesController < LabwareController
       log_plate_error(e)
       redirect_to limber_plate_path(params[:id]), alert: t('errors.messages.fail_wells_failed')
       nil
-    end   
+    end
   end
 
   def selected_wells
