@@ -43,7 +43,7 @@ FactoryBot.define do
     end
   end
 
-  factory :unmocked_v2_plate, class: Sequencescape::Api::V2::Plate do
+  factory :unmocked_plate, class: Sequencescape::Api::V2::Plate do
     skip_create
   end
 

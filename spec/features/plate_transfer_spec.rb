@@ -44,7 +44,7 @@ RSpec.feature 'Plate transfer', :js, :robots do
     Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
 
     # We look up the user
-    stub_v2_user(user, swipecard)
+    stub_user(user, swipecard)
   end
 
   let(:custom_metadatum_collections_attributes) do
@@ -80,7 +80,7 @@ RSpec.feature 'Plate transfer', :js, :robots do
     create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
 
     bed_labware_lookup(example_plate)
-    stub_v2_plate(example_plate)
+    stub_plate(example_plate)
 
     fill_in_swipecard(swipecard)
 
@@ -122,7 +122,7 @@ RSpec.feature 'Plate transfer', :js, :robots do
 
   scenario 'informs if the robot barcode is wrong' do
     bed_labware_lookup(example_plate_without_metadata)
-    stub_v2_plate(example_plate_without_metadata)
+    stub_plate(example_plate_without_metadata)
 
     fill_in_swipecard(swipecard)
 
@@ -147,7 +147,7 @@ RSpec.feature 'Plate transfer', :js, :robots do
 
   scenario 'verifies robot barcode' do
     bed_labware_lookup(example_plate_with_metadata)
-    stub_v2_plate(example_plate_with_metadata)
+    stub_plate(example_plate_with_metadata)
 
     fill_in_swipecard(swipecard)
 

@@ -74,7 +74,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
     before do
       create :purpose_config, uuid: basic_purpose, creator_class: 'LabwareCreators::StampedPlate'
-      stub_v2_plate(parent_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
     end
 
     context 'when a state filter is applied' do

@@ -78,8 +78,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_tube(example_tube)
-    stub_v2_tube(example_tube_2)
+    stub_tube(example_tube)
+    stub_tube(example_tube_2)
 
     # Available tubes search
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
@@ -100,8 +100,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
     ).and_return([example_tube, example_tube_2])
 
     # Used in the redirect. This call is probably unnecessary
-    stub_v2_tube(child_tube)
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_tube(child_tube)
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   context 'unique tags' do

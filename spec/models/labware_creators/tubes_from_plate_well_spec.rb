@@ -63,7 +63,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
 
     describe '#save!' do
       before do
-        stub_v2_plate(parent)
+        stub_plate(parent)
         allow(Sequencescape::Api::V2::TubeFromPlateCreation).to receive(:create!).and_return(
           instance_double(Sequencescape::Api::V2::TubeFromPlateCreation, child: child_tubes.first)
         )

@@ -85,12 +85,12 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the objects we need from the API stubs
-    stub_v2_plate(parent_plate)
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
-    stub_v2_tag_layout_templates(templates)
+    stub_plate(parent_plate)
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_tag_layout_templates(templates)
 
     # API v2 requests for the qcable
-    stub_v2_qcable(qcable)
+    stub_qcable(qcable)
   end
 
   shared_examples 'it supports the plate' do
@@ -100,9 +100,9 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
       expect_tag_layout_creation
       expect_transfer_creation
 
-      stub_v2_plate(create(:plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
+      stub_plate(create(:plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
       stub_post('StateChange')
-      stub_v2_qcable(qcable)
+      stub_qcable(qcable)
     end
 
     scenario 'creation with the plate' do
@@ -123,7 +123,7 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
   end
 
   shared_examples 'it rejects the candidate plate' do
-    before { stub_v2_qcable(qcable) }
+    before { stub_qcable(qcable) }
 
     scenario 'rejects the candidate plate' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode

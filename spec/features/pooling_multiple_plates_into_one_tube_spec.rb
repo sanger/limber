@@ -63,7 +63,7 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
 
   # Used to fetch the pools. This is the kind of thing we could pass through from a custom form
   let!(:stub_barcode_searches) do
-    stub_asset_v2_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
+    stub_asset_search([plate_barcode_1, plate_barcode_2], [example_plate_listed, example_plate_2_listed])
   end
 
   let(:transfers_attributes) do
@@ -96,13 +96,13 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
       [example_plate_listed, example_plate_2_listed]
     )
 
-    stub_v2_plate(example_plate)
-    stub_v2_tube(child_tube)
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_plate(example_plate)
+    stub_tube(child_tube)
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'creates multiple plates' do
-    stub_v2_plate(example_plate_2)
+    stub_plate(example_plate_2)
 
     expect_specific_tube_creation
     expect_transfer_creation
@@ -122,7 +122,7 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
   end
 
   scenario 'detects tag clash' do
-    stub_v2_plate(example_plate_3)
+    stub_plate(example_plate_3)
 
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find_by_id('plate-title')

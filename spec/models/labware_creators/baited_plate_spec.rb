@@ -37,8 +37,8 @@ RSpec.describe LabwareCreators::BaitedPlate do
     end
 
     before do
-      stub_v2_plate(parent_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false)
 
       stub_post('BaitLibraryLayout')
       stub_post('BaitLibraryLayout', [bait_library_layout], method: :preview)

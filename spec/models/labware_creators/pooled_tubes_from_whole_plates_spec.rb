@@ -65,7 +65,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
       end
     end
 
-    before { stub_asset_v2_search(barcodes, [parent, parent2, parent3, parent4]) }
+    before { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
 
     context 'with compatible plates' do
       it 'pools from all the plates' do

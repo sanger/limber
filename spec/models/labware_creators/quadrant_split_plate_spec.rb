@@ -120,7 +120,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
       { uuid: %w[child-a-uuid child-b-uuid child-c-uuid child-d-uuid] },
       includes: ['wells']
     ).and_return([child_plate_a, child_plate_b, child_plate_c, child_plate_d])
-    stub_v2_plate(plate, stub_search: false)
+    stub_plate(plate, stub_search: false)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
@@ -142,13 +142,13 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
       before do
         allow(SearchHelper).to receive(:merger_plate_names).and_return(stock_purpose_name)
 
-        stub_v2_user(user)
+        stub_user(user)
 
-        stub_v2_labware(stock_plate)
-        stub_v2_labware(child_plate_a)
-        stub_v2_labware(child_plate_b)
-        stub_v2_labware(child_plate_c)
-        stub_v2_labware(child_plate_d)
+        stub_labware(stock_plate)
+        stub_labware(child_plate_a)
+        stub_labware(child_plate_b)
+        stub_labware(child_plate_c)
+        stub_labware(child_plate_d)
       end
 
       it 'makes the expected requests' do

@@ -110,7 +110,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       includes: tube_includes
     ).and_return(parent_tube_2)
 
-    stub_v2_tube(parent_tube_1)
+    stub_tube(parent_tube_1)
   end
 
   describe '#new' do

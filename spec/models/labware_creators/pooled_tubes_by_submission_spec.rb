@@ -37,7 +37,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
-  before { stub_v2_plate(source_plate, stub_search: false) }
+  before { stub_plate(source_plate, stub_search: false) }
 
   describe '#save!' do
     let(:child_1_name) { 'DN5 A1:C1' }
@@ -51,7 +51,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
         tube_attributes.each_with_index.map do |attrs, index|
           create(:tube, name: attrs[:name], uuid: "tube-#{index}")
         end
-      child_tubes.each { |child_tube| stub_v2_labware(child_tube) }
+      child_tubes.each { |child_tube| stub_labware(child_tube) }
 
       child_tubes
     end
@@ -81,7 +81,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       ]
     end
 
-    before { stub_v2_plate(parent_plate, stub_search: false) }
+    before { stub_plate(parent_plate, stub_search: false) }
 
     context 'without parent metadata' do
       before do

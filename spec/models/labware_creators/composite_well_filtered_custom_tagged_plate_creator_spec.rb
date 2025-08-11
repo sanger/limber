@@ -115,7 +115,7 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     create(:pipeline, **pipeline1_config)
     create(:pipeline, **pipeline2_config)
 
-    stub_v2_plate(parent)
+    stub_plate(parent)
     allow(Sequencescape::Api::V2::PooledPlateCreation).to receive(:create!).and_return(
       instance_double(Sequencescape::Api::V2::PooledPlateCreation, child:)
     )

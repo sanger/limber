@@ -40,7 +40,7 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     end
 
     before do
-      stub_v2_plate(parent, stub_search: false)
+      stub_plate(parent, stub_search: false)
       stub_post('Transfer', transfer)
       stub_post('StateChange')
     end

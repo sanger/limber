@@ -16,14 +16,14 @@ RSpec.feature 'Charge and pass libraries', :js do
   background do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   context 'plate with no submissions to be made' do
     before do
       create :purpose_config, uuid: 'example-purpose-uuid'
-      stub_v2_plate(plate)
-      stub_v2_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
+      stub_plate(plate)
+      stub_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
     end
 
     let(:plate_barcode) { plate.labware_barcode.machine }
@@ -50,8 +50,8 @@ RSpec.feature 'Charge and pass libraries', :js do
   context 'tube with submissions to be made' do
     before do
       create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid'
-      stub_v2_tube(tube)
-      stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
+      stub_tube(tube)
+      stub_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
     end
 
     let(:submission_uuids) { [] }

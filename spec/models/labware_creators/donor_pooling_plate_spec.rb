@@ -812,7 +812,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     let(:transfer_requests_attributes) { subject.transfer_request_attributes(child_plate) }
 
-    before { stub_v2_plate(child_plate) }
+    before { stub_plate(child_plate) }
 
     let!(:stub_metadata_creation) { stub_save('PolyMetadatum') }
 

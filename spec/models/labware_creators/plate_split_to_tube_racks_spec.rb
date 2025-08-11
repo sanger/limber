@@ -197,13 +197,13 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
 
       # stub the tube
-      stub_v2_labware(child_tube)
+      stub_labware(child_tube)
 
       # create the racked tube
       racked_tube = create(:racked_tube, tube: child_tube, tube_rack: tube_rack, coordinate: tube_coordinate)
 
       # stub the racked tube
-      stub_v2_racked_tube(racked_tube)
+      stub_racked_tube(racked_tube)
 
       child_tube
     end
@@ -334,12 +334,12 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
 
     # stub the tube rack purposes
-    stub_v2_tube_rack_purpose(sequencing_tube_rack.purpose)
-    stub_v2_tube_rack_purpose(contingency_tube_rack.purpose)
+    stub_tube_rack_purpose(sequencing_tube_rack.purpose)
+    stub_tube_rack_purpose(contingency_tube_rack.purpose)
 
     # stub the child tube racks
-    stub_v2_labware(sequencing_tube_rack)
-    stub_v2_labware(contingency_tube_rack)
+    stub_labware(sequencing_tube_rack)
+    stub_labware(contingency_tube_rack)
 
     # set up the child tube purposes
     create(:purpose_config, name: child_sequencing_tube_purpose_name, uuid: child_sequencing_tube_purpose_uuid)
@@ -349,8 +349,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     create(:purpose_config, name: ancestor_tube_purpose_name, uuid: ancestor_tube_purpose_uuid)
 
     # ancestor tube lookups
-    stub_v2_tube(ancestor_tube_1_v2, stub_search: false)
-    stub_v2_tube(ancestor_tube_2_v2, stub_search: false)
+    stub_tube(ancestor_tube_1_v2, stub_search: false)
+    stub_tube(ancestor_tube_2_v2, stub_search: false)
 
     # Block finding tubes by given barcodes.
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000001').and_return(nil)
@@ -477,7 +477,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     let(:num_contingency_tubes) { 48 }
 
     before do
-      stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes)
+      stub_plate(parent_plate, stub_search: false, custom_includes: plate_includes)
       allow(subject).to receive(:num_sequencing_tubes).and_return(num_sequencing_tubes)
       allow(subject).to receive(:num_contingency_tubes).and_return(num_contingency_tubes)
       allow(subject).to receive(:num_parent_wells).and_return(num_parent_wells)
@@ -594,7 +594,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   describe '#check_tube_rack_barcodes_differ_between_files' do
-    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
+    before { stub_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'when files are not present' do
       before { subject.validate }
@@ -704,7 +704,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   describe '#check_tube_barcodes_differ_between_files' do
-    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
+    before { stub_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'when files are not present' do
       before { subject.validate }
@@ -910,7 +910,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       )
     end
 
-    before { stub_v2_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
+    before { stub_plate(parent_plate, stub_search: false, custom_includes: plate_includes) }
 
     context 'with both sequencing and contingency files' do
       let(:form_attributes) do
@@ -965,7 +965,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
       end
 
       before do
-        stub_v2_user(user)
+        stub_user(user)
       end
 
       it 'creates the child tubes' do
@@ -1170,7 +1170,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         end
       end
 
-      before { stub_v2_user(user) }
+      before { stub_user(user) }
 
       it 'creates the child tubes' do
         child_tube_racks = [sequencing_tube_rack]

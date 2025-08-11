@@ -24,8 +24,8 @@ RSpec.feature 'Viewing a plate', :js do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the actual plate
-    stub_v2_plate(example_plate)
-    stub_v2_barcode_printers(printer_list)
+    stub_plate(example_plate)
+    stub_barcode_printers(printer_list)
   end
 
   scenario 'of a recognised type' do
@@ -134,7 +134,7 @@ RSpec.feature 'Viewing a plate', :js do
         select(barcode_printer, from: 'Barcode Printer')
 
         allow_any_instance_of(PrintJob).to receive(:execute).and_return(true)
-        stub_v2_plate(example_plate)
+        stub_plate(example_plate)
         click_on('Print Label')
       end
     end

@@ -57,8 +57,8 @@ RSpec.describe LabwareCreators::MergedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    stub_v2_plate(source_plate_1, stub_search: false)
-    stub_v2_plate(source_plate_2, stub_search: false)
+    stub_plate(source_plate_1, stub_search: false)
+    stub_plate(source_plate_2, stub_search: false)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: source_plate_1.uuid, user_uuid: user_uuid } }
@@ -73,7 +73,7 @@ RSpec.describe LabwareCreators::MergedPlate do
           ).and_return([source_plate_1, source_plate_2])
         )
 
-        stub_v2_plate(child_plate, stub_search: false)
+        stub_plate(child_plate, stub_search: false)
       end
 
       let(:child_plate) do
@@ -186,7 +186,7 @@ RSpec.describe LabwareCreators::MergedPlate do
         creator_class: 'LabwareCreators::MergedPlate',
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
-      stub_v2_plate(source_plate_3, stub_search: false)
+      stub_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
         receive(:find_all).with(
           { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
@@ -226,7 +226,7 @@ RSpec.describe LabwareCreators::MergedPlate do
         creator_class: 'LabwareCreators::MergedPlate',
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
-      stub_v2_plate(source_plate_3, stub_search: false)
+      stub_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
         receive(:find_all).with(
           { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },

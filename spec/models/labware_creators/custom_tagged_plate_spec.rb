@@ -20,7 +20,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
   before do
     create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
-    stub_v2_plate(plate)
+    stub_plate(plate)
   end
 
   context 'on new' do
@@ -48,7 +48,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
       let(:tag_layout_templates) { create_list :tag_layout_template, 2 }
 
-      before { stub_v2_tag_layout_templates(tag_layout_templates) }
+      before { stub_tag_layout_templates(tag_layout_templates) }
 
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging.
       # Which is now unused.
@@ -173,7 +173,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_v2_pooled_plate_creation
+            stub_pooled_plate_creation
             stub_post('TagLayout')
             stub_post('Transfer')
             stub_post('StateChange')
@@ -211,7 +211,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_v2_pooled_plate_creation
+            stub_pooled_plate_creation
             stub_post('TagLayout')
             stub_post('Transfer')
 
@@ -237,7 +237,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_v2_pooled_plate_creation
+            stub_pooled_plate_creation
             stub_post('TagLayout')
             stub_post('Transfer')
 

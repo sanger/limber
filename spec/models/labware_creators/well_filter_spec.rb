@@ -72,7 +72,7 @@ RSpec.describe LabwareCreators::WellFilter do
 
     before do
       create :purpose_config, uuid: basic_purpose, creator_class: 'LabwareCreators::StampedPlate'
-      stub_v2_plate(parent_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
     end
 
     context 'without any additional filtering' do

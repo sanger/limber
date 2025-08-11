@@ -19,7 +19,7 @@ RSpec.describe Sequencescape::Api::V2::Request do
     let(:test_poly_metadatum) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
 
     # stub_save just checks something is being sent, not specifically what
-    let!(:api_v2_saves_poly_metadata) { stub_save('PolyMetadatum') }
+    let!(:api_saves_poly_metadata) { stub_save('PolyMetadatum') }
 
     context 'when we want to create poly metadata on a request' do
       it 'triggers save on the poly metadatum via api v2' do

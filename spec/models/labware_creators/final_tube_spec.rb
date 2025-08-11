@@ -10,7 +10,7 @@ RSpec.describe LabwareCreators::FinalTube do
   context 'on creation' do
     subject { described_class.new(form_attributes) }
 
-    before { stub_v2_tube(parent_tube) }
+    before { stub_tube(parent_tube) }
 
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }

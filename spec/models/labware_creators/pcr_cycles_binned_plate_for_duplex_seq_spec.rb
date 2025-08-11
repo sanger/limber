@@ -271,7 +271,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         library_type_name: library_type_name
       )
 
-      stub_v2_plate(
+      stub_plate(
         parent_plate,
         stub_search: false,
         custom_includes:
@@ -279,8 +279,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
       )
 
       # Some requests are made with standard includes, and others with the custom includes shown.
-      stub_v2_plate(child_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
+      stub_plate(child_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
     end
 
     context 'with an invalid file' do

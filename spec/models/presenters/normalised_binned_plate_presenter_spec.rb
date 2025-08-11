@@ -56,7 +56,7 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
   let(:warnings) { {} }
   let(:label_class) { 'Labels::PlateLabel' }
 
-  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
+  before { stub_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
   context 'when configuration is missing' do
     it 'throws an exception' do

@@ -76,12 +76,12 @@ RSpec.feature 'Multi plate pooling', :js do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_plate(example_plate)
-    stub_v2_plate(example_plate)
-    stub_v2_plate(example_plate_2)
-    stub_v2_plate(child_plate)
+    stub_plate(example_plate)
+    stub_plate(example_plate)
+    stub_plate(example_plate_2)
+    stub_plate(child_plate)
 
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'creates multiple plates' do

@@ -41,8 +41,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
 
   before do
     Settings.submission_templates = { 'example' => example_template_uuid }
-    stub_v2_tube(parent1, stub_search: false)
-    stub_v2_tube(parent2, stub_search: false)
+    stub_tube(parent1, stub_search: false)
+    stub_tube(parent2, stub_search: false)
   end
 
   context 'on new' do

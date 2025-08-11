@@ -8,7 +8,7 @@ RSpec.describe LabwareMetadata do
   let(:user) { create :user }
   let(:updated_metadata) { { created_with_robot: 'robot_barcode' } }
 
-  before { stub_v2_user(user) }
+  before { stub_user(user) }
 
   it 'raises an exception if the barcode is invalid' do
     # TODO: Y24-190 fix this test to use the correct error class
@@ -31,8 +31,8 @@ RSpec.describe LabwareMetadata do
     let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: plate.id, metadata: updated_metadata] }
 
     before do
-      stub_v2_plate(plate)
-      stub_v2_plate(plate_with_metadata)
+      stub_plate(plate)
+      stub_plate(plate_with_metadata)
     end
 
     context 'by labware' do
@@ -75,8 +75,8 @@ RSpec.describe LabwareMetadata do
     let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: tube.id, metadata: updated_metadata] }
 
     before do
-      stub_v2_tube(tube)
-      stub_v2_tube(tube_with_metadata)
+      stub_tube(tube)
+      stub_tube(tube_with_metadata)
     end
 
     context 'by labware' do

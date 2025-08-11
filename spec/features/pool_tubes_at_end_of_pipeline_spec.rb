@@ -58,10 +58,10 @@ RSpec.feature 'Pool tubes at end of pipeline', :js do
     stub_swipecard_search(user_swipecard, user)
 
     # Stub tubes
-    stub_v2_tube(tube)
-    stub_v2_tube(create(:tube, uuid: multiplexed_library_tube_uuid))
+    stub_tube(tube)
+    stub_tube(create(:tube, uuid: multiplexed_library_tube_uuid))
 
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   shared_examples 'a tube validation form' do

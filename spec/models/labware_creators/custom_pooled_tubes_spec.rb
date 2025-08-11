@@ -101,7 +101,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
       ]
     end
 
-    before { stub_v2_plate(parent_plate, stub_search: false) }
+    before { stub_plate(parent_plate, stub_search: false) }
 
     context 'with a valid file' do
       let(:file) do

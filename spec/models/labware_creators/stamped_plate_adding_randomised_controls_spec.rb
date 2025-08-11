@@ -81,10 +81,10 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       uuid: child_purpose_uuid,
       control_study_name: control_study_name
     )
-    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
-    stub_v2_plate(parent_plate, stub_search: false, custom_includes: parent_plate_includes)
-    stub_v2_study(control_study)
-    stub_v2_project(control_project)
+    stub_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
+    stub_plate(parent_plate, stub_search: false, custom_includes: parent_plate_includes)
+    stub_study(control_study)
+    stub_project(control_project)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }

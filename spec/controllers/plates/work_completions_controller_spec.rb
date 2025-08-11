@@ -12,7 +12,7 @@ RSpec.describe Plates::WorkCompletionsController, type: :controller do
     end
 
     let!(:plate_get) do
-      stub_v2_plate(example_plate, stub_search: false, custom_query: [:plate_for_completion, example_plate.uuid])
+      stub_plate(example_plate, stub_search: false, custom_query: [:plate_for_completion, example_plate.uuid])
     end
 
     it 'creates work_completion' do

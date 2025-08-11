@@ -44,7 +44,7 @@ RSpec.describe StateChangers do
     context 'when labware is a plate' do
       before do
         plate.wells.each { |well| well.state = 'failed' if failed_wells.include?(well.location) }
-        stub_v2_plate(plate, stub_search: false)
+        stub_plate(plate, stub_search: false)
       end
 
       context 'on a fully pending plate' do
@@ -94,7 +94,7 @@ RSpec.describe StateChangers do
       [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
     end
 
-    before { stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, labware_uuid]) }
+    before { stub_plate(plate, stub_search: false, custom_query: [:plate_for_completion, labware_uuid]) }
 
     context 'when config request type matches in progress submissions' do
       before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
@@ -167,7 +167,7 @@ RSpec.describe StateChangers do
     let(:labware) { tube_rack }
 
     before do
-      stub_v2_tube_rack(tube_rack)
+      stub_tube_rack(tube_rack)
       create(:tube_config, uuid: tube1_uuid, name: 'example-purpose')
     end
 

@@ -101,7 +101,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
   # let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   before do
-    stub_v2_plate(
+    stub_plate(
       labware,
       stub_search: false,
       custom_includes: 'wells.aliquots,wells.qc_results,wells.aliquots.request.poly_metadata'

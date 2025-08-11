@@ -27,10 +27,10 @@ RSpec.feature 'Creating a plate with bait', :js do
     stub_swipecard_search(user_swipecard, user)
 
     # These stubs are required to render plate show page
-    stub_v2_plate(example_plate)
-    stub_v2_plate(child_plate)
+    stub_plate(example_plate)
+    stub_plate(child_plate)
 
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
 
     # end of stubs for plate show page
 
@@ -47,7 +47,7 @@ RSpec.feature 'Creating a plate with bait', :js do
     # end of stubs for creating a new plate with baits
 
     # Stub the requests for the next plate page
-    stub_v2_plate(child_plate)
+    stub_plate(child_plate)
   end
 
   scenario 'of a recognised type' do

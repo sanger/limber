@@ -91,10 +91,10 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   end
 
   before do
-    stub_v2_user(user)
-    stub_v2_labware(tube_rack)
-    stub_v2_tube(tube1)
-    stub_v2_tube(tube2)
+    stub_user(user)
+    stub_labware(tube_rack)
+    stub_tube(tube1)
+    stub_tube(tube2)
 
     allow(subject).to receive_messages(labware: tube_rack, user_uuid: user_uuid)
   end

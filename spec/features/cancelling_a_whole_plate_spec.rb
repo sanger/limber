@@ -44,10 +44,10 @@ RSpec.feature 'Cancelling a whole plate', :js do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the plate several times, for both the initial find, and the redirect post state change.
-    stub_v2_plate(example_plate)
+    stub_plate(example_plate)
 
     # We get the printers
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'from the interface' do

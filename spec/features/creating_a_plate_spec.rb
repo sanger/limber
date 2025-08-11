@@ -74,9 +74,9 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the actual plate
-    2.times { stub_v2_plate(example_plate) }
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    2.times { stub_plate(example_plate) }
+    stub_plate(child_plate, stub_search: false)
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'basic plate creation' do

@@ -27,8 +27,8 @@ RSpec.describe LabwareCreators::StampedPlate do
 
   before do
     create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(plate, stub_search: false)
+    stub_plate(child_plate, stub_search: false)
+    stub_plate(plate, stub_search: false)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }

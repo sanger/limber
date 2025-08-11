@@ -53,7 +53,7 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
 
     before do
       create :purpose_config, uuid: basic_purpose, creator_class: 'LabwareCreators::TubesFromPlateWell'
-      stub_v2_plate(parent_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
     end
 
     context 'when there are wells with request_type equal to kinnex_prep' do

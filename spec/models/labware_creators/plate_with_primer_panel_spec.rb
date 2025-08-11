@@ -44,8 +44,8 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
 
     before do
-      stub_v2_plate(parent_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false)
     end
 
     describe '#panel_name' do

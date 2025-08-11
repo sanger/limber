@@ -24,7 +24,7 @@ module FeatureHelpers
     stub_search_and_multi_result('Find assets by barcode', { 'search' => { 'barcode' => barcode } }, asset)
   end
 
-  def stub_asset_v2_search(barcode, asset)
+  def stub_asset_search(barcode, asset)
     allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode:).and_return(asset)
   end
 

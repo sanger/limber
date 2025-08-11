@@ -46,10 +46,10 @@ RSpec.feature 'Failing wells', :js do
     # We get the actual plate
 
     2.times do # For both the initial find, and the redirect post state change
-      stub_v2_plate(example_plate)
+      stub_plate(example_plate)
     end
 
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'failing wells' do

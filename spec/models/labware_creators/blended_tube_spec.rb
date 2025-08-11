@@ -127,8 +127,8 @@ RSpec.describe LabwareCreators::BlendedTube do
   end
 
   before do
-    stub_v2_tube(parent1_tube, stub_search: false)
-    stub_v2_tube(parent2_tube, stub_search: false)
+    stub_tube(parent1_tube, stub_search: false)
+    stub_tube(parent2_tube, stub_search: false)
 
     create :blended_tube_purpose_config,
            name: child_tube_purpose_name,

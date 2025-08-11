@@ -329,7 +329,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
              uuid: child_purpose_uuid,
              name: child_purpose_name
 
-      stub_v2_plate(
+      stub_plate(
         parent_plate,
         stub_search: false,
         custom_includes:
@@ -337,8 +337,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       )
 
       # Some requests are made with standard includes, and others with the custom includes shown.
-      stub_v2_plate(child_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
+      stub_plate(child_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
     end
 
     context 'with an invalid file' do
@@ -1461,15 +1461,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       before do
         allow(pm_pcr_cycles).to receive(:update).and_return(true)
 
-        stub_v2_polymetadata(pm_original_plate_barcode, loop_2_request.id)
-        stub_v2_polymetadata(pm_original_well_id, loop_2_request.id)
-        stub_v2_polymetadata(pm_concentration_nm, loop_2_request.id)
-        stub_v2_polymetadata(pm_input_amount_available, loop_2_request.id)
-        stub_v2_polymetadata(pm_input_amount_desired, loop_2_request.id)
-        stub_v2_polymetadata(pm_sample_volume, loop_2_request.id)
-        stub_v2_polymetadata(pm_diluent_volume, loop_2_request.id)
-        stub_v2_polymetadata(pm_pcr_cycles, loop_2_request.id)
-        stub_v2_polymetadata(pm_hyb_panel, loop_2_request.id)
+        stub_polymetadata(pm_original_plate_barcode, loop_2_request.id)
+        stub_polymetadata(pm_original_well_id, loop_2_request.id)
+        stub_polymetadata(pm_concentration_nm, loop_2_request.id)
+        stub_polymetadata(pm_input_amount_available, loop_2_request.id)
+        stub_polymetadata(pm_input_amount_desired, loop_2_request.id)
+        stub_polymetadata(pm_sample_volume, loop_2_request.id)
+        stub_polymetadata(pm_diluent_volume, loop_2_request.id)
+        stub_polymetadata(pm_pcr_cycles, loop_2_request.id)
+        stub_polymetadata(pm_hyb_panel, loop_2_request.id)
       end
 
       it 'makes the expected method calls when creating the child plate' do

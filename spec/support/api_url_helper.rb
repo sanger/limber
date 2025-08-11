@@ -190,18 +190,18 @@ module ApiUrlHelper
     end
 
     # Stubs a request for all barcode printers
-    def stub_v2_barcode_printers(printers)
+    def stub_barcode_printers(printers)
       allow(Sequencescape::Api::V2::BarcodePrinter).to receive(:all).and_return(printers)
     end
 
-    def stub_v2_labware(labware)
+    def stub_labware(labware)
       [{ barcode: labware.barcode.machine }, { uuid: labware.uuid }].each do |query|
         allow(Sequencescape::Api::V2::Labware).to receive(:find).with(query).and_return([labware])
       end
     end
 
     # rubocop:todo Metrics/AbcSize
-    def stub_v2_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
+    def stub_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
       stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
 
       if custom_query
@@ -223,18 +223,18 @@ module ApiUrlHelper
     end
     # rubocop:enable Metrics/AbcSize
 
-    def stub_v2_tube_rack_purpose(tube_rack_purpose)
+    def stub_tube_rack_purpose(tube_rack_purpose)
       arguments = [{ name: tube_rack_purpose[:name] }]
       allow(Sequencescape::Api::V2::TubeRackPurpose).to receive(:find).with(*arguments).and_return([tube_rack_purpose])
     end
 
-    def stub_v2_racked_tube(racked_tube)
+    def stub_racked_tube(racked_tube)
       arguments = [{ tube_rack: racked_tube.tube_rack.id, tube: racked_tube.tube.id }]
       allow(Sequencescape::Api::V2::RackedTube).to receive(:find).with(*arguments).and_return(racked_tube)
     end
 
     # Builds the basic v2 plate finding query.
-    def stub_v2_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize
+    def stub_plate(plate, stub_search: true, custom_query: nil, custom_includes: nil) # rubocop:todo Metrics/AbcSize
       stub_barcode_search(plate.barcode.machine, plate) if stub_search
 
       if custom_query
@@ -249,25 +249,25 @@ module ApiUrlHelper
       end
 
       stub_find_by(Sequencescape::Api::V2::Plate, plate, custom_includes:)
-      stub_v2_labware(plate)
+      stub_labware(plate)
     end
 
-    def stub_v2_polymetadata(polymetadata, metadatable_id)
+    def stub_polymetadata(polymetadata, metadatable_id)
       arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
       allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
     end
 
-    def stub_v2_project(project)
+    def stub_project(project)
       arguments = [{ name: project.name }]
       allow(Sequencescape::Api::V2::Project).to receive(:find).with(*arguments).and_return([project])
     end
 
-    def stub_v2_qc_file(qc_file)
+    def stub_qc_file(qc_file)
       arguments = [{ uuid: qc_file.uuid }]
       allow(Sequencescape::Api::V2::QcFile).to receive(:find).with(*arguments).and_return([qc_file])
     end
 
-    def stub_v2_qcable(qcable)
+    def stub_qcable(qcable)
       arguments = [{ barcode: qcable.labware.barcode.machine }]
       query_builder = double('query_builder')
 
@@ -275,19 +275,19 @@ module ApiUrlHelper
       allow(query_builder).to receive(:find).with(*arguments).and_return([qcable])
     end
 
-    def stub_v2_study(study)
+    def stub_study(study)
       arguments = [{ name: study.name }]
       allow(Sequencescape::Api::V2::Study).to receive(:find).with(*arguments).and_return([study])
     end
 
-    def stub_v2_tag_layout_templates(templates)
+    def stub_tag_layout_templates(templates)
       query = double('tag_layout_template_query')
       allow(Sequencescape::Api::V2::TagLayoutTemplate).to receive(:paginate).and_return(query)
       allow(Sequencescape::Api::V2).to receive(:merge_page_results).with(query).and_return(templates)
     end
 
     # Builds the basic v2 tube finding query.
-    def stub_v2_tube(tube, stub_search: true, custom_query: nil, custom_includes: nil)
+    def stub_tube(tube, stub_search: true, custom_query: nil, custom_includes: nil)
       stub_barcode_search(tube.barcode.machine, tube) if stub_search
 
       if custom_query
@@ -295,10 +295,10 @@ module ApiUrlHelper
       end
 
       stub_find_by(Sequencescape::Api::V2::Tube, tube, custom_includes:)
-      stub_v2_labware(tube)
+      stub_labware(tube)
     end
 
-    def stub_v2_user(user, swipecard = nil)
+    def stub_user(user, swipecard = nil)
       # Find by UUID
       uuid_args = [{ uuid: user.uuid }]
       allow(Sequencescape::Api::V2::User).to receive(:find).with(*uuid_args).and_return([user])
@@ -310,7 +310,7 @@ module ApiUrlHelper
       allow(Sequencescape::Api::V2::User).to receive(:find).with(*swipecard_args).and_return([user])
     end
 
-    def stub_v2_pooled_plate_creation
+    def stub_pooled_plate_creation
       # Stubs the creation of a pooled plate by returning a double with a child attribute.
       pooled_plate_creation = double('pooled_plate_creation')
       allow(pooled_plate_creation).to receive(:child).and_return(child_plate)

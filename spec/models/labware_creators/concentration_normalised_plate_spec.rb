@@ -47,8 +47,8 @@ RSpec.describe LabwareCreators::ConcentrationNormalisedPlate do
 
   before do
     create :concentration_normalisation_purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(
+    stub_plate(child_plate, stub_search: false)
+    stub_plate(
       parent_plate,
       stub_search: false,
       custom_includes:

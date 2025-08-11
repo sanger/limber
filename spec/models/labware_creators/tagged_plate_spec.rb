@@ -39,7 +39,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
       uuid: child_purpose_uuid,
       disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
     )
-    stub_v2_plate(plate)
+    stub_plate(plate)
   end
 
   context 'on new' do
@@ -71,7 +71,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
 
       let(:tag_layout_templates) { create_list :tag_layout_template, 2 }
 
-      before { stub_v2_tag_layout_templates(tag_layout_templates) }
+      before { stub_tag_layout_templates(tag_layout_templates) }
 
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging.
       # Which is now unused. No method explicitly called `tag_plates_list` comes from

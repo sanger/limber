@@ -48,9 +48,9 @@ RSpec.describe LabwareCreators::MultiStamp do
   before do
     create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid
 
-    stub_v2_plate(parent1, stub_search: false)
-    stub_v2_plate(parent2, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
+    stub_plate(parent1, stub_search: false)
+    stub_plate(parent2, stub_search: false)
+    stub_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
   end
 
   context 'on new' do

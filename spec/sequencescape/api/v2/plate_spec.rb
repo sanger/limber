@@ -14,7 +14,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
   describe '#stock_plate' do
     let(:stock_plates) { create_list :stock_plate, 2 }
-    let(:plate) { build :unmocked_v2_plate, barcode_number: 12_345, ancestors: stock_plates }
+    let(:plate) { build :unmocked_plate, barcode_number: 12_345, ancestors: stock_plates }
 
     context 'when not a stock_plate' do
       before do

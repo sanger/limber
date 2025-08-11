@@ -41,7 +41,7 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, :cardinal do
     plate
   end
 
-  before { stub_v2_plate(parent_plate, stub_search: false) }
+  before { stub_plate(parent_plate, stub_search: false) }
 
   context 'on new' do
     it 'can be initialised' do

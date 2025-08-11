@@ -6,10 +6,10 @@ require './app/controllers/plates_controller'
 RSpec.describe PlatesController, type: :controller do
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate) { create :plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
-  let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3)) }
+  let(:barcode_printers_request) { stub_barcode_printers(create_list(:plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
 
-  before { stub_v2_plate(plate, stub_search: false) }
+  before { stub_plate(plate, stub_search: false) }
 
   describe '#show' do
     before do
