@@ -448,8 +448,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       before do
-        stub_api_v2_patch('Well')
-        stub_api_v2_save('PolyMetadatum')
+        stub_patch('Well')
+        stub_save('PolyMetadatum')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -782,8 +782,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       before do
-        stub_api_v2_save('PolyMetadatum')
-        stub_api_v2_post('Well')
+        stub_save('PolyMetadatum')
+        stub_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -1115,8 +1115,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       before do
-        stub_api_v2_save('PolyMetadatum')
-        stub_api_v2_post('Well')
+        stub_save('PolyMetadatum')
+        stub_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do

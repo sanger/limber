@@ -110,7 +110,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
     end
 
     def expect_tag_layout_creation
-      expect_api_v2_posts(
+      expect_posts(
         'TagLayout',
         [
           {
@@ -174,9 +174,9 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
           it 'has the correct child (and uuid)' do
             stub_v2_pooled_plate_creation
-            stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
-            stub_api_v2_post('StateChange')
+            stub_post('TagLayout')
+            stub_post('Transfer')
+            stub_post('StateChange')
 
             expect(subject.save).to be true
 
@@ -212,8 +212,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
           it 'has the correct child (and uuid)' do
             stub_v2_pooled_plate_creation
-            stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
+            stub_post('TagLayout')
+            stub_post('Transfer')
 
             expect(subject.save).to be true
 
@@ -238,8 +238,8 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
           it 'has the correct child (and uuid)' do
             stub_v2_pooled_plate_creation
-            stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
+            stub_post('TagLayout')
+            stub_post('Transfer')
 
             expect(subject.save).to be true
             expect(subject.child.uuid).to eq(child_plate.uuid)

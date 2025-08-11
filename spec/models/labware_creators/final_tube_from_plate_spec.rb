@@ -41,8 +41,8 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
 
     before do
       stub_v2_plate(parent, stub_search: false)
-      stub_api_v2_post('Transfer', transfer)
-      stub_api_v2_post('StateChange')
+      stub_post('Transfer', transfer)
+      stub_post('StateChange')
     end
 
     it 'pools by submission' do

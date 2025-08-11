@@ -101,7 +101,7 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
       expect_transfer_creation
 
       stub_v2_plate(create(:plate, uuid: tag_plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid'))
-      stub_api_v2_post('StateChange')
+      stub_post('StateChange')
       stub_v2_qcable(qcable)
     end
 

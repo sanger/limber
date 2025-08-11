@@ -10,7 +10,7 @@ module ApiUrlHelper
   # All methods here generate an expectation that the endpoint will be called with the correct arguments.
   # rubocop:todo Metrics/ModuleLength
   module V2Expectations
-    def expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+    def expect_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
       # 'Sequencescape::Api::V2::' to be called with given arguments, in sequence, and returns the given values.
       # If return_values is empty, it will return true.
@@ -23,7 +23,7 @@ module ApiUrlHelper
         end
     end
 
-    def do_not_expect_api_v2_posts(klass, args_list, return_values = [], method: :create!)
+    def do_not_expect_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
       # 'Sequencescape::Api::V2::' to not be called with given arguments, in sequence.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
@@ -31,15 +31,15 @@ module ApiUrlHelper
     end
 
     def expect_custom_metadatum_collection_creation
-      expect_api_v2_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
+      expect_posts('CustomMetadatumCollection', custom_metadatum_collections_attributes)
     end
 
     def expect_bulk_transfer_creation
-      expect_api_v2_posts('BulkTransfer', bulk_transfer_attributes)
+      expect_posts('BulkTransfer', bulk_transfer_attributes)
     end
 
     def expect_order_creation
-      expect_api_v2_posts(
+      expect_posts(
         'Order',
         orders_attributes.pluck(:attributes),
         orders_attributes.map { |attributes| double('Order', uuid: attributes[:uuid_out]) }
@@ -47,7 +47,7 @@ module ApiUrlHelper
     end
 
     def expect_plate_conversion_creation
-      expect_api_v2_posts(
+      expect_posts(
         'PlateConversion',
         plate_conversions_attributes,
         plate_conversions_attributes.map do |e|
@@ -62,11 +62,11 @@ module ApiUrlHelper
     def expect_plate_creation(child_plates = nil)
       child_plates ||= [child_plate] * plate_creations_attributes.size
       return_values = child_plates.map { |child_plate| double(child: child_plate) }
-      expect_api_v2_posts('PlateCreation', plate_creations_attributes, return_values)
+      expect_posts('PlateCreation', plate_creations_attributes, return_values)
     end
 
     def expect_pooled_plate_creation
-      expect_api_v2_posts(
+      expect_posts(
         'PooledPlateCreation',
         pooled_plates_attributes,
         [double(child: child_plate)] * pooled_plates_attributes.size
@@ -74,7 +74,7 @@ module ApiUrlHelper
     end
 
     def expect_qc_file_creation
-      expect_api_v2_posts('QcFile', qc_files_attributes)
+      expect_posts('QcFile', qc_files_attributes)
     end
 
     def expect_specific_tube_creation
@@ -92,15 +92,15 @@ module ApiUrlHelper
       specific_tube_creations = specific_tubes_attributes.map { |attrs| double(children: attrs[:child_tubes]) }
 
       # Create the expectation.
-      expect_api_v2_posts('SpecificTubeCreation', arguments, specific_tube_creations)
+      expect_posts('SpecificTubeCreation', arguments, specific_tube_creations)
     end
 
     def expect_state_change_creation
-      expect_api_v2_posts('StateChange', state_changes_attributes)
+      expect_posts('StateChange', state_changes_attributes)
     end
 
     def expect_submission_creation
-      expect_api_v2_posts(
+      expect_posts(
         'Submission',
         submissions_attributes.pluck(:attributes),
         submissions_attributes.map { |attributes| double('Submission', uuid: attributes[:uuid_out]) }
@@ -108,11 +108,11 @@ module ApiUrlHelper
     end
 
     def expect_tag_layout_creation
-      expect_api_v2_posts('TagLayout', tag_layouts_attributes)
+      expect_posts('TagLayout', tag_layouts_attributes)
     end
 
     def expect_transfer_creation
-      expect_api_v2_posts(
+      expect_posts(
         'Transfer',
         transfers_attributes.pluck(:arguments),
         transfers_attributes.pluck(:response) # Missing responses become nil which will trigger a default value.
@@ -120,11 +120,11 @@ module ApiUrlHelper
     end
 
     def expect_transfer_request_collection_creation
-      expect_api_v2_posts('TransferRequestCollection', [{ transfer_requests_attributes:, user_uuid: }])
+      expect_posts('TransferRequestCollection', [{ transfer_requests_attributes:, user_uuid: }])
     end
 
     def expect_tube_from_tube_creation
-      expect_api_v2_posts(
+      expect_posts(
         'TubeFromTubeCreation',
         tube_from_tubes_attributes,
         [double(child: child_tube)] * tube_from_tubes_attributes.size
@@ -132,7 +132,7 @@ module ApiUrlHelper
     end
 
     def expect_tube_from_plate_creation
-      expect_api_v2_posts(
+      expect_posts(
         'TubeFromPlateCreation',
         tubes_from_plate_attributes,
         [instance_double(Sequencescape::Api::V2::TubeFromPlateCreation, child: child_tubes.first)]
@@ -140,11 +140,11 @@ module ApiUrlHelper
     end
 
     def expect_work_completion_creation
-      expect_api_v2_posts('WorkCompletion', work_completions_attributes)
+      expect_posts('WorkCompletion', work_completions_attributes)
     end
 
     def do_not_expect_work_completion_creation
-      do_not_expect_api_v2_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
+      do_not_expect_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
     end
   end
   # rubocop:enable Metrics/ModuleLength
@@ -153,7 +153,7 @@ module ApiUrlHelper
   # None of the methods here generate an expectation that the endpoint will be called.
   # rubocop:todo Metrics/ModuleLength
   module V2Stubs
-    def stub_api_v2_patch(klass)
+    def stub_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
@@ -161,14 +161,14 @@ module ApiUrlHelper
       allow_any_instance_of(receiving_class).to receive(:update!).and_return(true)
     end
 
-    def stub_api_v2_save(klass)
+    def stub_save(klass)
       # intercepts the 'save' method for any instance of the class beginning with
       # 'Sequencescape::Api::V2::' and returns true.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
       allow_any_instance_of(receiving_class).to receive(:save).and_return(true)
     end
 
-    def stub_api_v2_post(klass, return_value = nil, method: :create!)
+    def stub_post(klass, return_value = nil, method: :create!)
       # intercepts the specified `method` for any class beginning with
       # 'Sequencescape::Api::V2::' and returns the given `return_value`, or else `true`.
       receiving_class = "Sequencescape::Api::V2::#{klass}".constantize
@@ -315,7 +315,7 @@ module ApiUrlHelper
       pooled_plate_creation = double('pooled_plate_creation')
       allow(pooled_plate_creation).to receive(:child).and_return(child_plate)
 
-      stub_api_v2_post('PooledPlateCreation', pooled_plate_creation)
+      stub_post('PooledPlateCreation', pooled_plate_creation)
     end
   end
   # rubocop:enable Metrics/ModuleLength

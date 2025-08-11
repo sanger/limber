@@ -295,7 +295,7 @@ Generally these are quite dynamic so you don't need to explicitly specify every 
 The base class also provides us with methods that are familiar to Rails for finding one or more records that match criteria.
 So to stub the API, the easiest thing to do is to get FactoryBot to make up resources using the specific resource sub-class for the V2 API, and then mock the calls to those lookup methods.
 Many of these have already been done for you in `spec/support/api_url_helper.rb` such as `stub_v2_study` and `stub_v2_tag_layout_templates` which sets up the `find` method for studies by name and the `all` method for tag layout templates, respectively.
-However there's also `stub_api_v2_post`, `stub_api_v2_patch` and `stub_api_v2_save` which ensures that any calls to the `create`, `update` and the `save` method for resources of a particular type are expected and give a return value.
+However there's also `stub_post`, `stub_patch` and `stub_save` which ensures that any calls to the `create`, `update` and the `save` method for resources of a particular type are expected and give a return value.
 If none of the existing method suit your needs, you should add new ones.
 
 ##### FactoryBot is not mocking my related resources correctly

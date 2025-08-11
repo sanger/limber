@@ -210,9 +210,9 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
 
         it 'has the correct child (and uuid)' do
           expect_plate_conversion_creation # We need the return value and this expectation mocks it for us.
-          stub_api_v2_post('StateChange')
-          stub_api_v2_post('TagLayout')
-          stub_api_v2_post('Transfer')
+          stub_post('StateChange')
+          stub_post('TagLayout')
+          stub_post('Transfer')
 
           expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)

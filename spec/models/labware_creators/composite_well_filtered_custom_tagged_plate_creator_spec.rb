@@ -182,7 +182,7 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     end
 
     def expect_tag_layout_creation
-      expect_api_v2_posts(
+      expect_posts(
         'TagLayout',
         [
           {

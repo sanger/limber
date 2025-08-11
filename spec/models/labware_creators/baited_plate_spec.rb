@@ -40,8 +40,8 @@ RSpec.describe LabwareCreators::BaitedPlate do
       stub_v2_plate(parent_plate, stub_search: false)
       stub_v2_plate(child_plate, stub_search: false)
 
-      stub_api_v2_post('BaitLibraryLayout')
-      stub_api_v2_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
+      stub_post('BaitLibraryLayout')
+      stub_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
     end
 
     it 'makes an api call for bait library layout preview' do

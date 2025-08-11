@@ -101,9 +101,9 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
 
   describe '#labware_created_with_robot' do
     it 'updates the tube rack and the tube labware metadata with the robot barcode' do
-      expect_api_v2_posts('CustomMetadatumCollection', tube_rack_custom_metadatum_collections_attributes)
-      expect_api_v2_posts('CustomMetadatumCollection', tube1_custom_metadatum_collections_attributes)
-      expect_api_v2_posts('CustomMetadatumCollection', tube2_custom_metadatum_collections_attributes)
+      expect_posts('CustomMetadatumCollection', tube_rack_custom_metadatum_collections_attributes)
+      expect_posts('CustomMetadatumCollection', tube1_custom_metadatum_collections_attributes)
+      expect_posts('CustomMetadatumCollection', tube2_custom_metadatum_collections_attributes)
 
       subject.labware_created_with_robot(robot_barcode)
     end

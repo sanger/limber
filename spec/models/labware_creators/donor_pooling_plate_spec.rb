@@ -814,7 +814,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     before { stub_v2_plate(child_plate) }
 
-    let!(:stub_metadata_creation) { stub_api_v2_save('PolyMetadatum') }
+    let!(:stub_metadata_creation) { stub_save('PolyMetadatum') }
 
     it 'posts transfer requests to Sequencescape' do
       expect_transfer_request_collection_creation

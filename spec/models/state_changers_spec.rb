@@ -11,7 +11,7 @@ RSpec.describe StateChangers do
 
   shared_context 'common setup' do
     before do
-      expect_api_v2_posts(
+      expect_posts(
         'StateChange',
         [
           {
@@ -181,7 +181,7 @@ RSpec.describe StateChangers do
 
     context 'when some tubes are not in failed state' do
       before do
-        expect_api_v2_posts(
+        expect_posts(
           'StateChange',
           [
             {

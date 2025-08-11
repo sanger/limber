@@ -100,9 +100,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
       before do
-        stub_api_v2_patch('Sample')
-        stub_api_v2_patch('SampleMetadata')
-        stub_api_v2_save('Aliquot')
+        stub_patch('Sample')
+        stub_patch('SampleMetadata')
+        stub_save('Aliquot')
       end
 
       it 'makes the expected requests' do

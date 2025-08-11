@@ -313,7 +313,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     allow(specific_tube_rack_creation).to receive(:children).and_return(child_tube_racks)
 
     # Expect the post request and return the mock.
-    expect_api_v2_posts(
+    expect_posts(
       'SpecificTubeRackCreation',
       [{ parent_uuids: [parent_uuid], tube_rack_attributes: child_tube_rack_attributes, user_uuid: user_uuid }],
       [specific_tube_rack_creation]

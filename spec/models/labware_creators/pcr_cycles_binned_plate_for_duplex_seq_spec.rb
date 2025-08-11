@@ -410,7 +410,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         ]
       end
 
-      before { stub_api_v2_patch('Well') }
+      before { stub_patch('Well') }
 
       it 'makes the expected transfer requests to bin the wells' do
         expect_plate_creation
