@@ -6,7 +6,7 @@ RSpec.shared_examples 'it only allows creation from tubes' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'allows creation' do
           expect(is_creatable_from).to be true
@@ -14,7 +14,7 @@ RSpec.shared_examples 'it only allows creation from tubes' do
       end
 
       context 'from a plate' do
-        let(:parent) { create :v2_plate }
+        let(:parent) { create :plate }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -62,7 +62,7 @@ RSpec.shared_examples 'it only allows creation from plates' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -70,7 +70,7 @@ RSpec.shared_examples 'it only allows creation from plates' do
       end
 
       context 'from a plate' do
-        let(:parent) { build :v2_plate }
+        let(:parent) { build :plate }
 
         it 'allows creation' do
           expect(is_creatable_from).to be true
@@ -86,7 +86,7 @@ RSpec.shared_examples 'it only allows creation from tagged plates' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -94,7 +94,7 @@ RSpec.shared_examples 'it only allows creation from tagged plates' do
       end
 
       context 'from a plate' do
-        let(:parent) { build :v2_plate }
+        let(:parent) { build :plate }
 
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -124,7 +124,7 @@ RSpec.shared_examples 'it does not allow creation' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -132,7 +132,7 @@ RSpec.shared_examples 'it does not allow creation' do
       end
 
       context 'from a plate' do
-        let(:parent) { build :v2_plate }
+        let(:parent) { build :plate }
 
         before { allow(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -162,7 +162,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -192,7 +192,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       end
 
       context 'from a previously passed library and a new repool' do
-        let(:parent) { build :v2_plate, pools: }
+        let(:parent) { build :plate, pools: }
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -253,7 +253,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false

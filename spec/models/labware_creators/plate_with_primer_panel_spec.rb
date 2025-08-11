@@ -20,13 +20,13 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
   end
   let(:parent_plate) do
-    create :v2_plate_with_primer_panels,
+    create :plate_with_primer_panels,
            barcode_number: '2',
            uuid: parent_uuid,
            size: plate_size,
            outer_requests: requests
   end
-  let(:child_plate) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
+  let(:child_plate) { create :plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 

@@ -12,9 +12,9 @@ RSpec.feature 'Creating a plate with bait', :js do
     Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
   let(:example_plate) do
-    create :v2_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests
+    create :plate, uuid: plate_uuid, state: 'passed', pool_sizes: [3, 3], barcode_number: 2, outer_requests: requests
   end
-  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3], barcode_number: 3 }
+  let(:child_plate) { create :plate, uuid: 'child-uuid', state: 'pending', pool_sizes: [3, 3], barcode_number: 3 }
 
   let(:bait_library_layout) { create :bait_library_layout }
 
@@ -30,7 +30,7 @@ RSpec.feature 'Creating a plate with bait', :js do
     stub_v2_plate(example_plate)
     stub_v2_plate(child_plate)
 
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
 
     # end of stubs for plate show page
 

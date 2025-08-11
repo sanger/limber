@@ -22,7 +22,7 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
   let(:request_type2) { create(:request_type, key: 'request-type-2') }
   let(:library_type2) { 'library-type-2' }
 
-  let(:new_submission) { create(:v2_submission) }
+  let(:new_submission) { create(:submission) }
 
   # Requests on the wells because of the new submission.
   let(:new_requests) do
@@ -65,17 +65,17 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
 
   let(:aliquots) do
     [
-      create(:v2_aliquot, request: [old_requests[0]]),
-      create(:v2_aliquot, request: [old_requests[1]]),
-      create(:v2_aliquot, request: [old_requests[2]])
+      create(:aliquot, request: [old_requests[0]]),
+      create(:aliquot, request: [old_requests[1]]),
+      create(:aliquot, request: [old_requests[2]])
     ]
   end
 
   let(:wells) do
     [
-      create(:v2_well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1'),
-      create(:v2_well, requests_as_source: [new_requests[1]], aliquots: [aliquots[1]], location: 'B1'),
-      create(:v2_well, requests_as_source: [new_requests[2]], aliquots: [aliquots[2]], location: 'C1')
+      create(:well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1'),
+      create(:well, requests_as_source: [new_requests[1]], aliquots: [aliquots[1]], location: 'B1'),
+      create(:well, requests_as_source: [new_requests[2]], aliquots: [aliquots[2]], location: 'C1')
     ]
   end
 
@@ -84,12 +84,12 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
   let(:parent_uuid) { 'parent-uuid' }
   let(:parent) do
     create(
-      :v2_plate,
+      :plate,
       :has_pooling_metadata,
       purpose: parent_purpose_name,
       uuid: parent_uuid,
       wells: wells,
-      submission_pools: create_list(:v2_submission_pool, 1)
+      submission_pools: create_list(:submission_pool, 1)
     )
   end
 
@@ -145,7 +145,7 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
 
     # Use the following as the tag plate.
     let(:child_uuid) { 'child-uuid' }
-    let(:child) { create(:v2_plate, purpose: child_purpose_name, uuid: child_uuid) }
+    let(:child) { create(:plate, purpose: child_purpose_name, uuid: child_uuid) }
 
     let(:tag_plate_barcode) { child.barcode.human }
     let(:tag_plate_uuid) { child_uuid }

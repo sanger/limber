@@ -9,8 +9,8 @@ RSpec.describe Presenters::StandardPresenter do
   before { create :banking_plate_purpose_config }
 
   let(:purpose_name) { 'banking-plate-purpose' }
-  let(:purpose) { create :v2_purpose, name: purpose_name }
-  let(:labware) { create :v2_plate, purpose: }
+  let(:purpose) { create :purpose, name: purpose_name }
+  let(:labware) { create :plate, purpose: }
   let(:presenter) { described_class.new(labware:) }
 
   describe '#csv_file_links' do

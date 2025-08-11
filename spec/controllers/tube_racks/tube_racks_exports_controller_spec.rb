@@ -99,7 +99,7 @@ RSpec.describe TubeRacks::TubeRacksExportsController do
       let(:includes) { 'racked_tubes.tube' }
       let(:selects) { nil }
       let(:ancestor_purpose_name) { 'LRC Blood Vac' }
-      let(:ancestor_tubes) { create_list(:v2_tube, 3, purpose: ancestor_purpose_name) }
+      let(:ancestor_tubes) { create_list(:tube, 3, purpose: ancestor_purpose_name) }
       let(:ancestor_tubes_sample_hash) { ancestor_tubes.index_by { |tube| tube.aliquots.first.sample.uuid } }
 
       before do

@@ -335,7 +335,7 @@ FactoryBot.define do
   factory :root_record, class: Sequencescape::Api::V2::RootRecord do
     skip_create
 
-    transient { related_thing { create :v2_tag_group_with_tags } }
+    transient { related_thing { create :tag_group_with_tags } }
 
     after(:build) do |record, factory|
       record._cached_relationship(:related_thing) { factory.related_thing } if factory.related_thing

@@ -3,7 +3,7 @@
 RSpec.describe Presenters::SimpleTubePresenter do
   subject { described_class.new(labware:) }
 
-  let(:labware) { build :v2_tube, state: }
+  let(:labware) { build :tube, state: }
 
   before do
     create(:purpose_config, name: 'Example Plate Purpose', uuid: 'example-purpose-uuid-1')

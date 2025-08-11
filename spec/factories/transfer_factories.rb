@@ -2,13 +2,13 @@
 
 FactoryBot.define do
   # API V2 Transfer
-  factory :v2_transfer, class: Sequencescape::Api::V2::Transfer do
+  factory :transfer, class: Sequencescape::Api::V2::Transfer do
     skip_create
 
     transient do
       user
-      source { create :v2_plate }
-      destination { create :v2_plate }
+      source { create :plate }
+      destination { create :plate }
     end
 
     uuid
@@ -18,10 +18,10 @@ FactoryBot.define do
     destination_uuid { destination.uuid }
     transfers { { 'A1' => 'A1', 'B1' => 'B1', 'C1' => 'C1' } }
 
-    factory :v2_transfer_to_tubes_by_submission do
+    factory :transfer_to_tubes_by_submission do
       transient do
         destination_tube_count { 2 }
-        tubes { create_list(:v2_tube, destination_tube_count) }
+        tubes { create_list(:tube, destination_tube_count) }
         well_coordinates { WellHelpers.column_order[0, destination_tube_count] }
       end
 
@@ -31,10 +31,10 @@ FactoryBot.define do
       transfers { (0...destination_tube_count).to_h { |i| [well_coordinates[i], { uuid: tubes[i].uuid }] } }
     end
 
-    factory :v2_transfer_between_tubes do
+    factory :transfer_between_tubes do
       transient do
-        source { create :v2_tube }
-        destination { create :v2_tube }
+        source { create :tube }
+        destination { create :tube }
       end
 
       transfers { nil }

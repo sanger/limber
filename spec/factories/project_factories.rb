@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   # API V2 Project
-  factory :v2_project, class: Sequencescape::Api::V2::Project do
+  factory :project, class: Sequencescape::Api::V2::Project do
     skip_create
 
     id

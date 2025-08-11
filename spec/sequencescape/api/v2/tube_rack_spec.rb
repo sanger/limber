@@ -7,8 +7,8 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
     let!(:tube_rack) { create(:tube_rack, tubes: { A1: tube1, B1: tube2 }) }
 
     context 'when there are no requests' do
-      let(:tube1) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: nil)]) }
-      let(:tube2) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: nil)]) }
+      let(:tube1) { create(:tube, aliquots: [create(:aliquot, request: nil)]) }
+      let(:tube2) { create(:tube, aliquots: [create(:aliquot, request: nil)]) }
 
       it 'returns an empty array' do
         expect(tube_rack.requests_in_progress).to eq([])
@@ -20,8 +20,8 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       let(:request_type2) { create(:request_type, key: 'second_key') }
       let(:request1) { create(:request, request_type: request_type1, state: 'started') }
       let(:request2) { create(:request, request_type: request_type2, state: 'started') }
-      let(:tube1) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: request1)]) }
-      let(:tube2) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: request2)]) }
+      let(:tube1) { create(:tube, aliquots: [create(:aliquot, request: request1)]) }
+      let(:tube2) { create(:tube, aliquots: [create(:aliquot, request: request2)]) }
 
       before do
         tube1
@@ -50,8 +50,8 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
     let!(:tube_rack) { create(:tube_rack, tubes: { A1: tube1, B1: tube2 }) }
 
     context 'when there are no requests' do
-      let(:tube1) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: nil)]) }
-      let(:tube2) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: nil)]) }
+      let(:tube1) { create(:tube, aliquots: [create(:aliquot, request: nil)]) }
+      let(:tube2) { create(:tube, aliquots: [create(:aliquot, request: nil)]) }
 
       it 'returns an empty array' do
         expect(tube_rack.all_requests).to eq([])
@@ -67,16 +67,16 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       # set up tube 1 with a request as source
       let(:receptacle1) do
         create(
-          :v2_receptacle,
+          :receptacle,
           qc_results: [],
-          aliquots: [create(:v2_aliquot, request: nil)],
+          aliquots: [create(:aliquot, request: nil)],
           requests_as_source: [request1]
         )
       end
-      let(:tube1) { create(:v2_tube, receptacle: receptacle1) }
+      let(:tube1) { create(:tube, receptacle: receptacle1) }
 
       # set up tube 2 with an aliquot request
-      let(:tube2) { create(:v2_tube, aliquots: [create(:v2_aliquot, request: request2)]) }
+      let(:tube2) { create(:tube, aliquots: [create(:aliquot, request: request2)]) }
 
       before do
         tube1
@@ -132,12 +132,12 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
     let(:tube5_uuid) { SecureRandom.uuid }
     let(:tube6_uuid) { SecureRandom.uuid }
 
-    let!(:tube1) { create :v2_tube, uuid: tube1_uuid, barcode_number: 1 }
-    let!(:tube2) { create :v2_tube, uuid: tube2_uuid, barcode_number: 2 }
-    let!(:tube3) { create :v2_tube, uuid: tube3_uuid, barcode_number: 3 }
-    let!(:tube4) { create :v2_tube, uuid: tube4_uuid, barcode_number: 4 }
-    let!(:tube5) { create :v2_tube, uuid: tube5_uuid, barcode_number: 5 }
-    let!(:tube6) { create :v2_tube, uuid: tube6_uuid, barcode_number: 6 }
+    let!(:tube1) { create :tube, uuid: tube1_uuid, barcode_number: 1 }
+    let!(:tube2) { create :tube, uuid: tube2_uuid, barcode_number: 2 }
+    let!(:tube3) { create :tube, uuid: tube3_uuid, barcode_number: 3 }
+    let!(:tube4) { create :tube, uuid: tube4_uuid, barcode_number: 4 }
+    let!(:tube5) { create :tube, uuid: tube5_uuid, barcode_number: 5 }
+    let!(:tube6) { create :tube, uuid: tube6_uuid, barcode_number: 6 }
 
     let(:tubes) { { 'B1' => tube1, 'A1' => tube2, 'C1' => tube3, 'D3' => tube4, 'A3' => tube5, 'C2' => tube6 } }
 
@@ -173,9 +173,9 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
   end
 
   describe '#state' do
-    let(:tube1) { create :v2_tube, uuid: 'tube1_uuid', state: state_for_tube1, barcode_number: 1 }
-    let(:tube2) { create :v2_tube, uuid: 'tube2_uuid', state: state_for_tube2, barcode_number: 2 }
-    let(:tube3) { create :v2_tube, uuid: 'tube3_uuid', state: state_for_tube3, barcode_number: 3 }
+    let(:tube1) { create :tube, uuid: 'tube1_uuid', state: state_for_tube1, barcode_number: 1 }
+    let(:tube2) { create :tube, uuid: 'tube2_uuid', state: state_for_tube2, barcode_number: 2 }
+    let(:tube3) { create :tube, uuid: 'tube3_uuid', state: state_for_tube3, barcode_number: 3 }
 
     let(:tubes) { { 'A1' => tube1, 'B1' => tube2, 'C1' => tube3 } }
 
@@ -235,7 +235,7 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
       let(:state_for_tube3) { 'failed' }
       let(:state_for_tube4) { 'cancelled' }
 
-      let(:tube4) { create :v2_tube, uuid: 'tube3_uuid', state: state_for_tube4, barcode_number: 4 }
+      let(:tube4) { create :tube, uuid: 'tube3_uuid', state: state_for_tube4, barcode_number: 4 }
 
       let(:tubes) { { 'A1' => tube1, 'B1' => tube2, 'C1' => tube3, 'D1' => tube4 } }
 

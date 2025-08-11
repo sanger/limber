@@ -29,11 +29,11 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
              library_type: 'Sample Libarary Type'
     end
     let(:well_kinnex) do
-      create(:v2_well, name: 'K1', position: { 'name' => 'K1' }, requests_as_source: [request], outer_request: nil)
+      create(:well, name: 'K1', position: { 'name' => 'K1' }, requests_as_source: [request], outer_request: nil)
     end
     let(:well_non_kinnex) do
       create(
-        :v2_well,
+        :well,
         name: 'K2',
         position: {
           'name' => 'K2'
@@ -43,7 +43,7 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
       )
     end
     let!(:parent_plate) do
-      create :v2_plate,
+      create :plate,
              uuid: parent_uuid,
              barcode_number: '2',
              size: plate_size,

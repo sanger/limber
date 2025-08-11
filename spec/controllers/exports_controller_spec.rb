@@ -11,7 +11,7 @@ RSpec.describe ExportsController, type: :controller do
     'wells.qc_results,wells.aliquots.sample.sample_metadata,wells.aliquots.request.poly_metadata'
   end
   let(:well_src_asset_includes) { 'wells.transfer_requests_as_target.source_asset' }
-  let(:plate) { create :v2_plate, barcode_number: 1 }
+  let(:plate) { create :plate, barcode_number: 1 }
   let(:plate_barcode) { 'DN1S' }
 
   RSpec.shared_examples 'a csv view' do
@@ -361,8 +361,8 @@ RSpec.describe ExportsController, type: :controller do
     # multiple_ancestor_plates is the view name for both exports set in exports.yml
 
     let(:ancestor_purpose_name) { 'example_ancestor_purpose' }
-    let(:ancestor_purpose) { create(:v2_purpose, name: ancestor_purpose_name) }
-    let(:ancestor_plates) { create_list(:v2_plate, 3, purpose: ancestor_purpose) }
+    let(:ancestor_purpose) { create(:purpose, name: ancestor_purpose_name) }
+    let(:ancestor_plates) { create_list(:plate, 3, purpose: ancestor_purpose) }
 
     let(:exports_path) { 'spec/fixtures/config/exports/multiple_ancestor_plates.yml' }
     let(:config) { YAML.load_file(exports_path) }

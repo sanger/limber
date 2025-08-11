@@ -4,7 +4,7 @@ require 'rails_helper'
 require_relative 'shared_examples'
 
 RSpec.describe Sequencescape::Api::V2::Plate do
-  subject(:plate) { create :v2_plate, barcode_number: 12_345 }
+  subject(:plate) { create :plate, barcode_number: 12_345 }
 
   let(:the_labware) { plate }
 
@@ -13,7 +13,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
   it { is_expected.not_to be_tube_rack }
 
   describe '#stock_plate' do
-    let(:stock_plates) { create_list :v2_stock_plate, 2 }
+    let(:stock_plates) { create_list :stock_plate, 2 }
     let(:plate) { build :unmocked_v2_plate, barcode_number: 12_345, ancestors: stock_plates }
 
     context 'when not a stock_plate' do
@@ -41,7 +41,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
   describe '#fetch_stock_plate_ancestors' do
     let(:ancestors_scope) { double('ancestors_scope') }
     let(:stock_plate_names) { ['Stock platey plate stock'] }
-    let(:stock_plates) { create_list :v2_plate, 2 }
+    let(:stock_plates) { create_list :plate, 2 }
 
     before do
       allow(plate).to receive(:ancestors).and_return(ancestors_scope)

@@ -7,7 +7,7 @@ require 'rails_helper'
 RSpec.describe Sequencescape::Api::V2::Plate::Pools do
   subject(:pools) { Sequencescape::Api::V2::Plate::Pools.new(plate.wells) }
 
-  let(:plate) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
+  let(:plate) { create :plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
   let(:number_of_pools) { 2 }
 
   describe '#number_of_pools' do

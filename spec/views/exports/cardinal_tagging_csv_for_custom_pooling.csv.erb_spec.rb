@@ -3,12 +3,12 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
-  let(:aliquot_1) { create :v2_tagged_aliquot }
-  let(:aliquot_2) { create :v2_tagged_aliquot }
-  let(:aliquot_3) { create :v2_tagged_aliquot }
-  let(:well_a1) { create(:v2_tagged_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_3]) }
-  let(:well_b1) { create(:v2_tagged_well, position: { 'name' => 'B1' }, aliquots: [aliquot_2]) }
-  let(:labware) { create(:v2_plate, wells: [well_a1, well_b1]) }
+  let(:aliquot_1) { create :tagged_aliquot }
+  let(:aliquot_2) { create :tagged_aliquot }
+  let(:aliquot_3) { create :tagged_aliquot }
+  let(:well_a1) { create(:tagged_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_3]) }
+  let(:well_b1) { create(:tagged_well, position: { 'name' => 'B1' }, aliquots: [aliquot_2]) }
+  let(:labware) { create(:plate, wells: [well_a1, well_b1]) }
 
   before { assign(:plate, labware) }
 
@@ -37,8 +37,8 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   end
 
   context "well a1's aliquot has no tags" do
-    let(:aliquot) { create(:v2_aliquot) }
-    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [aliquot]) }
+    let(:aliquot) { create(:aliquot) }
+    let(:well_a1) { create(:well, position: { 'name' => 'A1' }, aliquots: [aliquot]) }
 
     it "gives nil values for a1's tag indices", :aggregate_failures do
       parsed_csv = CSV.parse(render)
@@ -55,7 +55,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   end
 
   context 'well a1 is empty' do
-    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquot_count: 0) }
+    let(:well_a1) { create(:well, position: { 'name' => 'A1' }, aliquot_count: 0) }
 
     it 'skips empty wells', :aggregate_failures do
       parsed_csv = CSV.parse(render)
@@ -73,7 +73,7 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
 
   context 'well a1 has more than 1 aliquot but with matching tag indices' do
     let(:well_a1) do
-      create(:v2_well, position: { 'name' => 'A1' }, aliquot_count: 2, aliquot_factory: :v2_tagged_aliquot)
+      create(:well, position: { 'name' => 'A1' }, aliquot_count: 2, aliquot_factory: :tagged_aliquot)
     end
 
     it 'includes all wells, still', :aggregate_failures do
@@ -93,9 +93,9 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   end
 
   context 'well a1 has more than 1 aliquot with different tag_index values' do
-    let(:aliquot_1) { create(:v2_aliquot, tag_oligo: 'CAT', tag_index: 5, tag2_oligo: 'GAG', tag2_index: 10) }
-    let(:aliquot_2) { create(:v2_aliquot, tag_oligo: 'TAT', tag_index: 7, tag2_oligo: 'GAG', tag2_index: 10) }
-    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_2]) }
+    let(:aliquot_1) { create(:aliquot, tag_oligo: 'CAT', tag_index: 5, tag2_oligo: 'GAG', tag2_index: 10) }
+    let(:aliquot_2) { create(:aliquot, tag_oligo: 'TAT', tag_index: 7, tag2_oligo: 'GAG', tag2_index: 10) }
+    let(:well_a1) { create(:well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_2]) }
 
     it 'does not include well a1 in the CSV file', :aggregate_failures do
       parsed_csv = CSV.parse(render)
@@ -112,9 +112,9 @@ RSpec.describe 'exports/cardinal_tagging_csv_for_custom_pooling.csv.erb' do
   end
 
   context 'well a1 has more than 1 aliquot with different tag2_index values' do
-    let(:aliquot_1) { create(:v2_aliquot, tag_oligo: 'CAT', tag_index: 5, tag2_oligo: 'GAG', tag2_index: 10) }
-    let(:aliquot_2) { create(:v2_aliquot, tag_oligo: 'CAT', tag_index: 5, tag2_oligo: 'TAC', tag2_index: 8) }
-    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_2]) }
+    let(:aliquot_1) { create(:aliquot, tag_oligo: 'CAT', tag_index: 5, tag2_oligo: 'GAG', tag2_index: 10) }
+    let(:aliquot_2) { create(:aliquot, tag_oligo: 'CAT', tag_index: 5, tag2_oligo: 'TAC', tag2_index: 8) }
+    let(:well_a1) { create(:well, position: { 'name' => 'A1' }, aliquots: [aliquot_1, aliquot_2]) }
 
     it 'does not include well a1 in the CSV file', :aggregate_failures do
       parsed_csv = CSV.parse(render)

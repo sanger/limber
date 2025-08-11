@@ -10,7 +10,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
   it_behaves_like 'it only allows creation from plates'
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate) { create(:v2_plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
+  let(:plate) { create(:plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
   let(:transfer_template_uuid) { 'custom-pooling' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -46,7 +46,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
         end
       end
 
-      let(:tag_layout_templates) { create_list :v2_tag_layout_template, 2 }
+      let(:tag_layout_templates) { create_list :tag_layout_template, 2 }
 
       before { stub_v2_tag_layout_templates(tag_layout_templates) }
 
@@ -78,7 +78,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
     let(:tag_template_uuid) { 'tag-layout-template' }
     let(:parents) { [plate_uuid, tag_plate_uuid] }
 
-    let(:child_plate) { create :v2_plate }
+    let(:child_plate) { create :plate }
 
     let(:pooled_plates_attributes) do
       [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }]

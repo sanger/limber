@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :v2_tag_layout_template, class: Sequencescape::Api::V2::TagLayoutTemplate do
+  factory :tag_layout_template, class: Sequencescape::Api::V2::TagLayoutTemplate do
     skip_create
 
     uuid
@@ -11,7 +11,7 @@ FactoryBot.define do
     direction { 'column' }
     walking_by { 'wells of plate' }
     transient do
-      tag_group { create :v2_tag_group_with_tags }
+      tag_group { create :tag_group_with_tags }
       tag2_group { nil }
     end
 
@@ -51,8 +51,8 @@ FactoryBot.define do
       direction { 'combinatorial by row' }
     end
 
-    factory :v2_dual_index_tag_layout_template do
-      transient { tag2_group { create :v2_tag_group_with_tags } }
+    factory :dual_index_tag_layout_template do
+      transient { tag2_group { create :tag_group_with_tags } }
     end
   end
 end

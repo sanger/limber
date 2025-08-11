@@ -11,7 +11,7 @@ RSpec.describe RobotsController, :robots, type: :controller do
 
   describe '#start' do
     let(:user) { create :user }
-    let(:plate) { create :v2_plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
+    let(:plate) { create :plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
     let(:custom_metadatum_collections_attributes) do
       [{ user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
@@ -62,13 +62,13 @@ RSpec.describe RobotsController, :robots, type: :controller do
   describe '#verify' do
     let(:user) { create :user }
     let(:target_plate) do
-      create :v2_plate,
+      create :plate,
              purpose_name: 'target_plate_purpose',
              purpose_uuid: 'target_plate_purpose_uuid',
              parents: [source_plate]
     end
     let(:source_plate) do
-      create :v2_plate, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
+      create :plate, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
     end
 
     it 'verifies robot and beds' do

@@ -14,14 +14,14 @@ RSpec.describe LabwareCreators::CardinalPoolsPlate, :cardinal do
   let(:user_uuid) { 'user-uuid' }
   let(:plate_size) { 96 }
   let(:child_uuid) { 'example-dest-uuid' }
-  let(:child_plate) { create(:v2_plate, uuid: child_uuid, well_count: plate_size) }
+  let(:child_plate) { create(:plate, uuid: child_uuid, well_count: plate_size) }
 
   let(:form_attributes) { { purpose_uuid: dest_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
   # TODO: rename throughout to source and dest
   # SS V2 API Plate
   let(:parent_plate) do
-    plate = create(:v2_plate, uuid: parent_uuid, well_count: plate_size, aliquots_without_requests: 1)
+    plate = create(:plate, uuid: parent_uuid, well_count: plate_size, aliquots_without_requests: 1)
 
     collected_by_group1 = plate.wells[0..9]
     collected_by_group1.each do |well|

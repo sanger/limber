@@ -33,7 +33,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
   let(:well_a1_request) { create :library_request_with_poly_metadata, poly_metadata: [well_a1_metadata] }
   let(:well_a1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A1'
       },
@@ -48,7 +48,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
   let(:well_a2_request) { create :library_request_with_poly_metadata, poly_metadata: [well_a2_metadata] }
   let(:well_a2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A2'
       },
@@ -63,7 +63,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
   let(:well_b2_request) { create :library_request_with_poly_metadata, poly_metadata: [well_b2_metadata] }
   let(:well_b2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'B2'
       },
@@ -78,7 +78,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
   let(:well_a3_request) { create :library_request_with_poly_metadata, poly_metadata: [well_a3_metadata] }
   let(:well_a3) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A3'
       },
@@ -88,7 +88,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
   end
 
   let(:labware) do
-    build :v2_plate,
+    build :plate,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,

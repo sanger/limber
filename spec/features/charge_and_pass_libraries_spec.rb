@@ -16,7 +16,7 @@ RSpec.feature 'Charge and pass libraries', :js do
   background do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   context 'plate with no submissions to be made' do
@@ -29,12 +29,12 @@ RSpec.feature 'Charge and pass libraries', :js do
     let(:plate_barcode) { plate.labware_barcode.machine }
     let(:submission_uuids) { %w[pool-1-uuid pool-2-uuid] }
     let(:plate) do
-      create :v2_plate,
+      create :plate,
              uuid: labware_uuid,
              state: 'passed',
              pool_sizes: [8, 8],
              include_submissions: true,
-             well_factory: :v2_tagged_well
+             well_factory: :tagged_well
     end
 
     scenario 'charge and pass libraries' do
@@ -56,7 +56,7 @@ RSpec.feature 'Charge and pass libraries', :js do
 
     let(:submission_uuids) { [] }
     let(:request_options) { { read_length: '150' } }
-    let(:tube) { create :v2_tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
+    let(:tube) { create :tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
     let(:tube_barcode) { tube.labware_barcode.machine }
 
     let(:orders_attributes) do

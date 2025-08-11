@@ -7,16 +7,16 @@ RSpec.describe 'exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb' d
   let(:qc_result_options_2) { { value: 2.7, key: 'concentration', units: 'ng/ul' } }
 
   let(:well_a1) do
-    create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options_1))
+    create(:well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options_1))
   end
   let(:well_b1) do
-    create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options_2))
+    create(:well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options_2))
   end
 
-  let(:ancestor_well_a1) { create(:v2_well, position: { 'name' => 'A1' }) }
-  let(:ancestor_well_b1) { create(:v2_well, position: { 'name' => 'B1' }) }
-  let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
-  let(:ancestor_labware) { create(:v2_plate, wells: [ancestor_well_a1, ancestor_well_b1], pool_sizes: [1, 1]) }
+  let(:ancestor_well_a1) { create(:well, position: { 'name' => 'A1' }) }
+  let(:ancestor_well_b1) { create(:well, position: { 'name' => 'B1' }) }
+  let(:labware) { create(:plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
+  let(:ancestor_labware) { create(:plate, wells: [ancestor_well_a1, ancestor_well_b1], pool_sizes: [1, 1]) }
 
   let(:well_a1_sanger_sample_id) { well_a1.aliquots.first.sample.sanger_sample_id }
   let(:well_b1_sanger_sample_id) { well_b1.aliquots.first.sample.sanger_sample_id }

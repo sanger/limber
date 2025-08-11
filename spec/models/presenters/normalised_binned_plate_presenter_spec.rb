@@ -28,20 +28,20 @@ RSpec.describe Presenters::NormalisedBinnedPlatePresenter do
   # B       *
   # C       *
   let(:well_a1) do
-    create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result_concentration, 1, value: '0.6'))
+    create(:well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result_concentration, 1, value: '0.6'))
   end
   let(:well_a2) do
-    create(:v2_well, position: { 'name' => 'A2' }, qc_results: create_list(:qc_result_concentration, 1, value: '10.0'))
+    create(:well, position: { 'name' => 'A2' }, qc_results: create_list(:qc_result_concentration, 1, value: '10.0'))
   end
   let(:well_b2) do
-    create(:v2_well, position: { 'name' => 'B2' }, qc_results: create_list(:qc_result_concentration, 1, value: '12.0'))
+    create(:well, position: { 'name' => 'B2' }, qc_results: create_list(:qc_result_concentration, 1, value: '12.0'))
   end
   let(:well_c2) do
-    create(:v2_well, position: { 'name' => 'C2' }, qc_results: create_list(:qc_result_concentration, 1, value: '15.0'))
+    create(:well, position: { 'name' => 'C2' }, qc_results: create_list(:qc_result_concentration, 1, value: '15.0'))
   end
 
   let(:labware) do
-    build :v2_plate,
+    build :plate,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,

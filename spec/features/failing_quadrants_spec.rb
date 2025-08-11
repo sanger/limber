@@ -10,15 +10,15 @@ RSpec.feature 'Failing quadrants', :js do
   let(:plate_uuid) { SecureRandom.uuid }
   let(:wells) do
     [
-      create(:v2_well, location: 'A1', state: 'passed'),
-      create(:v2_well, location: 'B1', state: 'passed'),
-      create(:v2_well, location: 'A2', state: 'passed'),
-      create(:v2_well, location: 'B2', state: 'failed'),
-      create(:v2_well, location: 'A3', state: 'passed')
+      create(:well, location: 'A1', state: 'passed'),
+      create(:well, location: 'B1', state: 'passed'),
+      create(:well, location: 'A2', state: 'passed'),
+      create(:well, location: 'B2', state: 'failed'),
+      create(:well, location: 'A3', state: 'passed')
     ]
   end
   let(:example_plate) do
-    create :v2_plate,
+    create :plate,
            uuid: plate_uuid,
            purpose_uuid: 'stock-plate-purpose-uuid',
            state: 'passed',
@@ -54,7 +54,7 @@ RSpec.feature 'Failing quadrants', :js do
       stub_v2_plate(example_plate)
     end
 
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'failing wells' do

@@ -14,7 +14,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
   let(:pools) { 0 }
   let(:plate) do
     create(
-      :v2_plate,
+      :plate,
       :has_pooling_metadata,
       uuid: plate_uuid,
       barcode_number: 2,
@@ -69,7 +69,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
         end
       end
 
-      let(:tag_layout_templates) { create_list :v2_tag_layout_template, 2 }
+      let(:tag_layout_templates) { create_list :tag_layout_template, 2 }
 
       before { stub_v2_tag_layout_templates(tag_layout_templates) }
 

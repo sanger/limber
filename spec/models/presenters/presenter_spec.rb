@@ -6,7 +6,7 @@ RSpec.describe Presenters::Presenter, type: :model do
   # Presenter is a module so we need a dummy class
   let(:dummy_class) { Class.new { include Presenters::Presenter } }
 
-  let(:labware) { create :v2_plate }
+  let(:labware) { create :plate }
   let(:presenter) { dummy_class.new(labware:) }
 
   describe '#parent_labwares' do
@@ -29,7 +29,7 @@ RSpec.describe Presenters::Presenter, type: :model do
     end
 
     context 'when there are parents' do
-      let(:purpose) { create(:v2_purpose) }
+      let(:purpose) { create(:purpose) }
       let(:parent_labware1) { create(:labware, purpose:) }
       let(:parent_labware2) { create(:labware, purpose:) }
       let(:parent_labwares) { [parent_labware1, parent_labware2] }
@@ -69,7 +69,7 @@ RSpec.describe Presenters::Presenter, type: :model do
     end
 
     context 'when there are children' do
-      let(:purpose) { create(:v2_purpose) }
+      let(:purpose) { create(:purpose) }
       let(:child_labware1) { create(:labware, purpose:) }
       let(:child_labware2) { create(:labware, purpose:) }
       let(:child_labwares) { [child_labware1, child_labware2] }

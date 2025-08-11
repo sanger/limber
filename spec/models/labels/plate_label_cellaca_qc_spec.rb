@@ -8,7 +8,7 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
   describe '#attributes' do
     subject(:attributes) { label.attributes }
 
-    let(:labware) { create :v2_plate, barcode_number: 2 }
+    let(:labware) { create :plate, barcode_number: 2 }
     let(:label) { described_class.new(labware) }
 
     it 'has the additional attributes' do
@@ -22,7 +22,7 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
     let(:label) { described_class.new(labware) }
 
     context 'when creating the label of a full plate' do
-      let(:labware) { create :v2_plate, pool_sizes: [96] }
+      let(:labware) { create :plate, pool_sizes: [96] }
 
       it 'contains four items' do
         expect(qc_label_definitions.length).to eq(4)
@@ -49,7 +49,7 @@ RSpec.describe Labels::PlateLabelCellacaQc, type: :model do
     end
 
     context 'when creating the label of a partial plate' do
-      let(:labware) { create :v2_plate, pool_sizes: [5] }
+      let(:labware) { create :plate, pool_sizes: [5] }
 
       it 'contains four items' do
         expect(qc_label_definitions.length).to eq(1)
