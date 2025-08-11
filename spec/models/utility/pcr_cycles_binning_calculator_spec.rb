@@ -7,11 +7,8 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
   context 'when computing values for pcr cycles binning' do
     subject { described_class.new(well_details) }
 
-    let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
-    let(:num_rows) { 8 }
-    let(:num_cols) { 12 }
 
     let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, requests_as_source: [requests[0]]) }
     let(:well_b1) { create(:v2_well, position: { 'name' => 'B1' }, requests_as_source: [requests[1]]) }

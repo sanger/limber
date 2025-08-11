@@ -9,8 +9,6 @@ RSpec.describe LabwareCreators::MultiPlatePool do
   it_behaves_like 'it only allows creation from tagged plates'
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-  let(:wells_in_column_order) { WellHelpers.column_order }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -41,9 +39,6 @@ RSpec.describe LabwareCreators::MultiPlatePool do
     subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     let(:plate_b_uuid) { 'example-plate-b-uuid' }
-    let(:plate_b_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
-
-    let(:child_plate_uuid) { 'child-plate-uuid' }
 
     let(:form_attributes) do
       {

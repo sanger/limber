@@ -47,32 +47,6 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
     ]
   end
 
-  # The number of samples is 2, so the sample volume is 8.75 µL ((2*30000*0.75)/2400 -10.0)
-  let(:row_source_a1) do
-    [
-      source_plate.barcode.human,
-      source_well_a1.location,
-      dest_plate.barcode.human,
-      mapping[dest_well_a1.location],
-      '8.8',
-      '37.5',
-      '0.0'
-    ]
-  end
-
-  # The number of samples is 10, so the sample volume is 83.75 µL (((10*30000*0.75)/2400) -10.0)
-  let(:row_source_b1) do
-    [
-      source_plate.barcode.human,
-      source_well_b1.location,
-      dest_plate.barcode.human,
-      mapping[dest_well_a2.location],
-      '83.8',
-      '37.5',
-      '0.0'
-    ]
-  end
-
   before do
     assign(:workflow, workflow)
     assign(:plate, dest_plate)

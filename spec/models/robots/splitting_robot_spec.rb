@@ -7,7 +7,6 @@ RSpec.describe Robots::SplittingRobot, :robots do
   include RobotHelpers
 
   let(:user_uuid) { SecureRandom.uuid }
-  let(:plate_uuid) { SecureRandom.uuid }
 
   let(:wells) { %w[C1 D1].map { |location| create :v2_well, location: location, downstream_plates: transfer_target_1 } }
   let(:transfer_target_1) { [target_plate_1] }
@@ -23,8 +22,6 @@ RSpec.describe Robots::SplittingRobot, :robots do
   let(:target_purpose_name) { 'target_plate_purpose' }
   let(:target_plate_1) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 2 }
   let(:target_plate_2) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 3 }
-  let(:metadata_uuid) { SecureRandom.uuid }
-  let(:custom_metadatum_collection) { create :custom_metdatum_collection, uuid: metadata_uuid }
 
   let(:robot) { described_class.new(robot_spec.merge(user_uuid:)) }
 
@@ -32,7 +29,6 @@ RSpec.describe Robots::SplittingRobot, :robots do
     subject { robot.verify(bed_labwares: scanned_layout) }
 
     context 'a simple robot' do
-      let(:robot_id) { 'robot_id' }
       let(:robot_spec) do
         {
           'name' => 'robot_name',
@@ -127,7 +123,6 @@ RSpec.describe Robots::SplittingRobot, :robots do
   end
 
   describe '#perform_transfer' do
-    let(:robot_id) { 'bravo-lb-end-prep' }
     let(:robot_spec) do
       {
         'name' => 'bravo LB End Prep',

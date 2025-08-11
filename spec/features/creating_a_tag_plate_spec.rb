@@ -67,8 +67,6 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
     ]
   end
 
-  let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
-
   let(:enforce_same_template_within_pool) { false }
 
   # Setup stubs
@@ -145,7 +143,6 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
 
       context 'when nothing has been done on a cross plate pool' do
         let(:submission_pools) { create_list(:v2_dual_submission_pool, 1) }
-        let(:help_text) { 'This plate is part of a larger pool and must be indexed with UDI plates.' }
         let(:tag_error) { 'Pool is spread across multiple plates. UDI plates must be used.' }
 
         it_behaves_like 'it rejects the candidate plate'
@@ -156,7 +153,6 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
         # with configured templates - and matching scanned template: expected to find text "2" in ""
         # with no configured templates: expected to find text "9" in ""
         let(:submission_pools) { create_list(:v2_submission_pool, 1) }
-        let(:help_text) { 'This plate does not appear to be part of a larger pool. Dual indexing is optional.' }
         let(:enforce_uniqueness) { false }
 
         it_behaves_like 'it supports the plate'
@@ -166,7 +162,6 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
         let(:submission_pools) do
           create_list(:v2_dual_submission_pool, 1, used_template_uuids: ['tag-layout-template-1'])
         end
-        let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         let(:tag_error) { 'Pool is spread across multiple plates. UDI plates must be used.' }
 
         it_behaves_like 'it rejects the candidate plate'
@@ -179,7 +174,6 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
       context 'when nothing has been done' do
         let(:enforce_uniqueness) { false }
         let(:submission_pools) { create_list(:v2_submission_pool, 1) }
-        let(:help_text) { 'This plate is part of a larger pool and must be indexed with UDI plates.' }
 
         it_behaves_like 'it supports the plate'
       end
@@ -188,7 +182,6 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
         let(:submission_pools) do
           create_list(:v2_dual_submission_pool, 1, used_template_uuids: ['tag-layout-template-1'])
         end
-        let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
 
         it_behaves_like 'it supports the plate'
       end
@@ -197,7 +190,6 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
         let(:submission_pools) do
           create_list(:v2_dual_submission_pool, 1, used_template_uuids: ['tag-layout-template-0'])
         end
-        let(:help_text) { 'This plate is part of a larger pool which has been indexed with UDI plates.' }
         let(:tag_error) { 'This template has already been used.' }
 
         it_behaves_like 'it rejects the candidate plate'
