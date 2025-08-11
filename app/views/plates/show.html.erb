@@ -7,13 +7,13 @@
   <%= render 'warnings', presenter: @presenter %>
   <%= render 'info', presenter: @presenter %>
 
-  <div id="labware-sections">  
+  <div id="labware-sections">
    <% if @presenter.well_failing_applicable? %>
         <div id="labware-well-failing" class="collapse well-toggle" data-bs-parent="#labware-sections">
           <%= render 'fail_wells', presenter: @presenter %>
         </div>
     <% end %>
- 
+
     <% if @presenter.mark_under_represented_wells? %>
       <div id="labware-well-marking" class="well-toggle collapse" data-bs-parent="#labware-sections">
         <%= render 'mark_wells_under_represented', presenter: @presenter %>

@@ -15,7 +15,7 @@ class PlatesController < LabwareController
       )
     else
       begin
-        result = Sequencescape::Api::V2::StateChange.create!(
+        Sequencescape::Api::V2::StateChange.create!(
           contents: wells_to_fail,
           customer_accepts_responsibility: params[:customer_accepts_responsibility],
           reason: 'Individual Well Failure',
@@ -23,11 +23,15 @@ class PlatesController < LabwareController
           target_uuid: params[:id],
           user_uuid: current_user_uuid
         )
-      rescue => e
-        if e.respond_to?(:response) && e.response
-          Rails.logger.error "StateChange response body: #{e.response.body}"
-        end
-        raise
+      rescue StandardError => e
+        Rails.logger.error "StateChange error: #{e.message}"
+        Rails.logger.error "StateChange backtrace: #{e.backtrace.join("\n")}" if e.respond_to?(:backtrace)
+        Rails.logger.error "StateChange response body: #{e.response.body}" if e.respond_to?(:response) && e.response
+        redirect_to(
+          limber_plate_path(params[:id]),
+          alert: 'Failed to fail wells due to an unexpected error. Please try again or contact support.' # rubocop:todo Rails/I18nLocaleTexts
+        )
+        return
       end
       redirect_to(
         limber_plate_path(params[:id]),
@@ -42,7 +46,7 @@ class PlatesController < LabwareController
 
   def mark_under_represented_wells
     if wells_to_mark.empty?
-      redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to mark as under-represented')
+      redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to mark as under-represented') # rubocop:todo Rails/I18nLocaleTexts
     else
       # create record in poly metadata
       # type: request, key: under_represented, value: true
@@ -68,16 +72,18 @@ class PlatesController < LabwareController
           poly_metadatum.relationships.metadatable = request
           # save it
           poly_metadatum.save
-        
         end
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error "PolyMetadatum error: #{e.message}"
-        if e.respond_to?(:response) && e.response
-          Rails.logger.error "PolyMetadatum response body: #{e.response.body}"
-        end
-        raise
+        Rails.logger.error "PolyMetadatum response body: #{e.response.body}" if e.respond_to?(:response) && e.response
+        redirect_to(
+          limber_plate_path(params[:id]),
+          alert:
+            'Failed to mark wells under-represented due to an unexpected error. Please try again or contact support.' # rubocop:todo Rails/I18nLocaleTexts
+        )
+        return
       end
-      redirect_to(limber_plate_path(params[:id]), notice: 'Selected wells have been marked as under-represented')
+      redirect_to(limber_plate_path(params[:id]), notice: 'Selected wells have been marked as under-represented') # rubocop:todo Rails/I18nLocaleTexts
     end
   end
 

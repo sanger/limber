@@ -25,6 +25,10 @@ module PlateHelper # rubocop:todo Style/Documentation
     WellFailingPresenter.new(form, presenter)
   end
 
+  # Proxy object wrapping the form alongside the presenter.
+  # This allows us to use the shared plate partial, but pass the form
+  # object through to the custom aliquot partial
+  # rubocop:disable Rails/HelperInstanceVariable
   class WellMarkingPresenter < BasicObject
     def initialize(form, presenter)
       @form = form
@@ -38,9 +42,8 @@ module PlateHelper # rubocop:todo Style/Documentation
     delegate_missing_to :_presenter
     attr_reader :form, :_presenter
   end
-
   # rubocop:enable Rails/HelperInstanceVariable
-
+  
   def mark_wells_presenter_from(form, presenter)
     WellMarkingPresenter.new(form, presenter)
   end
@@ -101,7 +104,7 @@ module PlateHelper # rubocop:todo Style/Documentation
     return false unless aliquot
 
     request = Array(aliquot.request).first
-    return false unless request && request.respond_to?(:poly_metadata)
+    return false unless request.respond_to?(:poly_metadata)
 
     request.poly_metadata.any? { |pm| pm.key == 'under_represented' && pm.value == 'true' }
   end
