@@ -923,13 +923,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      # body for stubbing the contingency file upload
-      let(:contingency_file_content) do
-        content = contingency_file.read
-        contingency_file.rewind
-        content
-      end
-
       # create the sequencing tubes
       let(:sequencing_tubes) do
         prepare_created_child_tubes(

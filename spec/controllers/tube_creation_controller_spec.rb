@@ -13,7 +13,6 @@ RSpec.describe TubeCreationController, type: :controller do
   let(:parent_uuid) { 'parent-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:user_uuid) { 'user_uuid' }
-  let(:child_uuid) { 'child_uuid' }
 
   context 'for a tube with an automatic form' do
     before do

@@ -208,10 +208,6 @@ RSpec.describe StateChangers do
 
     include_context 'common setup'
 
-    let(:tube) { create :v2_tube, uuid: labware_uuid, state: tube_state }
-    let(:well_collection) { json :well_collection, default_state: tube_state, custom_state: failed_wells }
-    let(:failed_wells) { {} }
-
     context 'on a fully pending tube' do
       let(:target_state) { 'passed' }
       let(:coordinates_to_pass) { nil } # tubes don't have wells
@@ -223,20 +219,16 @@ RSpec.describe StateChangers do
       # if no wells are failed we leave contents blank and state changer assumes full tube
       let(:coordinates_to_pass) { nil }
 
-      let(:tube_state) { 'passed' }
       let(:target_state) { 'qc_complete' }
 
       it_behaves_like 'a state changer'
     end
 
     context 'on a partially failed tube' do
-      let(:tube_state) { 'passed' }
-
       # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
       let(:target_state) { 'qc_complete' }
 
       # when some wells are failed we filter those out of the contents
-      let(:failed_wells) { { 'A1' => 'failed', 'D1' => 'failed' } }
       let(:coordinates_to_pass) { nil } # tubes don't have wells
 
       it_behaves_like 'a state changer'
