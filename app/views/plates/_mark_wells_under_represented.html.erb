@@ -3,7 +3,7 @@
     Notes!!! you can only mark wells under represented <strong>after</strong> passing the plate.
   </div>
 <% else %>
-  <%= form_for(:plate, url: mark_under_represented_wells_path(presenter.labware), html: { method: 'post' }) do |form| %>
+  <%= form_for(:plate, url: process_mark_under_represented_wells_path(presenter.labware), html: { method: 'post' }) do |form| %>
     <fieldset>
       <legend class="card-body card-subtitle text-muted">Select wells to mark</legend>
       <div class="well well-marking">

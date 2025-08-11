@@ -44,7 +44,7 @@ class PlatesController < LabwareController
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
   end
 
-  def mark_under_represented_wells
+  def process_mark_under_represented_wells
     if wells_to_mark.empty?
       redirect_to(limber_plate_path(params[:id]), notice: 'No wells were selected to mark as under-represented') # rubocop:todo Rails/I18nLocaleTexts
     else
@@ -56,7 +56,7 @@ class PlatesController < LabwareController
 
         # for each well, find the aliquot and then the request
         # create a new poly metadatum for the request
-        wells_to_fail.each do |well_location|
+        wells_to_mark.each do |well_location|
           well = wells_by_location[well_location]
           aliquot = well.aliquots.first
           # Get the request from the aliquot

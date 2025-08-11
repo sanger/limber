@@ -43,7 +43,7 @@ module PlateHelper # rubocop:todo Style/Documentation
     attr_reader :form, :_presenter
   end
   # rubocop:enable Rails/HelperInstanceVariable
-  
+
   def mark_wells_presenter_from(form, presenter)
     WellMarkingPresenter.new(form, presenter)
   end
