@@ -219,12 +219,12 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
           [
             create(
               :v2_well,
-              requests_as_source: create_list(:mx_request, 1, priority: 1), # multiplexing request
+              requests_as_source: create_list(:mx_request, 1), # multiplexing request
               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
             ),
             create(
               :v2_well,
-              requests_as_source: create_list(:mx_request, 1, priority: 1), # multiplexing request
+              requests_as_source: create_list(:mx_request, 1), # multiplexing request
               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
             ),
             create(
@@ -234,7 +234,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
             ),
             create(
               :v2_well,
-              requests_as_source: create_list(:library_request, 1, priority: 1), # NOT a multiplexing request
+              requests_as_source: create_list(:library_request, 1), # NOT a multiplexing request
               aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
             )
           ]
