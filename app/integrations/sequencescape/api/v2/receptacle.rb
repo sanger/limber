@@ -23,6 +23,6 @@ class Sequencescape::Api::V2::Receptacle < Sequencescape::Api::V2::Base
   end
 
   def all_latest_qc
-    qc_results&.sort_by(&:id)&.index_by(&:key)&.values || []
+    Array(qc_results).sort_by(&:id).index_by(&:key).values || []
   end
 end
