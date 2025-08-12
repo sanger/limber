@@ -215,27 +215,51 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
 
         let(:aliquot_type) { :v2_aliquot }
         let(:labware_state) { 'pending' }
+        let(:request_completed) { 'passed' }
+        let(:request_active) { 'pending' }
         let(:wells) do
           [
             create(
               :v2_well,
-              requests_as_source: create_list(:mx_request, 1), # multiplexing request
-              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+              requests_as_source: [ # newly submitted multiplexing requests
+                create(:mx_request, state: request_completed),
+                create(:mx_request, state: request_active)
+              ],
+              aliquots: create_list(
+                aliquot_type, 1, request:
+                create(:library_request, state: request_completed) # previously submitted
+              )
             ),
             create(
               :v2_well,
-              requests_as_source: create_list(:mx_request, 1), # multiplexing request
-              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+              requests_as_source: [ # newly submitted multiplexing requests
+                create(:mx_request, state: request_completed),
+                create(:mx_request, state: request_active)
+              ],
+              aliquots: create_list(
+                aliquot_type, 1, request:
+                create(:library_request, state: request_completed) # previously submitted
+              )
             ),
             create(
               :v2_well,
-              requests_as_source: [], # NOT a multiplexing request
-              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))
+              requests_as_source: [
+                create(:mx_request, state: request_completed) # only a completed multiplexing request
+              ],
+              aliquots: create_list(
+                aliquot_type, 1, request:
+                create(:library_request, state: request_completed)
+              )
             ),
             create(
               :v2_well,
-              requests_as_source: create_list(:library_request, 1), # NOT a multiplexing request
-              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+              requests_as_source: [
+                create(:mx_request, state: request_completed) # only a completed multiplexing request
+              ],
+              aliquots: create_list(
+                aliquot_type, 1, request:
+                create(:library_request, state: request_completed)
+              )
             )
           ]
         end
