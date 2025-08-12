@@ -239,10 +239,15 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
             )
           ]
         end
-
         let(:parent) { build :v2_plate, state: labware_state, wells: wells }
         let(:tagged) { true }
-        before { expect(parent).to receive(:tagged?).and_return(tagged) }
+
+        before { allow(parent).to receive(:tagged?).and_return(tagged) }
+
+        it 'calls tagged? on the parent' do
+          expect(parent).to receive(:tagged?).and_return(tagged)
+          described_class.creatable_from?(parent)
+        end
 
         it 'allows creation' do
           expect(is_creatable_from).to be true
