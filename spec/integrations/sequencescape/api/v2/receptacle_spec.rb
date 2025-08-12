@@ -30,8 +30,22 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
       expect(receptacle.all_latest_qc).to contain_exactly(later_molarity, volume)
     end
 
-    context 'no qc results' do
+    context 'when no qc results' do
       let(:receptacle) { create(:v2_receptacle, qc_results: []) }
+
+      it 'gives no results back' do
+        expect(receptacle.all_latest_qc).to eq []
+      end
+    end
+
+    context 'when qc results are not defined' do
+      let(:receptacle) do
+        create(:v2_receptacle)
+      end
+
+      before do
+        receptacle.qc_results = nil # if nil is provided to the factory it will be replace with an empty array
+      end
 
       it 'gives no results back' do
         expect(receptacle.all_latest_qc).to eq []
@@ -44,7 +58,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
       expect(receptacle.latest_molarity).to be later_molarity
     end
 
-    context 'no qc results' do
+    context 'when no qc results' do
       let(:receptacle) { create(:v2_receptacle, qc_results: []) }
 
       it 'gives back nil' do
@@ -52,7 +66,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
       end
     end
 
-    context 'no molarity in qc results' do
+    context 'when no molarity in qc results' do
       let(:receptacle) { create(:v2_receptacle, qc_results: [volume]) }
 
       it 'gives back nil' do
@@ -60,7 +74,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
       end
     end
 
-    context 'reduced set of molarity results' do
+    context 'when reduced set of molarity results' do
       let(:receptacle) { create(:v2_receptacle, qc_results: [wrong_units_molarity, early_molarity]) }
 
       it 'gives back the latest of those present' do
@@ -70,7 +84,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
   end
 
   describe '#latest_qc' do
-    context 'present lookup' do
+    context 'when lookup is present' do
       it 'gives the latest molarity with nM back' do
         expect(receptacle.latest_qc(key: 'molarity', units: 'nM')).to be later_molarity
       end
@@ -84,7 +98,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
       end
     end
 
-    context 'absent lookup' do
+    context 'when lookup is absent' do
       it 'gives nil for molarity in M' do
         expect(receptacle.latest_qc(key: 'molarity', units: 'M')).to be_nil
       end

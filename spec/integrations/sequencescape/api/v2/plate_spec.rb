@@ -18,10 +18,9 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
     context 'when not a stock_plate' do
       before do
-        ancestor_scope = instance_double('JsonApiClient::Query::Builder')
-        expect(plate).to receive(:fetch_stock_plate_ancestors).and_return(ancestor_scope)
-        expect(ancestor_scope).to receive(:order).with(id: :asc).and_return(stock_plates)
-        expect(plate).to receive(:stock_plate?).and_return(false)
+        ancestor_scope = instance_double(JsonApiClient::Query::Builder)
+        allow(ancestor_scope).to receive(:order).with(id: :asc).and_return(stock_plates)
+        allow(plate).to receive_messages(fetch_stock_plate_ancestors: ancestor_scope, stock_plate?: false)
       end
 
       it 'returns the last element of the stock plates list' do
@@ -30,7 +29,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
     end
 
     context 'when a stock_plate' do
-      before { expect(plate).to receive(:stock_plate?).and_return(true) }
+      before { allow(plate).to receive(:stock_plate?).and_return(true) }
 
       it 'returns itself' do
         expect(plate.stock_plate).to eq(plate)

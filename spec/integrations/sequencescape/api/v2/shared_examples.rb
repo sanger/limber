@@ -19,10 +19,9 @@ RSpec.shared_examples 'a labware with a workline identifier' do
     let(:ancestors_scope) { double('ancestors_scope') }
 
     before do
-      allow(the_labware).to receive(:ancestors).and_return(ancestors_scope)
-      allow(the_labware).to receive(:stock_plate).and_return(stock_plate)
-      allow(SearchHelper).to receive(:stock_plate_names).and_return(stock_plate_names)
       allow(ancestors_scope).to receive(:where).with(purpose_name: stock_plate_names).and_return(stock_plates)
+      allow(the_labware).to receive_messages(ancestors: ancestors_scope, stock_plate: stock_plate)
+      allow(SearchHelper).to receive(:stock_plate_names).and_return(stock_plate_names)
     end
 
     context 'when the plate has no stock plates' do
