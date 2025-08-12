@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ViteInlineSvgFileLoader do
@@ -8,7 +9,6 @@ RSpec.describe ViteInlineSvgFileLoader do
     let(:manifest) { instance_double(ViteRuby::Manifest) }
     let(:vite_instance) { instance_double(ViteRuby) }
     let(:vite_asset_path) { '/app/frontend/images/test.svg' }
-    let(:svg_content) { '<svg>From dev server</svg>' }
 
     before do
       allow(ViteRuby).to receive(:instance).and_return(vite_instance)
@@ -45,7 +45,6 @@ RSpec.describe ViteInlineSvgFileLoader do
 
   describe '.fetch_from_dev_server', :private do
     let(:svg_content) { '<svg>From dev server</svg>' }
-    let(:response) { instance_double(Net::HTTPSuccess, body: svg_content) }
 
     before { stub_request(:get, "http://localhost:3037#{path}").to_return(status: 200, body: svg_content) }
 

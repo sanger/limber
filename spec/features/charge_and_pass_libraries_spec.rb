@@ -8,7 +8,6 @@ RSpec.feature 'Charge and pass libraries', :js do
   let(:user) { create :user, uuid: user_uuid }
   let(:user_uuid) { SecureRandom.uuid }
   let(:user_swipecard) { 'abcdef' }
-  let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
   let(:work_completions_attributes) do
     [{ target_uuid: labware_uuid, user_uuid: user_uuid, submission_uuids: submission_uuids }]
@@ -53,6 +52,7 @@ RSpec.feature 'Charge and pass libraries', :js do
   context 'tube with submissions to be made' do
     before do
       create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid'
+      stub_v2_tube(tube)
       stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
     end
 

@@ -63,4 +63,8 @@ class Limber::Plate < Sequencescape::Plate
   def tube?
     false
   end
+
+  def tube_rack?
+    false
+  end
 end

@@ -170,7 +170,7 @@ module Robots
       # We have scanned a labware, but weren't expecting one (invalid)
       msg =
         'Either the labware scanned into this bed should not be here, or the related labware(s) have not been ' \
-          'scanned into their beds.'
+        'scanned into their beds.'
 
       error(beds[position], msg)
       false

@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     get '/', action: :new, as: :search
     post '/', action: :create, as: :perform_search
     get '/ongoing_plates', action: :ongoing_plates
+
+    # TODO: do we need to add ongoing_tube_racks here?
     get '/ongoing_tubes', action: :ongoing_tubes
     post '/qcables', action: :qcables, as: :qcables_search
   end
@@ -33,6 +35,7 @@ Rails.application.routes.draw do
   resources :limber_plates, controller: :plates do
     resources :children, controller: :plate_creation
     resources :tubes, controller: :tube_creation
+    resources :tube_racks, controller: :tube_rack_creation
     resources :qc_files
     resources :exports, only: :show
     resources :work_completions, only: :create, module: :plates
@@ -49,6 +52,7 @@ Rails.application.routes.draw do
   resources :limber_tubes, controller: :tubes do
     resources :children, controller: :plate_creation
     resources :tubes, controller: :tube_creation
+    resources :tube_racks, controller: :tube_rack_creation
     resources :qc_files, controller: :qc_files
     resources :tubes_exports, only: :show, module: :tubes
     resources :work_completions, only: :create, module: :tubes
@@ -57,8 +61,11 @@ Rails.application.routes.draw do
   resources :validate_paired_tubes, only: :index, module: :tubes
 
   resources :limber_tube_racks, controller: :tube_racks do
+    resources :children, controller: :plate_creation
     resources :qc_files, controller: :qc_files
-    resources :exports, only: :show
+    resources :tube_racks_exports, only: :show, module: :tube_racks
+    # TODO: need to add work completion code for tube racks
+    # resources :tube_rack_work_completions, only: :create, module: :tube_racks
   end
 
   # limber_multiplexed_library_tube routes have been removed, and instead

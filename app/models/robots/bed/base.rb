@@ -20,7 +20,7 @@ module Robots::Bed
               }
     validates :labware,
               presence: {
-                message: lambda { |bed, _data| "Could not find a labware with the barcode '#{bed.barcode}'." }
+                message: ->(bed, _data) { "Could not find a labware with the barcode '#{bed.barcode}'." }
               },
               if: :barcode
     validate :correct_labware_purpose, if: :labware
@@ -100,9 +100,9 @@ module Robots::Bed
     private
 
     def correct_labware_purpose
-      return true if Array(purpose).include?(labware.purpose_name)
+      return true if Array(purpose).include?(labware.purpose.name)
 
-      error("Labware #{labware.human_barcode} is a #{labware.purpose_name} not a #{purpose_labels} labware.")
+      error("Labware #{labware.human_barcode} is a #{labware.purpose.name} not a #{purpose_labels} labware.")
     end
 
     def correct_labware_state

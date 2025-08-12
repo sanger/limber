@@ -1,0 +1,25 @@
+<div class="asset-info">
+  <h3 class="n">Pooling Information</h3>
+  <div class="row">
+    <table cellspacing="20" cellpadding="5" border="0">
+      <thead>
+        <tr>
+          <th>Study / Project Group</th>
+          <th>No. Samples Per Pool</th>
+          <th>Source Wells</th>
+          <th>Cells Per Chip Well</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% presenter.study_project_groups_from_wells.each do |key, wells| %>
+          <tr>
+            <td><%= key %></td>
+            <td><%= presenter.num_samples_per_pool(wells) %></td>
+            <td><%= presenter.get_source_wells(wells) %></td>
+            <td><%= presenter.cells_per_chip_well(wells[0]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
