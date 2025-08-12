@@ -192,63 +192,57 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       end
 
       context 'from a previously passed library and a new repool' do
-        let(:parent) { build :v2_plate, pools: }
+        # Checks that at least one request (versus all requests)
+        # is a multiplexing request (including no requests in the all case).
+        #
+        # Setup: a complex plate with pools, containing passed library requests and started multiplexing requests
+        # Inspired by spec/models/presenters/standard_presenter_spec.rb
+        #
+        # Taken from actual problem plate.
+        # Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
+        # Additional modifications made to convert to API v2
+        #
+        # Summary of pools per well
+        #
+        # older-complete-pool-1 ONLY: A5 A7 A10 B5 E6 E11 F5 G5 G8 G10 H3 H11
+        # older-complete-pool-2 ONLY: A3 A6 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9
+        # pool-we-want-to-use-1 ONLY:
+        # pool-we-want-to-use-2 ONLY: C3
+        #
+        # pool-we-want-to-use-1 AND older-complete-pool-2: B3
+        # pool-we-want-to-use-1 AND older-complete-pool-1: C9 H10
+        # pool-we-want-to-use-2 AND older-complete-pool-2: H5
+
+        let(:aliquot_type) { :v2_aliquot }
+        let(:labware_state) { 'pending' }
+        let(:wells) do
+          [
+            create(
+              :v2_well,
+              requests_as_source: create_list(:mx_request, 1, priority: 1), # multiplexing request
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+            ),
+            create(
+              :v2_well,
+              requests_as_source: create_list(:mx_request, 1, priority: 1), # multiplexing request
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+            ),
+            create(
+              :v2_well,
+              requests_as_source: [], # NOT a multiplexing request
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))
+            ),
+            create(
+              :v2_well,
+              requests_as_source: create_list(:library_request, 1, priority: 1), # NOT a multiplexing request
+              aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
+            )
+          ]
+        end
+
+        let(:parent) { build :v2_plate, state: labware_state, wells: wells }
         let(:tagged) { true }
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
-
-        let(:pools) do
-          # Taken from actual problem plate.
-          # Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
-          #
-          # Summary of pools per well
-          #
-          # older-complete-pool-1 ONLY: A5 A7 A10 B5 E6 E11 F5 G5 G8 G10 H3 H11
-          # older-complete-pool-2 ONLY: A3 A6 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9
-          # pool-we-want-to-use-1 ONLY:
-          # pool-we-want-to-use-2 ONLY: C3
-          #
-          # pool-we-want-to-use-1 AND older-complete-pool-2: B3
-          # pool-we-want-to-use-1 AND older-complete-pool-1: C9 H10
-          # pool-we-want-to-use-2 AND older-complete-pool-2: H5
-          {
-            'pool-we-want-to-use-1' => {
-              'wells' => %w[B3 C9 H10],
-              'pool_complete' => false,
-              'request_type' => 'limber_multiplexing',
-              'for_multiplexing' => true
-            },
-            'pool-we-want-to-use-2' => {
-              'wells' => %w[C3 H5],
-              'pool_complete' => false,
-              'request_type' => 'limber_multiplexing',
-              'for_multiplexing' => true
-            },
-            'older-complete-pool-1' => {
-              'wells' => %w[A5 A7 A10 B5 C9 E6 E11 F5 G5 G8 G10 H3 H10 H11],
-              'pool_complete' => true,
-              'insert_size' => {
-                'from' => 100,
-                'to' => 400
-              },
-              'library_type' => {
-                'name' => 'Agilent Pulldown'
-              },
-              'request_type' => 'limber_reisc'
-            },
-            'older-complete-pool-2' => {
-              'wells' => %w[A3 A6 B3 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9 H5],
-              'pool_complete' => true,
-              'insert_size' => {
-                'from' => 100,
-                'to' => 400
-              },
-              'library_type' => {
-                'name' => 'Agilent Pulldown'
-              },
-              'request_type' => 'limber_reisc'
-            }
-          }
-        end
 
         it 'allows creation' do
           expect(is_creatable_from).to be true
