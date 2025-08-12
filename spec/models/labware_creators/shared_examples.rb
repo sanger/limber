@@ -199,6 +199,17 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         let(:pools) do
           # Taken from actual problem plate.
           # Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
+          #
+          # Summary of pools per well
+          #
+          # older-complete-pool-1 ONLY: A5 A7 A10 B5 E6 E11 F5 G5 G8 G10 H3 H11
+          # older-complete-pool-2 ONLY: A3 A6 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9
+          # pool-we-want-to-use-1 ONLY:
+          # pool-we-want-to-use-2 ONLY: C3
+          #
+          # pool-we-want-to-use-1 AND older-complete-pool-2: B3
+          # pool-we-want-to-use-1 AND older-complete-pool-1: C9 H10
+          # pool-we-want-to-use-2 AND older-complete-pool-2: H5
           {
             'pool-we-want-to-use-1' => {
               'wells' => %w[B3 C9 H10],
