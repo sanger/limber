@@ -204,14 +204,16 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         #
         # Summary of pools per well
         #
-        # older-complete-pool-1 ONLY: A5 A7 A10 B5 E6 E11 F5 G5 G8 G10 H3 H11
-        # older-complete-pool-2 ONLY: A3 A6 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9
-        # pool-we-want-to-use-1 ONLY:
-        # pool-we-want-to-use-2 ONLY: C3
+        # 1. older-complete-pool-1 ONLY: A5 A7 A10 B5 E6 E11 F5 G5 G8 G10 H3 H11
+        # 2. older-complete-pool-2 ONLY: A3 A6 B7 C5 C12 D6 F6 F8 G2 G6 G7 G9
+        # 3. pool-we-want-to-use-1 ONLY:
+        # 4. pool-we-want-to-use-2 ONLY: C3
         #
-        # pool-we-want-to-use-1 AND older-complete-pool-2: B3
-        # pool-we-want-to-use-1 AND older-complete-pool-1: C9 H10
-        # pool-we-want-to-use-2 AND older-complete-pool-2: H5
+        # 5. pool-we-want-to-use-1 AND older-complete-pool-2: B3
+        # 6. pool-we-want-to-use-1 AND older-complete-pool-1: C9 H10
+        # 7. pool-we-want-to-use-2 AND older-complete-pool-2: H5
+        #
+        # Refactored recreation uses a well per scenario above, with a single request per well, for 6 wells
 
         let(:aliquot_type) { :v2_aliquot }
         let(:labware_state) { 'pending' }
@@ -219,46 +221,57 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         let(:request_active) { 'pending' }
         let(:wells) do
           [
-            create(
+            create( # 1. older-complete-pool-1 ONLY
               :v2_well,
-              requests_as_source: [ # newly submitted multiplexing requests
-                create(:mx_request, state: request_completed),
-                create(:mx_request, state: request_active)
-              ],
+              requests_as_source: [], # no multiplexing requests
               aliquots: create_list(
-                aliquot_type, 1, request:
-                create(:library_request, state: request_completed) # previously submitted
+                aliquot_type, 1, request: # previously submitted library request 1
+                create(:library_request, state: request_completed, include_submissions: true, submission_id: 1)
               )
             ),
-            create(
+            create( # 2. older-complete-pool-2 ONLY
               :v2_well,
-              requests_as_source: [ # newly submitted multiplexing requests
-                create(:mx_request, state: request_completed),
-                create(:mx_request, state: request_active)
-              ],
+              requests_as_source: [], # no multiplexing requests
               aliquots: create_list(
-                aliquot_type, 1, request:
-                create(:library_request, state: request_completed) # previously submitted
+                aliquot_type, 1, request: # previously submitted library request 2
+                create(:library_request, state: request_completed, include_submissions: true, submission_id: 2)
               )
             ),
-            create(
+            create( # 4. pool-we-want-to-use-2 ONLY
               :v2_well,
               requests_as_source: [
-                create(:mx_request, state: request_completed) # only a completed multiplexing request
+                create(:mx_request, state: request_active, include_submissions: true, submission_id: 4)
+              ],
+              aliquots: create_list(aliquot_type, 1) # no previously submitted library requests
+            ),
+            create( # 5. pool-we-want-to-use-1 AND older-complete-pool-2
+              :v2_well,
+              requests_as_source: [ # new multiplexing request 3
+                create(:mx_request, state: request_active, include_submissions: true, submission_id: 3)
               ],
               aliquots: create_list(
-                aliquot_type, 1, request:
-                create(:library_request, state: request_completed)
+                aliquot_type, 1, request: # previously submitted library request 2
+                create(:library_request, state: request_completed, include_submissions: true, submission_id: 2)
               )
             ),
-            create(
+            create( # 6. pool-we-want-to-use-1 AND older-complete-pool-1
               :v2_well,
-              requests_as_source: [
-                create(:mx_request, state: request_completed) # only a completed multiplexing request
+              requests_as_source: [ # new multiplexing request 3
+                create(:mx_request, state: request_active, include_submissions: true, submission_id: 3)
               ],
               aliquots: create_list(
-                aliquot_type, 1, request:
-                create(:library_request, state: request_completed)
+                aliquot_type, 1, request: # previously submitted library request 1
+                create(:library_request, state: request_completed, include_submissions: true, submission_id: 1)
+              )
+            ),
+            create( # 7. pool-we-want-to-use-2 AND older-complete-pool-2
+              :v2_well,
+              requests_as_source: [ # new multiplexing request 4
+                create(:mx_request, state: request_active, include_submissions: true, submission_id: 4)
+              ],
+              aliquots: create_list(
+                aliquot_type, 1, request: # previously submitted library request 2
+                create(:library_request, state: request_completed, include_submissions: true, submission_id: 2)
               )
             )
           ]
