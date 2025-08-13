@@ -32,6 +32,9 @@
     next if source_well.downstream_tubes.empty?
 
     child_tube = source_well.downstream_tubes.last
+    # skip if child tube not in passed state
+    next if child_tube.state != 'passed'
+
     child_tube_purpose = child_tube.purpose.name
 
     sample_uuid = source_well.aliquots.first.sample.uuid

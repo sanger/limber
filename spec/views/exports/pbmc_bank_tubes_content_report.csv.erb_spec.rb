@@ -274,5 +274,64 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
         expect(CSV.parse(render)).to eq(expected_content)
       end
     end
+
+    context 'when some downstream tubes are not in passed state' do
+      let(:failed_tube) do
+        create(
+          :v2_tube,
+          purpose: lrc_bank_seq,
+          uuid: SecureRandom.uuid,
+          barcode_prefix: 'FX',
+          barcode_number: 99,
+          aliquots: [dest_aliquot1],
+          name: 'SEQ:FAILED',
+          state: 'failed'
+        )
+      end
+
+      let(:source_well_attributes) do
+        [
+          { location: 'A1', aliquots: [src_aliquot1_s1], downstream_tubes: [dest_tube1],
+            qc_results: qc_results },
+          { location: 'A2', aliquots: [src_aliquot2_s1], downstream_tubes: [failed_tube],
+            qc_results: qc_results }
+        ]
+      end
+
+      let(:src_well_a1) { create(:v2_well, source_well_attributes[0]) }
+      let(:src_labware) { create(:v2_plate, wells: [src_well_a1], barcode_number: 3) }
+
+      let(:expected_content) do
+        [
+          ['Workflow', workflow_name],
+          [],
+          [
+            'Well name',
+            'Donor ID',
+            'Stock barcode',
+            'FluidX barcode',
+            'Extraction and freeze date',
+            'Sequencing or contingency',
+            'Total cell count (cells/ml)',
+            'Viability (%)',
+            'Volume (µl)',
+            'Study name',
+            'Collection site'
+          ],
+          # Only the passed tube should appear, not the failed one
+          ['DN1S:A1', 'Donor1', 'NT1O', 'FX4B', created_at, 'Sequencing', '20000', '75', '125', study_name, 'Sanger']
+        ]
+      end
+
+      before do
+        assign(:ancestor_tubes, ancestor_tubes)
+        assign(:plate, src_labware)
+        assign(:workflow, workflow_name)
+      end
+
+      it 'renders only tubes in passed state' do
+        expect(CSV.parse(render)).to eq(expected_content)
+      end
+    end
   end
 end
