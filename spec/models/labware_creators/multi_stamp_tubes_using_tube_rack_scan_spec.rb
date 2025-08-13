@@ -43,7 +43,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   # purpose uuids
   let(:parent_tube_1_purpose_uuid) { 'parent-tube-purpose-type-1-uuid' }
-  let(:parent_tube_2_purpose_uuid) { 'parent-tube-purpose-type-2-uuid' }
 
   # purpose names
   let(:parent_tube_1_purpose_name) { 'Parent Tube Purpose Type 1' }
@@ -260,7 +259,6 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
     end
 
-    let(:parent_tube_2_purpose_uuid) { 'parent-tube-purpose-type-unknown-uuid' }
     let(:parent_tube_2_purpose_name) { 'Parent Tube Purpose Type Unknown' }
 
     before { subject.validate }

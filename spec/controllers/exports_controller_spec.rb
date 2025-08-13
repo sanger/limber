@@ -339,8 +339,6 @@ RSpec.describe ExportsController, type: :controller do
   end
 
   context 'where default' do
-    let(:includes) { 'wells' }
-
     it 'returns 404 with unknown templates' do
       expect { get :show, params: { id: 'not_a_template', limber_plate_id: plate_barcode }, as: :csv }.to raise_error(
         ActionController::RoutingError,
@@ -369,8 +367,6 @@ RSpec.describe ExportsController, type: :controller do
     let(:exports_path) { 'spec/fixtures/config/exports/multiple_ancestor_plates.yml' }
     let(:config) { YAML.load_file(exports_path) }
     let(:export) { Export.new(config.fetch(csv_id)) } # csv_id specified by the individual test
-
-    let(:view_path) { 'spec/fixtures/app/views/' } # for exports/multiple_ancestor_plates.csv.erb
 
     before do
       # Make the controller to receive the plate.

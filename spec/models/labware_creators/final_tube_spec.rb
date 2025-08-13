@@ -14,11 +14,9 @@ RSpec.describe LabwareCreators::FinalTube do
 
     before { stub_v2_tube(parent_tube) }
 
-    let(:controller) { TubeCreationController.new }
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }
     let(:user_uuid) { 'user-uuid' }
-    let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube--uuid' }
     let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
     let(:transfer) { create :v2_transfer }
     let(:transfers_attributes) do

@@ -7,7 +7,6 @@ RSpec.describe SequencescapeSubmissionsController, type: :controller do
     has_a_working_api
 
     let(:user_uuid) { SecureRandom.uuid }
-    let(:example_plate) { create :v2_plate, uuid: plate_uuid, pool_sizes: [8, 8], include_submissions: true }
     let(:request_options) do
       {
         'library_type' => 'Sanger_tailed_artic_v1_96',
