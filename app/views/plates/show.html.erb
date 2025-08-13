@@ -6,11 +6,17 @@
   <%= render 'content_header', presenter: @presenter, type: 'plate' %>
   <%= render 'warnings', presenter: @presenter %>
   <%= render 'info', presenter: @presenter %>
+
+  <% if @presenter.respond_to?(:show_scrna_pooling?) && @presenter.show_scrna_pooling? %>
+    <%= render 'pooling_info', presenter: @presenter %>
+  <% end %>
+
   <% if @presenter.well_failing_applicable? %>
     <div id="labware-well-failing" class='well-fail-toggle collapse'>
       <%= render 'fail_wells', presenter: @presenter %>
     </div>
   <% end %>
+
   <div id="labware-summary" class='well-fail-toggle collapse show'>
     <%= render @presenter.summary_partial, presenter: @presenter %>
   </div>

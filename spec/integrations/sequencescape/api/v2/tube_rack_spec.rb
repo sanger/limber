@@ -144,8 +144,6 @@ RSpec.describe Sequencescape::Api::V2::TubeRack, type: :model do
     # NB. factory sets up the racked tubes given the tubes hash above
     let!(:tube_rack1) { create :tube_rack, barcode_number: 7, uuid: labware_uuid, tubes: tubes }
 
-    let(:tube_rack_barcode) { tube_rack1.labware_barcode.human }
-
     it 'returns racked tubes sorted by coordinate' do
       sorted_racked_tubes = tube_rack1.racked_tubes_in_columns
       expect(sorted_racked_tubes.map(&:tube)).to eq([tube2, tube1, tube3, tube6, tube5, tube4])
