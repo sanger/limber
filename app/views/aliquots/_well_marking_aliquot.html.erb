@@ -2,7 +2,7 @@
       :mark_well,
       { id: "mark_well_#{container.location}",
         name: "plate[wells][#{container.location}]",
-        disabled: !failable?(container) || well_under_represented?(presenter.labware.uuid, container.location),
+        disabled: !failable?(container) || well_under_represented?(presenter.labware, container.location),
         data: {
           quadrant_index: container.quadrant_index,
           prevent_well_fail: prevent_well_fail?(container),
@@ -13,7 +13,7 @@
 <%= presenter.form.label :mark_well, for: "mark_well_#{container.location}" do %>
   <div id="mark_aliquot_<%= id %>"
        class="aliquot <%= container.state %>
-        <%= 'under_represented' if well_under_represented?(presenter.labware.uuid, container.location) %>"
+        <%= 'under_represented' if well_under_represented?(presenter.labware, container.location) %>"
        data-bs-toggle="tooltip"
        data-bs-placement="top"
        data-bs-html="true"

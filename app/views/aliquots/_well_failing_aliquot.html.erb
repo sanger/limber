@@ -11,7 +11,7 @@
 <%= presenter.form.label id do %>
   <div id="aliquot_<%= id %>"
        class="aliquot <%= container.state %>
-              <%= 'under_represented' if well_under_represented?(presenter.labware.uuid, container.location) %>"
+              <%= 'under_represented' if well_under_represented?(presenter.labware, container.location) %>"
        data-bs-toggle="tooltip"
        data-bs-placement="top"
        data-bs-html="true"

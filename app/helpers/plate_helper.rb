@@ -94,9 +94,7 @@ module PlateHelper # rubocop:todo Style/Documentation
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
   end
 
-  def well_under_represented?(plate_id, well_location)
-    plate = Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots.request.poly_metadata', uuid: plate_id)
-
+  def well_under_represented?(plate, well_location)
     well = plate.wells.index_by(&:location)[well_location]
     return false unless well
 

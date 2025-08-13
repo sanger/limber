@@ -53,7 +53,7 @@ class PlatesController < LabwareController
   end
 
   def fetch_plate_with_requests(plate_id)
-    Sequencescape::Api::V2.plate_with_custom_includes(['wells.aliquots.request'], uuid: plate_id)
+    Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots.request', uuid: plate_id)
   end
 
   def mark_selected_wells_under_represented(plate)

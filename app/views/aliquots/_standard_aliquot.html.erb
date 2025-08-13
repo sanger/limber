@@ -6,7 +6,7 @@
         <%= container.state %>
         <%= container.suboptimal? ? 'suboptimal' : '' %>
         colour-<%= pool_index %>
-         <%= 'under_represented' if well_under_represented?(presenter.labware.uuid, container.location) %>"
+         <%= 'under_represented' if well_under_represented?(presenter.labware, container.location) %>"
   data-pool="<%= container.pool_id %>">
   <span class="pool-id"><%= pool_index %>
   <div class="pool-print-information"><% container.aliquots.each do |aliquot| %>
