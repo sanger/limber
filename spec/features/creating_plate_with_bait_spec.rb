@@ -35,7 +35,11 @@ RSpec.feature 'Creating a plate with bait', :js do
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
     stub_v2_plate(child_plate)
-
+    stub_v2_plate(
+      child_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
 
     # end of stubs for plate show page
