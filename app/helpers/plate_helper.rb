@@ -95,7 +95,7 @@ module PlateHelper # rubocop:todo Style/Documentation
   end
 
   def well_under_represented?(plate_id, well_location)
-    plate = Sequencescape::Api::V2.plate_with_custom_includes(['wells.aliquots.request.poly_metadata'], uuid: plate_id)
+    plate = Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots.request.poly_metadata', uuid: plate_id)
 
     well = plate.wells.index_by(&:location)[well_location]
     return false unless well
@@ -105,6 +105,7 @@ module PlateHelper # rubocop:todo Style/Documentation
 
     request = Array(aliquot.request).first
     return false unless request.respond_to?(:poly_metadata)
+    return false unless request.poly_metadata
 
     request.poly_metadata.any? { |pm| pm.key == 'under_represented' && pm.value == 'true' }
   end
