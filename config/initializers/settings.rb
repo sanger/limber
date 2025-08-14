@@ -11,6 +11,9 @@ class Settings
     end
     private :configuration_filename
 
+    # When invoked, this method will return a Hashie::Mash object that contains all the settings loaded from
+    # the YAML file.
+    # For example, you can access settings like `Settings.pipelines`, `Settings.purposes`, etc.
     def instance # rubocop:todo Metrics/AbcSize
       # @instance is a Hashie::Mash object that contains all the settings loaded from the YAML file.
       # It allows for method calls like Settings.pipelines, Settings.purposes, etc.
