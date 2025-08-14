@@ -47,7 +47,7 @@ class Settings
 
     # This line is making it possible to access configuration using
     # the Settings.<config> syntax. For example, Settings.pipelines, Settings.purposes, etc.
-    # It delegates all method calls to the instance of Settings.
+    # It delegates all method calls to the Mash (which is @instance here).
     delegate_missing_to :instance
 
     def reinitialize
