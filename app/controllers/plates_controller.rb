@@ -32,7 +32,7 @@ class PlatesController < LabwareController
   end
 
   def process_mark_under_represented_wells # rubocop:todo Metrics/AbcSize
-    return redirect_to(limber_plate_path(params[:id]), notice: no_wells_notice) if selected_wells.empty?
+    return redirect_to(limber_plate_path(params[:id]), notice: t('notices.no_wells_selected')) if selected_wells.empty?
 
     begin
       plate = fetch_plate_with_requests(params[:id])
@@ -72,13 +72,11 @@ class PlatesController < LabwareController
     # If request is an array, get the first one?
     request = Array(request).first
 
-    # Now `request` is the request object for that well
-    # new a poly metadatum
-    poly_metadatum = Sequencescape::Api::V2::PolyMetadatum.new(key: 'under_represented', value: 'true')
-    # set the metadatable, link it to the request
-    poly_metadatum.relationships.metadatable = request
-    # save it
-    poly_metadatum.save
+    Sequencescape::Api::V2::PolyMetadatum.create!(
+      key: 'under_represented',
+      value: 'true',
+      relationships: { metadatable: request }
+    )
   end
 
   def log_plate_error(exception)
