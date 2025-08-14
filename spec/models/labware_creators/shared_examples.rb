@@ -206,23 +206,16 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         let(:request_completed) { 'passed' }
         let(:request_active) { 'pending' }
 
-        let(:completed_library_request_1) do
-          create(:library_request, state: request_completed, include_submissions: true, submission_id: 1)
+        def completed_library_request(submission_id)
+          create(:library_request, state: request_completed, include_submissions: true, submission_id: submission_id)
         end
-        let(:completed_library_request_2) do
-          create(:library_request, state: request_completed, include_submissions: true, submission_id: 2)
+
+        def completed_multiplexing_request(submission_id)
+          create(:mx_request, state: request_completed, include_submissions: true, submission_id: submission_id)
         end
-        let(:completed_multiplexing_request_1) do
-          create(:mx_request, state: request_completed, include_submissions: true, submission_id: 3)
-        end
-        let(:completed_multiplexing_request_2) do
-          create(:mx_request, state: request_completed, include_submissions: true, submission_id: 4)
-        end
-        let(:active_multiplexing_request_1) do
-          create(:mx_request, state: request_active, include_submissions: true, submission_id: 5)
-        end
-        let(:active_multiplexing_request_2) do
-          create(:mx_request, state: request_active, include_submissions: true, submission_id: 6)
+
+        def active_multiplexing_request(submission_id)
+          create(:mx_request, state: request_active, include_submissions: true, submission_id: submission_id)
         end
 
         # Wells with requests
@@ -231,44 +224,44 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
             # Previously pooled wells
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_1],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_1)
+              requests_as_source: [completed_multiplexing_request(3)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_1],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_2)
+              requests_as_source: [completed_multiplexing_request(3)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             ),
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_2],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_1)
+              requests_as_source: [completed_multiplexing_request(4)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_2],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_2)
+              requests_as_source: [completed_multiplexing_request(4)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             ),
             # Wells with active pooling (multiplexing) requests
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_1, active_multiplexing_request_1],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_1)
+              requests_as_source: [completed_multiplexing_request(3), active_multiplexing_request(5)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_1, active_multiplexing_request_2],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_2)
+              requests_as_source: [completed_multiplexing_request(3), active_multiplexing_request(6)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             ),
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_2, active_multiplexing_request_1],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_1)
+              requests_as_source: [completed_multiplexing_request(4), active_multiplexing_request(5)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
               :v2_well,
-              requests_as_source: [completed_multiplexing_request_2, active_multiplexing_request_2],
-              aliquots: create_list(aliquot_type, 1, request: completed_library_request_2)
+              requests_as_source: [completed_multiplexing_request(4), active_multiplexing_request(6)],
+              aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             )
           ]
         end
