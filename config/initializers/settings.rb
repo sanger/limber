@@ -5,6 +5,22 @@ require 'config_loader/pipelines_loader'
 # Global setting object loaded from `config/settings/_environment_.yml` which is
 # generated on running `rake config:generate`
 class Settings
+  ATTRIBUTES = %i[
+    default_pmb_templates
+    default_printer_type_names
+    default_sprint_templates
+    pipelines
+    poolings
+    printers
+    purpose_uuids
+    purposes
+    robots
+    searches
+    submission_templates
+    transfer_templates
+  ].freeze
+  attr_accessor(*ATTRIBUTES)
+
   class << self
     def configuration_filename
       Rails.root.join('config', 'settings', "#{Rails.env}.yml")
@@ -18,11 +34,15 @@ class Settings
       # Immutability is good here though, so we should probably fix that.
       # Added flag onto safe_load to allow read of anchors (aliases) in yml files.
       config_file_descriptor = File.open(configuration_filename, 'r:bom|utf-8')
-      @instance = YAML.safe_load(config_file_descriptor, permitted_classes: [Symbol], aliases: true)
+      @instance = new
+      settings_data = YAML.safe_load(config_file_descriptor, permitted_classes: [Symbol], aliases: true)
+
+      # Assign values to attributes
+      ATTRIBUTES.each { |attribute| @instance.public_send(:"#{attribute}=", settings_data[attribute]) }
 
       # To view a list of pipeline groups and respective pipelines:
       # e.g. Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipelines| pipelines.map(&:name) }
-      @instance['pipelines'] = ConfigLoader::PipelinesLoader.new.pipelines
+      @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
 
       @instance
     rescue Errno::ENOENT

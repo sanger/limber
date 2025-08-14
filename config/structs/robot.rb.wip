@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+require 'dry-struct'
+
+class Robot < Dry::Struct
+  attribute :name, Types::String.optional
+  attribute :age, Types::Coercible::Integer
+end
