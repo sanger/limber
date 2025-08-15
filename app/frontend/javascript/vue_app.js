@@ -92,7 +92,7 @@ const elements = [
   {
     id: 'asset-comments',
     component: AssetComments,
-    userIdRequired: true,
+    userIdRequired: false,
   },
   {
     id: 'blended-tube-page',
