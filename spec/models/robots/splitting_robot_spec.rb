@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Robots::SplittingRobot, :robots do
   include FeatureHelpers
   include RobotHelpers
-  has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
 
@@ -24,7 +23,7 @@ RSpec.describe Robots::SplittingRobot, :robots do
   let(:target_plate_1) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 2 }
   let(:target_plate_2) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 3 }
 
-  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(user_uuid:)) }
 
   describe '#verify' do
     subject { robot.verify(bed_labwares: scanned_layout) }

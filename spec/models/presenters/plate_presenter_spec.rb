@@ -422,12 +422,7 @@ RSpec.describe Presenters::PlatePresenter do
   context 'returns csv links' do
     context 'with a default plate' do
       let(:expected_default_csv_links) do
-        [
-          [
-            'Download Concentration CSV',
-            [:limber_plate, :export, { format: :csv, id: 'concentrations', limber_plate_id: 'DN1S' }]
-          ]
-        ]
+        [['Download Concentration CSV', [:plate, :export, { format: :csv, id: 'concentrations', plate_id: 'DN1S' }]]]
       end
 
       it 'returns the expected csv links' do
@@ -488,14 +483,8 @@ RSpec.describe Presenters::PlatePresenter do
       it 'returns the expected number of links' do
         expect(presenter.csv_file_links).to eq(
           [
-            [
-              'Button 1',
-              [:limber_plate, :export, { :format => :csv, :id => 'template', :limber_plate_id => 'DN1S', 'page' => 0 }]
-            ],
-            [
-              'Button 2',
-              [:limber_plate, :export, { :format => :csv, :id => 'template', :limber_plate_id => 'DN1S', 'page' => 1 }]
-            ]
+            ['Button 1', [:plate, :export, { :format => :csv, :id => 'template', :plate_id => 'DN1S', 'page' => 0 }]],
+            ['Button 2', [:plate, :export, { :format => :csv, :id => 'template', :plate_id => 'DN1S', 'page' => 1 }]]
           ]
         )
       end

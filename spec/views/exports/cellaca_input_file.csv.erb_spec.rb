@@ -4,7 +4,6 @@ require 'spec_helper'
 
 RSpec.describe 'exports/cellaca_input_file.csv.erb', type: :view do
   context 'with a full plate' do
-    has_a_working_api
     let(:labware) { create(:v2_plate, barcode_number: 1) }
 
     before do

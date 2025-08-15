@@ -3,17 +3,15 @@
 require 'rails_helper'
 
 RSpec.feature 'Viewing an inbox', :js do
-  has_a_working_api
-
   let(:user) { create :user }
   let(:user_swipecard) { 'aaa' }
 
-  let(:plate_1) { create(:plate, barcode_number: 1) }
-  let(:plate_2) { create(:plate, barcode_number: 2) }
-  let(:plate_3) { create(:plate, barcode_number: 3) }
+  let(:plate_1) { create(:v2_plate, :has_pooling_metadata, barcode_number: 1) }
+  let(:plate_2) { create(:v2_plate, :has_pooling_metadata, barcode_number: 2) }
+  let(:plate_3) { create(:v2_plate, :has_pooling_metadata, barcode_number: 3) }
 
-  let(:tube_1) { create(:tube, barcode_number: 1) }
-  let(:tube_2) { create(:tube, barcode_number: 2) }
+  let(:tube_1) { create(:v2_tube, barcode_number: 1) }
+  let(:tube_2) { create(:v2_tube, barcode_number: 2) }
 
   background do
     stub_swipecard_search(user_swipecard, user)

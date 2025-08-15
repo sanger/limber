@@ -92,11 +92,15 @@ Naming/VariableNumber:
 
 RSpec/ContextWording:
   Prefixes:
+    - by
     - for
+    - from
     - if
+    - in
     - unless
     - when
     - where
+    - which
     - with
     - without
 

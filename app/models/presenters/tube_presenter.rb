@@ -78,9 +78,9 @@ module Presenters
           [
             link.name,
             [
-              :limber_tube,
+              :tube,
               :tubes_export,
-              { id: link.id, limber_tube_id: human_barcode, format: format_extension, **link.params || {} }
+              { id: link.id, tube_id: human_barcode, format: format_extension, **link.params || {} }
             ]
           ]
         end

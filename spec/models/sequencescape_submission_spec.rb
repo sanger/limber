@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe SequencescapeSubmission do
-  has_a_working_api
-
   subject(:submission) { described_class.new(attributes) }
 
   let(:asset_uuids) { ['asset-uuid'] }
@@ -12,7 +10,7 @@ RSpec.describe SequencescapeSubmission do
   let(:request_options) { { read_length: 150 } }
   let(:user_uuid) { 'user-uuid' }
   let(:attributes) do
-    { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+    { assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
   end
 
   describe '#template_uuid' do
@@ -25,13 +23,7 @@ RSpec.describe SequencescapeSubmission do
     context 'when set via template_name' do
       let(:template_name) { 'Submission template' }
       let(:attributes) do
-        {
-          api: api,
-          assets: asset_uuids,
-          template_uuid: template_uuid,
-          request_options: request_options,
-          user: user_uuid
-        }
+        { assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
       end
 
       before { Settings.submission_templates = { template_name => template_uuid } }
@@ -44,7 +36,7 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#extra_barcodes_trimmed' do
     let(:attributes) do
-      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     it 'removes any extra whitespaces' do
@@ -55,7 +47,7 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#extra_plates' do
     let(:attributes) do
-      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     let(:plate) { create :v2_plate }
@@ -74,7 +66,7 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#extra_assets' do
     let(:attributes) do
-      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     let(:plate) { create(:passed_plate) }
@@ -102,7 +94,7 @@ RSpec.describe SequencescapeSubmission do
 
   describe '#asset_groups_for_orders_creation' do
     let(:attributes) do
-      { api: api, assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
+      { assets: asset_uuids, template_uuid: template_uuid, request_options: request_options, user: user_uuid }
     end
 
     it 'returns normal asset groups when no extra barcodes provided' do
@@ -169,7 +161,6 @@ RSpec.describe SequencescapeSubmission do
       let(:asset_uuids2) { ['asset-2-uuid'] }
       let(:attributes) do
         {
-          api: api,
           asset_groups: {
             '1' => {
               assets: asset_uuids,

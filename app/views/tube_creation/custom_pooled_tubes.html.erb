@@ -38,7 +38,7 @@
   <% end %>
   <%= sidebar do %>
     <%= card title: 'File upload' do %>
-      <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
+      <%= form_for(@labware_creator, as: :tube, url: plate_child_tube_creations_path(@labware_creator.parent)) do |f| %>
         <%= f.hidden_field :purpose_uuid %>
         <div class="form-group">
           <%= f.file_field :file, accept: '.csv', required: true %>

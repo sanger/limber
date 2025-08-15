@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb' do
-  has_a_working_api
-
   let(:qc_result_options_a1) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
   let(:qc_result_options_b1) { { value: 1.2, key: 'concentration', units: 'ng/ul' } }
 

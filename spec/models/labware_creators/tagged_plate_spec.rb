@@ -5,11 +5,9 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
-
-  has_a_working_api
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
@@ -71,7 +69,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
         end
       end
 
-      let(:tag_layout_templates) { create_list :tag_layout_template, 2 }
+      let(:tag_layout_templates) { create_list :v2_tag_layout_template, 2 }
 
       before { stub_v2_tag_layout_templates(tag_layout_templates) }
 
