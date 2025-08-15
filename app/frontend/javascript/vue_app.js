@@ -51,7 +51,8 @@ export const renderVueComponent = (selector, component, props = {}, userIdRequir
 
   let app
   if (userIdRequired && !userId) {
-    console.error('User id is required to render this component.')
+    const component_name = component.name
+    console.warn(`User id is required to render the ${component_name} component.`)
     app = createApp({
       render: () => h('div', missingUserIdError),
     })
