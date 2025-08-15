@@ -85,7 +85,7 @@ const elements = [
   {
     id: 'asset-comments-counter',
     component: AssetCommentsCounter,
-    userIdRequired: true,
+    userIdRequired: false,
   },
   {
     id: 'asset-comments',
