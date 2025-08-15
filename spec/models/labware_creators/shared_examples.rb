@@ -4,8 +4,8 @@ RSpec.shared_examples 'it only allows creation from tubes' do
   context 'pre creation' do
     has_a_working_api
 
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :tube }
@@ -58,8 +58,8 @@ RSpec.shared_examples 'it only allows creation from plates' do
   context 'pre creation' do
     has_a_working_api
 
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :tube }
@@ -80,8 +80,8 @@ RSpec.shared_examples 'it only allows creation from tagged plates' do
   context 'pre creation' do
     has_a_working_api
 
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :tube }
@@ -114,8 +114,8 @@ RSpec.shared_examples 'it does not allow creation' do
   context 'pre creation' do
     has_a_working_api
 
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :tube }
@@ -148,8 +148,8 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
   context 'pre creation' do
     has_a_working_api
 
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :tube }
@@ -234,8 +234,8 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
   context 'pre creation' do
     has_a_working_api
 
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :tube }

@@ -6,7 +6,7 @@ module LabwareCreators
   # TODO: transfer_request_attributes currently assumes the pool identifier is
   # the submission uuid - this should be changed
   class PooledTubesBase < Base
-    include SupportParent::TaggedPlateOnly
+    include CreatableFrom::TaggedPlateOnly
 
     attr_reader :tube_transfer, :child_stock_tubes
     attr_writer :metadata_stock_barcode
