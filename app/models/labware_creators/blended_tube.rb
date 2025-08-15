@@ -5,7 +5,7 @@ module LabwareCreators
   #
   class BlendedTube < Base
     include LabwareCreators::CustomPage
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
 
     class_attribute :transfers_creator
 

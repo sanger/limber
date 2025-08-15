@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-module LabwareCreators::SupportParent
-  # Adds a class method which flags only plates as suitable parents
-  # This is used to work out is we should render the link
+module LabwareCreators::CreatableFrom
+  # Only plates are suitable parents for this creator.
+  #
+  # This uses `.creatable_from?` to determine whether we should render the link to create a child.
   module PlateOnly
     extend ActiveSupport::Concern
 
     class_methods do
-      def support_parent?(parent)
+      def creatable_from?(parent)
         parent.plate?
       end
     end

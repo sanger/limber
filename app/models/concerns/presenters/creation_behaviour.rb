@@ -62,6 +62,8 @@ module Presenters::CreationBehaviour
   end
 
   def compatible_purposes
-    Settings.purposes.lazy.select { |uuid, _purpose_settings| LabwareCreators.class_for(uuid).support_parent?(labware) }
+    Settings.purposes.lazy.select do |uuid, _purpose_settings|
+      LabwareCreators.class_for(uuid).creatable_from?(labware)
+    end
   end
 end

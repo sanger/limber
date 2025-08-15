@@ -8,7 +8,7 @@ module LabwareCreators
   #    all tubes in the submission
   # This check is based on the contents of sibling_tubes in the json
   class FinalTube < Base
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
 
     self.default_transfer_template_name = 'Transfer from tube to tube by submission'
     self.page = 'final_tube'

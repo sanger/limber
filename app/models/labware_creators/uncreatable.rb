@@ -11,7 +11,7 @@ module LabwareCreators
     # @note This actually duplicates the behaviour on the base class, so is not
     #       required for correct functionality. However I've decided to include
     #       it here for reasons of clarity.
-    def self.support_parent?(_parent)
+    def self.creatable_from?(_parent)
       false
     end
   end

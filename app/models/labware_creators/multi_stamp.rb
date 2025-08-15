@@ -3,7 +3,7 @@
 module LabwareCreators
   class MultiStamp < Base # rubocop:todo Style/Documentation
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     attr_accessor :transfers, :parents
 
