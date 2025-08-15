@@ -8,7 +8,7 @@ class PlatesController < LabwareController
   before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
 
   def fail_wells # rubocop:todo Metrics/AbcSize
-    return redirect_to(limber_plate_path(params[:id]), notice: t('notices.no_wells_selected')) if selected_wells.empty?
+    return redirect_to_no_wells_selected if selected_wells.empty?
 
     begin
       Sequencescape::Api::V2::StateChange.create!(
@@ -23,7 +23,6 @@ class PlatesController < LabwareController
     rescue StandardError => e
       log_plate_error(e)
       redirect_to limber_plate_path(params[:id]), alert: t('errors.messages.fail_wells_failed')
-      nil
     end
   end
 
@@ -31,18 +30,10 @@ class PlatesController < LabwareController
     params.fetch(:plate, {}).fetch(:wells, {}).select { |_, v| v == '1' }.keys
   end
 
-  def process_mark_under_represented_wells # rubocop:todo Metrics/AbcSize
-    return redirect_to(limber_plate_path(params[:id]), notice: t('notices.no_wells_selected')) if selected_wells.empty?
+  def process_mark_under_represented_wells
+    return redirect_to_no_wells_selected if selected_wells.empty?
 
-    begin
-      plate = fetch_plate_with_requests(params[:id])
-      mark_selected_wells_under_represented(plate)
-      redirect_to(limber_plate_path(params[:id]), notice: t('notices.wells_marked_under_represented'))
-    rescue StandardError => e
-      log_plate_error(e)
-      redirect_to limber_plate_path(params[:id]), alert: t('errors.messages.mark_wells_under_represented_failed')
-      nil
-    end
+    mark_wells_under_represented_and_redirect
   end
 
   private
@@ -54,6 +45,15 @@ class PlatesController < LabwareController
 
   def fetch_plate_with_requests(plate_id)
     Sequencescape::Api::V2.plate_with_custom_includes('wells.aliquots.request', uuid: plate_id)
+  end
+
+  def mark_wells_under_represented_and_redirect
+    plate = fetch_plate_with_requests(params[:id])
+    mark_selected_wells_under_represented(plate)
+    redirect_to(limber_plate_path(params[:id]), notice: t('notices.wells_marked_under_represented'))
+  rescue StandardError => e
+    log_plate_error(e)
+    redirect_to limber_plate_path(params[:id]), alert: t('errors.messages.mark_wells_under_represented_failed')
   end
 
   def mark_selected_wells_under_represented(plate)
@@ -85,5 +85,9 @@ class PlatesController < LabwareController
     return unless exception.respond_to?(:response) && exception.response
 
     Rails.logger.error "Response body: #{exception.response.body}"
+  end
+
+  def redirect_to_no_wells_selected
+    redirect_to(limber_plate_path(params[:id]), alert: t('errors.messages.no_wells_selected'))
   end
 end

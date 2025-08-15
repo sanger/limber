@@ -23,7 +23,7 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
 
   property :state, type: :string_inquirer
 
-  delegate :pending?, :started?, :passed?, :failed?, :cancelled?, :under_represented?, to: :state
+  delegate :pending?, :started?, :passed?, :failed?, :cancelled?, to: :state
 
   def latest_concentration
     latest_qc(key: 'concentration', units: 'ng/ul')

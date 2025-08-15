@@ -1,6 +1,6 @@
 <% unless presenter.passed? %>
   <div class="alert alert-danger" role="alert">
-    Notes!!! you can only mark wells under represented <strong>after</strong> passing the plate.
+     Wells can only be marked as under represented <strong>after</strong> passing the plate.
   </div>
 <% else %>
   <%= form_for(:plate, url: process_mark_under_represented_wells_path(presenter.labware), html: { method: 'post' }) do |form| %>
