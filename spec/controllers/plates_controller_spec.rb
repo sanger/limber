@@ -143,7 +143,7 @@ RSpec.describe PlatesController, type: :controller do
              params: { id: plate_uuid, plate: { wells: {} } }
 
         expect(response).to redirect_to(limber_plate_path(plate_uuid))
-        expect(flash[:notice]).to eq(I18n.t('notices.no_wells_selected'))
+        expect(flash[:alert]).to eq(I18n.t('errors.messages.no_wells_selected'))
       end
     end
 
