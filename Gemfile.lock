@@ -428,7 +428,7 @@ GEM
     simplecov_json_formatter (0.1.4)
     smart_properties (1.17.0)
     sprint_client (0.1.0)
-    state_machines (0.100.0)
+    state_machines (0.100.1)
     stringio (3.1.7)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
