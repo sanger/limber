@@ -11,7 +11,12 @@ class Settings
     end
     private :configuration_filename
 
+    # When invoked, this method will return a Hashie::Mash object that contains all the settings loaded from
+    # the YAML file.
+    # For example, you can access settings like `Settings.pipelines`, `Settings.purposes`, etc.
     def instance # rubocop:todo Metrics/AbcSize
+      # @instance is a Hashie::Mash object that contains all the settings loaded from the YAML file.
+      # It allows for method calls like Settings.pipelines, Settings.purposes, etc.
       return @instance if @instance.present?
 
       # Ideally we'd do Hashie::Mash.load(File.read(configuration_filename)) here
@@ -23,6 +28,8 @@ class Settings
 
       # To view a list of pipeline groups and respective pipelines:
       # e.g. Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipelines| pipelines.map(&:name) }
+
+      # This line has specifically been set to customise the behaviour of loading the pipelines.
       @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
 
       @instance
@@ -38,6 +45,9 @@ class Settings
       # rubocop:enable Style/StderrPuts
     end
 
+    # This line is making it possible to access configuration using
+    # the Settings.<config> syntax. For example, Settings.pipelines, Settings.purposes, etc.
+    # It delegates all method calls to the Mash (which is @instance here).
     delegate_missing_to :instance
 
     def reinitialize
