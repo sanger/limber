@@ -81,6 +81,7 @@ class PlatesController < LabwareController
 
   def log_plate_error(exception)
     return unless exception.respond_to?(:response) && exception.response
+
     Rails.logger.error "Response body: #{exception.response.body}"
   end
 
