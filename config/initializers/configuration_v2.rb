@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
+# Parent configuration mixin.
 module ConfigurationV2
   # Configuration for the application, including loaders for various configurations.
 
   def initialize(config_hash)
-    config_hash.with_indifferent_access.each do |key, value|
-
-    end
+    # config_hash.with_indifferent_access.each do |key, value|
+    # end
   end
 
+  # Configuration item.
   class Item
     include Enumerable
 
     attr_reader :children, :configuration
 
+    # rubocop:disable Metrics/MethodLength
     def initialize(configuration, children = {})
       @children = children
       @configuration = configuration
@@ -29,11 +31,10 @@ module ConfigurationV2
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def each(...)
       children.each(...)
     end
   end
-
-
 end

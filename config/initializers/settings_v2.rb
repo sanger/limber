@@ -1,24 +1,23 @@
 # frozen_string_literal: true
 
+# Parent settings mixin.
 module SettingsV2
-
-  CONFIGURATION_TYPES = [
-    :searches,
-    :transfer_templates,
-    :printers,
-    :purposes,
-    :purpose_uuids,
-    :robots,
-    :default_pmb_templates,
-    :default_sprint_templates,
-    :default_printer_type_names,
-    :submission_templates
-  ]*
-
-  CONFIGURATION_TYPES.each do |config|
-    # proc needs to return the configuration value
-    self.class.send(:define_method, config, proc { configuration.send(config) })
-  end
+  CONFIGURATION_TYPES = %i[
+    searches
+    transfer_templates
+    printers
+    purposes
+    purpose_uuids
+    robots
+    default_pmb_templates
+    default_sprint_templates
+    default_printer_type_names
+    submission_templates
+  ] *
+    CONFIGURATION_TYPES.each do |config|
+      # proc needs to return the configuration value
+      self.class.send(:define_method, config, proc { configuration.send(config) })
+    end
 
   def self.load_yaml
     config = Rails.root.join('config', 'settings', "#{Rails.env}.yml")
@@ -35,6 +34,4 @@ module SettingsV2
   def self.configuration
     @configuration ||= ConfigurationV2.new(load_yaml)
   end
-
-
 end
