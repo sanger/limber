@@ -13,11 +13,12 @@ module SettingsV2
     default_sprint_templates
     default_printer_type_names
     submission_templates
-  ] *
-    CONFIGURATION_TYPES.each do |config|
-      # proc needs to return the configuration value
-      self.class.send(:define_method, config, proc { configuration.send(config) })
-    end
+  ].freeze
+
+  CONFIGURATION_TYPES.each do |config|
+    # proc needs to return the configuration value
+    self.class.send(:define_method, config, proc { configuration.send(config) })
+  end
 
   def self.load_yaml
     config = Rails.root.join('config', 'settings', "#{Rails.env}.yml")
