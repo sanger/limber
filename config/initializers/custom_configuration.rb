@@ -7,8 +7,11 @@ module Settings
   # Custom configuration class that can be used to build a configuration
   class CustomConfiguration
     def initialize(config_hash)
-      config_hash.with_indifferent_access.each do |key, value|
+      @children = config_hash.with_indifferent_access
+
+      @children.each do |key, value|
         define_singleton_method(key) { Item.new(key, value) }
+        define_singleton_method("#{key}=") { |new_value| @children[key] = new_value }
       end
     end
 
@@ -32,6 +35,7 @@ module Settings
           else
             define_singleton_method(key) { child }
           end
+          define_singleton_method("#{key}=") { |new_value| @children[key] = new_value }
         end
       end
       # rubocop:enable Metrics/MethodLength
