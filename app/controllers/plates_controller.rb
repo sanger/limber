@@ -73,7 +73,7 @@ class PlatesController < LabwareController
     request = Array(request).first
 
     Sequencescape::Api::V2::PolyMetadatum.create!(
-      key: 'under_represented',
+      key: LimberConstants::UNDER_REPRESENTED_KEY,
       value: 'true',
       relationships: { metadatable: request }
     )

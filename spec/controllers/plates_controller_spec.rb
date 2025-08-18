@@ -116,7 +116,7 @@ RSpec.describe PlatesController, type: :controller do
       let(:expected_args) do
         wells.map do |well|
           {
-            key: 'under_represented',
+            key: LimberConstants::UNDER_REPRESENTED_KEY,
             value: 'true',
             relationships: { metadatable: well.aliquots.first.request }
           }

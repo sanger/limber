@@ -97,6 +97,6 @@ module PlateHelper # rubocop:todo Style/Documentation
     return false unless request.respond_to?(:poly_metadata)
     return false unless request.poly_metadata
 
-    request.poly_metadata.any? { |pm| pm.key == 'under_represented' && pm.value == 'true' }
+    request.poly_metadata.any? { |pm| pm.key == LimberConstants::UNDER_REPRESENTED_KEY && pm.value == 'true' }
   end
 end
