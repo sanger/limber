@@ -80,10 +80,7 @@ class PlatesController < LabwareController
   end
 
   def log_plate_error(exception)
-    Rails.logger.error "#{exception.class}: #{exception.message}"
-    Rails.logger.error "Backtrace:\n#{exception.backtrace.join("\n")}" if exception.respond_to?(:backtrace)
     return unless exception.respond_to?(:response) && exception.response
-
     Rails.logger.error "Response body: #{exception.response.body}"
   end
 
