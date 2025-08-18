@@ -1,66 +1,44 @@
 # frozen_string_literal: true
 
-require 'config_loader/pipelines_loader'
+# Parent settings mixin.
+module Settings
+  CONFIGURATION_TYPES = %i[
+    searches
+    transfer_templates
+    printers
+    purposes
+    purpose_uuids
+    robots
+    default_pmb_templates
+    default_sprint_templates
+    default_printer_type_names
+    submission_templates
+  ].freeze
 
-# Global setting object loaded from `config/settings/_environment_.yml` which is
-# generated on running `rake config:generate`
-class Settings
-  class << self
-    def configuration_filename
-      Rails.root.join('config', 'settings', "#{Rails.env}.yml")
-    end
-    private :configuration_filename
-
-    # When invoked, this method will return a Hashie::Mash object that contains all the settings loaded from
-    # the YAML file.
-    # For example, you can access settings like `Settings.pipelines`, `Settings.purposes`, etc.
-    def instance # rubocop:todo Metrics/AbcSize
-      # @instance is a Hashie::Mash object that contains all the settings loaded from the YAML file.
-      # It allows for method calls like Settings.pipelines, Settings.purposes, etc.
-      return @instance if @instance.present?
-
-      # Ideally we'd do Hashie::Mash.load(File.read(configuration_filename)) here
-      # but the creates an immutable setting object that messes with tests.
-      # Immutability is good here though, so we should probably fix that.
-      # Added flag onto safe_load to allow read of anchors (aliases) in yml files.
-      config_file_descriptor = File.open(configuration_filename, 'r:bom|utf-8')
-      @instance = Hashie::Mash.new(YAML.safe_load(config_file_descriptor, permitted_classes: [Symbol], aliases: true))
-
-      # To view a list of pipeline groups and respective pipelines:
-      # e.g. Settings.pipelines.group_by(&:pipeline_group).transform_values { |pipelines| pipelines.map(&:name) }
-
-      # This line has specifically been set to customise the behaviour of loading the pipelines.
-      @instance.pipelines = ConfigLoader::PipelinesLoader.new.pipelines
-
-      @instance
-    rescue Errno::ENOENT
-      # This before we've fully initialized and is intended to report issues to
-      # the user.
-      # rubocop:disable Style/StderrPuts
-      star_length = [96, 12 + configuration_filename.to_s.length].max
-      $stderr.puts('*' * star_length)
-      $stderr.puts "WARNING! No #{configuration_filename}"
-      $stderr.puts "You need to run 'rake config:generate' and can ignore this message if that's what you are doing!"
-      $stderr.puts('*' * star_length)
-      # rubocop:enable Style/StderrPuts
-    end
-
-    # This line is making it possible to access configuration using
-    # the Settings.<config> syntax. For example, Settings.pipelines, Settings.purposes, etc.
-    # It delegates all method calls to the Mash (which is @instance here).
-    delegate_missing_to :instance
-
-    def reinitialize
-      @instance = nil
-      self
-    end
+  CONFIGURATION_TYPES.each do |config|
+    # Accessor methods
+    self.class.send(:define_method, config, proc {
+      Settings.configuration.send(config)
+    })
+    # Mutator methods
+    self.class.send(:define_method, "#{config}=", proc { |value|
+      Settings.configuration.send("#{config}=", value)
+    })
   end
-end
 
-Rails.application.config.to_prepare do
-  # By re-initializing here we gain:
-  # - Clear hot-reloading of classes like PipelineList when in development mode
-  # - Reloading of the settings in development mode, meaning you don't need to
-  #   restart following a rake config:generate
-  Settings.reinitialize.instance
+  def self.load_yaml
+    config = Rails.root.join('config', 'settings', "#{Rails.env}.yml")
+    return unless File.exist?(config)
+
+    config_file_descriptor = File.open(config, 'r:bom|utf-8')
+    # Returns a Hash with the configuration data
+    config_data = YAML.safe_load(config_file_descriptor, permitted_classes: [Symbol], aliases: true)
+    raise "Configuration file #{config} is not valid YAML." if config_data.blank?
+
+    config_data.with_indifferent_access
+  end
+
+  def self.configuration
+    @configuration ||= CustomConfiguration.new(load_yaml)
+  end
 end
