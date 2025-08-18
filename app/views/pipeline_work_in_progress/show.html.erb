@@ -7,7 +7,7 @@
 
   <!-- one column per purpose, containing cards for each plate / tube -->
   <div class="scroll-container">
-    <div class="flex-row">
+    <div class="d-flex flex-row flex-nowrap gap-4">
       <% @ordered_purpose_list.each do |purpose_group| %>
         <div class="purpose-column">
           <!-- card for the column, with purpose name -->
