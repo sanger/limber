@@ -13,6 +13,8 @@ module Settings
     default_sprint_templates
     default_printer_type_names
     submission_templates
+    pipelines
+    poolings
   ].freeze
 
   CONFIGURATION_TYPES.each do |config|
