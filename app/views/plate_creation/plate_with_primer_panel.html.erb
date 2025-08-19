@@ -15,7 +15,7 @@
   <%= sidebar do %>
     <%= card without_block: true do %>
       <h3 class='card-header'>Actions</h3>
-        <%= form_for(@labware_creator, as: :plate, url: plate_child_plate_creation_path(@labware_creator.parent), html: {method: :post}) do |f| %>
+        <%= form_for(@labware_creator, as: :plate, url: plate_child_plate_creation_path(@labware_creator.parent), html: { method: :post }) do |f| %>
           <%= f.hidden_field :purpose_uuid, as: :hidden, value: @labware_creator.purpose_uuid %>
           <%= f.hidden_field :parent_uuid, as: :hidden, value: @labware_creator.parent_uuid %>
           <%= f.submit 'Create plate', class: 'btn btn-outline-primary w-100', style: 'padding: 10px' %>
