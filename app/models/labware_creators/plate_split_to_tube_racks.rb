@@ -42,7 +42,7 @@ module LabwareCreators
   # rubocop:disable Metrics/ClassLength
   class PlateSplitToTubeRacks < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     self.page = 'tube_rack_creation/plate_split_to_tube_racks'
     self.attributes += %i[sequencing_file contingency_file]
@@ -63,6 +63,8 @@ module LabwareCreators
     validate :check_tube_rack_barcodes_differ_between_files
     validate :check_tube_barcodes_differ_between_files
 
+    validate :check_decode_failure_in_tube_rack_files
+
     # validate there are sufficient tubes in the racks for the number of parent wells
     validate :must_have_correct_number_of_tubes_in_rack_files, if: :contingency_file
 
@@ -74,6 +76,12 @@ module LabwareCreators
     SEQ_TUBE_RACK_NAME = 'SEQ Tube Rack'
     SPR_TUBE_RACK_NAME = 'SPR Tube Rack'
     DEFAULT_TUBE_RACK_SIZE = '96'
+
+    # Text used to indicate a barcode decode failure in tube rack scan files (applies to both sequencing
+    # and contingency racks).
+    # This value appears in the barcode field when the scanner is unable to read a tube barcode.
+    # If present, the system will block progress and display an informative error to the user.
+    DECODE_FAILURE_TEXT = 'DECODE FAILURE'
 
     def validate_file_presence
       if sequencing_file.blank?
@@ -245,6 +253,37 @@ module LabwareCreators
         :contingency_csv_file,
         "Tube barcodes are duplicated across contingency and sequencing files (#{duplicate_barcodes.join(', ')})"
       )
+    end
+
+    # Validation that checks for 'DECODE FAILURE' in the uploaded tube rack scan files.
+    #
+    # This validation inspects both the sequencing and contingency tube rack scan CSV files (if present).
+    # If any barcode in either file is exactly 'DECODE FAILURE', it adds an error to the corresponding file attribute
+    # ('Sequencing tube rack scan file' or 'Contingency tube rack scan file').
+    #
+    # The error message is informative, explaining that 'DECODE FAILURE' means the scanner could not decode a barcode
+    # in one or more positions, and instructs the user to check and re-scan the affected tubes.
+    #
+    # Example error message:
+    #   "Sequencing csv file contains 'DECODE FAILURE'. This means the scanner could not decode a barcode in one or
+    #   more positions. Please check your file and re-scan the affected tubes."
+    #
+    # This prevents the user from progressing if a decode failure is detected in the uploaded files.
+
+    def check_decode_failure_in_tube_rack_files
+      [sequencing_csv_file, contingency_csv_file].each_with_index do |csv_file, idx|
+        next if csv_file.blank?
+
+        barcodes = extract_barcodes(csv_file)
+        next unless barcodes.any?('DECODE FAILURE')
+
+        file_type = idx.zero? ? 'Sequencing tube rack scan file' : 'Contingency tube rack scan file'
+        errors.add(
+          file_type,
+          "contains 'DECODE FAILURE'. This means the scanner could not decode a barcode in one or more positions. " \
+          'Please check your file and re-scan the affected tubes.'
+        )
+      end
     end
 
     def extract_barcodes(file)

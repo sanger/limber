@@ -8,7 +8,7 @@ module LabwareCreators
     class SubmissionFailure < StandardError
     end
 
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
     include LabwareCreators::CustomPage
     attr_reader :tube_transfer, :child, :barcodes
 

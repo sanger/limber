@@ -7,7 +7,7 @@ module LabwareCreators
   # of behaviour.
   class CustomTaggedPlate < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
     include LabwareCreators::TaggedPlateBehaviour
 
     attr_reader :child, :tag_plate
