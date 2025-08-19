@@ -58,6 +58,12 @@ module Settings
       end
       # rubocop:enable Metrics/MethodLength
 
+      delegate :[]=, to: :@children
+
+      def fetch(key, default = nil)
+        @children.fetch(key, default)
+      end
+
       def each(...)
         children.each(...)
       end
