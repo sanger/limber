@@ -22,7 +22,8 @@ module Settings
   CONFIGURATION_TYPES.each do |config|
     # Accessor methods
     self.class.send(:define_method, config, proc {
-      Settings.configuration.send(config)
+      value = Settings.configuration.send(config)
+      value.respond_to?(:children) ? value.children : value
     })
     # Mutator methods
     self.class.send(:define_method, "#{config}=", proc { |value|
