@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   # API V1 multiplexed library tube
-  factory :multiplexed_library_tube, class: Limber::MultiplexedLibraryTube, traits: %i[api_object ean13_barcoded] do
+  factory :multiplexed_library_tube, class: MultiplexedLibraryTube, traits: %i[api_object ean13_barcoded] do
     json_root { 'multiplexed_library_tube' }
 
     transient do
@@ -29,7 +29,7 @@ FactoryBot.define do
     state { 'pending' }
 
     # API V1 tube
-    factory :tube, class: Limber::Tube do
+    factory :tube, class: Tube do
       # with_has_many_associations 'aliquots'
       json_root { 'tube' }
       state { 'pending' }
