@@ -26,7 +26,7 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same
   #
-  # @return [ActiveModel::Name] The resource behaves like a Limber::TubeRack
+  # @return [ActiveModel::Name] The resource behaves like a TubeRack
   #
   def model_name
     ::ActiveModel::Name.new(TubeRack, false)
