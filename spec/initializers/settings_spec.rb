@@ -2,38 +2,15 @@
 
 require 'rails_helper'
 
-RSpec.describe Settings, skip: 'Skipping as WIP' do
-  let(:yaml_data) do
-    {
-      'searches' => %w[search1 search2],
-      'transfer_templates' => ['template1'],
-      'printers' => ['printer1'],
-      'purposes' => ['purpose1'],
-      'purpose_uuids' => ['uuid1'],
-      'robots' => ['robot1'],
-      'default_pmb_templates' => ['pmb1'],
-      'default_sprint_templates' => ['sprint1'],
-      'default_printer_type_names' => ['type1'],
-      'submission_templates' => ['submission1'],
-      'poolings' => ['pooling1']
-    }
-  end
-
+# rubocop:disable RSpec/EmptyExampleGroup
+RSpec.describe Settings, skip: 'WIP' do
   before do
-    allow(Rails).to receive_messages(root: Pathname.new(File.dirname(__FILE__)), env: 'test')
-    file_double = StringIO.new(yaml_data.to_yaml)
-    allow(File).to receive_messages(exist?: true, open: file_double)
-    stub_const('CustomConfiguration', Struct.new(*Settings::CONFIGURATION_TYPES) do
-      def initialize(hash)
-        hash.each { |k, v| send("#{k}=", v) }
-      end
-    end)
+    config = Rails.root.join('spec/data/config.yml')
+    config_file_descriptor = File.open(config, 'r:bom|utf-8')
+    # Returns a Hash with the configuration data
+    config_data = YAML.safe_load(config_file_descriptor, permitted_classes: [Symbol], aliases: true)
+    allow(described_class).to receive(:load_yaml).and_return(config_data)
     described_class.instance_variable_set(:@configuration, nil)
   end
-
-  describe 'Settings configuration setting the pipelines' do
-    it 'when invoked, returns the pipelines properly' do
-      skip 'WIP'
-    end
-  end
 end
+# rubocop:enable RSpec/EmptyExampleGroup

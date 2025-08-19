@@ -16,6 +16,9 @@ module Settings
     poolings
   ].freeze
 
+  # This loop declares Settings.<CONFIGURATION_TYPE> method declarations
+  # using metaprogramming. For example, when it will add purposes method for Settings, and
+  # when it is invoked, it will use the CustomConfiguration class to send the value for it.
   CONFIGURATION_TYPES.each do |config|
     # Accessor methods
     self.class.send(:define_method, config, proc {

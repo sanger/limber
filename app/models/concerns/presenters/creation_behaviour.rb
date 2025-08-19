@@ -34,9 +34,9 @@ module Presenters::CreationBehaviour
           parent_uuid: uuid,
           parent: labware,
           purpose_uuid: purpose_uuid,
-          name: purpose_settings.name,
-          type: purpose_settings.asset_type,
-          filters: purpose_settings.filters || {}
+          name: purpose_settings[:name],
+          type: purpose_settings[:asset_type],
+          filters: purpose_settings[:filters] || {}
         )
       end
       .force
@@ -62,6 +62,8 @@ module Presenters::CreationBehaviour
   end
 
   def compatible_purposes
-    Settings.purposes.lazy.select { |uuid, _purpose_settings| LabwareCreators.class_for(uuid).support_parent?(labware) }
+    Settings.purposes.children.lazy.select do |uuid, _purpose_settings|
+      LabwareCreators.class_for(uuid).support_parent?(labware)
+    end
   end
 end
