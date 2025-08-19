@@ -13,7 +13,6 @@ module Settings
     default_sprint_templates
     default_printer_type_names
     submission_templates
-    pipelines
     poolings
   ].freeze
 
@@ -26,6 +25,15 @@ module Settings
     self.class.send(:define_method, "#{config}=", proc { |value|
       Settings.configuration.send("#{config}=", value)
     })
+  end
+
+  # Delegates Settings.pipelines to the PipelinesLoader
+  def self.pipelines
+    @pipelines ||= ConfigLoader::PipelinesLoader.new.pipelines
+  end
+
+  def self.pipelines=(value)
+    @pipelines = value
   end
 
   def self.load_yaml

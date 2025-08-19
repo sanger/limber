@@ -44,6 +44,20 @@ module Settings
         @children = children
         @configuration = configuration
 
+        # Dynamically defines getter and setter methods for each child key in the configuration.
+        #
+        # For each key-value pair in the children hash:
+        # - If the value is a nested hash (ActiveSupport::HashWithIndifferentAccess),
+        #   it creates a getter method that returns a new Item instance, allowing for recursive access.
+        # - If the value is a simple value, it creates a getter method that returns the value directly.
+        # - For every key, it also creates a setter method to update the value in the children hash.
+        #
+        # This enables flexible, dot-notation access and assignment for deeply nested configuration structures.
+        #
+        # Example:
+        #   config = Settings.configuration
+        #   config.searches.some_child.some_grandchild        # Access nested value
+        #   config.searches.some_child.some_grandchild = val  # Set nested value
         children.each do |key, child|
           if child.is_a?(ActiveSupport::HashWithIndifferentAccess)
             next if respond_to?(key)
