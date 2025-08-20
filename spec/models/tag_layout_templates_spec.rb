@@ -31,7 +31,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
 
   # We mimic plate layout here, which seems preferable to arbitrary length limits.
   context 'by column' do
-    let(:template_factory) { :tag_layout_template }
+    let(:template_factory) { :v2_tag_layout_template }
     let(:expected_layout) do
       {
         'A1' => [1, 1],
