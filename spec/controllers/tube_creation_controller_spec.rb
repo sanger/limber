@@ -43,7 +43,7 @@ RSpec.describe TubeCreationController, type: :controller do
       before do
         expect_any_instance_of(LabwareCreators::PooledTubesBySubmission).to receive(:save).and_return(true)
         expect_any_instance_of(LabwareCreators::PooledTubesBySubmission).to receive(:redirection_target).and_return(
-          build(:tube, uuid: child_uuid)
+          build(:v2_tube, uuid: child_uuid)
         )
       end
 
