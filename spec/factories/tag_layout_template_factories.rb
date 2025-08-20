@@ -28,7 +28,7 @@ FactoryBot.define do
 
   # API V1 tag layout template. The inheriting factories set up the patterns
   # commonly seen by Limber
-  factory :tag_layout_template, class: TagLayoutTemplate, traits: [:api_object] do
+  factory :tag_layout_template, class: TagLayoutTemplates, traits: [:api_object] do
     skip_create
 
     json_root { 'tag_layout_template' }
