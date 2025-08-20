@@ -54,7 +54,7 @@ module LabwareCreators # rubocop:todo Style/Documentation
       when 'plate'
         ::ActiveModel::Name.new(Plate, nil, 'child_plate_creation')
       when 'tube'
-        ::ActiveModel::Name.new(Tube, nil, 'child_plate_creation')
+        ::ActiveModel::Name.new(Tube, nil, 'child_tube_creation')
       when 'tube_rack'
         ::ActiveModel::Name.new(TubeRack, nil, 'child_tube_rack_creation')
       else

@@ -47,7 +47,7 @@ Metrics/MethodLength:
     - 'spec/support/feature_helpers.rb'
     - 'spec/support/with_pmb_stubbed.rb'
 
-# Offense count: 10
+# Offense count: 9
 RSpec/AnyInstance:
   Exclude:
     - 'spec/controllers/robots_controller_spec.rb'
@@ -184,7 +184,7 @@ RSpec/ExampleWording:
   Exclude:
     - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
 
-# Offense count: 19
+# Offense count: 18
 RSpec/ExpectInHook:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
@@ -194,7 +194,7 @@ RSpec/ExpectInHook:
     - 'spec/models/labware_creators/multi_stamp_tubes_spec.rb'
     - 'spec/models/labware_creators/shared_examples.rb'
 
-# Offense count: 12
+# Offense count: 10
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: implicit, each, example
@@ -301,12 +301,10 @@ RSpec/MessageSpies:
     - 'spec/models/state_changers_spec.rb'
     - 'spec/support/api_url_helper.rb'
 
-# Offense count: 6
+# Offense count: 4
 RSpec/MultipleDescribes:
   Exclude:
     - 'spec/factory_outputs/plate_factory_spec.rb'
-    - 'spec/factory_outputs/transfer_factory_spec.rb'
-    - 'spec/factory_outputs/well_factory_spec.rb'
     - 'spec/models/utility/concentration_binning_calculator_spec.rb'
     - 'spec/models/utility/normalised_binning_calculator_spec.rb'
     - 'spec/models/utility/pcr_cycles_binning_calculator_spec.rb'
@@ -482,7 +480,7 @@ RSpec/SpecFilePathFormat:
     - 'spec/models/presenters/tag_plate_384_presenter_spec.rb'
     - 'spec/models/tube_rack_walking_spec.rb'
 
-# Offense count: 28
+# Offense count: 27
 RSpec/StubbedMock:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
@@ -519,7 +517,7 @@ RSpec/VariableName:
   Exclude:
     - 'spec/models/labware_creators/pcr_cycles_binned_plate_for_duplex_seq_spec.rb'
 
-# Offense count: 8
+# Offense count: 6
 # This cop supports unsafe autocorrection (--autocorrect-all).
 RSpec/VerifiedDoubleReference:
   Exclude:
@@ -538,7 +536,6 @@ RSpec/VerifiedDoubles:
     - 'spec/integrations/sequencescape/api/v2/plate_spec.rb'
     - 'spec/integrations/sequencescape/api/v2/shared_examples.rb'
     - 'spec/integrations/sequencescape/api/v2_spec.rb'
-    - 'spec/models/labels/plate_label_xp_base_spec.rb'
     - 'spec/models/labware_creators/donor_pooling_plate_spec.rb'
     - 'spec/models/labware_creators/plate_split_to_tube_racks_spec.rb'
     - 'spec/models/presenters/plate_presenter_spec.rb'

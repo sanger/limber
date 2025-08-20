@@ -56,7 +56,7 @@ Rails.application.routes.draw do
   resources :validate_paired_tubes, only: :index, module: :tubes
 
   resources :tube_racks, controller: :tube_racks do
-    resources :children, controller: :plate_creation
+    resources :child_plate_creations, controller: :plate_creation
     resources :qc_files, controller: :qc_files
     resources :tube_racks_exports, only: :show, module: :tube_racks
     # TODO: need to add work completion code for tube racks
