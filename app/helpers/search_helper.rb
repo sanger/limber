@@ -2,7 +2,7 @@
 
 module SearchHelper # rubocop:todo Style/Documentation
   def stock_plate_uuids
-    Settings.purposes.select { |_uuid, config| config.input_plate }.keys
+    Settings.purposes.select { |_uuid, config| config[:input_plate] }.keys
   end
 
   def self.stock_plate_names
