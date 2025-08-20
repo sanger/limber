@@ -20,14 +20,27 @@ module Settings
   # using metaprogramming. For example, when it will add purposes method for Settings, and
   # when it is invoked, it will use the CustomConfiguration class to send the value for it.
   CONFIGURATION_TYPES.each do |config|
-    # Accessor methods
-    self.class.send(:define_method, config, proc {
-      value = Settings.configuration.send(config)
-      value.respond_to?(:children) ? value.children : value
-    })
-    # Mutator methods
+    # Accessor
+    unless respond_to?(config)
+      self.class.send(:define_method, config, proc {
+        value = Settings.configuration.send(config)
+        value.respond_to?(:children) ? value.children : value
+      })
+    end
+    # Mutator
+    next if respond_to?("#{config}=")
+
     self.class.send(:define_method, "#{config}=", proc { |value|
-      Settings.configuration.send("#{config}=", value)
+      config_value = Settings.configuration.send(config)
+      if config_value.respond_to?(:children)
+        if config_value.children.is_a?(Hash) && value.is_a?(Hash)
+          config_value.children.replace(value)
+        else
+          Settings.configuration.send("#{config}=", value)
+        end
+      else
+        Settings.configuration.send("#{config}=", value)
+      end
     })
   end
 

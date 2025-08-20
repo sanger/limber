@@ -1,37 +1,15 @@
 ---
 :searches: {}
-:transfer_templates:
-  'Custom pooling': custom-pooling
-  'Pool wells based on submission': custom-transfer-template
-  'Transfer between specific tubes': transfer-between-specific-tubes
-  'Transfer columns 1-12': transfer-1-12
-  'Transfer from tube to tube by submission': tube-to-tube-by-sub
-  'Transfer wells to MX library tubes by submission': transfer-to-mx-tubes-on-submission
-  'Whole plate to tube': whole-plate-to-tube
+:transfer_templates: {}
 :printers:
   limit: 5
   default_count: 2
 :purposes: {}
 :purpose_uuids: {}
 :robots: {}
-:default_pmb_templates:
-  pmb_templates:
-    :plate_double: plate_6mm_double_code39
-    :plate_a: sqsc_96plate_label_template_code39
-    :tube_rack: sqsc_96plate_label_template_code39
-    :tube: tube_label_template_1d
-:default_sprint_templates:
-  sprint_templates:
-    :plate_double: plate_384.yml.erb
-    :plate_a: plate_96.yml.erb
-    :tube_rack: plate_96.yml.erb
-    :tube: tube_label_template_1d.yml.erb
-:default_printer_type_names:
-  printer_type_names:
-    :plate_double: 384 Well Plate Double
-    :plate_a: 96 Well Plate
-    :tube_rack: 96 Well Plate
-    :tube: 1D Tube
+:default_pmb_templates: {}
+:default_sprint_templates: {}
+:default_printer_type_names: []
 :submission_templates: {}
 :qc_purposes: []
 :locations: {}
