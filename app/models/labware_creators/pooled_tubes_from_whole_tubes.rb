@@ -68,7 +68,7 @@ module LabwareCreators
     end
 
     def redirection_target
-      Tube.new(@child.uuid)
+      Tube.new(nil, @child.uuid)
     end
 
     private

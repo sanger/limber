@@ -45,7 +45,7 @@ module LabwareCreators
 
       # The client_api returns a 'barcoded asset' here, rather than a tube.
       # We know that its a tube though, so wrap it in this useful tool
-      return Tube.new(destination_uuids.first) if destination_uuids.one?
+      return Tube.new(nil, destination_uuids.first) if destination_uuids.one?
 
       raise StandardError, 'Multiple targets found. You may have scanned tubes from separate submissions.'
     end
