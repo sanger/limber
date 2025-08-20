@@ -55,37 +55,4 @@ FactoryBot.define do
       transient { tag2_group { create :v2_tag_group_with_tags } }
     end
   end
-
-  # API V1 index of tag layout templates
-  factory :tag_layout_template_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
-    size { 2 }
-
-    transient do
-      json_root { nil }
-      resource_actions { %w[read first last] }
-      resource_url { 'tag_layout_templates/1' }
-      uuid { nil }
-
-      # Specifies which templates to generate
-      template_factory { :tag_layout_template }
-      direction { 'column' }
-    end
-
-    tag_layout_templates do
-      Array.new(size) do |i|
-        associated(template_factory, uuid: "tag-layout-template-#{i}", name: "Tag2 layout #{i}", direction: direction)
-      end
-    end
-
-    factory :tag_layout_template_collection_by_row do
-      transient do
-        direction { 'row' }
-        template_factory { :tag_layout_template_by_row }
-      end
-    end
-
-    factory :tag_layout_template_collection_by_quadrant do
-      transient { template_factory { :tag_layout_template_by_quadrant } }
-    end
-  end
 end
