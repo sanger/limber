@@ -147,7 +147,7 @@ RSpec.describe Presenters::TubeRackPresenter do
             [
               :tube_rack,
               :tube_racks_export,
-              { format: :csv, id: 'second_csv_id', tube_rack_id: labware.human_barcode }
+              { format: :csv, id: 'second_csv_id', tube_rack_id: labware.uuid }
             ]
           ]
         )
