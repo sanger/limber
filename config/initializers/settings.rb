@@ -30,10 +30,13 @@ module Settings
     # Mutator
     next if respond_to?("#{config}=")
 
+    # rubocop:disable Lint/DuplicateBranch
     self.class.send(:define_method, "#{config}=", proc { |value|
       config_value = Settings.configuration.send(config)
       if config_value.respond_to?(:children)
         if config_value.children.is_a?(Hash) && value.is_a?(Hash)
+          config_value.children.replace(value)
+        elsif config_value.children.is_a?(Array) && value.is_a?(Array)
           config_value.children.replace(value)
         else
           Settings.configuration.send("#{config}=", value)
@@ -42,6 +45,7 @@ module Settings
         Settings.configuration.send("#{config}=", value)
       end
     })
+    # rubocop:enable Lint/DuplicateBranch
   end
 
   # Delegates Settings.pipelines to the PipelinesLoader
