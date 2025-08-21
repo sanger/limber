@@ -79,9 +79,9 @@ module LabwareCreators
       control_locations = []
       list_of_controls.count.times do |control_index|
         control = list_of_controls[control_index]
-        if control.fixed_location?
+        if control[:fixed_location].present?
           # use the location specified in the purpose config for this control
-          control_locations.push(control.fixed_location)
+          control_locations.push(control[:fixed_location])
         else
           # sample a random parent well and fetch its location (child not created yet)
           control_locations.push(parent.wells.sample.position['name'])
@@ -92,13 +92,13 @@ module LabwareCreators
 
     def check_control_rules_from_config(control_locations)
       list_of_rules.each do |rule|
-        case rule.type
+        case rule[:type]
         when 'not'
           # locations must not match this combination of wells (order is important)
-          return false if control_locations == rule.value
+          return false if control_locations == rule[:value]
         when 'well_exclusions'
           # locations must not be in this list well locations (exclusions)
-          return false if control_locations.any? { |location| rule.value.include?(location) }
+          return false if control_locations.any? { |location| rule[:value].include?(location) }
         else
           # check for unrecognised rule type
           raise StandardError, "Unrecognised control locations rule type from purpose config #{rule.type}"
