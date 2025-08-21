@@ -2,7 +2,7 @@
 Ultima High Throughput PCR Free:
   pipeline_group: Ultima High Throughput PCR Free
   filters:
-    request_type_key: limber_ultima_pcr_free
+    request_type_key: limber_ultima_htp_pcr_free
     library_type:
       - Ultima High Throughput PCR Free 96
   library_pass: UPF Lib XP2
