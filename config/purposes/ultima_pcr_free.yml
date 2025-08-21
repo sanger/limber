@@ -1,0 +1,38 @@
+---
+UPF Cherrypicked:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StockPlatePresenter
+UPF Shear:
+  :asset_type: plate
+UPF Post Shear:
+  :asset_type: plate
+UPF End Prep XP1:
+  :asset_type: plate
+UPF Lib:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+    - 'Ultima P1'
+    - 'Ultima P2'
+UPF Lib XP2:
+  :asset_type: plate
+  :label_template: plate_xp
+UPF EqVol Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+UPF EqVol Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :tube
