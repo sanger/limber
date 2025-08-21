@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/duplex_seq_pcr_xp_concentrations_for_custom_pooling.csv.erb' do
-  has_a_working_api
-
   let(:qc_result_options) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
 
   let(:well_a1) do

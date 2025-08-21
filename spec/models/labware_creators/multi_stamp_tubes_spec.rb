@@ -7,8 +7,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiStampTubes do
   it_behaves_like 'it only allows creation from tubes'
 
-  has_a_working_api
-
   let(:parent1_tube_uuid) { 'example-tube1-uuid' }
   let(:parent2_tube_uuid) { 'example-tube2-uuid' }
 
@@ -48,7 +46,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on new' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_tube_uuid } }
 
@@ -66,7 +64,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on create' do
-    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {

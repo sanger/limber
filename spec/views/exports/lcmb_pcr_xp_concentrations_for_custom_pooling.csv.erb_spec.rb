@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/lcmb_pcr_xp_concentrations_for_custom_pooling.csv.erb' do
-  has_a_working_api
-
   let(:qc_result_options_1) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
   let(:qc_result_options_2) { { value: 2.7, key: 'concentration', units: 'ng/ul' } }
 

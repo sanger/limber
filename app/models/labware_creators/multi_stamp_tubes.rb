@@ -162,7 +162,6 @@ module LabwareCreators
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
         asset_groups: [{ asset_uuids:, autodetect_studies:, autodetect_projects: }],
-        api: api,
         user: user_uuid
       }
 

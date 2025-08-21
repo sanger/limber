@@ -8,12 +8,10 @@ require_relative 'shared_examples'
 # Adds the controls to randomised well locations on the child plate, potentially displacing samples
 # that would otherwise have been stamped across.
 RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
-
-  has_a_working_api
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
@@ -282,8 +280,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   describe '#register_stock_for_plate' do
     let(:logger) { instance_double(Logger) }
     let(:child_uuid) { 'child-uuid' }
-    let(:child_plate_v2) { instance_double('Plate') }
-    let(:child) { instance_double('Plate', uuid: child_uuid) }
+    let(:child_plate_v2) { create(:v2_plate) }
+    let(:child) { create(:v2_plate, uuid: child_uuid) }
 
     before do
       allow(Rails).to receive(:logger).and_return(logger)

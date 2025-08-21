@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/cardinal_sample_arraying_tube_layout.csv.erb' do
-  has_a_working_api
-
   let(:tube_a1) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 2) }
   let(:tube_b1) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 3) }
   let(:tube_c1) { create(:v2_stock_tube, state: 'passed', purpose_name: 'Example Purpose', barcode_number: 4) }

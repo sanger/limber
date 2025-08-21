@@ -3,12 +3,10 @@
 require 'spec_helper'
 
 RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
-  has_a_working_api
-
   # In these tests, sample uuid and well state are modified at specific
   # wells for setup.
 
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   let(:user_uuid) { 'user-uuid' }
   let(:parent_plate_uuid) { 'parent-plate-uuid' }

@@ -10,7 +10,7 @@ module WorkCompletionBehaviour
 
   included { include SequencescapeSubmissionBehaviour }
 
-  # Create a work completion for the given limber_plate_id
+  # Create a work completion for the given plate_id
   # and redirect to the plate page.
   # Work completions mark library creation requests as completed
   # and hook them up to the correct wells.
@@ -35,6 +35,6 @@ module WorkCompletionBehaviour
     params
       .require(:sequencescape_submission)
       .permit(:template_uuid, request_options: {}, assets: [])
-      .merge(api: api, user: current_user_uuid)
+      .merge(user: current_user_uuid)
   end
 end

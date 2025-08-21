@@ -4,8 +4,6 @@ require 'rails_helper'
 require './app/controllers/plates_controller'
 
 RSpec.describe PlatesController, type: :controller do
-  has_a_working_api
-
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate) { create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
   let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
@@ -91,7 +89,7 @@ RSpec.describe PlatesController, type: :controller do
 
       post :fail_wells, params: { id: plate_uuid, plate: { wells: { 'A1' => 1, 'B1' => 0 } } }, session: { user_uuid: }
 
-      expect(response).to redirect_to(limber_plate_path(plate_uuid))
+      expect(response).to redirect_to(plate_path(plate_uuid))
     end
   end
 end

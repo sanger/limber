@@ -68,7 +68,7 @@ module LabwareCreators
     end
 
     def redirection_target
-      TubeProxy.new(@child.uuid)
+      Tube.new(@child.uuid)
     end
 
     private
