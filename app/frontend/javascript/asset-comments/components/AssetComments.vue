@@ -1,5 +1,5 @@
 <template>
-  <ul class="comments-list list-group list-group-flush">
+  <ul class="comments-list list-group list-group-flush rounded-bottom">
     <li v-for="comment in sortedComments" :key="comment.id" class="list-group-item">
       <div class="mb-1">
         <strong>{{ comment.title }}</strong>
