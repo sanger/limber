@@ -9,7 +9,7 @@
 :robots: {}
 :default_pmb_templates: {}
 :default_sprint_templates: {}
-:default_printer_type_names: []
+:default_printer_type_names: {}
 :submission_templates: {}
 :qc_purposes: []
 :locations: {}
