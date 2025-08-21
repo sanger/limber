@@ -72,7 +72,7 @@ module Presenters
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
-        .select { |link| can_be_enabled?(link&.states) }
+        .select { |link| can_be_enabled?(link & [:states]) }
         .map do |link|
           format_extension = link.format || 'csv'
           [
