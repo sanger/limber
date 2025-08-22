@@ -29,7 +29,7 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   # @return [ActiveModel::Name] The resource behaves like a TubeRack
   #
   def model_name
-    ::ActiveModel::Name.new(TubeRack, false)
+    ::ActiveModel::Name.new(Sequencescape::Api::V2::TubeRack, false, 'TubeRack')
   end
 
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'
