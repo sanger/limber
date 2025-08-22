@@ -17,8 +17,11 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   STATE_EMPTY = 'empty'
   STATE_MIXED = 'mixed'
 
-  # This is needed in order for the URL helpers to work correctly
+  # Overrides the Rails method to return the UUID of the labware for use in URL generation.
+  #
+  # @return [String] The UUID of the labware instance.
   def to_param
+    # Currently use the uuid as our main identifier, might switch to human barcode soon
     uuid
   end
 

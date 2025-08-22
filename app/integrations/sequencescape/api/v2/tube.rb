@@ -61,8 +61,11 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
     ::ActiveModel::Name.new(Tube, false)
   end
 
-  # Currently us the uuid as our main identifier, might switch to human barcode soon
+  # Overrides the Rails method to return the UUID of the labware for use in URL generation.
+  #
+  # @return [String] The UUID of the labware instance.
   def to_param
+    # Currently use the uuid as our main identifier, might switch to human barcode soon
     uuid
   end
 

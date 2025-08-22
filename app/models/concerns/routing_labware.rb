@@ -9,7 +9,7 @@ module RoutingLabware
 
   # Initializes the model with an ID, which is used for routing.
   # @param api [Sequencescape::Api] DEPRECATED: The API v1 instance
-  # @param id [UUID, Integer] The identifier of the labware to redirect to
+  # @param id [UUID] The identifier of the labware to redirect to
   # @return [void]
   # @example
   #   plate = Plate.new(api, '123e4567-e89b-12d3-a456-426614174000')
@@ -19,7 +19,11 @@ module RoutingLabware
     @id = id
   end
 
+  # Overrides the Rails method to return the UUID of the labware for use in URL generation.
+  #
+  # @return [String] The UUID of the labware instance.
   def to_param
+    # Currently use the uuid as our main identifier, might switch to human barcode soon
     @id
   end
 
