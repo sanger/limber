@@ -20,7 +20,7 @@ class QcFilesController < ApplicationController
     qc_files = Sequencescape::Api::V2::Labware # api/v2/labware?
       .includes(:qc_files) # &include=qc_files
       .select(qc_files: %i[filename size uuid created_at]) # &fields[qc_files]=filename,size,uuid,created_at
-      .find(uuid:) # &filter[uuid]=5ccc12e4-ff35-11ef-b7df-000000000000
+      .find(uuid: asset.uuid) # &filter[uuid]=5ccc12e4-ff35-11ef-b7df-000000000000
       .first.qc_files
     respond_to { |format| format.json { render json: { 'qc_files' => qc_files.map { |q| qc_file_to_json(q) } } } }
   end
