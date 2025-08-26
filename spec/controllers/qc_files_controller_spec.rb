@@ -90,7 +90,7 @@ RSpec.describe QcFilesController, type: :controller do
       fields = %i[filename size uuid created_at]
       allow(Sequencescape::Api::V2::Labware).to receive(:includes).with(:qc_files).and_return(query_builder)
       allow(query_builder).to receive(:select).with(qc_files: fields).and_return(query_builder)
-      allow(query_builder).to receive(:find).with(uuid: plate.uuid) .and_return(query_builder)
+      allow(query_builder).to receive(:find).with(uuid: plate.uuid).and_return(query_builder)
       allow(query_builder).to receive(:first)
         .and_return(plate)
     end
