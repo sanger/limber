@@ -18,7 +18,7 @@ module Presenters
 
     def suitable_for_labware?(config)
       config[:beds]
-        .detect { |_bed, bed_config| bed_config.purpose == purpose_name && bed_config.states.include?(labware.state) }
+        .detect { |_bed, bed_config| bed_config[:purpose] == purpose_name && bed_config[:states].include?(labware.state) }
         .present?
     end
 
