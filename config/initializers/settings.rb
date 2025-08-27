@@ -69,7 +69,6 @@ module Settings
     config_data.with_indifferent_access
   end
 
-
   # Returns an instance of CustomConfiguration that provides access to the
   # configuration data loaded from the YAML file.
   def self.configuration
