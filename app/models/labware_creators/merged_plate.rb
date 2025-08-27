@@ -29,7 +29,7 @@ module LabwareCreators
     # @return [Array] Purpose name strings.
     #
     def expected_source_purposes
-      Settings.purposes.dig(@purpose_uuid, :merged_plate).source_purposes
+      Settings.purposes.dig(@purpose_uuid, :merged_plate)[:source_purposes]
     end
 
     #
@@ -38,7 +38,7 @@ module LabwareCreators
     # @return [String] Some descriptive text.
     #
     def help_text
-      Settings.purposes.dig(@purpose_uuid, :merged_plate).help_text
+      Settings.purposes.dig(@purpose_uuid, :merged_plate)[:help_text]
     end
 
     def barcodes=(barcodes)
