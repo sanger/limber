@@ -857,10 +857,10 @@
   resolved "https://registry.yarnpkg.com/@prettier/plugin-ruby/-/plugin-ruby-4.0.4.tgz#73d85fc2a1731a3f62b57ac3116cf1c234027cb6"
   integrity sha512-lCpvfS/dQU5WrwN3AQ5vR8qrvj2h5gE41X08NNzAAXvHdM4zwwGRcP2sHSxfu6n6No+ljWCVx95NvJPFTTjCTg==
 
-"@rails/ujs@^7.1.501":
-  version "7.1.501"
-  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-7.1.501.tgz#e560a7b6885a12a659c4beb47f4336c8a9353056"
-  integrity sha512-7EDRGUlgns12IgP3SXVSaxA3CwRzbLOypPXn1EqEZiZ/NS/PwaQ/oa7Z2VRO4B46JifoVr0PYg+G5ERSGQJHxQ==
+"@rails/ujs@^7.1.502":
+  version "7.1.502"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-7.1.502.tgz#504a05c44ec079432fae894e698556c630fdcd49"
+  integrity sha512-SFtA5X59BimNG8cy60pgZhPf1bGpg5KXVYF6Jj5H5hrwwNXKNmD2yNZhHC+WfuLqBN+972cZHR9Fto6nJQz+Xw==
 
 "@rollup/rollup-android-arm-eabi@4.22.4":
   version "4.22.4"
@@ -1754,10 +1754,10 @@ cytoscape-popper@^2.0.0:
   dependencies:
     "@popperjs/core" "^2.0.0"
 
-cytoscape@^3.33.0:
-  version "3.33.0"
-  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.33.0.tgz#c08136096f568d0f9b438406ec722f1a093b4e16"
-  integrity sha512-2d2EwwhaxLWC8ahkH1PpQwCyu6EY3xDRdcEJXrLTb4fOUtVc+YWQalHU67rFS1a6ngj1fgv9dQLtJxP/KAFZEw==
+cytoscape@^3.33.1:
+  version "3.33.1"
+  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.33.1.tgz#449e05d104b760af2912ab76482d24c01cdd4c97"
+  integrity sha512-iJc4TwyANnOGR1OmWhsS9ayRS3s+XQ185FmuHObThD+5AeJCakAAbWv8KimMTt08xCCLNgneQwFp+JRJOr9qGQ==
 
 data-urls@^5.0.0:
   version "5.0.0"
@@ -3898,10 +3898,10 @@ safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-sass@^1.89.2:
-  version "1.89.2"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.89.2.tgz#a771716aeae774e2b529f72c0ff2dfd46c9de10e"
-  integrity sha512-xCmtksBKd/jdJ9Bt9p7nPKiuqrlBMBuuGkQlkhZjjQk3Ty48lv93k5Dq6OPkKt4XwxDJ7tvlfrTa1MPA9bf+QA==
+sass@^1.90.0:
+  version "1.90.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.90.0.tgz#d6fc2be49c7c086ce86ea0b231a35bf9e33cb84b"
+  integrity sha512-9GUyuksjw70uNpb1MTYWsH9MQHOHY6kwfnkafC24+7aOMZn9+rVMBxRbLvw756mrBFbIsFg6Xw9IkR2Fnn3k+Q==
   dependencies:
     chokidar "^4.0.0"
     immutable "^5.0.2"
