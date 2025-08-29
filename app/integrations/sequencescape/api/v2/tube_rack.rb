@@ -25,14 +25,13 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
     uuid
   end
 
-  #
-  # Override the model used in form/URL helpers
-  # to allow us to treat old and new api the same
+  # Override the model used in form/URL helpers such as polymorphic_path
+  # to allow us to return an application-native model instead of the API model.
   #
   # @return [ActiveModel::Name] The resource behaves like a TubeRack
   #
   def model_name
-    ::ActiveModel::Name.new(Sequencescape::Api::V2::TubeRack, false, 'TubeRack')
+    ::ActiveModel::Name.new(TubeRack)
   end
 
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'

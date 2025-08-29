@@ -2,7 +2,7 @@
 
 # A concern to encapsulate Rails routing proxy behaviour for labware models that use a Sequencescape API.
 # See the route definitions in `config/routes.rb` for the `resources` to `controller` mapping.
-# For the actual mapping to Sequencescape API V2 models, see the model_name method
+# For the actual mapping to Sequencescape API V2 models, see the model_name methods and
 # in app/integrations/sequencescape/api/v2/labware.rb.
 #
 module RoutingLabware

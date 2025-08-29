@@ -51,14 +51,13 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
 
   delegate :requests_as_source, to: :receptacle
 
-  #
-  # Override the model used in form/URL helpers
-  # to allow us to treat old and new api the same
+  # Override the model used in form/URL helpers such as polymorphic_path
+  # to allow us to return an application-native model instead of the API model.
   #
   # @return [ActiveModel::Name] The resource behaves like a Tube
   #
   def model_name
-    ::ActiveModel::Name.new(Tube, false)
+    ::ActiveModel::Name.new(Tube)
   end
 
   # Overrides the Rails method to return the UUID of the labware for use in URL generation.

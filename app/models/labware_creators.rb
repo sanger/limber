@@ -45,21 +45,29 @@ module LabwareCreators # rubocop:todo Style/Documentation
     # tube_tube_racks (Tube -> TubeRack) (tube_rack_creation#create)
 
     # Returns the ActiveModel::Name instance for the given type.
-    # This method maps the type to the corresponding model class and returns an ActiveModel::Name instance.
+    # allowing us to return an application-native model instead of the API model.
+    # It also provides the correct URL routes for child labware creation.
     #
     # @return [ActiveModel::Name] the ActiveModel::Name instance for the given type.
     # @raise [StandardError] if the type is unknown.
     def model_name
       case type
       when 'plate'
-        ::ActiveModel::Name.new(Plate, nil, 'child_plate_creation')
+        build_model_name(klass: Plate, name: 'child_plate_creation')
       when 'tube'
-        ::ActiveModel::Name.new(Tube, nil, 'child_tube_creation')
+        build_model_name(klass: Tube, name: 'child_tube_creation')
       when 'tube_rack'
-        ::ActiveModel::Name.new(TubeRack, nil, 'child_tube_rack_creation')
+        build_model_name(klass: TubeRack, name: 'child_tube_rack_creation')
       else
         raise StandardError, "Unknown type #{type}"
       end
+    end
+
+    private
+
+    # Helper to allow named arguments for clarity
+    def build_model_name(klass:, namespace: nil, name: nil)
+      ::ActiveModel::Name.new(klass, namespace, name)
     end
   end
 
