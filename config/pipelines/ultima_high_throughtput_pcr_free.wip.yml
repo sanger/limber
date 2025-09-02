@@ -1,0 +1,22 @@
+---
+Ultima High Throughput PCR Free:
+  pipeline_group: Ultima High Throughput PCR Free
+  filters:
+    request_type_key: limber_ultima_htp_pcr_free
+    library_type:
+      - Ultima High Throughput PCR Free 96
+  library_pass: UPF Lib XP2
+  relationships:
+    UPF Cherrypicked: UPF Shear
+    UPF Shear: UPF Post Shear
+    UPF Post Shear: UPF End Prep XP1
+    UPF End Prep XP1: UPF Lib
+    UPF Lib: UPF Lib XP2
+Ultima Multiplexing:
+  pipeline_group: Ultima High Throughput PCR Free
+  filters:
+    request_type_key:
+      - limber_multiplexing_ultima
+  relationships:
+    UPF Lib XP2: UPF EqVol Pool
+    UPF EqVol Pool: UPF EqVol Norm
