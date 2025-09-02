@@ -107,7 +107,7 @@ templates:
     :sprint_template: plate_96_2d.yml.erb
 
   kinnex_tube:
-    :label_class: Labels::TubeLabelKinnex
+    :label_class: Labels::TubeLabelTractionCompatible
     :printer_type: 1D Tube
     :pmb_template: tube_label_template_1d
-    :sprint_template: tube_label_template_1d.yml.erb
+    :sprint_template: tube_label_traction_compatible.yml.erb
