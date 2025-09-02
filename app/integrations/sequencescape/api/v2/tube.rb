@@ -55,14 +55,17 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   # Override the model used in form/URL helpers
   # to allow us to treat old and new api the same
   #
-  # @return [ActiveModel::Name] The resource behaves like a Limber::Tube
+  # @return [ActiveModel::Name] The resource behaves like a Tube
   #
   def model_name
-    ::ActiveModel::Name.new(Limber::Tube, false)
+    ::ActiveModel::Name.new(Tube, false)
   end
 
-  # Currently us the uuid as our main identifier, might switch to human barcode soon
+  # Overrides the Rails method to return the UUID of the labware for use in URL generation.
+  #
+  # @return [String] The UUID of the labware instance.
   def to_param
+    # Currently use the uuid as our main identifier, might switch to human barcode soon
     uuid
   end
 

@@ -327,7 +327,7 @@ FactoryBot.define do
   end
 
   # Basic API v1 plate
-  factory :plate, class: Limber::Plate, traits: %i[api_object barcoded] do
+  factory :plate, class: Plate, traits: %i[api_object barcoded] do
     json_root { 'plate' }
     size { 96 }
     state { 'pending' }

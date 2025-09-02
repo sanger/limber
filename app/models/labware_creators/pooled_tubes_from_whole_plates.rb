@@ -38,7 +38,7 @@ module LabwareCreators
     end
 
     def redirection_target
-      TubeProxy.new(@child.uuid)
+      Tube.new(nil, @child.uuid)
     end
 
     # TODO: This should probably be asynchronous

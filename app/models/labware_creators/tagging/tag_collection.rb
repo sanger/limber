@@ -5,7 +5,7 @@ module LabwareCreators::Tagging
     #
     # Create a tag collection
     #
-    # @param [Limber::Plate] plate The plate from which the tag layout will be generated
+    # @param [Plate] plate The plate from which the tag layout will be generated
     # @param [String] purpose_uuid The uuid of the purpose which is about to be created
     #
     def initialize(plate, purpose_uuid)
@@ -89,7 +89,7 @@ module LabwareCreators::Tagging
     # Returns true if the given template is in the approved list
     # or the approved list is empty. Returns false otherwise.
     #
-    # @param [Limber::TagLayoutTemplate] template The template to check
+    # @param [TagLayoutTemplates] template The template to check
     #
     # @return [Bool] true if the template is acceptable
     #

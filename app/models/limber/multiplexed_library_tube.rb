@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class Limber::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube # rubocop:todo Style/Documentation
+# API V1 multiplexed library tube, extends the sequencescape-client-api implementation
+# to provide API compatibility with the V2 implementation
+class Limber::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube
   def location
     'A1'
   end

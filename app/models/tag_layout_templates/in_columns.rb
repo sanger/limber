@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
-# Used in quadrant layouts
-# Tags are arranged in quadrants in the case of some 384 well plates.
-# Essentially a 96 well plate of tags is transferred onto the same target
-# plate four times, such that each cluster of 4 wells contains the same tag.
-# Ie. Tag 1 is in wells A1, B1, A2, B2
-# In the case of column then column direction algorithms
-# Four different tag 2s then get applied to each cluster. These tags are
-# laid out in *COLUMN* order
-# ie. A1 => 1, A2 => 3, B1 => 2, B2 => 4
-#
-module Limber::TagLayoutTemplate::InColumnThenColumns
-  # Rows determined the second tag layout, which we don't
-  # worry about here.
+module TagLayoutTemplates::InColumns # rubocop:todo Style/Documentation
   def group_wells_of_plate(plate)
     group_wells(plate) do |well_location_pool_pair|
       WellHelpers.column_order(plate.size).map { |row_column| well_location_pool_pair.call(row_column) }
@@ -22,6 +10,7 @@ module Limber::TagLayoutTemplate::InColumnThenColumns
 
   # Returns the tag index for the primary (i7) tag
   # That is the one laid out in columns with four copies of each
+  # i5 follows the same pattern, but isn't actually shown in limber
   #
   # @param row [Integer] Zero indexed row co-ordinate of the well
   # @param column [Integer] Zero-indexed column co-ordinate of the well

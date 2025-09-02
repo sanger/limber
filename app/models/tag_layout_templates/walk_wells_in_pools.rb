@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Limber::TagLayoutTemplate::WalkWellsInPools # rubocop:todo Style/Documentation
+module TagLayoutTemplates::WalkWellsInPools # rubocop:todo Style/Documentation
   def generate_tag_layout(_plate)
     # This code was complicated, and its behaviour isn't
     # entirely apparent. (Something to do with optimising robots)

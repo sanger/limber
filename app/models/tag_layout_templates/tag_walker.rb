@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Generic walker behaviour
-module Limber::TagLayoutTemplate::TagWalker
+module TagLayoutTemplates::TagWalker
   def generate_tag_layout(plate) # rubocop:todo Metrics/AbcSize
     tags = tag_ids
     groups = group_wells_of_plate(plate)

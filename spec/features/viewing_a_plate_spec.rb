@@ -44,7 +44,7 @@ RSpec.feature 'Viewing a plate', :js do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.state-badge')).to have_content('Pending')
-    find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
+    find_link('Download Concentration CSV', href: '/plates/DN1S/exports/concentrations.csv')
   end
 
   context 'with a custom csv' do
@@ -54,8 +54,8 @@ RSpec.feature 'Viewing a plate', :js do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
       expect(find('.state-badge')).to have_content('Pending')
-      find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
-      find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
+      find_link('Download Worksheet CSV', href: "/plates/#{plate_uuid}.csv")
+      find_link('Download Concentration CSV', href: '/plates/DN1S/exports/concentrations.csv')
     end
   end
 
