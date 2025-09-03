@@ -44,7 +44,7 @@ RSpec.describe Labels::TubeLabelKinnex do
       end
 
       it 'has the correct barcode attribute' do
-        expect(attributes[:barcode]).to eq labware.barcode.ean13
+        expect(attributes[:barcode]).to eq labware.barcode.human
       end
     end
   end
