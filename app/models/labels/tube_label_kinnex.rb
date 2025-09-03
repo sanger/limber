@@ -8,6 +8,14 @@ class Labels::TubeLabelKinnex < Labels::TubeLabel # rubocop:todo Style/Documenta
     'receptacle.requests_as_source.request_type'
   ].freeze
 
+  def attributes
+    super.merge(
+      first_line: first_line,
+      second_line: second_line,
+      barcode: labware.barcode.human
+    )
+  end
+
   # This function is used to fetch the labware with the necessary includes for the label.
   # It uses the Sequencescape API to find the labware by its UUID and includes the custom includes defined above.
   # The labware is already set for the `labware` variable but we want to fetch the `transfer_requests_as_target`
