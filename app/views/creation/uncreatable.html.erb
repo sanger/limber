@@ -1,12 +1,15 @@
-<div class="w-50 p-5 mx-auto my-5 bg-warning rounded-3">
+<div class="w-50 p-5 mx-auto my-5 bg-warning text-dark rounded-3">
   <h1>Labware Creation Error</h1>
 
   <p class="lead">Cannot create the next stage of the pipeline</p>
 
   <p>
   This request to create a new
-  <strong><%= @labware_creator.child_purpose_name %></strong> <%= @labware_creator.child_labware_type %>
-  from a <strong><%= @labware_creator.parent_purpose_name %></strong> <%= @labware_creator.parent_labware_type %>
+  <%= link_to @labware_creator.child_purpose_name, pipelines_path(filter: @labware_creator.child_purpose_name), class: 'fw-bold' %>
+  <%= @labware_creator.child_labware_type %>
+  from a
+  <%= link_to @labware_creator.parent_purpose_name, pipelines_path(filter: @labware_creator.parent_purpose_name), class: 'fw-bold' %>
+  <%= @labware_creator.parent_labware_type %>
   has run into some problems and the child labware is uncreatable.
   </p>
 
