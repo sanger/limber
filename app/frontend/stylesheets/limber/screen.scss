@@ -515,6 +515,15 @@ dl#samples-information {
   }
 }
 
+// Link when text has been marked as dark, generally on light backgrounds
+.text-dark a {
+  @extend .link-dark;
+  @extend .text-decoration-underline;
+  @extend .link-underline-dark;
+  @extend .link-underline-opacity-50;
+  @extend .link-underline-opacity-100-hover;
+}
+
 // Classes deprecated during bootstrap v4 -> v5
 .form-group {
   margin-bottom: 1rem;

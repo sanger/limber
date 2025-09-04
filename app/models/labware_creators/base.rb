@@ -99,6 +99,19 @@ module LabwareCreators
     #
     def purpose_name
       purpose_config.name
+    rescue StandardError
+      'unknown'
+    end
+
+    #
+    # Returns the labware type of the child purpose
+    #
+    # @return [String] The labware type
+    #
+    def child_labware_type
+      purpose_config.asset_type
+    rescue StandardError
+      'labware'
     end
 
     private

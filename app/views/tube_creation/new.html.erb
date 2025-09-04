@@ -1,5 +1,12 @@
-<%= jumbotron do %>
-  <h1>Sorry</h1>
-  <p class="lead">We ran into some problems</p>
-  <%= flash_messages %>
-<% end %>
+<%# This page is used to display errors in flash messages - mostly raised by edge cases %>
+<div class="w-50 p-5 mx-auto my-5 bg-warning rounded-3">
+  <h1>Labware Creation Error</h1>
+
+  <p class="lead">Cannot create the next piece of labware</p>
+
+  <p class="mb-0">
+  This <strong><%= @labware_creator.class.name.demodulize.titleize.downcase %></strong> request to create a new
+  <strong><%= @labware_creator.purpose_name %></strong> <%= @labware_creator.child_labware_type.humanize.downcase %>
+  has run into some problems.
+  </p>
+</div>
