@@ -101,6 +101,15 @@ module LabwareCreators
       purpose_config.name
     end
 
+    #
+    # Returns the labware type of the child purpose
+    #
+    # @return [String] The labware type
+    #
+    def child_labware_type
+      purpose_config.asset_type
+    end
+
     private
 
     def create_plate_with_standard_transfer!

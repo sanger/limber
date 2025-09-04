@@ -35,11 +35,6 @@ module LabwareCreators
       purpose_name
     end
 
-    # Returns the labware type of the child purpose
-    def child_labware_type
-      purpose_config.asset_type
-    end
-
     private
 
     def parent
