@@ -197,7 +197,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
       plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
-      expect(page).to have_content('Cannot create the next piece of labware:')
+      expect(page).to have_content('Cannot create the next piece of labware')
       expect(page).to have_content('Well filter found 2 eligible requests for A1')
     end
   end
