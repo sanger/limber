@@ -85,4 +85,43 @@ RSpec.describe PlateHelper do
       expect(pool_store).to eq(expected_result)
     end
   end
+
+  describe '#well_under_represented?' do
+    context 'when the request has UNDER_REPRESENTED_KEY set to true' do
+      let(:poly_metadatum) { build(:poly_metadatum, key: LimberConstants::UNDER_REPRESENTED_KEY, value: 'true') }
+      let(:request) { build(:library_request_with_poly_metadata, poly_metadata: [poly_metadatum]) }
+      let(:aliquot) { build(:v2_aliquot, outer_request: request) }
+      let(:well) { build(:v2_well, location: 'A1', aliquots: [aliquot]) }
+      let(:plate) { build(:v2_plate, wells: [well]) }
+
+      it 'returns true' do
+        expect(well_under_represented?(plate, well.location)).to be true
+      end
+    end
+
+    context 'when no poly_metadata present' do
+      let(:request) { build(:library_request) }
+      let(:aliquot) { build(:v2_aliquot, outer_request: request) }
+      let(:well) { build(:v2_well, location: 'A1', aliquots: [aliquot]) }
+      let(:plate) { build(:v2_plate, wells: [well]) }
+
+      it 'returns false' do
+        expect(well_under_represented?(plate, well.location)).to be false
+      end
+    end
+
+    context 'when metadata key is something else' do
+      let(:request) do
+        build(:library_request_with_poly_metadata,
+              poly_metadata: [build(:poly_metadatum, key: 'other_key', value: 'true')])
+      end
+      let(:aliquot) { build(:v2_aliquot, outer_request: request) }
+      let(:well) { build(:v2_well, location: 'A1', aliquots: [aliquot]) }
+      let(:plate) { build(:v2_plate, wells: [well]) }
+
+      it 'returns false' do
+        expect(well_under_represented?(plate, well.location)).to be false
+      end
+    end
+  end
 end

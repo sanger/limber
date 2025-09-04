@@ -40,6 +40,9 @@ GBS PCR2:
   :size: 384
   :pcr_stage: 'pcr 2'
   :label_template: plate_6mm_double
+  :manual_transfer:
+    states:
+      - 'started'
 GBS PCR2 Pool Stock:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

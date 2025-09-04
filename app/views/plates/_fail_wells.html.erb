@@ -4,10 +4,13 @@
   </div>
 <% else %>
   <%= form_for(:plate, url: fail_wells_path(presenter.labware), html: { method: 'post' }) do |form| %>
-    <fieldset><legend class="card-body card-subtitle text-muted">Select wells to fail</legend>
-    <%= form.fields_for(:wells) do |well_form| %>
-      <%= render partial: 'plate', locals: { plate_presenter: fail_wells_presenter_from(well_form, presenter), id: 'well-failures' } %>
-    <% end %>
+    <fieldset>
+      <legend class="card-body card-subtitle text-muted">Select wells to fail</legend>
+      <div class="well well-failing">
+        <%= form.fields_for(:wells) do |well_form| %>
+          <%= render partial: 'plate', locals: { plate_presenter: fail_wells_presenter_from(well_form, presenter), id: 'well-failures' } %>
+        <% end %>
+      </div>
     </fieldset>
     <div class="card-body">
       <%= render presenter.quadrants_helper %>
