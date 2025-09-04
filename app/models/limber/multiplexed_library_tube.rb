@@ -29,7 +29,7 @@ class Limber::MultiplexedLibraryTube < Sequencescape::MultiplexedLibraryTube
   # @return [ActiveModel::Name] The resource behaves like a Limber::Tube
   #
   def model_name
-    ::ActiveModel::Name.new(Limber::Tube, false)
+    ::ActiveModel::Name.new(Tube)
   end
 
   # Mocked out for the time being
