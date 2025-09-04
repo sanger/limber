@@ -6,10 +6,10 @@
   <p>
   This request to create a new
   <%= link_to @labware_creator.child_purpose_name, pipelines_path(filter: @labware_creator.child_purpose_name), class: 'fw-bold' %>
-  <%= @labware_creator.child_labware_type.humanize %>
+  <%= @labware_creator.child_labware_type.humanize.downcase %>
   from a
   <%= link_to @labware_creator.parent_purpose_name, pipelines_path(filter: @labware_creator.parent_purpose_name), class: 'fw-bold' %>
-  <%= @labware_creator.parent_labware_type.humanize %>
+  <%= @labware_creator.parent_labware_type.humanize.downcase %>
   has run into some problems and the child labware is uncreatable.
   </p>
 

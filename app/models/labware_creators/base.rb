@@ -99,6 +99,8 @@ module LabwareCreators
     #
     def purpose_name
       purpose_config.name
+    rescue StandardError
+      'unknown'
     end
 
     #
@@ -108,6 +110,8 @@ module LabwareCreators
     #
     def child_labware_type
       purpose_config.asset_type
+    rescue StandardError
+      'labware'
     end
 
     private
