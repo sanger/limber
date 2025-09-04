@@ -8,8 +8,8 @@ RSpec.describe LabwareCreators::TubeFromTube do
   has_a_working_api
 
   context 'pre creation' do
-    describe '#support_parent?' do
-      subject { described_class.support_parent?(parent) }
+    describe '#creatable_from?' do
+      subject { described_class.creatable_from?(parent) }
 
       context 'with a tube' do
         let(:parent) { build :tube }
@@ -32,7 +32,6 @@ RSpec.describe LabwareCreators::TubeFromTube do
 
     it_behaves_like 'it has no custom page'
 
-    let(:controller) { TubeCreationController.new }
     let(:child_purpose_uuid) { SecureRandom.uuid }
     let(:parent_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }

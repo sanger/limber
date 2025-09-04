@@ -12,7 +12,6 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
   let(:another_plate_uuid) { SecureRandom.uuid }
   let(:child_purpose_uuid) { 'child-purpose-0' }
   let(:child_purpose_name) { 'Basic' }
-  let(:pools) { 1 }
   let(:request_type_a) { create :request_type, key: 'rt_a' }
   let(:request_type_b) { create :request_type, key: 'rt_b' }
   let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-0' }

@@ -146,10 +146,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     )
   end
 
-  # coordinates of tubes in racks (matches files being uploaded)
-  let(:sequencing_file_coords) { %w[A1 B1] }
-  let(:contingency_file_coords) { %w[A1 B1 C1 E1 F1] }
-
   # tube racks
   let(:sequencing_tube_rack) do
     create(
@@ -839,6 +835,79 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
+  describe '#check_decode_failure_in_tube_rack_files' do
+    let(:decode_failure_text) { described_class::DECODE_FAILURE_TEXT }
+
+    context 'when sequencing_csv_file contains DECODE FAILURE' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file).and_return(['ABC', decode_failure_text])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF'])
+        subject.check_decode_failure_in_tube_rack_files
+      end
+
+      it "adds an error to 'Sequencing tube rack scan file'" do
+        expect(subject.errors['Sequencing tube rack scan file']).to include(
+          "contains '#{decode_failure_text}'. This means the scanner could not decode a barcode in one " \
+          'or more positions. Please check your file and re-scan the affected tubes.'
+        )
+      end
+    end
+
+    context 'when contingency_csv_file contains DECODE FAILURE' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file).and_return(['ABC'])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF', decode_failure_text])
+        subject.check_decode_failure_in_tube_rack_files
+      end
+
+      it "adds an error to 'Contingency tube rack scan file'" do
+        expect(subject.errors['Contingency tube rack scan file']).to include(
+          "contains '#{decode_failure_text}'. This means the scanner could not decode a barcode in one " \
+          'or more positions. Please check your file and re-scan the affected tubes.'
+        )
+      end
+    end
+
+    context 'when neither file contains DECODE FAILURE' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file).and_return(['ABC'])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF'])
+        subject.check_decode_failure_in_tube_rack_files
+      end
+
+      it 'does not add any decode failure errors' do
+        expect(subject.errors['Sequencing tube rack scan file']).to be_blank
+        expect(subject.errors['Contingency tube rack scan file']).to be_blank
+      end
+    end
+
+    context 'when a file is blank' do
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(nil)
+        allow(subject).to receive(:contingency_csv_file).and_return(nil)
+      end
+
+      it 'does not raise an error' do
+        expect { subject.check_decode_failure_in_tube_rack_files }.not_to raise_error
+      end
+    end
+  end
+
   describe '#save' do
     # body for stubbing the contingency file upload
     let(:contingency_file_contents) do
@@ -936,13 +1005,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         content
       end
 
-      # body for stubbing the sequencing file upload
-      let(:sequencing_file_content) do
-        content = sequencing_file.read
-        sequencing_file.rewind
-        content
-      end
-
       # create the sequencing tubes
       let(:sequencing_tubes) do
         prepare_created_child_tubes(
@@ -981,20 +1043,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         fixture_file_upload(
           'spec/fixtures/files/scrna_core/scrna_core_contingency_tube_rack_scan_3_tubes.csv',
           'sequencescape/qc_file'
-        )
-      end
-
-      let(:custom_metadatum_collections_attributes) do
-        create_custom_metadatum_collection_attributes(
-          'TR00000001' => sequencing_tubes,
-          'TR00000002' => contingency_tubes
-        )
-      end
-
-      let(:specific_tubes_attributes) do
-        create_specific_tube_attributes(
-          child_sequencing_tube_purpose_uuid => sequencing_tubes,
-          child_contingency_tube_purpose_uuid => contingency_tubes
         )
       end
 
@@ -1170,10 +1218,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         }
       end
 
-      let(:custom_metadatum_collections_attributes) do
-        create_custom_metadatum_collection_attributes('TR00000001' => sequencing_tubes)
-      end
-
       # Only the sequencing file expected this time.
       let(:qc_files_attributes) do
         [
@@ -1217,10 +1261,6 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
         )
       end
 
-      let(:specific_tubes_attributes) do
-        create_specific_tube_attributes(child_sequencing_tube_purpose_uuid => sequencing_tubes)
-      end
-
       let(:transfer_requests_attributes) do
         [parent_well_a1, parent_well_b1].map.with_index do |parent_well, index|
           { submission_id: '2', source_asset: parent_well.uuid, target_asset: sequencing_tubes[index].uuid }
@@ -1252,6 +1292,28 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
+      end
+    end
+
+    context 'when a decode failure is present in the sequencing file' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file)
+          .and_return(['ABC', described_class::DECODE_FAILURE_TEXT])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF'])
+      end
+
+      it 'is not valid and does not save' do
+        expect(subject.valid?).to be_falsey
+        expect(subject.save).to be_falsey
+        expect(subject.errors['Sequencing tube rack scan file']).to include(
+          "contains '#{described_class::DECODE_FAILURE_TEXT}'. This means the scanner could not decode a barcode " \
+          'in one or more positions. Please check your file and re-scan the affected tubes.'
+        )
       end
     end
   end
