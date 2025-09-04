@@ -41,7 +41,7 @@ module RoutingLabware
   # This is used by Rails for routing and form helpers to determine the model name.
   # @return [ActiveModel::Name] The model name for the class
   def model_name
-    ::ActiveModel::Name.new(self.class, nil)
+    ::ActiveModel::Name.new(self.class)
   end
 
   # Indicates that the labware object is considered persisted.
