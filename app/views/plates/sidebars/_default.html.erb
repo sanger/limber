@@ -51,7 +51,7 @@
 <% end %>
 
 <%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
-  <% if presenter.robot? %>
+  <% if presenter.robot? && presenter.display_manual_transfer_button? %>
     <%= simple_state_change_form(presenter) %>
   <% end %>
 

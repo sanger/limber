@@ -177,6 +177,19 @@ module Presenters
       false
     end
 
+    # This method checks if the labware is in a state that allows manual transfer.
+    # It prevents the button appearing if the labware is not in one of the states listed.
+    #
+    # To use it add an entry to the purpose configuration as follows:
+    # :manual_transfer:
+    #   states:
+    #     - 'started'
+    #
+    # If no states are defined, it will return true by default.
+    def display_manual_transfer_button?
+      can_be_enabled?(purpose_config.dig(:manual_transfer, :states))
+    end
+
     private
 
     def libraries_passable?
