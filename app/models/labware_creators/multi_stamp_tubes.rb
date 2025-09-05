@@ -125,7 +125,7 @@ module LabwareCreators
     # Returns: a hash containing the submission parameters
     # Adds: errors if there is more than one submission specified
     def configured_params
-      submission_options_from_config = purpose_config.submission_options
+      submission_options_from_config = purpose_config[:submission_options]
 
       # if there's more than one appropriate submission, we can't know which one to choose,
       # so don't create one.

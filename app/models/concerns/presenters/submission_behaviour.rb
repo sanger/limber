@@ -3,7 +3,7 @@
 # Include in a presenter to add support for creating a submission
 module Presenters::SubmissionBehaviour
   def each_submission_option
-    purpose_config.submission_options.each do |button_text, options|
+    purpose_config[:submission_options].each do |button_text, options|
       submission_options = options.to_hash
       submission_options[:asset_groups] = asset_groups
       submission_options[:labware_barcode] = labware.labware_barcode.human

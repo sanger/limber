@@ -23,7 +23,7 @@ module Presenters::CreationBehaviour
 
   # Eventually this will end up on our labware_creators/creations module
   def purposes_of_type(type)
-    compatible_purposes.select { |_uuid, purpose| purpose.asset_type == type }
+    compatible_purposes.select { |_uuid, purpose| purpose[:asset_type] == type }
   end
 
   def construct_buttons(scope)
@@ -34,9 +34,9 @@ module Presenters::CreationBehaviour
           parent_uuid: uuid,
           parent: labware,
           purpose_uuid: purpose_uuid,
-          name: purpose_settings.name,
-          type: purpose_settings.asset_type,
-          filters: purpose_settings.filters || {}
+          name: purpose_settings[:name],
+          type: purpose_settings[:asset_type],
+          filters: purpose_settings[:filters] || {}
         )
       end
       .force
