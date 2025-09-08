@@ -41,6 +41,10 @@ Rails.application.routes.draw do
   end
 
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells
+  post '/process_mark_under_represented_wells/:id',
+       controller: :plates,
+       action: 'process_mark_under_represented_wells',
+       as: :process_mark_under_represented_wells
 
   resources :qc_files, only: :show
 
