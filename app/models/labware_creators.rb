@@ -27,7 +27,15 @@ module LabwareCreators # rubocop:todo Style/Documentation
     { params: refer[:params] }
   end
 
-  # Used to render the create plate/tube buttons
+  # The CreatorButton is used to render the create plate/tube buttons.
+  #
+  # Summary of labware creator paths and controller actions:
+  #
+  # plate_child_plate_creations (Plate -> Plate) (plate_creation#create)
+  # plate_child_tube_creations (Plate -> Tube) (tube_creation#create)
+  # plate_child_tube_rack_creations (Plate -> TubeRack) (tube_rack_creation#create)
+  # tube_child_plate_creations (Tube -> Plate) (plate_creation#create)
+  # tube_child_tube_creations (Tube -> Tube) (tube_creation#create)
   class CreatorButton
     attr_accessor :parent_uuid, :purpose_uuid, :name, :type, :filters, :parent, :creator
 
@@ -36,13 +44,6 @@ module LabwareCreators # rubocop:todo Style/Documentation
     def custom_form?
       false
     end
-
-    # plate_children (Plate -> Plate) (plate_creation#create)
-    # plate_tubes (Plate -> Tube) (tube_creation#create)
-    # plate_tube_racks (Plate -> TubeRack) (tube_rack_creation#create)
-    # tube_children (Tube -> Plate) (nothing - want to be plate_creation#create)
-    # tube_tubes (Tube -> Tube) (tube_creation#create)
-    # tube_tube_racks (Tube -> TubeRack) (tube_rack_creation#create)
 
     # Returns the ActiveModel::Name instance for the given type.
     # allowing us to return an application-native model instead of the API model.
