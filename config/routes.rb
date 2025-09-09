@@ -76,6 +76,19 @@ Rails.application.routes.draw do
   match '/limber_tube_racks(/*all)', to: redirect(path: '/tube_racks/%{all}'), via: :all
   match '/limber_qcables(/*all)', to: redirect(path: '/qcables/%{all}'), via: :all
 
+  # Redirect labware creation routes for any HTTP request type
+  # rubocop:disable Style/LineLength
+  match '/plates/:id/plates(/*all)',         to: redirect(path: '/plates/%{id}/child_plate_creations/%{all}'),          via: :all
+  match '/plates/:id/tubes(/*all)',          to: redirect(path: '/plates/%{id}/child_tube_creations/%{all}'),           via: :all
+  match '/plates/:id/tube_racks(/*all)',     to: redirect(path: '/plates/%{id}/child_tube_rack_creations/%{all}'),      via: :all
+  match '/tubes/:id/plates(/*all)',          to: redirect(path: '/tubes/%{id}/child_plate_creations/%{all}'),           via: :all
+  match '/tubes/:id/tubes(/*all)',           to: redirect(path: '/tubes/%{id}/child_tube_creations/%{all}'),            via: :all
+  match '/tubes/:id/tube_racks(/*all)',      to: redirect(path: '/tubes/%{id}/child_tube_rack_creations/%{all}'),       via: :all
+  match '/tube_racks/:id/plates(/*all)',     to: redirect(path: '/tube_racks/%{id}/child_plate_creations/%{all}'),      via: :all
+  match '/tube_racks/:id/tubes(/*all)',      to: redirect(path: '/tube_racks/%{id}/child_tube_creations/%{all}'),       via: :all
+  match '/tube_racks/:id/tube_racks(/*all)', to: redirect(path: '/tube_racks/%{id}/child_tube_rack_creations/%{all}'),  via: :all
+  # rubocop:enable Style/LineLength
+
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do
     get 'individual', action: 'individual', as: :print_individual_label
