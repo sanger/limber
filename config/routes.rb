@@ -69,10 +69,12 @@ Rails.application.routes.draw do
 
   # Add redirect to handle bookmarks and in-progress work.
   # These routes were changed as part of the SS API v2 migration.
-  get '/limber_qcables(/*all)', to: redirect(path: '/qcables/%{all}')
-  get '/limber_plates(/*all)', to: redirect(path: '/plates/%{all}')
-  get '/limber_tubes(/*all)', to: redirect(path: '/tubes/%{all}')
-  get '/limber_tube_racks(/*all)', to: redirect(path: '/tube_racks/%{all}')
+
+  # Redirect labware page routes for any HTTP request type
+  match '/limber_plates(/*all)', to: redirect(path: '/plates/%{all}'), via: :all
+  match '/limber_tubes(/*all)', to: redirect(path: '/tubes/%{all}'), via: :all
+  match '/limber_tube_racks(/*all)', to: redirect(path: '/tube_racks/%{all}'), via: :all
+  match '/limber_qcables(/*all)', to: redirect(path: '/qcables/%{all}'), via: :all
 
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do
