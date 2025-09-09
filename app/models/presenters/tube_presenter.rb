@@ -46,9 +46,9 @@ module Presenters
     end
 
     def sequencescape_submission
-      return nil if purpose_config.submission.empty?
+      return nil if purpose_config[:submission].empty?
 
-      s = SequencescapeSubmission.new(purpose_config.submission.to_hash.merge(assets: [labware.uuid]))
+      s = SequencescapeSubmission.new(purpose_config[:submission].to_hash.merge(assets: [labware.uuid]))
       yield s if block_given?
       s
     end
@@ -72,15 +72,15 @@ module Presenters
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
-        .select { |link| can_be_enabled?(link&.states) }
+        .select { |link| can_be_enabled?(link[:states]) }
         .map do |link|
-          format_extension = link.format || 'csv'
+          format_extension = link[:format] || 'csv'
           [
-            link.name,
+            link[:name],
             [
               :limber_tube,
               :tubes_export,
-              { id: link.id, limber_tube_id: human_barcode, format: format_extension, **link.params || {} }
+              { id: link[:id], limber_tube_id: human_barcode, format: format_extension, **link[:params] || {} }
             ]
           ]
         end

@@ -42,9 +42,10 @@ module Presenters
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
-        .select { |link| can_be_enabled?(link&.states) }
+        .select { |link| can_be_enabled?(link[:states]) }
         .map do |link|
-          [link.name, [:limber_tube_rack, :tube_racks_export, { id: link.id, limber_tube_rack_id: uuid, format: :csv }]]
+          [link[:name],
+           [:limber_tube_rack, :tube_racks_export, { id: link[:id], limber_tube_rack_id: uuid, format: :csv }]]
         end
     end
 

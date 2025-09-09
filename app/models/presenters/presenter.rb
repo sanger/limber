@@ -57,7 +57,7 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   end
 
   def default_printer
-    @default_printer ||= Settings.printers[purpose_config.default_printer_type]
+    @default_printer ||= Settings.printers[purpose_config[:default_printer_type]]
   end
 
   def default_label_count

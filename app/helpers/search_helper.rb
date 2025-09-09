@@ -2,16 +2,16 @@
 
 module SearchHelper # rubocop:todo Style/Documentation
   def stock_plate_uuids
-    Settings.purposes.select { |_uuid, config| config.input_plate }.keys
+    Settings.purposes.select { |_uuid, config| config[:input_plate] }.keys
   end
 
   def self.stock_plate_names
-    Settings.purposes.values.select(&:input_plate).map(&:name)
+    Settings.purposes.values.select { |item| item[:input_plate] == true }.pluck(:name)
   end
 
   # Returns purpose names of stock plates using stock_plate flag instead of input_plate.
   def self.stock_plate_names_with_flag
-    Settings.purposes.values.select(&:stock_plate).map(&:name)
+    Settings.purposes.values.select { |item| item[:stock_plate] == true }.pluck(:name)
   end
 
   def self.purpose_config_for_purpose_name(purpose_name)
