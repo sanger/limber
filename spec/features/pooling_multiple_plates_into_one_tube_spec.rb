@@ -53,9 +53,6 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
       pool_sizes: [96]
     )
   end
-  let(:example_plate_3_listed) do
-    create(:v2_plate, :has_pooling_metadata, { barcode_number: 3, state: 'passed', uuid: plate_uuid_3 })
-  end
 
   let(:parent_uuid) { plate_uuid }
   let(:child_tube) { create :v2_tube, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool tube' }
