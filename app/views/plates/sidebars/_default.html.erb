@@ -51,7 +51,7 @@
 <% end %>
 
 <%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
-  <% if presenter.robot? %>
+  <% if presenter.robot? && presenter.display_manual_transfer_button? %>
     <%= simple_state_change_form(presenter) %>
   <% end %>
 
@@ -68,9 +68,16 @@
   <% if presenter.well_failing_applicable? %>
     <button class='fail-wells w-100 my-1'
       data-bs-toggle="collapse"
-      data-parent="#main-content"
-      href=".well-fail-toggle"
-      aria-controls="well-fail-toggle">Fail Wells</button>
+      data-bs-target="#labware-well-failing, #labware-summary"
+      aria-controls="labware-well-failing labware-summary">
+      Fail Wells</button>
+  <% end %>
+
+  <% if presenter.mark_under_represented_wells? %>
+    <button class='fail-wells w-100 my-1'
+      data-bs-toggle="collapse"
+      data-bs-target="#labware-well-marking, #labware-summary"
+      aria-controls="labware-well-marking">Mark Under Represented Wells</button>
   <% end %>
 
   <div id="plate-state">

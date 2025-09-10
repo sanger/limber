@@ -1,0 +1,31 @@
+<%= presenter.form.check_box(
+      :mark_well,
+      { id: "mark_well_#{container.location}",
+        name: "plate[wells][#{container.location}]",
+        disabled: !failable?(container) || well_under_represented?(presenter.labware, container.location),
+        data: {
+          quadrant_index: container.quadrant_index,
+          prevent_well_fail: prevent_well_fail?(container),
+          **container.all_latest_qc.to_h { |qc| ["qc-#{qc.key}", presenter.qc_thresholds.value_for(qc)] }
+        } }
+    ) %>
+
+<%= presenter.form.label :mark_well, for: "mark_well_#{container.location}" do %>
+  <div id="mark_aliquot_<%= id %>"
+       class="aliquot <%= container.state %>
+        <%= 'under_represented' if well_under_represented?(presenter.labware, container.location) %>"
+       data-bs-toggle="tooltip"
+       data-bs-placement="top"
+       data-bs-html="true"
+       title="<%= id %>
+          <% container.all_latest_qc.each do |qc| %>
+            <p><%= qc.key %> : <%= qc.value %> <%= qc.units %></p>
+          <% end %>">
+
+    <% if container.respond_to?(:contains_control?) && container.contains_control? %>
+      <div class="control-type">
+        <%= container.control_info_formatted %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
