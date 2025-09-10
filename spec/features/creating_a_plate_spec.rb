@@ -76,6 +76,16 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
     # We get the actual plate
     2.times { stub_v2_plate(example_plate) }
     stub_v2_plate(child_plate, stub_search: false)
+    stub_v2_plate(
+      example_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
+    stub_v2_plate(
+      child_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
@@ -196,7 +206,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
       plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
-      expect(page).to have_content('Cannot create the next piece of labware:')
+      expect(page).to have_content('Cannot create the next piece of labware')
       expect(page).to have_content('Well filter found 2 eligible requests for A1')
     end
   end

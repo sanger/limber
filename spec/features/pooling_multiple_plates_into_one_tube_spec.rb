@@ -53,6 +53,9 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
       pool_sizes: [96]
     )
   end
+  let(:example_plate_3_listed) do
+    create(:v2_plate, :has_pooling_metadata, { barcode_number: 3, state: 'passed', uuid: plate_uuid_3 })
+  end
 
   let(:parent_uuid) { plate_uuid }
   let(:child_tube) { create :v2_tube, purpose_uuid: 'child-purpose-0', purpose_name: 'Pool tube' }
@@ -97,13 +100,22 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
     )
 
     stub_v2_plate(example_plate)
+    stub_v2_plate(
+      example_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_v2_tube(child_tube)
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
   end
 
   scenario 'creates multiple plates' do
     stub_v2_plate(example_plate_2)
-
+    stub_v2_plate(
+      example_plate_2,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     expect_specific_tube_creation
     expect_transfer_creation
 
@@ -123,7 +135,11 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
 
   scenario 'detects tag clash' do
     stub_v2_plate(example_plate_3)
-
+    stub_v2_plate(
+      example_plate_3,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('example-purpose')

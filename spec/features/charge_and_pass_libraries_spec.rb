@@ -23,6 +23,11 @@ RSpec.feature 'Charge and pass libraries', :js do
     before do
       create :purpose_config, uuid: 'example-purpose-uuid'
       stub_v2_plate(plate)
+      stub_v2_plate(
+        plate,
+        stub_search: false,
+        custom_includes: 'wells.aliquots.request.poly_metadata'
+      )
       stub_v2_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
     end
 
