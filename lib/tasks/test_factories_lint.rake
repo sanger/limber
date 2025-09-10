@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'factory_bot'
+require 'rspec'
+
 namespace :test do
   namespace :factories do
     desc 'Lint the factories'
