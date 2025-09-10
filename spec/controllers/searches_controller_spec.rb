@@ -26,7 +26,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_plate_path(uuid))
+        expect(response).to redirect_to(plate_path(uuid))
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_path(uuid))
+        expect(response).to redirect_to(tube_path(uuid))
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_rack_path(uuid))
+        expect(response).to redirect_to(tube_rack_path(uuid))
       end
     end
   end

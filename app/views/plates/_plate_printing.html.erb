@@ -1,6 +1,6 @@
 <%= card title: 'Print plate label' do %>
   <%= barcode_printing_form(
-        redirection_url: limber_plate_path(@presenter.uuid),
+        redirection_url: plate_path(@presenter.uuid),
         labels: [@presenter.label]
       ) %>
 <% end %>

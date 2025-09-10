@@ -89,7 +89,8 @@ RSpec.describe PlatesController, type: :controller do
     it 'fails the selected wells' do
       expect_state_change_creation
       post :fail_wells, params: { id: plate_uuid, plate: { wells: { 'A1' => 1, 'B1' => 0 } } }, session: { user_uuid: }
-      expect(response).to redirect_to(limber_plate_path(plate_uuid))
+
+      expect(response).to redirect_to(plate_path(plate_uuid))
     end
   end
 
@@ -132,7 +133,7 @@ RSpec.describe PlatesController, type: :controller do
                plate: { wells: { 'A1' => '1', 'B2' => '1' } }
              }
 
-        expect(response).to redirect_to(limber_plate_path(plate_uuid))
+        expect(response).to redirect_to(plate_path(plate_uuid))
         expect(flash[:notice]).to eq(I18n.t('notices.wells_marked_under_represented'))
       end
     end
@@ -142,7 +143,7 @@ RSpec.describe PlatesController, type: :controller do
         post :process_mark_under_represented_wells,
              params: { id: plate_uuid, plate: { wells: {} } }
 
-        expect(response).to redirect_to(limber_plate_path(plate_uuid))
+        expect(response).to redirect_to(plate_path(plate_uuid))
         expect(flash[:alert]).to eq(I18n.t('errors.messages.no_wells_selected'))
       end
     end
@@ -157,7 +158,7 @@ RSpec.describe PlatesController, type: :controller do
         post :process_mark_under_represented_wells,
              params: { id: plate_uuid, plate: { wells: { 'A1' => '1' } } }
 
-        expect(response).to redirect_to(limber_plate_path(plate_uuid))
+        expect(response).to redirect_to(plate_path(plate_uuid))
         expect(flash[:alert]).to eq(I18n.t('errors.messages.mark_wells_under_represented_failed'))
       end
     end

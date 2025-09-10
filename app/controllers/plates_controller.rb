@@ -19,10 +19,10 @@ class PlatesController < LabwareController
         target_uuid: params[:id],
         user_uuid: current_user_uuid
       )
-      redirect_to(limber_plate_path(params[:id]), notice: t('notices.wells_failed'))
+      redirect_to(plate_path(params[:id]), notice: t('notices.wells_failed'))
     rescue StandardError => e
       log_plate_error(e)
-      redirect_to limber_plate_path(params[:id]), alert: t('errors.messages.fail_wells_failed')
+      redirect_to plate_path(params[:id]), alert: t('errors.messages.fail_wells_failed')
     end
   end
 
@@ -50,10 +50,10 @@ class PlatesController < LabwareController
   def mark_wells_under_represented_and_redirect
     plate = fetch_plate_with_requests(params[:id])
     mark_selected_wells_under_represented(plate)
-    redirect_to(limber_plate_path(params[:id]), notice: t('notices.wells_marked_under_represented'))
+    redirect_to(plate_path(params[:id]), notice: t('notices.wells_marked_under_represented'))
   rescue StandardError => e
     log_plate_error(e)
-    redirect_to limber_plate_path(params[:id]), alert: t('errors.messages.mark_wells_under_represented_failed')
+    redirect_to plate_path(params[:id]), alert: t('errors.messages.mark_wells_under_represented_failed')
   end
 
   def mark_selected_wells_under_represented(plate)
@@ -86,6 +86,6 @@ class PlatesController < LabwareController
   end
 
   def redirect_to_no_wells_selected
-    redirect_to(limber_plate_path(params[:id]), alert: t('errors.messages.no_wells_selected'))
+    redirect_to(plate_path(params[:id]), alert: t('errors.messages.no_wells_selected'))
   end
 end

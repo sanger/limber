@@ -15,8 +15,8 @@ RSpec.describe Tubes::WorkCompletionsController, type: :controller do
       stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
       expect_work_completion_creation
 
-      post :create, params: { limber_tube_id: tube_uuid }, session: { user_uuid: }
-      expect(response).to redirect_to(limber_tube_path(tube_uuid))
+      post :create, params: { tube_id: tube_uuid }, session: { user_uuid: }
+      expect(response).to redirect_to(tube_path(tube_uuid))
       expect(flash.notice).to eq(['Requests have been passed'])
     end
   end

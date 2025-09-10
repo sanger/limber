@@ -27,7 +27,15 @@ module LabwareCreators # rubocop:todo Style/Documentation
     { params: refer[:params] }
   end
 
-  # Used to render the create plate/tube buttons
+  # The CreatorButton is used to render the create plate/tube buttons.
+  #
+  # Summary of labware creator paths and controller actions:
+  #
+  # plate_child_plate_creations (Plate -> Plate) (plate_creation#create)
+  # plate_child_tube_creations (Plate -> Tube) (tube_creation#create)
+  # plate_child_tube_rack_creations (Plate -> TubeRack) (tube_rack_creation#create)
+  # tube_child_plate_creations (Tube -> Plate) (plate_creation#create)
+  # tube_child_tube_creations (Tube -> Tube) (tube_creation#create)
   class CreatorButton
     attr_accessor :parent_uuid, :purpose_uuid, :name, :type, :filters, :parent, :creator
 
@@ -37,30 +45,30 @@ module LabwareCreators # rubocop:todo Style/Documentation
       false
     end
 
-    # limber_plate_children (Plate -> Plate) (plate_creation#create)
-    # limber_plate_tubes (Plate -> Tube) (tube_creation#create)
-    # limber_plate_tube_racks (Plate -> TubeRack) (tube_rack_creation#create)
-    # limber_tube_children (Tube -> Plate) (nothing - want to be plate_creation#create)
-    # limber_tube_tubes (Tube -> Tube) (tube_creation#create)
-    # limber_tube_tube_racks (Tube -> TubeRack) (tube_rack_creation#create)
-
     # Returns the ActiveModel::Name instance for the given type.
-    # This method maps the type to the corresponding model class and returns an ActiveModel::Name instance.
+    # allowing us to return an application-native model instead of the API model.
+    # It also provides the correct URL routes for child labware creation.
     #
     # @return [ActiveModel::Name] the ActiveModel::Name instance for the given type.
     # @raise [StandardError] if the type is unknown.
     def model_name
       case type
-      # TODO: can we rename 'child' to 'plate' please? see routes.rb
       when 'plate'
-        ::ActiveModel::Name.new(Limber::Plate, nil, 'child')
+        build_model_name(klass: Plate, name: 'child_plate_creation')
       when 'tube'
-        ::ActiveModel::Name.new(Limber::Tube, nil, 'tube')
+        build_model_name(klass: Tube, name: 'child_tube_creation')
       when 'tube_rack'
-        ::ActiveModel::Name.new(Limber::TubeRack, nil, 'tube_rack')
+        build_model_name(klass: TubeRack, name: 'child_tube_rack_creation')
       else
         raise StandardError, "Unknown type #{type}"
       end
+    end
+
+    private
+
+    # Helper to allow named arguments for clarity
+    def build_model_name(klass:, namespace: nil, name: nil)
+      ::ActiveModel::Name.new(klass, namespace, name)
     end
   end
 
