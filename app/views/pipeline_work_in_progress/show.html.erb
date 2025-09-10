@@ -6,24 +6,29 @@
   <%= link_to 'Last month', pipeline_work_in_progress_path(id: @pipeline_group_name, date: Time.zone.today.prev_month), method: :get, class: 'filter-button' %>
 
   <!-- one column per purpose, containing cards for each plate / tube -->
-  <div class="row">
-    <% @ordered_purpose_list.each do |purpose_group| %>
-      <div class="col-md">
-        <!-- card for the column, with purpose name -->
-        <%= card title: "#{purpose_group} (#{@grouped[purpose_group].size})" do %>
-          <% @grouped[purpose_group].each do |labware_data| %>
-            <% labware = labware_data[:record] %>
-
-            <!-- plate / tube card -->
-            <%= card do %>
-              <%= link_to labware.labware_barcode&.human.to_s, url_for(labware) %><br />
-              <%= labware.input_barcode %><br />
-              <%= labware_data[:state] %><br />
-              <%= "updated #{labware.updated_at.strftime('%d/%m/%y')}" %>
-            <% end %>
+  <div class="scroll-container">
+    <div class="d-flex flex-row flex-nowrap gap-4">
+      <% @ordered_purpose_list.each do |purpose_group| %>
+        <div class="purpose-column">
+          <!-- card for the column, with purpose name -->
+          <%= card title: "#{purpose_group} (#{@grouped[purpose_group].size})" do %>
+            <div class="labware-list">
+              <% @grouped[purpose_group].each do |labware_data| %>
+                <% labware = labware_data[:record] %>
+                <!-- plate / tube card -->
+                <%= card do %>
+                  <div class="labware-details">
+                    <%= link_to labware.labware_barcode&.human.to_s, url_for(labware) %><br />
+                    <%= labware.input_barcode %><br />
+                    <%= labware_data[:state] %><br />
+                    <%= "updated #{labware.updated_at.strftime('%d/%m/%y')}" %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
           <% end %>
-        <% end %>
-      </div>
-    <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 <% end %>
