@@ -7,4 +7,5 @@
 # See the ActiveSupport::ParameterFilter documentation for supported notations and behaviors.
 #
 # Tests are in spec/controllers/searches_controller_spec.rb
-Rails.application.config.filter_parameters += %i[passw email secret token _key crypt salt certificate otp ssn]
+Rails.application.config.filter_parameters += %i[passw email secret token crypt salt certificate otp ssn]
+Rails.application.config.filter_parameters += [/(?<!request_type)_key/]
