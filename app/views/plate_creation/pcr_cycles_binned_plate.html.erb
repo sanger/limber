@@ -52,7 +52,7 @@
   <% end %>
   <%= sidebar do %>
     <%= card title: 'File upload' do %>
-      <%= form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent)) do |f| %>
+      <%= form_for(@labware_creator, as: :plate, url: plate_child_plate_creations_path(@labware_creator.parent)) do |f| %>
         <%= f.hidden_field :purpose_uuid %>
         <div class="form-group">
           <%= f.file_field :file, accept: '.csv', required: true %>

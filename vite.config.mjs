@@ -8,6 +8,15 @@ export default defineConfig({
   build: {
     target: 'chrome65',
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+        silenceDeprecations: ['import', 'color-functions', 'global-builtin'],
+        verbose: false,
+      },
+    },
+  },
   plugins: [
     RubyPlugin(),
     vue(),
