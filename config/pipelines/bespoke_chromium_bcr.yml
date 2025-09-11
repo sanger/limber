@@ -2,7 +2,7 @@
 Bespoke Chromium BCR:
   pipeline_group: Bespoke Chromium BCR
   filters:
-    request_type: limber_chromium_bespoke
+    request_type_key: limber_chromium_bespoke
     library_type:
       - Chromium single cell BCR
       - Chromium single cell BCR HT
@@ -17,7 +17,7 @@ Bespoke Chromium BCR:
 Bespoke Chromium BCR MX:
   pipeline_group: Bespoke Chromium BCR
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     LBC BCR Post PCR: LBC BCR LibPS

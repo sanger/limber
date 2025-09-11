@@ -2,7 +2,7 @@
 Heron-96 Tailed A V2: # Heron 96-well pipeline specific to PCR 1 plate
   pipeline_group: Heron-96 V2
   filters: &heron_tailed_filters
-    request_type: limber_heron_lthr_v2
+    request_type_key: limber_heron_lthr_v2
     library_type:
       - PCR amplicon tailed adapters 96
       - Sanger_tailed_artic_v1_96

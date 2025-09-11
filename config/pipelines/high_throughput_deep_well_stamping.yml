@@ -3,6 +3,6 @@
 Deep-Well-96 Stamping:
   pipeline_group: Deep-Well-96 Stamping
   filters:
-    request_type: deep_well_plate_stamping
+    request_type_key: deep_well_plate_stamping
   relationships:
     LDW-96 Stock: LSW-96 Stock

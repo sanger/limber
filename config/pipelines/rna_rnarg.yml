@@ -2,7 +2,7 @@
 RNA Ribo Globin:
   pipeline_group: RNA
   filters:
-    request_type: limber_rnarg
+    request_type_key: limber_rnarg
     library_type: RNA Ribo Globin
   library_pass: LB Lib PCR-XP
   relationships:

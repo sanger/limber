@@ -17,10 +17,10 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid) }
 
   # requests
-  let(:request_type) { 'parent_tube_library_request_type' }
+  let(:request_type_key) { 'parent_tube_library_request_type' }
 
-  let(:request_type_1) { create :request_type, key: request_type }
-  let(:request_type_2) { create :request_type, key: request_type }
+  let(:request_type_1) { create :request_type, key: request_type_key }
+  let(:request_type_2) { create :request_type, key: request_type_key }
 
   let(:request_1) { create :library_request, request_type: request_type_1, uuid: 'request-1', submission_id: '1' }
   let(:request_2) { create :library_request, request_type: request_type_2, uuid: 'request-2', submission_id: '1' }

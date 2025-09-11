@@ -84,7 +84,7 @@ RSpec.describe LabwareCreators::PartialStampedPlateWithoutDilution do
       parent_uuid: parent_uuid,
       user_uuid: user_uuid,
       filters: {
-        request_type: well_d1.requests_as_source[1].request_type.key, # Standard
+        request_type_key: well_d1.requests_as_source[1].request_type.key, # Standard
         library_type: well_d1.requests_as_source[1].library_type # library-type-2
       }
     }

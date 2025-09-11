@@ -2,7 +2,7 @@
 RNA Poly A:
   pipeline_group: RNA
   filters:
-    request_type: limber_rnaa
+    request_type_key: limber_rnaa
     library_type: RNA PolyA
   library_pass: LB Lib PCR-XP
   relationships:

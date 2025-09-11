@@ -213,7 +213,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
   end
 
   context 'with multiple requests and config with request type filter' do
-    let(:filters) { { request_type: ['rt_a'] } }
+    let(:filters) { { request_type_key: ['rt_a'] } }
     let(:wells) do
       [
         create(
@@ -248,7 +248,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
 
   context 'with multiple requests and config with request and library type filters' do
     let(:library_type_name) { 'LibTypeA' }
-    let(:filters) { { 'request_type' => ['rt_a'], 'library_type' => [library_type_name] } }
+    let(:filters) { { 'request_type_key' => ['rt_a'], 'library_type' => [library_type_name] } }
 
     let(:request_a) do
       create :library_request, request_type: request_type_a, uuid: 'request-0', library_type: library_type_name

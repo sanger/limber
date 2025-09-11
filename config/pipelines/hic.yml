@@ -2,7 +2,7 @@
 Bespoke PCR HiC:
   pipeline_group: Bespoke PCR HiC
   filters:
-    request_type:
+    request_type_key:
       - limber_hic # Have to move this into a the new pipeline config when HiC pipeline is implemented (Y24-335).
     library_type:
       - ChIP-Seq Auto

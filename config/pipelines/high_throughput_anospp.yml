@@ -3,7 +3,7 @@
 # It is essentially a straight stamp, no controls added.
 ANOSPP Lysate Prep:
   filters:
-    request_type: limber_anospp_lysate_prep
+    request_type_key: limber_anospp_lysate_prep
   library_pass:
     - LANS-96 Lysate
   relationships:

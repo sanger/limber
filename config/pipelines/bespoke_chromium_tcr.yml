@@ -2,7 +2,7 @@
 Bespoke Chromium TCR:
   pipeline_group: Bespoke Chromium TCR
   filters:
-    request_type: limber_chromium_bespoke
+    request_type_key: limber_chromium_bespoke
     library_type:
       - Chromium single cell TCR
       - Chromium single cell TCR HT
@@ -17,7 +17,7 @@ Bespoke Chromium TCR:
 Bespoke Chromium TCR MX:
   pipeline_group: Bespoke Chromium TCR
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     LBC TCR Post PCR: LBC TCR LibPS

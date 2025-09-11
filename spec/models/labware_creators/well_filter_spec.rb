@@ -88,7 +88,7 @@ RSpec.describe LabwareCreators::WellFilter do
 
     context 'when a request type filter is applied' do
       context 'with a valid filter' do
-        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'returns all the wells' do
           expect(subject.filtered.count).to eq(4)
@@ -97,7 +97,7 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with an invalid filter' do
-        subject { described_class.new(creator: labware_creator, request_type: request_type_key_b) }
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_b) }
 
         it 'raises an exception' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)
@@ -134,7 +134,7 @@ RSpec.describe LabwareCreators::WellFilter do
       subject do
         described_class.new(
           creator: labware_creator,
-          request_type: request_type_key_a,
+          request_type_key: request_type_key_a,
           library_type: library_type_name_a
         )
       end
@@ -159,7 +159,7 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with a valid filter' do
-        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'returns all the wells' do
           expect(subject.filtered.count).to eq(4)
@@ -168,7 +168,7 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with an invalid filter' do
-        subject { described_class.new(creator: labware_creator, request_type: request_type_key_b) }
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_b) }
 
         it 'raises an exception' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)
@@ -193,7 +193,7 @@ RSpec.describe LabwareCreators::WellFilter do
       end
 
       context 'with an invalid filter' do
-        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
 
         it 'raises an exception' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)

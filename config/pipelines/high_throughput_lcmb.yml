@@ -3,7 +3,7 @@
 LCMB: # Top of the pipeline (Library Prep)
   pipeline_group: LCMB
   filters:
-    request_type:
+    request_type_key:
       - limber_lcmb
     library_type:
       # TODO: confirm with NPG - same as 'standard'

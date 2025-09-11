@@ -3,7 +3,7 @@
 LCM Triomics EMSeq:
   pipeline_group: LCM Triomics WGS and EMSeq
   filters:
-    request_type: limber_lcm_triomics_emseq
+    request_type_key: limber_lcm_triomics_emseq
     library_type: emSEQ
   library_pass: LCMT EM PCR XP
   relationships:
@@ -20,7 +20,7 @@ LCM Triomics EMSeq:
 LCM Triomics EMSeq Custom Pooling:
   pipeline_group: LCM Triomics WGS and EMSeq
   filters:
-    request_type: limber_lcm_triomics_emseq
+    request_type_key: limber_lcm_triomics_emseq
     state: passed
   relationships:
     LCMT EM PCR XP: LCMT EM Pool XP
@@ -30,7 +30,7 @@ LCM Triomics EMSeq Custom Pooling:
 LCM Triomics WGS:
   pipeline_group: LCM Triomics WGS and EMSeq
   filters:
-    request_type: limber_lcm_triomics_wgs
+    request_type_key: limber_lcm_triomics_wgs
     library_type: LCMB
   library_pass: LCMT DNA PCR XP
   relationships:
@@ -39,7 +39,7 @@ LCM Triomics WGS:
 LCM Triomics WGS Custom Pooling:
   pipeline_group: LCM Triomics WGS and EMSeq
   filters:
-    request_type: limber_lcm_triomics_wgs
+    request_type_key: limber_lcm_triomics_wgs
     state: passed
   relationships:
     LCMT DNA PCR XP: LCMT DNA Pool XP

@@ -2,7 +2,7 @@
 scRNA 96:
   pipeline_group: GnT/scRNA
   filters:
-    request_type: limber_scrna
+    request_type_key: limber_scrna
     library_type:
       - scRNA
       - GnT scRNA
@@ -15,7 +15,7 @@ scRNA 96:
 scRNA 96 MX: # Bottom of the pipeline (Pooling and normalization)
   pipeline_group: GnT/scRNA
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     scRNA Lib PCR: scRNA Lib Pool
@@ -24,7 +24,7 @@ scRNA 96 MX: # Bottom of the pipeline (Pooling and normalization)
 scRNA 384:
   pipeline_group: GnT/scRNA
   filters:
-    request_type: limber_scrna-384
+    request_type_key: limber_scrna-384
     library_type:
       - scRNA 384
       - GnT scRNA
@@ -36,7 +36,7 @@ scRNA 384:
 scRNA 384 MX: # Bottom of the pipeline (Pooling and normalization)
   pipeline_group: GnT/scRNA
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     scRNA-384 Lib PCR: scRNA-384 Lib Pool XP

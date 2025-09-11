@@ -26,7 +26,7 @@ module LabwareCreators::WellFilterBehaviour
 
   # Assigns the filters on the creator and the well filter. The filters are as
   # specified in the pipeline configuration but values are always arrays, for
-  # example, { request_type: ['example_request_type_key'], library_type: ['example_library_type']}
+  # example, { request_type_key: ['example_request_type_key'], library_type: ['example_library_type']}
   #
   # They are passed by the creation controller to initialise the labware creator instance.
   #

@@ -5,7 +5,7 @@
 # and adding controls into the destination LBSN-96 Lysate plate.
 Bioscan Lysate Prep:
   filters:
-    request_type: limber_bioscan_lysate_prep
+    request_type_key: limber_bioscan_lysate_prep
   library_pass:
     - LBSN-96 Lysate
   relationships:
@@ -15,7 +15,7 @@ Bioscan Lysate Prep:
 # 2. The Beckman automation has created the lysed plate from the initial insect stock plate
 Bioscan Library Prep:
   filters:
-    request_type: limber_bioscan_library_prep
+    request_type_key: limber_bioscan_library_prep
     library_type:
       - Bioscan
   library_pass:

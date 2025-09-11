@@ -12,7 +12,7 @@ class LabwareCreators::WellFilter
   # Indicates that the filter is unable to detect which request to use
   FilterError = Class.new(LabwareCreators::ResourceInvalid)
 
-  attr_accessor :request_type, :library_type, :creator
+  attr_accessor :request_type_key, :library_type, :creator
 
   validate :well_transfers
 
@@ -51,7 +51,7 @@ class LabwareCreators::WellFilter
   end
 
   def filter_by_request_type(requests)
-    requests.select { |r| @request_type.blank? || @request_type.include?(r.request_type.key) }
+    requests.select { |r| @request_type_key.blank? || @request_type_key.include?(r.request_type.key) }
   end
 
   def filter_by_library_type(requests)

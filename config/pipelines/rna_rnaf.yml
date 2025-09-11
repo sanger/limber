@@ -2,7 +2,7 @@
 RNA FFPE:
   pipeline_group: RNA
   filters:
-    request_type: limber_rnaf
+    request_type_key: limber_rnaf
     library_type: RNA FFPE
   library_pass: LB Lib PCR-XP
   relationships:

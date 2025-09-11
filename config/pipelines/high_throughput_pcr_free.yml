@@ -2,7 +2,7 @@
 High Throughput PCR Free 96:
   pipeline_group: High Throughput PCR Free 96
   filters:
-    request_type: limber_pcr_free
+    request_type_key: limber_pcr_free
     library_type:
       - HiSeqX PCR free
       - DAFT-seq
@@ -20,7 +20,7 @@ High Throughput PCR Free 96:
 High Throughput PCR Free 96 MX:
   pipeline_group: High Throughput PCR Free 96
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     PF Lib XP2: LB Lib Pool
@@ -28,7 +28,7 @@ High Throughput PCR Free 96 MX:
 High Throughput PCR Free 384:
   pipeline_group: High Throughput PCR Free 384
   filters:
-    request_type:
+    request_type_key:
       - limber_pcr_free
     library_type:
       - PCR Free 384
@@ -46,7 +46,7 @@ High Throughput PCR Free 384:
 High Throughput PCR Free 384 MX:
   pipeline_group: High Throughput PCR Free 384
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     PF-384 Lib XP2: PF Lib Q-XP2

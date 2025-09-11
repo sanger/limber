@@ -1,7 +1,7 @@
 ---
 Duplex Seq:
   filters:
-    request_type: limber_duplex-seq
+    request_type_key: limber_duplex-seq
     library_type:
       - Duplex-Seq
       - Targeted Nanoseq

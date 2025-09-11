@@ -4,7 +4,7 @@
 Heron-384 Tailed A: # Heron 384-well pipeline specific to PCR 1 plate
   pipeline_group: Heron-384 (legacy)
   filters: &heron_tailed_filters
-    request_type: limber_heron_lthr
+    request_type_key: limber_heron_lthr
     library_type:
       - Sanger_tailed_artic_v1_384
   library_pass: LTHR-384 Lib PCR pool
@@ -26,7 +26,7 @@ Heron-384 Tailed B:
 Heron 384 Tailed MX: # Bottom of the pipeline (Pooling and normalization)
   pipeline_group: Heron-384 (legacy)
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     LTHR-384 Lib PCR pool: LTHR-384 Pool XP

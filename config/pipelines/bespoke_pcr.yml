@@ -2,7 +2,7 @@
 Bespoke PCR:
   pipeline_group: Bespoke PCR
   filters:
-    request_type: limber_pcr_bespoke
+    request_type_key: limber_pcr_bespoke
     library_type:
       - ChIP-Seq Auto
       - Chromium single cell HTO
@@ -42,7 +42,7 @@ Bespoke PCR:
 
 Bespoke PCR BCR:
   filters:
-    request_type: limber_pcr_bespoke
+    request_type_key: limber_pcr_bespoke
     library_type:
       - Manual Chromium single cell BCR
   library_pass: LBB Lib PCR-XP
@@ -54,7 +54,7 @@ Bespoke PCR BCR:
     LBB Ligation: LBB Lib PCR-XP
 Bespoke PCR BCR HT:
   filters:
-    request_type: limber_pcr_bespoke
+    request_type_key: limber_pcr_bespoke
     library_type:
       - Manual Chromium single cell BCR HT
   library_pass: LBB Lib PCR-XP
@@ -66,7 +66,7 @@ Bespoke PCR BCR HT:
     LBB Ligation: LBB Lib PCR-XP
 Bespoke PCR TCR:
   filters:
-    request_type: limber_pcr_bespoke
+    request_type_key: limber_pcr_bespoke
     library_type:
       - Manual Chromium single cell TCR
   library_pass: LBB Lib PCR-XP
@@ -78,7 +78,7 @@ Bespoke PCR TCR:
     LBB Ligation: LBB Lib PCR-XP
 Bespoke PCR TCR HT:
   filters:
-    request_type: limber_pcr_bespoke
+    request_type_key: limber_pcr_bespoke
     library_type:
       - Manual Chromium single cell TCR HT
   library_pass: LBB Lib PCR-XP
@@ -91,7 +91,7 @@ Bespoke PCR TCR HT:
 Bespoke PCR MX:
   pipeline_group: Bespoke PCR
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     LBB Lib PCR-XP: LBB Lib Pool Stock

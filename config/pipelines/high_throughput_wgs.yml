@@ -2,7 +2,7 @@
 WGS: # Top of the pipeline (Library Prep)
   pipeline_group: WGS
   filters:
-    request_type:
+    request_type_key:
       - limber_wgs
       - limber_rnaa
     library_type: Standard
@@ -16,7 +16,7 @@ WGS: # Top of the pipeline (Library Prep)
 WGS MX: # Bottom of the pipeline (Pooling and normalization)
   pipeline_group: WGS
   filters:
-    request_type:
+    request_type_key:
       - limber_multiplexing
   relationships:
     LB Lib PCR-XP: LB Lib Pool
