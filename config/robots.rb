@@ -4262,17 +4262,17 @@ ROBOT_CONFIG =
       'hamilton-bge-lib-pcr-to-bge-lib-pcr-xp',
       name: 'Hamilton BGE Lib PCR => BGE Lib PCR XP',
       beds: {
-        bed(9).barcode => {
+        bed(7).barcode => {
           purpose: 'BGE Lib PCR',
           states: ['passed'],
-          label: 'Bed 9'
+          label: 'Bed 7'
         },
-        bed(7).barcode => {
+        bed(9).barcode => {
           purpose: 'BGE Lib PCR XP',
           states: ['pending'],
-          label: 'Bed 7',
+          label: 'Bed 9',
           target_state: 'passed',
-          parent: bed(9).barcode
+          parent: bed(7).barcode
         }
       }
     )
