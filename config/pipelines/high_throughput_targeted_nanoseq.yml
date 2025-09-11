@@ -2,7 +2,7 @@
 Targeted NanoSeq Library Prep:
   pipeline_group: Targeted NanoSeq Library Prep
   filters: &targeted_nanoseq_filters
-    request_type_key: limber_targeted_nanoseq
+    request_type: limber_targeted_nanoseq
     library_type:
       - Targeted Nanoseq
   library_pass: LTN AL Lib
@@ -19,7 +19,7 @@ Targeted NanoSeq Library Prep:
 Targeted NanoSeq ISC Prep:
   pipeline_group: Targeted NanoSeq ISC Prep
   filters:
-    request_type_key: limber_targeted_nanoseq_isc_prep
+    request_type: limber_targeted_nanoseq_isc_prep
   relationships:
     LTN AL Lib: LTN AL Lib Dil
     LTN AL Lib Dil: LTN Lib PCR

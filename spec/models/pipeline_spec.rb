@@ -5,7 +5,7 @@ RSpec.describe Pipeline do
 
   describe '#active_for?' do
     context 'when there are filters and the labware is a plate' do
-      let(:filters) { { 'request_type_key' => ['limber_wgs'], 'library_type' => ['Standard'] } }
+      let(:filters) { { 'request_type' => ['limber_wgs'], 'library_type' => ['Standard'] } }
 
       let(:pipeline_config) do
         {

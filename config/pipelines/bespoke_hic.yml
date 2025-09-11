@@ -1,6 +1,6 @@
 Bespoke PCR MX HiC:
   filters:
-    request_type_key: limber_multiplexing_hic
+    request_type: limber_multiplexing_hic
   relationships:
     LBB Lib PCR-XP: LBB Lib PCR-XP Norm
     LBB Lib PCR-XP Norm: LBB Lib Pool Stock

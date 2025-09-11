@@ -2,7 +2,7 @@
 RNA Ribo:
   pipeline_group: RNA
   filters:
-    request_type_key: limber_rnar
+    request_type: limber_rnar
     library_type: RNA Ribo
   library_pass: LB Lib PCR-XP
   relationships:

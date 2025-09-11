@@ -69,7 +69,7 @@ RSpec.describe LabwareCreators::StampedPlateCompressed do
       parent_uuid: parent_uuid,
       user_uuid: user_uuid,
       filters: {
-        request_type_key: parent_well_b1.requests_as_source[0].request_type.key, # Standard
+        request_type: parent_well_b1.requests_as_source[0].request_type.key, # Standard
         library_type: parent_well_b1.requests_as_source[0].library_type # library-type-1
       }
     }

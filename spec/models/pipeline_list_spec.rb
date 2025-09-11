@@ -4,7 +4,7 @@ RSpec.describe PipelineList do
   let(:model) { described_class.new(pipeline_config) }
 
   describe '#combine_and_order_pipelines' do
-    let(:filters) { { 'request_type_key' => ['example_req_type'], 'library_type' => ['example_lib_type'] } }
+    let(:filters) { { 'request_type' => ['example_req_type'], 'library_type' => ['example_lib_type'] } }
 
     context 'when the pipelines are simple' do
       let(:pipeline_config) do
@@ -193,7 +193,7 @@ RSpec.describe PipelineList do
         {
           'Heron-384 Tailed A' => {
             filters: {
-              'request_type_key' => ['limber_heron_lthr'],
+              'request_type' => ['limber_heron_lthr'],
               'library_type' => ['Sanger_tailed_artic_v1_384']
             },
             library_pass: 'LTHR-384 Lib PCR pool',
@@ -208,7 +208,7 @@ RSpec.describe PipelineList do
           },
           'Heron-384 Tailed B' => {
             filters: {
-              'request_type_key' => ['limber_heron_lthr'],
+              'request_type' => ['limber_heron_lthr'],
               'library_type' => ['Sanger_tailed_artic_v1_384']
             },
             library_pass: 'LTHR-384 Lib PCR pool',

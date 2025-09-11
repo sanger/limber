@@ -25,7 +25,7 @@ class Pipeline
   # Keys should be attributes on request (eg. library_type) whereas values are either an array
   # of acceptable values, or a single acceptable value
   # @example
-  #   pipeline.filters = { 'request_type_key' => 'library_request', 'library_type' => ['Standard', 'Other'] }
+  #   pipeline.filters = { 'request_type' => 'library_request', 'library_type' => ['Standard', 'Other'] }
   # @return [Hash] Filter options
   def filters
     @filters || {}

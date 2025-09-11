@@ -2,7 +2,7 @@
 BGE PCR Free:
   pipeline_group: BGE
   filters:
-    request_type_key: limber_bge_pcr_free
+    request_type: limber_bge_pcr_free
   library_pass: BGE Lib XP2
   relationships:
     BGE Cherrypick: BGE Shear
@@ -13,7 +13,7 @@ BGE PCR Free:
 
 BGE PCR Free MX:
   filters:
-    request_type_key: limber_multiplexing_bge_pcr_free
+    request_type: limber_multiplexing_bge_pcr_free
   pipeline_group: BGE
   library_pass: BGE Lib Pool
   relationships:
@@ -22,7 +22,7 @@ BGE PCR Free MX:
 BGE PCR Free to ISC:
   pipeline_group: BGE
   filters:
-    request_type_key: limber_bge_transition
+    request_type: limber_bge_transition
   library_pass: BGE Lib PCR XP
   relationships:
     BGE Lib XP2: BGE Lib PCR
@@ -31,7 +31,7 @@ BGE PCR Free to ISC:
 BGE ISC Library Prep:
   pipeline_group: BGE
   filters:
-    request_type_key: limber_bge_isc
+    request_type: limber_bge_isc
   library_pass: BGE Cap Lib PCR XP
   relationships:
     BGE Lib PCR XP: BGE Lib PrePool
@@ -43,7 +43,7 @@ BGE ISC Library Prep:
 BGE ISC MX:
   pipeline_group: BGE
   filters:
-    request_type_key: limber_multiplexing_bge_isc
+    request_type: limber_multiplexing_bge_isc
   relationships:
     BGE Cap Lib PCR XP: BGE Cap Lib Pool
     BGE Cap Lib Pool: BGE Cap Lib Pool Norm

@@ -9,7 +9,7 @@ scRNA Core Cell Extraction Entry:
 scRNA Core Cell Extraction Seq:
   pipeline_group: scRNA Core Cell Extraction
   filters: &scrna_core_cell_extraction_filters
-    request_type_key: limber_scrna_core_cell_extraction
+    request_type: limber_scrna_core_cell_extraction
   relationships:
     LRC Blood Bank: LRC PBMC Bank
     LRC PBMC Bank: LRC TR Bank Seq

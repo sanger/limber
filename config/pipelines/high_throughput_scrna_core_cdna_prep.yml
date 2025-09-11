@@ -6,7 +6,7 @@
 scRNA Core cDNA Prep:
   pipeline_group: scRNA Core cDNA Prep
   filters:
-    request_type_key: limber_scrna_core_cdna_prep_gem_x_5p
+    request_type: limber_scrna_core_cdna_prep_gem_x_5p
   relationships:
     LRC Bank Seq: LRC PBMC Cryostor
     LRC Bank Spare: LRC PBMC Cryostor
@@ -20,14 +20,14 @@ scRNA Core cDNA Prep:
 scRNA Core cDNA Prep GEM-X 5p GEMs Input:
   pipeline_group: scRNA Core cDNA Prep
   filters:
-    request_type_key: limber_scrna_core_cdna_prep_gem_x_5p_gems_input
+    request_type: limber_scrna_core_cdna_prep_gem_x_5p_gems_input
   relationships:
     LRC GEM-X 5p GEMs Input: LRC GEM-X 5p cDNA PCR
     LRC GEM-X 5p cDNA PCR: LRC GEM-X 5p cDNA PCR XP
 scRNA Core cDNA Prep GEM-X 5p GEMs Input CITE:
   pipeline_group: scRNA Core cDNA Prep
   filters:
-    request_type_key: limber_scrna_core_cdna_prep_gem_x_5p_gems_input
+    request_type: limber_scrna_core_cdna_prep_gem_x_5p_gems_input
   relationships:
     LRC GEM-X 5p GEMs Input CITE: LRC GEM-X 5p cDNA PCR CITE
     LRC GEM-X 5p cDNA PCR CITE: LRC GEM-X 5p cDNA PCR XP

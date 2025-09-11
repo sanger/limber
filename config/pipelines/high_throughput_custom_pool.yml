@@ -1,7 +1,7 @@
 ---
 Custom Pool:
   filters:
-    request_type_key: limber_lcmb
+    request_type: limber_lcmb
     state: passed
   relationships:
     LB Lib PCR-XP: LB Custom Pool

@@ -3,7 +3,7 @@
 RVI Bait Capture Library: # Top of the pipeline (Library Prep)
   pipeline_group: RVI Bait Capture Library
   filters:
-    request_type_key:
+    request_type:
       - limber_bait_capture_library_prep
       - limber_reisc # Typically this should occur on RVI Lib PCR XP
     library_type:
@@ -25,7 +25,7 @@ RVI Bait Capture Library: # Top of the pipeline (Library Prep)
 RVI Bait Capture Library MX:
   pipeline_group: RVI Bait Capture Library
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     RVI Cap Lib PCR XP: RVI Cap Lib Pool

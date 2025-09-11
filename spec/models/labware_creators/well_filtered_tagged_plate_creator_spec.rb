@@ -98,8 +98,8 @@ RSpec.describe LabwareCreators::WellFilteredTaggedPlateCreator do
   let(:child_purpose_name) { 'Child Purpose 1' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
 
-  let(:filters1_config) { { request_type_key: 'request-type-1', library_type: 'library-type-1' } }
-  let(:filters2_config) { { request_type_key: ['request-type-2'], library_type: 'library-type-2' } }
+  let(:filters1_config) { { request_type: 'request-type-1', library_type: 'library-type-1' } }
+  let(:filters2_config) { { request_type: ['request-type-2'], library_type: 'library-type-2' } }
 
   let(:relationships_config) { { parent_purpose_name: child_purpose_name } }
 

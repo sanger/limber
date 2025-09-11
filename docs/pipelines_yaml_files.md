@@ -27,7 +27,7 @@ pipeline.
 WGS: # Top of the pipeline (Library Prep)
   pipeline_group: WGS
   filters:
-    request_type_key:
+    request_type:
       - limber_wgs
       - limber_lcmb
       - limber_rnaa
@@ -42,7 +42,7 @@ WGS: # Top of the pipeline (Library Prep)
 WGS MX: # Bottom of the pipeline (Pooling and normalization)
   pipeline_group: WGS
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     LB Lib PCR-XP: LB Lib Pool
@@ -78,7 +78,7 @@ to set the pipeline's name.
 WGS: # Top of the pipeline (Library Prep)
   pipeline_group: WGS
   filters:
-    request_type_key:
+    request_type:
       - limber_wgs
       - limber_lcmb
       - limber_rnaa
@@ -113,7 +113,7 @@ value.
 
 ```yaml
 filters:
-  request_type_key:
+  request_type:
     - limber_wgs
     - limber_lcmb
     - limber_rnaa
@@ -200,7 +200,7 @@ PCR 2 routes.
 ---
 Heron-384 A: # Heron 384-well pipeline specific to PCR 1 plate
   filters: &heron_filters
-    request_type_key: limber_heron
+    request_type: limber_heron
     library_type: PCR amplicon ligated adapters 384
   library_pass: LHR-384 Lib PCR
   relationships:

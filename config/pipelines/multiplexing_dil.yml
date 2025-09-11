@@ -1,7 +1,7 @@
 Multiplexing_Dil:
   pipeline_group: Multiplexing
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     Library Stock Plate: Library Stock Dil Plate

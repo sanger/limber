@@ -2,7 +2,7 @@
 Bespoke Chromium 3pv2:
   pipeline_group: Bespoke Chromium 3pv2
   filters:
-    request_type_key: limber_chromium_bespoke
+    request_type: limber_chromium_bespoke
     library_type:
       - Chromium single cell 3 prime v2
       - Chromium genome
@@ -13,7 +13,7 @@ Bespoke Chromium 3pv2:
 Bespoke Chromium 3pv2 MX:
   pipeline_group: Bespoke Chromium 3pv2
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     LBB Lib-XP: LBB Lib Pool Stock

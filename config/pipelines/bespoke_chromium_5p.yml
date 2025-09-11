@@ -2,7 +2,7 @@
 Bespoke Chromium 5p:
   pipeline_group: Bespoke Chromium 5p
   filters:
-    request_type_key: limber_chromium_bespoke
+    request_type: limber_chromium_bespoke
     library_type:
       - Chromium single cell 5 prime
       - Chromium single cell 5 prime HT v2
@@ -15,7 +15,7 @@ Bespoke Chromium 5p:
 Bespoke Chromium 5p MX:
   pipeline_group: Bespoke Chromium 5p
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     LBC 5p GEX PCR 2XP: LBC 5p GLibPS

@@ -17,7 +17,7 @@ This is the pipeline configuration for the split (at the LTHR-384 RT-Q plate) an
 Heron-384 Tailed A V2:
   pipeline_group: Heron-384 V2
   filters: &heron_tailed_filters
-    request_type_key: limber_heron_lthr_v2
+    request_type: limber_heron_lthr_v2
     library_type:
       - Sanger_tailed_artic_v1_384
   library_pass: LB Lib Pool Norm
@@ -68,7 +68,7 @@ We have the initial aggregation pipeline that creates the Cherrypick plates from
 ```yaml
 Bespoke Aggregation:
   filters:
-    request_type_key: limber_bespoke_aggregation
+    request_type: limber_bespoke_aggregation
   relationships:
     LBC Stock: LBC Aggregate
     LBC Aggregate: LBC Cherrypick
@@ -82,7 +82,7 @@ We then have multiple library prep pipeline configs, for 5 prime, BCR and TCR:
 Bespoke Chromium 5p:
   pipeline_group: Bespoke Chromium 5p
   filters:
-    request_type_key: limber_chromium_bespoke
+    request_type: limber_chromium_bespoke
     library_type:
       - Chromium single cell 5 prime
       - Chromium single cell 5 prime HT v2
@@ -98,7 +98,7 @@ Bespoke Chromium 5p:
 Bespoke Chromium BCR:
   pipeline_group: Bespoke Chromium BCR
   filters:
-    request_type_key: limber_chromium_bespoke
+    request_type: limber_chromium_bespoke
     library_type:
       - Chromium single cell BCR
       - Chromium single cell BCR HT
@@ -116,7 +116,7 @@ Bespoke Chromium BCR:
 Bespoke Chromium TCR:
   pipeline_group: Bespoke Chromium TCR
   filters:
-    request_type_key: limber_chromium_bespoke
+    request_type: limber_chromium_bespoke
     library_type:
       - Chromium single cell TCR
       - Chromium single cell TCR HT

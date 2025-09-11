@@ -115,7 +115,7 @@ RSpec.describe LabwareCreators::WellFilterComposite do
       end
 
       context 'with a valid filter for some wells' do
-        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
 
         it 'returns the correct number of wells' do
           expect(subject.filtered.count).to eq(2)
@@ -157,7 +157,7 @@ RSpec.describe LabwareCreators::WellFilterComposite do
       end
 
       context 'with a valid filter for all wells' do
-        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
 
         it 'returns the correct number of wells' do
           expect(subject.filtered.count).to eq(4)
@@ -169,7 +169,7 @@ RSpec.describe LabwareCreators::WellFilterComposite do
       end
 
       context 'with a valid filter for a partial subset of the wells' do
-        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_b) }
+        subject { described_class.new(creator: labware_creator, request_type: request_type_key_b) }
 
         it 'returns the correct number of wells' do
           expect(subject.filtered.count).to eq(1)
@@ -185,7 +185,7 @@ RSpec.describe LabwareCreators::WellFilterComposite do
       end
 
       context 'with an invalid filter' do
-        subject { described_class.new(creator: labware_creator, request_type_key: 'rt_c') }
+        subject { described_class.new(creator: labware_creator, request_type: 'rt_c') }
 
         it 'returns no wells' do
           expect(subject.filtered.count).to eq(0)
@@ -198,7 +198,7 @@ RSpec.describe LabwareCreators::WellFilterComposite do
     end
 
     context 'with strict behaviour (failed wells)' do
-      subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_b) }
+      subject { described_class.new(creator: labware_creator, request_type: request_type_key_b) }
 
       let(:request_b) do
         create :library_request,
@@ -227,7 +227,7 @@ RSpec.describe LabwareCreators::WellFilterComposite do
       end
 
       context 'with an invalid filter' do
-        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
 
         it 'raises an exception for multiple similar requests in a well' do
           expect { subject.filtered }.to raise_error(LabwareCreators::WellFilter::FilterError)
@@ -256,7 +256,7 @@ RSpec.describe LabwareCreators::WellFilterComposite do
     end
 
     context 'with a well containing single passed request' do
-      subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
+      subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
 
       let(:parent_plate) do
         create :v2_plate,

@@ -2,7 +2,7 @@
 RNA Poly A Globin:
   pipeline_group: RNA
   filters:
-    request_type_key: limber_rnaag
+    request_type: limber_rnaag
     library_type: RNA Poly A Globin
   library_pass: LB Lib PCR-XP
   relationships:

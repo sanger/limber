@@ -69,14 +69,14 @@ RSpec.describe Presenters::StandardPresenter do
                purpose_name => 'Child purpose 2'
              },
              filters: {
-               'request_type_key' => ['limber_multiplexing']
+               'request_type' => ['limber_multiplexing']
              }
       create :pipeline,
              relationships: {
                purpose_name => 'Other purpose 2'
              },
              filters: {
-               'request_type_key' => ['other_type']
+               'request_type' => ['other_type']
              }
       create :purpose_config, name: 'Child purpose', uuid: 'child-purpose'
       create :purpose_config, name: 'Child purpose 2', uuid: 'child-purpose-2'
@@ -159,7 +159,7 @@ RSpec.describe Presenters::StandardPresenter do
                  'Example purpose' => 'Next example purpose'
                },
                filters: {
-                 'request_type_key' => suggest_passes
+                 'request_type' => suggest_passes
                },
                library_pass: 'Example purpose'
         create(:purpose_config, name: 'Example purpose', uuid: 'test-purpose')
@@ -218,7 +218,7 @@ RSpec.describe Presenters::StandardPresenter do
                  'Example purpose' => 'Next example purpose'
                },
                filters: {
-                 request_type_key: suggest_passes
+                 request_type: suggest_passes
                },
                library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
@@ -272,7 +272,7 @@ RSpec.describe Presenters::StandardPresenter do
 
     describe '#control_library_passing' do
       before do
-        create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
+        create :pipeline, filters: { request_type: suggest_passes }, library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
 
@@ -322,7 +322,7 @@ RSpec.describe Presenters::StandardPresenter do
     describe '#control_suggested_library_passing' do
       let(:aliquot_type) { :v2_tagged_aliquot }
       before do
-        create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
+        create :pipeline, filters: { request_type: suggest_passes }, library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
 

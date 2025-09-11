@@ -5,9 +5,9 @@ require 'spec_helper'
 RSpec.describe LabwareCreators::WellFilterKinnex do
   context 'when filtering a single well' do
     let!(:parent_uuid) { 'example-plate-uuid' }
-    let!(:request_type_key) { 'kinnex_prep' }
+    let!(:request_type) { 'kinnex_prep' }
     let!(:non_kinnex_request_type_key) { 'non_kinnex_prep' }
-    let!(:request_type_kinnex) { create :request_type, key: request_type_key }
+    let!(:request_type_kinnex) { create :request_type, key: request_type }
     let!(:request_type_non_kinnex) { create :request_type, key: non_kinnex_request_type_key }
     let!(:basic_purpose) { 'test-purpose' }
     let!(:labware_creator) do
@@ -57,7 +57,7 @@ RSpec.describe LabwareCreators::WellFilterKinnex do
     end
 
     context 'when there are wells with request_type equal to kinnex_prep' do
-      subject { described_class.new(creator: labware_creator, request_type_key: request_type_key) }
+      subject { described_class.new(creator: labware_creator, request_type: request_type) }
 
       let!(:filtered) { subject.filtered }
 

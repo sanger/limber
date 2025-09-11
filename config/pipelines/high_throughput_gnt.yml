@@ -2,7 +2,7 @@
 GnT Picoplex:
   pipeline_group: GnT/scRNA
   filters:
-    request_type_key: limber_gnt_picoplex
+    request_type: limber_gnt_picoplex
   relationships:
     GnT Stock: GnT scDNA
     GnT scDNA: GnT Pico-XP
@@ -12,7 +12,7 @@ GnT Picoplex:
 GnT Picoplex MX:
   pipeline_group: GnT/scRNA
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     GnT Pico Lib PCR: GnT Pico Lib Pool
@@ -21,7 +21,7 @@ GnT Picoplex MX:
 GnT MDA:
   pipeline_group: GnT/scRNA
   filters:
-    request_type_key:
+    request_type:
       - limber_gnt_mda
   relationships:
     GnT Stock: GnT scDNA

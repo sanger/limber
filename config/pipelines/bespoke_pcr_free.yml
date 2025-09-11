@@ -2,7 +2,7 @@
 Bespoke PCR Free:
   pipeline_group: Bespoke PCR Free
   filters:
-    request_type_key: limber_pcr_free_bespoke
+    request_type: limber_pcr_free_bespoke
     library_type:
       - No PCR (Plate)
       - HiSeqX PCR free
@@ -15,7 +15,7 @@ Bespoke PCR Free:
 Bespoke PCR Free MX:
   pipeline_group: Bespoke PCR Free
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     LBB Lib-XP: LBB Lib Pool Stock

@@ -43,7 +43,7 @@ module Sequencescape::Api::V2::Shared
     end
 
     def active_non_create_asset_requests
-      active_requests.reject { |r| r.request_type_key == 'create_asset' }
+      active_requests.reject { |r| r.request_type == 'create_asset' }
     end
 
     def pcr_cycles
@@ -72,7 +72,7 @@ module Sequencescape::Api::V2::Shared
       return [] if requests.blank?
 
       if request_types_to_complete.present?
-        requests.select { |r| request_types_to_complete.include? r.request_type_key }
+        requests.select { |r| request_types_to_complete.include? r.request_type }
       else
         requests
       end

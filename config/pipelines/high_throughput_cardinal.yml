@@ -12,7 +12,7 @@ Cardinal Entry B:
 Cardinal:
   pipeline_group: Cardinal Library Prep
   filters:
-    request_type_key: limber_cardinal
+    request_type: limber_cardinal
     library_type: Chromium single cell 3 prime v3
   library_pass: LCA Connect PCRXP
   relationships:
@@ -27,7 +27,7 @@ Cardinal:
 Cardinal Banking:
   pipeline_group: Cardinal Cell Banking
   filters:
-    request_type_key: limber_cardinal_banking
+    request_type: limber_cardinal_banking
   relationships:
     LCA Blood Vac: LCA Blood Bank
     LCA Blood Bank: LCA PBMC Bank

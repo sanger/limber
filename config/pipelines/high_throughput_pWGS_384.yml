@@ -2,7 +2,7 @@
 pWGS-384: # Top of the pipeline (Library Prep)
   pipeline_group: pWGS-384
   filters:
-    request_type_key: limber_pwgs-384
+    request_type: limber_pwgs-384
     library_type: pWGS-384
   library_pass: pWGS-384 Lib PCR
   relationships:
@@ -15,7 +15,7 @@ pWGS-384: # Top of the pipeline (Library Prep)
 pWGS-384 MX: # Bottom of the pipeline (Pooling and normalization)
   pipeline_group: pWGS-384
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     pWGS-384 Lib PCR: pWGS-384 Lib Pool XP

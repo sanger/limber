@@ -200,7 +200,7 @@ module Presenters
     # Passable requests are those associated with aliquots,
     # which have not yet been passed, failed or cancelled
     def passable_request_types
-      wells.flat_map { |well| well.requests_in_progress.select(&:passable?).map(&:request_type_key) }
+      wells.flat_map { |well| well.requests_in_progress.select(&:passable?).map(&:request_type) }
     end
 
     # This is determined in Sequencescape by accessing the submission orders and checking if any of them are

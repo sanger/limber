@@ -108,7 +108,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with a valid filter for some wells' do
-        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
 
         it 'returns the expected wells' do
           expect(subject.filtered.count).to eq(2)
@@ -141,7 +141,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with a valid filter for all wells' do
-        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_a) }
+        subject { described_class.new(creator: labware_creator, request_type: request_type_key_a) }
 
         it 'returns all the wells' do
           expect(subject.filtered.count).to eq(4)
@@ -150,7 +150,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with a valid filter for a partial subset of the wells' do
-        subject { described_class.new(creator: labware_creator, request_type_key: request_type_key_b) }
+        subject { described_class.new(creator: labware_creator, request_type: request_type_key_b) }
 
         # this represents a partial submission of wells on the plate
         it 'returns the expected wells' do
@@ -161,7 +161,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
       end
 
       context 'with an invalid filter' do
-        subject { described_class.new(creator: labware_creator, request_type_key: 'rt_c') }
+        subject { described_class.new(creator: labware_creator, request_type: 'rt_c') }
 
         # up to the creator to catch the situation where the filter returns no wells as a validation check
         it 'returns no wells' do

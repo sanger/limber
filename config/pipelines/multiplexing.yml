@@ -1,7 +1,7 @@
 Multiplexing:
   pipeline_group: Multiplexing
   filters:
-    request_type_key:
+    request_type:
       - limber_multiplexing
   relationships:
     Library Stock Plate: LB Lib Pool #These are supplied as ready-made libraries and enter the pipeline at this point.
