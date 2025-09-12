@@ -23,12 +23,12 @@ RSpec.describe LabwareMetadata do
   end
 
   it 'raises an exception if the barcode is invalid' do
-    invalid_barcode = 'not_a_barcode'
+    barcode = 'not_a_barcode'
     error = JsonApiClient::Errors::NotFound
 
-    allow(Sequencescape::Api::V2::Labware).to receive(:find).with(hash_including(barcode: invalid_barcode)).and_return([])
+    allow(Sequencescape::Api::V2::Labware).to receive(:find).with(hash_including(barcode:)).and_return([])
 
-    expect { described_class.new(barcode: invalid_barcode, user_uuid: user.uuid) }.to raise_error(error)
+    expect { described_class.new(barcode: barcode, user_uuid: user.uuid) }.to raise_error(error)
   end
 
   context 'plates' do
