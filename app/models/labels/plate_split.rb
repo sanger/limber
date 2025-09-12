@@ -22,5 +22,8 @@ class Labels::PlateSplit < Labels::PlateLabelXpBase # rubocop:todo Style/Documen
     barcode = 'N/A'
     barcode = metadata.fetch('stock_barcode', barcode) unless metadata.nil?
     barcode
+  rescue JsonApiClient::Errors::NotFound
+    # A labware cannot be found for the barcode
+    nil
   end
 end

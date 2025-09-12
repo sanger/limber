@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
-class LabwareMetadata # rubocop:todo Style/Documentation
+# Handles fetching and updating custom metadata for labware via the Sequencescape API
+# Can be initialized with either a barcode or a labware object
+# If both are given, the labware is used
+# If neither is given, an `ArgumentError` is raised
+# If a barcode is given, but no labware is found, `JsonApiClient::Errors::NotFound` is raised
+class LabwareMetadata
   attr_accessor :user_uuid, :labware, :barcode
 
   def initialize(params = {})
     # Initialize with either a barcode or a labware object
     # If both are given, the labware is used
-    # If neither is given, an ArgumentError is raised
-    # If a barcode is given, but no labware is found, a JsonApiClient::Errors::NotFound is raised
+    # If neither is given, an `ArgumentError` is raised
+    # If a barcode is given, but no labware is found, `JsonApiClient::Errors::NotFound` is raised
     @user_uuid = params.fetch(:user_uuid, nil)
     @labware = params.fetch(:labware, nil)
     @barcode = params.fetch(:barcode, nil)
