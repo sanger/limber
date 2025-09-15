@@ -49,6 +49,11 @@ RSpec.feature 'Failing wells', :js do
 
     2.times do # For both the initial find, and the redirect post state change
       stub_v2_plate(example_plate)
+      stub_v2_plate(
+        example_plate,
+        stub_search: false,
+        custom_includes: 'wells.aliquots.request.poly_metadata'
+      )
     end
 
     stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))

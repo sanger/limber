@@ -14,7 +14,7 @@
       <div class="card-body">
       <%= form_for(
             @labware_creator,
-            url: limber_plate_children_path(@labware_creator.parent_uuid),
+            url: plate_child_plate_creations_path(@labware_creator.parent_uuid),
             as: :plate,
             html: { method: :post }
           ) do |form| %>
@@ -42,7 +42,7 @@
       </div>
       <%= form_for(
             @labware_creator,
-            url: limber_plate_children_path(@labware_creator.parent_uuid),
+            url: plate_child_plate_creations_path(@labware_creator.parent_uuid),
             as: :plate,
             html: { method: :post }
           ) do |form| %>

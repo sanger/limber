@@ -12,7 +12,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
       subject { described_class.creatable_from?(parent) }
 
       context 'with a plate' do
-        let(:parent) { build :plate }
+        let(:parent) { build :v2_plate }
 
         it { is_expected.to be true }
       end
