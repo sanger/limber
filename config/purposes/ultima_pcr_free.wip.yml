@@ -14,7 +14,7 @@ UPF End Prep XP1:
   :asset_type: plate
 UPF Lib:
   :asset_type: plate
-  :presenter_class: Presenters::PermissivePresenter
+  :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
     - 'Ultima P1'
