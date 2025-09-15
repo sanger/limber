@@ -22,9 +22,11 @@ UPF Lib:
 UPF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
+  # TODO: add Presenter here for automated submission for rebalancing
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
+  # TODO: IlluminaHtp type doesn't seem right for Ultima sequencing
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
@@ -32,7 +34,35 @@ UPF EqVol Pool:
 UPF EqVol Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
+  # TODO: IlluminaHtp type doesn't seem right for Ultima sequencing
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
+UPF Balanced Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  # TODO: IlluminaHtp type doesn't seem right for Ultima sequencing
+  :type: IlluminaHtp::InitialStockTubePurpose
+  # TODO: this creator need to be replaced by one that takes the upload of the Nexus file
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+UPF Balanced Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  # TODO: IlluminaHtp type doesn't seem right for Ultima sequencing
+  :type: IlluminaHtp::MxTubePurpose
+  :default_printer_type: :tube
+  # TODO: this creator needs to be replaced by one that creates 2 child tubes
+  :creator_class: LabwareCreators::TubeFromTube
+  # TODO: this presenter needs to be replaced by one that can do an automatic
+  # submission on a tube for Ultima sequencing.
+  # :presenter_class: Presenters::SubmissionTubePresenter
+  # :submission_options:
+  #   Ultima Sequencing - Automated Submission:
+  #     template_name: 'Limber-Htp - Ultima PCR Free - Ultima sequencing Automated'
+  #     allowed_extra_barcodes: false
+  #     request_options:
+  #       # TODO: what goes here for the Ultima sequencing submission?
+  :presenter_class: Presenters::FinalTubePresenter
