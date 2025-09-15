@@ -328,13 +328,35 @@ dl#samples-information {
   }
 }
 
-.well {
+#well-failures .well {
   // Format well failing interface
   input[type='checkbox'] {
     display: none;
   }
   input[type='checkbox']:checked + label .aliquot {
     background-color: red;
+  }
+  input[type='checkbox']:disabled + label .aliquot {
+    opacity: 0.5;
+  }
+
+  label {
+    font-size: small;
+  }
+
+  .pool-print-information {
+    display: none;
+  }
+}
+
+// Add this for mark well mode
+#well-mark .well {
+  // Format well marking interface
+  input[type='checkbox'] {
+    display: none;
+  }
+  input[type='checkbox']:checked + label .aliquot {
+    background-color: #ff9100;
   }
   input[type='checkbox']:disabled + label .aliquot {
     opacity: 0.5;
@@ -491,6 +513,15 @@ dl#samples-information {
   button.fail-wells {
     @extend .btn-danger;
   }
+}
+
+// Link when text has been marked as dark, generally on light backgrounds
+.text-dark a {
+  @extend .link-dark;
+  @extend .text-decoration-underline;
+  @extend .link-underline-dark;
+  @extend .link-underline-opacity-50;
+  @extend .link-underline-opacity-100-hover;
 }
 
 // Classes deprecated during bootstrap v4 -> v5

@@ -26,7 +26,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_plate_path(uuid))
+        expect(response).to redirect_to(plate_path(uuid))
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_path(uuid))
+        expect(response).to redirect_to(tube_path(uuid))
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe SearchController, type: :controller do
 
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_rack_path(uuid))
+        expect(response).to redirect_to(tube_rack_path(uuid))
       end
     end
   end
@@ -80,6 +80,45 @@ RSpec.describe SearchController, type: :controller do
         post :create, params: { plate_barcode: '' }, format: :json
         expect(response).to have_http_status(:not_found)
         expect(response.parsed_body).to eq('error' => 'You have not supplied a labware barcode')
+      end
+    end
+
+    context 'when logs should be checked for sensitive parameters' do
+      let(:barcode) { 'ABC123' }
+      let(:params) do
+        {
+          plate_barcode: barcode,
+          _key: 'sensitive',
+          api_key: 'sensitive',
+          bananas: 'public',
+          keywords: 'public',
+          monkey: 'public',
+          request_type_key: 'public',
+          token: 'sensitive',
+          user_key: 'sensitive'
+        }
+      end
+
+      before do
+        allow(controller).to receive(:find_labware).with(barcode).and_return('/labware/ABC123')
+        allow(Rails.logger).to receive(:info)
+
+        post :create, params: params, session: { format: :json }
+      end
+
+      public_params = %w[bananas keywords monkey request_type_key]
+      sensitive_params = %w[_key api_key token user_key]
+
+      public_params.each do |param|
+        it "does not filter '#{param}' from logs" do
+          expect(Rails.logger).to have_received(:info).with(a_string_including("\"#{param}\" => \"public\""))
+        end
+      end
+
+      sensitive_params.each do |param|
+        it "filters sensitive '#{param}' from logs" do
+          expect(Rails.logger).to have_received(:info).with(a_string_including("\"#{param}\" => \"[FILTERED]\""))
+        end
       end
     end
   end

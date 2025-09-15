@@ -109,7 +109,7 @@
               </li>
             </ul>
           </div>
-          <%= form_for(@labware_creator, as: :tube, url: limber_plate_tubes_path(@labware_creator.parent)) do |f| %>
+          <%= form_for(@labware_creator, as: :tube, url: plate_child_tube_creations_path(@labware_creator.parent)) do |f| %>
             <%= f.hidden_field :purpose_uuid %>
             <div class="mb-4">
               <h5 class="mb-2" style="color: #a084e8;">Sequencing tube rack scan file </h5>

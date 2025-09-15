@@ -5,12 +5,12 @@
 # Essentially a 96 well plate of tags is transferred onto the same target
 # plate four times, such that each cluster of 4 wells contains the same tag.
 # Ie. Tag 1 is in wells A1, B1, A2, B2
-# In the case of column then row direction algorithms
+# In the case of column then column direction algorithms
 # Four different tag 2s then get applied to each cluster. These tags are
-# laid out in *ROW* order
-# ie. A1 => 1, A2 => 2, B1 => 3, B2 => 4
+# laid out in *COLUMN* order
+# ie. A1 => 1, A2 => 3, B1 => 2, B2 => 4
 #
-module Limber::TagLayoutTemplate::InColumnThenRows
+module TagLayoutTemplates::InColumnThenColumns
   # Rows determined the second tag layout, which we don't
   # worry about here.
   def group_wells_of_plate(plate)
