@@ -7,7 +7,7 @@
       data-enforce-same-template-within-pool="<%= @labware_creator.enforce_same_template_within_pool? %>">
   </div>
 
-  <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
+  <% form_for(@labware_creator, as: :plate, url: plate_child_plate_creations_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>
         <div id="labware-summary-div">

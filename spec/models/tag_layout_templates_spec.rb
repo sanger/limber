@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 # CreationForm is the base class for our forms
-RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
+RSpec.describe TagLayoutTemplates, :tag_plate do
   has_a_working_api
 
   # :tag_layout_template_by_row
@@ -12,14 +12,16 @@ RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
   subject(:tag_layout_template) { build template_factory }
 
   let(:plate_uuid) { SecureRandom.uuid }
-
   let(:plate) do
-    build(:stock_plate, uuid: plate_uuid, state: 'passed', pool_sizes: [48, 48], &:populate_wells_with_pool)
+    build(
+      :v2_stock_plate,
+      :has_pooling_metadata,
+      uuid: plate_uuid,
+      state: 'passed',
+      pool_sizes: [48, 48],
+      &:assign_pools_to_wells
+    )
   end
-
-  let(:wells_json) { json :well_collection, size: 96 }
-
-  before { stub_api_get plate_uuid, 'wells', body: wells_json }
 
   shared_examples 'a tag layout' do
     describe '#generate_tag_layout' do
@@ -31,7 +33,7 @@ RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
 
   # We mimic plate layout here, which seems preferable to arbitrary length limits.
   context 'by column' do
-    let(:template_factory) { :tag_layout_template }
+    let(:template_factory) { :v2_tag_layout_template }
     let(:expected_layout) do
       {
         'A1' => [1, 1],
@@ -243,21 +245,20 @@ RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
   end
 
   context 'by column on a partial plate' do
-    let(:wells_json) { json :well_collection, size: 96, empty_well: %w[A1 H12] }
     let(:plate) do
       build(
-        :stock_plate,
+        :v2_stock_plate,
+        :has_pooling_metadata,
         uuid: plate_uuid,
         state: 'passed',
-        pool_sizes: [47, 47],
-        empty_wells: %w[A1 H12],
-        &:populate_wells_with_pool
+        pool_sizes: [47, 47], # Wells H6 and H12 are empty
+        &:assign_pools_to_wells
       )
     end
-    let(:template_factory) { :tag_layout_template }
+    let(:template_factory) { :v2_tag_layout_template }
     let(:expected_layout) do
       {
-        # A1 is missing, but H12 is shown. Not sure we actually care...
+        'A1' => [1, 1],
         'A2' => [1, 9],
         'A3' => [1, 17],
         'A4' => [1, 25],
@@ -346,7 +347,7 @@ RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
         'H3' => [1, 24],
         'H4' => [1, 32],
         'H5' => [1, 40],
-        'H6' => [1, 48],
+        'H6' => [2, 48],
         'H7' => [2, 56],
         'H8' => [2, 64],
         'H9' => [2, 72],
@@ -799,21 +800,21 @@ RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
   end
 
   context 'by quadrants on a partial plate' do
-    let(:wells_json) { json :well_collection, size: 96, empty_well: %w[A1 H12] }
     let(:plate) do
       build(
-        :stock_plate,
+        :v2_stock_plate,
+        :has_pooling_metadata,
         uuid: plate_uuid,
         state: 'passed',
-        pool_sizes: [47, 47],
-        empty_wells: %w[A1 H12],
-        &:populate_wells_with_pool
+        pool_sizes: [47, 47], # Wells H6 and H12 are empty
+        &:assign_pools_to_wells
       )
     end
+
     let(:template_factory) { :tag_layout_template_by_quadrant }
     let(:expected_layout) do
       {
-        # A1 is missing, but H12 is shown. Not sure we actually care...
+        'A1' => [1, 1],
         'A2' => [1, 1],
         'A3' => [1, 5],
         'A4' => [1, 5],
@@ -902,7 +903,7 @@ RSpec.describe Limber::TagLayoutTemplate, :tag_plate do
         'H3' => [1, 8],
         'H4' => [1, 8],
         'H5' => [1, 12],
-        'H6' => [1, 12],
+        'H6' => [2, 12],
         'H7' => [2, 16],
         'H8' => [2, 16],
         'H9' => [2, 20],

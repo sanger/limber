@@ -29,7 +29,7 @@ FactoryBot.define do
     state { 'pending' }
 
     # API V1 tube
-    factory :tube, class: Limber::Tube do
+    factory :tube, class: Tube do
       # with_has_many_associations 'aliquots'
       json_root { 'tube' }
       state { 'pending' }

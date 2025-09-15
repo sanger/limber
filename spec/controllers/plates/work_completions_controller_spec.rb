@@ -20,8 +20,8 @@ RSpec.describe Plates::WorkCompletionsController, type: :controller do
     it 'creates work_completion' do
       expect_work_completion_creation
 
-      post :create, params: { limber_plate_id: plate_uuid }, session: { user_uuid: }
-      expect(response).to redirect_to(limber_plate_path(plate_uuid))
+      post :create, params: { plate_id: plate_uuid }, session: { user_uuid: }
+      expect(response).to redirect_to(plate_path(plate_uuid))
       expect(flash.notice).to eq(['Requests have been passed'])
     end
   end

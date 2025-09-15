@@ -22,26 +22,27 @@ class Sequencescape::Api::V2::Labware < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2::Labware.includes(*includes).where(options).all
   end
 
-  #
-  # Plates and tubes are handled by different URLs. This allows us to redirect
-  # to the expected endpoint.
-  # @return [ActiveModel::Name] The resource behaves like a Limber::Tube/Limber::Plate/Limber::TubeRack
+  # Provide the correct labware specific model for use in views and URL helpers
+  # @return [ActiveModel::Name] The resource behaves like a a Plate, Tube, or TubeRack
   #
   def model_name
     case type
     when 'tubes'
-      ::ActiveModel::Name.new(Limber::Tube, false)
+      ::ActiveModel::Name.new(Tube)
     when 'plates'
-      ::ActiveModel::Name.new(Limber::Plate, false)
+      ::ActiveModel::Name.new(Plate)
     when 'tube_racks'
-      ::ActiveModel::Name.new(Limber::TubeRack, false)
+      ::ActiveModel::Name.new(TubeRack)
     else
-      raise "Can't view #{type} in limber"
+      raise "Can't view #{type} in Limber"
     end
   end
 
-  # Currently use the uuid as our main identifier, might switch to human barcode soon
+  # Overrides the Rails method to return the UUID of the labware for use in URL generation.
+  #
+  # @return [String] The UUID of the labware instance.
   def to_param
+    # Currently use the uuid as our main identifier, might switch to human barcode soon
     uuid
   end
 

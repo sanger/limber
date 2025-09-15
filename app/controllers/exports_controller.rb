@@ -40,7 +40,7 @@ class ExportsController < ApplicationController
 
   def locate_labware
     @labware =
-      @plate = Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, barcode: params[:limber_plate_id])
+      @plate = Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, barcode: params[:plate_id])
   end
 
   def locate_ancestor_plate

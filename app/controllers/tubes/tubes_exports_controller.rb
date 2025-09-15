@@ -41,7 +41,7 @@ class Tubes::TubesExportsController < ApplicationController
         Sequencescape::Api::V2.tube_with_custom_includes(
           include_parameters,
           select_parameters,
-          barcode: params[:limber_tube_id]
+          barcode: params[:tube_id]
         )
   end
 

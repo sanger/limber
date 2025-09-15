@@ -282,8 +282,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   describe '#register_stock_for_plate' do
     let(:logger) { instance_double(Logger) }
     let(:child_uuid) { 'child-uuid' }
-    let(:child_plate_v2) { instance_double('Plate') }
-    let(:child) { instance_double('Plate', uuid: child_uuid) }
+    let(:child_plate_v2) { create(:v2_plate) }
+    let(:child) { create(:v2_plate, uuid: child_uuid) }
 
     before do
       allow(Rails).to receive(:logger).and_return(logger)

@@ -23,7 +23,7 @@ RSpec.describe TubeCreationController, type: :controller do
 
     describe '#new' do
       it 'creates a tube from a tube parent' do
-        get :new, params: { limber_tube_id: parent_uuid, purpose_uuid: child_purpose_uuid }, session: { user_uuid: }
+        get :new, params: { tube_id: parent_uuid, purpose_uuid: child_purpose_uuid }, session: { user_uuid: }
         expect(response).to render_template('new')
         expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
         expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
@@ -31,7 +31,7 @@ RSpec.describe TubeCreationController, type: :controller do
       end
 
       it 'creates a tube from a plate parent' do
-        get :new, params: { limber_plate_id: parent_uuid, purpose_uuid: child_purpose_uuid }, session: { user_uuid: }
+        get :new, params: { plate_id: parent_uuid, purpose_uuid: child_purpose_uuid }, session: { user_uuid: }
         expect(response).to render_template('new')
         expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
         expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
@@ -40,18 +40,19 @@ RSpec.describe TubeCreationController, type: :controller do
     end
 
     describe '#create' do
-      before do
-        expect_any_instance_of(LabwareCreators::PooledTubesBySubmission).to receive(:save).and_return(true)
-        expect_any_instance_of(LabwareCreators::PooledTubesBySubmission).to receive(:redirection_target).and_return(
-          build(:tube, uuid: child_uuid)
-        )
-      end
+      before { expect_any_instance_of(LabwareCreators::PooledTubesBySubmission).to receive(:save).and_return(true) }
 
       context 'from a tube parent' do
+        before do
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(
+            build(:v2_plate, uuid: parent_uuid)
+          )
+        end
+
         it 'creates a tube' do
           post :create,
                params: {
-                 limber_tube_id: parent_uuid,
+                 tube_id: parent_uuid,
                  tube: {
                    purpose_uuid: child_purpose_uuid
                  }
@@ -59,7 +60,7 @@ RSpec.describe TubeCreationController, type: :controller do
                session: {
                  user_uuid:
                }
-          expect(response).to redirect_to("#{limber_tube_path(child_uuid)}#relatives_tab")
+          expect(response).to redirect_to("#{plate_path(parent_uuid)}#relatives_tab")
           expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
           expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
           expect(assigns(:labware_creator).purpose_uuid).to eq(child_purpose_uuid)
@@ -67,10 +68,16 @@ RSpec.describe TubeCreationController, type: :controller do
       end
 
       context 'from a plate parent' do
+        before do
+          allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(
+            build(:v2_plate, uuid: parent_uuid)
+          )
+        end
+
         it 'creates a tube' do
           post :create,
                params: {
-                 limber_plate_id: parent_uuid,
+                 plate_id: parent_uuid,
                  tube: {
                    purpose_uuid: child_purpose_uuid
                  }
@@ -78,7 +85,7 @@ RSpec.describe TubeCreationController, type: :controller do
                session: {
                  user_uuid:
                }
-          expect(response).to redirect_to("#{limber_tube_path(child_uuid)}#relatives_tab")
+          expect(response).to redirect_to("#{plate_path(parent_uuid)}#relatives_tab")
           expect(assigns(:labware_creator).parent_uuid).to eq(parent_uuid)
           expect(assigns(:labware_creator).user_uuid).to eq(user_uuid)
           expect(assigns(:labware_creator).purpose_uuid).to eq(child_purpose_uuid)

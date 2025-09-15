@@ -1,3 +1,4 @@
+/* eslint-disable vue/one-component-per-file */
 /* eslint no-console: 0 */
 
 import { createApp, h } from 'vue'

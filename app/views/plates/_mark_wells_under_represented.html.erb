@@ -1,0 +1,30 @@
+<% unless presenter.passed? %>
+  <div class="alert alert-danger" role="alert">
+     Wells can only be marked as under represented <strong>after</strong> passing the plate.
+  </div>
+<% else %>
+  <%= form_for(:plate, url: process_mark_under_represented_wells_path(presenter.labware), html: { method: 'post' }) do |form| %>
+    <fieldset>
+      <legend class="card-body card-subtitle text-muted">Select wells to mark</legend>
+      <div class="well well-marking">
+        <%= form.fields_for(:wells) do |well_form| %>
+        <%= render partial: 'plate', locals: { plate_presenter: mark_wells_presenter_from(well_form, presenter), id: 'well-mark' } %>
+        <% end %>
+      </div>
+    </fieldset>
+    <div class="card-body">
+      <%= render presenter.quadrants_helper %>
+      <%= render 'thresholds', presenter: presenter.qc_thresholds %>
+      <p>Marking wells as under-represented will not fail them, but will allow you to mark them for further investigation.</p>
+      <p>Marked wells will be colored in orange in the plate view.
+      <p>Once the "Mark Selected Wells" button has been pressed, marking cannot be undone, but further marked wells can be added. The 'Still charge customer' option will only affect the wells selected to mark at the same time. Previously and subsequently marked wells will retain their original options.</p>
+
+      <div class='custom-control custom-checkbox'>
+        <%= check_box_tag :customer_accepts_responsibility, true, false, class: 'custom-control-input' %>
+        <%= label_tag :customer_accepts_responsibility, 'Still charge customer', class: 'custom-control-label' %>
+      </div>
+
+      <%= form.submit('Mark selected wells as under-represented', class: 'btn btn-lg btn-danger') %>
+    </div>
+  <% end %>
+<% end %>

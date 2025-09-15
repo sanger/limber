@@ -14,11 +14,11 @@ module LabwareCreators
     extend NestedValidation
 
     attr_reader :api, :child
-    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params, :limber_plate_id, :limber_tube_id
+    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params, :plate_id, :tube_id
 
     class_attribute :default_transfer_template_name, :style_class, :state
 
-    self.attributes = %i[purpose_uuid parent_uuid user_uuid limber_plate_id limber_tube_id]
+    self.attributes = %i[purpose_uuid parent_uuid user_uuid plate_id tube_id]
     self.default_transfer_template_name = 'Transfer columns 1-12'
     self.style_class = 'creator'
 
@@ -99,6 +99,19 @@ module LabwareCreators
     #
     def purpose_name
       purpose_config.name
+    rescue StandardError
+      'unknown'
+    end
+
+    #
+    # Returns the labware type of the child purpose
+    #
+    # @return [String] The labware type
+    #
+    def child_labware_type
+      purpose_config.asset_type
+    rescue StandardError
+      'labware'
     end
 
     private
