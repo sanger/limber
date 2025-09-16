@@ -4946,6 +4946,46 @@ ROBOT_CONFIG =
       }
     )
 
+    # bed layout verification for UPF Cherrypicked -> UPF Shear
+    custom_robot(
+      'bravo-upf-cherrypicked-to-upf-shear',
+      name: 'UPF Cherrypicked => UPF Shear',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF Cherrypicked',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF Shear',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # bed layout verification for UPF Shear -> UPF Post Shear
+    custom_robot(
+      'bravo-upf-shear-to-upf-post-shear',
+      name: 'UPF Shear => UPF Post Shear',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'UPF Shear',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(7).barcode => {
+          purpose: 'UPF Post Shear',
+          states: ['pending'],
+          label: 'Bed 7',
+          parent: bed(9).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
     # bed layout verification for UPF Post Shear -> UPF End Prep XP1
     custom_robot(
       'bravo-upf-post-shear-to-upf-end-prep-xp1',
