@@ -4273,6 +4273,18 @@ ROBOT_CONFIG =
           label: 'Bed 9',
           target_state: 'passed',
           parent: bed(7).barcode
+        },
+        bed(12).barcode => {
+          purpose: 'BGE Lib PCR',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'BGE Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 14',
+          target_state: 'passed',
+          parent: bed(12).barcode
         }
       }
     )
