@@ -42,7 +42,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
         subject.check_for_invalid_characters
         expect(subject.errors.full_messages).to include(
           "contains invalid character(s) at column 2 in #{subject}, " \
-            'please use only standard characters and UTF-8 encoding for your csv file'
+          'please use only standard characters and UTF-8 encoding for your csv file'
         )
       end
     end
@@ -54,7 +54,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
         subject.check_for_invalid_characters
         expect(subject.errors.full_messages).to include(
           "contains invalid character(s) at column 2 in #{subject}, " \
-            'please use only standard characters and UTF-8 encoding for your csv file'
+          'please use only standard characters and UTF-8 encoding for your csv file'
         )
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
         subject.check_for_invalid_characters
         expect(subject.errors.full_messages).to include(
           "contains invalid character(s) at column 2 in #{subject}, " \
-            'please use only standard characters and UTF-8 encoding for your csv file'
+          'please use only standard characters and UTF-8 encoding for your csv file'
         )
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
         subject.check_for_invalid_characters
         expect(subject.errors.full_messages).to include(
           "contains invalid character(s) at column 2 in #{subject}, " \
-            'please use only standard characters and UTF-8 encoding for your csv file'
+          'please use only standard characters and UTF-8 encoding for your csv file'
         )
       end
     end
@@ -149,7 +149,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFile::RowBase do
         subject.check_has_expected_number_of_columns
         expect(subject.errors.full_messages).to include(
           "contains an unexpected number of columns (#{row_data.size} expecting " \
-            "#{expected_number_of_columns}) at #{subject}"
+          "#{expected_number_of_columns}) at #{subject}"
         )
       end
     end

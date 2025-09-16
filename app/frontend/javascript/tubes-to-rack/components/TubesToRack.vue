@@ -128,7 +128,7 @@ export default {
       return indexToName(index, this.rackHeight)
     },
     updateTube(index, data) {
-      this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
+      this.tubes[index - 1] = { ...data, index: index - 1 }
     },
     createRack() {
       this.progressMessage = 'Creating tube rack...'

@@ -27,21 +27,22 @@
     <% end %>
     <div class="card-body">
       <%= form_for(
-        @labware_creator,
-        url: limber_plate_children_path(@labware_creator.parent_uuid),
-        as: :plate,
-        html: { method: :post }) do |form| %>
+            @labware_creator,
+            url: plate_child_plate_creations_path(@labware_creator.parent_uuid),
+            as: :plate,
+            html: { method: :post }
+          ) do |form| %>
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
         <% @labware_creator.max_number_of_source_plates.times do |index| %>
-          <div class="labware-container scan-labware form-group row">
+          <div class="labware-container scan-labware form-group row me-2">
             <label for="plate[barcodes][<%= index %>]"
-                   class="plate-label col-md-2">Source Plate <%= index + 1 %></label>
+                   class="plate-label col-3 col-form-label">Source Plate <%= index + 1 %></label>
             <input type="text"
                    id="plate[barcodes][<%= index %>]"
                    name="plate[barcodes][]"
-                   class="form-control col-md-8" />
+                   class="form-control col" />
           </div>
         <% end %>
         <%= form.submit 'Create Plate', class: 'btn btn-success btn-lg', id: 'create-labware' %>

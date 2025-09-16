@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post '/', action: :create, as: :perform_search
     get '/ongoing_plates', action: :ongoing_plates
     get '/ongoing_tubes', action: :ongoing_tubes
+    # TODO: do we need to add ongoing_tube_racks here?
     post '/qcables', action: :qcables, as: :qcables_search
   end
 
@@ -28,23 +29,29 @@ Rails.application.routes.draw do
 
   resources :print_jobs, only: [:create]
 
-  resources :limber_qcables, controller: :tag_plates, only: [:show]
+  resources :qcables, controller: :tag_plates, only: [:show]
 
-  resources :limber_plates, controller: :plates do
-    resources :children, controller: :plate_creation
-    resources :tubes, controller: :tube_creation
+  resources :plates, controller: :plates do
+    resources :child_plate_creations, controller: :plate_creation
+    resources :child_tube_creations, controller: :tube_creation
+    resources :child_tube_rack_creations, controller: :tube_rack_creation
     resources :qc_files
     resources :exports, only: :show
     resources :work_completions, only: :create, module: :plates
   end
 
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells
+  post '/process_mark_under_represented_wells/:id',
+       controller: :plates,
+       action: 'process_mark_under_represented_wells',
+       as: :process_mark_under_represented_wells
 
   resources :qc_files, only: :show
 
-  resources :limber_tubes, controller: :tubes do
-    resources :children, controller: :plate_creation
-    resources :tubes, controller: :tube_creation
+  resources :tubes, controller: :tubes do
+    resources :child_plate_creations, controller: :plate_creation
+    resources :child_tube_creations, controller: :tube_creation
+    resources :child_tube_rack_creations, controller: :tube_rack_creation
     resources :qc_files, controller: :qc_files
     resources :tubes_exports, only: :show, module: :tubes
     resources :work_completions, only: :create, module: :tubes
@@ -52,16 +59,35 @@ Rails.application.routes.draw do
 
   resources :validate_paired_tubes, only: :index, module: :tubes
 
-  resources :limber_tube_racks, controller: :tube_racks do
+  resources :tube_racks, controller: :tube_racks do
+    resources :child_plate_creations, controller: :plate_creation
     resources :qc_files, controller: :qc_files
-    resources :exports, only: :show
+    resources :tube_racks_exports, only: :show, module: :tube_racks
+    # TODO: need to add work completion code for tube racks
+    # resources :tube_rack_work_completions, only: :create, module: :tube_racks
   end
 
-  # limber_multiplexed_library_tube routes have been removed, and instead
-  # mx tubes behave like standard tubes for the purposes of routing/url generation
-  # Keeping this redirect here to handle bookmarks. The other routes weren't
-  # actively being used.
-  get '/limber_multiplexed_library_tube/:uuid', to: redirect('/limber_tubes/%<uuid>s')
+  # Add redirect to handle bookmarks and in-progress work.
+  # These routes were changed as part of the SS API v2 migration.
+
+  # Redirect labware page routes for any HTTP request type
+  match '/limber_plates(/*all)', to: redirect(path: '/plates/%{all}'), via: :all
+  match '/limber_tubes(/*all)', to: redirect(path: '/tubes/%{all}'), via: :all
+  match '/limber_tube_racks(/*all)', to: redirect(path: '/tube_racks/%{all}'), via: :all
+  match '/limber_qcables(/*all)', to: redirect(path: '/qcables/%{all}'), via: :all
+
+  # Redirect labware creation routes for any HTTP request type
+  # rubocop:disable Style/LineLength
+  match '/plates/:id/plates(/*all)',         to: redirect(path: '/plates/%{id}/child_plate_creations/%{all}'),          via: :all
+  match '/plates/:id/tubes(/*all)',          to: redirect(path: '/plates/%{id}/child_tube_creations/%{all}'),           via: :all
+  match '/plates/:id/tube_racks(/*all)',     to: redirect(path: '/plates/%{id}/child_tube_rack_creations/%{all}'),      via: :all
+  match '/tubes/:id/plates(/*all)',          to: redirect(path: '/tubes/%{id}/child_plate_creations/%{all}'),           via: :all
+  match '/tubes/:id/tubes(/*all)',           to: redirect(path: '/tubes/%{id}/child_tube_creations/%{all}'),            via: :all
+  match '/tubes/:id/tube_racks(/*all)',      to: redirect(path: '/tubes/%{id}/child_tube_rack_creations/%{all}'),       via: :all
+  match '/tube_racks/:id/plates(/*all)',     to: redirect(path: '/tube_racks/%{id}/child_plate_creations/%{all}'),      via: :all
+  match '/tube_racks/:id/tubes(/*all)',      to: redirect(path: '/tube_racks/%{id}/child_tube_creations/%{all}'),       via: :all
+  match '/tube_racks/:id/tube_racks(/*all)', to: redirect(path: '/tube_racks/%{id}/child_tube_rack_creations/%{all}'),  via: :all
+  # rubocop:enable Style/LineLength
 
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do

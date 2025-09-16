@@ -53,7 +53,8 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
           well.name,
           format(
             '%0.1f',
-            (well.aliquots.size * required_number_of_cells_per_sample_in_pool * wastage_factor) /
+            (well.aliquots.size * required_number_of_cells_per_sample_in_pool *
+             wastage_factor.call(well.aliquots.size)) /
               desired_chip_loading_concentration
           )
         ]

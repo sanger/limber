@@ -22,18 +22,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
            purpose_name: parent_purpose_name,
            aliquots: aliquot_set_1
   end
-  let(:example_tube_v1) do
-    json(
-      :tube,
-      {
-        barcode_number: 1,
-        state: 'passed',
-        uuid: tube_uuid,
-        purpose_name: parent_purpose_name,
-        aliquots: aliquot_set_1
-      }
-    )
-  end
 
   let(:tube_barcode_2) { SBCF::SangerBarcode.new(prefix: 'NT', number: 2).machine_barcode.to_s }
   let(:tube_uuid_2) { SecureRandom.uuid }
@@ -48,8 +36,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
 
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:template_uuid) { SecureRandom.uuid }
-
-  let(:barcodes) { [tube_barcode_1, tube_barcode_2] }
 
   let(:child_uuid) { 'tube-0' }
   let(:child_tube) { create :v2_tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
@@ -155,7 +141,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
 
       expect(page).to have_text(
         'The scanned tube contains tags that would clash with those in other tubes in the pool. ' \
-          'Tag clashes found between: NT1 (3980000001795) and NT2 (3980000002808)'
+        'Tag clashes found between: NT1 (3980000001795) and NT2 (3980000002808)'
       )
 
       # removes the error message if another scan is made (NB. currently validation and messages relate to

@@ -36,7 +36,7 @@ module LabwareCreators
   # rubocop:disable Metrics/ClassLength
   class MultiStampTubesUsingTubeRackScan < Base
     include LabwareCreators::CustomPage
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
 
     self.page = 'multi_stamp_tubes_using_tube_rack_scan'
     self.attributes += [:file]
@@ -94,11 +94,11 @@ module LabwareCreators
         csv_file
           .position_details
           .each_with_object({}) do |(_tube_posn, details_hash), tubes|
-            foreign_barcode = details_hash['tube_barcode']
-            search_params = { barcode: foreign_barcode, includes: Sequencescape::Api::V2::Tube::DEFAULT_INCLUDES }
+          foreign_barcode = details_hash['tube_barcode']
+          search_params = { barcode: foreign_barcode, includes: Sequencescape::Api::V2::Tube::DEFAULT_INCLUDES }
 
-            tubes[foreign_barcode] = Sequencescape::Api::V2::Tube.find_by(**search_params)
-          end
+          tubes[foreign_barcode] = Sequencescape::Api::V2::Tube.find_by(**search_params)
+        end
     end
 
     # Validates that all parent tubes in the CSV file exist in the LIMS.
@@ -111,7 +111,7 @@ module LabwareCreators
 
         msg =
           "Tube barcode #{foreign_barcode} not found in the LIMS. " \
-            'Please check the tube barcodes in the scan file are valid tubes.'
+          'Please check the tube barcodes in the scan file are valid tubes.'
         errors.add(:base, msg)
       end
     end
@@ -143,10 +143,11 @@ module LabwareCreators
 
       # parent tube should be LRC Bank Seq or LRC Bank Spare barcoded SQ01125101 or similar
       return if labware.barcode.ean13.nil?
+
       errors.add(
         :base,
         'Uploaded tube rack scan file does not work with ean13-barcoded ' \
-          "tube scanned on the previous page (#{labware.barcode.ean13})"
+        "tube scanned on the previous page (#{labware.barcode.ean13})"
       )
     end
 
@@ -181,6 +182,7 @@ module LabwareCreators
         end
 
       return if contains_source_tube
+
       errors.add(
         :base,
         "Uploaded tube rack scan file does not contain the tube scanned on the previous page (#{parent_tube_barcode})"

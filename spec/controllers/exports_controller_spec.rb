@@ -16,7 +16,7 @@ RSpec.describe ExportsController, type: :controller do
 
   RSpec.shared_examples 'a csv view' do
     it 'renders the view' do
-      get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+      get :show, params: { id: csv_id, plate_id: plate_barcode }, as: :csv
       expect(response).to have_http_status(:ok)
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Plate)
       expect(assigns(:plate)).to be_a(Sequencescape::Api::V2::Plate)
@@ -317,18 +317,18 @@ RSpec.describe ExportsController, type: :controller do
       it_behaves_like 'a csv view'
 
       it 'assigns page 0 by default' do
-        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        get :show, params: { id: csv_id, plate_id: plate_barcode }, as: :csv
         expect(assigns(:page)).to be 0
       end
 
       it 'assigns page 1 if specified' do
-        get :show, params: { id: csv_id, limber_plate_id: plate_barcode, page: '1' }, as: :csv
+        get :show, params: { id: csv_id, plate_id: plate_barcode, page: '1' }, as: :csv
         expect(assigns(:page)).to be 1
       end
 
       it 'sets the correct filename' do
         page = 0
-        get :show, params: { id: csv_id, limber_plate_id: plate_barcode, page: page }, as: :csv
+        get :show, params: { id: csv_id, plate_id: plate_barcode, page: page }, as: :csv
         expect(
           @response.headers['Content-Disposition'].include?(
             "filename=\"cellaca_input_file_#{plate_barcode}_#{page + 1}.csv\""
@@ -339,10 +339,8 @@ RSpec.describe ExportsController, type: :controller do
   end
 
   context 'where default' do
-    let(:includes) { 'wells' }
-
     it 'returns 404 with unknown templates' do
-      expect { get :show, params: { id: 'not_a_template', limber_plate_id: plate_barcode }, as: :csv }.to raise_error(
+      expect { get :show, params: { id: 'not_a_template', plate_id: plate_barcode }, as: :csv }.to raise_error(
         ActionController::RoutingError,
         'Unknown template not_a_template'
       )
@@ -369,8 +367,6 @@ RSpec.describe ExportsController, type: :controller do
     let(:exports_path) { 'spec/fixtures/config/exports/multiple_ancestor_plates.yml' }
     let(:config) { YAML.load_file(exports_path) }
     let(:export) { Export.new(config.fetch(csv_id)) } # csv_id specified by the individual test
-
-    let(:view_path) { 'spec/fixtures/app/views/' } # for exports/multiple_ancestor_plates.csv.erb
 
     before do
       # Make the controller to receive the plate.
@@ -416,14 +412,14 @@ RSpec.describe ExportsController, type: :controller do
       it 'assigns @ancestor_plate_list to the list of ancestor plates' do
         # The export controller's show action should assign @ancestor_plate_list
         # to an array of ancestor plates.
-        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        get :show, params: { id: csv_id, plate_id: plate_barcode }, as: :csv
         expect(assigns(:ancestor_plate_list)).to eq(ancestor_plates)
       end
 
       it 'renders the view with @ancestor_plate_list' do
         # The export controller's show action should render the view with
         # @ancestor_plate_list.
-        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        get :show, params: { id: csv_id, plate_id: plate_barcode }, as: :csv
 
         expect(response).to render_template('exports/multiple_ancestor_plates')
 
@@ -442,7 +438,7 @@ RSpec.describe ExportsController, type: :controller do
       it 'assigns @ancestor_plate_list to an empty array' do
         # The export controller's show action should assign @ancestor_plate_list
         # to an empty array if the ancestor plate is not configured.
-        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        get :show, params: { id: csv_id, plate_id: plate_barcode }, as: :csv
         expect(assigns(:ancestor_plate_list)).to eq([])
       end
 
@@ -450,7 +446,7 @@ RSpec.describe ExportsController, type: :controller do
         # The export controller's show action should render the view with an empty
         # @ancestor_plate_list if the ancestor plate is not configured.
 
-        get :show, params: { id: csv_id, limber_plate_id: plate_barcode }, as: :csv
+        get :show, params: { id: csv_id, plate_id: plate_barcode }, as: :csv
         expect(response).to render_template('exports/multiple_ancestor_plates')
 
         output = [['Plate Barcode', plate.barcode.human], ['Ancestor Barcode', 'Ancestor Purpose']]

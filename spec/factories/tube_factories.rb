@@ -29,7 +29,7 @@ FactoryBot.define do
     state { 'pending' }
 
     # API V1 tube
-    factory :tube, class: Limber::Tube do
+    factory :tube, class: Tube do
       # with_has_many_associations 'aliquots'
       json_root { 'tube' }
       state { 'pending' }
@@ -117,6 +117,7 @@ FactoryBot.define do
       aliquots { create_list aliquot_factory, aliquot_count, library_state:, outer_request: }
       parents { [] }
       purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+      racked_tube { nil }
 
       siblings_count { 0 }
       sibling_default_state { 'passed' }
@@ -156,6 +157,7 @@ FactoryBot.define do
       asset._cached_relationship(:aliquots) { evaluator.aliquots || [] }
       asset._cached_relationship(:parents) { evaluator.parents }
       asset._cached_relationship(:receptacle) { evaluator.receptacle }
+      asset._cached_relationship(:racked_tube) { evaluator.racked_tube }
 
       if evaluator.custom_metadatum_collection
         asset._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }

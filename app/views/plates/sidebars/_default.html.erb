@@ -5,7 +5,7 @@
 
 <%= render 'labware/qc_data_upload' %>
 
-<%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+<%= card title: 'Suggested Actions', css_class: 'suggested-actions' do %>
   <% presenter.control_suggested_library_passing do %>
     <%= render 'work_completion_form', presenter: %>
   <% end %>
@@ -15,14 +15,16 @@
   <% end %>
 
   <% presenter.csv_file_links.each do |link_name, link_target| %>
-    <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+    <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
   <% end %>
 
   <% if presenter.robot? %>
     <h4 class="card-title mt-3">Robots</h4>
-    <% presenter.each_robot do |robot_id, robot_name| %>
-      <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block logged_in_only' %>
-    <% end %>
+    <div class="d-grid gap-2">
+      <% presenter.each_robot do |robot_id, robot_name| %>
+        <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg logged_in_only' %>
+      <% end %>
+    </div>
   <% else %>
     <%= simple_state_change_form(presenter) %>
   <% end %>
@@ -48,26 +50,34 @@
   </div>
 <% end %>
 
-<%= card title:'Other Actions', css_class: 'other-actions logged_in_only' do %>
-  <% if presenter.robot? %>
+<%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
+  <% if presenter.robot? && presenter.display_manual_transfer_button? %>
     <%= simple_state_change_form(presenter) %>
   <% end %>
 
-  <% presenter.control_additional_creation do %>
-    <%= render 'creation_dropdown', resource_type: 'plates', resources: presenter.compatible_plate_purposes %>
-    <%= render 'creation_dropdown', resource_type: 'tubes', resources: presenter.compatible_tube_purposes %>
-  <% end %>
+    <% presenter.control_additional_creation do %>
+      <%= render 'creation_dropdown', resource_type: 'plates', resources: presenter.compatible_plate_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tubes', resources: presenter.compatible_tube_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tube_racks', resources: presenter.compatible_tube_rack_purposes %>
+    <% end %>
 
   <% presenter.control_library_passing do %>
     <%= render 'work_completion_form', presenter: %>
   <% end %>
 
   <% if presenter.well_failing_applicable? %>
-    <button class='fail-wells'
-      data-toggle="collapse"
-      data-parent="#main-content"
-      href=".well-fail-toggle"
-      aria-controls="well-fail-toggle">Fail Wells</button>
+    <button class='fail-wells w-100 my-1'
+      data-bs-toggle="collapse"
+      data-bs-target="#labware-well-failing, #labware-summary"
+      aria-controls="labware-well-failing labware-summary">
+      Fail Wells</button>
+  <% end %>
+
+  <% if presenter.mark_under_represented_wells? %>
+    <button class='fail-wells w-100 my-1'
+      data-bs-toggle="collapse"
+      data-bs-target="#labware-well-marking, #labware-summary"
+      aria-controls="labware-well-marking">Mark Under Represented Wells</button>
   <% end %>
 
   <div id="plate-state">

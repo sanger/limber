@@ -16,7 +16,7 @@ FactoryBot.define do
     name { 'Plate Purpose' }
     creator_class { 'LabwareCreators::StampedPlate' }
     presenter_class { 'Presenters::StandardPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     default_printer_type { :plate_a }
     asset_type { 'plate' }
     label_class { 'Labels::PlateLabel' }
@@ -265,13 +265,11 @@ FactoryBot.define do
         {
           'Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {
-            }
+            'request_options' => {}
           },
           'Another Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {
-            }
+            'request_options' => {}
           }
         }
       end
@@ -279,18 +277,25 @@ FactoryBot.define do
 
     # Configuration for a plate split to tube racks purpose
     factory :plate_split_to_tube_racks_purpose_config do
+      asset_type { 'tube_rack' }
+      target { 'TubeRack' }
+      size { 96 }
+      type { 'TubeRack::Purpose' }
       creator_class do
         {
           name: 'LabwareCreators::PlateSplitToTubeRacks',
           args: {
-            child_seq_tube_purpose_name: 'Seq Child Purpose',
+            child_seq_tube_purpose_name: 'SEQ Tube Purpose',
             child_seq_tube_name_prefix: 'SEQ',
-            child_spare_tube_purpose_name: 'Spare Child Purpose',
-            child_spare_tube_name_prefix: 'SPR'
+            child_seq_tube_rack_purpose_name: 'SEQ TubeRack Purpose',
+            child_spare_tube_purpose_name: 'SPR Tube Purpose',
+            child_spare_tube_name_prefix: 'SPR',
+            child_spare_tube_rack_purpose_name: 'SPR TubeRack Purpose',
+            ancestor_stock_tube_purpose_name: 'Ancestor Tube Purpose'
           }
         }
       end
-      ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
+      presenter_class { 'Presenters::TubeRackPresenter' }
     end
 
     factory :blended_tube_purpose_config do
@@ -358,6 +363,12 @@ FactoryBot.define do
       end
     end
 
+    factory :purpose_config_with_manual_transfer_allowed_states do
+      transient { allowed_states { %w[started] } }
+      presenter_class { 'Presenters::MinimalPCRPlatePresenter' }
+      manual_transfer { { states: allowed_states } }
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
@@ -398,7 +409,7 @@ FactoryBot.define do
     asset_type { 'tube_rack' }
     default_printer_type { :tube_rack }
     presenter_class { 'Presenters::TubeRackPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     submission { {} }
     label_class { nil }
     printer_type { '96 Well Plate' }

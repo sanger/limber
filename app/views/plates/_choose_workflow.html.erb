@@ -1,5 +1,5 @@
 <%= vite_javascript_tag 'entrypoints/pages/choose_workflow.js', defer: true %>
-<%= card title:'Choose workflow', id: 'choose_workflow_card', css_class: 'choose-workflow logged_in_only' do %>
+<%= card title: 'Choose workflow', id: 'choose_workflow_card', css_class: 'choose-workflow logged_in_only' do %>
   <p class="lead">
     A new workflow can be created for this plate. Please choose a workflow to
     continue. This will build the necessary submissions in Sequencescape,
@@ -38,9 +38,9 @@
             <br />
             <% (1..submission.num_extra_barcodes).each do |num| %>
               <div class="form-group row">
-                <%= f.label "extra_barcodes_#{num}", "Barcode #{num}", class:"plate-label col-md-2" %>
-                <%= f.text_field :extra_barcodes, multiple: true, class: "form-control col-md-8",
-                                 id: "sequencescape_submission_extra_barcodes_#{num}" %>
+                <%= f.label "extra_barcodes_#{num}", "Barcode #{num}", class: 'plate-label col-md-2' %>
+                <%= f.text_field :extra_barcodes, multiple: true, class: 'form-control col-md-8',
+                                                  id: "sequencescape_submission_extra_barcodes_#{num}" %>
               </div>
             <% end %>
           <% end %>

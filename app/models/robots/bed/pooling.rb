@@ -38,7 +38,7 @@ module Robots::Bed
     def range
       round = states.index(labware.state)
       size = parents.count / states.count
-      (size * round...size * (round + 1))
+      ((size * round)...(size * (round + 1)))
     end
   end
 end

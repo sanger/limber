@@ -1,21 +1,14 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import BlendedTube from '@/javascript/blended-tube/components/BlendedTube.vue'
 import mockApi from '@/javascript/test_support/mock_api.js'
 
-// create an extended `Vue` constructor
-import localVue from '@/javascript/test_support/base_vue.js'
-
-import MockAdapter from 'axios-mock-adapter'
-import flushPromises from 'flush-promises' // Add this import for handling asynchronous updates
-
 describe('BlendedTube.vue', () => {
   let wrapper
-  let mockAxios
-  let mockLocation
+  let mockLocation = {}
 
   const wrapperFactory = (options = {}) => {
-    return shallowMount(BlendedTube, {
+    return mount(BlendedTube, {
       propsData: {
         childPurposeUuid: 'child-purpose-uuid',
         childPurposeName: 'Child Purpose',
@@ -26,34 +19,26 @@ describe('BlendedTube.vue', () => {
         api: mockApi().devour,
         ...options,
       },
-      localVue,
     })
   }
 
   beforeEach(() => {
-    mockAxios = new MockAdapter(localVue.prototype.$axios)
-    mockLocation = { href: '' } // Initialize mock location object
     wrapper = wrapperFactory()
   })
 
-  afterEach(() => {
-    mockAxios.restore()
-    wrapper.destroy()
-  })
-
   it('renders correctly with required props', () => {
-    expect(wrapper.find('b-card-stub').attributes('header')).toBe('Blend Tubes:')
-    expect(wrapper.find('b-button-stub').text()).toBe('Blend')
+    expect(wrapper.find('.card-header').text()).toBe('Blend Tubes:')
+    expect(wrapper.find('button').text()).toBe('Blend')
   })
 
   it('disables the Blend button when pairing is invalid', async () => {
     await wrapper.setData({ isPairingValid: false })
-    expect(wrapper.find('b-button-stub').attributes('disabled')).toBe('true')
+    expect(wrapper.find('button').isDisabled()).toBe(true)
   })
 
   it('enables the Blend button when pairing is valid', async () => {
     await wrapper.setData({ isPairingValid: true })
-    expect(wrapper.find('b-button-stub').attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('button').isDisabled()).toBe(false)
   })
 
   it('updates tube pairing state on updateTubePair method call', async () => {
@@ -68,7 +53,8 @@ describe('BlendedTube.vue', () => {
   })
 
   it('handles createTube method successfully', async () => {
-    mockAxios.onPost('/api/tubes').reply(201, { message: 'Success', redirect: '/new-url' })
+    mockLocation.href = null
+    wrapper.vm.$axios = vi.fn().mockResolvedValue({ data: { message: 'Success', redirect: '/new-url' } })
 
     wrapper.vm.parentTubes = [{ uuid: 'tube-uuid-1' }, { uuid: 'tube-uuid-2' }]
     wrapper.vm.isPairingValid = true
@@ -80,10 +66,26 @@ describe('BlendedTube.vue', () => {
     await flushPromises() // Wait for all promises to resolve
     expect(wrapper.vm.progressMessage).toBe('Success')
     expect(mockLocation.href).toBe('/new-url') // Assert the mock location object
+    expect(wrapper.vm.$axios).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.$axios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: 'post',
+        url: '/api/tubes',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: {
+          tube: {
+            parent_uuid: wrapper.vm.parentTubes[0].uuid,
+            purpose_uuid: wrapper.vm.childPurposeUuid,
+            transfers: wrapper.vm.apiTransfers(),
+          },
+        },
+      }),
+    )
   })
 
   it('handles createTube method failure', async () => {
-    mockAxios.onPost('/api/tubes').reply(500, { message: 'Error' })
+    mockLocation.href = null
+    wrapper.vm.$axios = vi.fn().mockRejectedValue({ data: { message: 'Error' } })
 
     wrapper.vm.parentTubes = [{ uuid: 'tube-uuid-1' }, { uuid: 'tube-uuid-2' }]
     wrapper.vm.isPairingValid = true
@@ -94,5 +96,20 @@ describe('BlendedTube.vue', () => {
     await flushPromises() // Wait for all promises to resolve
 
     expect(wrapper.vm.loading).toBe(false) // Ensure loading is reset to false after failure
+    expect(wrapper.vm.$axios).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.$axios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: 'post',
+        url: '/api/tubes',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: {
+          tube: {
+            parent_uuid: wrapper.vm.parentTubes[0].uuid,
+            purpose_uuid: wrapper.vm.childPurposeUuid,
+            transfers: wrapper.vm.apiTransfers(),
+          },
+        },
+      }),
+    )
   })
 })

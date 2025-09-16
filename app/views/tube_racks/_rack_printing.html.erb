@@ -1,6 +1,0 @@
-<%= card title: 'Print rack label' do %>
-  <%= barcode_printing_form(
-        redirection_url: limber_tube_rack_path(presenter.uuid),
-        labels: [presenter.label]
-  ) %>
-<% end %>

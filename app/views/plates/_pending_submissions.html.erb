@@ -1,6 +1,6 @@
 <%# presenter.submissions returns a JsonApiClient::Query::Builder at this point #%>
 <% if presenter.submissions.present? and presenter.submissions.size > 0 %>
-  <%= card title:'Submissions', css_class: 'submissions', without_block: true do %>
+  <%= card title: 'Submissions', css_class: 'submissions', without_block: true do %>
     <% if presenter.pending_submissions? %>
       <div class="card-body">
         <p class="lead">There are currently submissions being built, the page will refresh in

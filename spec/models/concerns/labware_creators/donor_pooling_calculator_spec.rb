@@ -13,7 +13,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
   let(:aliquot1) { create :v2_aliquot, request: request1 }
   let(:request1) { create :scrna_customer_request, request_metadata: request_metadata1 }
   let(:request_metadata1) { create :v2_request_metadata, cells_per_chip_well:, allowance_band: }
-  let(:cells_per_chip_well) { 90_000 }
+  let(:cells_per_chip_well) { 37_500 }
   let(:allowance_band) { '2 pool attempts, 2 counts' }
 
   describe '#number_of_cells_per_chip_well_from_request' do
@@ -24,8 +24,8 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
         expect do
           instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)
         end.to raise_error StandardError,
-                    'No request found for source well at A1, cannot fetch ' \
-                      'cells per chip well metadata for allowance band calculations'
+                           'No request found for source well at A1, cannot fetch ' \
+                           'cells per chip well metadata for allowance band calculations'
       end
     end
 
@@ -52,11 +52,6 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple aliquots in a source well' do
-      let(:aliquot2) { create :v2_aliquot, request: request2 }
-      let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-      let(:request_metadata2) { create :v2_request_metadata, cells_per_chip_well: }
-      let(:source_well) { create :v2_well, aliquots: [aliquot1, aliquot2] }
-
       it 'returns the number of cells per chip well from the first aliquot' do
         expect(instance_of_test_pooling_class.send(:number_of_cells_per_chip_well_from_request, pool)).to eq(
           cells_per_chip_well
@@ -73,8 +68,8 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
         expect do
           instance_of_test_pooling_class.send(:allowance_band_from_request, pool)
         end.to raise_error StandardError,
-                    'No request found for source well at A1, cannot fetch ' \
-                      'allowance band well metadata for allowance band calculations'
+                           'No request found for source well at A1, cannot fetch ' \
+                           'allowance band well metadata for allowance band calculations'
       end
     end
 
@@ -97,11 +92,6 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     end
 
     context 'when there are multiple aliquots in a source well' do
-      let(:aliquot2) { create :v2_aliquot, request: request2 }
-      let(:request2) { create :scrna_customer_request, request_metadata: request_metadata2 }
-      let(:request_metadata2) { create :v2_request_metadata, allowance_band: }
-      let(:source_well) { create :v2_well, aliquots: [aliquot1, aliquot2] }
-
       it 'returns the allowance_band from the first aliquot' do
         expect(instance_of_test_pooling_class.send(:allowance_band_from_request, pool)).to eq(allowance_band)
       end
@@ -112,10 +102,21 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     let(:count_of_samples_in_pool) { 10 }
     let(:num_cells_per_sample) { Rails.application.config.scrna_config[:required_number_of_cells_per_sample_in_pool] }
     let(:wastage_factor) { Rails.application.config.scrna_config[:wastage_factor] }
-    let(:expected_volume) { (count_of_samples_in_pool * num_cells_per_sample) * wastage_factor }
+    let(:expected_volume) do
+      (count_of_samples_in_pool * num_cells_per_sample) * wastage_factor.call(count_of_samples_in_pool)
+    end
 
     it 'calculates the value correctly' do
-      expect(instance_of_test_pooling_class.send(:calculate_total_cells_in_300ul, count_of_samples_in_pool)).to eq(
+      expect(described_class.calculate_total_cells_in_300ul(count_of_samples_in_pool)).to eq(
+        expected_volume
+      )
+    end
+
+    it 'calculates the value correctly when the wastage_factor is above 13' do
+      count_of_samples_in_pool = 15
+      expected_volume = count_of_samples_in_pool * num_cells_per_sample * wastage_factor.call(count_of_samples_in_pool)
+
+      expect(described_class.calculate_total_cells_in_300ul(count_of_samples_in_pool)).to eq(
         expected_volume
       )
     end
@@ -210,7 +211,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     let(:dest_well) { create :v2_well, uuid: 'dest_well_uuid', location: 'A1' }
     let(:dest_well_location) { dest_well.location }
 
-    context 'when the count of samples in pool is outside the range 5 to 8' do
+    context 'when the count of samples in pool is outside the range 5 to 10' do
       it 'stores the number of cells per chip well taken from the request on the destination well' do
         expect(instance_of_test_pooling_class).to receive(:create_new_well_metadata).with(
           Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key],
@@ -222,7 +223,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       end
     end
 
-    context 'when the count of samples in pool is within the range 5 to 8' do
+    context 'when the count of samples in pool is within the range 5 to 10' do
       # 3rd source well
       let(:source_well3) { create :v2_well, aliquots: [aliquot3] }
       let(:aliquot3) { create :v2_aliquot, request: request3 }
@@ -264,14 +265,14 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
         it 'errors when the allowance band and number of pools do not match the allowance table' do
           # Stub allowance band and chip_loading_volume to create conditions that do not match the allowance table
           allow(instance_of_test_pooling_class).to receive(:allowance_band_from_request).and_return(
-            '1 pool attempt, 2 counts'
+            '1 pool attempt, 1 count'
           )
           allow(instance_of_test_pooling_class).to receive(:calculate_chip_loading_volume).and_return(50)
 
           expect do
             instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
           end.to raise_error StandardError,
-                      'No allowance value found for allowance band 1 pool attempt, 2 counts and sample count 6'
+                             'No allowance value found for allowance band 1 pool attempt, 1 count and sample count 6'
         end
       end
 

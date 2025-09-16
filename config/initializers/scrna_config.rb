@@ -13,7 +13,11 @@ Rails.application.config.scrna_config = {
   # Number of cells required for each sample going into the pool
   required_number_of_cells_per_sample_in_pool: 30_000,
   # Factor accounting for wastage of material when transferring between labware
-  wastage_factor: 0.95,
+  wastage_factor: lambda { |number_of_samples_in_pool|
+    return 0.75 if number_of_samples_in_pool <= 13
+
+    0.6
+  },
   # Fixed wastage volume in microlitres
   wastage_volume: 5.0,
   # Desired concentration of cells per microlitre for chip loading
@@ -26,22 +30,36 @@ Rails.application.config.scrna_config = {
   # with values dependent on the Allowance band
   allowance_table: {
     '2 pool attempts, 2 counts' => {
-      5 => 41_428,
-      6 => 55_714,
-      7 => 70_000,
-      8 => 84_285
+      5 => 26_250,
+      6 => 37_500,
+      7 => 48_750,
+      8 => 60_000,
+      9 => 71_250,
+      10 => 82_500
     },
     '2 pool attempts, 1 count' => {
-      5 => 53_428,
-      6 => 67_714,
-      7 => 82_000,
-      8 => nil
+      5 => 38_250,
+      6 => 49_500,
+      7 => 60_750,
+      8 => 72_000,
+      9 => 83_250,
+      10 => nil
     },
     '1 pool attempt, 2 counts' => {
-      5 => 82_857,
+      5 => 52_500,
+      6 => 75_000,
+      7 => nil,
+      8 => nil,
+      9 => nil,
+      10 => nil
+    },
+    '1 pool attempt, 1 count' => {
+      5 => 76_500,
       6 => nil,
       7 => nil,
-      8 => nil
+      8 => nil,
+      9 => nil,
+      10 => nil
     }
   },
   # Default viability threshold when passing/failing samples (in percent)

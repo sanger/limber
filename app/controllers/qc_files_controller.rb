@@ -10,8 +10,19 @@ class QcFilesController < ApplicationController
 
   before_action :find_assets, only: %i[create index]
 
+  # Return a list of QC Files for the given asset, excluding the file contents
+  # Used by the front end to display a list of files
   def index
-    respond_to { |format| format.json { render json: { 'qc_files' => asset.qc_files.map { |q| qc_file_to_json(q) } } } }
+    # Re-request the asset with qc_files specifically told avoid including contents
+    # - we don't need them in a simple list of files anyway.
+    # This makes it easier to debug character encoding issues as it will
+    # allow you to at least figure out which file is causing the problem...
+    qc_files = Sequencescape::Api::V2::Labware # api/v2/labware?
+      .includes(:qc_files) # &include=qc_files
+      .select(qc_files: %i[filename size uuid created_at]) # &fields[qc_files]=filename,size,uuid,created_at
+      .find(uuid: asset.uuid) # &filter[uuid]=5ccc12e4-ff35-11ef-b7df-000000000000
+      .first.qc_files
+    respond_to { |format| format.json { render json: { 'qc_files' => qc_files.map { |q| qc_file_to_json(q) } } } }
   end
 
   def show
@@ -38,11 +49,11 @@ class QcFilesController < ApplicationController
   end
 
   def find_assets
-    %w[plate tube multiplexed_library_tube tube_rack].each do |klass|
-      next if params["limber_#{klass}_id"].nil?
+    %w[plate tube tube_rack].each do |klass|
+      next if params["#{klass}_id"].nil?
 
-      @asset_path = send(:"limber_#{klass}_path", params["limber_#{klass}_id"])
-      @asset = Sequencescape::Api::V2::Labware.find(uuid: params["limber_#{klass}_id"]).first
+      @asset_path = send(:"#{klass}_path", params["#{klass}_id"])
+      @asset = Sequencescape::Api::V2::Labware.find(uuid: params["#{klass}_id"]).first
       return true
     end
     false

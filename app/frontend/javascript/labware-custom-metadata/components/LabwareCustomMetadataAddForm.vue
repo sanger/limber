@@ -12,7 +12,7 @@
         <!-- only show input for fields which are defined in config -->
         <b-row>
           <b-col cols="10">
-            <b-form-input :id="item" v-model="form[item]" @update="onUpdate"></b-form-input>
+            <b-form-input :id="item" v-model="form[item]" @update:model-value="onUpdate"></b-form-input>
           </b-col>
           <b-col>
             <b-button
@@ -21,16 +21,17 @@
               title="Find other labware with the same metadata in Sequencescape"
               variant="outline-primary"
             >
-              <b-icon icon="search"></b-icon>
-              <b-icon font-scale="0.7" icon="box-arrow-up-right"></b-icon>
+              <BoxArrowUpRight color="#007aff" />
             </b-button>
           </b-col>
         </b-row>
       </b-form-group>
 
-      <b-button id="labware_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg" block>
-        {{ buttonText }}
-      </b-button>
+      <div class="d-grid">
+        <b-button id="labware_custom_metadata_submit_button" type="submit" :variant="buttonStyle" size="lg">
+          {{ buttonText }}
+        </b-button>
+      </div>
     </b-form>
   </div>
 </template>
@@ -48,9 +49,12 @@
 // onSubmit remove any fields that have no data
 // Send a patch or post request, depending whether metadata already exists
 // All metadata should be either created or overwrited
-
+import BoxArrowUpRight from '@/javascript/icons/BoxArrowUpRight.vue'
 export default {
   name: 'LabwareCustomMetadataAddForm',
+  components: {
+    BoxArrowUpRight,
+  },
   props: {
     labwareId: {
       type: String,

@@ -40,7 +40,7 @@ module LabwareCreators
 
       msg =
         'No wells in the parent plate have pending library preparation requests with the expected library type. ' \
-          'Check your Submission.'
+        'Check your Submission.'
 
       errors.add(:parent, msg)
     end

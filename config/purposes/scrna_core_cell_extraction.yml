@@ -67,9 +67,6 @@ LRC PBMC Bank:
   :file_links:
     - name: 'Download Hamilton LRC Blood Bank plate to LRC PBMC Bank plate CSV'
       id: hamilton_lrc_blood_bank_to_lrc_pbmc_bank
-    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
-      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
-      states: [passed, qc_complete]
     - name: 'Download PBMC Bank Tubes Content Report'
       id: pbmc_bank_tubes_content_report
       states: [passed, qc_complete]
@@ -86,34 +83,75 @@ LRC PBMC Bank:
       units: 'cells/ml'
       default_threshold: 650000
       decimal_places: 0
-# FluidX tube for freezing and output of cell banking protocol
-LRC Bank Seq:
-  :asset_type: tube
-  :target: SampleTube
-  :type: Tube::Purpose
+# Tube rack for storing LRC Bank Seq tubes
+LRC TR Bank Seq:
+  :asset_type: tube_rack
+  :target: TubeRack
+  :size: 96
+  :type: TubeRack::Purpose
   :creator_class:
     name: LabwareCreators::PlateSplitToTubeRacks
     args: &fluidx_tube_creation_config
       child_seq_tube_purpose_name: LRC Bank Seq
       child_seq_tube_name_prefix: SEQ
+      child_seq_tube_rack_purpose_name: LRC TR Bank Seq
       child_spare_tube_purpose_name: LRC Bank Spare
       child_spare_tube_name_prefix: SPR
-  :ancestor_stock_tube_purpose_name: LRC Blood Vac
-  :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+      child_spare_tube_rack_purpose_name: LRC TR Bank Spare
+      ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :presenter_class: Presenters::TubeRackPresenter
+  # This needs to be the AutomaticTubeRackStateChanger.
+  # But, the work-completion for the AutomaticTubeRackStateChanger is not yet
+  # fixed for TubeRacks (this needs to be done in Sequencescape). So, for now,
+  # we are using the TubeRackStateChanger for Manual Transfers.
+  # See: https://github.com/sanger/limber/issues/2074
+  :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
   :work_completion_request_type: 'limber_scrna_core_cell_extraction'
+  :file_links:
+    - name: Download Racked Tube Concentrations (ng/ul) CSV
+      id: tube_rack_concentrations_ngul
+    - name: Download Racked Tube Concentrations (nM) CSV
+      id: tube_rack_concentrations_nm
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
+# Tube rack for storing LRC Bank Spare tubes
+LRC TR Bank Spare:
+  :asset_type: tube_rack
+  :target: TubeRack
+  :size: 96
+  :type: TubeRack::Purpose
+  :creator_class:
+    name: LabwareCreators::PlateSplitToTubeRacks
+    args: *fluidx_tube_creation_config
+  :presenter_class: Presenters::TubeRackPresenter
+  # This needs to be the AutomaticTubeRackStateChanger.
+  # But, the work-completion for the AutomaticTubeRackStateChanger is not yet
+  # fixed for TubeRacks (this needs to be done in Sequencescape). So, for now,
+  # we are using the TubeRackStateChanger for Manual Transfers.
+  # See: https://github.com/sanger/limber/issues/2074
+  :state_changer_class: StateChangers::AutomaticTubeRackStateChanger
+  :work_completion_request_type: 'limber_scrna_core_cell_extraction'
+  :file_links:
+    - name: Download Tube Rack Concentrations (ng/ul) CSV
+      id: tube_rack_concentrations_ngul
+    - name: Download Racked Tube Concentrations (nM) CSV
+      id: tube_rack_concentrations_nm
+    - name: 'Download Hamilton LRC PBMC Bank plate to LRC Bank Seq and Spare tubes CSV'
+      id: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
+# FluidX tube for freezing and output of cell banking protocol
+LRC Bank Seq:
+  :asset_type: tube
+  :target: SampleTube
+  :type: Tube::Purpose
+  :creator_class: LabwareCreators::Uncreatable
+  :presenter_class: Presenters::SimpleTubePresenter
 # FluidX tube for freezing and output of cell banking protocol
 LRC Bank Spare:
   :asset_type: tube
   :target: SampleTube
   :type: Tube::Purpose
-  :creator_class:
-    name: LabwareCreators::PlateSplitToTubeRacks
-    args: *fluidx_tube_creation_config
-  :ancestor_stock_tube_purpose_name: LRC Blood Vac
+  :creator_class: LabwareCreators::Uncreatable
   :presenter_class: Presenters::SimpleTubePresenter
-  :state_changer_class: StateChangers::AutomaticTubeStateChanger
-  :work_completion_request_type: 'limber_scrna_core_cell_extraction'
 # FluidX tube frozen input from faculty tube, created by manifest
 LRC Bank Input:
   :asset_type: tube

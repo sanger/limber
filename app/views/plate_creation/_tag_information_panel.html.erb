@@ -1,4 +1,4 @@
-<div id="<%= panel_type.downcase.tr(' ','-') %>-info" class="card">
+<div id="<%= panel_type.downcase.tr(' ', '-') %>-info" class="card">
   <div class='qc_validation_report'></div>
   <h3 class='card-header'><%= panel_type.titleize %> Information</h3>
   <div class="card-body">
@@ -11,8 +11,8 @@
       <dd class="col-sm-9 state">...</dd>
     </dl>
   </div>
-  <%= form.fields_for :"#{ panel_type.downcase.tr(' ','_')}" do |qcable| %>
-    <%= qcable.hidden_field :asset_uuid,    required: required, class: 'asset_uuid' %>
+  <%= form.fields_for :"#{panel_type.downcase.tr(' ', '_')}" do |qcable| %>
+    <%= qcable.hidden_field :asset_uuid, required: required, class: 'asset_uuid' %>
     <%= qcable.hidden_field :template_uuid, required: required, class: 'template_uuid' %>
   <% end %>
 </div>

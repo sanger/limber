@@ -77,7 +77,7 @@ header.limber-header {
   }
   @extend .navbar-text;
   @extend .small;
-  @extend .mr-2;
+  @extend .me-2;
 }
 
 // Set the background color of the navbar based on the environment
@@ -105,7 +105,7 @@ header.limber-header {
     }
     .btn-logout {
       @extend .btn-success;
-      border-color: darken($training, 5%) !important;
+      border-color: shade-color($training, 5%) !important;
     }
   }
 }
@@ -118,7 +118,7 @@ header.limber-header {
     }
     .btn-logout {
       @extend .btn-danger;
-      border-color: darken($staging, 5%) !important;
+      border-color: shade-color($staging, 5%) !important;
     }
   }
 }
@@ -170,27 +170,25 @@ button#btnGroupWip {
   @extend .btn-primary;
   @extend .dropdown-toggle;
   @extend .btn-lg;
-  @extend .btn-block;
 }
 
 #btnPipelinesOverview {
   @extend .btn;
   @extend .btn-primary;
   @extend .btn-lg;
-  @extend .btn-block;
 }
 
 .btn-upload {
   @extend .btn;
   @extend .btn-success;
   @extend .btn-lg;
-  @extend .btn-block;
+
+  width: 100%;
 }
 
 nav.inbox-list,
 nav.robots-list {
   @extend .dropdown-menu;
-  @extend .btn-block;
 
   a {
     @extend .dropdown-item;
@@ -203,7 +201,7 @@ nav.robots-list {
   font-style: oblique;
   font-stretch: ultra-condensed;
   font-weight: lighter;
-  @extend .mr-2;
+  @extend .me-2;
 }
 
 .btn-logout {
@@ -227,10 +225,6 @@ nav.robots-list {
 .plate-view-control {
   margin: 18px 0;
 }
-// Keeps the labels in the bed scanner the same width.
-.bed-scanner label {
-  width: 15%;
-}
 
 // Bootstrap alerts have a bottom margin of 1rem, which looks
 // a little silly in our card stack.
@@ -244,6 +238,8 @@ nav.robots-list {
 .content-secondary,
 .content-main {
   @extend .mt-3;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .content-main {
@@ -261,12 +257,15 @@ nav.robots-list {
 .robots-button,
 .create-plate-button,
 .create-tube-button,
+.create-tube_rack-button,
 .csv-link,
 .create-submission-button {
   @extend .btn;
   @extend .btn-lg;
-  @extend .btn-block;
   @extend .mb-2;
+
+  width: 100%;
+  display: block;
 }
 
 .choose-workflow {
@@ -278,6 +277,7 @@ nav.robots-list {
 .other-actions {
   .work-completion-button,
   .create-plate-button,
+  .create-tube_rack-button,
   .create-tube-button {
     @extend .btn-secondary;
   }
@@ -285,7 +285,8 @@ nav.robots-list {
 .suggested-actions {
   .work-completion-button,
   .create-plate-button,
-  .create-tube-button {
+  .create-tube-button,
+  .create-tube_rack-button {
     @extend .btn-success;
   }
 }
@@ -308,7 +309,7 @@ nav.robots-list {
     @extend .col-3;
   }
   select {
-    @extend .custom-select;
+    @extend .form-select;
     @extend .col-9;
   }
 }
@@ -327,13 +328,35 @@ dl#samples-information {
   }
 }
 
-.well {
+#well-failures .well {
   // Format well failing interface
   input[type='checkbox'] {
     display: none;
   }
   input[type='checkbox']:checked + label .aliquot {
     background-color: red;
+  }
+  input[type='checkbox']:disabled + label .aliquot {
+    opacity: 0.5;
+  }
+
+  label {
+    font-size: small;
+  }
+
+  .pool-print-information {
+    display: none;
+  }
+}
+
+// Add this for mark well mode
+#well-mark .well {
+  // Format well marking interface
+  input[type='checkbox'] {
+    display: none;
+  }
+  input[type='checkbox']:checked + label .aliquot {
+    background-color: #ff9100;
   }
   input[type='checkbox']:disabled + label .aliquot {
     opacity: 0.5;
@@ -364,9 +387,8 @@ dl#samples-information {
   li.state-passed {
     @extend .list-group-item-success;
   }
-  // TODO: Update to primary when bootstrap updated
-  li.state-qc_completed {
-    @extend .list-group-item-success;
+  li.state-qc_complete {
+    @extend .list-group-item-primary;
   }
   li.state-cancelled {
     @extend .list-group-item-danger;
@@ -388,24 +410,30 @@ dl#samples-information {
   @extend.badge;
 }
 .state-badge.pending {
-  @extend.badge-warning;
+  @extend.bg-warning;
 }
 .state-badge.started,
 .state-badge.process_1,
 .state-badge.process_2 {
-  @extend.badge-info;
+  @extend.bg-info;
 }
 .state-badge.passed {
-  @extend.badge-success;
+  @extend.bg-success;
 }
-.state-badge.qc_completed {
-  @extend.badge-success;
+.state-badge.qc_complete {
+  @extend.bg-primary;
 }
 .state-badge.cancelled {
-  @extend .list-group-item-danger;
+  @extend .bg-danger;
 }
 .state-badge.failed {
-  @extend .list-group-item-danger;
+  @extend .bg-danger;
+}
+.state-badge.mixed {
+  @extend.bg-secondary;
+}
+.state-badge.empty {
+  @extend.bg-dark;
 }
 
 .flash {
@@ -464,7 +492,6 @@ dl#samples-information {
 .other-actions {
   div[role='group'] {
     @extend .btn-group;
-    @extend .btn-block;
     button {
       @extend .dropdown-toggle;
     }
@@ -472,7 +499,6 @@ dl#samples-information {
 
   button {
     @extend .btn;
-    @extend .btn-block;
     @extend .btn-lg;
     @extend .btn-secondary;
   }
@@ -489,8 +515,26 @@ dl#samples-information {
   }
 }
 
-form + .btn-block {
-  margin-top: 0.5rem;
+// Link when text has been marked as dark, generally on light backgrounds
+.text-dark a {
+  @extend .link-dark;
+  @extend .text-decoration-underline;
+  @extend .link-underline-dark;
+  @extend .link-underline-opacity-50;
+  @extend .link-underline-opacity-100-hover;
+}
+
+// Classes deprecated during bootstrap v4 -> v5
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-row {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
 }
 
 // Tubes borrow bootstrap styling. We could use the styles directly,
@@ -520,9 +564,9 @@ form + .btn-block {
 
     .pool-size {
       @extend .badge;
-      @extend .badge-info;
-      @extend .badge-pill;
-      @extend .ml-2;
+      @extend .bg-info;
+      @extend .rounded-pill;
+      @extend .ms-2;
     }
     .pool-info {
       @extend .text-muted;
@@ -580,9 +624,16 @@ footer.version-info {
 
   h3 {
     @extend .col-xl-3;
+    white-space: nowrap;
+    margin-bottom: 10px;
   }
   ul {
     @extend .col-xl-9;
+  }
+  th,
+  td {
+    text-align: center;
+    vertical-align: middle;
   }
 }
 
@@ -674,10 +725,6 @@ div.good-labware {
   .form-control {
     @extend .is-valid;
   }
-}
-
-.ui-field-contain label.bed-label {
-  width: 4em;
 }
 
 .bad_bed h3,

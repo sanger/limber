@@ -66,6 +66,7 @@ class LabwareCreators::WellFilter
     @well_transfers ||=
       wells.each_with_object([]) do |well, transfers|
         next if well.empty? || well.failed?
+
         transfers << [well, filter_requests(well.active_requests, well)]
       end
   end

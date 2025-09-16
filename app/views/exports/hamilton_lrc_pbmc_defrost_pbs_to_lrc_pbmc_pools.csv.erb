@@ -24,7 +24,6 @@
   minimum_sample_volume = scrna_config[:minimum_sample_volume]
   minimum_resuspension_volume = scrna_config[:minimum_resuspension_volume]
   millilitres_to_microlitres = scrna_config[:millilitres_to_microlitres]
-  wastage_factor = scrna_config[:wastage_factor]
   desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
 
   # Make a mapping { src_barcode => { src_location => src_well } }
@@ -62,7 +61,7 @@
   rows_array = transfer_request_data.map do |data|
     samples_in_pool = samples_by_dest_well[data[3]].count
     required_number_of_cells_per_sample_in_pool = data[5]
-    resuspension_volume = [(samples_in_pool * required_number_of_cells_per_sample_in_pool * wastage_factor) / desired_chip_loading_concentration, minimum_resuspension_volume].max
+    resuspension_volume = [(LabwareCreators::DonorPoolingCalculator.calculate_total_cells_in_300ul(samples_in_pool)) / desired_chip_loading_concentration, minimum_resuspension_volume].max
     # Replace required number of cells with resuspension volume
     data[5] = '%0.1f' % resuspension_volume
     data

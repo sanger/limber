@@ -3,32 +3,26 @@
 # @title Purposes yaml files
 -->
 
-# Pipelines yaml files
+# Purposes yaml files
 
-There are a number of `*.yml` files located in `config/purposes/` these
-configure display and behaviour of labware according to their purpose as they
-pass through a pipeline.
+There are a number of `*.yml` files located in `config/purposes/`. These files define the creation and display behaviour of the instances of labware made with these purposes, so they do the correct things for that step in their pipeline.
 
-Limber automatically loads all `.yml` files within this directory into the
-{Settings} when you run `rake config:generate`. It is likely this will be
-refactored to use a PurposeConfig object in future, to bring it more in line
-with the {Pipeline} behaviour.
+The purpose configurations do not describe how they are connected together to make a pipeline, that is the job of the `config/pipelines/` files.
+Note that all purposes configured here should also have an entry in the relationships section of one of the pipeline yaml files. Without this relationship link, Limber will not be able to determine any suggested actions for labwares created with this purpose.
 
-In addition, Limber will also register purposes in Sequencescape upon running
-`rake config:generate`. This process is idempotent (ie. will only register
-each purpose once), although is subject to race conditions if run concurrently.
-`rake config:generate` is run automatically on deployment, and is run in series
+Limber automatically loads all `.yml` files within this directory into the {Settings} when you run `rake config:generate`. It is likely this will be refactored to use a PurposeConfig object in future, to bring it more in line with the {Pipeline} behaviour.
+
+In addition, Limber will also register purposes in Sequencescape upon running `rake config:generate`. This process is idempotent (ie. will only register each purpose once), although is subject to race conditions if run concurrently.
+The `rake config:generate` task is run automatically on deployment, and is run in series
 on each host to avoid the race conditions.
 
-Filenames, and the grouping of purposes within files, have no functional
-relevance, and are intended for organizational reasons.
+Filenames, and the grouping of purposes within files, have no functional relevance, and are intended for organizational reasons. For example, the purposes relating to a specific pipeline are typically grouped together in the same file, to make development and deployment easier.
 
-Loading of yaml files is handled by {ConfigLoader::PurposesLoader} which
-loads all files and detects potential duplicates.
+Loading of yaml files is handled by {ConfigLoader::PurposesLoader} which loads all files and detects potential duplicates.
 
-> **TIP**
-> It is suggested that when you create a new pipeline, you create a purposes.yml to match.
-> However, purposes can be shared between different pipelines.
+> [TIP]
+> - It is suggested that when you create a new pipeline, you create a `purposes.yml` file to match that pipeline.
+> - Be aware that purposes can be shared between different pipelines. This is valid, but means you must be more careful using these purposes in pipeline configurations and have explicit filters.
 
 ## An example file
 
@@ -95,26 +89,30 @@ The key will be used to set the {Sequencescape::Api::V2::Purpose#name}, this is
 displayed extensively throughout Limber and Sequencescape, and also appears on
 the plate label. Due to space constraints on labels, it is a good idea if
 purpose names are kept short. This key is also used to identify plate purposes
-in the {file:docs/pipelines_yaml_files.md pipeline configuration}.
+in the pipeline configuration.
+See [`docs/pipelines_yaml_files.md`](./pipelines_yaml_files.md)
+
+Recently we have taken to prefixing purpose keys with a short 3 or 4 character pipeline identifier, to more easily see what pipeline a purpose belongs to. This helps to keep the purposes unique, whilst still using common naming for similar steps in different pipelines. The prefix usually also starts with an 'L' to denote a Limber pipeline.
+e.g. LPL1 PCR XP and LPL2 PCR XP for similar steps in two pipelines.
 
 The values in turn are used to describe each {Sequencescape::Api::V2::Purpose}.
-The valid options are detailed in Purpose below.
+The valid options are detailed in the following section.
 
 ### Purpose
 
 Each purpose configures a name, and set of behaviours. As discussed above, the
 key is a unique value, which gets used to set the pipeline's name. The example
-below shows a plate purpose called 'Example plate'.
+below shows a plate purpose called 'LPL Example'.
 
 ```yaml
-Example plate:
+LPL Example:
   :asset_type: plate
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
   :size: 96
   :presenter_class: Presenters::StandardPresenter
-  :state_changer_class: StateChangers::DefaultStateChanger
+  :state_changer_class: StateChangers::PlateStateChanger
   :creator_class: LabwareCreators::TaggedPlate
   :default_printer_type: :plate_a
 ```
@@ -125,7 +123,7 @@ symbols, not strings.
 #### :asset_type
 
 **[required]**
-Indicates the type of labware, can be either `plate` or `tube`.
+Indicates the type of labware, can be either `plate`, `tube` or `tube_rack`.
 
 ```yaml
 :asset_type: plate
@@ -149,7 +147,7 @@ Default: `false`
 Boolean, indicates that the plate has the input_plate flag set
 in Sequencescape. Usually only true for the first plate in the pipeline. Also
 used to determine if the plate shows in the 'New Input Plates' inbox, and to
-determine which barcode gets shown on downstream ancestors
+determine which barcode gets shown on downstream ancestors.
 
 ```yaml
 :input_plate: false
@@ -173,9 +171,10 @@ Default: `false`
 
 #### :size
 
-**(plate only)**
+**(plate and tube rack)**
 Integer, passed to Sequencescape, specifies the number of wells
-on the plate. Assumes a 3:2 shape. Common values are 96, 384.
+on the plate. Assumes a 3:2 shape. Common values are 96, 384. Or
+number of tubes in the tube rack. Common values 48, 96.
 
 Default: 96
 
@@ -221,7 +220,8 @@ different stages or ensure tag information gets shown.
 
 If you don't need any special behaviour, the defaults should be just fine.
 
-{file:docs/presenters.md Full list of presenters and their behaviour}
+Description of presenters and their behaviour:
+See [`docs/presenters.md`](./presenters.md)
 
 ```yaml
 :presenter_class: Presenters::StockPlatePresenter
@@ -231,6 +231,8 @@ Default (plate): `Presenters::StandardPresenter`
 
 Default (tube): `Presenters::SimpleTubePresenter`
 
+Default (tube_rack): `Presenters::TubeRackPresenter`
+
 #### :state_changer_class
 
 String, indicates which {StateChangers state changer} to use for the given
@@ -239,15 +241,36 @@ purpose. State changers are used on updating labware state, either via a
 {LabwareController#update}. In the vast majority of cases this can be left as
 the default option.
 
-Valid options are subclasses of {StateChangers::DefaultStateChanger}.
-
-{file:docs/state_changers.md Full list of state changers and their behaviour}
+Valid options are subclasses of {StateChangers}.
+See `app/models/state_changers.rb`
 
 ```yaml
-:state_changer_class: StateChangers::DefaultStateChanger
+:state_changer_class: StateChangers::PlateStateChanger
+```
+There are variants for different types of Labwares (plates, tubes and tube racks).
+And there are automatic versions of each, these are used when you want to automatically complete the related submission requests when you change the state.
+
+Hierarchy:
+- {StateChangers::BaseStateChanger}
+  - {StateChangers::PlateStateChanger}
+    - {StateChangers::AutomaticPlateStateChanger} [includes AutomaticBehaviour]
+  - {StateChangers::TubeRackStateChanger}
+    - {StateChangers::AutomaticTubeRackStateChanger} [includes AutomaticBehaviour]
+  - {StateChangers::TubeStateChanger}
+    - {StateChangers::AutomaticTubeStateChanger} [includes AutomaticBehaviour]
+
+
+#### :work_completion_request_type
+
+Optional line used in combination with the state_changer_class which applies a filter that limits the state change to complete (pass) only those requests with the supplied key. It is prudent to include this line to prevent completion of the wrong requests by accident.
+
+The request type key will be the same key used in the pipelines filter, which is in turn the same key used for the submission template for the portion of the pipeline being completed.
+
+```yaml
+:work_completion_request_type: limber_targeted_nanoseq_isc_prep
 ```
 
-Default: `StateChangers::DefaultStateChanger`
+This is used instead of the manual 'Charge and Pass' button to automatically close a submission at the end of a pipeline section. e.g. it might be used to  close off the sample preparation part of a pipeline before beginning the library prep section.
 
 #### :creator_class
 
@@ -256,6 +279,41 @@ purpose. {LabwareCreators} are the home of a significant proportion of Limber's
 business logic, and determine the way in which labware with this particular
 purpose will be created from its parent.
 
+If you want to have purpose configuration parameters that are used in the labware creator, there are two ways to include these in the purpose config yaml:
+
+As arguments under the labware creator line (note the name is specifically defined then the arguments). The main advantage of this method is they are kept together with the creator_class section of the yaml, so you know what they apply to:
+e.g.
+```yaml
+:creator_class:
+    name: LabwareCreators::MyLabwareCreator
+    args:
+      default_volume: 25
+      max_volume: 100
+```
+These can be retrieved in the labware creator code using dig:
+e.g.
+```code
+def default_volume
+  purpose_config.dig(:creator_class, :args, :default_volume)
+end
+```
+
+Alternatively, you can put the parameters anywhere in the purpose yaml. This is valid but perhaps harder to read as not clear they are used by the labware creator class:
+e.g.
+```yaml
+:creator_class: LabwareCreators::MyLabwareCreator
+:default_volume: 25
+:max_volume: 100
+```
+
+These can be retrieved in the labware creator code using fetch:
+e.g.
+```code
+def default_volume
+  purpose_config.fetch(:default_volume)
+end
+```
+
 The default plate creator {LabwareCreators::StampedPlate} handles the transfer
 of all wells from the parent plate to the new child plate. Failed and cancelled
 wells are not transferred.
@@ -263,7 +321,8 @@ wells are not transferred.
 The default tube creator {LabwareCreators::TubeFromTube} handles the transfer
 of all material from the parent tube to the new child tube.
 
-{file:docs/creators.md Full list of creators and their behaviour}
+Description of labware creators and their behaviours:
+See [`docs/creators.md`](./creators.md)
 
 ```yaml
 :creator_class: LabwareCreators::TaggedPlate
@@ -272,6 +331,23 @@ of all material from the parent tube to the new child tube.
 Default (plate): `LabwareCreators::StampedPlate`
 
 Default (tube): `LabwareCreators::TubeFromTube`
+
+#### :custom_metadata_fields
+
+List of custom metadata fields for which you want to allow the user to enter values for on this labware. This will appear as entry fields on the right of the GUI on the labware view page.
+
+```yaml
+:custom_metadata_fields:
+    - My Custom Field 1
+    - My Custom Field 2
+```
+
+See `app/views/plates/sidebars/_default.html.erb`
+and `app/views/tubes/sidebars/_default.html.erb`
+where there is a card for 'Adding Custom Metadata'.
+
+This is using VueJS to write the metadata values to the Sequencescape database, see:
+`app/frontend/javascript/labware-custom-metadata/components/*`
 
 #### :default_printer_type
 
@@ -330,6 +406,9 @@ Default (Plate): [{ name: 'Download Concentration (nM) CSV', id: 'concentrations
 
 Default (Tube): []
 
+See [`docs/exports_files.md`](./exports_files.md) for more information on exports.
+See [`docs/exports_yaml_files.md`](./exports_yaml_files.md) for more details on the config yaml file for exports.
+
 #### :csv_template
 
 String, either `'show_extended'`, `'show'` or leave undefined.
@@ -349,11 +428,7 @@ Default: nil.
 
 #### :alternative_workline_identifier
 
-This attribute defines this plate purpose
-as an alternative labware that could be referred as a workline identifier
-while printing the barcode for our current plate barcode. This could be apply
-to distinguish between different workflows for plates when all of them have in
-common the same stock plate (RT ticket #683047)
+This attribute defines this plate purpose as an alternative labware that could be referred as a workline identifier while printing the barcode for our current plate barcode. This could be apply to distinguish between different workflows for plates when all of them have in common the same stock plate (RT ticket #683047)
 
 ```yaml
 :alternative_workline_identifier: LB Lib PCR-XP
@@ -363,7 +438,7 @@ common the same stock plate (RT ticket #683047)
 
 String, used to select an alternative {Labels::Base label} template, such as for
 printing QC labels. A list of valid label templates can be found in
-{file:config/label_templates.yml}
+[`config/label_templates.yml`](../config/label_templates.yml)
 
 A label template is a configuration that combines a {Labels::Base label class},
 which describes the specific fields (barcode, date, user, etc...) which will be
@@ -371,7 +446,8 @@ displayed on a Plate/Tube label, and a print my barcode template, which
 describes how those fields are physically laid out on the label.
 
 If unspecified, falls back on the default label template for the given printer type
-specified in the defaults_by_printer_type section in {file:config/label_templates.yml}.
+specified in the defaults_by_printer_type section.
+See [`config/label_templates.yml`](../config/label_templates.yml)
 
 ```yaml
 :label_template: plate_xp

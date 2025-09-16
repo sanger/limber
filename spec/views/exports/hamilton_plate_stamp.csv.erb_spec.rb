@@ -8,7 +8,6 @@ RSpec.describe 'exports/hamilton_plate_stamp.csv.erb' do
 
     let(:source_well_a1) { create(:v2_well, location: 'A1') }
     let(:source_well_b1) { create(:v2_well, location: 'B1') }
-    let(:source_labware) { create(:v2_plate, wells: [source_well_a1, source_well_b1], barcode_number: 1) }
 
     let(:dest_well_a1) do
       create(

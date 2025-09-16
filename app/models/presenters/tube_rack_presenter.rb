@@ -6,6 +6,9 @@ module Presenters
   # rack presenters based on the tubes within.
   class TubeRackPresenter
     include Presenters::Presenter
+    include Presenters::RobotControlled
+    include Presenters::Statemachine::Standard
+    include Presenters::CreationBehaviour
     include TubeRackWalking
 
     self.summary_partial = 'tube_racks/summaries/default'
@@ -20,19 +23,8 @@ module Presenters
 
     delegate_missing_to :labware
 
-    # Returns an augmented state of the tube rack.
-    # All states take precedence over canceled and failed (in that order or priority)
-    # however if we still have a mixed state after that, we display it as such.
-    def state
-      states = all_tubes.pluck(:state).uniq
-      return states.first if states.one?
-
-      %w[cancelled failed].each do |filter|
-        states.delete(filter)
-        return states.first if states.one?
-      end
-      'mixed'
-    end
+    # Purpose, state and barcode are delegated to the tube rack.
+    delegate :purpose, :state, :human_barcode, to: :labware
 
     def priority
       all_tubes.map(&:priority).max
@@ -47,20 +39,12 @@ module Presenters
       false
     end
 
-    def label
-      Labels::TubeRackLabel.new(labware)
-    end
-
-    def tube_labels
-      all_tubes.map { |tube| Labels::TubeLabel.new(tube) }
-    end
-
     def csv_file_links
       purpose_config
         .fetch(:file_links, [])
         .select { |link| can_be_enabled?(link&.states) }
         .map do |link|
-          [link.name, [:limber_tube_rack, :export, { id: link.id, limber_tube_rack_id: human_barcode, format: :csv }]]
+          [link.name, [:tube_rack, :tube_racks_export, { id: link.id, tube_rack_id: uuid, format: :csv }]]
         end
     end
 

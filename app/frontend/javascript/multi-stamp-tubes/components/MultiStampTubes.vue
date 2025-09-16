@@ -33,13 +33,13 @@
             @change="updateTube(i, $event)"
           />
         </b-form-group>
-        <b-alert :show="transfersError !== ''" variant="danger">
+        <b-alert :model-value="transfersError !== ''" variant="danger">
           {{ transfersError }}
         </b-alert>
         <component
           :is="transfersCreatorComponent"
           :valid-transfers="validTransfers"
-          @change="transfersCreatorObj = $event"
+          @update:model-value="transfersCreatorObj = $event"
         />
         <hr />
         <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>
@@ -326,7 +326,7 @@ export default {
      *   }
      */
     updateTube(index, data) {
-      this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
+      this.tubes[index - 1] = { ...data, index: index - 1 }
     },
     apiTransfers() {
       // what we want to transfer when creating the plate

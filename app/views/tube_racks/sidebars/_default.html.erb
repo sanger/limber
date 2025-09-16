@@ -1,13 +1,28 @@
 <%= sidebar do %>
   <%= render 'logged_out_warning' %>
-  <%= render 'rack_printing', presenter: %>
-  <%= render 'tube_printing', presenter: %>
 
   <%= render 'labware/qc_data_upload' %>
 
-  <%= card title:'Suggested Actions', css_class: 'suggested-actions' do %>
+  <%= card title: 'Suggested Actions', css_class: 'suggested-actions' do %>
+    <%# TODO: add render work_completion_form for tube_racks %>
+
+    <%# See CreationController for more information %>
+    <%# TODO: will need testing once we have a labware creator which creates children from tube racks %>
+    <% presenter.control_additional_creation do -%>
+      <%= render presenter.suggested_purposes, parent: presenter.labware %>
+    <% end %>
+
+    <%# TODO: checking with users if this is needed, may need Quanthub changes %>
     <% presenter.csv_file_links.each do |link_name, link_target| %>
-      <%= link_to(link_name, link_target, rel: "external",  class: 'csv-link') %>
+      <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
+    <% end %>
+
+    <% if presenter.robot? %>
+      <% @presenter.each_robot do |robot_id, robot_name| %>
+        <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg btn-block' %>
+      <% end %>
+    <% else %>
+      <%= simple_state_change_form(@presenter) %>
     <% end %>
   <% end %>
 
@@ -18,6 +33,22 @@
       data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
       data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
       data-asset-id="<%= presenter.id %>">
+    </div>
+  <% end %>
+
+  <%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
+    <% if presenter.robot? %>
+      <%= simple_state_change_form(presenter) %>
+    <% end %>
+
+    <% presenter.control_additional_creation do %>
+      <%= render 'creation_dropdown', resource_type: 'plates', resources: presenter.compatible_plate_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tubes', resources: presenter.compatible_tube_purposes %>
+      <%= render 'creation_dropdown', resource_type: 'tube_racks', resources: presenter.compatible_tube_rack_purposes %>
+    <% end %>
+
+    <div id="tube-state">
+      <%= state_change_form(@presenter) %>
     </div>
   <% end %>
 <% end %>

@@ -93,7 +93,7 @@ module LabwareCreators
         errors.add(
           :base,
           "contains invalid character(s) at column #{column + 1} in #{self}, " \
-            'please use only standard characters and UTF-8 encoding for your csv file'
+          'please use only standard characters and UTF-8 encoding for your csv file'
         )
       end
     end

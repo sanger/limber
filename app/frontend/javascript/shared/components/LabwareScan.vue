@@ -1,42 +1,38 @@
 <template>
-  <div>
-    <b-container>
-      <b-row>
-        <b-col v-if="showWellIndicator" cols="1">
-          <div :class="['pool-colours']">
-            <div :id="'well_index_' + colourIndex" class="well">
-              <span :class="['aliquot', colourClass]" />
-            </div>
-          </div>
-        </b-col>
-        <b-col cols="9">
-          <b-form-group
-            :label="label"
-            :label-cols="labelColumnSpan"
-            label-size="lg"
-            :label-for="uid"
-            :description="description"
-            :state="formState"
-            :invalid-feedback="feedback"
-            :valid-feedback="feedback"
-            :class="{ 'wait-labware': searching }"
-          >
-            <b-form-input
-              :id="uid"
-              ref="scan"
-              v-model.trim="labwareBarcode"
-              type="text"
-              :state="formState"
-              size="lg"
-              :placeholder="'Scan ' + labwareType"
-              :disabled="scanDisabled"
-              @change="lookupLabware"
-            />
-          </b-form-group>
-        </b-col>
-      </b-row>
-    </b-container>
-  </div>
+  <b-row>
+    <b-col v-if="showWellIndicator" cols="1">
+      <div :class="['pool-colours']">
+        <div :id="'well_index_' + colourIndex" class="well">
+          <span :class="['aliquot', colourClass]" />
+        </div>
+      </div>
+    </b-col>
+    <b-col class="mb-2">
+      <b-form-group
+        :label="label"
+        :label-cols="labelColumnSpan"
+        label-size="lg"
+        :label-for="uid"
+        :description="description"
+        :state="formState"
+        :invalid-feedback="feedback"
+        :valid-feedback="feedback"
+        :class="{ 'wait-labware': searching }"
+      >
+        <b-form-input
+          :id="uid"
+          ref="scan"
+          v-model.trim="labwareBarcode"
+          type="text"
+          :state="formState"
+          size="lg"
+          :placeholder="'Scan ' + labwareType"
+          :disabled="scanDisabled"
+          @change="lookupLabware"
+        />
+      </b-form-group>
+    </b-col>
+  </b-row>
 </template>
 
 <script>
@@ -71,7 +67,7 @@ export default {
       default: 'Plate',
     },
     labelColumnSpan: {
-      // The number of columns for the label to span (out of 9)
+      // The number of columns for the label to span
       type: Number,
       default: 2,
     },
@@ -130,6 +126,7 @@ export default {
       default: 'Great!',
     },
   },
+  emits: ['change'],
   data() {
     uid += 1
     return {

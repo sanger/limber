@@ -6,9 +6,11 @@
     <%= hidden_field_tag :purpose_uuid, presenter.purpose.uuid %>
     <%= hidden_field_tag :labware_barcode, presenter.human_barcode %>
     <%= hidden_field_tag :state, transition.to %>
-    <%= hidden_field transition.to, :reason, value: t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]) %>
-    <%= f.submit t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitions]),
-        class: 'btn btn-lg btn-block btn-warning',
-        data: { disable_with: t(transition.to,scope: [:state_machine, presenter.state_transition_name_scope, :transitioning]) } %>
+    <%= hidden_field transition.to, :reason, value: t(transition.to, scope: [:state_machine, presenter.state_transition_name_scope, :transitions]) %>
+    <div class="d-grid gap-2">
+    <%= f.submit t(transition.to, scope: [:state_machine, presenter.state_transition_name_scope, :transitions]),
+                 class: 'btn btn-lg btn-warning',
+                 data: { disable_with: t(transition.to, scope: [:state_machine, presenter.state_transition_name_scope, :transitioning]) } %>
+    </div>
   <% end %>
 <% end %>

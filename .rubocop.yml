@@ -1,6 +1,5 @@
 inherit_from:
   - .rubocop_todo.yml
-  - node_modules/@prettier/plugin-ruby/rubocop.yml
 plugins:
   - rubocop-capybara
   - rubocop-performance
@@ -15,6 +14,16 @@ AllCops:
     - tmp/**/*
     - vendor/**/*
   NewCops: enable
+
+Layout/LeadingCommentSpace:
+  AllowRBSInlineAnnotation: true
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 Rails:
   Enabled: true
 # We're not actually using Rails methods here.
@@ -72,6 +81,10 @@ Metrics/MethodLength:
     - hash
     - heredoc
 
+# There is so much existing inconsistent code that it is not worth enforcing this cop
+Naming/PredicateMethod:
+  Enabled: false
+
 Naming/VariableNumber:
   CheckSymbols:
     false # Rubocop gets annoyed about our states. I'm disabling globally
@@ -79,11 +92,15 @@ Naming/VariableNumber:
 
 RSpec/ContextWording:
   Prefixes:
+    - by
     - for
+    - from
     - if
+    - in
     - unless
     - when
     - where
+    - which
     - with
     - without
 
@@ -129,3 +146,10 @@ RSpec/NestedGroups:
 
 RSpec/NamedSubject:
   EnforcedStyle: named_only
+
+# This cop doesn't always increase clarity
+Style/CollectionQuerying:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded

@@ -3,8 +3,6 @@ import { mount } from '@vue/test-utils'
 import PairTubesToBlend from '@/javascript/blended-tube/components/PairTubesToBlend.vue'
 import mockApi from '@/javascript/test_support/mock_api.js'
 
-// create an extended `Vue` constructor
-import localVue from '@/javascript/test_support/base_vue.js'
 import { expect } from 'vitest'
 
 describe('PairTubesToBlend.vue', () => {
@@ -54,12 +52,7 @@ describe('PairTubesToBlend.vue', () => {
           errorMessages: [],
         }
       },
-      localVue,
     })
-  })
-
-  afterEach(() => {
-    wrapper.destroy()
   })
 
   // Test for validatedTubes

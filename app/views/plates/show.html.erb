@@ -6,16 +6,30 @@
   <%= render 'content_header', presenter: @presenter, type: 'plate' %>
   <%= render 'warnings', presenter: @presenter %>
   <%= render 'info', presenter: @presenter %>
-  <% if @presenter.well_failing_applicable? %>
-    <div id="labware-well-failing" class='well-fail-toggle collapse'>
-      <%= render 'fail_wells', presenter: @presenter %>
-    </div>
+
+  <% if @presenter.respond_to?(:show_scrna_pooling?) && @presenter.show_scrna_pooling? %>
+    <%= render 'pooling_info', presenter: @presenter %>
   <% end %>
-  <div id="labware-summary" class='well-fail-toggle collapse show'>
-    <%= render @presenter.summary_partial, presenter: @presenter %>
+
+  <div id="labware-sections">
+   <% if @presenter.well_failing_applicable? %>
+        <div id="labware-well-failing" class="collapse well-toggle" data-bs-parent="#labware-sections">
+          <%= render 'fail_wells', presenter: @presenter %>
+        </div>
+    <% end %>
+
+    <% if @presenter.mark_under_represented_wells? %>
+      <div id="labware-well-marking" class="well-toggle collapse" data-bs-parent="#labware-sections">
+        <%= render 'mark_wells_under_represented', presenter: @presenter %>
+      </div>
+    <% end %>
+
+    <div id="labware-summary" class="well-toggle collapse show" data-bs-parent="#labware-sections">
+      <%= render @presenter.summary_partial, presenter: @presenter %>
+    </div>
   </div>
 <% end %>
 
 <%= content_for(:labware_sidebar) do %>
-  <%= render "plates/sidebars/container", presenter: @presenter %>
+  <%= render 'plates/sidebars/container', presenter: @presenter %>
 <% end %>

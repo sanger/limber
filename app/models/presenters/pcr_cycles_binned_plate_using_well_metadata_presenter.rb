@@ -22,14 +22,14 @@ module Presenters
         current_plate
           .wells
           .each_with_object({}) do |well, details|
-            next if well.aliquots.empty?
+          next if well.aliquots.empty?
 
-            # Should be a value by this point in order to have calculated the binning
-            pcr_cycles = well.attributes['pcr_cycles'] || nil
-            raise "No pcr_cycles value found on well #{well.location}" if pcr_cycles.nil?
+          # Should be a value by this point in order to have calculated the binning
+          pcr_cycles = well.attributes['pcr_cycles'] || nil
+          raise "No pcr_cycles value found on well #{well.location}" if pcr_cycles.nil?
 
-            details[well.location] = { 'pcr_cycles' => pcr_cycles }
-          end
+          details[well.location] = { 'pcr_cycles' => pcr_cycles }
+        end
     end
   end
 end

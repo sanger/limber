@@ -1,0 +1,93 @@
+<%# This is a custom picking file for the transfer from LRC PBMC Bank plate to %>
+<%# LRC Bank Seq and LRC Bank Spare tubes on a Hamilton robot %>
+<%= CSV.generate_line [
+                        'Workflow',
+                        @workflow
+                      ],
+                      row_sep: ""
+%>
+
+<%= CSV.generate_line [
+                        'Source Plate ID',
+                        'Source Plate Well',
+                        'Destination Rack',
+                        'Purpose',
+                        'Destination Tube ID',
+                        'Destination Tube Position',
+                        'Sample Vac Tube ID',
+                        'Sample Name'
+                      ],
+                      row_sep: ""
+%>
+<%
+  rows_array = []
+
+  # Function for finding a racked_tube given a tube and set of tube racks
+  def find_racked_tube_in_tube_racks(tube_racks, tube_id)
+    tube_racks.each do |tube_rack|
+      racked_tube = tube_rack.racked_tubes.find { |rt| rt.tube.id == tube_id }
+      return racked_tube if racked_tube
+    end
+    nil
+  end
+
+  # Fetch the parent plate of the tube rack
+  parent_plate =
+      Sequencescape::Api::V2.plate_with_custom_includes(
+        [
+          'wells.downstream_tubes',
+          'wells.transfer_requests_as_source.target_asset'
+        ],
+        barcode: @tube_rack.parents.last.barcode.human
+      )
+
+  return if parent_plate.nil?
+
+  # Fetch the tube racks from the parent plate
+  tube_racks = parent_plate.children.select { |child| child.type == 'tube_racks' }.map do |tr|
+    Sequencescape::Api::V2.tube_rack_with_custom_includes(
+      'racked_tubes.tube',
+      nil,
+      barcode: tr.labware_barcode.machine
+    )
+  end
+
+  return if tube_racks.nil?
+
+  parent_plate.wells_in_columns.each do |source_well|
+    next if source_well.empty?
+    next unless source_well.passed?
+
+    next if source_well.downstream_tubes.empty?
+
+    destination_tube = source_well.downstream_tubes.last
+
+    racked_tube = find_racked_tube_in_tube_racks(tube_racks, destination_tube.id)
+
+    # If this is nil, then the tube is not in the tube racks, likely something has gone wrong
+    next if racked_tube.nil?
+
+    tube_rack_barcode = racked_tube.tube_rack.barcode
+    tube_rack_position = racked_tube.coordinate
+
+    sample_uuid = source_well.aliquots.first.sample.uuid
+    source_well_posn = source_well.position['name']
+    destination_tube_name_array = destination_tube.name.split(':')
+    # e.g. SEQ:DESTTUBE:A1
+    purpose = ((destination_tube_name_array[0] == 'SEQ') ? 'Sequencing' : 'Contingency')
+    # if destination_tube_name_array.length == 3
+    rows_array << [
+      parent_plate.labware_barcode.human,
+      source_well_posn,
+      tube_rack_barcode,
+      purpose,
+      destination_tube.labware_barcode.human,
+      tube_rack_position,
+      @ancestor_tubes[sample_uuid].labware_barcode.human,
+      source_well.aliquots.first.sample.name
+    ]
+  end
+%>
+<% rows_array.sort_by{ |a| WellHelpers.well_coordinate(a[1]) }.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>

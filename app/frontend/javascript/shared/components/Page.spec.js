@@ -69,7 +69,7 @@ describe('Page', () => {
       const alertsAfter = wrapper.findAllComponents(Alert)
       expect(alertsAfter).toHaveLength(2) // checks alert removed from DOM
       // check that uid of alert that was closed is not in the list of alerts
-      expect(alertsAfter.wrappers.map((alert) => alert.vm.$vnode.key)).not.toContain(alertToClose.vm.$vnode.key)
+      expect(alertsAfter.map((alert) => alert.vm.message)).not.toContain(alertToClose.vm.message)
     })
   })
 })

@@ -2,7 +2,7 @@
   <lb-page>
     <lb-loading-modal v-if="loading" :message="progressMessage" />
     <lb-main-content v-if="parentPlate">
-      <div class="card-body">
+      <div class="card-body mb-2">
         <h2 id="plate-title" class="card-title">
           {{ childPurposeName }}
           <span class="state-badge pending">Pending</span>
@@ -57,14 +57,13 @@
               :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
               @tagparamsupdated="tagParamsUpdated"
             />
-            <div class="form-group form-row">
+            <div class="form-group form-row d-grid">
               <b-button
                 id="custom_tagged_plate_submit_button"
                 name="custom_tagged_plate_submit_button"
                 :disabled="createButtonDisabled"
                 :variant="createButtonStyle"
                 size="lg"
-                block
                 @click="createPlate"
               >
                 {{ createButtonText }}
@@ -174,7 +173,10 @@ export default {
     filters: {
       // This is passed through to the tag groups lookup and filters that list if present
       type: Object,
-      required: true,
+      required: false,
+      default: () => {
+        return {}
+      },
     },
   },
   data() {
@@ -212,7 +214,7 @@ export default {
       this.tagSubstitutions // used for tag substitution check
       this.childUsedOligos // used for tag clash check
 
-      if (this.parentWells === {}) {
+      if (this.parentWells == {}) {
         return {}
       }
       if (Object.keys(this.tagLayout).length === 0) {
@@ -513,7 +515,7 @@ export default {
           if (data.state === 'valid') {
             this.parentPlate = { ...data.results }
           } else {
-            ;(this.progressMessage = 'Parent plate lookup error: '), data.state
+            this.progressMessage = 'Parent plate lookup error: ' + data.state
           }
           this.loading = false
         }
@@ -691,13 +693,13 @@ export default {
         // delete the substitution from the list
         this.removeTagSubstitution(originalTagMapId)
       } else {
-        this.$set(this.tagSubstitutions, originalTagMapId, substituteTagId)
+        this.tagSubstitutions[originalTagMapId] = substituteTagId
       }
 
       this.hideWellModal()
     },
     removeTagSubstitution(originalTagMapId) {
-      this.$delete(this.tagSubstitutions, originalTagMapId)
+      delete this.tagSubstitutions[originalTagMapId]
     },
   },
 }

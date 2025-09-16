@@ -64,6 +64,8 @@ FactoryBot.define do
           'id' => evaluator.order_id.to_s
         }
       }
+
+      request._cached_relationship(:request_type) { evaluator.request_type }
     end
 
     # Basic library creation request, such as wgs

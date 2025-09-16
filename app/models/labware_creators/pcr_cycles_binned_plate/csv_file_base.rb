@@ -64,8 +64,10 @@ module LabwareCreators
 
     def plate_barcode_header_row
       # data[0] here is the first row in the uploaded file, and should contain the plate barcode
+      return unless @data[0]
+
       @plate_barcode_header_row ||=
-        PcrCyclesBinnedPlate::CsvFile::PlateBarcodeHeader.new(@parent_barcode, @data[0]) if @data[0]
+        PcrCyclesBinnedPlate::CsvFile::PlateBarcodeHeader.new(@parent_barcode, @data[0])
     end
 
     # Returns the contents of the header row for the well detail columns

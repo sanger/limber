@@ -1,19 +1,22 @@
 <div id="labware-summary-div">
-  <%= render partial: "tube_rack", locals: { tube_rack_presenter: presenter } %>
+  <%= render partial: 'tube_rack', locals: { tube_rack_presenter: presenter } %>
 </div>
 
 <div id="plate-view-control" class="card-header">
   <ul class="nav nav-tabs card-header-tabs float-xs-left" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" href="#summary_tab" data-toggle="tab" role="tab" data-plate-view="summary-view">Summary</a>
+      <a class="nav-link active" href="#summary_tab" data-bs-toggle="tab" role="tab" data-plate-view="summary-view">Summary</a>
     </li>
-    <% data_attributes = {
-        sequencescape_api: Limber::Application.config.api.v2.connection_options.js_url,
-        sequencescape_api_key: Limber::Application.config.api.v2.connection_options.authorisation,
-        asset_id: presenter.id
-    } %>
     <li class="nav-item">
-      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-toggle="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter',data_attributes) %></a>
+      <a class="nav-link" href="#relatives_tab" data-bs-toggle="tab" role="tab" data-plate-view="pools-view">Relatives</a>
+    </li>
+    <li class="nav-item">
+      <% data_attributes = {
+           sequencescape_api: Limber::Application.config.api.v2.connection_options.js_url,
+           sequencescape_api_key: Limber::Application.config.api.v2.connection_options.authorisation,
+           asset_id: presenter.id
+         } %>
+      <a id='comments-tab-link' class="nav-link" href="#comments_tab" data-toggle="tab" role="tab" data-plate-view="comments-view">Comments <%= count_badge(nil, 'asset-comments-counter', data_attributes) %></a>
     </li>
   </ul>
 </div>
@@ -22,6 +25,11 @@
   <div class="tab-pane active" id='summary_tab' role="tabpanel">
     <%= render partial: 'summary', locals: { presenter: } %>
   </div>
+
+  <div class="tab-pane" id='relatives_tab' role="tabpanel">
+    <%= render partial: 'relatives_list', locals: { presenter: } %>
+  </div>
+
   <div class="tab-pane" id='comments_tab' role="tabpanel">
     <div id='asset-comments' data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
                              data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"

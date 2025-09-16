@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 module LabwareCreators
   # This class is used to transfer samples from a plate well into two tubes, each for a well.
   class TubesFromPlateWell < Base
     include LabwareCreators::WellFilterBehaviour
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     attr_reader :tube_transfer, :tubes
 

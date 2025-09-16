@@ -16,7 +16,7 @@ module LabwareCreators
   # Tag depth index is added to aliquot attributes to avoid tag clashes.
   class DonorPoolingPlate < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     include LabwareCreators::DonorPoolingCalculator
     include LabwareCreators::DonorPoolingValidator
@@ -188,9 +188,9 @@ module LabwareCreators
         pools
           .each_with_index
           .with_object({}) do |(pool, index), result|
-            dest_location = WellHelpers.well_at_column_index(index) # column order, 96 wells
-            pool.each { |source_well| result[source_well] = { dest_locn: dest_location } }
-          end
+          dest_location = WellHelpers.well_at_column_index(index) # column order, 96 wells
+          pool.each { |source_well| result[source_well] = { dest_locn: dest_location } }
+        end
     end
 
     # Returns a hash mapping each source well to its index in its pool plus one.
@@ -203,8 +203,8 @@ module LabwareCreators
         pools
           .each_with_index
           .with_object({}) do |(pool, _pool_index), hash|
-            pool.each_with_index { |well, index| hash[well] = (index + 1).to_s }
-          end
+          pool.each_with_index { |well, index| hash[well] = (index + 1).to_s }
+        end
     end
 
     # Builds the pools for the destination plate. The wells are first grouped
@@ -214,13 +214,13 @@ module LabwareCreators
     def build_pools
       study_project_groups = split_single_group_by_study_and_project(source_wells_for_pooling)
 
-      # allocate_wells_to_pools returns an array of pools
+      # allocate_wells_to_pools returns an array of pools
       # We get one of these for every study/project group, and then 'flatten' to get a single array of pools
       built_pools = study_project_groups.flat_map { |group| allocate_wells_to_pools(group, number_of_pools(group)) }
 
       unless VALID_POOL_COUNT_RANGE.cover?(built_pools.size)
         raise "Invalid requested number of pools: must be between #{VALID_POOL_COUNT_RANGE.min} " \
-                "and #{VALID_POOL_COUNT_RANGE.max}. Provided: #{built_pools.size}."
+              "and #{VALID_POOL_COUNT_RANGE.max}. Provided: #{built_pools.size}."
       end
 
       built_pools

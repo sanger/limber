@@ -4,7 +4,7 @@ module LabwareCreators
   # Merges plates together into a single child plate, and de-duplicates aliquots if they are identical.
   class MergedPlate < StampedPlate
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     attr_reader :child, :barcodes, :minimal_barcodes
 
@@ -102,7 +102,7 @@ module LabwareCreators
       errors.add(
         :source_plates,
         'have different requests or suboptimal status and can not be merged, ' \
-          'please check you have scanned the correct set of source plates.'
+        'please check you have scanned the correct set of source plates.'
       )
     end
 

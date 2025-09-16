@@ -1,9 +1,8 @@
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import AssetLookupByUuid from '@/javascript/shared/components/AssetLookupByUuid.vue'
 import { jsonCollectionFactory } from '@/javascript/test_support/factories.js'
 import mockApi from '@/javascript/test_support/mock_api.js'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 describe('AssetLookupByUuid', () => {
   const assetUuid = 'afabla7e-9498-42d6-964e-50f61ded6d9a'
@@ -13,14 +12,13 @@ describe('AssetLookupByUuid', () => {
     // Not ideal using mount here, but having trouble
     // triggering change events on unmounted components
     return mount(AssetLookupByUuid, {
-      propsData: {
+      props: {
         api: api.devour,
         resourceName: 'plate',
         includes: '',
         fields: {},
         filter: { uuid: assetUuid },
       },
-      localVue,
     })
   }
 

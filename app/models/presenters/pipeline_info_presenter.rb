@@ -96,7 +96,7 @@ class Presenters::PipelineInfoPresenter
   def join_up_to(max_listed, array, separator = ', ')
     return array.join(separator) if array.size <= max_listed
 
-    "#{array[0..max_listed - 1].join(separator)}, ...(#{array.size - max_listed} more)"
+    "#{array[0..(max_listed - 1)].join(separator)}, ...(#{array.size - max_listed} more)"
   end
 
   def pipeline_groups_by_purpose

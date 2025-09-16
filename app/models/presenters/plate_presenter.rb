@@ -112,14 +112,7 @@ module Presenters
           .fetch(:file_links, [])
           .select { |link| can_be_enabled?(link&.states) }
           .map do |link|
-            [
-              link.name,
-              [
-                :limber_plate,
-                :export,
-                { id: link.id, limber_plate_id: human_barcode, format: :csv, **link.params || {} }
-              ]
-            ]
+            [link.name, [:plate, :export, { id: link.id, plate_id: human_barcode, format: :csv, **link.params || {} }]]
           end
       links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
       links
@@ -153,6 +146,10 @@ module Presenters
       allow_well_failure_in_states.include?(state.to_sym)
     end
 
+    def mark_under_represented_wells?
+      purpose_config.fetch(:mark_under_represented_wells, false)
+    end
+
     def qc_thresholds
       @qc_thresholds ||= Presenters::QcThresholdPresenter.new(labware, purpose_config.fetch(:qc_thresholds, {}))
     end
@@ -171,6 +168,19 @@ module Presenters
 
       # do not show the pooling tab by default
       false
+    end
+
+    # This method checks if the labware is in a state that allows manual transfer.
+    # It prevents the button appearing if the labware is not in one of the states listed.
+    #
+    # To use it add an entry to the purpose configuration as follows:
+    # :manual_transfer:
+    #   states:
+    #     - 'started'
+    #
+    # If no states are defined, it will return true by default.
+    def display_manual_transfer_button?
+      can_be_enabled?(purpose_config.dig(:manual_transfer, :states))
     end
 
     private

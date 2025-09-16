@@ -6,9 +6,10 @@ export default {
   props: {
     validTransfers: { type: Array, required: true },
   },
+  emits: ['update:model-value'],
   watch: {
     validTransfers: function () {
-      this.$emit('change', {
+      this.$emit('update:model-value', {
         extraParams: (_transfer) => {},
         isValid: true,
       })

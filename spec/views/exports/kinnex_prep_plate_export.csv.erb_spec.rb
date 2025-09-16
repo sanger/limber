@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'exports/kinnex_prep_plate_export.csv.erb' do

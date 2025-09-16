@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { mount } from '@vue/test-utils'
 import TagLayout from '@/javascript/custom-tagged-plate/components/mixins/TagLayout.js'
 import {
   nullTagGroup,
@@ -8,7 +8,7 @@ import {
 } from '@/javascript/custom-tagged-plate/testData/customTaggedPlateTestData.js'
 
 describe('TagLayout mixin', () => {
-  let cmp, tagLayout, data
+  let tagLayout, data
 
   beforeEach(() => {
     data = {
@@ -17,14 +17,18 @@ describe('TagLayout mixin', () => {
       numberOfTargetWells: 10,
       tagsPerWell: 1,
     }
-    cmp = Vue.extend({ mixins: [TagLayout] })
-    tagLayout = new cmp({
-      propsData: data,
-      stubs: {
-        'lb-tag-groups-lookup': true,
-        'lb-tag-offset': true,
+
+    const wrapper = mount(
+      {
+        template: '<div></div>',
+        mixins: [TagLayout],
+        props: Object.keys(data),
       },
-    })
+      {
+        props: { ...data },
+      },
+    )
+    tagLayout = wrapper.vm
   })
 
   describe('checking props:', () => {

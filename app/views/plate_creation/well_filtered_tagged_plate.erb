@@ -7,7 +7,7 @@
       data-enforce-same-template-within-pool="<%= @labware_creator.enforce_same_template_within_pool? %>">
   </div>
 
-  <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
+  <% form_for(@labware_creator, as: :plate, url: plate_child_plate_creations_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>
         <div id="labware-summary-div">
@@ -44,7 +44,7 @@
                          },
                          class: 'form-control', required: true %>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
-        <small id="submit-summary" class="form-text text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>
+        <small id="submit-summary" class="form-text d-block text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>
       <%- end -%>
     <%- end -%>
   <%- end -%>

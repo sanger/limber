@@ -8,7 +8,7 @@ module LabwareCreators
     class SubmissionFailure < StandardError
     end
 
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
     include LabwareCreators::CustomPage
     attr_reader :tube_transfer, :child, :barcodes
 
@@ -68,7 +68,7 @@ module LabwareCreators
     end
 
     def redirection_target
-      TubeProxy.new(@child.uuid)
+      Tube.new(nil, @child.uuid)
     end
 
     private

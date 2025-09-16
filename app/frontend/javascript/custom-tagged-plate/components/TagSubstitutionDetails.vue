@@ -15,13 +15,12 @@
           {{ tagSubstitutionValue }}
         </b-col>
         <b-col>
-          <div class="form-group form-row">
+          <div class="form-group form-row d-grid">
             <b-button
               :id="'remove_tag_id_' + tagSubstitutionKey + '_submit_button'"
               :name="'remove_tag_id_' + tagSubstitutionKey + '_button'"
               class="pb-2"
               size="sm"
-              block
               @click="removeSubstitution(tagSubstitutionKey)"
             >
               Remove
@@ -66,6 +65,7 @@ export default {
       },
     },
   },
+  emits: ['removetagsubstitution'],
   data() {
     return {}
   },

@@ -104,26 +104,6 @@ RSpec.describe Presenters::TubeRackPresenter do
     end
   end
 
-  describe '#label' do
-    it 'is a Labels::TubeRackLabel' do
-      expect(presenter.label).to be_a(Labels::TubeRackLabel)
-    end
-
-    it 'has the correct labware' do
-      expect(presenter.label.labware).to eq(labware)
-    end
-  end
-
-  describe '#tube_labels' do
-    it 'returns a label for each tube' do
-      expect(presenter.tube_labels.length).to eq(3)
-    end
-
-    it 'returns tube labels' do
-      expect(presenter.tube_labels).to all be_a(Labels::TubeLabel)
-    end
-  end
-
   describe '#comment_title' do
     it 'returns the a barcode, purpose and tube purposes' do
       expect(presenter.comment_title).to eq("DN2T - #{purpose_name} : #{tube_purpose_name}")
@@ -165,9 +145,9 @@ RSpec.describe Presenters::TubeRackPresenter do
           [
             'Second type CSV',
             [
-              :limber_tube_rack,
-              :export,
-              { format: :csv, id: 'second_csv_id', limber_tube_rack_id: labware.human_barcode }
+              :tube_rack,
+              :tube_racks_export,
+              { format: :csv, id: 'second_csv_id', tube_rack_id: labware.uuid }
             ]
           ]
         )

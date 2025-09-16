@@ -249,7 +249,11 @@ Yard will also try and document the installed gems: [http://localhost:8808/docs]
 
 ## Configuring pipelines
 
-{file:docs/configuring_new_pipelines.md Configuring new pipelines}
+See {file:docs/configuring_new_pipelines.md Configuring new pipelines}
+
+This file is the start point for a set of files documenting how pipelines are configured in Limber.
+
+In Visual Code you can right click on the md files and Open Preview to see them with their markup formatting.
 
 ## Running Specs
 
@@ -279,7 +283,6 @@ There are a few tools available to assist with writing specs:
 - Strategies: You can use json `:factory_name` to generate the json that the API is expected to receive. This is very useful for mocking web responses. The association strategy is used for building nested json, it will usually only be used as part of other factories.
 
 - Traits:
-
   - `api_object`: Ensures that lots of the shared behaviour, like actions and uuids are generated automatically
     barcoded: Automatically ensures that barcode is populated with the correct hash, and calculates human and machine barcodes
   - `build`: Returns an actual object, as though already found via the api. Useful for unit tests

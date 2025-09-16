@@ -10,10 +10,9 @@ import {
 } from '@/javascript/shared/components/plateScanValidators'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
 import { transferPlatesToPlatesCreator } from '@/javascript/shared/transfersCreators.js'
-import Vue from 'vue'
 import MultiStamp from './MultiStamp.vue'
 
-export default Vue.extend({
+export default {
   mixins: [MultiStamp],
   props: {
     childrenLibraryTypeToPurposeMappingJson: {
@@ -114,4 +113,4 @@ export default Vue.extend({
         })
     },
   },
-})
+}

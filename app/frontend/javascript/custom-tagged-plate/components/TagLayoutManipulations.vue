@@ -13,7 +13,7 @@
       :includes="tagSetLookupIncludes"
       @change="tagSetsLookupUpdated($event)"
     />
-    <b-row class="form-group form-row">
+    <b-row class="mb-3">
       <b-col>
         <b-form-group id="tag_plate_scan_group" label="Scan in the tag plate you wish to use here...">
           <lb-plate-scan
@@ -30,7 +30,7 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row class="form-group form-row">
+    <b-row class="mb-3">
       <b-col>
         <b-form-group id="tag_set_selection_group" horizontal label="Select Tag Set:" label-for="tag_set_selection">
           <b-form-select
@@ -38,27 +38,34 @@
             v-model="tagSetId"
             :options="tagSetOptions"
             :disabled="tagSetsDisabled"
-            @input="tagSetInput"
+            @update:model-value="tagGroupInput"
             @change="tagSetChanged"
           />
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row v-if="tag1GroupName" id="tag1_name_label" class="form-group form-row">
-      <b-label>i7 Tag 1 Group</b-label> : {{ tag1GroupName }}
+    <b-row v-if="tag1GroupName">
+      <b-col>
+        <b-form-group id="tag1_name_label" label="i7 Tag 1 Group:" label-for="tag1_name">
+          <b-form-input id="tag1_name" :model-value="tag1GroupName" :disabled="true" />
+        </b-form-group>
+      </b-col>
     </b-row>
-    <b-row v-if="tag2GroupName" id="tag2_name_label" class="form-group form-row mb-2">
-      <b-label>i5 Tag 2 Group</b-label> : {{ tag2GroupName }}</b-row
-    >
-
-    <b-row class="form-group form-row">
+    <b-row v-if="tag2GroupName">
+      <b-col>
+        <b-form-group id="tag2_name_label" label="i5 Tag 2 Group:" label-for="tag2_name">
+          <b-form-input id="tag2_name" :model-value="tag2GroupName" :disabled="true" />
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <b-row class="mb-3">
       <b-col>
         <b-form-group id="walking_by_options_group" label="Walking By Options:" label-for="walking_by_options">
           <b-form-select
             id="walking_by_options"
             v-model="walkingBy"
             :options="walkingByOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
@@ -68,12 +75,12 @@
             id="direction_options"
             v-model="direction"
             :options="directionOptions"
-            @input="updateTagParams"
+            @update:model-value="updateTagParams"
           />
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row class="form-group form-row">
+    <b-row class="mb-3">
       <b-col>
         <lb-tag-offset
           id="tag_offset_input"
@@ -86,7 +93,7 @@
       </b-col>
       <b-col>
         <b-form-group id="tags_per_well_group" label="Tags per well:" label-for="tags_per_well">
-          <b-form-input id="tags_per_well" type="number" :value="tagsPerWell" :disabled="true" />
+          <b-form-input id="tags_per_well" type="number" :model-value="tagsPerWell" :disabled="true" />
         </b-form-group>
       </b-col>
     </b-row>
@@ -230,7 +237,7 @@ export default {
           this.tagPlateScanDisabled = false
         }
       }
-      this.updateTagParams(null)
+      this.updateTagParams()
     },
     tagGroupLookupFilter() {
       if (this.tagGroupAdapterTypeNameFilter) {
@@ -244,14 +251,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 input:invalid + span:after {
   content: '✖';
-  padding-left: 5px;
+  padding-left: '5px';
 }
 
 input:valid + span:after {
   content: '✓';
-  padding-left: 5px;
+  padding-left: '5px';
 }
 </style>

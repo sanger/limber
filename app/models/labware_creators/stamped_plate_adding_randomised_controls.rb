@@ -12,7 +12,7 @@ module LabwareCreators
   class StampedPlateAddingRandomisedControls < StampedPlate # rubocop:todo Metrics/ClassLength
     PARENT_PLATE_INCLUDES =
       'wells.requests_as_source,wells.requests_as_source.request_type,' \
-        'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
+      'wells.aliquots,wells.aliquots.sample,wells.aliquots.sample.sample_metadata'
 
     def parent
       @parent ||= Sequencescape::Api::V2.plate_with_custom_includes(PARENT_PLATE_INCLUDES, uuid: parent_uuid)
@@ -49,6 +49,7 @@ module LabwareCreators
 
         # check control locations selected pass rules, otherwise we retry with new locations
         return control_locations if validate_control_rules(control_locations)
+
         retries_count += 1
       end
 
@@ -274,10 +275,10 @@ module LabwareCreators
 
     def update_control_sample_metadata(control_v2, well_location)
       if control_v2.sample_metadata.update(
-           supplier_name: control_v2.name,
-           cohort: control_cohort,
-           sample_description: control_desc
-         )
+        supplier_name: control_v2.name,
+        cohort: control_cohort,
+        sample_description: control_desc
+      )
         return
       end
 

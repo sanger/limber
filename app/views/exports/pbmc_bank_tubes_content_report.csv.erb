@@ -20,6 +20,7 @@
 %>
 <%
   rows_array = []
+
   @plate.wells_in_columns.each do |source_well|
     # skip if well empty (not all wells have samples in them)
     next if source_well.empty?
@@ -30,25 +31,11 @@
     # skip if no downstream tubes for this well (not set up children in Limber yet)
     next if source_well.downstream_tubes.empty?
 
-    child_tube_v1 = source_well.downstream_tubes.last
-    child_tube_v2 =
-      Sequencescape::Api::V2.tube_with_custom_includes(
-        'custom_metadatum_collection',
-        nil,
-        barcode: child_tube_v1.labware_barcode.machine
-      )
+    child_tube = source_well.downstream_tubes.last
+    # skip if child tube not in passed state
+    next if child_tube.state != 'passed'
 
-    next unless child_tube_v2 && child_tube_v2.custom_metadatum_collection
-
-    # get tube metadata from child_tube
-    metadata = child_tube_v2.custom_metadatum_collection.metadata
-
-    next unless metadata
-
-    tube_rack_barcode = metadata['tube_rack_barcode']
-    tube_rack_position = metadata['tube_rack_position']
-
-    next unless tube_rack_barcode && tube_rack_position
+    child_tube_purpose = child_tube.purpose.name
 
     sample_uuid = source_well.aliquots.first.sample.uuid
     source_well_posn = source_well.position['name']
@@ -57,7 +44,6 @@
 
     # donor_id is sourced from the sample metadata provided by Sequencescape
     donor_id = sample_metadata.respond_to?(:donor_id) ? sample_metadata.donor_id : nil
-    child_tube_purpose = child_tube_v2.purpose.name
     destination = ((child_tube_purpose == 'LRC Bank Seq') ? 'Sequencing' : 'Contingency')
     volume = 125
 
@@ -65,8 +51,8 @@
       source_well.name, # Well name
       donor_id, # Donor ID
       @ancestor_tubes[sample_uuid].labware_barcode.human, # LRC Blood Vac purpose barcode
-      child_tube_v2.barcode, # FluidX barcode
-      child_tube_v2.created_at, # Extraction and freeze date
+      child_tube.barcode, # FluidX barcode
+      child_tube.created_at, # Extraction and freeze date
       destination, # Sequencing or contingency
       source_well.latest_total_cell_count&.value, # Total Cell Count
       source_well.latest_cell_viability&.value, # Viability

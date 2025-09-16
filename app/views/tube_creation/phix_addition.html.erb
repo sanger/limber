@@ -13,20 +13,21 @@
       <div id="validation_report"></div>
       <div class="card-body">
       <%= form_for(
-        @labware_creator,
-        url: limber_plate_children_path(@labware_creator.parent_uuid),
-        as: :plate,
-        html: { method: :post }) do |form| %>
+            @labware_creator,
+            url: plate_child_plate_creations_path(@labware_creator.parent_uuid),
+            as: :plate,
+            html: { method: :post }
+          ) do |form| %>
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
-        <div class="labware-container scan-labware form-group row">
+        <div class="labware-container scan-labware form-group row me-2">
           <label for="spikedbuffer_tube_barcode"
-                  class="plate-label col-md-2">PhiX tube barcode</label>
+                  class="plate-label col-4 col-form-label">PhiX tube barcode</label>
           <input type="text"
                   id="spikedbuffer_tube_barcode"
                   name="plate[spikedbuffer_tube_barcode]"
-                  class="form-control col-md-8"
+                  class="form-control col"
                   required="required" />
         </div>
         <%= form.submit 'Add PhiX and continue', class: 'btn btn-success btn-lg', id: 'create-labware-with-phix' %>
@@ -40,10 +41,11 @@
         <p>Only skip adding PhiX if you know of a good reason.</p>
       </div>
       <%= form_for(
-        @labware_creator,
-        url: limber_plate_children_path(@labware_creator.parent_uuid),
-        as: :plate,
-        html: { method: :post }) do |form| %>
+            @labware_creator,
+            url: plate_child_plate_creations_path(@labware_creator.parent_uuid),
+            as: :plate,
+            html: { method: :post }
+          ) do |form| %>
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>

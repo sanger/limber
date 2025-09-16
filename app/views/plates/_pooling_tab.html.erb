@@ -4,14 +4,14 @@
     <li data-pool="<%= pool.id %>" class='list-group-item pool-colours'>
       <div class="pool-data">
         <span class="pool_name colour-<%= pool.pool_index %> badge">Pool <%= pool.pool_index %></span>
-        <span class="badge badge-light well-count"><%= pool.well_count %> wells</span>
-        <span class="badge badge-light well-count"><%= pool.lane_count %> lanes</span>
+        <span class="badge bg-light text-dark well-count"><%= pool.well_count %> wells</span>
+        <span class="badge bg-light text-dark well-count"><%= pool.lane_count %> lanes</span>
       </div>
 
       <% pool.subpools.each do |subpool| %>
         <dl class='metadata sub-pool'>
           <dt>Wells</dt>
-          <dd class='well-list'><%= WellHelpers.formatted_range(subpool.well_locations, plate_presenter.size ) %></dd>
+          <dd class='well-list'><%= WellHelpers.formatted_range(subpool.well_locations, plate_presenter.size) %></dd>
           <dt>Insert Size</dt>
           <dd class="insert-size"><%= subpool.fragment_size.from %> - <%= subpool.fragment_size.to %></dd>
           <dt>Library Type</dt>

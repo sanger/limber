@@ -15,6 +15,10 @@ module Presenters::CreationBehaviour
     construct_buttons(purposes_of_type('tube'))
   end
 
+  def compatible_tube_rack_purposes
+    construct_buttons(purposes_of_type('tube_rack'))
+  end
+
   private
 
   # Eventually this will end up on our labware_creators/creations module
@@ -58,6 +62,8 @@ module Presenters::CreationBehaviour
   end
 
   def compatible_purposes
-    Settings.purposes.lazy.select { |uuid, _purpose_settings| LabwareCreators.class_for(uuid).support_parent?(labware) }
+    Settings.purposes.lazy.select do |uuid, _purpose_settings|
+      LabwareCreators.class_for(uuid).creatable_from?(labware)
+    end
   end
 end

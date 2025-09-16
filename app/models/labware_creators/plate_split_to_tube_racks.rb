@@ -42,26 +42,28 @@ module LabwareCreators
   # rubocop:disable Metrics/ClassLength
   class PlateSplitToTubeRacks < Base
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
-    self.page = 'plate_split_to_tube_racks'
+    self.page = 'tube_rack_creation/plate_split_to_tube_racks'
     self.attributes += %i[sequencing_file contingency_file]
 
     attr_accessor :sequencing_file, :contingency_file
-    attr_reader :child_sequencing_tubes, :child_contingency_tubes
+    attr_reader :tube_rack_attributes, :child_tube_racks
 
     validates_nested :well_filter
 
-    # Don't create the tubes until at least the contingency file has been uploaded
+    # Don't create the tubes until at least the sequencing file has been uploaded
     validate :validate_file_presence
 
-    # N.B. contingency file is required, sequencing file is optional
+    # N.B. sequencing file is required, contingency file is optional
     validates_nested :sequencing_csv_file, if: :sequencing_file
     validates_nested :contingency_csv_file, if: :contingency_file
 
     # validations for duplications between the two tube rack files
     validate :check_tube_rack_barcodes_differ_between_files
     validate :check_tube_barcodes_differ_between_files
+
+    validate :check_decode_failure_in_tube_rack_files
 
     # validate there are sufficient tubes in the racks for the number of parent wells
     validate :must_have_correct_number_of_tubes_in_rack_files, if: :contingency_file
@@ -71,6 +73,15 @@ module LabwareCreators
 
     PARENT_PLATE_INCLUDES =
       'wells.aliquots,wells.aliquots.sample,wells.downstream_tubes,wells.downstream_tubes.custom_metadatum_collection'
+    SEQ_TUBE_RACK_NAME = 'SEQ Tube Rack'
+    SPR_TUBE_RACK_NAME = 'SPR Tube Rack'
+    DEFAULT_TUBE_RACK_SIZE = '96'
+
+    # Text used to indicate a barcode decode failure in tube rack scan files (applies to both sequencing
+    # and contingency racks).
+    # This value appears in the barcode field when the scanner is unable to read a tube barcode.
+    # If present, the system will block progress and display an informative error to the user.
+    DECODE_FAILURE_TEXT = 'DECODE FAILURE'
 
     def validate_file_presence
       if sequencing_file.blank?
@@ -103,27 +114,50 @@ module LabwareCreators
     #
     # @return [Boolean] true if the child tubes were created successfully.
     def create_labware!
-      @child_sequencing_tubes = create_child_sequencing_tubes
-      @child_contingency_tubes = create_child_contingency_tubes
-      add_child_tube_metadata
+      @child_tube_racks = create_child_tubes_and_racks
+
+      if child_tube_racks.blank?
+        errors.add(:base, 'Failed to create child tube racks and tubes, nothing returned from API creation call')
+        return false
+      end
+
       perform_transfers
       true
     end
 
-    # Creates a single child sequencing tube for each parent well containing a unique sample.
-    #
-    # @return [Array<Tube>] The child sequencing tubes.
-    def create_child_sequencing_tubes
-      create_tubes(sequencing_tube_purpose_uuid, parent_wells_for_sequencing.length, sequencing_tube_attributes)
+    #   @example [
+    #   {
+    #     :tube_rack_name=>"Seq Tube Rack",
+    #     :tube_rack_barcode=>"TR00000001",
+    #     :tube_rack_purpose_uuid=>"0ab4c9cc-4dad-11ef-8ca3-82c61098d1a1",
+    #     :racked_tubes=>[
+    #       {
+    #         :tube_barcode=>"SQ45303801",
+    #         :tube_name=>"SEQ:NT749R:A1",
+    #         :tube_purpose_uuid=>"0ab4c9cc-4dad-11ef-8ca3-82c61098d1a1",
+    #         :tube_position=>"A1",
+    #         :parent_uuids=>["bd49e7f8-80a1-11ef-bab6-82c61098d1a0"]
+    #       },
+    #       etc... more tubes
+    #     ]
+    #   },
+    #   etc... second rack for contingency tubes
+    def generate_tube_rack_attributes
+      @tube_rack_attributes = []
+      tube_rack_attributes << generate_sequencing_tube_rack_attributes(tube_rack_attributes)
+      return if require_sequencing_tubes_only?
+
+      tube_rack_attributes << generate_contingency_tube_rack_attributes(tube_rack_attributes)
     end
 
-    # Creates a child contingency tube for each parent well not already assigned to a sequencing tube.
-    #
-    # @return [Array<Tube>] The child contingency tubes.
-    def create_child_contingency_tubes
-      return [] if require_sequencing_tubes_only?
+    def create_child_tubes_and_racks
+      # create an array of tube rack details, including the tubes
+      generate_tube_rack_attributes
 
-      create_tubes(contingency_tube_purpose_uuid, parent_wells_for_contingency.length, contingency_tube_attributes)
+      Sequencescape::Api::V2::SpecificTubeRackCreation
+        .create!(parent_uuids: [parent_uuid], tube_rack_attributes: tube_rack_attributes, user_uuid: user_uuid)
+        .children # returns list of api v2 TubeRacks
+        .index_by(&:name)
     end
 
     # Creates transfer requests for the given transfer request attributes and performs the transfers.
@@ -136,12 +170,12 @@ module LabwareCreators
       )
     end
 
-    # We will create multiple child tubes, so redirect to the parent plate
+    # We redirect to the sequencing tube rack that we have just created.
     def redirection_target
-      parent
+      child_tube_racks[SEQ_TUBE_RACK_NAME]
     end
 
-    # Display the children tab in the plate view so we see the child tubes listed.
+    # Display the relatives tab on the child tube rack page.
     def anchor
       'relatives_tab'
     end
@@ -151,8 +185,10 @@ module LabwareCreators
     # @return [CsvFile, nil] A CsvFile object for the sequencing tube rack scan CSV file, or nil if the file
     # doesn't exist.
     def sequencing_csv_file
+      return unless sequencing_file
+
       @sequencing_csv_file ||=
-        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(sequencing_file) if sequencing_file
+        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(sequencing_file)
     end
 
     # Returns a CsvFile object for the contingency tube rack scan CSV file, or nil if the file doesn't exist.
@@ -160,8 +196,10 @@ module LabwareCreators
     # @return [CsvFile, nil] A CsvFile object for the contingency tube rack scan CSV file, or nil if the file
     # doesn't exist.
     def contingency_csv_file
+      return unless contingency_file
+
       @contingency_csv_file ||=
-        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(contingency_file) if contingency_file
+        CommonFileHandling::CsvFileForTubeRackWithRackBarcode.new(contingency_file)
     end
 
     # Returns the number of unique sample UUIDs for the parent wells after applying the current well filter.
@@ -192,15 +230,11 @@ module LabwareCreators
       )
     end
 
+    # Checks if the sequencing tube rack barcode is the same as the contingency tube rack barcode.
+    #
+    # @return [Boolean] true if the barcodes are the same, false otherwise
     def same_tube_rack_barcode?
-      seq_tube_rack = extract_tube_rack_barcode(sequencing_csv_file)
-      cont_tube_rack = extract_tube_rack_barcode(contingency_csv_file)
-
-      seq_tube_rack == cont_tube_rack
-    end
-
-    def extract_tube_rack_barcode(file)
-      file.position_details.values.first['tube_rack_barcode']
+      sequencing_tube_rack_barcode == contingency_tube_rack_barcode
     end
 
     # Validation to compare the tube barcodes in the two files to check for duplication
@@ -221,6 +255,37 @@ module LabwareCreators
       )
     end
 
+    # Validation that checks for 'DECODE FAILURE' in the uploaded tube rack scan files.
+    #
+    # This validation inspects both the sequencing and contingency tube rack scan CSV files (if present).
+    # If any barcode in either file is exactly 'DECODE FAILURE', it adds an error to the corresponding file attribute
+    # ('Sequencing tube rack scan file' or 'Contingency tube rack scan file').
+    #
+    # The error message is informative, explaining that 'DECODE FAILURE' means the scanner could not decode a barcode
+    # in one or more positions, and instructs the user to check and re-scan the affected tubes.
+    #
+    # Example error message:
+    #   "Sequencing csv file contains 'DECODE FAILURE'. This means the scanner could not decode a barcode in one or
+    #   more positions. Please check your file and re-scan the affected tubes."
+    #
+    # This prevents the user from progressing if a decode failure is detected in the uploaded files.
+
+    def check_decode_failure_in_tube_rack_files
+      [sequencing_csv_file, contingency_csv_file].each_with_index do |csv_file, idx|
+        next if csv_file.blank?
+
+        barcodes = extract_barcodes(csv_file)
+        next unless barcodes.any?('DECODE FAILURE')
+
+        file_type = idx.zero? ? 'Sequencing tube rack scan file' : 'Contingency tube rack scan file'
+        errors.add(
+          file_type,
+          "contains 'DECODE FAILURE'. This means the scanner could not decode a barcode in one or more positions. " \
+          'Please check your file and re-scan the affected tubes.'
+        )
+      end
+    end
+
     def extract_barcodes(file)
       file.position_details.values.pluck('tube_barcode')
     end
@@ -233,6 +298,7 @@ module LabwareCreators
     # Sets errors if there are insufficient or too many tubes.
     def must_have_correct_number_of_tubes_in_rack_files
       return unless files_valid?
+
       unless require_sequencing_tubes_only?
         add_error_if_wrong_number_of_tubes(
           :contingency_csv_file,
@@ -309,13 +375,16 @@ module LabwareCreators
       @ancestor_stock_tubes ||= locate_ancestor_tubes
     end
 
+    def stock_labware_purpose_name
+      @stock_labware_purpose_name ||= purpose_config.dig(:creator_class, :args, :ancestor_stock_tube_purpose_name)
+    end
+
     # Locates the ancestor stock tubes for the parent wells.
     #
     # @return [Hash{String => Sequencescape::Api::V2::Tube}] A hash of ancestor stock tubes, keyed by sample UUID.
     def locate_ancestor_tubes
-      purpose_name = purpose_config[:ancestor_stock_tube_purpose_name]
+      ancestor_results = parent.ancestors.where(purpose_name: stock_labware_purpose_name)
 
-      ancestor_results = parent.ancestors.where(purpose_name:)
       return {} if ancestor_results.blank?
 
       ancestor_results.each_with_object({}) do |ancestor_result, tube_list|
@@ -344,6 +413,32 @@ module LabwareCreators
     # @return [Integer] The number of contingency tubes.
     def num_contingency_tubes
       @num_contingency_tubes ||= contingency_csv_file&.position_details&.length || 0
+    end
+
+    # Retrieves the tube rack barcode from the sequencing CSV file.
+    #
+    # @return [String] the tube rack barcode extracted from the sequencing CSV file
+    # @raise [KeyError, NoMethodError] if the expected keys or methods are not present in the sequencing CSV file
+    def sequencing_tube_rack_barcode
+      @sequencing_tube_rack_barcode ||= extract_tube_rack_barcode(sequencing_csv_file)
+    end
+
+    # Retrieves the tube rack barcode from the contingency CSV file.
+    #
+    # @return [String] the tube rack barcode extracted from the contingency CSV file
+    # @raise [KeyError, NoMethodError] if the expected keys or methods are not present in the contingency CSV file
+    def contingency_tube_rack_barcode
+      @contingency_tube_rack_barcode ||= extract_tube_rack_barcode(contingency_csv_file)
+    end
+
+    # Extracts the tube rack barcode from the given file.
+    # This method assumes that the file has a `position_details` attribute, which is a hash.
+    #
+    # @param file [Object] the file object containing position details
+    # @return [String] the tube rack barcode extracted from the file
+    # @raise [KeyError, NoMethodError] if the expected keys or methods are not present in the file object
+    def extract_tube_rack_barcode(file)
+      file.position_details.values.first['tube_rack_barcode']
     end
 
     # Uploads the sequencing and contingency tube rack scan CSV files for the parent plate.
@@ -407,25 +502,6 @@ module LabwareCreators
         well_filter.filtered.filter_map { |well, _ignore| well unless parent_wells_for_sequencing.include?(well) }
     end
 
-    # Creates a specified number of tubes with the given attributes and returns a hash of the created tubes indexed
-    # by name.
-    #
-    # @param tube_purpose_uuid [String] The UUID of the tube purpose to use for the created tubes.
-    # @param number_of_tubes [Integer] The number of tubes to create.
-    # @param tube_attributes [Hash] A hash of attributes to use for the created tubes.
-    # @return [Hash<String, Tube>] A hash of the created tubes indexed by name.
-    def create_tubes(tube_purpose_uuid, number_of_tubes, tube_attributes)
-      Sequencescape::Api::V2::SpecificTubeCreation
-        .create!(
-          child_purpose_uuids: [tube_purpose_uuid] * number_of_tubes,
-          parent_uuids: [parent_uuid],
-          tube_attributes: tube_attributes,
-          user_uuid: user_uuid
-        )
-        .children
-        .index_by(&:name)
-    end
-
     # Returns the name of the sequencing tube purpose based on the current purpose configuration.
     #
     # @return [String] The name of the sequencing tube purpose.
@@ -474,6 +550,55 @@ module LabwareCreators
       Settings.purpose_uuids[contingency_tube_purpose_name]
     end
 
+    # Returns the name of the sequencing tube rack purpose based on the current purpose configuration.
+    #
+    # @return [String] The name of the sequencing tube rack purpose.
+    def sequencing_tube_rack_purpose_name
+      @sequencing_tube_rack_purpose_name ||=
+        purpose_config.dig(:creator_class, :args, :child_seq_tube_rack_purpose_name)
+    end
+
+    # Returns the UUID of the sequencing tube rack purpose based on the current purpose configuration.
+    #
+    # @return [Sequencescape::Api::V2::TubeRackPurpose] The sequencing tube rack purpose.
+    def sequencing_tube_rack_purpose
+      unless sequencing_tube_rack_purpose_name
+        raise "Missing purpose configuration argument 'child_seq_tube_rack_purpose_name'"
+      end
+
+      Sequencescape::Api::V2::TubeRackPurpose.find(name: sequencing_tube_rack_purpose_name).first
+    end
+
+    def sequencing_tube_rack_purpose_uuid
+      @sequencing_tube_rack_purpose_uuid ||= sequencing_tube_rack_purpose.uuid
+    end
+
+    # Returns the name of the contingency tube rack purpose based on the current purpose configuration.
+    #
+    # @return [String] The name of the contingency tube rack purpose.
+    def contingency_tube_rack_purpose_name
+      @contingency_tube_rack_purpose_name ||=
+        purpose_config.dig(:creator_class, :args, :child_spare_tube_rack_purpose_name)
+    end
+
+    # Returns the contingency tuberack purpose based on the current purpose configuration.
+    #
+    # @return [Sequencescape::Api::V2::TubeRackPurpose] The contingency tuberack purpose.
+    def contingency_tube_rack_purpose
+      unless contingency_tube_rack_purpose_name
+        raise "Missing purpose configuration argument 'child_spare_tube_rack_purpose_name'"
+      end
+
+      Sequencescape::Api::V2::TubeRackPurpose.find(name: contingency_tube_rack_purpose_name).first
+    end
+
+    # Returns the UUID of the contingency tube rack purpose.
+    #
+    # @return [String] The UUID of the contingency tube rack purpose.
+    def contingency_tube_rack_purpose_uuid
+      @contingency_tube_rack_purpose_uuid ||= contingency_tube_rack_purpose.uuid
+    end
+
     # Returns the human-readable barcode of the ancestor (supplier) source tube for the given sample UUID.
     #
     # @param sample_uuid [String] The UUID of the sample to find the ancestor tube for.
@@ -491,17 +616,37 @@ module LabwareCreators
     # Returns a hash of attributes to use for the sequencing tubes.
     #
     # @return [Hash] A hash of attributes to use for the sequencing tubes.
-    def sequencing_tube_attributes
-      @sequencing_tube_attributes ||=
-        generate_tube_attributes('sequencing', sequencing_csv_file, parent_wells_for_sequencing)
+    def generate_sequencing_tube_rack_attributes(_tube_rack_attributes)
+      {
+        tube_rack_name: SEQ_TUBE_RACK_NAME,
+        tube_rack_barcode: sequencing_tube_rack_barcode,
+        tube_rack_purpose_uuid: sequencing_tube_rack_purpose_uuid,
+        racked_tubes:
+          generate_tube_attributes(
+            'sequencing',
+            sequencing_csv_file,
+            sequencing_tube_purpose_uuid,
+            parent_wells_for_sequencing
+          )
+      }
     end
 
     # Returns a hash of attributes to use for the contingency tubes.
     #
     # @return [Hash] A hash of attributes to use for the contingency tubes.
-    def contingency_tube_attributes
-      @contingency_tube_attributes ||=
-        generate_tube_attributes('contingency', contingency_csv_file, parent_wells_for_contingency)
+    def generate_contingency_tube_rack_attributes(_tube_rack_attributes)
+      {
+        tube_rack_name: SPR_TUBE_RACK_NAME,
+        tube_rack_barcode: contingency_tube_rack_barcode,
+        tube_rack_purpose_uuid: contingency_tube_rack_purpose_uuid,
+        racked_tubes:
+          generate_tube_attributes(
+            'contingency',
+            contingency_csv_file,
+            contingency_tube_purpose_uuid,
+            parent_wells_for_contingency
+          )
+      }
     end
 
     # Returns the name prefix for child tubes based on the tube type.
@@ -526,37 +671,16 @@ module LabwareCreators
       name_prefix
     end
 
-    # Adds a mapping between a well and a tube name to the appropriate hash based on the tube type.
-    # @param tube_type [String] The type of tube to generate attributes for ('sequencing' or 'contingency').
-    # @param well [Well] The well to add the mapping for.
-    # @param tube_name [String] The name of the tube to add the mapping for.
-    #
-    # This method adds the mapping to either the `@sequencing_wells_to_tube_names` or to the
-    # `@contingency_wells_to_tube_names` hash, depending on the tube type.
-    # If the hash does not exist, this method creates it.
-    # @return [void]
-    def add_to_well_to_tube_hash(tube_type, well, tube_name)
-      if tube_type == 'sequencing'
-        @sequencing_wells_to_tube_names ||= {}
-        @sequencing_wells_to_tube_names[well] = tube_name
-      else
-        @contingency_wells_to_tube_names ||= {}
-        @contingency_wells_to_tube_names[well] = tube_name
-      end
-    end
-
     # Generates a hash of attributes to use for the tubes based on the
     # current purpose configuration and the available tube positions.
-    # Passes the name for each tube.
-    # Passes the foreign barcode extracted from the tube rack scan upload for each tube,
-    # which on the Sequencescape side sets that barcode as the primary.
     # @param tube_type [String] The type of tube to generate attributes for.
     # @param csv_file [CsvFile] The CSV file containing the tube rack scan data.
+    # @param tube_purpose_uuid [String] The UUID of the tube purpose to use for the tubes.
     # @param wells [Array<Well>] The parent wells to generate attributes for.
     #
-    # @return [Hash] A hash of attributes to use for the contingency tubes.
+    # @return [Array<Hash>] A array of hashes of tube attributes.
     # rubocop:disable Metrics/AbcSize
-    def generate_tube_attributes(tube_type, csv_file, wells)
+    def generate_tube_attributes(tube_type, csv_file, tube_purpose_uuid, wells)
       # fetch the available tube positions (i.e. locations of scanned tubes for which we
       # have the barcodes) e.g. ["A1", "B1", "D1"]
       available_tube_posns = csv_file.position_details.keys
@@ -566,18 +690,25 @@ module LabwareCreators
       wells
         .zip(available_tube_posns)
         .map do |well, tube_posn|
+          # NB. assumption of 1 sample per well, but only used for name generation
           sample_uuid = well.aliquots.first.sample.uuid
 
+          # generate a human-readable name for the tube
           name_for_details = name_for_details_hash(name_prefix, ancestor_tube_barcode(sample_uuid), tube_posn)
-
           tube_name = name_for(name_for_details)
-          add_to_well_to_tube_hash(tube_type, well, tube_name)
 
-          { name: tube_name, foreign_barcode: csv_file.position_details[tube_posn]['tube_barcode'] }
+          {
+            tube_barcode: csv_file.position_details[tube_posn]['tube_barcode'],
+            tube_name: tube_name,
+            tube_purpose_uuid: tube_purpose_uuid,
+            tube_position: tube_posn,
+            parent_uuids: [well.uuid]
+          }
         end
     end
 
     # rubocop:enable Metrics/AbcSize
+
     # Returns a hash of details to use for generating a tube name based on the given prefix,
     # stock tube barcode, and destination tube position.
     #
@@ -598,72 +729,131 @@ module LabwareCreators
       "#{details[:prefix]}:#{details[:stock_tube_bc]}:#{details[:dest_tube_posn]}"
     end
 
-    # Returns an array of transfer request hashes for the filtered wells and their corresponding child tubes.
+    # Fetches the tube barcodes for a given well UUID.
     #
-    # @return [Array<Hash>] An array of transfer request hashes.
+    # This method iterates over the tube rack attributes and selects the racked tubes
+    # whose parent UUIDs include the specified well UUID. It then extracts the tube
+    # barcodes from the selected racked tubes.
+    #
+    # @param well_uuid [String] The UUID of the well for which to fetch tube barcodes.
+    # @return [Array<String>] An array of tube barcodes associated with the specified well UUID.
+    #
+    def fetch_tube_barcodes_for_well(well_uuid)
+      tube_rack_attributes.flat_map do |tube_rack|
+        tube_rack[:racked_tubes]
+          .select { |racked_tube| racked_tube[:parent_uuids].include?(well_uuid) }
+          .pluck(:tube_barcode)
+      end
+    end
+
+    # Generates a hash mapping tube barcodes to their corresponding UUIDs.
+    #
+    # This method iterates over the child tube racks and their racked tubes,
+    # extracting the barcode and UUID of each tube. It then stores these values
+    # in a hash, where the keys are the human-readable barcodes and the values
+    # are the corresponding UUIDs.
+    #
+    # @return [Hash{String => String}] A hash mapping tube barcodes to their UUIDs.
+    #
+    # Example:
+    #   {
+    #     "ABC123" => "uuid-1234-5678-9012",
+    #     "DEF456" => "uuid-2345-6789-0123"
+    #   }
+    #
+    def generate_tube_uuids_by_barcode
+      child_tube_racks.each_with_object({}) do |(_tube_rack_name, tube_rack), tube_uuids_by_barcode|
+        tube_rack.racked_tubes.each do |racked_tube|
+          tube = racked_tube.tube
+          tube_barcode = tube.barcode.human
+          tube_uuid = tube.uuid
+
+          # store barcode to uuid mapping
+          tube_uuids_by_barcode[tube_barcode] = tube_uuid
+        end
+      end
+    end
+
+    # Returns a hash mapping tube barcodes to their corresponding UUIDs.
+    def tube_uuids_by_barcode
+      @tube_uuids_by_barcode ||= generate_tube_uuids_by_barcode
+    end
+
+    # Generates transfer request attributes for each well and its child tubes.
+    #
+    # This method iterates over the filtered wells and generates transfer request
+    # attributes for each well and its associated child tubes. It raises an error
+    # if it is unable to identify the child tube barcodes or the newly created
+    # child tube UUIDs for any well.
+    #
+    # @return [Array<Hash>] An array of hashes representing the transfer request attributes.
+    #
+    # @raise [RuntimeError] If unable to identify the child tube barcodes for a well.
+    # @raise [RuntimeError] If unable to identify the newly created child tube UUID for a well.
+    #
+    # Example:
+    #   [
+    #     {
+    #       well_uuid: "uuid-1234-5678-9012",
+    #       tube_uuid: "uuid-2345-6789-0123",
+    #       additional_parameters: { ... }
+    #     },
+    #     ...
+    #   ]
+    #
     def transfer_request_attributes
-      well_filter.filtered.filter_map do |well, additional_parameters|
-        child_tube = find_child_tube(well)
+      well_filter
+        .filtered
+        .each_with_object([]) do |(well, additional_parameters), transfer_requests|
+          well_uuid = well.uuid
+          tube_barcodes_for_well = fetch_tube_barcodes_for_well(well_uuid)
 
-        next unless child_tube
+          validate_tube_barcodes_for_well!(tube_barcodes_for_well, well)
 
-        request_hash(well.uuid, child_tube.uuid, additional_parameters)
+          tube_barcodes_for_well.each do |tube_barcode_for_well|
+            tube_uuid = fetch_tube_uuid_for_barcode(tube_barcode_for_well, well)
+            transfer_requests << request_hash(well_uuid, tube_uuid, additional_parameters)
+          end
+        end
+    end
+
+    # Validates the presence of tube barcodes for a given well.
+    #
+    # This method checks if the tube_barcodes_for_well array is blank and raises
+    # an error if it is. It ensures that there are child tube barcodes for the
+    # specified well.
+    #
+    # @param tube_barcodes_for_well [Array<String>] An array of tube barcodes for the well.
+    # @param well [Object] The well object for which to validate tube barcodes.
+    # @raise [RuntimeError] If the tube_barcodes_for_well array is blank.
+    #
+    def validate_tube_barcodes_for_well!(tube_barcodes_for_well, well)
+      return if tube_barcodes_for_well.present?
+
+      raise "Unable to identify the child tube barcodes for parent well '#{well.position[:name]}'"
+    end
+
+    # Fetches the tube UUID for a given tube barcode.
+    #
+    # This method retrieves the tube UUID for the specified tube barcode from the
+    # tube_uuids_by_barcode hash. It raises an error if the tube UUID is blank.
+    #
+    # @param tube_barcode_for_well [String] The barcode of the tube for which to fetch the UUID.
+    # @param well [Object] The well object associated with the tube barcode.
+    # @return [String] The UUID of the tube.
+    # @raise [RuntimeError] If the tube UUID is blank.
+    #
+    # Example:
+    #   tube_uuid = fetch_tube_uuid_for_barcode("ABC123", well)
+    #   # => "uuid-2345-6789-0123"
+    #
+    def fetch_tube_uuid_for_barcode(tube_barcode_for_well, well)
+      tube_uuid = tube_uuids_by_barcode[tube_barcode_for_well]
+      if tube_uuid.blank?
+        raise "Unable to identify the newly created child tube for parent well '#{well.position[:name]}'"
       end
-    end
 
-    # Finds the child tube corresponding to the given well.
-    #
-    # @param well [Well] The well to find the child tube for.
-    # @return [Tube, nil] The child tube corresponding to the given well, or nil if no child tube was found.
-    def find_child_tube(well)
-      if require_sequencing_tubes_only?
-        @child_sequencing_tubes[@sequencing_wells_to_tube_names[well]]
-      else
-        @child_sequencing_tubes[@sequencing_wells_to_tube_names[well]] ||
-          @child_contingency_tubes[@contingency_wells_to_tube_names[well]]
-      end
-    end
-
-    # Adds metadata to child tubes using details from the parsed sequencing and contingency CSV files.
-    #
-    # @return [void]
-    def add_child_tube_metadata
-      add_sequencing_tube_metadata
-
-      add_contingency_tube_metadata unless require_sequencing_tubes_only?
-    end
-
-    # Adds tube rack barcode and position metadata to child sequencing tubes.
-    #
-    # @return [void]
-    def add_sequencing_tube_metadata
-      child_sequencing_tubes.each do |child_tube_name, child_tube|
-        tube_posn = child_tube_name.split(':').last
-        add_tube_metadata(child_tube, tube_posn, sequencing_csv_file.position_details[tube_posn])
-      end
-    end
-
-    # Adds tube rack barcode and position metadata to child contingency tubes.
-    #
-    # @return [void]
-    def add_contingency_tube_metadata
-      child_contingency_tubes.each do |child_tube_name, child_tube|
-        tube_posn = child_tube_name.split(':').last
-        add_tube_metadata(child_tube, tube_posn, contingency_csv_file.position_details[tube_posn])
-      end
-    end
-
-    # Shared method for adding tube rack barcode and position metadata to child tubes.
-    #
-    # @param child_tube [Tube] The child tube to add metadata to.
-    # @param tube_posn [String] The position of the child tube in the tube rack.
-    # @param tube_details [Hash] The tube details hash from the tube rack scan file.
-    # @return [void]
-    def add_tube_metadata(child_tube, tube_posn, tube_details)
-      LabwareMetadata.new(user_uuid: user_uuid, barcode: child_tube.barcode.machine).update!(
-        tube_rack_barcode: tube_details['tube_rack_barcode'],
-        tube_rack_position: tube_posn
-      )
+      tube_uuid
     end
 
     # Generates a transfer request hash for the given source well UUID, target tube UUID, and additional parameters.
