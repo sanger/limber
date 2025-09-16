@@ -13,32 +13,35 @@ A flexible front end to pipelines in Sequencescape.
 
 <!-- toc -->
 
-- [User Requirements](#user-requirements)
-- [Initial Setup (using Docker)](#initial-setup-using-docker)
-- [Initial Setup (using native installation)](#initial-setup-using-native-installation)
-- [Linting and formatting](#linting-and-formatting)
-- [Troubleshooting](#troubleshooting)
-  - [ViteRuby::MissingEntrypointError in Search#new](#viterubymissingentrypointerror-in-search%23new)
-  - [Changes not updating](#changes-not-updating)
-  - [Cucumber / RSpec feature chromedriver issues](#cucumber--rspec-feature-chromedriver-issues)
-- [Note about the remainder of this document](#note-about-the-remainder-of-this-document)
-- [Docs](#docs)
-- [Configuring pipelines](#configuring-pipelines)
-- [Running Specs](#running-specs)
-  - [RSpec](#rspec)
-  - [Vitest](#vitest)
-  - [Writing specs](#writing-specs)
-    - [Factory Bot](#factory-bot)
-    - [Request stubbing for the Sequencescape v1 API](#request-stubbing-for-the-sequencescape-v1-api)
-    - [Request stubbing for the Sequencescape v2 API](#request-stubbing-for-the-sequencescape-v2-api)
-      - [FactoryBot is not mocking my related resources correctly](#factorybot-is-not-mocking-my-related-resources-correctly)
-    - [Feature debugging](#feature-debugging)
-  - [Lefthook](#lefthook)
-- [Credentials](#credentials)
-- [Miscellaneous](#miscellaneous)
-  - [Sprint Templates for Barcode Label Printing](#sprint-templates-for-barcode-label-printing)
-  - [Chromedriver issues](#chromedriver-issues)
-  - [Updating the table of contents](#updating-the-table-of-contents)
+- [Limber Pipeline Application](#limber-pipeline-application)
+  - [Description](#description)
+  - [Contents](#contents)
+  - [User Requirements](#user-requirements)
+  - [Initial Setup (using Docker)](#initial-setup-using-docker)
+  - [Initial Setup (using native installation)](#initial-setup-using-native-installation)
+  - [Linting and formatting](#linting-and-formatting)
+  - [Troubleshooting](#troubleshooting)
+    - [ViteRuby::MissingEntrypointError in Search#new](#viterubymissingentrypointerror-in-searchnew)
+    - [Changes not updating](#changes-not-updating)
+    - [Cucumber / RSpec feature chromedriver issues](#cucumber--rspec-feature-chromedriver-issues)
+  - [Note about the remainder of this document](#note-about-the-remainder-of-this-document)
+  - [Docs](#docs)
+  - [Configuring pipelines](#configuring-pipelines)
+  - [Running Specs](#running-specs)
+    - [RSpec](#rspec)
+    - [Vitest](#vitest)
+    - [Writing specs](#writing-specs)
+      - [Factory Bot](#factory-bot)
+      - [Request stubbing for the Sequencescape v1 API](#request-stubbing-for-the-sequencescape-v1-api)
+      - [Request stubbing for the Sequencescape v2 API](#request-stubbing-for-the-sequencescape-v2-api)
+        - [FactoryBot is not mocking my related resources correctly](#factorybot-is-not-mocking-my-related-resources-correctly)
+      - [Feature debugging](#feature-debugging)
+    - [Lefthook](#lefthook)
+  - [Credentials](#credentials)
+  - [Miscellaneous](#miscellaneous)
+    - [Sprint Templates for Barcode Label Printing](#sprint-templates-for-barcode-label-printing)
+    - [Chromedriver issues](#chromedriver-issues)
+    - [Updating the table of contents](#updating-the-table-of-contents)
 
 <!-- tocstop -->
 
@@ -283,7 +286,6 @@ There are a few tools available to assist with writing specs:
 - Strategies: You can use json `:factory_name` to generate the json that the API is expected to receive. This is very useful for mocking web responses. The association strategy is used for building nested json, it will usually only be used as part of other factories.
 
 - Traits:
-
   - `api_object`: Ensures that lots of the shared behaviour, like actions and uuids are generated automatically
     barcoded: Automatically ensures that barcode is populated with the correct hash, and calculates human and machine barcodes
   - `build`: Returns an actual object, as though already found via the api. Useful for unit tests
