@@ -12,8 +12,8 @@ class Sequencescape::Api::V2::TagLayoutTemplate < Sequencescape::Api::V2::Base
   # Performs the coercion of this instance so that it behaves appropriately given the direction
   # and walking algorithm information.
   def coerce
-    extend("limber/tag_layout_template/in_#{direction.gsub(/\s+/, '_')}s".camelize.constantize)
-    extend("limber/tag_layout_template/walk_#{walking_by.gsub(/\s+/, '_')}".camelize.constantize)
+    extend("tag_layout_templates/in_#{direction.gsub(/\s+/, '_')}s".camelize.constantize)
+    extend("tag_layout_templates/walk_#{walking_by.gsub(/\s+/, '_')}".camelize.constantize)
   rescue NameError => e
     Rails.logger.warn("Unrecognised layout options: #{e.message}")
     extend Unsupported
