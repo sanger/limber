@@ -44,7 +44,7 @@ RSpec.describe 'exports/concentrations_ngul.csv.erb' do
     before do
       assign(:plate, labware)
       allow(well_a1).to receive(:submission_ids).and_return([1, 2])
-      allow(well_b1).to receive(:submission_ids).and_return([1, 2])
+      allow(well_b1).to receive(:submission_ids).and_return([2, 1]) # It must be sorted in the view.
     end
 
     let(:expected_content) do

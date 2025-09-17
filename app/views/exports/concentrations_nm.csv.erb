@@ -4,7 +4,7 @@
 <% seen_well_locations = Set.new %><%# To prevent duplicated wells in the CSV at branch points %>
 <%= CSV.generate_line ['Well','Concentration','Pick','Pool'], row_sep: "" %>
 <% @plate.wells_in_columns.each do |well| %>
-  <% well.submission_ids.each do |submission_id| %>
+  <% well.submission_ids.sort.each do |submission_id| %>
     <% well_location = well.position['name'] %>
     <% pool_number = @pooling_ids[submission_id] %>
     <% next if seen_well_locations.include?(well_location) %>
