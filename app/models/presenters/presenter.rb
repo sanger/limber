@@ -153,7 +153,11 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   end
 
   def stock_plate_barcode_from_metadata(plate_machine_barcode)
-    metadata = LabwareMetadata.new(barcode: plate_machine_barcode).metadata
+    begin
+      metadata = LabwareMetadata.new(barcode: plate_machine_barcode).metadata
+    rescue JsonApiClient::Errors::NotFound
+      metadata = nil
+    end
     metadata.present? ? metadata.fetch('stock_barcode', barcode) : 'N/A'
   end
 end

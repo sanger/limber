@@ -80,6 +80,45 @@ RSpec.describe SearchController, type: :controller do
         expect(response.parsed_body).to eq('error' => 'You have not supplied a labware barcode')
       end
     end
+
+    context 'when logs should be checked for sensitive parameters' do
+      let(:barcode) { 'ABC123' }
+      let(:params) do
+        {
+          plate_barcode: barcode,
+          _key: 'sensitive',
+          api_key: 'sensitive',
+          bananas: 'public',
+          keywords: 'public',
+          monkey: 'public',
+          request_type_key: 'public',
+          token: 'sensitive',
+          user_key: 'sensitive'
+        }
+      end
+
+      before do
+        allow(controller).to receive(:find_labware).with(barcode).and_return('/labware/ABC123')
+        allow(Rails.logger).to receive(:info)
+
+        post :create, params: params, session: { format: :json }
+      end
+
+      public_params = %w[bananas keywords monkey request_type_key]
+      sensitive_params = %w[_key api_key token user_key]
+
+      public_params.each do |param|
+        it "does not filter '#{param}' from logs" do
+          expect(Rails.logger).to have_received(:info).with(a_string_including("\"#{param}\" => \"public\""))
+        end
+      end
+
+      sensitive_params.each do |param|
+        it "filters sensitive '#{param}' from logs" do
+          expect(Rails.logger).to have_received(:info).with(a_string_including("\"#{param}\" => \"[FILTERED]\""))
+        end
+      end
+    end
   end
 
   context 'configured plates and tubes' do
