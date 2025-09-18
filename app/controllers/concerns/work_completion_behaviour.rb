@@ -10,10 +10,8 @@ module WorkCompletionBehaviour
 
   included { include SequencescapeSubmissionBehaviour }
 
-  # Create a work completion for the given plate_id
-  # and redirect to the plate page.
-  # Work completions mark library creation requests as completed
-  # and hook them up to the correct wells.
+  # Create a work completion for the given labware ID and redirect to the labware's page.
+  # Work completions mark library creation requests as completed and hook them up to the correct wells.
   def create
     Sequencescape::Api::V2::WorkCompletion.create!(
       # Our pools keys are our submission uuids.
@@ -22,8 +20,7 @@ module WorkCompletionBehaviour
       user_uuid: current_user_uuid
     )
 
-    # We assign the message in an array as create_submission may wish to add
-    # its own feedback.
+    # We assign the message in an array as create_submission may wish to add its own feedback.
     flash[:notice] = ['Requests have been passed']
 
     create_submission if params[:sequencescape_submission]
