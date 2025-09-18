@@ -17,7 +17,7 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
 
   RSpec.shared_examples 'a tsv view' do
     it 'renders the view' do
-      get :show, params: { id: tsv_id, limber_tube_id: tube_barcode }, as: :tsv
+      get :show, params: { id: tsv_id, tube_id: tube_barcode }, as: :tsv
       expect(response).to have_http_status(:ok)
       expect(assigns(:labware)).to be_a(Sequencescape::Api::V2::Tube)
       expect(assigns(:tube)).to be_a(Sequencescape::Api::V2::Tube)
@@ -48,10 +48,8 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
   end
 
   context 'where default' do
-    let(:includes) { 'wells' }
-
     it 'returns 404 with unknown templates' do
-      expect { get :show, params: { id: 'not_a_template', limber_tube_id: tube_barcode }, as: :csv }.to raise_error(
+      expect { get :show, params: { id: 'not_a_template', tube_id: tube_barcode }, as: :csv }.to raise_error(
         ActionController::RoutingError,
         'Unknown template not_a_template'
       )

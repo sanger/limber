@@ -8,7 +8,6 @@ RSpec.feature 'Charge and pass libraries', :js do
   let(:user) { create :user, uuid: user_uuid }
   let(:user_uuid) { SecureRandom.uuid }
   let(:user_swipecard) { 'abcdef' }
-  let(:labware_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).machine_barcode.to_s }
   let(:labware_uuid) { SecureRandom.uuid }
   let(:work_completions_attributes) do
     [{ target_uuid: labware_uuid, user_uuid: user_uuid, submission_uuids: submission_uuids }]
@@ -26,6 +25,11 @@ RSpec.feature 'Charge and pass libraries', :js do
     before do
       create :purpose_config, uuid: 'example-purpose-uuid'
       stub_v2_plate(plate)
+      stub_v2_plate(
+        plate,
+        stub_search: false,
+        custom_includes: 'wells.aliquots.request.poly_metadata'
+      )
       stub_v2_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
     end
 

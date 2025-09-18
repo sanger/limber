@@ -12,9 +12,6 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   # robot barcode
   let(:robot_barcode) { 'robot_barcode' }
 
-  # tube rack barcode
-  let(:tube_rack_barcode) { 'TR1F' }
-
   # tube uuids
   let(:tube1_uuid) { 'tube1_uuid' }
   let(:tube2_uuid) { 'tube2_uuid' }
