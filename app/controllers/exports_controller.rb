@@ -33,11 +33,6 @@ class ExportsController < ApplicationController
     raise ActionController::RoutingError, "Unknown template #{params[:id]}"
   end
 
-  def configure_api
-    # We don't use the V1 Sequencescape API here, so lets disable its initialization.
-    # Probably should consider two controller classes as this expands.
-  end
-
   def locate_labware
     @labware =
       @plate = Sequencescape::Api::V2.plate_with_custom_includes(include_parameters, barcode: params[:plate_id])

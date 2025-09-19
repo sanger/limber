@@ -241,7 +241,6 @@ GEM
     mini_portile2 (2.8.9)
     minitest (5.25.5)
     msgpack (1.8.0)
-    multi_json (1.15.0)
     multipart-post (2.4.0)
     mutex_m (0.3.0)
     nenv (0.3.0)
@@ -413,11 +412,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    sequencescape-client-api (2.0.0)
-      activemodel (>= 5.0.0)
-      activesupport (>= 5.0.0)
-      i18n
-      multi_json
     shellany (0.0.1)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -516,7 +510,6 @@ DEPENDENCIES
   ruby-units
   sanger_barcode_format!
   selenium-webdriver (~> 4.1)
-  sequencescape-client-api
   simplecov
   simplecov-lcov
   sprint_client

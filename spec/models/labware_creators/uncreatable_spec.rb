@@ -27,7 +27,7 @@ RSpec.describe LabwareCreators::Uncreatable do
   let(:purpose_name) { 'Uncreatable Purpose' }
   let(:purpose_uuid) { 'uncreatable-purpose' }
 
-  let(:labware_creator) { described_class.new(nil, purpose_uuid:, parent_uuid:) }
+  let(:labware_creator) { described_class.new(purpose_uuid:, parent_uuid:) }
 
   let(:purpose_settings) do
     {

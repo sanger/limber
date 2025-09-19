@@ -71,7 +71,7 @@ module Robots::Bed
     # @param tube [Tube] the tube for which the state should be changed
     def change_tube_state(tube)
       state_changer = StateChangers.lookup_for(tube.purpose.uuid)
-      state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
+      state_changer.new(tube.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
     end
   end
 end

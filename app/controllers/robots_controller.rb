@@ -94,7 +94,7 @@ class RobotsController < ApplicationController
   end
 
   def find_robot
-    @robot = Robots.find(id: params[:id], api: api, user_uuid: current_user_uuid)
+    @robot = Robots.find(id: params[:id], user_uuid: current_user_uuid)
   end
 
   def stripped_beds

@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe SearchController, type: :controller do
   include FeatureHelpers
 
-  has_a_working_api
-
   let(:uuid) { SecureRandom.uuid }
 
   describe '#new' do

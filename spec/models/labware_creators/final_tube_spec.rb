@@ -5,12 +5,10 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::FinalTube do
-  has_a_working_api
-
   it_behaves_like 'it only allows creation from tubes'
 
   context 'on creation' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     before { stub_v2_tube(parent_tube) }
 
@@ -38,7 +36,7 @@ RSpec.describe LabwareCreators::FinalTube do
       let(:parent_tube) { create :v2_tube, uuid: parent_uuid }
 
       describe '#save' do
-        it 'is vaild' do
+        it 'is valid' do
           expect_transfer_creation
 
           expect(subject.save).to be true

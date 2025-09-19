@@ -6,8 +6,6 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
   include FeatureHelpers
 
   context 'when creating a pbmc bank tubes content report csv' do
-    has_a_working_api
-
     # study
     let(:study_name) { 'Report Study' }
     let(:study) { create(:v2_study, name: study_name) }

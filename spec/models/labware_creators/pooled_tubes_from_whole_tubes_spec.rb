@@ -8,10 +8,8 @@ require_relative 'shared_examples'
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
-  has_a_working_api
-
   include FeatureHelpers
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from tubes'
 

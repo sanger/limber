@@ -9,20 +9,6 @@ namespace :config do
   require './config/robots'
 
   task generate: :environment do
-    begin
-      api = Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options)
-    rescue Sequencescape::Api::UnauthenticatedError => _e
-      puts <<~HEREDOC
-        Could not authenticate with the Sequencescape API
-        Check config.api.v1.connection_options.authorisation in config/environments/#{Rails.env}.rb
-        The value should be listed in the api_applications table of the Sequencescape instance
-        you are connecting to.
-        In development mode it is recommended that you set the key through the API_KEY environment
-        variable. This reduces the risk of accidentally committing the key.
-      HEREDOC
-      exit 1
-    end
-
     label_template_config = YAML.load_file(Rails.root.join('config/label_templates.yml'))
 
     puts 'Fetching submission_templates...'
@@ -44,14 +30,6 @@ namespace :config do
     # Build the configuration file based on the server we are connected to.
     CONFIG = # rubocop:todo Lint/ConstantDefinitionInBlock
       {}.tap do |configuration|
-        # TODO: Y24-190 - Remove this once we have moved everything else over to V2;
-        #                 also the config entries for :searches
-        puts 'Preparing searches ...'
-        configuration[:searches] = api
-          .search
-          .all
-          .each_with_object({}) { |search, searches| searches[search.name] = search.uuid }
-
         puts 'Preparing transfer templates ...'
         query = Sequencescape::Api::V2::TransferTemplate.select(:uuid, :name).paginate(per_page: 100)
         transfer_templates = Sequencescape::Api::V2.merge_page_results(query).to_h { |tt| [tt.name, tt.uuid] }

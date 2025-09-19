@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb' do
-  has_a_working_api
-
   let(:wells) do
     # 8 because of the Pools plate.
     (1..8).map do |index| # one-based index
