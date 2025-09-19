@@ -20,9 +20,9 @@ FactoryBot.define do
   factory :tag_group, class: Sequencescape::Api::V2::TagGroup do
     skip_create
 
-    transient { tags { [] } }
+    transient { input_tags { [] } }
     sequence(:name) { |index| "TagGroup#{index}" }
-    tags { tags.map { |t| { index: t.map_id, oligo: t.oligo } } }
+    tags { input_tags.map { |t| { index: t.map_id, oligo: t.oligo } } }
 
     factory :tag_group_with_tags do
       transient do
