@@ -41,10 +41,8 @@ module LabwareCreators
     def redirection_target
       return :contents_not_transfered_to_mx_tube if all_tube_transfers.nil?
 
+      # Return a single tube as a redirection target
       destination_uuids = all_tube_transfers.map(&:destination_uuid).uniq
-
-      # The client_api returns a 'barcoded asset' here, rather than a tube.
-      # We know that its a tube though, so wrap it in this useful tool
       return Tube.new(destination_uuids.first) if destination_uuids.one?
 
       raise StandardError, 'Multiple targets found. You may have scanned tubes from separate submissions.'

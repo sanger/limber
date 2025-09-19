@@ -34,6 +34,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
     let(:template_factory) { :tag_layout_template }
     let(:expected_layout) do
       {
+        # Well => [Pool, Tag]
         'A1' => [1, 1],
         'A2' => [1, 9],
         'A3' => [1, 17],
@@ -798,6 +799,10 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
   end
 
   context 'by quadrants on a partial plate' do
+    # NOTE: don't fully understand what is actually being tested here.
+    # Quadrants are normally used for 384-well plates, but this is a 96-well plate.
+    # See https://github.com/sanger/limber/pull/2551/files#r2352708472
+    # Potentially related to https://github.com/sanger/limber/pull/71/files
     let(:plate) do
       build(
         :stock_plate,

@@ -46,8 +46,23 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', :js do
     create :pipeline, relationships: { 'Primer Panel example' => child_purpose_name }
     stub_swipecard_search(user_swipecard, user)
     stub_plate(parent)
+    stub_plate(
+      parent,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_plate(parent2)
+    stub_plate(
+      parent2,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_plate(child_plate)
+    stub_plate(
+      child_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
   end
 
   scenario 'creates multiple plates' do

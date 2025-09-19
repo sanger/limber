@@ -110,4 +110,4 @@ templates:
     :label_class: Labels::TubeLabelKinnex
     :printer_type: 1D Tube
     :pmb_template: tube_label_template_1d
-    :sprint_template: tube_label_template_1d.yml.erb
+    :sprint_template: tube_label_traction_compatible.yml.erb

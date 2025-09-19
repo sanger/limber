@@ -45,6 +45,11 @@ RSpec.feature 'Failing a whole plate', :js do
 
     # We get the plate several times, for both the initial find, and the redirect post state change
     stub_plate(example_plate)
+    stub_plate(
+      example_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
 
     # We get the printers
     stub_barcode_printers(create_list(:plate_barcode_printer, 3))

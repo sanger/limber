@@ -24,7 +24,7 @@ RSpec.describe Labels::TubeLabelKinnex do
       end
 
       it 'has the correct first_line attribute' do
-        expect(attributes[:first_line]).to eq labware.name
+        expect(attributes[:first_line]).to eq labware.barcode.human
       end
 
       it 'has the correct second_line attribute' do
@@ -44,7 +44,7 @@ RSpec.describe Labels::TubeLabelKinnex do
       end
 
       it 'has the correct barcode attribute' do
-        expect(attributes[:barcode]).to eq labware.barcode.ean13
+        expect(attributes[:barcode]).to eq labware.barcode.human
       end
     end
   end

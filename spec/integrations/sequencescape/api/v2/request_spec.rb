@@ -32,6 +32,9 @@ RSpec.describe Sequencescape::Api::V2::Request do
     context 'when we want to update existing poly metadata on a request' do
       it 'triggers an update on the request via api v2' do
         expect(test_poly_metadatum.save).to be true
+      end
+
+      it 'updates the poly metadata key and value' do
         expect(test_poly_metadatum.update(value: 'value2')).to be true
       end
     end

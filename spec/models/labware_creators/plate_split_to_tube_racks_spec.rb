@@ -833,6 +833,79 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     end
   end
 
+  describe '#check_decode_failure_in_tube_rack_files' do
+    let(:decode_failure_text) { described_class::DECODE_FAILURE_TEXT }
+
+    context 'when sequencing_csv_file contains DECODE FAILURE' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file).and_return(['ABC', decode_failure_text])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF'])
+        subject.check_decode_failure_in_tube_rack_files
+      end
+
+      it "adds an error to 'Sequencing tube rack scan file'" do
+        expect(subject.errors['Sequencing tube rack scan file']).to include(
+          "contains '#{decode_failure_text}'. This means the scanner could not decode a barcode in one " \
+          'or more positions. Please check your file and re-scan the affected tubes.'
+        )
+      end
+    end
+
+    context 'when contingency_csv_file contains DECODE FAILURE' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file).and_return(['ABC'])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF', decode_failure_text])
+        subject.check_decode_failure_in_tube_rack_files
+      end
+
+      it "adds an error to 'Contingency tube rack scan file'" do
+        expect(subject.errors['Contingency tube rack scan file']).to include(
+          "contains '#{decode_failure_text}'. This means the scanner could not decode a barcode in one " \
+          'or more positions. Please check your file and re-scan the affected tubes.'
+        )
+      end
+    end
+
+    context 'when neither file contains DECODE FAILURE' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file).and_return(['ABC'])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF'])
+        subject.check_decode_failure_in_tube_rack_files
+      end
+
+      it 'does not add any decode failure errors' do
+        expect(subject.errors['Sequencing tube rack scan file']).to be_blank
+        expect(subject.errors['Contingency tube rack scan file']).to be_blank
+      end
+    end
+
+    context 'when a file is blank' do
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(nil)
+        allow(subject).to receive(:contingency_csv_file).and_return(nil)
+      end
+
+      it 'does not raise an error' do
+        expect { subject.check_decode_failure_in_tube_rack_files }.not_to raise_error
+      end
+    end
+  end
+
   describe '#save' do
     # body for stubbing the contingency file upload
     let(:contingency_file_contents) do
@@ -1195,6 +1268,28 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
         expect(subject.valid?).to be_truthy
         expect(subject.save).to be_truthy
+      end
+    end
+
+    context 'when a decode failure is present in the sequencing file' do
+      let(:sequencing_csv_file) { double('CsvFile') }
+      let(:contingency_csv_file) { double('CsvFile') }
+
+      before do
+        allow(subject).to receive(:sequencing_csv_file).and_return(sequencing_csv_file)
+        allow(subject).to receive(:contingency_csv_file).and_return(contingency_csv_file)
+        allow(subject).to receive(:extract_barcodes).with(sequencing_csv_file)
+          .and_return(['ABC', described_class::DECODE_FAILURE_TEXT])
+        allow(subject).to receive(:extract_barcodes).with(contingency_csv_file).and_return(['DEF'])
+      end
+
+      it 'is not valid and does not save' do
+        expect(subject.valid?).to be_falsey
+        expect(subject.save).to be_falsey
+        expect(subject.errors['Sequencing tube rack scan file']).to include(
+          "contains '#{described_class::DECODE_FAILURE_TEXT}'. This means the scanner could not decode a barcode " \
+          'in one or more positions. Please check your file and re-scan the affected tubes.'
+        )
       end
     end
   end

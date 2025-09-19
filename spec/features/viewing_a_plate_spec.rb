@@ -35,6 +35,11 @@ RSpec.feature 'Viewing a plate', :js do
 
     # We get the actual plate
     stub_plate(example_plate)
+    stub_plate(
+      example_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_barcode_printers(printer_list)
   end
 

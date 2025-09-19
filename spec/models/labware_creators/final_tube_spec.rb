@@ -36,7 +36,7 @@ RSpec.describe LabwareCreators::FinalTube do
       let(:parent_tube) { create :tube, uuid: parent_uuid }
 
       describe '#save' do
-        it 'is vaild' do
+        it 'is valid' do
           expect_transfer_creation
 
           expect(subject.save).to be true

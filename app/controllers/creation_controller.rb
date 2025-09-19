@@ -9,6 +9,7 @@
 #           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class CreationController < ApplicationController
   before_action :check_for_current_user!
+  rescue_from LabwareCreators::ResourceInvalid, with: :creation_failed
 
   def new
     params[:parent_uuid] ||= parent_uuid
@@ -24,6 +25,14 @@ class CreationController < ApplicationController
 
   def labware_creator(form_attributes)
     creator_class.new(form_attributes.permit(permitted_attributes).merge(params_for_creator_build))
+  end
+
+  def creation_failed(exception)
+    Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}")
+    Rails.logger.error(exception.message)
+    exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
+
+    redirect_back_after_error('Cannot create the next piece of labware:', exception.resource.errors.full_messages)
   end
 
   private
@@ -68,5 +77,14 @@ class CreationController < ApplicationController
 
   def parent_uuid
     params[:tube_id] || params[:plate_id] || params[:tube_rack_id]
+  end
+
+  def redirect_back_after_error(prefix_message, error_messages)
+    flash_messages = [prefix_message] + Array(error_messages)
+    respond_to do |format|
+      format.html do
+        redirect_back(fallback_location: url_for(@labware_creator.parent), alert: truncate_flash(flash_messages))
+      end
+    end
   end
 end

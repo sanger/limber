@@ -86,6 +86,11 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
 
     # We get the objects we need from the API stubs
     stub_plate(parent_plate)
+    stub_plate(
+      parent_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_barcode_printers(create_list(:plate_barcode_printer, 3))
     stub_tag_layout_templates(templates)
 

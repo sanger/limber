@@ -17,19 +17,21 @@ class Sequencescape::Api::V2::TubeRack < Sequencescape::Api::V2::Base
   STATE_EMPTY = 'empty'
   STATE_MIXED = 'mixed'
 
-  # This is needed in order for the URL helpers to work correctly
+  # Overrides the Rails method to return the UUID of the labware for use in URL generation.
+  #
+  # @return [String] The UUID of the labware instance.
   def to_param
+    # Currently use the uuid as our main identifier, might switch to human barcode soon
     uuid
   end
 
+  # Override the model used in form/URL helpers such as polymorphic_path
+  # to allow us to return an application-native model instead of the API model.
   #
-  # Override the model used in form/URL helpers
-  # to allow us to treat old and new api the same
-  #
-  # @return [ActiveModel::Name] The resource behaves like a Limber::TubeRack
+  # @return [ActiveModel::Name] The resource behaves like a TubeRack
   #
   def model_name
-    ::ActiveModel::Name.new(TubeRack, false)
+    ::ActiveModel::Name.new(TubeRack)
   end
 
   has_many :racked_tubes, class_name: 'Sequencescape::Api::V2::RackedTube'

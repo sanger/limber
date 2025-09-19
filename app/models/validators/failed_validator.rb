@@ -12,13 +12,14 @@ module Validators
 
       presenter.errors.add(
         :submission,
-        "on this plate has already been failed (#{affected_range}). You should not carry out further work. " \
+        "on this plate has some failed wells (#{affected_range}). You should not carry out further work. " \
         'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
     end
 
     def active_wells_with_terminated_requests(labware)
       labware.wells.filter_map do |well|
+        # If the well is inactive or has no active requests, skip it
         next if well.inactive? || well.active_requests.empty?
 
         well.location if well.active_requests.all?(&:failed?)
