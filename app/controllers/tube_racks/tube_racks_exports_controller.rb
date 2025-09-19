@@ -5,6 +5,7 @@ require 'csv'
 # The exports controller handles the generation of exported files for tube racks
 class TubeRacks::TubeRacksExportsController < ApplicationController
   include ExportsFilenameBehaviour
+
   # helper ExportsHelper
   before_action :locate_labware, only: :show
   rescue_from Export::NotFound, with: :not_found

@@ -204,7 +204,9 @@ module StateChangers
     end
 
     def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
+      return @v2_labware if defined?(@v2_labware)
+
+      @v2_labware = Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
     end
   end
 
@@ -227,7 +229,9 @@ module StateChangers
     end
 
     def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
+      return @v2_labware if defined?(@v2_labware)
+
+      @v2_labware = Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
 

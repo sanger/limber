@@ -5,6 +5,7 @@ module LabwareCreators
   class PooledTubesFromWholePlates < Base
     include CreatableFrom::TaggedPlateOnly
     include LabwareCreators::CustomPage
+
     attr_reader :tube_transfer, :child, :barcodes
 
     self.page = 'pooled_tubes_from_whole_plates'

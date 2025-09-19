@@ -6,6 +6,7 @@ require 'csv'
 # such as CSV files for mbrave files.
 class Tubes::TubesExportsController < ApplicationController
   include ExportsFilenameBehaviour
+
   helper ExportsHelper
   before_action :locate_labware, only: :show
   rescue_from Export::NotFound, with: :not_found
