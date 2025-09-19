@@ -572,7 +572,6 @@ RSpecRails/TravelAround:
     - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
     - 'spec/models/presenters/submission_plate_presenter_spec.rb'
 
-
 # Offense count: 2
 Style/MultilineBlockChain:
   Exclude:
