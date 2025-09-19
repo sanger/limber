@@ -10,6 +10,7 @@ module Presenters
   # be returned to using the MinimalPcrPlatePresenter.
   class PcrWithPrimerPanelPlatePresenter < StandardPresenter
     include HasPrimerPanel
+
     self.summary_partial = 'labware/plates/pcr_with_primer_panel_summary'
     self.state_transition_name_scope = :pcr
 

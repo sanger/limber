@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Pooling multiple tubes into a tube', :js do
-  has_a_working_api
-
   let(:user_uuid) { SecureRandom.uuid }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }

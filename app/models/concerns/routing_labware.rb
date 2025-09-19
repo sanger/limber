@@ -8,17 +8,15 @@
 module RoutingLabware
   extend ActiveSupport::Concern
 
-  included { attr_reader :api, :id }
+  included { attr_reader :id }
 
   # Initializes the model with an ID, which is used for routing.
-  # @param api [Sequencescape::Api] DEPRECATED: The API v1 instance
   # @param id [UUID] The identifier of the labware to redirect to
   # @return [void]
   # @example
-  #   plate = Plate.new(api, '123e4567-e89b-12d3-a456-426614174000')
+  #   plate = Plate.new('123e4567-e89b-12d3-a456-426614174000')
   #   puts plate.to_param # Outputs: '123e4567-e89b-12d3-a456-426614174000'
-  def initialize(api, id)
-    @api = api # DEPRECATED: To be removed when API v1 is fully removed
+  def initialize(id)
     @id = id
   end
 

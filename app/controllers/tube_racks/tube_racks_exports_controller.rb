@@ -5,6 +5,7 @@ require 'csv'
 # The exports controller handles the generation of exported files for tube racks
 class TubeRacks::TubeRacksExportsController < ApplicationController
   include ExportsFilenameBehaviour
+
   # helper ExportsHelper
   before_action :locate_labware, only: :show
   rescue_from Export::NotFound, with: :not_found
@@ -28,11 +29,6 @@ class TubeRacks::TubeRacksExportsController < ApplicationController
 
   def not_found
     raise ActionController::RoutingError, "Unknown template #{params[:id]}"
-  end
-
-  def configure_api
-    # We don't use the V1 Sequencescape API here, so lets disable its initialization.
-    # Probably should consider two controller classes as this expands.
   end
 
   def locate_labware

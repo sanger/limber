@@ -326,8 +326,6 @@ RSpec.shared_examples 'a QC assaying plate creator' do
     let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
     it 'makes the expected requests' do
-      # NB. QcAssay and TransferRequestCollection creations are using API v2;
-      #     PlateCreation post is using API v1
       expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
       expect_plate_creation
       expect_transfer_request_collection_creation

@@ -16,8 +16,8 @@ RSpec.describe RepeatedStateChangeError do
     it { is_expected.to be false }
   end
 
-  context 'A Sequencescape::Api::ConnectionFactory::Actions::ServerError' do
-    let(:exception_class) { Sequencescape::Api::ConnectionFactory::Actions::ServerError }
+  context 'A RepeatedStateChangeError' do
+    let(:exception_class) { described_class }
 
     context 'with matching states' do
       let(:exception_message) { '{"general":["No obvious transition from \"passed\" to \"passed\""]}' }

@@ -21,7 +21,9 @@ module LabwareCreators::WellFilterBehaviour
   #
   # @return [Sequencescape::Api::V2::Plate]
   def parent
-    @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
+    return @parent if defined?(@parent)
+
+    @parent = Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
   end
 
   # Assigns the filters on the creator and the well filter. The filters are as

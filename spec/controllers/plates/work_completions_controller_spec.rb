@@ -4,8 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Plates::WorkCompletionsController, type: :controller do
   describe '#create' do
-    has_a_working_api
-
     let(:plate_uuid) { SecureRandom.uuid }
     let(:user_uuid) { SecureRandom.uuid }
     let(:example_plate) { create :v2_plate, uuid: plate_uuid, pool_sizes: [8, 8], include_submissions: true }

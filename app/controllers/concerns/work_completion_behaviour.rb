@@ -32,6 +32,6 @@ module WorkCompletionBehaviour
     params
       .require(:sequencescape_submission)
       .permit(:template_uuid, request_options: {}, assets: [])
-      .merge(api: api, user: current_user_uuid)
+      .merge(user: current_user_uuid)
   end
 end

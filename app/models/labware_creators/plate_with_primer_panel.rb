@@ -12,6 +12,7 @@ module LabwareCreators
   class PlateWithPrimerPanel < StampedPlate
     include LabwareCreators::CustomPage
     include HasPrimerPanel
+
     self.page = 'plate_with_primer_panel'
   end
 end

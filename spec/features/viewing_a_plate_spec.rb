@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Viewing a plate', :js do
-  has_a_working_api
-
   let(:user) { create :user }
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode) { example_plate.barcode.machine }

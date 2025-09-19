@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Pooling multiple plates into a tube', :js do
-  has_a_working_api
-
   let(:user_uuid) { SecureRandom.uuid }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
@@ -54,9 +52,6 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
       wells: example_plate.wells,
       pool_sizes: [96]
     )
-  end
-  let(:example_plate_3_listed) do
-    create(:v2_plate, :has_pooling_metadata, { barcode_number: 3, state: 'passed', uuid: plate_uuid_3 })
   end
 
   let(:parent_uuid) { plate_uuid }

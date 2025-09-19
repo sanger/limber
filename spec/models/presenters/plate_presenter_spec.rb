@@ -493,7 +493,6 @@ RSpec.describe Presenters::PlatePresenter do
 
   describe '#display_manual_transfer_button?' do
     let(:state) { 'passed' }
-    let(:allowed_states) { nil }
 
     before do
       create(:purpose_config_with_manual_transfer_allowed_states, uuid: labware.purpose.uuid,

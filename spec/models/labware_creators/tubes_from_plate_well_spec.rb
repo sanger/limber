@@ -5,8 +5,6 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::TubesFromPlateWell do
-  has_a_working_api
-
   context 'for pre creation' do
     describe '#creatable_from?' do
       subject { described_class.creatable_from?(parent) }
@@ -20,7 +18,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
   end
 
   context 'for creation' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:child_purpose_uuid) { SecureRandom.uuid }
     let(:parent_uuid) { SecureRandom.uuid }

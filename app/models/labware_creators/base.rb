@@ -13,7 +13,7 @@ module LabwareCreators
 
     extend NestedValidation
 
-    attr_reader :api, :child
+    attr_reader :child
     attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params, :plate_id, :tube_id
 
     class_attribute :default_transfer_template_name, :style_class, :state
@@ -25,19 +25,11 @@ module LabwareCreators
     # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
     self.state = 'pending'
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :transfer_template_name, presence: true
+    validates :purpose_uuid, :parent_uuid, :user_uuid, :transfer_template_name, presence: true
 
     # The base creator is abstract, and is not intended to be used directly
     def self.creatable_from?(_parent)
       false
-    end
-
-    # We pull out the api as the first argument as it ensures
-    # we'll always have it available, even during assignment of
-    # other attributes. Otherwise we end up relying on hash order.
-    def initialize(api, *)
-      @api = api
-      super(*)
     end
 
     def plate_to_walk

@@ -11,7 +11,7 @@ module LabwareCreators
     self.attributes += [{ barcodes: [] }]
     self.page = 'merged_plate'
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
+    validates :purpose_uuid, :parent_uuid, :user_uuid, presence: true
     validate :all_source_barcodes_must_be_entered
     validate :source_plates_can_be_merged
     validate :source_barcodes_must_be_different

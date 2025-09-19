@@ -4,8 +4,6 @@ require 'spec_helper'
 
 RSpec.describe 'exports/hamilton_fixed_volume_dilutions.csv.erb' do
   context 'when creating a fixed volume dilutions csv' do
-    has_a_working_api
-
     let(:source_well_a1) { create(:v2_well, location: 'A1') }
     let(:source_well_b1) { create(:v2_well, location: 'B1') }
 

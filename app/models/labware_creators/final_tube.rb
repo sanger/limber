@@ -43,7 +43,7 @@ module LabwareCreators
 
       # Return a single tube as a redirection target
       destination_uuids = all_tube_transfers.map(&:destination_uuid).uniq
-      return Tube.new(nil, destination_uuids.first) if destination_uuids.one?
+      return Tube.new(destination_uuids.first) if destination_uuids.one?
 
       raise StandardError, 'Multiple targets found. You may have scanned tubes from separate submissions.'
     end
@@ -56,7 +56,9 @@ module LabwareCreators
     end
 
     def parent
-      @parent ||= Sequencescape::Api::V2::Tube.find_by(uuid: parent_uuid)
+      return @parent if defined?(@parent)
+
+      @parent = Sequencescape::Api::V2::Tube.find_by(uuid: parent_uuid)
     end
     alias tube parent
 

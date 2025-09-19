@@ -64,8 +64,7 @@ module StateChangers
 
   # The Base state changer that contains common behaviour for all state changers.
   class BaseStateChanger
-    attr_reader :labware_uuid, :api, :user_uuid
-    private :api
+    attr_reader :labware_uuid, :user_uuid
 
     FILTER_FAILS_ON = %w[qc_complete failed cancelled].freeze
 
@@ -73,8 +72,7 @@ module StateChangers
       raise 'Implement in the child class'
     end
 
-    def initialize(api, labware_uuid, user_uuid)
-      @api = api
+    def initialize(labware_uuid, user_uuid)
       @labware_uuid = labware_uuid
       @user_uuid = user_uuid
     end
@@ -206,7 +204,9 @@ module StateChangers
     end
 
     def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
+      return @v2_labware if defined?(@v2_labware)
+
+      @v2_labware = Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
     end
   end
 
@@ -229,7 +229,9 @@ module StateChangers
     end
 
     def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
+      return @v2_labware if defined?(@v2_labware)
+
+      @v2_labware = Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
 
