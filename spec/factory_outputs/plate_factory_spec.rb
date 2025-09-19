@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'v2_plate' do
+RSpec.describe 'plate' do
   context 'with specified study and project at plate level' do
     subject { create(:plate, aliquots_without_requests: 1, study: study, project: project) }
 
@@ -48,7 +48,7 @@ RSpec.describe 'v2_plate' do
   end
 end
 
-RSpec.describe 'v2_plate_for_submission' do
+RSpec.describe 'plate_for_submission' do
   context 'with specified study and project at plate level' do
     subject { create(:plate_for_submission, aliquots_without_requests: 1, study: study, project: project) }
 

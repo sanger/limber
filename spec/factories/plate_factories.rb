@@ -67,7 +67,7 @@ FactoryBot.define do
       well_factory { :well }
 
       # The factory to use for requests associated with the plate.
-      # For v2_plates this is associated with the aliquot, for v2_stock_plates
+      # For plates this is associated with the aliquot, for stock_plates
       # these requests are coming from the wells themselves
       request_factory { :library_request }
 
@@ -215,7 +215,7 @@ FactoryBot.define do
 
     # Set up a stock plate. Changed behaviour relative to standard plate:
     # - The plate purpose
-    # - The well factory to v2_stock_well which sets requests coming out of the wells,
+    # - The well factory to stock_well which sets requests coming out of the wells,
     #   rather than on the aliquots
     # - Sets is_stock to true, which ensures the stock_plate matches itself
     factory :stock_plate do

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'v2_well' do
+RSpec.describe 'well' do
   # samples
   let(:sample) { create(:sample) }
 

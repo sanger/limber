@@ -233,7 +233,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   # ]
   # Example input
   # params = {
-  #  sequencing_tubes: [ array of v2_tube objects ],
+  #  sequencing_tubes: [ array of tube objects ],
   #  sequencing_tube_parent_well_uuids: [array of parent well uuids],
   #  contingency_tubes: [array of v2 tubes],
   #  contingency_tube_parent_well_uuids: [array of parent well uuids],

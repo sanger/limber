@@ -34,7 +34,7 @@ FactoryBot.define do
       # The factory to use for outer requests
       request_factory { :library_request }
 
-      # The requests comming out of the well. v2_stock wells will set this based
+      # The requests comming out of the well. stock wells will set this based
       # on outer request.
       requests_as_source { [] }
 

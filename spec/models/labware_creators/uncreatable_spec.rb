@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 RSpec.describe LabwareCreators::Uncreatable do
   before do
-    stub_v2_plate(parent_labware)
+    stub_plate(parent_labware)
     create(:purpose_config, uuid: purpose_uuid, creator_class: 'LabwareCreators::Uncreatable')
 
     Settings.purposes = {
