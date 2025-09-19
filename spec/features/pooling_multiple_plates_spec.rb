@@ -86,7 +86,7 @@ RSpec.feature 'Multi plate pooling', :js do
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
 
-    stub_v2_barcode_printers(create_list(:plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'creates multiple plates' do
