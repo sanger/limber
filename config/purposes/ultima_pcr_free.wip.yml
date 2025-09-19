@@ -23,6 +23,7 @@ UPF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
   # TODO: add Presenter here for automated submission for rebalancing
+  :presenter_class: Presenters::SubmissionPlateDownstreamCompletedPresenter
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
