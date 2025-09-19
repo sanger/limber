@@ -250,12 +250,6 @@ RSpec/InstanceVariable:
     - 'spec/features/creating_a_plate_spec.rb'
     - 'spec/helpers/barcode_labels_helper_spec.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/IteratedExpectation:
-  Exclude:
-    - 'spec/views/exports/pbmc_bank_tubes_content_report.csv.erb_spec.rb'
-
 # Offense count: 14
 RSpec/LetSetup:
   Exclude:
