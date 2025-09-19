@@ -14,20 +14,20 @@ FactoryBot.define do
 
     sequence(:map_id) { |i| i }
     sequence(:oligo) { |_index| generate_oligo }
-    tag_group { create :tag_group, given_tags: [instance] }
+    tag_group { create :tag_group, test_tags: [instance] }
   end
 
   factory :tag_group, class: Sequencescape::Api::V2::TagGroup do
     skip_create
 
-    transient { given_tags { [] } }
+    transient { test_tags { [] } }
     sequence(:name) { |index| "TagGroup#{index}" }
-    tags { given_tags.map { |t| { index: t.map_id, oligo: t.oligo } } }
+    tags { test_tags.map { |t| { index: t.map_id, oligo: t.oligo } } }
 
     factory :tag_group_with_tags do
       transient do
         size { 96 }
-        given_tags { (1..size).map { |i| create(:tag, map_id: i, tag_group: instance) } }
+        test_tags { (1..size).map { |i| create(:tag, map_id: i, tag_group: instance) } }
       end
     end
   end
