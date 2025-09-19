@@ -39,11 +39,11 @@ RSpec.describe Labels::Plate384SingleLabel, type: :model do
   end
 
   describe '#first_of_configured_purpose' do
-    let(:labware) { create :v2_plate, purpose_name: 'Plate Purpose', barcode_number: '123' }
+    let(:labware) { create :plate, purpose_name: 'Plate Purpose', barcode_number: '123' }
     let(:label) { described_class.new(labware) }
-    let(:ancestor1) { create :v2_plate, purpose_name: 'Purpose1', barcode_number: '456' }
-    let(:ancestor2) { create :v2_plate, purpose_name: 'Purpose2', barcode_number: '789' }
-    let(:ancestor3) { create :v2_plate, purpose_name: 'Purpose3', barcode_number: '101' }
+    let(:ancestor1) { create :plate, purpose_name: 'Purpose1', barcode_number: '456' }
+    let(:ancestor2) { create :plate, purpose_name: 'Purpose2', barcode_number: '789' }
+    let(:ancestor3) { create :plate, purpose_name: 'Purpose3', barcode_number: '101' }
 
     before do
       # Use a more direct approach by stubbing the actual method rather than trying to mock the relation

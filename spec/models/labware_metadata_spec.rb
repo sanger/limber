@@ -15,7 +15,7 @@ RSpec.describe LabwareMetadata do
   end
 
   it 'uses the labware if both labware and barcode are given' do
-    plate = create :v2_stock_plate
+    plate = create :stock_plate
     stub_v2_plate(plate)
 
     expect(Sequencescape::Api::V2::Labware).not_to receive(:find)

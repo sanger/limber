@@ -96,12 +96,12 @@ RSpec.describe PlatesController, type: :controller do
     let(:well_locations) { %w[A1 B2] }
     let(:wells) do
       well_locations.map do |location|
-        build(:v2_well, location: location, aliquots: [build(:v2_aliquot, request: build(:request))])
+        build(:well, location: location, aliquots: [build(:aliquot, request: build(:request))])
       end
     end
 
     let(:plate_with_wells) do
-      build(:v2_plate, uuid: plate_uuid, wells: wells)
+      build(:plate, uuid: plate_uuid, wells: wells)
     end
 
     before do

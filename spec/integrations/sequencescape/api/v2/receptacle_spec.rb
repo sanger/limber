@@ -40,7 +40,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
 
     context 'when qc results are not defined' do
       let(:receptacle) do
-        create(:v2_receptacle)
+        create(:receptacle)
       end
 
       before do

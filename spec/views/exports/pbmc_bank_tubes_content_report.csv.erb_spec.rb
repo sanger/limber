@@ -276,7 +276,7 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
     context 'when some downstream tubes are not in passed state' do
       let(:failed_tube) do
         create(
-          :v2_tube,
+          :tube,
           purpose: lrc_bank_seq,
           uuid: SecureRandom.uuid,
           barcode_prefix: 'FX',
@@ -296,8 +296,8 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
         ]
       end
 
-      let(:src_well_a1) { create(:v2_well, source_well_attributes[0]) }
-      let(:src_labware) { create(:v2_plate, wells: [src_well_a1], barcode_number: 3) }
+      let(:src_well_a1) { create(:well, source_well_attributes[0]) }
+      let(:src_labware) { create(:plate, wells: [src_well_a1], barcode_number: 3) }
 
       let(:expected_content) do
         [
