@@ -37,6 +37,11 @@ RSpec.feature 'Viewing a plate', :js do
 
     # We get the actual plate
     stub_v2_plate(example_plate)
+    stub_v2_plate(
+      example_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
     stub_v2_barcode_printers(printer_list)
   end
 
@@ -44,7 +49,7 @@ RSpec.feature 'Viewing a plate', :js do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
     expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
     expect(find('.state-badge')).to have_content('Pending')
-    find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
+    find_link('Download Concentration CSV', href: '/plates/DN1S/exports/concentrations.csv')
   end
 
   context 'with a custom csv' do
@@ -54,8 +59,8 @@ RSpec.feature 'Viewing a plate', :js do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
       expect(find('.state-badge')).to have_content('Pending')
-      find_link('Download Worksheet CSV', href: "/limber_plates/#{plate_uuid}.csv")
-      find_link('Download Concentration CSV', href: '/limber_plates/DN1S/exports/concentrations.csv')
+      find_link('Download Worksheet CSV', href: "/plates/#{plate_uuid}.csv")
+      find_link('Download Concentration CSV', href: '/plates/DN1S/exports/concentrations.csv')
     end
   end
 
