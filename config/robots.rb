@@ -3000,33 +3000,33 @@ ROBOT_CONFIG =
     )
 
     # Bioscan Mosquito bed verification
-    # LBSN-96 Lysate plates to LBSN-384 PCR 1
+    # LBSN-96 Lysate or LBSN-96 Lysate Input plates to LBSN-384 PCR 1
     # transfers up to 4 plates into the 384 destination
     custom_robot(
-      'mosquito-lbsn-96-lysate-to-lbsn-384-pcr-1',
-      name: 'Mosquito LBSN-96 Lysate => LBSN-384 PCR 1',
+      'mosquito-lbsn-96-lysate-or-input-to-lbsn-384-pcr-1',
+      name: 'Mosquito LBSN-96 Lysate (or Input) => LBSN-384 PCR 1',
       require_robot: true,
       beds: {
         bed(1).barcode => {
-          purpose: 'LBSN-96 Lysate',
+          purpose: ['LBSN-96 Lysate', 'LBSN-96 Lysate Input'],
           states: ['passed'],
           child: bed(5).barcode,
           label: 'Bed 1'
         },
         bed(2).barcode => {
-          purpose: 'LBSN-96 Lysate',
+          purpose: ['LBSN-96 Lysate', 'LBSN-96 Lysate Input'],
           states: ['passed'],
           child: bed(5).barcode,
           label: 'Bed 2'
         },
         bed(3).barcode => {
-          purpose: 'LBSN-96 Lysate',
+          purpose: ['LBSN-96 Lysate', 'LBSN-96 Lysate Input'],
           states: ['passed'],
           child: bed(5).barcode,
           label: 'Bed 3'
         },
         bed(4).barcode => {
-          purpose: 'LBSN-96 Lysate',
+          purpose: ['LBSN-96 Lysate', 'LBSN-96 Lysate Input'],
           states: ['passed'],
           child: bed(5).barcode,
           label: 'Bed 4'
