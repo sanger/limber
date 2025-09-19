@@ -9,6 +9,7 @@ module LabwareCreators
   # is the same as the location on the destination plate.)
   class StampedPlate < Base
     include CreatableFrom::PlateOnly
+
     self.default_transfer_template_name = 'Custom pooling'
     self.attributes += [{ filters: {} }]
 

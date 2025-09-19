@@ -10,6 +10,7 @@ module LabwareCreators
 
     include CreatableFrom::TubeOnly
     include LabwareCreators::CustomPage
+
     attr_reader :tube_transfer, :child, :barcodes
 
     self.page = 'pooled_tubes_from_whole_tubes'

@@ -6,36 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 27
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLinesAfterModuleInclusion:
-  Exclude:
-    - 'app/controllers/exports_controller.rb'
-    - 'app/controllers/tube_racks/tube_racks_exports_controller.rb'
-    - 'app/controllers/tubes/tubes_exports_controller.rb'
-    - 'app/models/concerns/form.rb'
-    - 'app/models/concerns/presenters/extended_csv.rb'
-    - 'app/models/concerns/presenters/statemachine/allows_library_passing.rb'
-    - 'app/models/concerns/presenters/statemachine/does_not_allow_library_passing.rb'
-    - 'app/models/concerns/presenters/statemachine/permissive.rb'
-    - 'app/models/concerns/presenters/statemachine/permissive_submission.rb'
-    - 'app/models/concerns/presenters/statemachine/single_child_permissive.rb'
-    - 'app/models/concerns/presenters/statemachine/state_allows_child_creation.rb'
-    - 'app/models/concerns/presenters/statemachine/state_allows_single_child_creation.rb'
-    - 'app/models/concerns/presenters/statemachine/state_does_not_allow_child_creation.rb'
-    - 'app/models/concerns/presenters/statemachine/submission.rb'
-    - 'app/models/concerns/presenters/statemachine/submission_when_passed.rb'
-    - 'app/models/labware_creators/composite_well_filtered_custom_tagged_plate_creator.rb'
-    - 'app/models/labware_creators/plate_with_primer_panel.rb'
-    - 'app/models/labware_creators/pooled_tubes_from_whole_plates.rb'
-    - 'app/models/labware_creators/pooled_tubes_from_whole_tubes.rb'
-    - 'app/models/labware_creators/stamped_plate.rb'
-    - 'app/models/labware_creators/well_filtered_tagged_plate_creator.rb'
-    - 'app/models/presenters/pcr_with_primer_panel_plate_presenter.rb'
-    - 'lib/robot_configuration.rb'
-    - 'spec/models/labware_creators/pooled_tubes_from_whole_plates_spec.rb'
-    - 'spec/models/labware_creators/pooled_tubes_from_whole_tubes_spec.rb'
-
 # Offense count: 2
 # Configuration parameters: LengthThreshold.
 Metrics/CollectionLiteralLength:
