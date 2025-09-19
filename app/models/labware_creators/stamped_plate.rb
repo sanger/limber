@@ -16,7 +16,9 @@ module LabwareCreators
     validates_nested :well_filter
 
     def parent
-      @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
+      return @parent if defined?(@parent)
+
+      @parent = Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
     end
 
     def filters=(filter_parameters)

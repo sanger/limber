@@ -572,21 +572,6 @@ RSpecRails/TravelAround:
     - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
     - 'spec/models/presenters/submission_plate_presenter_spec.rb'
 
-# Offense count: 12
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Rails/FindByOrAssignmentMemoization:
-  Exclude:
-    - 'app/models/concerns/labware_creators/creatable_from/plate_only.rb'
-    - 'app/models/concerns/labware_creators/creatable_from/plate_ready_for_custom_pooling_only.rb'
-    - 'app/models/concerns/labware_creators/creatable_from/plate_ready_for_pooling_only.rb'
-    - 'app/models/concerns/labware_creators/creatable_from/tagged_plate_only.rb'
-    - 'app/models/concerns/labware_creators/creatable_from/tube_only.rb'
-    - 'app/models/concerns/labware_creators/well_filter_behaviour.rb'
-    - 'app/models/labware_creators/final_tube.rb'
-    - 'app/models/labware_creators/pooled_tubes_by_submission_with_phi_x.rb'
-    - 'app/models/labware_creators/pooled_wells_by_sample_in_groups.rb'
-    - 'app/models/labware_creators/stamped_plate.rb'
-    - 'app/models/state_changers.rb'
 
 # Offense count: 2
 Style/MultilineBlockChain:

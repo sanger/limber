@@ -56,7 +56,9 @@ module LabwareCreators
     end
 
     def parent
-      @parent ||= Sequencescape::Api::V2::Tube.find_by(uuid: parent_uuid)
+      return @parent if defined?(@parent)
+
+      @parent = Sequencescape::Api::V2::Tube.find_by(uuid: parent_uuid)
     end
     alias tube parent
 
