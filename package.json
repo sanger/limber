@@ -3,9 +3,9 @@
     "@popperjs/core": "^2.0.0",
     "@rails/ujs": "^7.1.502",
     "axios": "^1.11.0",
-    "bootstrap": "^5.3.7",
+    "bootstrap": "^5.3.8",
     "bootstrap-vue-next": "^0.26.28",
-    "cytoscape": "^3.33.0",
+    "cytoscape": "^3.33.1",
     "cytoscape-elk": "^2.3.0",
     "cytoscape-popper": "^2.0.0",
     "devour-client": "^2.1.2",
@@ -13,7 +13,7 @@
     "pluralize": "^7.0.0",
     "tiny-emitter": "^2.1.0",
     "unique-slug": "^2.0.0",
-    "vue": "^3.5.18",
+    "vue": "^3.5.20",
     "web-worker": "^1.5.0"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "sass": "^1.90.0",
     "typescript": "^4.6.3",
     "unplugin-vue-components": "^28.4.1",
-    "vite": "^5.4.19",
+    "vite": "^5.4.20",
     "vite-plugin-ruby": "^5.1.1",
     "vitest": "^3.2.4",
     "vue-template-compiler": "^2.7.0"

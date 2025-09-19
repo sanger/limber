@@ -18,11 +18,26 @@ module PlateHelper # rubocop:todo Style/Documentation
     delegate_missing_to :_presenter
     attr_reader :form, :_presenter
   end
-
   # rubocop:enable Rails/HelperInstanceVariable
 
   def fail_wells_presenter_from(form, presenter)
     WellFailingPresenter.new(form, presenter)
+  end
+
+  # Proxy presenter for well marking functionality.
+  # Inherits from WellFailingPresenter to reuse well handling logic
+  # such as form integration and presenter behavior.
+  #
+  # Overrides `aliquot_partial` so that the shared plate partial
+  # will render the correct custom aliquot template (`_well_marking_aliquot.html.erb`)
+  class WellMarkingPresenter < WellFailingPresenter
+    def aliquot_partial
+      'well_marking_aliquot'
+    end
+  end
+
+  def mark_wells_presenter_from(form, presenter)
+    WellMarkingPresenter.new(form, presenter)
   end
 
   # Returns an array of all pre-capture pools for a plate, with wells sorted
@@ -69,5 +84,19 @@ module PlateHelper # rubocop:todo Style/Documentation
     # sort the pool hashes by Order id
     sorted = unsorted.sort_by { |k| k[:order_id] }
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
+  end
+
+  def well_under_represented?(plate, well_location)
+    well = plate.wells.index_by(&:location)[well_location]
+    return false unless well
+
+    aliquot = well.aliquots.first
+    return false unless aliquot
+
+    request = Array(aliquot.request).first
+    return false unless request.respond_to?(:poly_metadata)
+    return false unless request.poly_metadata
+
+    request.poly_metadata.any? { |pm| pm.key == LimberConstants::UNDER_REPRESENTED_KEY && pm.value == 'true' }
   end
 end

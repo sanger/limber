@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Limber::TagLayoutTemplate::WalkWellsOfPlate # rubocop:todo Style/Documentation
+module TagLayoutTemplates::WalkWellsOfPlate # rubocop:todo Style/Documentation
   def generate_tag_layout(plate)
     tagged_wells = {}
     tags = tag_ids
