@@ -7,13 +7,13 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
 
-  let(:aliquot_set_1) { create_list :v2_tagged_aliquot, 2, library_state: 'passed' }
+  let(:aliquot_set_1) { create_list :tagged_aliquot, 2, library_state: 'passed' }
 
   let(:tube_barcode_1) { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:tube_uuid) { SecureRandom.uuid }
   let(:parent_purpose_name) { 'example-purpose' }
   let(:example_tube) do
-    create :v2_tube,
+    create :tube,
            barcode_number: 1,
            state: 'passed',
            uuid: tube_uuid,
@@ -24,7 +24,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
   let(:tube_barcode_2) { SBCF::SangerBarcode.new(prefix: 'NT', number: 2).machine_barcode.to_s }
   let(:tube_uuid_2) { SecureRandom.uuid }
   let(:example_tube_2) do
-    create :v2_tube,
+    create :tube,
            barcode_number: 2,
            state: 'passed',
            uuid: tube_uuid_2,
@@ -36,7 +36,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
   let(:template_uuid) { SecureRandom.uuid }
 
   let(:child_uuid) { 'tube-0' }
-  let(:child_tube) { create :v2_tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
+  let(:child_tube) { create :tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
 
   let(:tube_from_tubes_attributes) do
     [{ child_purpose_uuid: purpose_uuid, parent_uuid: tube_uuid, user_uuid: user_uuid }]
@@ -78,8 +78,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_tube(example_tube)
-    stub_v2_tube(example_tube_2)
+    stub_tube(example_tube)
+    stub_tube(example_tube_2)
 
     # Available tubes search
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
@@ -100,12 +100,12 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
     ).and_return([example_tube, example_tube_2])
 
     # Used in the redirect. This call is probably unnecessary
-    stub_v2_tube(child_tube)
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_tube(child_tube)
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   context 'unique tags' do
-    let(:aliquot_set_2) { create_list :v2_tagged_aliquot, 2, library_state: 'passed' }
+    let(:aliquot_set_2) { create_list :tagged_aliquot, 2, library_state: 'passed' }
 
     scenario 'creates multiple tubes' do
       # This isn't strictly speaking correct to test. But there isn't a great way

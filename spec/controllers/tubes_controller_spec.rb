@@ -5,14 +5,14 @@ require './app/controllers/tubes_controller'
 
 RSpec.describe TubesController, type: :controller do
   let(:tube_uuid) { 'example-tube-uuid' }
-  let(:v2_tube) { create :v2_tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
-  let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
+  let(:tube) { create :tube, uuid: tube_uuid, purpose_uuid: 'stock-tube-purpose-uuid', state: 'passed' }
+  let(:barcode_printers_request) { stub_barcode_printers(create_list(:plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
 
   describe '#show' do
     before do
       create :tube_config, uuid: 'stock-tube-purpose-uuid'
-      stub_v2_tube(v2_tube, stub_search: false)
+      stub_tube(tube, stub_search: false)
       barcode_printers_request
     end
 

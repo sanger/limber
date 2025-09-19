@@ -4,10 +4,10 @@ RSpec.describe Presenters::StandardPresenter do
   subject { described_class.new(labware:) }
 
   let(:purpose_name) { 'Example purpose' }
-  let(:aliquot_type) { :v2_aliquot }
+  let(:aliquot_type) { :aliquot }
   let(:state) { 'pending' }
   let(:labware) do
-    create :v2_plate,
+    create :plate,
            barcode_number: 1,
            state: state,
            purpose_name: purpose_name,
@@ -18,22 +18,22 @@ RSpec.describe Presenters::StandardPresenter do
   let(:wells) do
     [
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 1),
         aliquots: create_list(aliquot_type, 1)
       ),
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 1),
         aliquots: create_list(aliquot_type, 1)
       ),
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 2),
         aliquots: create_list(aliquot_type, 1)
       ),
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 1),
         aliquots: create_list(aliquot_type, 1)
       )
@@ -130,22 +130,22 @@ RSpec.describe Presenters::StandardPresenter do
     let(:wells) do
       [
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         )
@@ -166,7 +166,7 @@ RSpec.describe Presenters::StandardPresenter do
       end
 
       context 'tagged' do
-        let(:aliquot_type) { :v2_tagged_aliquot }
+        let(:aliquot_type) { :tagged_aliquot }
 
         context 'and passed' do
           let(:state) { 'passed' }
@@ -198,7 +198,7 @@ RSpec.describe Presenters::StandardPresenter do
       end
 
       context 'untagged' do
-        let(:aliquot_type) { :v2_aliquot }
+        let(:aliquot_type) { :aliquot }
 
         context 'and passed' do
           let(:state) { 'passed' }
@@ -211,7 +211,7 @@ RSpec.describe Presenters::StandardPresenter do
     end
 
     describe '#control_suggested_library_passing' do
-      let(:aliquot_type) { :v2_tagged_aliquot }
+      let(:aliquot_type) { :tagged_aliquot }
       before do
         create :pipeline,
                relationships: {
@@ -248,22 +248,22 @@ RSpec.describe Presenters::StandardPresenter do
     let(:wells) do
       [
         create(
-          :v2_well,
+          :well,
           requests_as_source: create_list(:mx_request, 1, priority: 1),
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: create_list(:mx_request, 1, priority: 1),
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: create_list(:mx_request, 1, priority: 1),
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
         )
@@ -277,7 +277,7 @@ RSpec.describe Presenters::StandardPresenter do
       end
 
       context 'tagged' do
-        let(:aliquot_type) { :v2_tagged_aliquot }
+        let(:aliquot_type) { :tagged_aliquot }
 
         context 'and passed' do
           let(:state) { 'passed' }
@@ -307,7 +307,7 @@ RSpec.describe Presenters::StandardPresenter do
       end
 
       context 'untagged' do
-        let(:aliquot_type) { :v2_aliquot }
+        let(:aliquot_type) { :aliquot }
 
         context 'and passed' do
           let(:state) { 'passed' }
@@ -320,7 +320,7 @@ RSpec.describe Presenters::StandardPresenter do
     end
 
     describe '#control_suggested_library_passing' do
-      let(:aliquot_type) { :v2_tagged_aliquot }
+      let(:aliquot_type) { :tagged_aliquot }
       before do
         create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')

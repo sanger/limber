@@ -4,14 +4,14 @@ require 'rails_helper'
 require './app/controllers/qc_files_controller'
 
 RSpec.describe QcFilesController, type: :controller do
-  let(:plate) { create(:v2_plate, uuid: 'plate-uuid', qc_files_count: 3) }
+  let(:plate) { create(:plate, uuid: 'plate-uuid', qc_files_count: 3) }
 
-  before { stub_v2_plate(plate, stub_search: false) }
+  before { stub_plate(plate, stub_search: false) }
 
   describe '#show' do
     let(:qc_file) { create(:qc_file, uuid: 'file-uuid', filename: 'important_qc_data.csv') }
 
-    before { stub_v2_qc_file(qc_file) }
+    before { stub_qc_file(qc_file) }
 
     it 'returns a file' do
       get :show, params: { id: qc_file.uuid, plate_id: plate.uuid }

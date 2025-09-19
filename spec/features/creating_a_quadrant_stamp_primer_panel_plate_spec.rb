@@ -11,7 +11,7 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', :js do
   let(:parent_purpose_uuid) { 'parent-purpose' }
   let(:child_uuid) { 'child-uuid' }
   let(:parent) do
-    create :v2_plate_with_primer_panels,
+    create :plate_with_primer_panels,
            barcode_number: '2',
            uuid: parent_uuid,
            pool_sizes: [10],
@@ -22,7 +22,7 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', :js do
   end
   let(:parent1_barcode) { parent.barcode.machine }
   let(:parent2) do
-    create :v2_plate_with_primer_panels,
+    create :plate_with_primer_panels,
            barcode_number: '3',
            uuid: parent2_uuid,
            pool_sizes: [10],
@@ -31,13 +31,13 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', :js do
            state: 'passed',
            purpose_name: 'Primer Panel example'
   end
-  let(:child_plate) { create :v2_plate, uuid: child_uuid, barcode_number: '4', size: 384 }
+  let(:child_plate) { create :plate, uuid: child_uuid, barcode_number: '4', size: 384 }
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
 
   background do
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
     create :purpose_config, name: 'Primer Panel example', uuid: parent_purpose_uuid
     create :purpose_config,
            creator_class: 'LabwareCreators::QuadrantStampPrimerPanel',
@@ -45,20 +45,20 @@ RSpec.feature 'Creating a quadrant stamp primer panel plate', :js do
            uuid: 'child-purpose-0'
     create :pipeline, relationships: { 'Primer Panel example' => child_purpose_name }
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_plate(parent)
-    stub_v2_plate(
+    stub_plate(parent)
+    stub_plate(
       parent,
       stub_search: false,
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
-    stub_v2_plate(parent2)
-    stub_v2_plate(
+    stub_plate(parent2)
+    stub_plate(
       parent2,
       stub_search: false,
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
-    stub_v2_plate(child_plate)
-    stub_v2_plate(
+    stub_plate(child_plate)
+    stub_plate(
       child_plate,
       stub_search: false,
       custom_includes: 'wells.aliquots.request.poly_metadata'

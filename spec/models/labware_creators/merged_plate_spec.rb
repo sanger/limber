@@ -23,9 +23,9 @@ RSpec.describe LabwareCreators::MergedPlate do
   let(:source_purpose_2_name) { 'Source 2 Purpose' }
   let(:source_purpose_2) { create :purpose_config, name: source_purpose_2_name, uuid: source_purpose_2_uuid }
 
-  let(:shared_parent) { create :v2_plate, barcode_number: '1', size: plate_size }
+  let(:shared_parent) { create :plate, barcode_number: '1', size: plate_size }
   let(:source_plate_1) do
-    create :v2_plate,
+    create :plate,
            barcode_number: '2',
            size: plate_size,
            outer_requests: requests,
@@ -33,7 +33,7 @@ RSpec.describe LabwareCreators::MergedPlate do
            purpose: source_purpose_1
   end
   let(:source_plate_2) do
-    create :v2_plate,
+    create :plate,
            barcode_number: '3',
            size: plate_size,
            outer_requests: requests,
@@ -57,8 +57,8 @@ RSpec.describe LabwareCreators::MergedPlate do
   let(:user_uuid) { 'user-uuid' }
 
   before do
-    stub_v2_plate(source_plate_1, stub_search: false)
-    stub_v2_plate(source_plate_2, stub_search: false)
+    stub_plate(source_plate_1, stub_search: false)
+    stub_plate(source_plate_2, stub_search: false)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: source_plate_1.uuid, user_uuid: user_uuid } }
@@ -73,11 +73,11 @@ RSpec.describe LabwareCreators::MergedPlate do
           ).and_return([source_plate_1, source_plate_2])
         )
 
-        stub_v2_plate(child_plate, stub_search: false)
+        stub_plate(child_plate, stub_search: false)
       end
 
       let(:child_plate) do
-        create :v2_plate,
+        create :plate,
                uuid: 'child-uuid',
                barcode_number: '4',
                size: plate_size,
@@ -159,9 +159,9 @@ RSpec.describe LabwareCreators::MergedPlate do
     let(:different_requests) do
       Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 2 }
     end
-    let(:different_parent) { create :v2_plate }
+    let(:different_parent) { create :plate }
     let(:source_plate_3) do
-      create :v2_plate,
+      create :plate,
              barcode_number: '4',
              size: plate_size,
              outer_requests: different_requests,
@@ -186,7 +186,7 @@ RSpec.describe LabwareCreators::MergedPlate do
         creator_class: 'LabwareCreators::MergedPlate',
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
-      stub_v2_plate(source_plate_3, stub_search: false)
+      stub_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
         receive(:find_all).with(
           { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
@@ -199,9 +199,9 @@ RSpec.describe LabwareCreators::MergedPlate do
   end
 
   context 'with source plates from different parents but same requests' do
-    let(:different_parent) { create :v2_plate }
+    let(:different_parent) { create :plate }
     let(:source_plate_3) do
-      create :v2_plate,
+      create :plate,
              barcode_number: '4',
              size: plate_size,
              outer_requests: requests,
@@ -226,7 +226,7 @@ RSpec.describe LabwareCreators::MergedPlate do
         creator_class: 'LabwareCreators::MergedPlate',
         source_purposes: ['Source 1 Purpose', 'Source 2 Purpose']
       )
-      stub_v2_plate(source_plate_3, stub_search: false)
+      stub_plate(source_plate_3, stub_search: false)
       allow(Sequencescape::Api::V2::Plate).to(
         receive(:find_all).with(
           { barcode: [source_plate_1.barcode.machine, source_plate_3.barcode.machine] },
@@ -302,7 +302,7 @@ RSpec.describe LabwareCreators::MergedPlate do
   # check for user accidently making 2 plates of the same purpose type that they then try to merge
   context 'with two plates of the same purpose and same parent' do
     let(:source_plate_4) do
-      create :v2_plate,
+      create :plate,
              barcode_number: '5',
              size: plate_size,
              outer_requests: requests,

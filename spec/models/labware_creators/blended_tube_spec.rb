@@ -5,32 +5,32 @@ require_relative 'shared_examples'
 
 # 2 parent tubes are blended into a single child tube
 RSpec.describe LabwareCreators::BlendedTube do
-  let(:blend_study) { create :v2_study, name: 'Blend Study' }
-  let(:blend_project) { create :v2_project, name: 'Blend Project' }
+  let(:blend_study) { create :study, name: 'Blend Study' }
+  let(:blend_project) { create :project, name: 'Blend Project' }
 
-  let(:sample1) { create(:v2_sample) }
-  let(:sample2) { create(:v2_sample) }
+  let(:sample1) { create(:sample) }
+  let(:sample2) { create(:sample) }
 
   let(:ancestor_plate_purpose_name) { 'Ancestor Plate Purpose' }
 
-  let(:tag_group1) { create(:v2_tag_group, name: 'blendedtg1') }
-  let(:tag_group2) { create(:v2_tag_group, name: 'blendedtg2') }
+  let(:tag_group1) { create(:tag_group, name: 'blendedtg1') }
+  let(:tag_group2) { create(:tag_group, name: 'blendedtg2') }
 
-  let(:tag1s) { (1..2).map { |i| create(:v2_tag, map_id: i, tag_group: tag_group1) } }
-  let(:tag2s) { (5..6).map { |i| create(:v2_tag, map_id: i, tag_group: tag_group2) } }
+  let(:tag1s) { (1..2).map { |i| create(:tag, map_id: i, tag_group: tag_group1) } }
+  let(:tag2s) { (5..6).map { |i| create(:tag, map_id: i, tag_group: tag_group2) } }
 
-  let(:ancestor_aliquot1) { create(:v2_aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
-  let(:ancestor_aliquot2) { create(:v2_aliquot, sample: sample2, tag: tag1s[1], tag2: tag2s[1]) }
+  let(:ancestor_aliquot1) { create(:aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
+  let(:ancestor_aliquot2) { create(:aliquot, sample: sample2, tag: tag1s[1], tag2: tag2s[1]) }
 
   let(:ancestor_wells) do
     [
-      create(:v2_well, study: blend_study, project: blend_project, aliquots: [ancestor_aliquot1], location: 'A1'),
-      create(:v2_well, study: blend_study, project: blend_project, aliquots: [ancestor_aliquot2], location: 'B1')
+      create(:well, study: blend_study, project: blend_project, aliquots: [ancestor_aliquot1], location: 'A1'),
+      create(:well, study: blend_study, project: blend_project, aliquots: [ancestor_aliquot2], location: 'B1')
     ]
   end
 
   let(:ancestor_plate) do
-    create(:v2_plate, purpose_name: ancestor_plate_purpose_name, barcode_number: '1', size: 96, wells: ancestor_wells)
+    create(:plate, purpose_name: ancestor_plate_purpose_name, barcode_number: '1', size: 96, wells: ancestor_wells)
   end
 
   let(:parent1_tube_uuid) { 'parent-tube1-uuid' }
@@ -45,26 +45,26 @@ RSpec.describe LabwareCreators::BlendedTube do
   let(:parent1_receptacle_uuid) { 'parent-receptacle1-uuid' }
   let(:parent2_receptacle_uuid) { 'parent-receptacle2-uuid' }
 
-  let(:parent1_aliquot1) { create(:v2_aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
-  let(:parent1_aliquot2) { create(:v2_aliquot, sample: sample2, tag: tag1s[1], tag2: tag2s[1]) }
+  let(:parent1_aliquot1) { create(:aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
+  let(:parent1_aliquot2) { create(:aliquot, sample: sample2, tag: tag1s[1], tag2: tag2s[1]) }
 
   # this duplicate of sample 1 should replace one from parent 1 in the destination
-  let(:parent2_aliquot1) { create(:v2_aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
+  let(:parent2_aliquot1) { create(:aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
 
   let(:parent1_receptacle) do
     create(
-      :v2_receptacle,
+      :receptacle,
       uuid: parent1_receptacle_uuid,
       aliquots: [parent1_aliquot1, parent1_aliquot2],
       qc_results: []
     )
   end
   let(:parent2_receptacle) do
-    create(:v2_receptacle, uuid: parent2_receptacle_uuid, aliquots: [parent2_aliquot1], qc_results: [])
+    create(:receptacle, uuid: parent2_receptacle_uuid, aliquots: [parent2_aliquot1], qc_results: [])
   end
 
   let(:parent1_tube) do
-    create :v2_tube,
+    create :tube,
            uuid: parent1_tube_uuid,
            purpose_name: parent1_tube_purpose_name,
            purpose_uuid: parent1_tube_purpose_uuid,
@@ -73,7 +73,7 @@ RSpec.describe LabwareCreators::BlendedTube do
            barcode_number: '2'
   end
   let(:parent2_tube) do
-    create :v2_tube,
+    create :tube,
            uuid: parent2_tube_uuid,
            purpose_name: parent2_tube_purpose_name,
            purpose_uuid: parent2_tube_purpose_uuid,
@@ -92,7 +92,7 @@ RSpec.describe LabwareCreators::BlendedTube do
   let(:child_tube_uuid) { 'child-tube-uuid' }
 
   let(:child_tube) do
-    create :v2_tube,
+    create :tube,
            uuid: child_tube_uuid,
            purpose_name: child_tube_purpose_name,
            barcode_number: '4',
@@ -127,8 +127,8 @@ RSpec.describe LabwareCreators::BlendedTube do
   end
 
   before do
-    stub_v2_tube(parent1_tube, stub_search: false)
-    stub_v2_tube(parent2_tube, stub_search: false)
+    stub_tube(parent1_tube, stub_search: false)
+    stub_tube(parent2_tube, stub_search: false)
 
     create :blended_tube_purpose_config,
            name: child_tube_purpose_name,
@@ -243,7 +243,7 @@ RSpec.describe LabwareCreators::BlendedTube do
     subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     let(:child_tube) do
-      create :v2_tube,
+      create :tube,
              uuid: child_tube_uuid,
              purpose_name: child_tube_purpose_name,
              barcode_number: '4',

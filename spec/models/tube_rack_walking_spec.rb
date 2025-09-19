@@ -8,7 +8,7 @@ RSpec.describe TubeRackWalking::Walker do
   context 'A v2 rack' do
     let(:rack) { build :tube_rack, tubes: }
 
-    let(:tubes) { { 'A1' => create(:v2_tube), 'B1' => create(:v2_tube), 'H10' => create(:v2_tube) } }
+    let(:tubes) { { 'A1' => create(:tube), 'B1' => create(:tube), 'H10' => create(:tube) } }
 
     it 'yields for each row' do
       expect { |b| subject.each(&b) }.to yield_control.exactly(8).times

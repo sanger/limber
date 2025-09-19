@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   # Create a plate with 96 wells in pending state and 1 aliquot in each well
   # and then add requests to the aliquots with the same submission_id.
   let(:parent_plate) do
-    plate = create(:v2_plate, uuid: parent_plate_uuid, aliquots_without_requests: 1)
+    plate = create(:plate, uuid: parent_plate_uuid, aliquots_without_requests: 1)
     requests = create_list(:request, 96, submission_id: 2)
     plate.wells.each_with_index { |well, index| well.aliquots.first.request = requests[index] }
     plate
@@ -26,14 +26,14 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_plate_uuid, user_uuid: user_uuid } }
 
   # Child plate assumed to be created
-  let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
+  let(:child_plate) { create(:plate, uuid: child_plate_uuid) }
 
   before do
     # Create a purpose config for the plate (number_of_source_wells is 2)
     create(:pooled_wells_by_sample_in_groups_purpose_config, uuid: child_purpose_uuid)
     allow(subject).to receive(:parent).and_return(parent_plate)
-    stub_v2_plate(parent_plate, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false)
+    stub_plate(parent_plate, stub_search: false)
+    stub_plate(child_plate, stub_search: false)
   end
 
   describe '#number_of_source_wells' do

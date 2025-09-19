@@ -10,13 +10,13 @@ RSpec.describe Utility::PcrCyclesBinningCalculator do
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
 
-    let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, requests_as_source: [requests[0]]) }
-    let(:well_b1) { create(:v2_well, position: { 'name' => 'B1' }, requests_as_source: [requests[1]]) }
-    let(:well_c1) { create(:v2_well, position: { 'name' => 'C1' }, requests_as_source: [requests[2]]) }
-    let(:well_d1) { create(:v2_well, position: { 'name' => 'D1' }, requests_as_source: [requests[3]]) }
+    let(:well_a1) { create(:well, position: { 'name' => 'A1' }, requests_as_source: [requests[0]]) }
+    let(:well_b1) { create(:well, position: { 'name' => 'B1' }, requests_as_source: [requests[1]]) }
+    let(:well_c1) { create(:well, position: { 'name' => 'C1' }, requests_as_source: [requests[2]]) }
+    let(:well_d1) { create(:well, position: { 'name' => 'D1' }, requests_as_source: [requests[3]]) }
 
     let(:parent_plate) do
-      create :v2_plate,
+      create :plate,
              uuid: parent_uuid,
              barcode_number: '2',
              size: plate_size,

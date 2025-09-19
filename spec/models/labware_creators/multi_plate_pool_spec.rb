@@ -57,7 +57,7 @@ RSpec.describe LabwareCreators::MultiPlatePool do
       }
     end
 
-    let(:child_plate) { create :v2_plate }
+    let(:child_plate) { create :plate }
 
     let(:bulk_transfer_attributes) do
       [

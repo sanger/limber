@@ -8,15 +8,15 @@ RSpec.describe LabwareMetadata do
   let(:user) { create :user }
   let(:updated_metadata) { { created_with_robot: 'robot_barcode' } }
 
-  before { stub_v2_user(user) }
+  before { stub_user(user) }
 
   it 'raises an exception if both labware and barcode are nil' do
     expect { described_class.new }.to raise_error(ArgumentError)
   end
 
   it 'uses the labware if both labware and barcode are given' do
-    plate = create :v2_stock_plate
-    stub_v2_plate(plate)
+    plate = create :stock_plate
+    stub_plate(plate)
 
     expect(Sequencescape::Api::V2::Labware).not_to receive(:find)
     described_class.new(labware: plate, barcode: 'not_a_barcode', user_uuid: user.uuid)
@@ -32,14 +32,14 @@ RSpec.describe LabwareMetadata do
   end
 
   context 'plates' do
-    let(:plate) { create :v2_stock_plate }
-    let(:plate_with_metadata) { create :v2_stock_plate_with_metadata }
+    let(:plate) { create :stock_plate }
+    let(:plate_with_metadata) { create :stock_plate_with_metadata }
 
     let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: plate.id, metadata: updated_metadata] }
 
     before do
-      stub_v2_plate(plate)
-      stub_v2_plate(plate_with_metadata)
+      stub_plate(plate)
+      stub_plate(plate_with_metadata)
     end
 
     context 'by labware' do
@@ -76,14 +76,14 @@ RSpec.describe LabwareMetadata do
   end
 
   context 'tubes' do
-    let(:tube) { create :v2_stock_tube }
-    let(:tube_with_metadata) { create :v2_stock_tube_with_metadata }
+    let(:tube) { create :stock_tube }
+    let(:tube_with_metadata) { create :stock_tube_with_metadata }
 
     let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: tube.id, metadata: updated_metadata] }
 
     before do
-      stub_v2_tube(tube)
-      stub_v2_tube(tube_with_metadata)
+      stub_tube(tube)
+      stub_tube(tube_with_metadata)
     end
 
     context 'by labware' do
