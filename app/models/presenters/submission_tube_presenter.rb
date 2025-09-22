@@ -16,10 +16,5 @@ module Presenters
   class SubmissionTubePresenter < TubePresenter
     include Presenters::Statemachine::SequencingSubmission
     include Presenters::SubmissionBehaviour
-
-    # Override SubmissionBehaviour asset_groups as tubes only have one asset
-    def asset_groups
-      @asset_groups ||= [{ assets: [labware.uuid], autodetect_studies: true, autodetect_projects: true }]
-    end
   end
 end
