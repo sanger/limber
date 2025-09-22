@@ -28,8 +28,6 @@ module Presenters::SubmissionBehaviour
     submissions_in_progress == false
   end
 
-  private
-
   def asset_groups
     @asset_groups ||=
       labware
@@ -58,6 +56,8 @@ module Presenters::SubmissionBehaviour
   def format_asset_group(wells)
     { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true }
   end
+
+  private
 
   def active_submissions?
     submissions.any?(&:ready?)

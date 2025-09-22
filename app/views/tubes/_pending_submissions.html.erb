@@ -1,0 +1,15 @@
+<%# presenter.submissions returns a JsonApiClient::Query::Builder at this point #%>
+<% if presenter.submissions.present? and presenter.submissions.size > 0 %>
+  <%= card title: 'Submissions', css_class: 'submissions', without_block: true do %>
+    <% if presenter.pending_submissions? %>
+      <div class="card-body">
+        <p class="lead">There are currently submissions being built, the page will refresh in
+        <span id="refresh_time" data-reload-time="5">5</span> seconds.</p>
+      </div>
+    <% end %>
+    <%# We've already made the submission, and are waiting for it to build %>
+    <ul class="submission-list">
+      <%= render partial: 'submission_item', collection: presenter.submissions %>
+    </ul>
+  <% end %>
+<% end %>

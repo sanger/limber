@@ -1,0 +1,54 @@
+<%= vite_javascript_tag 'entrypoints/pages/choose_workflow.js', defer: true %>
+<%= card title: 'Choose workflow', id: 'choose_workflow_card', css_class: 'choose-workflow logged_in_only' do %>
+  <p class="lead">
+    A new workflow can be created for this plate. Please choose a workflow to
+    continue. This will build the necessary submissions in Sequencescape,
+    allowing you to proceed.
+  </p>
+
+  <div id="submission_forms">
+    <% presenter.each_submission_option do |name, submission| %>
+      <%= card do %>
+        <%= form_for submission do |f| %>
+          <%= f.fields_for('request_options') do |ro| %>
+            <% submission.request_options.each do |k,v| %>
+              <%= ro.hidden_field k, value: v %>
+            <% end %>
+          <% end %>
+          <%= f.hidden_field :template_uuid %>
+          <%= f.hidden_field :labware_barcode %>
+          <%= f.fields_for :asset_groups do |asset_groups_form| %>
+            <% submission.asset_groups.each_with_index do |asset_group, group_id| %>
+              <%= asset_groups_form.fields_for group_id.to_s do |ag_form| %>
+                <% asset_group.except(:asset_uuids).each do |key, value| %>
+                  <%# Deconstruct the other fields of our asset group, such as study and project %>
+                  <%= ag_form.hidden_field key, value: %>
+                <% end %>
+                <%= ag_form.fields_for :asset_uuids do |asset_form| %>
+                <% asset_group[:asset_uuids].each do |asset_uuid| %>
+                  <%= asset_form.hidden_field nil, value: asset_uuid %>
+                <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+
+          <% if submission.allowed_extra_barcodes %>
+            <%= f.label :extra_barcodes, 'Add additional labware barcodes to the submission (Optional)' %>
+            <br />
+            <% (1..submission.num_extra_barcodes).each do |num| %>
+              <div class="form-group row">
+                <%= f.label "extra_barcodes_#{num}", "Barcode #{num}", class: 'plate-label col-md-2' %>
+                <%= f.text_field :extra_barcodes, multiple: true, class: 'form-control col-md-8',
+                                                  id: "sequencescape_submission_extra_barcodes_#{num}" %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <%= submit_tag name, class: 'create-submission-button' %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+<% end %>

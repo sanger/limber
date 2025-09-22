@@ -19,6 +19,12 @@ module LabwareCreators
       pools_for_multiplexing =
         parent.pooling_metadata.select { |_submission_id, pool_info| pool_info['for_multiplexing'] }
 
+      # Removes pools that are already completed
+      # This prevents issues / tag clashes if a user re-runs pooling on a plate that has already been pooled
+      # e.g. in Ultima when they re-submit and pool again after rebalancing
+      pools_for_multiplexing.reject! { |_submission_id, pool_info| pool_info['pool_complete'] }
+
+      # binding.pry
       # filter for just those where the source wells for the pool have't been failed
       pools_for_multiplexing.transform_values { |pool_info| all_wells_in_pool_passed?(pool_info) }
     end

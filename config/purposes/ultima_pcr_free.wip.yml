@@ -56,13 +56,13 @@ UPF Balanced Norm:
   :default_printer_type: :tube
   # TODO: this creator needs to be replaced by one that creates 2 child tubes
   :creator_class: LabwareCreators::TubeFromTube
-  # TODO: this presenter needs to be replaced by one that can do an automatic
-  # submission on a tube for Ultima sequencing.
-  # :presenter_class: Presenters::SubmissionTubePresenter
-  # :submission_options:
-  #   Ultima Sequencing - Automated Submission:
-  #     template_name: 'Limber-Htp - Ultima PCR Free - Ultima sequencing Automated'
-  #     allowed_extra_barcodes: false
-  #     request_options:
-  #       # TODO: what goes here for the Ultima sequencing submission?
-  :presenter_class: Presenters::FinalTubePresenter
+  :presenter_class: Presenters::SubmissionTubePresenter
+  :submission_options:
+    Ultima Sequencing - Automated Submission:
+      template_name: 'Limber-Htp - Ultima PCR Free - Ultima sequencing Automated'
+      allowed_extra_barcodes: false
+      request_options:
+        library_type: Ultima High Throughput PCR Free 96
+        ot_recipe: Flex
+        fragment_size: 300
+        fragment_size_to: 400
