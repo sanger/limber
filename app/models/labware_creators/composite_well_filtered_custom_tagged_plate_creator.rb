@@ -30,6 +30,7 @@ module LabwareCreators
   # @see LabwareCreators::WellFilterComposite
   class CompositeWellFilteredCustomTaggedPlateCreator < CustomTaggedPlate
     include LabwareCreators::WellFilterBehaviour
+
     self.page = 'custom_tagged_plate'
 
     # Creates if not exists and returns the WellFilter instance associated with

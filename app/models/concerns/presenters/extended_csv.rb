@@ -2,6 +2,7 @@
 
 module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   extend ActiveSupport::Concern
+
   included do
     class_attribute :bed_prefix
     self.bed_prefix = 'PCRXP'

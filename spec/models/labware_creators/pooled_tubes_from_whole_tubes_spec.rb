@@ -9,6 +9,7 @@ require_relative 'shared_examples'
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   include FeatureHelpers
+
   subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from tubes'
