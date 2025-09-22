@@ -19,7 +19,6 @@ module Presenters::Statemachine
     included do
       include Shared
 
-      # The state machine for plates which has knock-on effects on the plates that can be created
       state_machine :state, initial: :pending do
         StateTransitions.inject(self)
 
