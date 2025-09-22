@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe Robots::PoolingRobot, :robots do
   include RobotHelpers
 
-  has_a_working_api
-
   let(:source_plate_attributes) do
     {
       uuid: plate_uuid,
@@ -44,7 +42,7 @@ RSpec.describe Robots::PoolingRobot, :robots do
 
   let(:target_plate_parents) { [source_plate] }
 
-  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(user_uuid:)) }
 
   let(:robot_spec) do
     {

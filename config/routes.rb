@@ -77,7 +77,7 @@ Rails.application.routes.draw do
   match '/limber_qcables(/*all)', to: redirect(path: '/qcables/%{all}'), via: :all
 
   # Redirect labware creation routes for any HTTP request type
-  # rubocop:disable Style/LineLength
+  # rubocop:disable Layout/LineLength
   match '/plates/:id/plates(/*all)',         to: redirect(path: '/plates/%{id}/child_plate_creations/%{all}'),          via: :all
   match '/plates/:id/tubes(/*all)',          to: redirect(path: '/plates/%{id}/child_tube_creations/%{all}'),           via: :all
   match '/plates/:id/tube_racks(/*all)',     to: redirect(path: '/plates/%{id}/child_tube_rack_creations/%{all}'),      via: :all
@@ -87,7 +87,7 @@ Rails.application.routes.draw do
   match '/tube_racks/:id/plates(/*all)',     to: redirect(path: '/tube_racks/%{id}/child_plate_creations/%{all}'),      via: :all
   match '/tube_racks/:id/tubes(/*all)',      to: redirect(path: '/tube_racks/%{id}/child_tube_creations/%{all}'),       via: :all
   match '/tube_racks/:id/tube_racks(/*all)', to: redirect(path: '/tube_racks/%{id}/child_tube_rack_creations/%{all}'),  via: :all
-  # rubocop:enable Style/LineLength
+  # rubocop:enable Layout/LineLength
 
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do

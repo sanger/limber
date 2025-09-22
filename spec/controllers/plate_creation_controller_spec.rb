@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe PlateCreationController do
-  has_a_working_api
   include FeatureHelpers
 
   # context 'for a plate with a custom-form' do

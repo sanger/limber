@@ -23,7 +23,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
   # Define the presenter and labware for the tests
   let(:presenter) { described_class.new(labware) }
   let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
-  let(:labware) { create(:v2_stock_plate, :has_pooling_metadata, purpose: wgs_purpose) }
+  let(:labware) { create(:v2_stock_plate, purpose: wgs_purpose) }
 
   describe '#pipeline_groups' do
     before { Settings.pipelines = PipelineList.new(pipelines_config) }
@@ -69,7 +69,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       end
       let(:aliquot) { [create(:v2_aliquot, request:)] }
       let(:wells) { [create(:v2_well, aliquots: aliquot, location: 'A1')] }
-      let(:labware) { create(:v2_plate, :has_pooling_metadata, purpose: wgs_purpose, wells: wells) }
+      let(:labware) { create(:v2_plate, purpose: wgs_purpose, wells: wells) }
       let(:pipelines_config) do
         {
           'wgs_purpose_and_unrelated_library_type_pipeline' => {
@@ -147,14 +147,13 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       let(:purpose_middle) { create(:v2_purpose, name: 'purpose-middle') }
       let(:purpose_last) { create(:v2_purpose, name: 'purpose-last') }
 
-      let(:labware_first) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_first) }
+      let(:labware_first) { create(:v2_stock_plate, purpose: purpose_first) }
       let(:labware_middle) do
-        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_middle, ancestors: [labware_first])
+        create(:v2_stock_plate, purpose: purpose_middle, ancestors: [labware_first])
       end
       let(:labware_last) do
         create(
           :v2_stock_plate,
-          :has_pooling_metadata,
           purpose: purpose_last,
           ancestors: [labware_middle, labware_first]
         )
@@ -258,20 +257,19 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       let(:purpose_other_parent) { create(:v2_purpose, name: 'purpose-other-parent') }
       let(:purpose_other_child) { create(:v2_purpose, name: 'purpose-other-child') }
 
-      let(:labware_branching_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
+      let(:labware_branching_parent) { create(:v2_stock_plate, purpose: purpose_parent) }
       let(:labware_child) do
-        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_child, ancestors: [labware_parent])
+        create(:v2_stock_plate, purpose: purpose_child, ancestors: [labware_parent])
       end
       let(:labware_other_child) do
-        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_child, ancestors: [labware_parent])
+        create(:v2_stock_plate, purpose: purpose_other_child, ancestors: [labware_parent])
       end
 
-      let(:labware_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
-      let(:labware_other_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_parent) }
+      let(:labware_parent) { create(:v2_stock_plate, purpose: purpose_parent) }
+      let(:labware_other_parent) { create(:v2_stock_plate, purpose: purpose_other_parent) }
       let(:labware_combining_child) do
         create(
           :v2_stock_plate,
-          :has_pooling_metadata,
           purpose: purpose_child,
           ancestors: [labware_parent, labware_other_parent]
         )
@@ -418,16 +416,16 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
         let(:purpose_branching_parent) { create(:v2_purpose, name: 'purpose-branching-parent') }
 
-        let(:labware_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
-        let(:labware_other_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_parent) }
+        let(:labware_parent) { create(:v2_stock_plate, purpose: purpose_parent) }
+        let(:labware_other_parent) { create(:v2_stock_plate, purpose: purpose_other_parent) }
         let(:labware_combining_child) do
-          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_combining_child)
+          create(:v2_stock_plate, purpose: purpose_combining_child)
         end
         let(:labware_branching_parent) do
-          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_branching_parent)
+          create(:v2_stock_plate, purpose: purpose_branching_parent)
         end
-        let(:labware_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_child) }
-        let(:labware_other_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_child) }
+        let(:labware_child) { create(:v2_stock_plate, purpose: purpose_child) }
+        let(:labware_other_child) { create(:v2_stock_plate, purpose: purpose_other_child) }
 
         before do
           allow(labware_combining_child).to receive_messages(parents: [labware_parent])

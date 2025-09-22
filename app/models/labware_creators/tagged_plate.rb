@@ -20,21 +20,7 @@ module LabwareCreators
     self.attributes += [:tag_plate_barcode, { tag_plate: %i[asset_uuid template_uuid] }]
     self.default_transfer_template_name = 'Custom pooling'
 
-    # The TaggedPlate labware creator uses API V1 Plate as parent. The V1 Plate
-    # has the populate_wells_with_pool method that assigns pools to wells using
-    # its pools attribute. However, this is incompatible with the V2 API Plate.
-    # The V2 plate does not have such a method and its pool attribute has a
-    # different structure. The populate_wells_with_pool method is called in the
-    # initialize method of the TaggedPlate labware creator on the parent plate.
-    # This makes it difficult to subclass the labware creator and also use a V2
-    # API plate as parent. If the class attribute should_populate_wells_with_pool
-    # is set to false, it will not call the populate_wells_with_pool method on
-    # the parent plate.
-
-    class_attribute :should_populate_wells_with_pool
-    self.should_populate_wells_with_pool = true # parent is a V1 plate
-
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
+    validates :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 

@@ -6,8 +6,6 @@ RSpec.describe 'exports/kinnex_prep_plate_export.csv.erb' do
   include FeatureHelpers
 
   context 'when creating a kinnex prep plate export csv' do
-    has_a_working_api
-
     # samples
     let(:sample1_uuid) { SecureRandom.uuid }
     let(:sample2_uuid) { SecureRandom.uuid }

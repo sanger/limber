@@ -70,14 +70,7 @@ Rails.application.configure do
   config.admin_email = 'nnnnnnnnnnnnnnnn'
   config.exception_recipients = 'nnnnnnnnnnnnnnnn'
 
-  # API v1 config (deprecated)
   config.api = ActiveSupport::OrderedOptions.new
-  config.api.v1 = ActiveSupport::OrderedOptions.new
-  config.api.v1.connection_options = ActiveSupport::OrderedOptions.new
-  config.api.v1.connection_options.namespace = 'Limber'
-  config.api.v1.connection_options.url = rewrite_localhost(ENV.fetch('API_URL', 'http://localhost:3000/api/1/'))
-  config.api.v1.connection_options.authorisation = ENV.fetch('API_KEY', 'development')
-
   # API v2 config
   config.api.v2 = ActiveSupport::OrderedOptions.new
   config.api.v2.connection_options = ActiveSupport::OrderedOptions.new

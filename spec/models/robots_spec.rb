@@ -5,14 +5,12 @@ require 'rails_helper'
 RSpec.describe Robots, :robots do
   include FeatureHelpers
 
-  has_a_working_api
-
   let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
   before { Settings.robots = settings[:robots] }
 
   describe '::find' do
-    subject { described_class.find(id: robot_id, api: api, user_uuid: user_uuid) }
+    subject { described_class.find(id: robot_id, user_uuid: user_uuid) }
 
     let(:user_uuid) { SecureRandom.uuid }
 

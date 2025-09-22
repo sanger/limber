@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::Base do
   end
 
   context 'with a custom transfer-template' do
-    subject { described_class.new(nil, purpose_uuid: 'test-purpose') }
+    subject { described_class.new(purpose_uuid: 'test-purpose') }
 
     before do
       create :purpose_config, transfer_template: 'Custom transfer template', uuid: 'test-purpose'
