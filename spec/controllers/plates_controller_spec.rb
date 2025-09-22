@@ -123,7 +123,7 @@ RSpec.describe PlatesController, type: :controller do
       end
 
       it 'creates poly metadata for each selected well and redirects with notice' do
-        expect_api_posts('PolyMetadatum', expected_args)
+        expect_posts('PolyMetadatum', expected_args)
 
         post :process_mark_under_represented_wells,
              params: {
