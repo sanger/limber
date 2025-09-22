@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   # API V2 QCable
-  factory :qcable, class: Sequencescape::Api::V2::Qcable, traits: [:barcoded_v2] do
+  factory :qcable, class: Sequencescape::Api::V2::Qcable, traits: [:barcoded] do
     skip_create
 
     uuid

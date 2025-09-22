@@ -53,7 +53,7 @@ FactoryBot.define do
   # request_factory - The factory to use for each request
   # pool_sizes - determined the number of requests on the plate and how they pool
   # outer_requests - More fine-grained controls if the above options aren't suitable
-  factory :plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
+  factory :plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded] do
     skip_create
 
     initialize_with { Sequencescape::Api::V2::Plate.load(attributes) }
@@ -312,7 +312,7 @@ FactoryBot.define do
   end
 
   # Dummy stock plate for the stock_plate association
-  factory :stock_plate_for_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded_v2] do
+  factory :stock_plate_for_plate, class: Sequencescape::Api::V2::Plate, traits: [:barcoded] do
     initialize_with { Sequencescape::Api::V2::Plate.load(attributes) }
     skip_create
 

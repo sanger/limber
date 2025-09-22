@@ -4,7 +4,7 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
-  factory :labware, class: Sequencescape::Api::V2::Labware, traits: [:barcoded_v2] do
+  factory :labware, class: Sequencescape::Api::V2::Labware, traits: [:barcoded] do
     skip_create
 
     initialize_with { Sequencescape::Api::V2::Labware.load(attributes) }

@@ -7,7 +7,7 @@ FactoryBot.define do
   # Generates an api v2 tube with the Sequencescape::Api::V2::Asset class
   # This is required to mimic the behaviour of the API gem when loading some
   # polymorphic resources
-  factory :asset_tube, class: Sequencescape::Api::V2::Asset, traits: [:barcoded_v2] do
+  factory :asset_tube, class: Sequencescape::Api::V2::Asset, traits: [:barcoded] do
     skip_create
     uuid
     name { 'My tube' }

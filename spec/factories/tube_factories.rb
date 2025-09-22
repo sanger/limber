@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   # API v2 tube
-  factory :tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded_v2] do
+  factory :tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded] do
     skip_create
 
     sequence(:id, &:to_s)

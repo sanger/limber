@@ -66,7 +66,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
 
   # parent well ancestor stock tubes
   let(:ancestor_tube_1_aliquot) { create(:aliquot, sample: sample1) }
-  let(:ancestor_tube_1_v2) do
+  let(:ancestor_tube_1) do
     create(
       :stock_tube,
       state: 'passed',
@@ -77,7 +77,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   let(:ancestor_2_aliquot) { create(:aliquot, sample: sample2) }
-  let(:ancestor_tube_2_v2) do
+  let(:ancestor_tube_2) do
     create(
       :stock_tube,
       state: 'passed',
@@ -88,7 +88,7 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
   end
 
   # ancestor tubes list
-  let(:ancestor_tubes) { [ancestor_tube_1_v2, ancestor_tube_2_v2] }
+  let(:ancestor_tubes) { [ancestor_tube_1, ancestor_tube_2] }
 
   # parent wells
   let(:parent_well_a1) do
@@ -349,8 +349,8 @@ RSpec.describe LabwareCreators::PlateSplitToTubeRacks, with: :uploader do
     create(:purpose_config, name: ancestor_tube_purpose_name, uuid: ancestor_tube_purpose_uuid)
 
     # ancestor tube lookups
-    stub_tube(ancestor_tube_1_v2, stub_search: false)
-    stub_tube(ancestor_tube_2_v2, stub_search: false)
+    stub_tube(ancestor_tube_1, stub_search: false)
+    stub_tube(ancestor_tube_2, stub_search: false)
 
     # Block finding tubes by given barcodes.
     allow(Sequencescape::Api::V2::Tube).to receive(:find_by).with(barcode: 'FX00000001').and_return(nil)
