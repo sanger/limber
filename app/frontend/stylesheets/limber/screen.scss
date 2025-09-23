@@ -617,6 +617,29 @@ footer.version-info {
   }
 }
 
+.scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.purpose-column {
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: top;
+  min-width: max-content;
+}
+
+.labware-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.labware-details {
+  width: max-content;
+  min-width: 0;
+}
+
 .asset-info {
   @extend .card-body;
   @extend .bg-info;
