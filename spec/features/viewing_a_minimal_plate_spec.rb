@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Viewing a plate', :js do
-  has_a_working_api
-
   let(:user) { create :user }
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode) { example_plate.barcode.machine }
@@ -75,7 +73,7 @@ RSpec.feature 'Viewing a plate', :js do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_content(
-        'Submission on this plate has already been failed (A1-E1). You should not carry out further work. ' \
+        'Submission on this plate has some failed wells (A1-E1). You should not carry out further work. ' \
         'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
     end
@@ -128,8 +126,6 @@ RSpec.feature 'Viewing a plate', :js do
     end
 
     scenario 'we can use the tube label form' do
-      # expect(job).to receive(:execute).and_return(true)
-
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       within('.tube-printing') do
         expect(page).to have_content('Print tube labels')

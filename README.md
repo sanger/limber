@@ -29,7 +29,6 @@ A flexible front end to pipelines in Sequencescape.
   - [Vitest](#vitest)
   - [Writing specs](#writing-specs)
     - [Factory Bot](#factory-bot)
-    - [Request stubbing for the Sequencescape v1 API](#request-stubbing-for-the-sequencescape-v1-api)
     - [Request stubbing for the Sequencescape v2 API](#request-stubbing-for-the-sequencescape-v2-api)
       - [FactoryBot is not mocking my related resources correctly](#factorybot-is-not-mocking-my-related-resources-correctly)
     - [Feature debugging](#feature-debugging)
@@ -288,12 +287,6 @@ There are a few tools available to assist with writing specs:
   - `build`: Returns an actual object, as though already found via the api. Useful for unit tests
 
 - Helpers: `with_has_many_associations` and `with_belongs_to_associations` can be used in factories to set up the relevant json. They won't actually mock up the relevant requests, but ensure that things like actions are defined so that the api knows where to find them.
-
-#### Request stubbing for the Sequencescape v1 API
-
-Request stubs are provided by webmock. Two helper methods will assist with the majority of mocking requests to the api, `stub_api_get` and `stub_api_post`. See `spec/support/api_url_helper.rb` for details.
-
-**Note**: Due to the way the api functions, the factories don't yet support nested associations.
 
 #### Request stubbing for the Sequencescape v2 API
 

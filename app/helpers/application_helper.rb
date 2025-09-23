@@ -18,11 +18,6 @@ module ApplicationHelper # rubocop:todo Style/Documentation
   end
   include DeploymentInfo
 
-  # Easy access to the api from the console
-  def api
-    Sequencescape::Api.new(Limber::Application.config.api.v1.connection_options.dup)
-  end
-
   def environment
     Rails.env
   end

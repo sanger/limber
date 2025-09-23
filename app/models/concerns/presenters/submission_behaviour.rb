@@ -34,9 +34,29 @@ module Presenters::SubmissionBehaviour
     @asset_groups ||=
       labware
         .wells
-        .compact_blank
+        .reject { |well| exclude_well?(well) }
         .group_by(&:order_group)
-        .map { |_, wells| { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true } }
+        .map { |_, wells| format_asset_group(wells) }
+  end
+
+  def exclude_well?(well)
+    empty_well?(well) || all_aliquot_requests_failed?(well)
+  end
+
+  def empty_well?(well)
+    well.aliquots.blank?
+  end
+
+  def all_aliquot_requests_failed?(well)
+    well.aliquots.present? && well.aliquots.all? { |aliquot| aliquot_request_failed?(aliquot) }
+  end
+
+  def aliquot_request_failed?(aliquot)
+    aliquot.request&.state == 'failed'
+  end
+
+  def format_asset_group(wells)
+    { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true }
   end
 
   def active_submissions?

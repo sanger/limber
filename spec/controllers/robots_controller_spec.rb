@@ -4,8 +4,6 @@ require 'rails_helper'
 require './app/controllers/robots_controller'
 
 RSpec.describe RobotsController, :robots, type: :controller do
-  has_a_working_api
-
   include FeatureHelpers
   include RobotHelpers
 
@@ -38,12 +36,6 @@ RSpec.describe RobotsController, :robots, type: :controller do
       stub_v2_user(user)
       stub_v2_plate(plate)
       bed_labware_lookup(plate)
-
-      # Legacy asset search
-      stub_asset_search(
-        plate.barcode.machine,
-        json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid)
-      )
     end
 
     it 'adds robot barcode to plate metadata' do

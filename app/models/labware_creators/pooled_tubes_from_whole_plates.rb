@@ -5,6 +5,7 @@ module LabwareCreators
   class PooledTubesFromWholePlates < Base
     include CreatableFrom::TaggedPlateOnly
     include LabwareCreators::CustomPage
+
     attr_reader :tube_transfer, :child, :barcodes
 
     self.page = 'pooled_tubes_from_whole_plates'
@@ -38,7 +39,7 @@ module LabwareCreators
     end
 
     def redirection_target
-      Tube.new(nil, @child.uuid)
+      Tube.new(@child.uuid)
     end
 
     # TODO: This should probably be asynchronous

@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Creating a quadrant stamp primer panel plate', :js do
-  has_a_working_api
-
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
 

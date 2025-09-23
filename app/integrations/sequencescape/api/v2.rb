@@ -4,6 +4,8 @@
 # Contains query plans
 # :reek:UncommunicativeModuleName
 module Sequencescape::Api::V2
+  SsApiV2 = Sequencescape::Api::V2
+
   # transfer_request_as_target.source_asset is added to the includes to make
   # the source receptacles available in presenters.
   PLATE_PRESENTER_INCLUDES = [
@@ -30,11 +32,11 @@ module Sequencescape::Api::V2
   ].freeze
 
   #
-  # Returns a {Sequencescape::V2::Api::Labware} object with *just* the UUID, suitable for redirection
+  # Returns a {Sequencescape::Api::V2::Labware} object with *just* the UUID, suitable for redirection
   #
   # @param barcode [String] The barcode to find
   #
-  # @return [Sequencescape::V2::Api::Labware] Found labware object
+  # @return [Sequencescape::Api::V2::Labware] Found labware object
   #
   def self.minimal_labware_by_barcode(barcode, select: :uuid)
     Sequencescape::Api::V2::Labware.where(barcode:).select(tube_racks: select, plates: select, tubes: select).first

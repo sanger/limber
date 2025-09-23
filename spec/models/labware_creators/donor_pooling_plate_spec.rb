@@ -4,12 +4,10 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::DonorPoolingPlate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has a custom page', 'donor_pooling_plate'
-
-  has_a_working_api
 
   let(:user_uuid) { 'user-uuid' }
   let(:parent_1_plate_uuid) { 'parent-1-plate-uuid' }
