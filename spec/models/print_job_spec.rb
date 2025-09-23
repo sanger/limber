@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe PrintJob do
-  has_a_working_api
-
   let(:printer_pmb) { build :v2_barcode_printer }
   let(:printer_sprint) { build :v2_barcode_printer, print_service: 'SPrint' }
   let(:printer_unknown) { build :v2_barcode_printer, print_service: 'UNKNOWN' }
@@ -15,8 +13,6 @@ RSpec.describe PrintJob do
   let(:label_templates_by_service) do
     JSON.generate({ 'PMB' => label_template_name_pmb, 'SPrint' => label_template_name_sprint })
   end
-  let(:label_template_query) { { 'filter[name]': label_template_name_pmb, 'page[page]': 1, 'page[per_page]': 1 } }
-  let(:label_template_url) { "/v1/label_templates?#{URI.encode_www_form(label_template_query)}" }
 
   let(:expected_labels) { [{ 'label' => { 'test_attr' => 'test', 'barcode' => '12345' } }] }
   let(:expected_sprint_labels) do

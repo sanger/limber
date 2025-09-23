@@ -21,6 +21,7 @@ module RobotConfiguration
 
   class Register # rubocop:todo Style/Documentation
     include BedHelpers
+
     def self.configure(&)
       register = new
       register.instance_eval(&)
@@ -52,6 +53,7 @@ module RobotConfiguration
 
   class Simple # rubocop:todo Style/Documentation
     include BedHelpers
+
     attr_reader :source_purpose,
                 :target_purpose,
                 :type,

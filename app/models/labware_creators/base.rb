@@ -13,31 +13,23 @@ module LabwareCreators
 
     extend NestedValidation
 
-    attr_reader :api, :child
-    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params, :limber_plate_id, :limber_tube_id
+    attr_reader :child
+    attr_accessor :purpose_uuid, :parent_uuid, :user_uuid, :params, :plate_id, :tube_id
 
     class_attribute :default_transfer_template_name, :style_class, :state
 
-    self.attributes = %i[purpose_uuid parent_uuid user_uuid limber_plate_id limber_tube_id]
+    self.attributes = %i[purpose_uuid parent_uuid user_uuid plate_id tube_id]
     self.default_transfer_template_name = 'Transfer columns 1-12'
     self.style_class = 'creator'
 
     # Used when rendering plates. Mostly set to pending as we're usually rendering a new plate.
     self.state = 'pending'
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, :transfer_template_name, presence: true
+    validates :purpose_uuid, :parent_uuid, :user_uuid, :transfer_template_name, presence: true
 
     # The base creator is abstract, and is not intended to be used directly
-    def self.support_parent?(_parent)
+    def self.creatable_from?(_parent)
       false
-    end
-
-    # We pull out the api as the first argument as it ensures
-    # we'll always have it available, even during assignment of
-    # other attributes. Otherwise we end up relying on hash order.
-    def initialize(api, *)
-      @api = api
-      super(*)
     end
 
     def plate_to_walk
@@ -99,6 +91,19 @@ module LabwareCreators
     #
     def purpose_name
       purpose_config.name
+    rescue StandardError
+      'unknown'
+    end
+
+    #
+    # Returns the labware type of the child purpose
+    #
+    # @return [String] The labware type
+    #
+    def child_labware_type
+      purpose_config.asset_type
+    rescue StandardError
+      'labware'
     end
 
     private

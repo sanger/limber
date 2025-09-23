@@ -10,16 +10,25 @@ RSpec.describe LabwareMetadata do
 
   before { stub_v2_user(user) }
 
-  it 'raises an exception if the barcode is invalid' do
-    error = Sequencescape::Api::ResourceNotFound.new('Not found')
-    invalid_barcode = 'not_a_barcode'
-    allow(Sequencescape::Api::V2::Labware).to receive(:find).with(barcode: invalid_barcode).and_raise(error)
-
-    expect { described_class.new(barcode: invalid_barcode, user_uuid: user.uuid) }.to raise_error(error)
-  end
-
   it 'raises an exception if both labware and barcode are nil' do
     expect { described_class.new }.to raise_error(ArgumentError)
+  end
+
+  it 'uses the labware if both labware and barcode are given' do
+    plate = create :v2_stock_plate
+    stub_v2_plate(plate)
+
+    expect(Sequencescape::Api::V2::Labware).not_to receive(:find)
+    described_class.new(labware: plate, barcode: 'not_a_barcode', user_uuid: user.uuid)
+  end
+
+  it 'raises an exception if the barcode is invalid' do
+    barcode = 'not_a_barcode'
+    error = JsonApiClient::Errors::NotFound
+
+    allow(Sequencescape::Api::V2::Labware).to receive(:find).with(hash_including(barcode:)).and_return([])
+
+    expect { described_class.new(barcode: barcode, user_uuid: user.uuid) }.to raise_error(error)
   end
 
   context 'plates' do

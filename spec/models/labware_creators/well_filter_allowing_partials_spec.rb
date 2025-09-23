@@ -6,8 +6,6 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
   context 'when filtering wells' do
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
-    let(:num_rows) { 8 }
-    let(:num_cols) { 12 }
 
     let(:well_a1) do
       create(:v2_well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a], outer_request: nil)
@@ -32,9 +30,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
     end
 
     let(:basic_purpose) { 'test-purpose' }
-    let(:labware_creator) do
-      LabwareCreators::StampedPlate.new(nil, purpose_uuid: 'test-purpose', parent_uuid: parent_uuid)
-    end
+    let(:labware_creator) { LabwareCreators::StampedPlate.new(purpose_uuid: 'test-purpose', parent_uuid: parent_uuid) }
 
     let(:request_type_key_a) { 'rt_a' }
     let(:request_type_key_b) { 'rt_b' }

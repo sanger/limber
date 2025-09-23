@@ -33,6 +33,8 @@ Rails/HasManyOrHasOneDependent:
   Enabled: false
 Rails/FindBy:
   Enabled: false
+Rails/FindByOrAssignmentMemoization:
+  Enabled: true # Using JSON-API method; the interface is similar to Rails find_by, so this cop is still useful
 Style/ClassAndModuleChildren:
   Enabled: false
 
@@ -92,11 +94,15 @@ Naming/VariableNumber:
 
 RSpec/ContextWording:
   Prefixes:
+    - by
     - for
+    - from
     - if
+    - in
     - unless
     - when
     - where
+    - which
     - with
     - without
 

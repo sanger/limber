@@ -4,21 +4,18 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::BaitedPlate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-  let(:purpose) { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid) { 'parent-uuid' }
   let(:requests) do
     Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
   let(:parent_plate) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
   let(:child_plate) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
-  let(:transfer_template_uuid) { 'custom-pooling' }
-  let(:transfer_template) { json :transfer_template, uuid: transfer_template_uuid }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
@@ -35,8 +32,6 @@ RSpec.describe LabwareCreators::BaitedPlate do
   end
 
   context 'create plate' do
-    has_a_working_api
-
     let(:plate_creations_attributes) do
       [{ child_purpose_uuid: purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid }]
     end

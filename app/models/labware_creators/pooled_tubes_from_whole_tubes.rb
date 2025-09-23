@@ -8,8 +8,9 @@ module LabwareCreators
     class SubmissionFailure < StandardError
     end
 
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
     include LabwareCreators::CustomPage
+
     attr_reader :tube_transfer, :child, :barcodes
 
     self.page = 'pooled_tubes_from_whole_tubes'
@@ -68,7 +69,7 @@ module LabwareCreators
     end
 
     def redirection_target
-      TubeProxy.new(@child.uuid)
+      Tube.new(@child.uuid)
     end
 
     private

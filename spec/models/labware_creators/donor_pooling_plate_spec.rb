@@ -4,17 +4,14 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::DonorPoolingPlate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has a custom page', 'donor_pooling_plate'
 
-  has_a_working_api
-
   let(:user_uuid) { 'user-uuid' }
   let(:parent_1_plate_uuid) { 'parent-1-plate-uuid' }
   let(:parent_2_plate_uuid) { 'parent-2-plate-uuid' }
-  let(:parent_purpose_uuid) { 'parent-purpose-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
   let(:number_of_pools) { 8 }
@@ -54,13 +51,9 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   # Usually we need three studies for testing.
   let(:study_1) { create(:v2_study, name: 'study-1-name') }
-  let(:study_2) { create(:v2_study, name: 'study-2-name') }
-  let(:study_3) { create(:v2_study, name: 'study-3-name') }
 
   # Usually we need three projects for testing.
   let(:project_1) { create(:v2_project, name: 'project-1-name') }
-  let(:project_2) { create(:v2_project, name: 'project-2-name') }
-  let(:project_3) { create(:v2_project, name: 'project-3-name') }
 
   # This is the form that includes plate barcodes, submitted by user.
   let(:form_attributes) do
@@ -331,7 +324,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       let(:project) { create(:v2_project) }
       let(:donor_ids) { (1..32).to_a }
       let(:wells) { parent_1_plate.wells[0..31] }
-      let(:expected_number_of_pools) { 8 }
       let(:number_of_pools) { 8 }
 
       before do
@@ -466,7 +458,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       # Only 10 unique donor ids, but 20 samples needed per pool - impossible to distribute correctly
       let(:donor_ids) { (1..10).to_a * 8 }
       let(:wells) { parent_1_plate.wells[0..79] }
-      let(:expected_number_of_pools) { 4 }
       let(:number_of_pools) { 4 }
 
       before do

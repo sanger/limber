@@ -11,7 +11,6 @@ RSpec.describe LabwareCreators::BlendedTube do
   let(:sample1) { create(:v2_sample) }
   let(:sample2) { create(:v2_sample) }
 
-  let(:ancestor_plate_purpose_uuid) { 'ancestor-plate-purpose-uuid' }
   let(:ancestor_plate_purpose_name) { 'Ancestor Plate Purpose' }
 
   let(:tag_group1) { create(:v2_tag_group, name: 'blendedtg1') }
@@ -45,7 +44,6 @@ RSpec.describe LabwareCreators::BlendedTube do
 
   let(:parent1_receptacle_uuid) { 'parent-receptacle1-uuid' }
   let(:parent2_receptacle_uuid) { 'parent-receptacle2-uuid' }
-  let(:parent_receptacle_uuids) { [parent1_receptacle_uuid, parent2_receptacle_uuid] }
 
   let(:parent1_aliquot1) { create(:v2_aliquot, sample: sample1, tag: tag1s[0], tag2: tag2s[0]) }
   let(:parent1_aliquot2) { create(:v2_aliquot, sample: sample2, tag: tag1s[1], tag2: tag2s[1]) }
@@ -88,7 +86,6 @@ RSpec.describe LabwareCreators::BlendedTube do
   let(:child_tube_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
-  let(:user) { json :user, uuid: user_uuid }
 
   let(:list_sample_attributes) { %w[sample_id tag1 tag2] }
 
@@ -145,10 +142,8 @@ RSpec.describe LabwareCreators::BlendedTube do
 
   it_behaves_like 'it only allows creation from tubes'
 
-  has_a_working_api
-
   context 'when validating and transfers is not present' do
-    subject { described_class.new(api, purpose_uuid: child_tube_purpose_uuid) }
+    subject { described_class.new(purpose_uuid: child_tube_purpose_uuid) }
 
     it 'is not valid' do
       expect(subject).not_to be_valid
@@ -161,7 +156,7 @@ RSpec.describe LabwareCreators::BlendedTube do
   end
 
   describe '#create_labware!' do
-    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     before { allow(subject).to receive_messages(create_child_tube: child_tube) }
 
@@ -179,7 +174,7 @@ RSpec.describe LabwareCreators::BlendedTube do
   end
 
   describe '#request_hash' do
-    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     before do
       # Stub the @child_tube instance variable
@@ -221,7 +216,7 @@ RSpec.describe LabwareCreators::BlendedTube do
   end
 
   describe '#new' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) do
       {
@@ -245,7 +240,7 @@ RSpec.describe LabwareCreators::BlendedTube do
   end
 
   describe '#create' do
-    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     let(:child_tube) do
       create :v2_tube,
@@ -280,21 +275,21 @@ RSpec.describe LabwareCreators::BlendedTube do
 
   describe '#acceptable_parent_tube_purposes' do
     it 'returns the acceptable parent tube purposes from the purpose config' do
-      blended_tube = described_class.new(api, purpose_uuid: child_tube_purpose_uuid)
+      blended_tube = described_class.new(purpose_uuid: child_tube_purpose_uuid)
       expect(blended_tube.acceptable_parent_tube_purposes).to eq([parent1_tube_purpose_name, parent2_tube_purpose_name])
     end
   end
 
   describe '#single_ancestor_parent_tube_purpose' do
     it 'returns the single ancestor parent tube purpose from the purpose config' do
-      blended_tube = described_class.new(api, purpose_uuid: child_tube_purpose_uuid)
+      blended_tube = described_class.new(purpose_uuid: child_tube_purpose_uuid)
       expect(blended_tube.single_ancestor_parent_tube_purpose).to eq(parent1_tube_purpose_name)
     end
   end
 
   describe '#redirection_target' do
     it 'returns the child tube as the redirection target' do
-      blended_tube = described_class.new(api, purpose_uuid: child_tube_purpose_uuid)
+      blended_tube = described_class.new(purpose_uuid: child_tube_purpose_uuid)
       blended_tube.instance_variable_set(:@child_tube, child_tube)
       expect(blended_tube.redirection_target).to eq(child_tube)
     end
@@ -302,14 +297,14 @@ RSpec.describe LabwareCreators::BlendedTube do
 
   describe '#parent_uuids_from_transfers' do
     it 'extracts unique parent UUIDs from transfers' do
-      blended_tube = described_class.new(api, form_attributes.merge(user_uuid:))
+      blended_tube = described_class.new(form_attributes.merge(user_uuid:))
       expect(blended_tube.send(:parent_uuids_from_transfers)).to eq([parent1_tube_uuid, parent2_tube_uuid])
     end
   end
 
   describe '#tube_attributes' do
     it 'generates tube attributes based on parent barcodes' do
-      blended_tube = described_class.new(api, form_attributes.merge(user_uuid:))
+      blended_tube = described_class.new(form_attributes.merge(user_uuid:))
       allow(blended_tube).to receive(:parents).and_return([parent1_tube, parent2_tube])
       expect(blended_tube.send(:tube_attributes)).to eq(
         [{ name: "#{parent1_tube.human_barcode}:#{parent2_tube.human_barcode}" }]
@@ -319,7 +314,7 @@ RSpec.describe LabwareCreators::BlendedTube do
 
   describe '#perform_transfers' do
     it 'calls the API to perform transfers' do
-      blended_tube = described_class.new(api, form_attributes.merge(user_uuid:))
+      blended_tube = described_class.new(form_attributes.merge(user_uuid:))
       allow(blended_tube).to receive(:transfer_request_attributes).and_return(transfer_requests_attributes)
 
       allow(Sequencescape::Api::V2::TransferRequestCollection).to receive(:create!)

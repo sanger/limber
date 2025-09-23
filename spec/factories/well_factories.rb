@@ -4,38 +4,6 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
-  # API V1 well
-  factory :well, class: Sequencescape::Well, traits: [:api_object] do
-    transient do
-      # Number of aliquots in the well
-      sample_count { 1 }
-
-      # Factory to use for aliquots
-      aliquot_factory { :aliquot }
-    end
-
-    json_root { 'well' }
-    state { 'pending' }
-    location { 'A1' }
-
-    aliquots do
-      Array.new(sample_count) do |i|
-        associated(
-          aliquot_factory,
-          sample_name: "sample_#{location}_#{i}",
-          sample_id: "SAM#{location}#{i}",
-          sample_uuid: "example-sample-uuid-#{i}"
-        )
-      end
-    end
-
-    # Generates an empty well
-    factory :empty_well do
-      aliquots { [] }
-      state { 'unknown' }
-    end
-  end
-
   # V2 well
   factory :v2_well, class: Sequencescape::Api::V2::Well do
     initialize_with { Sequencescape::Api::V2::Well.load(attributes) }
@@ -183,83 +151,52 @@ FactoryBot.define do
         end
       end
     end
-  end
 
-  # API V1 collection of wells, used mainly for setting up the well association on v1 plates
-  factory :well_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
-    size { 96 }
-
-    transient do
-      locations { WellHelpers.column_order.slice(0, size) }
-      json_root { nil }
-      resource_actions { %w[read first last] }
-      plate_uuid { SecureRandom.uuid }
-
-      # While resources can be paginated, wells wont be.
-      # Furthermore, we trust the api gem to handle that side of things.
-      resource_url { "#{api_root}#{plate_uuid}/wells/1" }
-      uuid { nil }
-      default_state { 'pending' }
-      custom_state { {} }
-      aliquot_factory { :aliquot }
-      empty_wells { [] }
-    end
-
-    wells do
-      locations.each_with_index.map do |location, i|
-        if empty_wells.include?(location)
-          associated(:empty_well, location: location, uuid: "example-well-uuid-#{i}")
-        else
-          state = custom_state[location] || default_state
-          associated(
-            :well,
-            location: location,
-            uuid: "example-well-uuid-#{i}",
-            state: state,
-            aliquot_factory: aliquot_factory
-          )
+    factory :v2_well_with_transfer_requests_and_polymetadata, parent: :v2_well do
+      transient do
+        # From :v2_well_with_transfer_requests
+        transfer_request_as_source_volume { 10.0 }
+        transfer_request_as_source_target_asset { :v2_well }
+        transfer_requests_as_source do
+          [
+            create(
+              :v2_transfer_request,
+              source_asset: nil,
+              target_asset: transfer_request_as_source_target_asset,
+              volume: transfer_request_as_source_volume
+            )
+          ]
         end
+
+        transfer_request_as_target_volume { 10.0 }
+        transfer_request_as_target_source_asset { :v2_well }
+        transfer_requests_as_target do
+          [
+            create(
+              :v2_transfer_request,
+              source_asset: transfer_request_as_target_source_asset,
+              target_asset: nil,
+              volume: transfer_request_as_target_volume
+            )
+          ]
+        end
+
+        # From :v2_well_with_polymetadata
+        poly_metadata { [] }
       end
-    end
-  end
 
-  # Api V1 Aliquot
-  factory :aliquot, class: Sequencescape::Behaviour::Receptacle::Aliquot, traits: [:api_object] do
-    bait_library { nil }
-    insert_size { {} }
-    tag { {} }
-    tag2 { {} }
-    suboptimal { false }
+      after(:build) do |well, evaluator|
+        # Transfer request relationships
+        well._cached_relationship(:transfer_requests_as_source) { evaluator.transfer_requests_as_source || [] }
+        well._cached_relationship(:transfer_requests_as_target) { evaluator.transfer_requests_as_target || [] }
 
-    sample { associated(:sample, name: sample_name, sample_id: sample_id, uuid: sample_uuid) }
+        # Poly metadata setup
+        well.poly_metadata = []
 
-    transient do
-      sample_name { 'sample' }
-      sample_id { 'SAM0' }
-      sample_uuid { 'example-sample-uuid-0' }
-    end
-
-    factory :suboptimal_aliquot do
-      suboptimal { true }
-    end
-
-    # Dual tagged aliquot
-    factory :tagged_aliquot do
-      sequence(:tag) do |i|
-        {
-          name: "Tag #{i}",
-          identifier: i,
-          oligo: i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G'),
-          group: 'My first tag group'
-        }
-      end
-      sequence(:tag2) do |i|
-        {
-          name: "Tag #{i}",
-          identifier: i,
-          oligo: i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G'),
-          group: 'My first tag group'
-        }
+        evaluator.poly_metadata.each do |pm|
+          pm.relationships.metadatable = well
+          well.poly_metadata.push(pm)
+        end
       end
     end
   end

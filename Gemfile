@@ -23,11 +23,8 @@ group :default do
   # Used in the setting object, allows access by object and hash notation.
   gem 'hashie'
 
-  # Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
+  # Communications with JSON APIs
   gem 'json_api_client', github: 'sanger/json_api_client', branch: 'v1.21.0a'
-
-  # Older Sequencescape API
-  gem 'sequencescape-client-api', require: 'sequencescape'
 
   # Speed up json encoding/decoding with oj
   gem 'oj'

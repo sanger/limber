@@ -34,8 +34,7 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::PlateStateChanger do
-    has_a_working_api
-    subject { described_class.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(labware_uuid, user_uuid) }
 
     include_context 'common setup'
 
@@ -82,21 +81,15 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::AutomaticPlateStateChanger do
-    subject { described_class.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(labware_uuid, user_uuid) }
 
     include_context 'common setup'
-
-    has_a_working_api
 
     let(:plate_state) { 'pending' }
     let!(:plate) { create :v2_plate_for_aggregation, uuid: plate_uuid, state: plate_state }
     let(:target_state) { 'passed' }
     let(:coordinates_to_pass) { nil }
     let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
-    let(:work_completion_request) do
-      { 'work_completion' => { target: labware_uuid, submissions: %w[pool-1-uuid pool-2-uuid], user: user_uuid } }
-    end
-    let(:work_completion) { json :work_completion }
     let(:work_completions_attributes) do
       [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
     end
@@ -148,12 +141,9 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::TubeRackStateChanger do
-    has_a_working_api
-
-    subject { described_class.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(labware_uuid, user_uuid) }
 
     let(:tube_starting_state) { 'pending' }
-    let(:tube_failed_state) { 'failed' }
     let(:tube_cancelled_state) { 'cancelled' }
 
     let(:target_state) { 'passed' }
@@ -167,9 +157,6 @@ RSpec.describe StateChangers do
     end
     let(:tube2) do
       create :v2_tube, uuid: tube2_uuid, state: tube_cancelled_state, barcode_number: 2, purpose_uuid: tube1_uuid
-    end
-    let(:tube3) do
-      create :v2_tube, uuid: tube3_uuid, state: tube_failed_state, barcode_number: 3, purpose_uuid: tube1_uuid
     end
 
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
@@ -217,17 +204,11 @@ RSpec.describe StateChangers do
   end
 
   describe StateChangers::TubeStateChanger do
-    has_a_working_api
-    subject { described_class.new(api, labware_uuid, user_uuid) }
+    subject { described_class.new(labware_uuid, user_uuid) }
 
     include_context 'common setup'
 
-    let(:tube) { json :tube, uuid: labware_uuid, state: tube_state }
-    let(:well_collection) { json :well_collection, default_state: tube_state, custom_state: failed_wells }
-    let(:failed_wells) { {} }
-
     context 'on a fully pending tube' do
-      let(:tube_state) { 'pending' }
       let(:target_state) { 'passed' }
       let(:coordinates_to_pass) { nil } # tubes don't have wells
 
@@ -235,36 +216,20 @@ RSpec.describe StateChangers do
     end
 
     context 'on a fully passed tube' do
-      # Ideally we wouldn't need this query here, but we don't know that
-      # until we perform it.
-      before do
-        stub_api_get(labware_uuid, body: tube)
-        stub_api_get(labware_uuid, 'wells', body: well_collection)
-      end
-
       # if no wells are failed we leave contents blank and state changer assumes full tube
       let(:coordinates_to_pass) { nil }
 
-      let(:tube_state) { 'passed' }
       let(:target_state) { 'qc_complete' }
 
       it_behaves_like 'a state changer'
     end
 
     context 'on a partially failed tube' do
-      let(:tube_state) { 'passed' }
-
       # this triggers the FILTER_FAILS_ON check so contents is generated and failed wells are excluded
       let(:target_state) { 'qc_complete' }
 
       # when some wells are failed we filter those out of the contents
-      let(:failed_wells) { { 'A1' => 'failed', 'D1' => 'failed' } }
       let(:coordinates_to_pass) { nil } # tubes don't have wells
-
-      before do
-        stub_api_get(labware_uuid, body: tube)
-        stub_api_get(labware_uuid, 'wells', body: well_collection)
-      end
 
       it_behaves_like 'a state changer'
     end

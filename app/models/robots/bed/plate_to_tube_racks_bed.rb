@@ -18,6 +18,7 @@ module Robots::Bed
       # RobotController uses machine barcode for initialising LabwareMetadata
       # First write the robot barcode to the tube rack
       # This will be used if we verify barcode on the next bed verification
+      # TODO: Add handling for JsonApiClient::Errors::NotFound error if barcode does not match a labware
       LabwareMetadata.new(user_uuid: user_uuid, barcode: labware.barcode.machine).update!(
         created_with_robot: robot_barcode
       )
@@ -25,6 +26,7 @@ module Robots::Bed
       # Next write the robot barcode to the racked tubes in the tube rack
       # This is just so the tube (which can be used independently of the rack) also has a record
       # of the robot that created it
+      # TODO: Add handling for JsonApiClient::Errors::NotFound error if barcode does not match a labware
       labware.racked_tubes.each do |racked_tube|
         LabwareMetadata.new(user_uuid: user_uuid, barcode: racked_tube.tube.barcode.machine).update!(
           created_with_robot: robot_barcode
@@ -69,7 +71,7 @@ module Robots::Bed
     # @param tube [Tube] the tube for which the state should be changed
     def change_tube_state(tube)
       state_changer = StateChangers.lookup_for(tube.purpose.uuid)
-      state_changer.new(api, tube.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
+      state_changer.new(tube.uuid, user_uuid).move_to!(target_state, "Robot #{robot.name} started")
     end
   end
 end

@@ -8,14 +8,17 @@ module LabwareCreators
   # across in a direct stamp. (ie. The location of a sample on the source plate
   # is the same as the location on the destination plate.)
   class StampedPlate < Base
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
+
     self.default_transfer_template_name = 'Custom pooling'
     self.attributes += [{ filters: {} }]
 
     validates_nested :well_filter
 
     def parent
-      @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
+      return @parent if defined?(@parent)
+
+      @parent = Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
     end
 
     def filters=(filter_parameters)

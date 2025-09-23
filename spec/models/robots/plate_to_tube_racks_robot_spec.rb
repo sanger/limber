@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   include FeatureHelpers # Include methods for stubbing Sequencescape API requests.
   include RobotHelpers # Include methods for stubbing bed labware lookups.
-  has_a_working_api # Add a mock Sequencescape API to the test context.
 
   # user_uuid
   let(:user_uuid) { 'user_uuid' }
@@ -194,9 +193,6 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
   # plate purpose
   let(:plate_purpose) { create(:v2_purpose, name: plate_purpose_name, uuid: plate_purpose_uuid) }
 
-  # plate uuid
-  let(:plate_uuid) { 'plate_uuid' }
-
   # plate state
   let(:plate_state) { 'passed' }
 
@@ -253,7 +249,7 @@ RSpec.describe Robots::PlateToTubeRacksRobot, :robot do
     }
   end
 
-  let(:robot) { described_class.new(robot_config.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_config.merge(user_uuid:)) }
 
   let(:scanned_layout) do
     {

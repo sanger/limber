@@ -7,12 +7,11 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::QuadrantSplitPlate do
   include FeatureHelpers
 
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
-  has_a_working_api
   let(:user) { create :user }
   let(:user_uuid) { user.uuid }
 
@@ -165,8 +164,6 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
   end
 
   context '384 well plate' do
-    let(:plate_size) { 384 }
-
     let(:transfer_requests_attributes) do
       # Hardcoding this to be explicit
       [

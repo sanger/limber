@@ -422,12 +422,7 @@ RSpec.describe Presenters::PlatePresenter do
   context 'returns csv links' do
     context 'with a default plate' do
       let(:expected_default_csv_links) do
-        [
-          [
-            'Download Concentration CSV',
-            [:limber_plate, :export, { format: :csv, id: 'concentrations', limber_plate_id: 'DN1S' }]
-          ]
-        ]
+        [['Download Concentration CSV', [:plate, :export, { format: :csv, id: 'concentrations', plate_id: 'DN1S' }]]]
       end
 
       it 'returns the expected csv links' do
@@ -488,16 +483,43 @@ RSpec.describe Presenters::PlatePresenter do
       it 'returns the expected number of links' do
         expect(presenter.csv_file_links).to eq(
           [
-            [
-              'Button 1',
-              [:limber_plate, :export, { :format => :csv, :id => 'template', :limber_plate_id => 'DN1S', 'page' => 0 }]
-            ],
-            [
-              'Button 2',
-              [:limber_plate, :export, { :format => :csv, :id => 'template', :limber_plate_id => 'DN1S', 'page' => 1 }]
-            ]
+            ['Button 1', [:plate, :export, { :format => :csv, :id => 'template', :plate_id => 'DN1S', 'page' => 0 }]],
+            ['Button 2', [:plate, :export, { :format => :csv, :id => 'template', :plate_id => 'DN1S', 'page' => 1 }]]
           ]
         )
+      end
+    end
+  end
+
+  describe '#display_manual_transfer_button?' do
+    let(:state) { 'passed' }
+
+    before do
+      create(:purpose_config_with_manual_transfer_allowed_states, uuid: labware.purpose.uuid,
+                                                                  allowed_states: allowed_states)
+    end
+
+    context 'when manual_transfer_allowed_states is not present in purpose_config' do
+      let(:allowed_states) { nil }
+
+      it 'returns true' do
+        expect(presenter.display_manual_transfer_button?).to be true
+      end
+    end
+
+    context 'when manual_transfer_allowed_states is present and includes the current state' do
+      let(:allowed_states) { %w[passed pending] }
+
+      it 'returns true' do
+        expect(presenter.display_manual_transfer_button?).to be true
+      end
+    end
+
+    context 'when manual_transfer_allowed_states is present but does not include the current state' do
+      let(:allowed_states) { ['pending'] }
+
+      it 'returns false' do
+        expect(presenter.display_manual_transfer_button?).to be false
       end
     end
   end

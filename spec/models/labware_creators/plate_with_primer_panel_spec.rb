@@ -6,14 +6,12 @@ require_relative 'shared_examples'
 # A plate with primer panel has a preview page, but otherwise
 # behaves exactly as a normal plate stamp
 RSpec.describe LabwareCreators::PlateWithPrimerPanel do
-  has_a_working_api
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-  let(:purpose) { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid) { SecureRandom.uuid }
   let(:plate_size) { 384 }
   let(:requests) do

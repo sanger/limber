@@ -5,16 +5,12 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
-  has_a_working_api
-
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:plate) { create(:v2_plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
-  let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -29,16 +25,6 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
   context 'on new' do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
-
-    # These values all describe the returned json.
-    # They are used to prevent magic numbers from appearing in the specs
-    let(:plate_size) { 96 }
-    let(:occupied_wells) { 30 }
-    let(:pool_size) { 15 }
-    let(:largest_tag_group) { 120 }
-
-    let(:maximum_tag_offset) { largest_tag_group - occupied_wells }
-    let(:maximum_well_offset) { plate_size - occupied_wells + 1 }
 
     it 'can be created' do
       expect(subject).to be_a described_class

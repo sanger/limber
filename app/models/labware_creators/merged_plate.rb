@@ -4,14 +4,14 @@ module LabwareCreators
   # Merges plates together into a single child plate, and de-duplicates aliquots if they are identical.
   class MergedPlate < StampedPlate
     include LabwareCreators::CustomPage
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
 
     attr_reader :child, :barcodes, :minimal_barcodes
 
     self.attributes += [{ barcodes: [] }]
     self.page = 'merged_plate'
 
-    validates :api, :purpose_uuid, :parent_uuid, :user_uuid, presence: true
+    validates :purpose_uuid, :parent_uuid, :user_uuid, presence: true
     validate :all_source_barcodes_must_be_entered
     validate :source_plates_can_be_merged
     validate :source_barcodes_must_be_different

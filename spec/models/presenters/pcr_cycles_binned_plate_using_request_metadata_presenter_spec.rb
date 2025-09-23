@@ -100,9 +100,6 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingRequestMetadataPresenter do
 
   # let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
-  let(:warnings) { {} }
-  let(:label_class) { 'Labels::PlateLabel' }
-
   before do
     stub_v2_plate(
       labware,

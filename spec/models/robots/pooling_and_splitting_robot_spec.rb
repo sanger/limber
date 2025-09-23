@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe Robots::PoolingAndSplittingRobot, :robots do
   include RobotHelpers
 
-  has_a_working_api
-
   # robot has at least one source, and can have multiple
   let(:source_plate_1_attributes) do
     {
@@ -73,7 +71,7 @@ RSpec.describe Robots::PoolingAndSplittingRobot, :robots do
   end
   let(:target_plate_2) { create :v2_plate, target_plate_2_attributes }
 
-  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(user_uuid:)) }
 
   let(:robot_spec) do
     {
@@ -125,8 +123,6 @@ RSpec.describe Robots::PoolingAndSplittingRobot, :robots do
       ]
     }
   end
-
-  let(:robot_id) { 'pooling_and_splitting_robot_id' }
 
   before do
     create :purpose_config, uuid: source_purpose_uuid, name: source_purpose_name

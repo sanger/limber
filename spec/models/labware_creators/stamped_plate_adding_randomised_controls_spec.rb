@@ -8,12 +8,10 @@ require_relative 'shared_examples'
 # Adds the controls to randomised well locations on the child plate, potentially displacing samples
 # that would otherwise have been stamped across.
 RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
-
-  has_a_working_api
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
@@ -74,25 +72,6 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
            control: true,
            control_type: 'pcr negative',
            sample_metadata: control_neg_sample_metadata
-  end
-
-  let(:child_well_pos) { child_plate.wells.find { |well| well.position['name'] == control_well_locations[0] } }
-  let(:child_well_neg) { child_plate.wells.find { |well| well.position['name'] == control_well_locations[1] } }
-
-  let(:control_aliquot_pos) do
-    create :v2_aliquot,
-           sample: control_sample_pos,
-           study: control_study,
-           project: control_project,
-           receptacle: child_well_pos
-  end
-
-  let(:control_aliquot_neg) do
-    create :v2_aliquot,
-           sample: control_sample_neg,
-           study: control_study,
-           project: control_project,
-           receptacle: child_well_neg
   end
 
   before do
@@ -301,8 +280,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   describe '#register_stock_for_plate' do
     let(:logger) { instance_double(Logger) }
     let(:child_uuid) { 'child-uuid' }
-    let(:child_plate_v2) { instance_double('Plate') }
-    let(:child) { instance_double('Plate', uuid: child_uuid) }
+    let(:child_plate_v2) { create(:v2_plate) }
+    let(:child) { create(:v2_plate, uuid: child_uuid) }
 
     before do
       allow(Rails).to receive(:logger).and_return(logger)

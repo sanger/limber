@@ -5,12 +5,10 @@ require_relative 'shared_examples'
 
 # Uses a custom transfer template to transfer material into the new plate
 RSpec.describe LabwareCreators::MergedPlate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has a custom page', 'merged_plate'
-
-  has_a_working_api
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
@@ -201,9 +199,6 @@ RSpec.describe LabwareCreators::MergedPlate do
   end
 
   context 'with source plates from different parents but same requests' do
-    let(:different_requests) do
-      Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: 2 }
-    end
     let(:different_parent) { create :v2_plate }
     let(:source_plate_3) do
       create :v2_plate,

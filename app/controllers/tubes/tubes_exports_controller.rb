@@ -6,6 +6,7 @@ require 'csv'
 # such as CSV files for mbrave files.
 class Tubes::TubesExportsController < ApplicationController
   include ExportsFilenameBehaviour
+
   helper ExportsHelper
   before_action :locate_labware, only: :show
   rescue_from Export::NotFound, with: :not_found
@@ -30,18 +31,13 @@ class Tubes::TubesExportsController < ApplicationController
     raise ActionController::RoutingError, "Unknown template #{params[:id]}"
   end
 
-  def configure_api
-    # We don't use the V1 Sequencescape API here, so lets disable its initialization.
-    # Probably should consider two controller classes as this expands.
-  end
-
   def locate_labware
     @labware =
       @tube =
         Sequencescape::Api::V2.tube_with_custom_includes(
           include_parameters,
           select_parameters,
-          barcode: params[:limber_tube_id]
+          barcode: params[:tube_id]
         )
   end
 
