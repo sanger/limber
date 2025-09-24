@@ -113,8 +113,8 @@ module LabwareCreators
       # create the empty child plate, including empty wells
       @child = plate_creation.child
 
-      # re-fetch the child plate in v2 api so we have access to the v2 wells
-      @child_plate_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
+      # re-fetch the child plate to preload the wells
+      @child_plate_with_wells = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
 
       # create and add the control samples to the child plate in the chosen locations
       create_control_samples_in_child_plate
@@ -128,18 +128,19 @@ module LabwareCreators
       after_transfer!
 
       # call stock register if there is register_stock_plate flag
-      register_stock_for_plate if @child_plate_v2.register_stock_plate?
+      register_stock_for_plate if @child_plate_with_wells.register_stock_plate?
 
       true
     end
 
     def register_stock_for_plate
       # call Sequencescape::Api::V2::Plate register_stock_for_plate method
-      if @child_plate_v2.register_stock_for_plate
+      if @child_plate_with_wells.register_stock_for_plate
         Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
       else
         Rails.logger.error(
-          "Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}"
+          "Stock registration failed for plate #{@child.uuid}: " \
+          "#{@child_plate_with_wells.errors.full_messages.join(', ')}"
         )
       end
     rescue StandardError => e
@@ -151,7 +152,7 @@ module LabwareCreators
       list_of_controls.each_with_index do |control, index|
         well_location = control_well_locations[index]
 
-        child_well_v2 = well_for_plate_location(@child_plate_v2, well_location)
+        child_well_v2 = well_for_plate_location(@child_plate_with_wells, well_location)
         create_control_in_child_well(control, child_well_v2, well_location)
       end
     end
@@ -228,7 +229,7 @@ module LabwareCreators
 
     def transfer_request_attributes
       well_filter.filtered.map do |well, additional_parameters|
-        request_hash(well, @child_plate_v2, additional_parameters)
+        request_hash(well, @child_plate_with_wells, additional_parameters)
       end
     end
 
