@@ -301,7 +301,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
     context 'when stock registration fails' do
       before do
         allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_return(false)
-        allow(child_plate_with_wells).to receive_message_chain(:errors, :full_messages).and_return(['Something went wrong'])
+        allow(child_plate_with_wells).to receive_message_chain(:errors, :full_messages)
+          .and_return(['Something went wrong'])
       end
 
       it 'logs an error message with the errors' do
@@ -314,7 +315,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     context 'when an exception occurs' do
       before do
-        allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_raise(StandardError, 'unexpected failure')
+        allow(child_plate_with_wells).to receive(:register_stock_for_plate)
+          .and_raise(StandardError, 'unexpected failure')
       end
 
       it 'logs an exception error message' do
