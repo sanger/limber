@@ -49,6 +49,9 @@ module Limber
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Sets the exceptions application invoked by the ShowException middleware when an exception happens.
+    config.exceptions_app = routes
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.

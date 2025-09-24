@@ -5,6 +5,12 @@ Rails.application.routes.draw do
 
   get '/health' => 'rails/health#show', :as => :rails_health_check
 
+  # Error handling endpoints
+  get '/404', to: 'errors#not_found'
+  get '/406', to: 'errors#not_acceptable'
+  get '/500', to: 'errors#internal_server_error'
+  get '/503', to: 'errors#service_unavailable'
+
   scope 'search', controller: :search do
     get '/', action: :new, as: :search
     post '/', action: :create, as: :perform_search
