@@ -280,17 +280,17 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   describe '#register_stock_for_plate' do
     let(:logger) { instance_double(Logger) }
     let(:child_uuid) { 'child-uuid' }
-    let(:child_plate_v2) { create(:v2_plate) }
+    let(:child_plate_with_wells) { create(:v2_plate) }
     let(:child) { create(:v2_plate, uuid: child_uuid) }
 
     before do
       allow(Rails).to receive(:logger).and_return(logger)
-      subject.instance_variable_set(:@child_plate_v2, child_plate_v2)
+      subject.instance_variable_set(:@child_plate_with_wells, child_plate_with_wells)
       subject.instance_variable_set(:@child, child)
     end
 
     context 'when stock registration succeeds' do
-      before { allow(child_plate_v2).to receive(:register_stock_for_plate).and_return(true) }
+      before { allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_return(true) }
 
       it 'logs a success message' do
         expect(logger).to receive(:info).with(/Stock registration successful for plate #{child_uuid}/)
@@ -300,8 +300,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     context 'when stock registration fails' do
       before do
-        allow(child_plate_v2).to receive(:register_stock_for_plate).and_return(false)
-        allow(child_plate_v2).to receive_message_chain(:errors, :full_messages).and_return(['Something went wrong'])
+        allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_return(false)
+        allow(child_plate_with_wells).to receive_message_chain(:errors, :full_messages).and_return(['Something went wrong'])
       end
 
       it 'logs an error message with the errors' do
@@ -314,7 +314,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     context 'when an exception occurs' do
       before do
-        allow(child_plate_v2).to receive(:register_stock_for_plate).and_raise(StandardError, 'unexpected failure')
+        allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_raise(StandardError, 'unexpected failure')
       end
 
       it 'logs an exception error message' do
