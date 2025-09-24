@@ -2,9 +2,8 @@
 
 module Presenters
   #
-  # The SubmissionTubePresenter is used when tubes enter the process with no
-  # assigned pipeline. It presents the user with a selection of workflows,
-  # and allows them to generate corresponding Sequencescape submissions.
+  # The SubmissionTubePresenter is used when tubes are at the end of a pipeline
+  # and allows them to generate corresponding Sequencescape sequencing submissions.
   #
   # Submission options are defined by the submission_options config in the
   # purposes/*.yml file. Structure is:

@@ -11,7 +11,6 @@ module Presenters::Statemachine
   #   be displayed. This sidebar allows the user to build a submission for the
   #   tube.
   # - In all other states the default sidebar will be used.
-  # - In all states the library passing is not permitted.
   #
   # Other states: Typically not seen in standard scenarios.
   module SequencingSubmission
