@@ -3,7 +3,7 @@
 RSpec.shared_examples 'a labware with a workline identifier' do
   describe '#workline_identifier' do
     it 'displays the barcode of the workline_reference element' do
-      plate2 = create :v2_plate
+      plate2 = create :plate
       allow(the_labware).to receive(:workline_reference).and_return(plate2)
       expect(the_labware.workline_identifier).to eq(plate2.barcode.human)
     end
@@ -34,7 +34,7 @@ RSpec.shared_examples 'a labware with a workline identifier' do
     end
 
     context 'when the plate has one stock plate' do
-      let(:stock_plates) { create_list :v2_plate, 1 }
+      let(:stock_plates) { create_list :plate, 1 }
       let(:stock_plate) { stock_plates.last }
 
       it 'returns the stock plate' do
@@ -43,7 +43,7 @@ RSpec.shared_examples 'a labware with a workline identifier' do
     end
 
     context 'when the plate has more than one stock plate' do
-      let(:stock_plates) { create_list :v2_plate, 2 }
+      let(:stock_plates) { create_list :plate, 2 }
       let(:stock_plate) { stock_plates.last }
 
       context 'when there are no alternative workline purpose references' do
@@ -58,7 +58,7 @@ RSpec.shared_examples 'a labware with a workline identifier' do
       end
 
       context 'when there is a list of alternative workline purpose references' do
-        let(:alternative_workline_reference_plates) { create_list :v2_plate, 2 }
+        let(:alternative_workline_reference_plates) { create_list :plate, 2 }
         let(:alternative_workline_name) { 'Some other plate with some stuff inside' }
 
         before do

@@ -11,7 +11,7 @@ RSpec.describe StateChangers do
 
   shared_context 'common setup' do
     before do
-      expect_api_v2_posts(
+      expect_posts(
         'StateChange',
         [
           {
@@ -38,13 +38,13 @@ RSpec.describe StateChangers do
 
     include_context 'common setup'
 
-    let(:plate) { create :v2_plate, uuid: labware_uuid, state: plate_state }
+    let(:plate) { create :plate, uuid: labware_uuid, state: plate_state }
     let(:failed_wells) { {} }
 
     context 'when labware is a plate' do
       before do
         plate.wells.each { |well| well.state = 'failed' if failed_wells.include?(well.location) }
-        stub_v2_plate(plate, stub_search: false)
+        stub_plate(plate, stub_search: false)
       end
 
       context 'on a fully pending plate' do
@@ -86,7 +86,7 @@ RSpec.describe StateChangers do
     include_context 'common setup'
 
     let(:plate_state) { 'pending' }
-    let!(:plate) { create :v2_plate_for_aggregation, uuid: plate_uuid, state: plate_state }
+    let!(:plate) { create :plate_for_aggregation, uuid: plate_uuid, state: plate_state }
     let(:target_state) { 'passed' }
     let(:coordinates_to_pass) { nil }
     let(:plate_purpose_name) { 'Limber Bespoke Aggregation' }
@@ -94,7 +94,7 @@ RSpec.describe StateChangers do
       [{ submission_uuids: %w[pool-1-uuid pool-2-uuid], target_uuid: plate_uuid, user_uuid: user_uuid }]
     end
 
-    before { stub_v2_plate(plate, stub_search: false, custom_query: [:plate_for_completion, labware_uuid]) }
+    before { stub_plate(plate, stub_search: false, custom_query: [:plate_for_completion, labware_uuid]) }
 
     context 'when config request type matches in progress submissions' do
       before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
@@ -153,10 +153,10 @@ RSpec.describe StateChangers do
     let(:tube3_uuid) { SecureRandom.uuid }
 
     let(:tube1) do
-      create :v2_tube, uuid: tube1_uuid, state: tube_starting_state, barcode_number: 1, purpose_uuid: tube1_uuid
+      create :tube, uuid: tube1_uuid, state: tube_starting_state, barcode_number: 1, purpose_uuid: tube1_uuid
     end
     let(:tube2) do
-      create :v2_tube, uuid: tube2_uuid, state: tube_cancelled_state, barcode_number: 2, purpose_uuid: tube1_uuid
+      create :tube, uuid: tube2_uuid, state: tube_cancelled_state, barcode_number: 2, purpose_uuid: tube1_uuid
     end
 
     let!(:tube_rack) { create :tube_rack, barcode_number: 4, uuid: labware_uuid }
@@ -167,7 +167,7 @@ RSpec.describe StateChangers do
     let(:labware) { tube_rack }
 
     before do
-      stub_v2_tube_rack(tube_rack)
+      stub_tube_rack(tube_rack)
       create(:tube_config, uuid: tube1_uuid, name: 'example-purpose')
     end
 
@@ -181,7 +181,7 @@ RSpec.describe StateChangers do
 
     context 'when some tubes are not in failed state' do
       before do
-        expect_api_v2_posts(
+        expect_posts(
           'StateChange',
           [
             {

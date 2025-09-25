@@ -2,15 +2,15 @@
 
 FactoryBot.define do
   # API V2 QCable
-  factory :v2_qcable, class: Sequencescape::Api::V2::Qcable, traits: [:barcoded_v2] do
+  factory :qcable, class: Sequencescape::Api::V2::Qcable, traits: [:barcoded] do
     skip_create
 
     uuid
     state { 'available' }
 
     transient do
-      labware { create :v2_plate }
-      lot { create :v2_lot }
+      labware { create :plate }
+      lot { create :lot }
     end
 
     after(:build) do |qcable, factory|
@@ -20,14 +20,14 @@ FactoryBot.define do
     end
   end
 
-  factory :v2_lot, class: Sequencescape::Api::V2::Lot do
+  factory :lot, class: Sequencescape::Api::V2::Lot do
     skip_create
 
     sequence(:lot_number) { |n| "UAT12345.#{n}" }
 
     transient do
-      lot_type { create :v2_lot_type }
-      template { create :v2_tag_layout_template }
+      lot_type { create :lot_type }
+      template { create :tag_layout_template }
     end
 
     after(:build) do |lot, factory|
@@ -36,12 +36,12 @@ FactoryBot.define do
     end
   end
 
-  factory :v2_lot_type, class: Sequencescape::Api::V2::LotType do
+  factory :lot_type, class: Sequencescape::Api::V2::LotType do
     skip_create
 
     sequence(:name) { |n| "LotType#{n}" }
 
-    transient { target_purpose { create :v2_purpose } }
+    transient { target_purpose { create :purpose } }
 
     after(:build) do |lot_type, factory|
       lot_type._cached_relationship(:target_purpose) { factory.target_purpose } if factory.target_purpose

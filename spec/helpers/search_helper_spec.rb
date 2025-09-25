@@ -42,7 +42,7 @@ RSpec.describe SearchHelper, type: :helper do
 
   describe '#alternative_workline_reference_name' do
     context 'when the plate purpose for my plate has alternative workline identifier' do
-      let(:plate) { create :v2_plate, purpose_name: 'Plate with more holes' }
+      let(:plate) { create :plate, purpose_name: 'Plate with more holes' }
 
       it 'returns the configured reference purpose' do
         ref = described_class.alternative_workline_reference_name(plate)
@@ -51,7 +51,7 @@ RSpec.describe SearchHelper, type: :helper do
     end
 
     context 'when the plate purpose for my plate does not have alternative' do
-      let(:plate) { create :v2_plate, purpose_name: 'Plate with less holes' }
+      let(:plate) { create :plate, purpose_name: 'Plate with less holes' }
 
       it 'returns nil' do
         ref = described_class.alternative_workline_reference_name(plate)

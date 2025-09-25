@@ -5,12 +5,12 @@ require_relative '../support/json_renderers'
 FactoryBot.define do
   # The following factory is used for setting up a submission_pools collection
   # for a v2 plate.
-  factory :v2_submission_pool, class: Sequencescape::Api::V2::SubmissionPool do
+  factory :submission_pool, class: Sequencescape::Api::V2::SubmissionPool do
     skip_create
 
     transient do
       used_template_uuids { Array.new(plates_in_submission) { SecureRandom.uuid } }
-      tag_layout_templates { used_template_uuids.map { |uuid| create(:v2_tag_layout_template, uuid:) } }
+      tag_layout_templates { used_template_uuids.map { |uuid| create(:tag_layout_template, uuid:) } }
     end
 
     plates_in_submission { 1 }
@@ -22,7 +22,7 @@ FactoryBot.define do
       end
     end
 
-    factory :v2_dual_submission_pool do
+    factory :dual_submission_pool do
       plates_in_submission { 2 }
     end
   end

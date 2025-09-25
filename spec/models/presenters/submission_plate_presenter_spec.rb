@@ -67,7 +67,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_plate_for_submission,
+      create :plate_for_submission,
              purpose_name: purpose_name,
              barcode_number: 2,
              direct_submissions: [],
@@ -80,8 +80,8 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     let(:title) { purpose_name }
     let(:state) { 'pending' }
     let(:sidebar_partial) { 'submission' }
-    let(:submission_study) { create :v2_study, name: 'Submission Study' }
-    let(:submission_project) { create :v2_project, name: 'Submission Project' }
+    let(:submission_study) { create :study, name: 'Submission Study' }
+    let(:submission_project) { create :project, name: 'Submission Project' }
     let(:summary_tab) do
       [
         %w[Barcode DN2T],
@@ -115,10 +115,10 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_plate_for_submission, purpose_name: purpose_name, barcode_number: 2, direct_submissions: submissions
+      create :plate_for_submission, purpose_name: purpose_name, barcode_number: 2, direct_submissions: submissions
     end
 
-    let(:submissions) { create_list :v2_submission, 1, state: 'pending' }
+    let(:submissions) { create_list :submission, 1, state: 'pending' }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
@@ -157,10 +157,10 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     end
 
     let(:labware) do
-      create :v2_plate_for_submission, purpose_name: purpose_name, barcode_number: 2, direct_submissions: submissions
+      create :plate_for_submission, purpose_name: purpose_name, barcode_number: 2, direct_submissions: submissions
     end
     let(:now) { Time.zone.parse('2020-11-24 16:13:43 +0000') }
-    let(:submissions) { create_list :v2_submission, 1, state: 'ready', updated_at: now - 5.seconds }
+    let(:submissions) { create_list :submission, 1, state: 'ready', updated_at: now - 5.seconds }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
@@ -188,7 +188,7 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a labware presenter'
     it_behaves_like 'a stock presenter'
 
-    let(:labware) { create :v2_stock_plate, purpose_name: purpose_name, barcode_number: 2, pool_sizes: [2] }
+    let(:labware) { create :stock_plate, purpose_name: purpose_name, barcode_number: 2, pool_sizes: [2] }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
@@ -213,14 +213,14 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_stock_plate,
+      create :stock_plate,
              purpose_name: purpose_name,
              barcode_number: 2,
              pool_sizes: [2],
              direct_submissions: submissions,
              state: state
     end
-    let(:submissions) { create_list :v2_submission, 1, state: }
+    let(:submissions) { create_list :submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
@@ -255,14 +255,14 @@ RSpec.describe Presenters::SubmissionPlatePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_stock_plate,
+      create :stock_plate,
              purpose_name: purpose_name,
              barcode_number: 2,
              pool_sizes: [2],
              direct_submissions: submissions,
              state: state
     end
-    let(:submissions) { create_list :v2_submission, 1, state: }
+    let(:submissions) { create_list :submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
