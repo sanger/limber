@@ -33,12 +33,12 @@ RSpec.describe 'exports/concentrations_nm.csv.erb' do
     let(:qc_result_options) { { value: 1.5, key: 'molarity', units: 'nM' } }
 
     let(:well_a1) do
-      create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
+      create(:well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
     end
     let(:well_b1) do
-      create(:v2_well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
+      create(:well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
     end
-    let(:labware) { create(:v2_plate, wells: [well_a1, well_b1]) }
+    let(:labware) { create(:plate, wells: [well_a1, well_b1]) }
 
     before do
       assign(:plate, labware)
