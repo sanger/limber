@@ -28,7 +28,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   # B       *
   let(:well_a1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A1'
       },
@@ -38,7 +38,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
   let(:well_a2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A2'
       },
@@ -48,7 +48,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
   let(:well_b2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'B2'
       },
@@ -58,7 +58,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
   let(:well_a3) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A3'
       },
@@ -68,7 +68,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
 
   let(:labware) do
-    build :v2_plate,
+    build :plate,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,
@@ -80,7 +80,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
 
   let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
-  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
+  before { stub_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
   context 'when binning' do
     it_behaves_like 'a labware presenter'

@@ -4,7 +4,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   let(:controller) { described_class.new }
 
   describe 'GET show' do
-    let(:purposes) { create_list :v2_purpose, 2 }
+    let(:purposes) { create_list :purpose, 2 }
     let(:purpose_names) { purposes.map(&:name) }
     let(:labware) { create_list :labware, 2, purpose: purposes[0] }
 
@@ -45,7 +45,7 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   end
 
   describe '#mould_data_for_view' do
-    let(:purposes) { create_list :v2_purpose, 2 }
+    let(:purposes) { create_list :purpose, 2 }
     let(:purpose_names) { purposes.map(&:name) }
     let(:labware_record_no_state) { create :labware, purpose: purposes[0] }
     let(:labware_record_passed) { create :labware_with_state_changes, purpose: purposes[0], target_state: 'passed' }
@@ -69,8 +69,8 @@ RSpec.describe PipelineWorkInProgressController, type: :controller do
   end
 
   describe '#arrange_labware_records' do
-    let(:pipeline_purposes) { create_list :v2_purpose, 3 }
-    let(:another_purpose) { create :v2_purpose }
+    let(:pipeline_purposes) { create_list :purpose, 3 }
+    let(:another_purpose) { create :purpose }
 
     let(:pipeline_purpose_names) { pipeline_purposes.map(&:name) }
 

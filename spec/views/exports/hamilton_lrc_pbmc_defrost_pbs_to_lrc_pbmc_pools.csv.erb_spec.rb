@@ -24,42 +24,42 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
   let(:total_cell_count_d3) { create(:qc_result, key: 'total_cell_count', value: '1_200_000', units: 'cells/ml') }
 
   let(:source_well_a1) do
-    create(:v2_well, location: 'A1', qc_results: [total_cell_count_a1], plate_barcode: plate1_barcode)
+    create(:well, location: 'A1', qc_results: [total_cell_count_a1], plate_barcode: plate1_barcode)
   end
   let(:source_well_b1) do
-    create(:v2_well, location: 'B1', qc_results: [total_cell_count_b1], plate_barcode: plate1_barcode)
+    create(:well, location: 'B1', qc_results: [total_cell_count_b1], plate_barcode: plate1_barcode)
   end
   let(:source_well_c1) do
-    create(:v2_well, location: 'C1', qc_results: [total_cell_count_c1], plate_barcode: plate2_barcode)
+    create(:well, location: 'C1', qc_results: [total_cell_count_c1], plate_barcode: plate2_barcode)
   end
   let(:source_well_d1) do
-    create(:v2_well, location: 'D1', qc_results: [total_cell_count_d1], plate_barcode: plate2_barcode)
+    create(:well, location: 'D1', qc_results: [total_cell_count_d1], plate_barcode: plate2_barcode)
   end
 
   let(:source_well_a2) do
-    create(:v2_well, location: 'A2', qc_results: [total_cell_count_a2], plate_barcode: plate1_barcode)
+    create(:well, location: 'A2', qc_results: [total_cell_count_a2], plate_barcode: plate1_barcode)
   end
   let(:source_well_b2) do
-    create(:v2_well, location: 'B2', qc_results: [total_cell_count_b2], plate_barcode: plate1_barcode)
+    create(:well, location: 'B2', qc_results: [total_cell_count_b2], plate_barcode: plate1_barcode)
   end
   let(:source_well_c2) do
-    create(:v2_well, location: 'C2', qc_results: [total_cell_count_c2], plate_barcode: plate2_barcode)
+    create(:well, location: 'C2', qc_results: [total_cell_count_c2], plate_barcode: plate2_barcode)
   end
   let(:source_well_d2) do
-    create(:v2_well, location: 'D2', qc_results: [total_cell_count_d2], plate_barcode: plate2_barcode)
+    create(:well, location: 'D2', qc_results: [total_cell_count_d2], plate_barcode: plate2_barcode)
   end
 
   let(:source_well_a3) do
-    create(:v2_well, location: 'A3', qc_results: [total_cell_count_a3], plate_barcode: plate1_barcode)
+    create(:well, location: 'A3', qc_results: [total_cell_count_a3], plate_barcode: plate1_barcode)
   end
   let(:source_well_b3) do
-    create(:v2_well, location: 'B3', qc_results: [total_cell_count_b3], plate_barcode: plate1_barcode)
+    create(:well, location: 'B3', qc_results: [total_cell_count_b3], plate_barcode: plate1_barcode)
   end
   let(:source_well_c3) do
-    create(:v2_well, location: 'C3', qc_results: [total_cell_count_c3], plate_barcode: plate2_barcode)
+    create(:well, location: 'C3', qc_results: [total_cell_count_c3], plate_barcode: plate2_barcode)
   end
   let(:source_well_d3) do
-    create(:v2_well, location: 'D3', qc_results: [total_cell_count_d3], plate_barcode: plate2_barcode)
+    create(:well, location: 'D3', qc_results: [total_cell_count_d3], plate_barcode: plate2_barcode)
   end
 
   let(:source_plate1_wells) do
@@ -71,23 +71,23 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   let(:all_source_wells) { source_plate1_wells + source_plate2_wells }
 
-  let(:source_plate1) { create(:v2_plate, wells: source_plate1_wells, barcode_number: 1) }
-  let(:source_plate2) { create(:v2_plate, wells: source_plate2_wells, barcode_number: 2) }
+  let(:source_plate1) { create(:plate, wells: source_plate1_wells, barcode_number: 1) }
+  let(:source_plate2) { create(:plate, wells: source_plate2_wells, barcode_number: 2) }
 
-  let(:transfer_request1) { create(:v2_transfer_request, source_asset: source_well_a1, target_asset: nil) }
-  let(:transfer_request2) { create(:v2_transfer_request, source_asset: source_well_b1, target_asset: nil) }
-  let(:transfer_request3) { create(:v2_transfer_request, source_asset: source_well_c1, target_asset: nil) }
-  let(:transfer_request4) { create(:v2_transfer_request, source_asset: source_well_d1, target_asset: nil) }
+  let(:transfer_request1) { create(:transfer_request, source_asset: source_well_a1, target_asset: nil) }
+  let(:transfer_request2) { create(:transfer_request, source_asset: source_well_b1, target_asset: nil) }
+  let(:transfer_request3) { create(:transfer_request, source_asset: source_well_c1, target_asset: nil) }
+  let(:transfer_request4) { create(:transfer_request, source_asset: source_well_d1, target_asset: nil) }
 
-  let(:transfer_request5) { create(:v2_transfer_request, source_asset: source_well_a2, target_asset: nil) }
-  let(:transfer_request6) { create(:v2_transfer_request, source_asset: source_well_b2, target_asset: nil) }
-  let(:transfer_request7) { create(:v2_transfer_request, source_asset: source_well_c2, target_asset: nil) }
-  let(:transfer_request8) { create(:v2_transfer_request, source_asset: source_well_d2, target_asset: nil) }
+  let(:transfer_request5) { create(:transfer_request, source_asset: source_well_a2, target_asset: nil) }
+  let(:transfer_request6) { create(:transfer_request, source_asset: source_well_b2, target_asset: nil) }
+  let(:transfer_request7) { create(:transfer_request, source_asset: source_well_c2, target_asset: nil) }
+  let(:transfer_request8) { create(:transfer_request, source_asset: source_well_d2, target_asset: nil) }
 
-  let(:transfer_request9) { create(:v2_transfer_request, source_asset: source_well_a3, target_asset: nil) }
-  let(:transfer_request10) { create(:v2_transfer_request, source_asset: source_well_b3, target_asset: nil) }
-  let(:transfer_request11) { create(:v2_transfer_request, source_asset: source_well_c3, target_asset: nil) }
-  let(:transfer_request12) { create(:v2_transfer_request, source_asset: source_well_d3, target_asset: nil) }
+  let(:transfer_request9) { create(:transfer_request, source_asset: source_well_a3, target_asset: nil) }
+  let(:transfer_request10) { create(:transfer_request, source_asset: source_well_b3, target_asset: nil) }
+  let(:transfer_request11) { create(:transfer_request, source_asset: source_well_c3, target_asset: nil) }
+  let(:transfer_request12) { create(:transfer_request, source_asset: source_well_d3, target_asset: nil) }
 
   let(:transfers_to_a1) do
     [transfer_request1, transfer_request3, transfer_request5, transfer_request7, transfer_request9, transfer_request11]
@@ -98,7 +98,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   let(:dest_well_a1) do
     create(
-      :v2_well_with_transfer_requests,
+      :well_with_transfer_requests,
       location: 'A1',
       transfer_requests_as_target: transfers_to_a1,
       plate_barcode: 'DN3U'
@@ -107,14 +107,14 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
 
   let(:dest_well_b1) do
     create(
-      :v2_well_with_transfer_requests,
+      :well_with_transfer_requests,
       location: 'B1',
       transfer_requests_as_target: transfers_to_b1,
       plate_barcode: 'DN3U'
     )
   end
 
-  let(:dest_plate) { create(:v2_plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 3) }
+  let(:dest_plate) { create(:plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 3) }
 
   # NB. This expected content will change if you modify the value of constants in
   # the config/initializers/scrna_config.rb file

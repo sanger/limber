@@ -10,13 +10,13 @@ RSpec.describe LabwareCreators::FinalTube do
   context 'on creation' do
     subject { described_class.new(form_attributes) }
 
-    before { stub_v2_tube(parent_tube) }
+    before { stub_tube(parent_tube) }
 
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }
     let(:user_uuid) { 'user-uuid' }
     let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
-    let(:transfer) { create :v2_transfer }
+    let(:transfer) { create :transfer }
     let(:transfers_attributes) do
       [
         {
@@ -33,7 +33,7 @@ RSpec.describe LabwareCreators::FinalTube do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     context 'with a sibling-less parent tube' do
-      let(:parent_tube) { create :v2_tube, uuid: parent_uuid }
+      let(:parent_tube) { create :tube, uuid: parent_uuid }
 
       describe '#save' do
         it 'is valid' do
@@ -47,7 +47,7 @@ RSpec.describe LabwareCreators::FinalTube do
 
     context 'with a parent tube with siblings' do
       context 'when all are passed' do
-        let(:parent_tube) { create(:v2_tube, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
+        let(:parent_tube) { create(:tube, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
 
         describe '#save' do
           it 'returns false' do
@@ -76,7 +76,7 @@ RSpec.describe LabwareCreators::FinalTube do
           end
 
           let(:sibling_uuid) { 'sibling-tube-0' }
-          let(:transfer_b) { create :v2_transfer }
+          let(:transfer_b) { create :transfer }
 
           let(:transfers_attributes) do
             [

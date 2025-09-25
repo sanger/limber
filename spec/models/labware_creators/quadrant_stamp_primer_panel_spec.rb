@@ -12,11 +12,11 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   let(:parent2_uuid) { 'example-plate2-uuid' }
   let(:requests) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
   let(:requests2) { Array.new(96) { |i| create :gbs_library_request, state: 'started', uuid: "request-#{i}" } }
-  let(:stock_plate1) { create :v2_stock_plate_for_plate, barcode_number: '1' }
-  let(:stock_plate2) { create :v2_stock_plate_for_plate, barcode_number: '2' }
+  let(:stock_plate1) { create :stock_plate_for_plate, barcode_number: '1' }
+  let(:stock_plate2) { create :stock_plate_for_plate, barcode_number: '2' }
   let(:parent1) do
     create(
-      :v2_plate_with_primer_panels,
+      :plate_with_primer_panels,
       barcode_number: '3',
       uuid: parent1_uuid,
       size: 96,
@@ -27,7 +27,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
   end
   let(:parent2) do
     create(
-      :v2_plate_with_primer_panels,
+      :plate_with_primer_panels,
       barcode_number: '4',
       uuid: parent2_uuid,
       size: 96,
@@ -36,7 +36,7 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
       stock_plate: stock_plate2
     )
   end
-  let(:child_plate) { create :v2_plate, barcode_number: '5', size: 384 }
+  let(:child_plate) { create :plate, barcode_number: '5', size: 384 }
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
 
@@ -45,10 +45,10 @@ RSpec.describe LabwareCreators::QuadrantStampPrimerPanel do
 
   before do
     create :purpose_config, name: child_purpose_name
-    stub_v2_user(user)
-    stub_v2_plate(parent1, stub_search: false)
-    stub_v2_plate(parent2, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
+    stub_user(user)
+    stub_plate(parent1, stub_search: false)
+    stub_plate(parent2, stub_search: false)
+    stub_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
   end
 
   context 'on new' do

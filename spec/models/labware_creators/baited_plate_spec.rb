@@ -14,8 +14,8 @@ RSpec.describe LabwareCreators::BaitedPlate do
   let(:requests) do
     Array.new(6) { |i| create :library_request, state: 'started', uuid: "request-#{i}", submission_id: '2' }
   end
-  let(:parent_plate) { create :v2_plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
-  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
+  let(:parent_plate) { create :plate, uuid: parent_uuid, outer_requests: requests, barcode_number: 2 }
+  let(:child_plate) { create :plate, uuid: 'child-uuid', outer_requests: requests, barcode_number: 3 }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
@@ -37,11 +37,11 @@ RSpec.describe LabwareCreators::BaitedPlate do
     end
 
     before do
-      stub_v2_plate(parent_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false)
 
-      stub_api_v2_post('BaitLibraryLayout')
-      stub_api_v2_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
+      stub_post('BaitLibraryLayout')
+      stub_post('BaitLibraryLayout', [bait_library_layout], method: :preview)
     end
 
     it 'makes an api call for bait library layout preview' do

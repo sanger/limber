@@ -19,18 +19,18 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
   let(:request_d) { create :library_request, request_type: request_type_b, uuid: 'request-3' }
   let(:wells) do
     [
-      create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a]),
-      create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c]),
-      create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+      create(:stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a]),
+      create(:stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c]),
+      create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
     ]
   end
 
   let(:example_plate) do
-    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
+    create :stock_plate, barcode_number: 6, uuid: plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
   end
 
   let(:another_plate) do
-    create :v2_stock_plate,
+    create :stock_plate,
            barcode_number: 106,
            uuid: another_plate_uuid,
            wells: wells,
@@ -38,7 +38,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
   end
 
   let(:alternative_plate) do
-    create :v2_stock_plate,
+    create :stock_plate,
            barcode_number: 107,
            uuid: another_plate_uuid,
            wells: wells,
@@ -48,7 +48,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
   let(:alternative_purpose_name) { 'Alternative identifier plate' }
 
   let(:child_plate) do
-    create :v2_plate, uuid: 'child-uuid', barcode_number: 7, state: 'passed', purpose_name: child_purpose_name
+    create :plate, uuid: 'child-uuid', barcode_number: 7, state: 'passed', purpose_name: child_purpose_name
   end
 
   let(:plate_creations_attributes) do
@@ -74,19 +74,19 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the actual plate
-    2.times { stub_v2_plate(example_plate) }
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(
+    2.times { stub_plate(example_plate) }
+    stub_plate(child_plate, stub_search: false)
+    stub_plate(
       example_plate,
       stub_search: false,
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
-    stub_v2_plate(
+    stub_plate(
       child_plate,
       stub_search: false,
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'basic plate creation' do
@@ -183,20 +183,20 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
     let(:wells) do
       [
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-A1',
           location: 'A1',
           aliquot_count: 1,
           requests_as_source: [request_a, request_b]
         ),
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-B1',
           location: 'B1',
           aliquot_count: 1,
           requests_as_source: [request_c, request_d]
         ),
-        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 
@@ -216,20 +216,20 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
     let(:wells) do
       [
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-A1',
           location: 'A1',
           aliquot_count: 1,
           requests_as_source: [request_a, request_b]
         ),
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-B1',
           location: 'B1',
           aliquot_count: 1,
           requests_as_source: [request_c, request_d]
         ),
-        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 
@@ -260,20 +260,20 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
     let(:wells) do
       [
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-A1',
           location: 'A1',
           aliquot_count: 1,
           requests_as_source: [request_a, request_b]
         ),
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-B1',
           location: 'B1',
           aliquot_count: 1,
           requests_as_source: [request_c, request_d]
         ),
-        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 

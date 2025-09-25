@@ -4,7 +4,7 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
-  factory :labware, class: Sequencescape::Api::V2::Labware, traits: [:barcoded_v2] do
+  factory :labware, class: Sequencescape::Api::V2::Labware, traits: [:barcoded] do
     skip_create
 
     initialize_with { Sequencescape::Api::V2::Labware.load(attributes) }
@@ -29,7 +29,7 @@ FactoryBot.define do
     end
 
     factory(:labware_with_state_changes) do
-      state_changes { create_list :v2_state_change, 2, target_state: }
+      state_changes { create_list :state_change, 2, target_state: }
 
       after(:build) { |labware, evaluator| labware._cached_relationship(:state_changes) { evaluator.state_changes } }
     end

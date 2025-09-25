@@ -2,17 +2,17 @@
 
 require 'rails_helper'
 
-RSpec.describe 'v2_plate' do
+RSpec.describe 'plate' do
   context 'with specified study and project at plate level' do
-    subject { create(:v2_plate, aliquots_without_requests: 1, study: study, project: project) }
+    subject { create(:plate, aliquots_without_requests: 1, study: study, project: project) }
 
     # study
     let(:study_uuid) { SecureRandom.uuid }
-    let(:study) { create(:v2_study, name: 'Provided Study', uuid: study_uuid) }
+    let(:study) { create(:study, name: 'Provided Study', uuid: study_uuid) }
 
     # project
     let(:project_uuid) { SecureRandom.uuid }
-    let(:project) { create(:v2_project, name: 'Provided Project', uuid: project_uuid) }
+    let(:project) { create(:project, name: 'Provided Project', uuid: project_uuid) }
 
     describe 'first aliquot' do
       let(:first_aliquot) { subject.wells.first.aliquots.first }
@@ -48,17 +48,17 @@ RSpec.describe 'v2_plate' do
   end
 end
 
-RSpec.describe 'v2_plate_for_submission' do
+RSpec.describe 'plate_for_submission' do
   context 'with specified study and project at plate level' do
-    subject { create(:v2_plate_for_submission, aliquots_without_requests: 1, study: study, project: project) }
+    subject { create(:plate_for_submission, aliquots_without_requests: 1, study: study, project: project) }
 
     # study
     let(:study_uuid) { SecureRandom.uuid }
-    let(:study) { create(:v2_study, name: 'Provided Study', uuid: study_uuid) }
+    let(:study) { create(:study, name: 'Provided Study', uuid: study_uuid) }
 
     # project
     let(:project_uuid) { SecureRandom.uuid }
-    let(:project) { create(:v2_project, name: 'Provided Project', uuid: project_uuid) }
+    let(:project) { create(:project, name: 'Provided Project', uuid: project_uuid) }
 
     describe 'first aliquot' do
       let(:first_aliquot) { subject.wells.first.aliquots.first }
