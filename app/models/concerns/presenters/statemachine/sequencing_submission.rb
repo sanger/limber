@@ -15,6 +15,7 @@ module Presenters::Statemachine
   # Other states: Typically not seen in standard scenarios.
   module SequencingSubmission
     extend ActiveSupport::Concern
+
     included do
       include Shared
 
