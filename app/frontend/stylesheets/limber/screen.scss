@@ -420,6 +420,9 @@ dl#samples-information {
 .state-badge.passed {
   @extend.bg-success;
 }
+.state-badge.ready {
+  @extend.bg-success;
+}
 .state-badge.qc_complete {
   @extend.bg-primary;
 }

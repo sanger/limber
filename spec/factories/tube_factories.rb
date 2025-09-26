@@ -71,6 +71,7 @@ FactoryBot.define do
       asset._cached_relationship(:parents) { evaluator.parents }
       asset._cached_relationship(:receptacle) { evaluator.receptacle }
       asset._cached_relationship(:racked_tube) { evaluator.racked_tube }
+      asset._cached_relationship(:direct_submissions) { evaluator.direct_submissions || [] }
 
       if evaluator.custom_metadatum_collection
         asset._cached_relationship(:custom_metadatum_collection) { evaluator.custom_metadatum_collection }
