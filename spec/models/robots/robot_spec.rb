@@ -12,7 +12,7 @@ RSpec.describe Robots::Robot, :robots do
   let(:source_plate_state) { 'passed' }
   let(:target_plate_state) { 'pending' }
   let(:source_plate) do
-    create :v2_plate,
+    create :plate,
            barcode_number: 1,
            purpose_name: source_purpose_name,
            purpose_uuid: source_purpose_uuid,
@@ -23,7 +23,7 @@ RSpec.describe Robots::Robot, :robots do
   let(:target_purpose_name) { 'target_plate_purpose' }
   let(:target_tube_purpose_name) { 'target_tube_purpose' }
   let(:target_plate) do
-    create :v2_plate,
+    create :plate,
            purpose_name: target_purpose_name,
            barcode_number: 2,
            parents: target_plate_parents,
@@ -31,7 +31,7 @@ RSpec.describe Robots::Robot, :robots do
   end
   let(:target_tube_state) { 'pending' }
   let(:target_tube) do
-    create :v2_tube,
+    create :tube,
            purpose_name: target_tube_purpose_name,
            barcode_number: 3,
            state: target_tube_state,
@@ -123,13 +123,13 @@ RSpec.describe Robots::Robot, :robots do
         end
 
         context 'but unrelated plates' do
-          let(:target_plate_parents) { [create(:v2_plate)] }
+          let(:target_plate_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
 
         context 'and an unchecked additional parent' do
-          let(:target_plate_parents) { [source_plate, create(:v2_plate)] }
+          let(:target_plate_parents) { [source_plate, create(:plate)] }
 
           it { is_expected.to be_valid }
         end
@@ -143,7 +143,7 @@ RSpec.describe Robots::Robot, :robots do
         context 'and a parent in the database of a different purpose and an empty parent bed' do
           let(:scanned_layout) { { 'bed1_barcode' => [], 'bed2_barcode' => [target_plate_barcode] } }
 
-          let(:target_plate_parents) { [create(:v2_plate)] }
+          let(:target_plate_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
@@ -214,12 +214,12 @@ RSpec.describe Robots::Robot, :robots do
       end
 
       let(:source_plate2) do
-        create :v2_plate, barcode_number: 3, purpose_name: source_purpose_name, state: source_plate_state
+        create :plate, barcode_number: 3, purpose_name: source_purpose_name, state: source_plate_state
       end
       let(:source_plate2_barcode) { source_plate2.human_barcode }
       let(:target_plate2_parents) { [source_plate2] }
       let(:target_plate2) do
-        create :v2_plate,
+        create :plate,
                purpose_name: target_purpose_name,
                barcode_number: 4,
                parents: target_plate2_parents,
@@ -265,13 +265,13 @@ RSpec.describe Robots::Robot, :robots do
         end
 
         context 'but unrelated plates' do
-          let(:target_plate_parents) { [create(:v2_plate)] }
+          let(:target_plate_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
 
         context 'and an unchecked additional parent' do
-          let(:target_plate_parents) { [source_plate, create(:v2_plate)] }
+          let(:target_plate_parents) { [source_plate, create(:plate)] }
 
           it { is_expected.to be_valid }
         end
@@ -297,7 +297,7 @@ RSpec.describe Robots::Robot, :robots do
         context 'and a parent in the database of a different purpose and an empty parent bed' do
           let(:scanned_layout) { { 'bed1_barcode' => [], 'bed2_barcode' => [target_plate_barcode] } }
 
-          let(:target_plate_parents) { [create(:v2_plate)] }
+          let(:target_plate_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
@@ -353,13 +353,13 @@ RSpec.describe Robots::Robot, :robots do
         end
 
         context 'and if one target plate has an unrelated parent' do
-          let(:target_plate_parents) { [create(:v2_plate)] }
+          let(:target_plate_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
 
         context 'and if one target plate has an unchecked additional parent' do
-          let(:target_plate_parents) { [source_plate, create(:v2_plate)] }
+          let(:target_plate_parents) { [source_plate, create(:plate)] }
 
           it { is_expected.to be_valid }
         end
@@ -400,7 +400,7 @@ RSpec.describe Robots::Robot, :robots do
 
     context 'a robot with beds with multiple parents' do
       let(:source_plate_2) do
-        create :v2_plate, barcode_number: 3, purpose_name: source_purpose_name, state: source_plate_state
+        create :plate, barcode_number: 3, purpose_name: source_purpose_name, state: source_plate_state
       end
       let(:source_plate_2_barcode) { source_plate_2.human_barcode }
       let(:target_plate_parents) { [source_plate, source_plate_2] }
@@ -491,7 +491,7 @@ RSpec.describe Robots::Robot, :robots do
         end
 
         context 'but unrelated plates' do
-          let(:target_plate_parents) { [create(:v2_plate)] }
+          let(:target_plate_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
@@ -564,7 +564,7 @@ RSpec.describe Robots::Robot, :robots do
         end
 
         context 'but unrelated plates' do
-          let(:target_tube_parents) { [create(:v2_plate)] }
+          let(:target_tube_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
@@ -601,7 +601,7 @@ RSpec.describe Robots::Robot, :robots do
       let(:phix_tube_purpose_name) { 'phix_tube_purpose' }
       let(:phix_tube_state) { 'passed' }
       let(:phix_tube) do
-        create :v2_tube, purpose_name: phix_tube_purpose_name, barcode_number: 4, state: phix_tube_state
+        create :tube, purpose_name: phix_tube_purpose_name, barcode_number: 4, state: phix_tube_state
       end
       let(:phix_tube_barcode) { phix_tube.human_barcode }
       let(:source_purpose) { source_purpose_name }
@@ -670,7 +670,7 @@ RSpec.describe Robots::Robot, :robots do
         end
 
         context 'and unrelated labwares' do
-          let(:target_tube_parents) { [create(:v2_plate)] }
+          let(:target_tube_parents) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
@@ -719,13 +719,13 @@ RSpec.describe Robots::Robot, :robots do
           let(:target_tube_parents) { [source_plate, phix_tube] }
 
           let(:source_plate_2) do
-            create :v2_plate, barcode_number: 5, purpose_name: source_purpose_name, state: source_plate_state
+            create :plate, barcode_number: 5, purpose_name: source_purpose_name, state: source_plate_state
           end
           let(:source_plate_2_barcode) { source_plate_2.human_barcode }
 
           let(:target_tube_2_parents) { [source_plate_2, phix_tube] }
           let(:target_tube_2) do
-            create :v2_tube,
+            create :tube,
                    purpose_name: target_tube_purpose_name,
                    barcode_number: 6,
                    state: target_tube_state,
@@ -820,7 +820,7 @@ RSpec.describe Robots::Robot, :robots do
       let(:grandchild_purpose_uuid) { SecureRandom.uuid }
       let(:grandchild_barcode) { grandchild_plate.human_barcode }
       let(:grandchild_plate) do
-        create :v2_plate,
+        create :plate,
                purpose_name: grandchild_purpose_name,
                purpose_uuid: grandchild_purpose_uuid,
                parents: [target_plate],
@@ -865,7 +865,7 @@ RSpec.describe Robots::Robot, :robots do
 
       context 'without metadata' do
         let(:source_plate) do
-          create :v2_plate, barcode_number: '123', purpose_name: source_purpose_name, state: 'passed'
+          create :plate, barcode_number: '123', purpose_name: source_purpose_name, state: 'passed'
         end
 
         it 'is invalid' do
@@ -882,7 +882,7 @@ RSpec.describe Robots::Robot, :robots do
 
       context 'with metadata' do
         let(:source_plate) do
-          create :v2_plate,
+          create :plate,
                  barcode_number: '123',
                  purpose_name: source_purpose_name,
                  state: 'passed',
@@ -983,7 +983,7 @@ RSpec.describe Robots::Robot, :robots do
     let(:target_plate_state) { 'started' }
 
     let(:plate) do
-      create :v2_plate,
+      create :plate,
              barcode_number: '123',
              purpose_uuid: 'lb_end_prep_uuid',
              purpose_name: 'LB End Prep',

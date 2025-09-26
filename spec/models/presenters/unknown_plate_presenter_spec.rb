@@ -3,7 +3,7 @@
 RSpec.describe Presenters::UnknownPlatePresenter do
   subject { described_class.new(labware:) }
 
-  let(:labware) { create :v2_plate, purpose_name: 'Other plate' }
+  let(:labware) { create :plate, purpose_name: 'Other plate' }
 
   it 'prevents state change' do
     expect { |b| subject.default_state_change(&b) }.not_to yield_control

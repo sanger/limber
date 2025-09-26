@@ -4,7 +4,7 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
-  factory :tube_rack, class: Sequencescape::Api::V2::TubeRack, traits: [:barcoded_v2] do
+  factory :tube_rack, class: Sequencescape::Api::V2::TubeRack, traits: [:barcoded] do
     skip_create
 
     initialize_with { Sequencescape::Api::V2::TubeRack.load(attributes) }
@@ -17,7 +17,7 @@ FactoryBot.define do
       purpose_uuid { 'example-purpose-uuid' }
 
       # The tube rack purpose
-      purpose { create :v2_tube_rack_purpose, name: purpose_name, uuid: purpose_uuid }
+      purpose { create :tube_rack_purpose, name: purpose_name, uuid: purpose_uuid }
       tubes { {} }
 
       # The parent assets
@@ -58,7 +58,7 @@ FactoryBot.define do
 
     transient do
       tube_rack { create :tube_rack }
-      tube { create :v2_tube, racked_tube: instance }
+      tube { create :tube, racked_tube: instance }
     end
 
     after(:build) do |racked_tube, evaluator|

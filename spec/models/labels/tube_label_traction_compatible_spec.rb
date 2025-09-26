@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Labels::TubeLabelTractionCompatible, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
-  let(:labware) { build :v2_tube, parents: [build(:v2_tube)] }
+  let(:labware) { build :tube, parents: [build(:tube)] }
   let(:label) { described_class.new(labware) }
 
   context 'when creating the label of a tube' do
@@ -22,7 +22,7 @@ RSpec.describe Labels::TubeLabelTractionCompatible, type: :model do
   end
 
   context 'when labware name contains plate and well range' do
-    let(:labware) { build :v2_tube, name: 'SQPT-12345-H A1:P24', parents: [build(:v2_plate)] }
+    let(:labware) { build :tube, name: 'SQPT-12345-H A1:P24', parents: [build(:plate)] }
 
     it 'has the correct attributes' do
       attributes = label.attributes

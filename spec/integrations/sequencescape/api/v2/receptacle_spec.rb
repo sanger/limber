@@ -22,7 +22,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
     )
   end
   let(:receptacle) do
-    create(:v2_receptacle, qc_results: [wrong_units_molarity, early_molarity, later_molarity, volume])
+    create(:receptacle, qc_results: [wrong_units_molarity, early_molarity, later_molarity, volume])
   end
 
   describe '#all_latest_qc' do
@@ -31,7 +31,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
     end
 
     context 'when no qc results' do
-      let(:receptacle) { create(:v2_receptacle, qc_results: []) }
+      let(:receptacle) { create(:receptacle, qc_results: []) }
 
       it 'gives no results back' do
         expect(receptacle.all_latest_qc).to eq []
@@ -40,7 +40,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
 
     context 'when qc results are not defined' do
       let(:receptacle) do
-        create(:v2_receptacle)
+        create(:receptacle)
       end
 
       before do
@@ -59,7 +59,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
     end
 
     context 'when no qc results' do
-      let(:receptacle) { create(:v2_receptacle, qc_results: []) }
+      let(:receptacle) { create(:receptacle, qc_results: []) }
 
       it 'gives back nil' do
         expect(receptacle.latest_molarity).to be_nil
@@ -67,7 +67,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
     end
 
     context 'when no molarity in qc results' do
-      let(:receptacle) { create(:v2_receptacle, qc_results: [volume]) }
+      let(:receptacle) { create(:receptacle, qc_results: [volume]) }
 
       it 'gives back nil' do
         expect(receptacle.latest_molarity).to be_nil
@@ -75,7 +75,7 @@ RSpec.describe Sequencescape::Api::V2::Receptacle do
     end
 
     context 'when reduced set of molarity results' do
-      let(:receptacle) { create(:v2_receptacle, qc_results: [wrong_units_molarity, early_molarity]) }
+      let(:receptacle) { create(:receptacle, qc_results: [wrong_units_molarity, early_molarity]) }
 
       it 'gives back the latest of those present' do
         expect(receptacle.latest_molarity).to be early_molarity

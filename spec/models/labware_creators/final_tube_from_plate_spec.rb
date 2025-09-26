@@ -12,13 +12,13 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:parent_uuid) { SecureRandom.uuid }
-  let(:parent) { create(:v2_plate, uuid: parent_uuid, pool_sizes: [3, 3]) }
+  let(:parent) { create(:plate, uuid: parent_uuid, pool_sizes: [3, 3]) }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
   describe '#save!' do
-    let(:destination_tubes) { create_list :v2_tube, 2 }
-    let(:transfer) { create :v2_transfer_to_tubes_by_submission, tubes: destination_tubes }
+    let(:destination_tubes) { create_list :tube, 2 }
+    let(:transfer) { create :transfer_to_tubes_by_submission, tubes: destination_tubes }
     let(:transfers_attributes) do
       [
         {
@@ -40,9 +40,9 @@ RSpec.describe LabwareCreators::FinalTubeFromPlate do
     end
 
     before do
-      stub_v2_plate(parent, stub_search: false)
-      stub_api_v2_post('Transfer', transfer)
-      stub_api_v2_post('StateChange')
+      stub_plate(parent, stub_search: false)
+      stub_post('Transfer', transfer)
+      stub_post('StateChange')
     end
 
     it 'pools by submission' do

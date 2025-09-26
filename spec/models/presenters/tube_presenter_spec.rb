@@ -7,7 +7,7 @@ RSpec.describe Presenters::TubePresenter do
   subject { described_class.new(labware:) }
 
   let(:labware) do
-    build :v2_tube,
+    build :tube,
           receptacle: receptacle,
           purpose: purpose,
           purpose_name: purpose_name,
@@ -17,7 +17,7 @@ RSpec.describe Presenters::TubePresenter do
   end
 
   let!(:purpose_config) { create(:stock_plate_config, uuid: purpose_uuid) }
-  let(:purpose) { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+  let(:purpose) { create :purpose, name: purpose_name, uuid: purpose_uuid }
   let(:purpose_name) { 'Limber example purpose' }
   let(:purpose_uuid) { 'example-purpose-uuid' }
   let(:title) { purpose_name }
@@ -28,7 +28,7 @@ RSpec.describe Presenters::TubePresenter do
       create(:qc_result, key: 'molarity', value: '5.5', units: 'nM')
     ]
   end
-  let(:receptacle) { create :v2_receptacle, qc_results: }
+  let(:receptacle) { create :receptacle, qc_results: }
   let(:summary_tab) do
     [
       ['Barcode', 'NT6T <em>3980000006844</em>'],

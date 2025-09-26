@@ -12,7 +12,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
   let(:plate_uuid) { SecureRandom.uuid }
   let(:plate) do
     build(
-      :v2_stock_plate,
+      :stock_plate,
       :has_pooling_metadata,
       uuid: plate_uuid,
       state: 'passed',
@@ -31,7 +31,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
 
   # We mimic plate layout here, which seems preferable to arbitrary length limits.
   context 'by column' do
-    let(:template_factory) { :v2_tag_layout_template }
+    let(:template_factory) { :tag_layout_template }
     let(:expected_layout) do
       {
         # Well => [Pool, Tag]
@@ -246,7 +246,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
   context 'by column on a partial plate' do
     let(:plate) do
       build(
-        :v2_stock_plate,
+        :stock_plate,
         :has_pooling_metadata,
         uuid: plate_uuid,
         state: 'passed',
@@ -254,7 +254,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
         &:assign_pools_to_wells
       )
     end
-    let(:template_factory) { :v2_tag_layout_template }
+    let(:template_factory) { :tag_layout_template }
     let(:expected_layout) do
       {
         'A1' => [1, 1],
@@ -805,7 +805,7 @@ RSpec.describe TagLayoutTemplates, :tag_plate do
     # Potentially related to https://github.com/sanger/limber/pull/71/files
     let(:plate) do
       build(
-        :v2_stock_plate,
+        :stock_plate,
         :has_pooling_metadata,
         uuid: plate_uuid,
         state: 'passed',

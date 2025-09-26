@@ -43,7 +43,7 @@ RSpec.describe TubeCreationController, type: :controller do
       context 'from a tube parent' do
         before do
           allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(
-            build(:v2_plate, uuid: parent_uuid)
+            build(:plate, uuid: parent_uuid)
           )
         end
 
@@ -68,7 +68,7 @@ RSpec.describe TubeCreationController, type: :controller do
       context 'from a plate parent' do
         before do
           allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(
-            build(:v2_plate, uuid: parent_uuid)
+            build(:plate, uuid: parent_uuid)
           )
         end
 

@@ -17,7 +17,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
   let(:parent_well_a1) do
     create(
-      :v2_well,
+      :well,
       location: 'A1',
       position: {
         'name' => 'A1'
@@ -29,7 +29,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_b1) do
     create(
-      :v2_well,
+      :well,
       location: 'B1',
       position: {
         'name' => 'B1'
@@ -41,7 +41,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_d1) do
     create(
-      :v2_well,
+      :well,
       location: 'D1',
       position: {
         'name' => 'D1'
@@ -53,7 +53,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_e1) do
     create(
-      :v2_well,
+      :well,
       location: 'E1',
       position: {
         'name' => 'E1'
@@ -65,7 +65,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_f1) do
     create(
-      :v2_well,
+      :well,
       location: 'F1',
       position: {
         'name' => 'F1'
@@ -77,7 +77,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_h1) do
     create(
-      :v2_well,
+      :well,
       location: 'H1',
       position: {
         'name' => 'H1'
@@ -89,7 +89,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_a2) do
     create(
-      :v2_well,
+      :well,
       location: 'A2',
       position: {
         'name' => 'A2'
@@ -101,7 +101,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_b2) do
     create(
-      :v2_well,
+      :well,
       location: 'B2',
       position: {
         'name' => 'B2'
@@ -113,7 +113,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_c2) do
     create(
-      :v2_well,
+      :well,
       location: 'C2',
       position: {
         'name' => 'C2'
@@ -125,7 +125,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_d2) do
     create(
-      :v2_well,
+      :well,
       location: 'D2',
       position: {
         'name' => 'D2'
@@ -137,7 +137,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_e2) do
     create(
-      :v2_well,
+      :well,
       location: 'E2',
       position: {
         'name' => 'E2'
@@ -149,7 +149,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_f2) do
     create(
-      :v2_well,
+      :well,
       location: 'F2',
       position: {
         'name' => 'F2'
@@ -161,7 +161,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_g2) do
     create(
-      :v2_well,
+      :well,
       location: 'G2',
       position: {
         'name' => 'G2'
@@ -173,7 +173,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
   let(:parent_well_h2) do
     create(
-      :v2_well,
+      :well,
       location: 'H2',
       position: {
         'name' => 'H2'
@@ -185,7 +185,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   end
 
   let(:parent_plate) do
-    create :v2_plate,
+    create :plate,
            uuid: parent_uuid,
            barcode_number: '2',
            size: plate_size,
@@ -212,52 +212,52 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
   # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
   # Just done like this to make it easier to match up the requests to the wells.
   let(:child_well_a2) do
-    create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
+    create(:well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
   end
   let(:child_well_b2) do
-    create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
+    create(:well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
   end
   let(:child_well_a1) do
-    create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
+    create(:well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
   end
   let(:child_well_a3) do
-    create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
+    create(:well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
   end
   let(:child_well_b3) do
-    create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
+    create(:well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
   end
   let(:child_well_c3) do
-    create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
+    create(:well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
   end
   let(:child_well_d3) do
-    create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
+    create(:well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
   end
   let(:child_well_e3) do
-    create(:v2_well, location: 'E3', position: { 'name' => 'E3' }, outer_request: isc_prep_requests[7])
+    create(:well, location: 'E3', position: { 'name' => 'E3' }, outer_request: isc_prep_requests[7])
   end
   let(:child_well_f3) do
-    create(:v2_well, location: 'F3', position: { 'name' => 'F3' }, outer_request: isc_prep_requests[8])
+    create(:well, location: 'F3', position: { 'name' => 'F3' }, outer_request: isc_prep_requests[8])
   end
   let(:child_well_g3) do
-    create(:v2_well, location: 'G3', position: { 'name' => 'G3' }, outer_request: isc_prep_requests[9])
+    create(:well, location: 'G3', position: { 'name' => 'G3' }, outer_request: isc_prep_requests[9])
   end
   let(:child_well_c2) do
-    create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[10])
+    create(:well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[10])
   end
   let(:child_well_b1) do
-    create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[11])
+    create(:well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[11])
   end
   let(:child_well_d2) do
-    create(:v2_well, location: 'D2', position: { 'name' => 'D2' }, outer_request: isc_prep_requests[12])
+    create(:well, location: 'D2', position: { 'name' => 'D2' }, outer_request: isc_prep_requests[12])
   end
   let(:child_well_c1) do
-    create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[13])
+    create(:well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[13])
   end
 
   let(:child_plate) do
     # Wells have been listed in the order here to match the order of the list of original requests.
     # Wells will be laid out by well location so this has no effect on the actual layout of the wells in the plate.
-    create :v2_plate,
+    create :plate,
            uuid: 'child-uuid',
            barcode_number: '3',
            size: plate_size,
@@ -329,7 +329,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
              uuid: child_purpose_uuid,
              name: child_purpose_name
 
-      stub_v2_plate(
+      stub_plate(
         parent_plate,
         stub_search: false,
         custom_includes:
@@ -337,8 +337,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       )
 
       # Some requests are made with standard includes, and others with the custom includes shown.
-      stub_v2_plate(child_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
+      stub_plate(child_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
     end
 
     context 'with an invalid file' do
@@ -448,8 +448,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       before do
-        stub_api_v2_patch('Well')
-        stub_api_v2_save('PolyMetadatum')
+        stub_patch('Well')
+        stub_save('PolyMetadatum')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -485,7 +485,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # rows in the file)
       let(:parent_well_a1) do
         create(
-          :v2_well,
+          :well,
           location: 'A1',
           position: {
             'name' => 'A1'
@@ -497,7 +497,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_b1) do
         create(
-          :v2_well,
+          :well,
           location: 'B1',
           position: {
             'name' => 'B1'
@@ -509,7 +509,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_d1) do
         create(
-          :v2_well,
+          :well,
           location: 'D1',
           position: {
             'name' => 'D1'
@@ -523,7 +523,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # E1 not included in Submission
       let(:parent_well_e1) do
         create(
-          :v2_well,
+          :well,
           location: 'E1',
           position: {
             'name' => 'E1'
@@ -535,7 +535,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_f1) do
         create(
-          :v2_well,
+          :well,
           location: 'F1',
           position: {
             'name' => 'F1'
@@ -547,7 +547,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_h1) do
         create(
-          :v2_well,
+          :well,
           location: 'H1',
           position: {
             'name' => 'H1'
@@ -561,7 +561,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # A2 not included in Submission
       let(:parent_well_a2) do
         create(
-          :v2_well,
+          :well,
           location: 'A2',
           position: {
             'name' => 'A2'
@@ -573,7 +573,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_b2) do
         create(
-          :v2_well,
+          :well,
           location: 'B2',
           position: {
             'name' => 'B2'
@@ -587,7 +587,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # C2 not included in Submission
       let(:parent_well_c2) do
         create(
-          :v2_well,
+          :well,
           location: 'C2',
           position: {
             'name' => 'C2'
@@ -599,7 +599,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_d2) do
         create(
-          :v2_well,
+          :well,
           location: 'D2',
           position: {
             'name' => 'D2'
@@ -611,7 +611,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_e2) do
         create(
-          :v2_well,
+          :well,
           location: 'E2',
           position: {
             'name' => 'E2'
@@ -623,7 +623,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_f2) do
         create(
-          :v2_well,
+          :well,
           location: 'F2',
           position: {
             'name' => 'F2'
@@ -637,7 +637,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # G2 not included in Submission
       let(:parent_well_g2) do
         create(
-          :v2_well,
+          :well,
           location: 'G2',
           position: {
             'name' => 'G2'
@@ -649,7 +649,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_h2) do
         create(
-          :v2_well,
+          :well,
           location: 'H2',
           position: {
             'name' => 'H2'
@@ -664,40 +664,40 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
       # Just done like this to make it easier to match up the requests to the wells.
       let(:child_well_a2) do
-        create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
+        create(:well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
       end
       let(:child_well_b2) do
-        create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
+        create(:well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
       end
       let(:child_well_a1) do
-        create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
+        create(:well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
       end
       let(:child_well_a3) do
-        create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
+        create(:well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
       end
       let(:child_well_b3) do
-        create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
+        create(:well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
       end
       let(:child_well_c3) do
-        create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
+        create(:well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
       end
       let(:child_well_d3) do
-        create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
+        create(:well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
       end
       let(:child_well_c2) do
-        create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[7])
+        create(:well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[7])
       end
       let(:child_well_b1) do
-        create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[8])
+        create(:well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[8])
       end
       let(:child_well_c1) do
-        create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[9])
+        create(:well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[9])
       end
 
       let(:child_plate) do
         # Wells have been listed in the order here to match the order of the list of original requests.
         # Wells will be laid out by well location so this has no effect on the actual layout of the wells in the plate.
-        create :v2_plate,
+        create :plate,
                uuid: 'child-uuid',
                barcode_number: '3',
                size: plate_size,
@@ -782,8 +782,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       before do
-        stub_api_v2_save('PolyMetadatum')
-        stub_api_v2_post('Well')
+        stub_save('PolyMetadatum')
+        stub_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -818,7 +818,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # in the customer file)
       let(:parent_well_a1) do
         create(
-          :v2_well,
+          :well,
           location: 'A1',
           position: {
             'name' => 'A1'
@@ -830,7 +830,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_b1) do
         create(
-          :v2_well,
+          :well,
           location: 'B1',
           position: {
             'name' => 'B1'
@@ -842,7 +842,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_d1) do
         create(
-          :v2_well,
+          :well,
           location: 'D1',
           position: {
             'name' => 'D1'
@@ -856,7 +856,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # E1 not included in Submission
       let(:parent_well_e1) do
         create(
-          :v2_well,
+          :well,
           location: 'E1',
           position: {
             'name' => 'E1'
@@ -868,7 +868,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_f1) do
         create(
-          :v2_well,
+          :well,
           location: 'F1',
           position: {
             'name' => 'F1'
@@ -880,7 +880,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_h1) do
         create(
-          :v2_well,
+          :well,
           location: 'H1',
           position: {
             'name' => 'H1'
@@ -894,7 +894,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # A2 not included in Submission
       let(:parent_well_a2) do
         create(
-          :v2_well,
+          :well,
           location: 'A2',
           position: {
             'name' => 'A2'
@@ -906,7 +906,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_b2) do
         create(
-          :v2_well,
+          :well,
           location: 'B2',
           position: {
             'name' => 'B2'
@@ -920,7 +920,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # C2 not included in Submission
       let(:parent_well_c2) do
         create(
-          :v2_well,
+          :well,
           location: 'C2',
           position: {
             'name' => 'C2'
@@ -932,7 +932,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_d2) do
         create(
-          :v2_well,
+          :well,
           location: 'D2',
           position: {
             'name' => 'D2'
@@ -944,7 +944,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_e2) do
         create(
-          :v2_well,
+          :well,
           location: 'E2',
           position: {
             'name' => 'E2'
@@ -956,7 +956,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_f2) do
         create(
-          :v2_well,
+          :well,
           location: 'F2',
           position: {
             'name' => 'F2'
@@ -970,7 +970,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # G2 not included in Submission
       let(:parent_well_g2) do
         create(
-          :v2_well,
+          :well,
           location: 'G2',
           position: {
             'name' => 'G2'
@@ -982,7 +982,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_h2) do
         create(
-          :v2_well,
+          :well,
           location: 'H2',
           position: {
             'name' => 'H2'
@@ -997,40 +997,40 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # Which is to do with how the binning algorithm lays them out, based on the value of PCR cycles.
       # Just done like this to make it easier to match up the requests to the wells.
       let(:child_well_a2) do
-        create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
+        create(:well, location: 'A2', position: { 'name' => 'A2' }, outer_request: isc_prep_requests[0])
       end
       let(:child_well_b2) do
-        create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
+        create(:well, location: 'B2', position: { 'name' => 'B2' }, outer_request: isc_prep_requests[1])
       end
       let(:child_well_a1) do
-        create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
+        create(:well, location: 'A1', position: { 'name' => 'A1' }, outer_request: isc_prep_requests[2])
       end
       let(:child_well_a3) do
-        create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
+        create(:well, location: 'A3', position: { 'name' => 'A3' }, outer_request: isc_prep_requests[3])
       end
       let(:child_well_b3) do
-        create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
+        create(:well, location: 'B3', position: { 'name' => 'B3' }, outer_request: isc_prep_requests[4])
       end
       let(:child_well_c3) do
-        create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
+        create(:well, location: 'C3', position: { 'name' => 'C3' }, outer_request: isc_prep_requests[5])
       end
       let(:child_well_d3) do
-        create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
+        create(:well, location: 'D3', position: { 'name' => 'D3' }, outer_request: isc_prep_requests[6])
       end
       let(:child_well_c2) do
-        create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[7])
+        create(:well, location: 'C2', position: { 'name' => 'C2' }, outer_request: isc_prep_requests[7])
       end
       let(:child_well_b1) do
-        create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[8])
+        create(:well, location: 'B1', position: { 'name' => 'B1' }, outer_request: isc_prep_requests[8])
       end
       let(:child_well_c1) do
-        create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[9])
+        create(:well, location: 'C1', position: { 'name' => 'C1' }, outer_request: isc_prep_requests[9])
       end
 
       let(:child_plate) do
         # Wells have been listed in the order here to match the order of the list of original requests.
         # Wells will be laid out by well location so this has no effect on the actual layout of the wells in the plate.
-        create :v2_plate,
+        create :plate,
                uuid: 'child-uuid',
                barcode_number: '3',
                size: plate_size,
@@ -1115,8 +1115,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       before do
-        stub_api_v2_save('PolyMetadatum')
-        stub_api_v2_post('Well')
+        stub_save('PolyMetadatum')
+        stub_post('Well')
       end
 
       it 'makes the expected method calls when creating the child plate' do
@@ -1159,7 +1159,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # from the submission.
       let(:parent_well_a1) do
         create(
-          :v2_well,
+          :well,
           location: 'A1',
           position: {
             'name' => 'A1'
@@ -1171,7 +1171,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_b1) do
         create(
-          :v2_well,
+          :well,
           location: 'B1',
           position: {
             'name' => 'B1'
@@ -1183,7 +1183,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_d1) do
         create(
-          :v2_well,
+          :well,
           location: 'D1',
           position: {
             'name' => 'D1'
@@ -1197,7 +1197,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # E1 not included in Submission
       let(:parent_well_e1) do
         create(
-          :v2_well,
+          :well,
           location: 'E1',
           position: {
             'name' => 'E1'
@@ -1209,7 +1209,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_f1) do
         create(
-          :v2_well,
+          :well,
           location: 'F1',
           position: {
             'name' => 'F1'
@@ -1221,7 +1221,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_h1) do
         create(
-          :v2_well,
+          :well,
           location: 'H1',
           position: {
             'name' => 'H1'
@@ -1235,7 +1235,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # A2 not included in Submission
       let(:parent_well_a2) do
         create(
-          :v2_well,
+          :well,
           location: 'A2',
           position: {
             'name' => 'A2'
@@ -1247,7 +1247,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_b2) do
         create(
-          :v2_well,
+          :well,
           location: 'B2',
           position: {
             'name' => 'B2'
@@ -1261,7 +1261,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # C2 not included in Submission
       let(:parent_well_c2) do
         create(
-          :v2_well,
+          :well,
           location: 'C2',
           position: {
             'name' => 'C2'
@@ -1273,7 +1273,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_d2) do
         create(
-          :v2_well,
+          :well,
           location: 'D2',
           position: {
             'name' => 'D2'
@@ -1285,7 +1285,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_e2) do
         create(
-          :v2_well,
+          :well,
           location: 'E2',
           position: {
             'name' => 'E2'
@@ -1297,7 +1297,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_f2) do
         create(
-          :v2_well,
+          :well,
           location: 'F2',
           position: {
             'name' => 'F2'
@@ -1311,7 +1311,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       # G2 not included in Submission
       let(:parent_well_g2) do
         create(
-          :v2_well,
+          :well,
           location: 'G2',
           position: {
             'name' => 'G2'
@@ -1323,7 +1323,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
       let(:parent_well_h2) do
         create(
-          :v2_well,
+          :well,
           location: 'H2',
           position: {
             'name' => 'H2'
@@ -1388,7 +1388,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
       let(:parent_well_a1) do
         create(
-          :v2_well,
+          :well,
           location: 'A1',
           position: {
             'name' => 'A1'
@@ -1400,7 +1400,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       end
 
       let(:parent_plate) do
-        create :v2_plate,
+        create :plate,
                uuid: parent_uuid,
                barcode_number: '2',
                size: plate_size,
@@ -1433,11 +1433,11 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
 
       # child
       let(:child_well_a1) do
-        create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: loop_2_request)
+        create(:well, location: 'A1', position: { 'name' => 'A1' }, outer_request: loop_2_request)
       end
 
       let(:child_plate) do
-        create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, wells: [child_well_a1]
+        create :plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, wells: [child_well_a1]
       end
 
       let(:transfer_requests_attributes) do
@@ -1461,15 +1461,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       before do
         allow(pm_pcr_cycles).to receive(:update).and_return(true)
 
-        stub_v2_polymetadata(pm_original_plate_barcode, loop_2_request.id)
-        stub_v2_polymetadata(pm_original_well_id, loop_2_request.id)
-        stub_v2_polymetadata(pm_concentration_nm, loop_2_request.id)
-        stub_v2_polymetadata(pm_input_amount_available, loop_2_request.id)
-        stub_v2_polymetadata(pm_input_amount_desired, loop_2_request.id)
-        stub_v2_polymetadata(pm_sample_volume, loop_2_request.id)
-        stub_v2_polymetadata(pm_diluent_volume, loop_2_request.id)
-        stub_v2_polymetadata(pm_pcr_cycles, loop_2_request.id)
-        stub_v2_polymetadata(pm_hyb_panel, loop_2_request.id)
+        stub_polymetadata(pm_original_plate_barcode, loop_2_request.id)
+        stub_polymetadata(pm_original_well_id, loop_2_request.id)
+        stub_polymetadata(pm_concentration_nm, loop_2_request.id)
+        stub_polymetadata(pm_input_amount_available, loop_2_request.id)
+        stub_polymetadata(pm_input_amount_desired, loop_2_request.id)
+        stub_polymetadata(pm_sample_volume, loop_2_request.id)
+        stub_polymetadata(pm_diluent_volume, loop_2_request.id)
+        stub_polymetadata(pm_pcr_cycles, loop_2_request.id)
+        stub_polymetadata(pm_hyb_panel, loop_2_request.id)
       end
 
       it 'makes the expected method calls when creating the child plate' do

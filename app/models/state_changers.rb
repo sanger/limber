@@ -21,7 +21,7 @@ module StateChangers
   # This is the abstract behaviour.
   module AutomaticBehaviour
     def purpose_uuid
-      @purpose_uuid ||= v2_labware.purpose.uuid
+      @purpose_uuid ||= labware.purpose.uuid
     end
 
     def purpose_config
@@ -51,12 +51,12 @@ module StateChangers
 
     def complete_outstanding_requests
       in_prog_submissions =
-        v2_labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
+        labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
       return if in_prog_submissions.blank?
 
       Sequencescape::Api::V2::WorkCompletion.create!(
         submission_uuids: in_prog_submissions,
-        target_uuid: v2_labware.uuid,
+        target_uuid: labware.uuid,
         user_uuid: user_uuid
       )
     end
@@ -68,7 +68,7 @@ module StateChangers
 
     FILTER_FAILS_ON = %w[qc_complete failed cancelled].freeze
 
-    def v2_labware
+    def labware
       raise 'Implement in the child class'
     end
 
@@ -125,7 +125,7 @@ module StateChangers
     #
     # Iterates over the tubes and passes them individually.
     def move_to!(state, reason = nil, customer_accepts_responsibility = nil)
-      return if state.nil? || v2_labware.nil? # We have nothing to do
+      return if state.nil? || labware.nil? # We have nothing to do
 
       Sequencescape::Api::V2::StateChange.create!(
         contents: nil,
@@ -163,17 +163,17 @@ module StateChangers
       #  - In case the target state is for example 'qc_complete',
       #    we only want to change tubes that are not already 'failed'.
       racked_tubes_locations_filtered =
-        v2_labware.racked_tubes.reject { |rt| rt.tube.state == 'failed' }.map(&:coordinate)
+        labware.racked_tubes.reject { |rt| rt.tube.state == 'failed' }.map(&:coordinate)
 
       # if no tubes are in the target state then no need to send the contents subset (state changer assumes all
       #  will change)
-      return nil if racked_tubes_locations_filtered.length == v2_labware.racked_tubes.count
+      return nil if racked_tubes_locations_filtered.length == labware.racked_tubes.count
 
       racked_tubes_locations_filtered
     end
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2::TubeRack.find({ uuid: labware_uuid }).first
+    def labware
+      @labware ||= Sequencescape::Api::V2::TubeRack.find({ uuid: labware_uuid }).first
     end
   end
 
@@ -181,8 +181,8 @@ module StateChangers
   class AutomaticTubeRackStateChanger < BaseTubeRackStateChanger
     include AutomaticBehaviour
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
+    def labware
+      @labware ||= Sequencescape::Api::V2.tube_rack_for_completion(labware_uuid)
     end
   end
 
@@ -195,18 +195,18 @@ module StateChangers
       return nil unless FILTER_FAILS_ON.include?(target_state)
 
       # determine list of well locations requiring the state change
-      well_locations_filtered = v2_labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
+      well_locations_filtered = labware.wells.reject { |w| w.state == 'failed' }.map(&:location)
 
       # if no wells are in failed state then no need to send the contents subset
-      return nil if well_locations_filtered.length == v2_labware.wells.count
+      return nil if well_locations_filtered.length == labware.wells.count
 
       well_locations_filtered
     end
 
-    def v2_labware
-      return @v2_labware if defined?(@v2_labware)
+    def labware
+      return @labware if defined?(@labware)
 
-      @v2_labware = Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
+      @labware = Sequencescape::Api::V2::Plate.find_by(uuid: labware_uuid)
     end
   end
 
@@ -214,8 +214,8 @@ module StateChangers
   class AutomaticPlateStateChanger < PlateStateChanger
     include AutomaticBehaviour
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
+    def labware
+      @labware ||= Sequencescape::Api::V2.plate_for_completion(labware_uuid)
     end
   end
 
@@ -228,10 +228,10 @@ module StateChangers
       nil
     end
 
-    def v2_labware
-      return @v2_labware if defined?(@v2_labware)
+    def labware
+      return @labware if defined?(@labware)
 
-      @v2_labware = Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
+      @labware = Sequencescape::Api::V2::Tube.find_by(uuid: labware_uuid)
     end
   end
 
@@ -239,8 +239,8 @@ module StateChangers
   class AutomaticTubeStateChanger < TubeStateChanger
     include AutomaticBehaviour
 
-    def v2_labware
-      @v2_labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
+    def labware
+      @labware ||= Sequencescape::Api::V2.tube_for_completion(labware_uuid)
     end
   end
 end

@@ -16,9 +16,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
   let(:parent_plate) do
-    create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
+    create :stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
   end
-  let(:child_plate) { create :v2_plate_empty, uuid: 'child-uuid', barcode_number: '3', size: plate_size }
+  let(:child_plate) { create :plate_empty, uuid: 'child-uuid', barcode_number: '3', size: plate_size }
   let(:requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -33,10 +33,10 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   let(:control_well_locations) { %w[B5 H3] }
 
   let(:control_study_name) { 'UAT Study' }
-  let(:control_study) { create :v2_study, name: control_study_name }
+  let(:control_study) { create :study, name: control_study_name }
 
   let(:control_project_name) { 'UAT Project' }
-  let(:control_project) { create :v2_project, name: control_project_name }
+  let(:control_project) { create :project, name: control_project_name }
 
   let(:sample_md_cohort) { 'Cohort' }
   let(:sample_md_sample_description) { 'Description' }
@@ -45,21 +45,21 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   let(:control_neg_sample_name) { 'CONTROL_NEG_Description_B5' }
 
   let!(:control_pos_sample_metadata) do
-    create :v2_sample_metadata,
+    create :sample_metadata,
            supplier_name: control_pos_sample_name,
            cohort: sample_md_cohort,
            sample_description: sample_md_sample_description
   end
 
   let!(:control_neg_sample_metadata) do
-    create :v2_sample_metadata,
+    create :sample_metadata,
            supplier_name: control_neg_sample_name,
            cohort: sample_md_cohort,
            sample_description: sample_md_sample_description
   end
 
   let(:control_sample_pos) do
-    create :v2_sample,
+    create :sample,
            name: control_pos_sample_name,
            control: true,
            control_type: 'pcr positive',
@@ -67,7 +67,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   end
 
   let(:control_sample_neg) do
-    create :v2_sample,
+    create :sample,
            name: control_neg_sample_name,
            control: true,
            control_type: 'pcr negative',
@@ -81,10 +81,10 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       uuid: child_purpose_uuid,
       control_study_name: control_study_name
     )
-    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
-    stub_v2_plate(parent_plate, stub_search: false, custom_includes: parent_plate_includes)
-    stub_v2_study(control_study)
-    stub_v2_project(control_project)
+    stub_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
+    stub_plate(parent_plate, stub_search: false, custom_includes: parent_plate_includes)
+    stub_study(control_study)
+    stub_project(control_project)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
@@ -100,9 +100,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
       before do
-        stub_api_v2_patch('Sample')
-        stub_api_v2_patch('SampleMetadata')
-        stub_api_v2_save('Aliquot')
+        stub_patch('Sample')
+        stub_patch('SampleMetadata')
+        stub_save('Aliquot')
       end
 
       it 'makes the expected requests' do
@@ -280,17 +280,17 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   describe '#register_stock_for_plate' do
     let(:logger) { instance_double(Logger) }
     let(:child_uuid) { 'child-uuid' }
-    let(:child_plate_v2) { create(:v2_plate) }
-    let(:child) { create(:v2_plate, uuid: child_uuid) }
+    let(:child_plate_with_wells) { create(:plate) }
+    let(:child) { create(:plate, uuid: child_uuid) }
 
     before do
       allow(Rails).to receive(:logger).and_return(logger)
-      subject.instance_variable_set(:@child_plate_v2, child_plate_v2)
+      subject.instance_variable_set(:@child_plate_with_wells, child_plate_with_wells)
       subject.instance_variable_set(:@child, child)
     end
 
     context 'when stock registration succeeds' do
-      before { allow(child_plate_v2).to receive(:register_stock_for_plate).and_return(true) }
+      before { allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_return(true) }
 
       it 'logs a success message' do
         expect(logger).to receive(:info).with(/Stock registration successful for plate #{child_uuid}/)
@@ -300,8 +300,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     context 'when stock registration fails' do
       before do
-        allow(child_plate_v2).to receive(:register_stock_for_plate).and_return(false)
-        allow(child_plate_v2).to receive_message_chain(:errors, :full_messages).and_return(['Something went wrong'])
+        allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_return(false)
+        allow(child_plate_with_wells).to receive_message_chain(:errors, :full_messages)
+          .and_return(['Something went wrong'])
       end
 
       it 'logs an error message with the errors' do
@@ -314,7 +315,8 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
     context 'when an exception occurs' do
       before do
-        allow(child_plate_v2).to receive(:register_stock_for_plate).and_raise(StandardError, 'unexpected failure')
+        allow(child_plate_with_wells).to receive(:register_stock_for_plate)
+          .and_raise(StandardError, 'unexpected failure')
       end
 
       it 'logs an exception error message' do
@@ -326,9 +328,9 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
 
   describe '#generate_control_sample_desc' do
     let(:plate_size) { 96 }
-    let(:sample_metadata) { create :v2_sample_metadata, sample_description: test_description }
-    let(:sample) { create :v2_sample, sample_metadata: }
-    let(:aliquot) { create :v2_aliquot, sample: }
+    let(:sample_metadata) { create :sample_metadata, sample_description: test_description }
+    let(:sample) { create :sample, sample_metadata: }
+    let(:aliquot) { create :aliquot, sample: }
 
     before do
       allow(parent_plate).to receive_message_chain(

@@ -6,12 +6,12 @@ RSpec.describe BarcodeLabelsHelper do
   include described_class
 
   describe '#barcode_printing_form' do
-    let(:plate) { create(:v2_plate) }
+    let(:plate) { create(:plate) }
     let!(:purpose_config) { create(:stock_plate_with_info_config, uuid: 'stock-plate-purpose-uuid') }
     let(:labels) { [Labels::PlateLabel.new(plate, {})] }
     let(:redirection_url) { 'example_plate_url' }
     let(:default_printer_name) { 'example_printer_name' }
-    let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
+    let(:barcode_printers_request) { stub_barcode_printers(create_list(:plate_barcode_printer, 3)) }
     let(:presenter) { Presenters::StockPlatePresenter.new(labware: plate) }
 
     before do

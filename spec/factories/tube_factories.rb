@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   # API v2 tube
-  factory :v2_tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded_v2] do
+  factory :tube, class: Sequencescape::Api::V2::Tube, traits: [:ean13_barcoded] do
     skip_create
 
     sequence(:id, &:to_s)
@@ -12,13 +12,13 @@ FactoryBot.define do
     state { 'passed' }
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
-    receptacle { create(:v2_receptacle, qc_results: [], aliquots: aliquots) }
+    receptacle { create(:receptacle, qc_results: [], aliquots: aliquots) }
     sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + siblings }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
 
     transient do
-      stock_plate { create :v2_stock_plate }
+      stock_plate { create :stock_plate }
       ancestors { [stock_plate] }
       barcode_prefix { 'NT' }
       library_state { 'pending' }
@@ -26,10 +26,10 @@ FactoryBot.define do
       outer_request { create request_factory, state: library_state, priority: priority }
       request_factory { :library_request }
       aliquot_count { 2 }
-      aliquot_factory { :v2_tagged_aliquot }
+      aliquot_factory { :tagged_aliquot }
       aliquots { create_list aliquot_factory, aliquot_count, library_state:, outer_request: }
       parents { [] }
-      purpose { create :v2_purpose, name: purpose_name, uuid: purpose_uuid }
+      purpose { create :purpose, name: purpose_name, uuid: purpose_uuid }
       racked_tube { nil }
 
       siblings_count { 0 }
@@ -77,15 +77,15 @@ FactoryBot.define do
       end
     end
 
-    factory :v2_tube_with_metadata do
+    factory :tube_with_metadata do
       transient { custom_metadatum_collection { create :custom_metadatum_collection } }
     end
 
-    factory :v2_stock_tube do
+    factory :stock_tube do
       ancestors { nil }
       outer_request { nil }
 
-      factory :v2_stock_tube_with_metadata do
+      factory :stock_tube_with_metadata do
         transient { custom_metadatum_collection { create :custom_metadatum_collection } }
       end
     end

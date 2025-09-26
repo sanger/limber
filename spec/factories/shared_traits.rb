@@ -22,7 +22,7 @@ FactoryBot.define do
   end
 
   # Add to API_V2 Factories to add a barcode
-  trait :barcoded_v2 do
+  trait :barcoded do
     _barcoded
 
     labware_barcode do
@@ -35,7 +35,7 @@ FactoryBot.define do
   end
 
   # Add to API_V2 Factories to add a legacy ean13 barcode
-  trait :ean13_barcoded_v2 do
+  trait :ean13_barcoded do
     _barcoded
 
     labware_barcode do

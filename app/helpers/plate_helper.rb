@@ -86,17 +86,15 @@ module PlateHelper # rubocop:todo Style/Documentation
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
   end
 
-  def well_under_represented?(plate, well_location)
-    well = plate.wells.index_by(&:location)[well_location]
+  def well_under_represented?(well)
     return false unless well
 
     aliquot = well.aliquots.first
     return false unless aliquot
 
-    request = Array(aliquot.request).first
-    return false unless request.respond_to?(:poly_metadata)
-    return false unless request.poly_metadata
+    return false unless aliquot.request.respond_to?(:poly_metadata)
+    return false unless aliquot.request.poly_metadata
 
-    request.poly_metadata.any? { |pm| pm.key == LimberConstants::UNDER_REPRESENTED_KEY && pm.value == 'true' }
+    aliquot.request.poly_metadata.any? { |pm| pm.key == LimberConstants::UNDER_REPRESENTED_KEY && pm.value == 'true' }
   end
 end

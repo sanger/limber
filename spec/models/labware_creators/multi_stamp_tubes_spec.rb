@@ -14,17 +14,17 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   let(:parent2_receptacle_uuid) { 'example-receptacle2-uuid' }
   let(:parent_receptacle_uuids) { [parent1_receptacle_uuid, parent2_receptacle_uuid] }
 
-  let(:parent1_receptacle) { create(:v2_receptacle, uuid: parent1_receptacle_uuid, qc_results: []) }
-  let(:parent2_receptacle) { create(:v2_receptacle, uuid: parent2_receptacle_uuid, qc_results: []) }
+  let(:parent1_receptacle) { create(:receptacle, uuid: parent1_receptacle_uuid, qc_results: []) }
+  let(:parent2_receptacle) { create(:receptacle, uuid: parent2_receptacle_uuid, qc_results: []) }
 
   let(:parent1) do
-    create :v2_stock_tube,
+    create :stock_tube,
            uuid: parent1_tube_uuid,
            purpose_uuid: 'parent-tube-purpose-uuid',
            receptacle: parent1_receptacle
   end
   let(:parent2) do
-    create :v2_stock_tube,
+    create :stock_tube,
            uuid: parent2_tube_uuid,
            purpose_uuid: 'parent-tube-purpose-uuid',
            receptacle: parent2_receptacle
@@ -41,8 +41,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
 
   before do
     Settings.submission_templates = { 'example' => example_template_uuid }
-    stub_v2_tube(parent1, stub_search: false)
-    stub_v2_tube(parent2, stub_search: false)
+    stub_tube(parent1, stub_search: false)
+    stub_tube(parent2, stub_search: false)
   end
 
   context 'on new' do
@@ -85,7 +85,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
     end
 
     let(:child_plate) do
-      create :v2_plate_for_submission, purpose_name: child_purpose_name, barcode_number: '5', size: 96
+      create :plate_for_submission, purpose_name: child_purpose_name, barcode_number: '5', size: 96
     end
 
     let(:pooled_plates_attributes) do
@@ -182,18 +182,18 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         end
 
         # set up two tube to plate well transfers, each from a different study
-        let(:aliquot1) { create :v2_aliquot, study_id: 1 }
-        let(:aliquot2) { create :v2_aliquot, study_id: 2 }
+        let(:aliquot1) { create :aliquot, study_id: 1 }
+        let(:aliquot2) { create :aliquot, study_id: 2 }
 
         let(:parent1) do
-          create :v2_stock_tube,
+          create :stock_tube,
                  uuid: parent1_tube_uuid,
                  purpose_uuid: 'parent-tube-purpose-uuid',
                  receptacle: parent1_receptacle,
                  aliquots: [aliquot1]
         end
         let(:parent2) do
-          create :v2_stock_tube,
+          create :stock_tube,
                  uuid: parent2_tube_uuid,
                  purpose_uuid: 'parent-tube-purpose-uuid',
                  receptacle: parent2_receptacle,
@@ -232,7 +232,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         end
 
         let!(:multiple_study_submission) do
-          create(:v2_submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
+          create(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
         end
 
         it 'creates a plate!' do
