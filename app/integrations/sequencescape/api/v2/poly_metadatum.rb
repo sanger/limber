@@ -21,4 +21,42 @@ class Sequencescape::Api::V2::PolyMetadatum < Sequencescape::Api::V2::Base
 
   property :created_at, type: :time
   property :updated_at, type: :time
+
+  # Class method to convert metadata into JSON:API bulk payload
+  #
+  # @param metadata_array [Array<Hash>] array of hashes, each containing:
+  #   - :key [String] the metadata key
+  #   - :value [String] the metadata value
+  #   - :metadatable [Object] the associated API resource (must respond to #type and #id)
+  #
+  # @return [Hash] JSON:API-compliant payload for use with .bulk_create
+  #
+  # Example:
+  #   Sequencescape::Api::V2::PolyMetadatum.as_bulk_payload([
+  #     { key: 'vol to pool', value: '32.453', metadatable: aliquot },
+  #     { key: 'sample, value: 's1', metadatable: aliquot },
+  #     { key: 'barcode', value: 'Z0001', metadatable: aliquot }
+  #   ])
+  #
+  def self.as_bulk_payload(metadata_array)
+    {
+      data: metadata_array.map do |meta|
+        {
+          type: 'poly_metadata',
+          attributes: {
+            key: meta[:key],
+            value: meta[:value]
+          },
+          relationships: {
+            metadatable: {
+              data: { type: meta[:metadatable].type, id: meta[:metadatable].id }
+            }
+          }
+        }
+      end
+    }
+  end
+
+  # Defines a custom collection endpoint for bulk creation of PolyMetadata.
+  custom_endpoint :bulk_create, on: :collection, request_method: :post
 end
