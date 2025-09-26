@@ -66,7 +66,7 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_tube,
+      create :tube,
              purpose_name: purpose_name,
              direct_submissions: [],
              study: submission_study,
@@ -79,8 +79,8 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     let(:title) { purpose_name }
     let(:state) { 'passed' }
     let(:sidebar_partial) { 'submission_default' }
-    let(:submission_study) { create :v2_study, name: 'Submission Study' }
-    let(:submission_project) { create :v2_project, name: 'Submission Project' }
+    let(:submission_study) { create :study, name: 'Submission Study' }
+    let(:submission_project) { create :project, name: 'Submission Project' }
     let(:summary_tab) do
       [
         ['Barcode', barcode_summary],
@@ -105,10 +105,10 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_tube, purpose_name: purpose_name, direct_submissions: submissions
+      create :tube, purpose_name: purpose_name, direct_submissions: submissions
     end
 
-    let(:submissions) { create_list :v2_submission, 1, state: 'pending' }
+    let(:submissions) { create_list :submission, 1, state: 'pending' }
     let(:barcode_summary) { "#{labware.human_barcode} <em>#{labware.labware_barcode.machine}</em>" }
     let(:barcode_string) { 'Unknown' }
     let(:purpose_name) { 'Test Tube' }
@@ -143,10 +143,10 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_tube, purpose_name: purpose_name, direct_submissions: submissions
+      create :tube, purpose_name: purpose_name, direct_submissions: submissions
     end
     let(:now) { Time.zone.parse('2020-11-24 16:13:43 +0000') }
-    let(:submissions) { create_list :v2_submission, 1, state: 'ready', updated_at: now - 5.seconds }
+    let(:submissions) { create_list :submission, 1, state: 'ready', updated_at: now - 5.seconds }
     let(:barcode_summary) { "#{labware.human_barcode} <em>#{labware.labware_barcode.machine}</em>" }
     let(:barcode_string) { 'Unknown' }
     let(:purpose_name) { 'Test Tube' }
@@ -172,8 +172,8 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     it_behaves_like 'a labware presenter'
     it_behaves_like 'a stock presenter'
 
-    let(:labware) { create :v2_tube, purpose_name: purpose_name, direct_submissions: submissions }
-    let(:submissions) { create_list :v2_submission, 1, state: 'ready' }
+    let(:labware) { create :tube, purpose_name: purpose_name, direct_submissions: submissions }
+    let(:submissions) { create_list :submission, 1, state: 'ready' }
     let(:barcode_summary) { "#{labware.human_barcode} <em>#{labware.labware_barcode.machine}</em>" }
     let(:barcode_string) { 'Unknown' }
     let(:purpose_name) { 'Test Tube' }
@@ -198,12 +198,12 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_tube,
+      create :tube,
              purpose_name: purpose_name,
              direct_submissions: submissions,
              state: state
     end
-    let(:submissions) { create_list :v2_submission, 1, state: 'cancelled' }
+    let(:submissions) { create_list :submission, 1, state: 'cancelled' }
     let(:barcode_summary) { "#{labware.human_barcode} <em>#{labware.labware_barcode.machine}</em>" }
     let(:barcode_string) { 'Unknown' }
     let(:purpose_name) { 'Test Tube' }
@@ -238,12 +238,12 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     it_behaves_like 'a stock presenter'
 
     let(:labware) do
-      create :v2_tube,
+      create :tube,
              purpose_name: purpose_name,
              direct_submissions: submissions,
              state: state
     end
-    let(:submissions) { create_list :v2_submission, 1, state: 'failed' }
+    let(:submissions) { create_list :submission, 1, state: 'failed' }
     let(:barcode_summary) { "#{labware.human_barcode} <em>#{labware.labware_barcode.machine}</em>" }
     let(:barcode_string) { 'Unknown' }
     let(:purpose_name) { 'Test Tube' }
@@ -275,8 +275,8 @@ RSpec.describe Presenters::SubmissionTubePresenter do
     it_behaves_like 'a labware presenter'
     it_behaves_like 'a stock presenter'
 
-    let(:labware) { create :v2_tube, purpose_name: purpose_name, direct_submissions: submissions, state: state }
-    let(:submissions) { create_list :v2_submission, 1, state: 'ready' }
+    let(:labware) { create :tube, purpose_name: purpose_name, direct_submissions: submissions, state: state }
+    let(:submissions) { create_list :submission, 1, state: 'ready' }
     let(:barcode_summary) { "#{labware.human_barcode} <em>#{labware.labware_barcode.machine}</em>" }
     let(:barcode_string) { 'Unknown' }
     let(:purpose_name) { 'Test Tube' }
