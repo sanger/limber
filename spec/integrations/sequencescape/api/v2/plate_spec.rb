@@ -102,6 +102,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
             wells.aliquots.request.primer_panel
             wells.aliquots.request.pre_capture_pool
             wells.aliquots.request.submission
+            wells.aliquots.request.poly_metadata
             wells.transfer_requests_as_target.source_asset
           ].join(',')
         },

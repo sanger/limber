@@ -92,10 +92,18 @@ RSpec.describe PlateHelper do
       let(:request) { build(:library_request_with_poly_metadata, poly_metadata: [poly_metadatum]) }
       let(:aliquot) { build(:aliquot, outer_request: request) }
       let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
-      let(:plate) { build(:plate, wells: [well]) }
 
       it 'returns true' do
-        expect(well_under_represented?(plate, well.location)).to be true
+        expect(well_under_represented?(well)).to be true
+      end
+    end
+
+    context 'when no request' do
+      let(:aliquot) { build(:aliquot, outer_request: nil) }
+      let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
+
+      it 'returns false' do
+        expect(well_under_represented?(well)).to be false
       end
     end
 
@@ -103,10 +111,9 @@ RSpec.describe PlateHelper do
       let(:request) { build(:library_request) }
       let(:aliquot) { build(:aliquot, outer_request: request) }
       let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
-      let(:plate) { build(:plate, wells: [well]) }
 
       it 'returns false' do
-        expect(well_under_represented?(plate, well.location)).to be false
+        expect(well_under_represented?(well)).to be false
       end
     end
 
@@ -117,10 +124,9 @@ RSpec.describe PlateHelper do
       end
       let(:aliquot) { build(:aliquot, outer_request: request) }
       let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
-      let(:plate) { build(:plate, wells: [well]) }
 
       it 'returns false' do
-        expect(well_under_represented?(plate, well.location)).to be false
+        expect(well_under_represented?(well)).to be false
       end
     end
   end

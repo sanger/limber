@@ -17,7 +17,8 @@ module Sequencescape::Api::V2
         {
           downstream_tubes: 'purpose',
           requests_as_source: %w[request_type primer_panel pre_capture_pool submission],
-          aliquots: ['sample.sample_metadata', { request: %w[request_type primer_panel pre_capture_pool submission] }],
+          aliquots: ['sample.sample_metadata',
+                     { request: %w[request_type primer_panel pre_capture_pool submission poly_metadata] }],
           transfer_requests_as_target: %w[source_asset]
         }
       ]
