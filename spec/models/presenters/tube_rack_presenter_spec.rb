@@ -28,9 +28,9 @@ RSpec.describe Presenters::TubeRackPresenter do
 
   let(:tubes) do
     {
-      'A1' => create(:v2_tube, priority: 1, purpose_name: tube_purpose_name, state: states[0]),
-      'B1' => create(:v2_tube, priority: 3, purpose_name: tube_purpose_name, state: states[1]),
-      'C1' => create(:v2_tube, priority: 0, purpose_name: tube_purpose_name, state: states[2])
+      'A1' => create(:tube, priority: 1, purpose_name: tube_purpose_name, state: states[0]),
+      'B1' => create(:tube, priority: 3, purpose_name: tube_purpose_name, state: states[1]),
+      'C1' => create(:tube, priority: 0, purpose_name: tube_purpose_name, state: states[2])
     }
   end
 

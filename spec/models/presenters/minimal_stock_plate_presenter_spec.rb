@@ -7,7 +7,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
   subject(:presenter) { described_class.new(labware:) }
 
   let(:labware) do
-    create :v2_stock_plate,
+    create :stock_plate,
            purpose_name: purpose_name,
            state: state,
            barcode_number: 1,
@@ -49,7 +49,7 @@ RSpec.describe Presenters::MinimalStockPlatePresenter do
   it_behaves_like 'a stock presenter'
 
   context 'a plate with conflicting pools' do
-    let(:labware) { create :v2_plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
+    let(:labware) { create :plate, pool_sizes: [2, 2], pool_pcr_cycles: [10, 6] }
 
     it 'reports as invalid' do
       expect(subject).not_to be_valid

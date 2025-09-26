@@ -13,10 +13,10 @@ RSpec.describe LabwareCreators::StampedPlate do
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
   let(:plate) do
-    create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
+    create :stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
   end
   let(:child_plate) do
-    create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
+    create :plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
   end
   let(:requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
@@ -27,8 +27,8 @@ RSpec.describe LabwareCreators::StampedPlate do
 
   before do
     create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(plate, stub_search: false)
+    stub_plate(child_plate, stub_search: false)
+    stub_plate(plate, stub_search: false)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
@@ -91,7 +91,7 @@ RSpec.describe LabwareCreators::StampedPlate do
   end
 
   context 'more complicated scenarios' do
-    let(:plate) { create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: wells }
+    let(:plate) { create :plate, uuid: parent_uuid, barcode_number: '2', wells: wells }
 
     context 'with multiple requests of different types' do
       let(:request_type_a) { create :request_type, key: 'rt_a' }
@@ -103,20 +103,20 @@ RSpec.describe LabwareCreators::StampedPlate do
       let(:wells) do
         [
           create(
-            :v2_stock_well,
+            :stock_well,
             uuid: '2-well-A1',
             location: 'A1',
             aliquot_count: 1,
             requests_as_source: [request_a, request_b]
           ),
           create(
-            :v2_stock_well,
+            :stock_well,
             uuid: '2-well-B1',
             location: 'B1',
             aliquot_count: 1,
             requests_as_source: [request_c, request_d]
           ),
-          create(:v2_stock_well, uuid: '2-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+          create(:stock_well, uuid: '2-well-c1', location: 'C1', aliquot_count: 0, requests_as_source: [])
         ]
       end
       let(:transfer_requests_attributes) do
@@ -219,21 +219,21 @@ RSpec.describe LabwareCreators::StampedPlate do
       let(:request_d) { create :library_request, request_type: request_type, uuid: 'request-d', submission_id: '2' }
       let(:aliquots_a) do
         [
-          create(:v2_aliquot, library_state: 'started', outer_request: request_a),
-          create(:v2_aliquot, library_state: 'started', outer_request: request_b)
+          create(:aliquot, library_state: 'started', outer_request: request_a),
+          create(:aliquot, library_state: 'started', outer_request: request_b)
         ]
       end
       let(:aliquots_b) do
         [
-          create(:v2_aliquot, library_state: 'started', outer_request: request_c),
-          create(:v2_aliquot, library_state: 'started', outer_request: request_d)
+          create(:aliquot, library_state: 'started', outer_request: request_c),
+          create(:aliquot, library_state: 'started', outer_request: request_d)
         ]
       end
 
       let(:wells) do
         [
-          create(:v2_well, uuid: '2-well-A1', location: 'A1', aliquots: aliquots_a),
-          create(:v2_well, uuid: '2-well-B1', location: 'B1', aliquots: aliquots_b)
+          create(:well, uuid: '2-well-A1', location: 'A1', aliquots: aliquots_a),
+          create(:well, uuid: '2-well-B1', location: 'B1', aliquots: aliquots_b)
         ]
       end
 

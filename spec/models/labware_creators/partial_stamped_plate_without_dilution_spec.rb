@@ -28,13 +28,13 @@ RSpec.describe LabwareCreators::PartialStampedPlateWithoutDilution do
   let(:library_type_2) { 'library-type-2' }
   let(:library_type_3) { 'library-type-3' }
 
-  let(:well_a1) { create(:v2_well, location: 'A1', requests_as_source: []) }
+  let(:well_a1) { create(:well, location: 'A1', requests_as_source: []) }
   let(:well_b1) do
-    create(:v2_well, location: 'B1', requests_as_source: [create(:library_request, library_type: library_type_1)])
+    create(:well, location: 'B1', requests_as_source: [create(:library_request, library_type: library_type_1)])
   end
   let(:well_d1) do
     create(
-      :v2_well,
+      :well,
       location: 'D1',
       requests_as_source: [
         create(:library_request, library_type: library_type_1),
@@ -44,7 +44,7 @@ RSpec.describe LabwareCreators::PartialStampedPlateWithoutDilution do
   end
   let(:well_e1) do
     create(
-      :v2_well,
+      :well,
       location: 'E1',
       requests_as_source: [
         create(:library_request, library_type: library_type_1),
@@ -54,16 +54,16 @@ RSpec.describe LabwareCreators::PartialStampedPlateWithoutDilution do
     )
   end
   let(:well_b2) do
-    create(:v2_well, location: 'B2', requests_as_source: [create(:library_request, library_type: library_type_2)])
+    create(:well, location: 'B2', requests_as_source: [create(:library_request, library_type: library_type_2)])
   end
 
   let(:parent_wells) { [well_a1, well_b1, well_d1, well_e1, well_b2] }
 
   let(:parent_uuid) { 'uuid' }
   let(:plate) do
-    create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: parent_wells.rotate(2) # unsorted wells
+    create :plate, uuid: parent_uuid, barcode_number: '2', wells: parent_wells.rotate(2) # unsorted wells
   end
-  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', barcode_number: '3' }
+  let(:child_plate) { create :plate, uuid: 'child-uuid', barcode_number: '3' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -72,8 +72,8 @@ RSpec.describe LabwareCreators::PartialStampedPlateWithoutDilution do
 
   before do
     create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
-    stub_v2_plate(plate, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false)
+    stub_plate(plate, stub_search: false)
+    stub_plate(child_plate, stub_search: false)
   end
 
   let(:form_attributes) do

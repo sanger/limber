@@ -113,8 +113,8 @@ module LabwareCreators
       # create the empty child plate, including empty wells
       @child = plate_creation.child
 
-      # re-fetch the child plate in v2 api so we have access to the v2 wells
-      @child_plate_v2 = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
+      # re-fetch the child plate to preload the wells
+      @child_plate_with_wells = Sequencescape::Api::V2.plate_with_wells(@child.uuid)
 
       # create and add the control samples to the child plate in the chosen locations
       create_control_samples_in_child_plate
@@ -128,18 +128,19 @@ module LabwareCreators
       after_transfer!
 
       # call stock register if there is register_stock_plate flag
-      register_stock_for_plate if @child_plate_v2.register_stock_plate?
+      register_stock_for_plate if @child_plate_with_wells.register_stock_plate?
 
       true
     end
 
     def register_stock_for_plate
       # call Sequencescape::Api::V2::Plate register_stock_for_plate method
-      if @child_plate_v2.register_stock_for_plate
+      if @child_plate_with_wells.register_stock_for_plate
         Rails.logger.info("Stock registration successful for plate #{@child.uuid}")
       else
         Rails.logger.error(
-          "Stock registration failed for plate #{@child.uuid}: #{@child_plate_v2.errors.full_messages.join(', ')}"
+          "Stock registration failed for plate #{@child.uuid}: " \
+          "#{@child_plate_with_wells.errors.full_messages.join(', ')}"
         )
       end
     rescue StandardError => e
@@ -151,8 +152,8 @@ module LabwareCreators
       list_of_controls.each_with_index do |control, index|
         well_location = control_well_locations[index]
 
-        child_well_v2 = well_for_plate_location(@child_plate_v2, well_location)
-        create_control_in_child_well(control, child_well_v2, well_location)
+        child_well = well_for_plate_location(@child_plate_with_wells, well_location)
+        create_control_in_child_well(control, child_well, well_location)
       end
     end
 
@@ -161,13 +162,13 @@ module LabwareCreators
       list_of_controls.each_with_index do |_control, index|
         well_location = control_well_locations[index]
 
-        parent_well_v2 = well_for_plate_location(parent, well_location)
-        cancel_request_in_parent_well(parent_well_v2)
+        parent_well = well_for_plate_location(parent, well_location)
+        cancel_request_in_parent_well(parent_well)
       end
     end
 
-    def well_for_plate_location(plate_v2, well_location)
-      plate_v2.wells.detect { |well| well.location == well_location }
+    def well_for_plate_location(plate, well_location)
+      plate.wells.detect { |well| well.location == well_location }
     end
 
     def parent_wells_with_aliquots
@@ -207,14 +208,14 @@ module LabwareCreators
       parent_cohort
     end
 
-    # fetch the api v2 study object for the control study name from the purpose config
-    def control_study_v2
-      @control_study_v2 ||= Sequencescape::Api::V2::Study.find(name: control_study_name).first
+    # fetch the study object for the control study name from the purpose config
+    def control_study
+      @control_study ||= Sequencescape::Api::V2::Study.find(name: control_study_name).first
     end
 
-    # fetch the api v2 project object for the control project name from the purpose config
-    def control_project_v2
-      @control_project_v2 ||= Sequencescape::Api::V2::Project.find(name: control_project_name).first
+    # fetch the project object for the control project name from the purpose config
+    def control_project
+      @control_project ||= Sequencescape::Api::V2::Project.find(name: control_project_name).first
     end
 
     # this transfer collection stamps all the samples from the parent into the child plate,
@@ -228,23 +229,23 @@ module LabwareCreators
 
     def transfer_request_attributes
       well_filter.filtered.map do |well, additional_parameters|
-        request_hash(well, @child_plate_v2, additional_parameters)
+        request_hash(well, @child_plate_with_wells, additional_parameters)
       end
     end
 
     # create the control sample, setting the sample name and metadata, then create
     # an aliquot containing the control and link it to the selected child well
-    def create_control_in_child_well(control, child_well_v2, well_location)
+    def create_control_in_child_well(control, child_well, well_location)
       # check the well should be empty
-      unless child_well_v2.aliquots.empty?
+      unless child_well.aliquots.empty?
         raise StandardError, "Expecting child plate well to be empty at location #{well_location}"
       end
 
-      control_v2 = create_control_sample(control, well_location)
+      control = create_control_sample(control, well_location)
 
-      update_control_sample_metadata(control_v2, well_location)
+      update_control_sample_metadata(control, well_location)
 
-      create_aliquot_in_child_well(control_v2, child_well_v2, well_location)
+      create_aliquot_in_child_well(control, child_well, well_location)
     end
 
     # create the name for the control
@@ -259,23 +260,23 @@ module LabwareCreators
 
       # sample name must not contain spaces, if it does replace with underscores
       sample_name.parameterize.underscore
-      control_v2 =
+      control =
         Sequencescape::Api::V2::Sample.new(
           name: sample_name,
           sanger_sample_id: sample_name,
           control: true,
           control_type: control.control_type
         )
-      control_v2.relationships.studies = [control_study_v2]
+      control.relationships.studies = [control_study]
 
-      return control_v2 if control_v2.save
+      return control if control.save
 
       raise StandardError, "New control (type #{control.control_type}) did not save for location #{well_location}"
     end
 
-    def update_control_sample_metadata(control_v2, well_location)
-      if control_v2.sample_metadata.update(
-        supplier_name: control_v2.name,
+    def update_control_sample_metadata(control, well_location)
+      if control.sample_metadata.update(
+        supplier_name: control.name,
         cohort: control_cohort,
         sample_description: control_desc
       )
@@ -286,27 +287,27 @@ module LabwareCreators
     end
 
     # create aliquot in child well to hold the control sample
-    def create_aliquot_in_child_well(control_v2, child_well_v2, well_location) # rubocop:todo Metrics/AbcSize
-      control_aliquot_v2 = Sequencescape::Api::V2::Aliquot.new
+    def create_aliquot_in_child_well(control, child_well, well_location) # rubocop:todo Metrics/AbcSize
+      control_aliquot = Sequencescape::Api::V2::Aliquot.new
 
       # set relationships on the new aliquot
-      control_aliquot_v2.relationships.sample = control_v2
-      control_aliquot_v2.relationships.study = control_study_v2
-      control_aliquot_v2.relationships.project = control_project_v2
-      control_aliquot_v2.relationships.receptacle = child_well_v2
+      control_aliquot.relationships.sample = control
+      control_aliquot.relationships.study = control_study
+      control_aliquot.relationships.project = control_project
+      control_aliquot.relationships.receptacle = child_well
 
       # Seems to require setting this attribute on the relationship otherwise we get a TypeMismatch error
-      control_aliquot_v2.relationships.attributes['receptacle']['data']['type'] = 'receptacles'
+      control_aliquot.relationships.attributes['receptacle']['data']['type'] = 'receptacles'
 
-      return if control_aliquot_v2.save
+      return if control_aliquot.save
 
       raise StandardError, "Could not create aliquot for location #{well_location}"
     end
 
     # filter on requests matching expected request type
-    def suitable_request_for_well(parent_well_v2)
+    def suitable_request_for_well(parent_well)
       reqs =
-        parent_well_v2.requests_as_source.filter do |request|
+        parent_well.requests_as_source.filter do |request|
           request.request_type.key == purpose_config.fetch(:work_completion_request_type) && request.state == 'pending'
         end
 
@@ -315,10 +316,10 @@ module LabwareCreators
 
     # find and close request of type specified by config in the parent well
     # for a well location replaced by a control in the child plate
-    def cancel_request_in_parent_well(parent_well_v2)
-      return if parent_well_v2.requests_as_source.blank?
+    def cancel_request_in_parent_well(parent_well)
+      return if parent_well.requests_as_source.blank?
 
-      req = suitable_request_for_well(parent_well_v2)
+      req = suitable_request_for_well(parent_well)
       return if req.blank?
 
       # cancel the request
