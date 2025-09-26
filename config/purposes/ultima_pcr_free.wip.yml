@@ -22,11 +22,9 @@ UPF Lib:
 UPF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
-  # TODO: add Presenter here for automated submission for rebalancing
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
-  # TODO: IlluminaHtp type doesn't seem right for Ultima sequencing
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
@@ -34,7 +32,6 @@ UPF EqVol Pool:
 UPF EqVol Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
-  # TODO: IlluminaHtp type doesn't seem right for Ultima sequencing
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
