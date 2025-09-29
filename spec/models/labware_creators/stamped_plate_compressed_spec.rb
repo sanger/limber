@@ -4,12 +4,10 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::StampedPlateCompressed do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
-
-  has_a_working_api
 
   # Our parent has the following wells with requests:
   #
@@ -34,23 +32,23 @@ RSpec.describe LabwareCreators::StampedPlateCompressed do
   let(:library_type_1) { 'library-type-1' }
 
   let(:parent_well_b1) do
-    create(:v2_well, location: 'B1', requests_as_source: [create(:library_request, library_type: library_type_1)])
+    create(:well, location: 'B1', requests_as_source: [create(:library_request, library_type: library_type_1)])
   end
   let(:parent_well_d1) do
-    create(:v2_well, location: 'D1', requests_as_source: [create(:library_request, library_type: library_type_1)])
+    create(:well, location: 'D1', requests_as_source: [create(:library_request, library_type: library_type_1)])
   end
   let(:parent_well_e1) do
-    create(:v2_well, location: 'E1', requests_as_source: [create(:library_request, library_type: library_type_1)])
+    create(:well, location: 'E1', requests_as_source: [create(:library_request, library_type: library_type_1)])
   end
   let(:parent_well_b2) do
-    create(:v2_well, location: 'B2', requests_as_source: [create(:library_request, library_type: library_type_1)])
+    create(:well, location: 'B2', requests_as_source: [create(:library_request, library_type: library_type_1)])
   end
 
   let(:parent_wells) { [parent_well_b1, parent_well_d1, parent_well_e1, parent_well_b2] }
 
   let(:parent_uuid) { 'uuid' }
-  let(:parent_plate) { create :v2_plate, uuid: parent_uuid, barcode_number: '2', wells: parent_wells }
-  let(:child_plate) { create :v2_plate, uuid: 'child-uuid', barcode_number: '3' }
+  let(:parent_plate) { create :plate, uuid: parent_uuid, barcode_number: '2', wells: parent_wells }
+  let(:child_plate) { create :plate, uuid: 'child-uuid', barcode_number: '3' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -59,8 +57,8 @@ RSpec.describe LabwareCreators::StampedPlateCompressed do
 
   before do
     create(:purpose_config, name: child_purpose_name, uuid: child_purpose_uuid)
-    stub_v2_plate(parent_plate, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false)
+    stub_plate(parent_plate, stub_search: false)
+    stub_plate(child_plate, stub_search: false)
   end
 
   let(:form_attributes) do

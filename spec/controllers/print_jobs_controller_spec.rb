@@ -5,10 +5,8 @@ require './app/controllers/print_jobs_controller'
 
 RSpec.describe PrintJobsController, type: :controller do
   describe '#create' do
-    has_a_working_api
-
     it 'creates print_job is successful' do
-      stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+      stub_barcode_printers(create_list(:plate_barcode_printer, 3))
 
       params = {
         print_job: {

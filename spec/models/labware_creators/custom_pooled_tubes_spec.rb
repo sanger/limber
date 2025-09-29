@@ -8,9 +8,7 @@ require_relative 'shared_examples'
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
-  has_a_working_api
-
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from charged and passed plates'
 
@@ -22,10 +20,10 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:parent_uuid) { SecureRandom.uuid }
   let(:pool_size) { 16 }
-  let(:stock_plate) { create(:v2_stock_plate_for_plate, barcode_number: 5) }
+  let(:stock_plate) { create(:stock_plate_for_plate, barcode_number: 5) }
   let(:parent_plate) do
     create(
-      :v2_plate,
+      :plate,
       uuid: parent_uuid,
       pool_sizes: [pool_size],
       well_states: ['passed'] * pool_size,
@@ -69,8 +67,8 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
 
     let(:specific_tubes_attributes) do
       child_tubes = [
-        create(:v2_tube, name: 'DN5 A1:B2', uuid: 'tube-0'),
-        create(:v2_tube, name: 'DN5 C1:G2', uuid: 'tube-1')
+        create(:tube, name: 'DN5 A1:B2', uuid: 'tube-0'),
+        create(:tube, name: 'DN5 C1:G2', uuid: 'tube-1')
       ]
 
       [
@@ -103,7 +101,7 @@ RSpec.describe LabwareCreators::CustomPooledTubes, with: :uploader do
       ]
     end
 
-    before { stub_v2_plate(parent_plate, stub_search: false) }
+    before { stub_plate(parent_plate, stub_search: false) }
 
     context 'with a valid file' do
       let(:file) do

@@ -7,12 +7,11 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::QuadrantSplitPlate do
   include FeatureHelpers
 
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
-  has_a_working_api
   let(:user) { create :user }
   let(:user_uuid) { user.uuid }
 
@@ -29,7 +28,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:stock_plate) do
     create(
-      :v2_stock_plate_for_plate,
+      :stock_plate_for_plate,
       purpose_name: stock_purpose_name,
       barcode_number: stock_plate_barcode,
       uuid: stock_plate_uuid
@@ -54,7 +53,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:plate) do
     create(
-      :v2_plate,
+      :plate,
       uuid: parent_uuid,
       stock_plate: stock_plate,
       barcode_number: '2',
@@ -65,7 +64,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_a) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-a-uuid',
       barcode_number: '3',
       size: child_plate_size,
@@ -78,7 +77,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_b) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-b-uuid',
       barcode_number: '4',
       size: child_plate_size,
@@ -91,7 +90,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_c) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-c-uuid',
       barcode_number: '5',
       size: child_plate_size,
@@ -104,7 +103,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
 
   let(:child_plate_d) do
     create(
-      :v2_plate,
+      :plate,
       uuid: 'child-d-uuid',
       barcode_number: '6',
       size: child_plate_size,
@@ -121,7 +120,7 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
       { uuid: %w[child-a-uuid child-b-uuid child-c-uuid child-d-uuid] },
       includes: ['wells']
     ).and_return([child_plate_a, child_plate_b, child_plate_c, child_plate_d])
-    stub_v2_plate(plate, stub_search: false)
+    stub_plate(plate, stub_search: false)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
@@ -143,13 +142,13 @@ RSpec.describe LabwareCreators::QuadrantSplitPlate do
       before do
         allow(SearchHelper).to receive(:merger_plate_names).and_return(stock_purpose_name)
 
-        stub_v2_user(user)
+        stub_user(user)
 
-        stub_v2_labware(stock_plate)
-        stub_v2_labware(child_plate_a)
-        stub_v2_labware(child_plate_b)
-        stub_v2_labware(child_plate_c)
-        stub_v2_labware(child_plate_d)
+        stub_labware(stock_plate)
+        stub_labware(child_plate_a)
+        stub_labware(child_plate_b)
+        stub_labware(child_plate_c)
+        stub_labware(child_plate_d)
       end
 
       it 'makes the expected requests' do

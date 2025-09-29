@@ -4,40 +4,8 @@ require './lib/well_helpers'
 require_relative '../support/factory_bot_extensions'
 
 FactoryBot.define do
-  # API V1 well
-  factory :well, class: Sequencescape::Well, traits: [:api_object] do
-    transient do
-      # Number of aliquots in the well
-      sample_count { 1 }
-
-      # Factory to use for aliquots
-      aliquot_factory { :aliquot }
-    end
-
-    json_root { 'well' }
-    state { 'pending' }
-    location { 'A1' }
-
-    aliquots do
-      Array.new(sample_count) do |i|
-        associated(
-          aliquot_factory,
-          sample_name: "sample_#{location}_#{i}",
-          sample_id: "SAM#{location}#{i}",
-          sample_uuid: "example-sample-uuid-#{i}"
-        )
-      end
-    end
-
-    # Generates an empty well
-    factory :empty_well do
-      aliquots { [] }
-      state { 'unknown' }
-    end
-  end
-
   # V2 well
-  factory :v2_well, class: Sequencescape::Api::V2::Well do
+  factory :well, class: Sequencescape::Api::V2::Well do
     initialize_with { Sequencescape::Api::V2::Well.load(attributes) }
 
     skip_create
@@ -53,11 +21,11 @@ FactoryBot.define do
       # Use the stock well factory if you want the request comming out of the well
       outer_request { create request_factory, state: library_state }
 
-      study { create :v2_study, name: 'Well Study' }
-      project { create :v2_project, name: 'Well Project' }
+      study { create :study, name: 'Well Study' }
+      project { create :project, name: 'Well Project' }
 
       # The factory to use for aliquots
-      aliquot_factory { :v2_aliquot }
+      aliquot_factory { :aliquot }
       aliquots do
         # Conditional to avoid generating requests when not required
         aliquot_count.positive? ? create_list(aliquot_factory, aliquot_count, outer_request:, study:, project:) : []
@@ -66,7 +34,7 @@ FactoryBot.define do
       # The factory to use for outer requests
       request_factory { :library_request }
 
-      # The requests comming out of the well. v2_stock wells will set this based
+      # The requests comming out of the well. stock wells will set this based
       # on outer request.
       requests_as_source { [] }
 
@@ -119,27 +87,27 @@ FactoryBot.define do
 
     # API v2 stock wells associate the outer requests with the well requests_as_source,
     # not the aliquots
-    factory :v2_stock_well do
+    factory :stock_well do
       transient do
-        aliquot_factory { :v2_stock_aliquot }
+        aliquot_factory { :stock_aliquot }
         requests_as_source { [outer_request].compact }
       end
     end
 
     # Tagged wells have tagged aliquots
-    factory :v2_tagged_well do
-      transient { aliquot_factory { :v2_tagged_aliquot } }
+    factory :tagged_well do
+      transient { aliquot_factory { :tagged_aliquot } }
     end
 
     # Mock in transfer requests into and out of the well
-    factory :v2_well_with_transfer_requests do
+    factory :well_with_transfer_requests do
       transient do
         transfer_request_as_source_volume { 10.0 }
-        transfer_request_as_source_target_asset { :v2_well }
+        transfer_request_as_source_target_asset { :well }
         transfer_requests_as_source do
           [
             create(
-              :v2_transfer_request,
+              :transfer_request,
               source_asset: nil,
               target_asset: transfer_request_as_source_target_asset,
               volume: transfer_request_as_source_volume
@@ -147,11 +115,11 @@ FactoryBot.define do
           ]
         end
         transfer_request_as_target_volume { 10.0 }
-        transfer_request_as_target_source_asset { :v2_well }
+        transfer_request_as_target_source_asset { :well }
         transfer_requests_as_target do
           [
             create(
-              :v2_transfer_request,
+              :transfer_request,
               source_asset: transfer_request_as_target_source_asset,
               target_asset: nil,
               volume: transfer_request_as_target_volume
@@ -166,7 +134,7 @@ FactoryBot.define do
       end
     end
 
-    factory :v2_well_with_polymetadata do
+    factory :well_with_polymetadata do
       transient { poly_metadata { [] } }
 
       after(:build) do |well, evaluator|
@@ -184,15 +152,15 @@ FactoryBot.define do
       end
     end
 
-    factory :v2_well_with_transfer_requests_and_polymetadata, parent: :v2_well do
+    factory :well_with_transfer_requests_and_polymetadata, parent: :well do
       transient do
-        # From :v2_well_with_transfer_requests
+        # From :well_with_transfer_requests
         transfer_request_as_source_volume { 10.0 }
-        transfer_request_as_source_target_asset { :v2_well }
+        transfer_request_as_source_target_asset { :well }
         transfer_requests_as_source do
           [
             create(
-              :v2_transfer_request,
+              :transfer_request,
               source_asset: nil,
               target_asset: transfer_request_as_source_target_asset,
               volume: transfer_request_as_source_volume
@@ -201,11 +169,11 @@ FactoryBot.define do
         end
 
         transfer_request_as_target_volume { 10.0 }
-        transfer_request_as_target_source_asset { :v2_well }
+        transfer_request_as_target_source_asset { :well }
         transfer_requests_as_target do
           [
             create(
-              :v2_transfer_request,
+              :transfer_request,
               source_asset: transfer_request_as_target_source_asset,
               target_asset: nil,
               volume: transfer_request_as_target_volume
@@ -213,7 +181,7 @@ FactoryBot.define do
           ]
         end
 
-        # From :v2_well_with_polymetadata
+        # From :well_with_polymetadata
         poly_metadata { [] }
       end
 
@@ -233,87 +201,8 @@ FactoryBot.define do
     end
   end
 
-  # API V1 collection of wells, used mainly for setting up the well association on v1 plates
-  factory :well_collection, class: Sequencescape::Api::PageOfResults, traits: [:api_object] do
-    size { 96 }
-
-    transient do
-      locations { WellHelpers.column_order.slice(0, size) }
-      json_root { nil }
-      resource_actions { %w[read first last] }
-      plate_uuid { SecureRandom.uuid }
-
-      # While resources can be paginated, wells wont be.
-      # Furthermore, we trust the api gem to handle that side of things.
-      resource_url { "#{api_root}#{plate_uuid}/wells/1" }
-      uuid { nil }
-      default_state { 'pending' }
-      custom_state { {} }
-      aliquot_factory { :aliquot }
-      empty_wells { [] }
-    end
-
-    wells do
-      locations.each_with_index.map do |location, i|
-        if empty_wells.include?(location)
-          associated(:empty_well, location: location, uuid: "example-well-uuid-#{i}")
-        else
-          state = custom_state[location] || default_state
-          associated(
-            :well,
-            location: location,
-            uuid: "example-well-uuid-#{i}",
-            state: state,
-            aliquot_factory: aliquot_factory
-          )
-        end
-      end
-    end
-  end
-
-  # Api V1 Aliquot
-  factory :aliquot, class: Sequencescape::Behaviour::Receptacle::Aliquot, traits: [:api_object] do
-    bait_library { nil }
-    insert_size { {} }
-    tag { {} }
-    tag2 { {} }
-    suboptimal { false }
-
-    sample { associated(:sample, name: sample_name, sample_id: sample_id, uuid: sample_uuid) }
-
-    transient do
-      sample_name { 'sample' }
-      sample_id { 'SAM0' }
-      sample_uuid { 'example-sample-uuid-0' }
-    end
-
-    factory :suboptimal_aliquot do
-      suboptimal { true }
-    end
-
-    # Dual tagged aliquot
-    factory :tagged_aliquot do
-      sequence(:tag) do |i|
-        {
-          name: "Tag #{i}",
-          identifier: i,
-          oligo: i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G'),
-          group: 'My first tag group'
-        }
-      end
-      sequence(:tag2) do |i|
-        {
-          name: "Tag #{i}",
-          identifier: i,
-          oligo: i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G'),
-          group: 'My first tag group'
-        }
-      end
-    end
-  end
-
   # API V2 aliquot
-  factory :v2_aliquot, class: Sequencescape::Api::V2::Aliquot do
+  factory :aliquot, class: Sequencescape::Api::V2::Aliquot do
     initialize_with { Sequencescape::Api::V2::Aliquot.load(attributes) }
 
     transient do
@@ -323,8 +212,8 @@ FactoryBot.define do
       # Alias for request: The request set on the aliquot itself
       outer_request { create :library_request, state: library_state }
       well_location { 'A1' }
-      study { create :v2_study, name: 'Test Aliquot Study' }
-      project { create :v2_project, name: 'Test Aliquot Project' }
+      study { create :study, name: 'Test Aliquot Study' }
+      project { create :project, name: 'Test Aliquot Project' }
       sample_attributes { {} }
     end
 
@@ -334,7 +223,7 @@ FactoryBot.define do
     tag2_oligo { nil }
     tag2_index { nil }
     suboptimal { false }
-    sample { create :v2_sample, sample_attributes }
+    sample { create :sample, sample_attributes }
     request { outer_request }
 
     # See the README.md for an explanation under "FactoryBot is not mocking my related resources correctly"
@@ -365,30 +254,30 @@ FactoryBot.define do
       }
     end
 
-    factory :v2_tagged_aliquot do
+    factory :tagged_aliquot do
       sequence(:tag_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
       tag_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
       sequence(:tag2_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
       tag2_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
     end
 
-    factory :v2_tagged_aliquot_for_mbrave do
+    factory :tagged_aliquot_for_mbrave do
       sequence(:tag_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
       tag_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
       sequence(:tag2_oligo) { |i| i.to_s(4).tr('0', 'A').tr('1', 'T').tr('2', 'C').tr('3', 'G') }
       tag2_index { |_i| (WellHelpers.column_order.index(well_location) || 0) + 1 }
-      tag { create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')) }
-      tag2 { |_i| create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_1_v2')) }
+      tag { create(:tag, tag_group: create(:tag_group, name: 'Bioscan_forward_96_v2')) }
+      tag2 { |_i| create(:tag, tag_group: create(:tag_group, name: 'Bioscan_reverse_4_1_v2')) }
 
-      sample { create(:v2_sample, sample_metadata: create(:v2_sample_metadata_for_mbrave)) }
+      sample { create(:sample, sample_metadata: create(:sample_metadata_for_mbrave)) }
     end
 
-    factory :v2_suboptimal_aliquot do
+    factory :suboptimal_aliquot do
       suboptimal { true }
     end
 
     # V2 API stock aliquots. Prevents the request being set on aliquot
-    factory :v2_stock_aliquot do
+    factory :stock_aliquot do
       request { nil }
     end
 

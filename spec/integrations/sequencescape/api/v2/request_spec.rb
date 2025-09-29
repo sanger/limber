@@ -19,8 +19,8 @@ RSpec.describe Sequencescape::Api::V2::Request do
     let(:test_poly_metadatum) { build :poly_metadatum, metadatable: request, key: 'key1', value: 'value1' }
 
     before do
-      # stub_api_v2_save just checks something is being sent, not specifically what
-      stub_api_v2_save('PolyMetadatum')
+      # stub_save just checks something is being sent, not specifically what
+      stub_save('PolyMetadatum')
     end
 
     context 'when we want to create poly metadata on a request' do

@@ -4,8 +4,6 @@ require 'rails_helper'
 
 RSpec.describe SequencescapeSubmissionsController, type: :controller do
   describe '#create' do
-    has_a_working_api
-
     let(:user_uuid) { SecureRandom.uuid }
     let(:request_options) do
       {

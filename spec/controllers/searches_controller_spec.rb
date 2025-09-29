@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe SearchController, type: :controller do
   include FeatureHelpers
 
-  has_a_working_api
-
   let(:uuid) { SecureRandom.uuid }
 
   describe '#new' do
@@ -137,7 +135,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe '#ongoing_plates' do
       let(:api_class) { :plates }
-      let(:result) { create :v2_plate }
+      let(:result) { create :plate }
 
       context 'without parameters' do
         let(:search_parameters) do
@@ -174,7 +172,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe '#ongoing_tubes' do
       let(:api_class) { :tubes }
-      let(:result) { create :v2_tube }
+      let(:result) { create :tube }
 
       context 'without parameters' do
         let(:search_parameters) do

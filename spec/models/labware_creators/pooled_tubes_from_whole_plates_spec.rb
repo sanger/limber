@@ -9,7 +9,8 @@ require_relative 'shared_examples'
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   include FeatureHelpers
-  subject { described_class.new(api, form_attributes) }
+
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from tagged plates'
 
@@ -24,10 +25,10 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
   let(:parent3_uuid) { SecureRandom.uuid }
   let(:parent4_uuid) { SecureRandom.uuid }
 
-  let(:parent) { create :v2_plate, uuid: parent_uuid, barcode_number: 1 }
-  let(:parent2) { create :v2_plate, uuid: parent2_uuid, barcode_number: 2 }
-  let(:parent3) { create :v2_plate, uuid: parent3_uuid, barcode_number: 3 }
-  let(:parent4) { create :v2_plate, uuid: parent4_uuid, barcode_number: 4 }
+  let(:parent) { create :plate, uuid: parent_uuid, barcode_number: 1 }
+  let(:parent2) { create :plate, uuid: parent2_uuid, barcode_number: 2 }
+  let(:parent3) { create :plate, uuid: parent3_uuid, barcode_number: 3 }
+  let(:parent4) { create :plate, uuid: parent4_uuid, barcode_number: 4 }
 
   let(:barcodes) do
     [
@@ -40,17 +41,14 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
 
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_plates'
-    has_a_working_api
 
     let(:form_attributes) { { purpose_uuid:, parent_uuid: } }
   end
 
   describe '#save!' do
-    has_a_working_api
-
     let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid:, barcodes: } }
 
-    let(:child_tube) { create :v2_tube }
+    let(:child_tube) { create :tube }
     let(:specific_tubes_attributes) do
       [{ uuid: purpose_uuid, parent_uuids: [parent_uuid], child_tubes: [child_tube], tube_attributes: [{}] }]
     end
@@ -68,7 +66,7 @@ RSpec.describe LabwareCreators::PooledTubesFromWholePlates, with: :uploader do
       end
     end
 
-    before { stub_asset_v2_search(barcodes, [parent, parent2, parent3, parent4]) }
+    before { stub_asset_search(barcodes, [parent, parent2, parent3, parent4]) }
 
     context 'with compatible plates' do
       it 'pools from all the plates' do

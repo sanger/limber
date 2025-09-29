@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe PlateCreationController do
-  has_a_working_api
   include FeatureHelpers
 
   # context 'for a plate with a custom-form' do
@@ -37,8 +36,8 @@ RSpec.describe PlateCreationController do
     end
 
     describe '#create' do
-      let(:parent) { build(:v2_plate, uuid: parent_uuid) }
-      let(:child) { build(:v2_plate, uuid: child_uuid) }
+      let(:parent) { build(:plate, uuid: parent_uuid) }
+      let(:child) { build(:plate, uuid: child_uuid) }
 
       before do
         allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(parent)

@@ -7,14 +7,12 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploader do
   it_behaves_like 'it only allows creation from tubes'
 
-  has_a_working_api
-
   # samples
   let(:sample1_uuid) { SecureRandom.uuid }
   let(:sample2_uuid) { SecureRandom.uuid }
 
-  let(:sample1) { create(:v2_sample, name: 'Sample1', uuid: sample1_uuid) }
-  let(:sample2) { create(:v2_sample, name: 'Sample2', uuid: sample2_uuid) }
+  let(:sample1) { create(:sample, name: 'Sample1', uuid: sample1_uuid) }
+  let(:sample2) { create(:sample, name: 'Sample2', uuid: sample2_uuid) }
 
   # requests
   let(:request_type_key) { 'parent_tube_library_request_type' }
@@ -30,12 +28,12 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   # parent aliquots
   # NB. in scRNA the outer request is an already passed request ie. from the earlier submission
-  let(:parent_tube_1_aliquot) { create(:v2_aliquot, sample: sample1, outer_request: ancestor_request_1) }
-  let(:parent_tube_2_aliquot) { create(:v2_aliquot, sample: sample2, outer_request: ancestor_request_2) }
+  let(:parent_tube_1_aliquot) { create(:aliquot, sample: sample1, outer_request: ancestor_request_1) }
+  let(:parent_tube_2_aliquot) { create(:aliquot, sample: sample2, outer_request: ancestor_request_2) }
 
   # receptacles
-  let(:receptacle_1) { create(:v2_receptacle, qc_results: [], requests_as_source: [request_1]) }
-  let(:receptacle_2) { create(:v2_receptacle, qc_results: [], requests_as_source: [request_2]) }
+  let(:receptacle_1) { create(:receptacle, qc_results: [], requests_as_source: [request_1]) }
+  let(:receptacle_2) { create(:receptacle, qc_results: [], requests_as_source: [request_2]) }
 
   # parent tube foreign barcodes (need to match values of foreign barcodes in csv file)
   let(:parent_tube_1_foreign_barcode) { 'AB10000001' }
@@ -53,7 +51,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   let(:parent_tube_1) do
     create(
-      :v2_tube,
+      :tube,
       uuid: parent_tube_1_uuid,
       purpose_uuid: parent_tube_1_purpose_uuid,
       purpose_name: parent_tube_1_purpose_name,
@@ -67,7 +65,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   let(:parent_tube_2_uuid) { 'tube-2-uuid' }
   let(:parent_tube_2) do
     create(
-      :v2_tube,
+      :tube,
       uuid: parent_tube_2_uuid,
       purpose_uuid: parent_tube_2_purpose_name,
       purpose_name: parent_tube_2_purpose_name,
@@ -85,7 +83,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   # child plate
   let(:child_plate_purpose_uuid) { 'child-purpose' }
   let(:child_plate_purpose_name) { 'Child Purpose' }
-  let(:child_plate) { create :v2_plate, purpose_name: child_plate_purpose_name, barcode_number: '5', size: 96 }
+  let(:child_plate) { create :plate, purpose_name: child_plate_purpose_name, barcode_number: '5', size: 96 }
 
   let(:user_uuid) { 'user-uuid' }
 
@@ -112,11 +110,11 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
       includes: tube_includes
     ).and_return(parent_tube_2)
 
-    stub_v2_tube(parent_tube_1)
+    stub_tube(parent_tube_1)
   end
 
   describe '#new' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) { { purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid } }
 
@@ -134,7 +132,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   describe '#save when everything is valid' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
@@ -195,7 +193,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a file is not correctly parsed' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:file) do
       fixture_file_upload(
@@ -221,7 +219,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a tube is not in LIMS' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:file) do
       fixture_file_upload(
@@ -253,7 +251,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a tube is not of expected purpose type' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
@@ -273,7 +271,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
   end
 
   context 'when a tube does not have an active request of the expected type' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) do
       { user_uuid: user_uuid, purpose_uuid: child_plate_purpose_uuid, parent_uuid: parent_tube_1_uuid, file: file }
@@ -301,7 +299,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   context 'when a tube rack has a source tube with a ean13 barcode' do
     # source tube
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:source_tube) { subject.labware }
     let(:source_tube_barcode) { source_tube.barcode.machine }
@@ -330,7 +328,7 @@ RSpec.describe LabwareCreators::MultiStampTubesUsingTubeRackScan, with: :uploade
 
   context 'when a tube rack does not contain the source tube' do
     # source tube
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:source_tube) { subject.labware }
     let(:source_tube_barcode) { source_tube.barcode.machine }

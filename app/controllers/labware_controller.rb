@@ -87,7 +87,7 @@ class LabwareController < ApplicationController
   end
 
   def state_changer_for(purpose_uuid, labware_uuid)
-    StateChangers.lookup_for(purpose_uuid).new(api, labware_uuid, current_user_uuid)
+    StateChangers.lookup_for(purpose_uuid).new(labware_uuid, current_user_uuid)
   end
 
   def presenter_for(labware)

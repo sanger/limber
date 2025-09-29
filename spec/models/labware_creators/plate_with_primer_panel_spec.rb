@@ -6,8 +6,7 @@ require_relative 'shared_examples'
 # A plate with primer panel has a preview page, but otherwise
 # behaves exactly as a normal plate stamp
 RSpec.describe LabwareCreators::PlateWithPrimerPanel do
-  has_a_working_api
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
@@ -21,13 +20,13 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
   end
   let(:parent_plate) do
-    create :v2_plate_with_primer_panels,
+    create :plate_with_primer_panels,
            barcode_number: '2',
            uuid: parent_uuid,
            size: plate_size,
            outer_requests: requests
   end
-  let(:child_plate) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
+  let(:child_plate) { create :plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
@@ -45,8 +44,8 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
 
     before do
-      stub_v2_plate(parent_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false)
     end
 
     describe '#panel_name' do

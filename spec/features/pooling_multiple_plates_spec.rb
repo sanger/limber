@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Multi plate pooling', :js do
-  has_a_working_api
-
   let(:user_uuid) { SecureRandom.uuid }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
@@ -12,29 +10,29 @@ RSpec.feature 'Multi plate pooling', :js do
   let(:plate_barcode_1) { SBCF::SangerBarcode.new(prefix: 'DN', number: 1).human_barcode }
   let(:plate_uuid) { 'plate-1-uuid' }
   let(:example_plate) do
-    create :v2_plate_for_pooling,
+    create :plate_for_pooling,
            barcode_number: 1,
            state: 'passed',
            well_states: %w[passed failed],
            uuid: plate_uuid,
-           well_factory: :v2_tagged_well,
+           well_factory: :tagged_well,
            purpose_uuid: 'stock-plate-purpose-uuid'
   end
 
   let(:plate_barcode_2) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).human_barcode }
   let(:plate_uuid_2) { 'plate-2-uuid' }
   let(:example_plate_2) do
-    create :v2_plate_for_pooling,
+    create :plate_for_pooling,
            barcode_number: 2,
            pool_sizes: [2, 2],
            library_state: %w[started passed],
            state: 'passed',
            uuid: plate_uuid_2,
-           well_factory: :v2_tagged_well,
+           well_factory: :tagged_well,
            purpose_uuid: 'stock-plate-purpose-uuid'
   end
 
-  let(:child_plate) { create :v2_plate, purpose_name: 'Pool Plate', barcode_number: 3 }
+  let(:child_plate) { create :plate, purpose_name: 'Pool Plate', barcode_number: 3 }
 
   let(:bulk_transfer_attributes) do
     [
@@ -78,16 +76,17 @@ RSpec.feature 'Multi plate pooling', :js do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_plate(example_plate)
-    stub_v2_plate(example_plate)
-    stub_v2_plate(example_plate_2)
-    stub_v2_plate(child_plate)
-    stub_v2_plate(
+    stub_plate(example_plate)
+    stub_plate(example_plate)
+    stub_plate(example_plate_2)
+    stub_plate(child_plate)
+    stub_plate(
       example_plate,
       stub_search: false,
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'creates multiple plates' do

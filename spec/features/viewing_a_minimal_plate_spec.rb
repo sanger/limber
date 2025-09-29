@@ -3,15 +3,13 @@
 require 'rails_helper'
 
 RSpec.feature 'Viewing a plate', :js do
-  has_a_working_api
-
   let(:user) { create :user }
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode) { example_plate.barcode.machine }
   let(:plate_uuid) { SecureRandom.uuid }
   let(:plate_state) { 'pending' }
-  let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, size: 384, state: plate_state, pool_sizes: [3] }
-  let(:printer_list) { create_list(:v2_tube_barcode_printer, 2) + create_list(:v2_plate_barcode_printer, 2) }
+  let(:example_plate) { create :stock_plate, uuid: plate_uuid, size: 384, state: plate_state, pool_sizes: [3] }
+  let(:printer_list) { create_list(:tube_barcode_printer, 2) + create_list(:plate_barcode_printer, 2) }
   let(:default_tube_printer) { printer_list.first.name }
 
   # Setup stubs
@@ -26,8 +24,8 @@ RSpec.feature 'Viewing a plate', :js do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the actual plate
-    stub_v2_plate(example_plate)
-    stub_v2_barcode_printers(printer_list)
+    stub_plate(example_plate)
+    stub_barcode_printers(printer_list)
   end
 
   scenario 'of a recognised type' do
@@ -59,7 +57,7 @@ RSpec.feature 'Viewing a plate', :js do
   end
 
   feature 'with passed pools' do
-    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['passed'], pool_sizes: [5] }
+    let(:example_plate) { create :stock_plate, uuid: plate_uuid, library_state: ['passed'], pool_sizes: [5] }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -70,7 +68,7 @@ RSpec.feature 'Viewing a plate', :js do
   end
 
   feature 'with failed pools' do
-    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['failed'], pool_sizes: [5] }
+    let(:example_plate) { create :stock_plate, uuid: plate_uuid, library_state: ['failed'], pool_sizes: [5] }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -82,7 +80,7 @@ RSpec.feature 'Viewing a plate', :js do
   end
 
   feature 'with cancelled pools' do
-    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['cancelled'], pool_sizes: [5] }
+    let(:example_plate) { create :stock_plate, uuid: plate_uuid, library_state: ['cancelled'], pool_sizes: [5] }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -95,7 +93,7 @@ RSpec.feature 'Viewing a plate', :js do
 
   feature 'plates with 384 wells' do
     let(:example_plate) do
-      create :v2_stock_plate,
+      create :stock_plate,
              uuid: plate_uuid,
              library_state: ['passed'],
              size: 384,
@@ -112,10 +110,10 @@ RSpec.feature 'Viewing a plate', :js do
 
   feature 'with transfers to tubes' do
     let(:example_plate) do
-      create :v2_plate,
+      create :plate,
              uuid: plate_uuid,
              transfer_targets: {
-               'A1' => create_list(:v2_asset_tube, 1)
+               'A1' => create_list(:asset_tube, 1)
              },
              purpose_uuid: 'child-purpose-0'
     end
@@ -134,7 +132,7 @@ RSpec.feature 'Viewing a plate', :js do
         select(barcode_printer, from: 'Barcode Printer')
 
         allow_any_instance_of(PrintJob).to receive(:execute).and_return(true)
-        stub_v2_plate(example_plate)
+        stub_plate(example_plate)
         click_on('Print Label')
       end
     end

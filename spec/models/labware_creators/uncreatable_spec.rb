@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 RSpec.describe LabwareCreators::Uncreatable do
   before do
-    stub_v2_plate(parent_labware)
+    stub_plate(parent_labware)
     create(:purpose_config, uuid: purpose_uuid, creator_class: 'LabwareCreators::Uncreatable')
 
     Settings.purposes = {
@@ -20,14 +20,14 @@ RSpec.describe LabwareCreators::Uncreatable do
   let(:parent_uuid) { 'parent-uuid' }
   let(:parent_asset_type) { 'plate' }
 
-  let(:parent_purpose) { create(:v2_purpose) }
-  let(:parent_labware) { create(:v2_plate, uuid: parent_uuid, purpose: parent_purpose) }
+  let(:parent_purpose) { create(:purpose) }
+  let(:parent_labware) { create(:plate, uuid: parent_uuid, purpose: parent_purpose) }
 
   let(:asset_type) { 'tube' }
   let(:purpose_name) { 'Uncreatable Purpose' }
   let(:purpose_uuid) { 'uncreatable-purpose' }
 
-  let(:labware_creator) { described_class.new(nil, purpose_uuid:, parent_uuid:) }
+  let(:labware_creator) { described_class.new(purpose_uuid:, parent_uuid:) }
 
   let(:purpose_settings) do
     {

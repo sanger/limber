@@ -6,12 +6,12 @@ RSpec.describe Labels::TubeLabelKinnex do
   it { expect(described_class).to be < Labels::Base }
 
   context 'when printing from tube presenter' do
-    let(:labware) { create(:v2_tube, name: 'ABCD:A1') }
+    let(:labware) { create(:tube, name: 'ABCD:A1') }
     let(:label) { described_class.new(labware) }
 
     before do
       allow(labware).to receive(:transfer_requests_as_target).and_return(
-        [create(:v2_transfer_request, source_asset: labware)]
+        [create(:transfer_request, source_asset: labware)]
       )
       allow(label).to receive(:labware_with_includes).and_return(labware)
     end
@@ -24,7 +24,7 @@ RSpec.describe Labels::TubeLabelKinnex do
       end
 
       it 'has the correct first_line attribute' do
-        expect(attributes[:first_line]).to eq labware.name
+        expect(attributes[:first_line]).to eq labware.barcode.human
       end
 
       it 'has the correct second_line attribute' do
@@ -44,7 +44,7 @@ RSpec.describe Labels::TubeLabelKinnex do
       end
 
       it 'has the correct barcode attribute' do
-        expect(attributes[:barcode]).to eq labware.barcode.ean13
+        expect(attributes[:barcode]).to eq labware.barcode.human
       end
     end
   end

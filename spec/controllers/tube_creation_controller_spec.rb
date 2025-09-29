@@ -4,7 +4,6 @@ require 'rails_helper'
 require './app/controllers/tubes_controller'
 
 RSpec.describe TubeCreationController, type: :controller do
-  has_a_working_api
   include FeatureHelpers
 
   context 'for a tube with a custom-form' do
@@ -14,7 +13,6 @@ RSpec.describe TubeCreationController, type: :controller do
   let(:parent_uuid) { 'parent-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:user_uuid) { 'user_uuid' }
-  let(:child_uuid) { 'child_uuid' }
 
   context 'for a tube with an automatic form' do
     before do
@@ -45,7 +43,7 @@ RSpec.describe TubeCreationController, type: :controller do
       context 'from a tube parent' do
         before do
           allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(
-            build(:v2_plate, uuid: parent_uuid)
+            build(:plate, uuid: parent_uuid)
           )
         end
 
@@ -70,7 +68,7 @@ RSpec.describe TubeCreationController, type: :controller do
       context 'from a plate parent' do
         before do
           allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with(uuid: parent_uuid).and_return(
-            build(:v2_plate, uuid: parent_uuid)
+            build(:plate, uuid: parent_uuid)
           )
         end
 

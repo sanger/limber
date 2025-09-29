@@ -4,14 +4,12 @@ require 'rails_helper'
 require './app/controllers/plates_controller'
 
 RSpec.describe PlatesController, type: :controller do
-  has_a_working_api
-
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate) { create :v2_plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
-  let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
+  let(:plate) { create :plate, uuid: plate_uuid, purpose_uuid: 'stock-plate-purpose-uuid' }
+  let(:barcode_printers_request) { stub_barcode_printers(create_list(:plate_barcode_printer, 3)) }
   let(:user_uuid) { SecureRandom.uuid }
 
-  before { stub_v2_plate(plate, stub_search: false) }
+  before { stub_plate(plate, stub_search: false) }
 
   describe '#show' do
     before do
@@ -98,12 +96,12 @@ RSpec.describe PlatesController, type: :controller do
     let(:well_locations) { %w[A1 B2] }
     let(:wells) do
       well_locations.map do |location|
-        build(:v2_well, location: location, aliquots: [build(:v2_aliquot, request: build(:request))])
+        build(:well, location: location, aliquots: [build(:aliquot, request: build(:request))])
       end
     end
 
     let(:plate_with_wells) do
-      build(:v2_plate, uuid: plate_uuid, wells: wells)
+      build(:plate, uuid: plate_uuid, wells: wells)
     end
 
     before do
@@ -125,7 +123,7 @@ RSpec.describe PlatesController, type: :controller do
       end
 
       it 'creates poly metadata for each selected well and redirects with notice' do
-        expect_api_v2_posts('PolyMetadatum', expected_args)
+        expect_posts('PolyMetadatum', expected_args)
 
         post :process_mark_under_represented_wells,
              params: {

@@ -7,20 +7,18 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiStamp do
   it_behaves_like 'it only allows creation from plates'
 
-  has_a_working_api
-
   let(:parent1_uuid) { 'parent1-plate-uuid' }
   let(:parent2_uuid) { 'parent2-plate-uuid' }
 
   let(:requests_parent1) { Array.new(24) { |i| create :library_request, state: 'started', uuid: "request-p1-#{i}" } }
   let(:requests_parent2) { Array.new(24) { |i| create :library_request, state: 'started', uuid: "request-p2-#{i}" } }
 
-  let(:stock_plate1) { create :v2_stock_plate_for_plate, barcode_number: '1' }
-  let(:stock_plate2) { create :v2_stock_plate_for_plate, barcode_number: '2' }
+  let(:stock_plate1) { create :stock_plate_for_plate, barcode_number: '1' }
+  let(:stock_plate2) { create :stock_plate_for_plate, barcode_number: '2' }
 
   let(:parent1) do
     create(
-      :v2_plate,
+      :plate,
       barcode_number: '3',
       uuid: parent1_uuid,
       size: 96,
@@ -31,7 +29,7 @@ RSpec.describe LabwareCreators::MultiStamp do
   end
   let(:parent2) do
     create(
-      :v2_plate,
+      :plate,
       barcode_number: '4',
       uuid: parent2_uuid,
       size: 96,
@@ -40,7 +38,7 @@ RSpec.describe LabwareCreators::MultiStamp do
       stock_plate: stock_plate2
     )
   end
-  let(:child_plate) { create :v2_plate, barcode_number: '5', size: 96 }
+  let(:child_plate) { create :plate, barcode_number: '5', size: 96 }
 
   let(:child_purpose_uuid) { 'child-purpose' }
   let(:child_purpose_name) { 'Child Purpose' }
@@ -50,13 +48,13 @@ RSpec.describe LabwareCreators::MultiStamp do
   before do
     create :purpose_config, name: child_purpose_name, uuid: child_purpose_uuid
 
-    stub_v2_plate(parent1, stub_search: false)
-    stub_v2_plate(parent2, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
+    stub_plate(parent1, stub_search: false)
+    stub_plate(parent2, stub_search: false)
+    stub_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
   end
 
   context 'on new' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_uuid } }
 
@@ -74,7 +72,7 @@ RSpec.describe LabwareCreators::MultiStamp do
   end
 
   context 'on create' do
-    subject { described_class.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {

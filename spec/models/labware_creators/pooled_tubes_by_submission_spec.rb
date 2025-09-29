@@ -10,9 +10,7 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::PooledTubesBySubmission do
   include FeatureHelpers
 
-  has_a_working_api
-
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from charged and passed plates with defined downstream pools'
 
@@ -20,11 +18,11 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
 
   let(:purpose_uuid) { SecureRandom.uuid }
 
-  let(:stock_plate) { create(:v2_stock_plate_for_plate, barcode_number: 5) }
+  let(:stock_plate) { create(:stock_plate_for_plate, barcode_number: 5) }
   let(:parent_uuid) { SecureRandom.uuid }
   let(:parent_plate) do
     create(
-      :v2_plate,
+      :plate,
       :has_pooling_metadata,
       uuid: parent_uuid,
       pool_sizes: [3, 6],
@@ -35,11 +33,11 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
     )
   end
 
-  let(:source_plate) { create :v2_plate, uuid: parent_uuid }
+  let(:source_plate) { create :plate, uuid: parent_uuid }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
-  before { stub_v2_plate(source_plate, stub_search: false) }
+  before { stub_plate(source_plate, stub_search: false) }
 
   describe '#save!' do
     let(:child_1_name) { 'DN5 A1:C1' }
@@ -51,9 +49,9 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       # Prepare child tubes and stub their lookups.
       child_tubes =
         tube_attributes.each_with_index.map do |attrs, index|
-          create(:v2_tube, name: attrs[:name], uuid: "tube-#{index}")
+          create(:tube, name: attrs[:name], uuid: "tube-#{index}")
         end
-      child_tubes.each { |child_tube| stub_v2_labware(child_tube) }
+      child_tubes.each { |child_tube| stub_labware(child_tube) }
 
       child_tubes
     end
@@ -83,7 +81,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       ]
     end
 
-    before { stub_v2_plate(parent_plate, stub_search: false) }
+    before { stub_plate(parent_plate, stub_search: false) }
 
     context 'without parent metadata' do
       before do
@@ -107,10 +105,10 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       let(:child_1_name) { 'DN8 A1:C1' }
       let(:child_2_name) { 'DN8 D1:A2' }
 
-      let(:stock_plate) { create(:v2_stock_plate_for_plate, barcode_number: 8) }
+      let(:stock_plate) { create(:stock_plate_for_plate, barcode_number: 8) }
       let(:parent_plate) do
         create(
-          :v2_plate_with_metadata,
+          :plate_with_metadata,
           :has_pooling_metadata,
           uuid: parent_uuid,
           pool_sizes: [3, 6],
@@ -159,7 +157,7 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
     context 'with previously passed requests' do
       let(:parent_plate) do
         create(
-          :v2_plate_with_metadata,
+          :plate_with_metadata,
           :has_pooling_metadata,
           uuid: parent_uuid,
           pool_sizes: [3, 6],

@@ -3,11 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe PrintJob do
-  has_a_working_api
-
-  let(:printer_pmb) { build :v2_barcode_printer }
-  let(:printer_sprint) { build :v2_barcode_printer, print_service: 'SPrint' }
-  let(:printer_unknown) { build :v2_barcode_printer, print_service: 'UNKNOWN' }
+  let(:printer_pmb) { build :barcode_printer }
+  let(:printer_sprint) { build :barcode_printer, print_service: 'SPrint' }
+  let(:printer_unknown) { build :barcode_printer, print_service: 'UNKNOWN' }
 
   let(:label_template_id) { 1 }
   let(:label_template_name_pmb) { 'sqsc_96plate_label_template' }

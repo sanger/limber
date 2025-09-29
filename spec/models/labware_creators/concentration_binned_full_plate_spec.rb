@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   before do
     create(
@@ -13,8 +13,8 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
       name: child_purpose_name,
       library_type_name: library_type_name
     )
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_plate(
+    stub_plate(child_plate, stub_search: false)
+    stub_plate(
       parent_plate,
       stub_search: false,
       custom_includes:
@@ -25,14 +25,12 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
 
-  has_a_working_api
-
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
 
   let(:well_a1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A1'
       },
@@ -44,7 +42,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
 
   let(:well_b1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'B1'
       },
@@ -56,7 +54,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
 
   let(:well_c1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'C1'
       },
@@ -68,7 +66,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
 
   let(:well_d1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'D1'
       },
@@ -79,7 +77,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
   end
 
   let(:parent_plate) do
-    create :v2_plate,
+    create :plate,
            uuid: parent_uuid,
            barcode_number: '2',
            size: plate_size,
@@ -88,7 +86,7 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
   end
 
   let(:child_plate) do
-    create :v2_plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
+    create :plate, uuid: 'child-uuid', barcode_number: '3', size: plate_size, outer_requests: requests
   end
 
   let(:library_type_name) { 'Test Library Type' }
@@ -112,10 +110,10 @@ RSpec.describe LabwareCreators::ConcentrationBinnedFullPlate do
     end
 
     context 'when wells are missing a concentration value' do
-      let(:well_e1) { create(:v2_well, position: { 'name' => 'E1' }, qc_results: []) }
+      let(:well_e1) { create(:well, position: { 'name' => 'E1' }, qc_results: []) }
 
       let(:parent_plate) do
-        create :v2_plate,
+        create :plate,
                uuid: parent_uuid,
                barcode_number: '2',
                size: plate_size,

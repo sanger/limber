@@ -22,8 +22,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
 
   # Define the presenter and labware for the tests
   let(:presenter) { described_class.new(labware) }
-  let(:wgs_purpose) { create(:v2_purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
-  let(:labware) { create(:v2_stock_plate, :has_pooling_metadata, purpose: wgs_purpose) }
+  let(:wgs_purpose) { create(:purpose, uuid: 'wgs-purpose-uuid', name: 'WGS Purpose') }
+  let(:labware) { create(:stock_plate, purpose: wgs_purpose) }
 
   describe '#pipeline_groups' do
     before { Settings.pipelines = PipelineList.new(pipelines_config) }
@@ -67,9 +67,9 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       let(:request) do
         [create(:request, :uuid, request_type: request_type, library_type: library_type, state: request_state)]
       end
-      let(:aliquot) { [create(:v2_aliquot, request:)] }
-      let(:wells) { [create(:v2_well, aliquots: aliquot, location: 'A1')] }
-      let(:labware) { create(:v2_plate, :has_pooling_metadata, purpose: wgs_purpose, wells: wells) }
+      let(:aliquot) { [create(:aliquot, request:)] }
+      let(:wells) { [create(:well, aliquots: aliquot, location: 'A1')] }
+      let(:labware) { create(:plate, purpose: wgs_purpose, wells: wells) }
       let(:pipelines_config) do
         {
           'wgs_purpose_and_unrelated_library_type_pipeline' => {
@@ -143,18 +143,17 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       #    The first should return the first pipeline group, the second should return both groups?,
       #    and the third should return the second group.
 
-      let(:purpose_first) { create(:v2_purpose, name: 'purpose-first') }
-      let(:purpose_middle) { create(:v2_purpose, name: 'purpose-middle') }
-      let(:purpose_last) { create(:v2_purpose, name: 'purpose-last') }
+      let(:purpose_first) { create(:purpose, name: 'purpose-first') }
+      let(:purpose_middle) { create(:purpose, name: 'purpose-middle') }
+      let(:purpose_last) { create(:purpose, name: 'purpose-last') }
 
-      let(:labware_first) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_first) }
+      let(:labware_first) { create(:stock_plate, purpose: purpose_first) }
       let(:labware_middle) do
-        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_middle, ancestors: [labware_first])
+        create(:stock_plate, purpose: purpose_middle, ancestors: [labware_first])
       end
       let(:labware_last) do
         create(
-          :v2_stock_plate,
-          :has_pooling_metadata,
+          :stock_plate,
           purpose: purpose_last,
           ancestors: [labware_middle, labware_first]
         )
@@ -253,25 +252,24 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       #     The child should return both groups, but the parents should return their own group.
       #
 
-      let(:purpose_parent) { create(:v2_purpose, name: 'purpose-parent') }
-      let(:purpose_child) { create(:v2_purpose, name: 'purpose-child') }
-      let(:purpose_other_parent) { create(:v2_purpose, name: 'purpose-other-parent') }
-      let(:purpose_other_child) { create(:v2_purpose, name: 'purpose-other-child') }
+      let(:purpose_parent) { create(:purpose, name: 'purpose-parent') }
+      let(:purpose_child) { create(:purpose, name: 'purpose-child') }
+      let(:purpose_other_parent) { create(:purpose, name: 'purpose-other-parent') }
+      let(:purpose_other_child) { create(:purpose, name: 'purpose-other-child') }
 
-      let(:labware_branching_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
+      let(:labware_branching_parent) { create(:stock_plate, purpose: purpose_parent) }
       let(:labware_child) do
-        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_child, ancestors: [labware_parent])
+        create(:stock_plate, purpose: purpose_child, ancestors: [labware_parent])
       end
       let(:labware_other_child) do
-        create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_child, ancestors: [labware_parent])
+        create(:stock_plate, purpose: purpose_other_child, ancestors: [labware_parent])
       end
 
-      let(:labware_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
-      let(:labware_other_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_parent) }
+      let(:labware_parent) { create(:stock_plate, purpose: purpose_parent) }
+      let(:labware_other_parent) { create(:stock_plate, purpose: purpose_other_parent) }
       let(:labware_combining_child) do
         create(
-          :v2_stock_plate,
-          :has_pooling_metadata,
+          :stock_plate,
           purpose: purpose_child,
           ancestors: [labware_parent, labware_other_parent]
         )
@@ -415,19 +413,19 @@ RSpec.describe Presenters::PipelineInfoPresenter do
           }
         end
 
-        let(:purpose_combining_child) { create(:v2_purpose, name: 'purpose-combining-child') }
-        let(:purpose_branching_parent) { create(:v2_purpose, name: 'purpose-branching-parent') }
+        let(:purpose_combining_child) { create(:purpose, name: 'purpose-combining-child') }
+        let(:purpose_branching_parent) { create(:purpose, name: 'purpose-branching-parent') }
 
-        let(:labware_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_parent) }
-        let(:labware_other_parent) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_parent) }
+        let(:labware_parent) { create(:stock_plate, purpose: purpose_parent) }
+        let(:labware_other_parent) { create(:stock_plate, purpose: purpose_other_parent) }
         let(:labware_combining_child) do
-          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_combining_child)
+          create(:stock_plate, purpose: purpose_combining_child)
         end
         let(:labware_branching_parent) do
-          create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_branching_parent)
+          create(:stock_plate, purpose: purpose_branching_parent)
         end
-        let(:labware_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_child) }
-        let(:labware_other_child) { create(:v2_stock_plate, :has_pooling_metadata, purpose: purpose_other_child) }
+        let(:labware_child) { create(:stock_plate, purpose: purpose_child) }
+        let(:labware_other_child) { create(:stock_plate, purpose: purpose_other_child) }
 
         before do
           allow(labware_combining_child).to receive_messages(parents: [labware_parent])
@@ -559,11 +557,11 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when a tube has grandparents' do
-      let(:grandparent_purpose) { create(:v2_purpose, name: 'Grandparent Purpose') }
-      let(:parent_purpose) { create(:v2_purpose, name: 'Parent Purpose') }
+      let(:grandparent_purpose) { create(:purpose, name: 'Grandparent Purpose') }
+      let(:parent_purpose) { create(:purpose, name: 'Parent Purpose') }
 
-      let(:parent_tube) { create(:v2_stock_tube, purpose: parent_purpose, uuid: 'parent-tube-uuid') }
-      let(:grandparent_tube) { create(:v2_stock_tube, purpose: grandparent_purpose, uuid: 'grandparent-tube-uuid') }
+      let(:parent_tube) { create(:stock_tube, purpose: parent_purpose, uuid: 'parent-tube-uuid') }
+      let(:grandparent_tube) { create(:stock_tube, purpose: grandparent_purpose, uuid: 'grandparent-tube-uuid') }
 
       before do
         allow(labware).to receive_messages(parents: [parent_tube])
@@ -589,8 +587,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when a tube has parents' do
-      let(:parent_purpose) { create(:v2_purpose, name: 'Parent Purpose') }
-      let(:parent_tube) { create(:v2_stock_tube, purpose: parent_purpose, uuid: 'parent-tube-uuid') }
+      let(:parent_purpose) { create(:purpose, name: 'Parent Purpose') }
+      let(:parent_tube) { create(:stock_tube, purpose: parent_purpose, uuid: 'parent-tube-uuid') }
 
       before do
         allow(labware).to receive_messages(parents: [parent_tube])
@@ -604,10 +602,10 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when a tube has multiple parents' do
-      let(:parent_purpose_1) { create(:v2_purpose, name: 'Parent Purpose 1') }
-      let(:parent_purpose_2) { create(:v2_purpose, name: 'Parent Purpose 2') }
-      let(:parent_tube_1) { create(:v2_stock_tube, purpose: parent_purpose_1, uuid: 'parent-tube-uuid-1') }
-      let(:parent_tube_2) { create(:v2_stock_tube, purpose: parent_purpose_2, uuid: 'parent-tube-uuid-2') }
+      let(:parent_purpose_1) { create(:purpose, name: 'Parent Purpose 1') }
+      let(:parent_purpose_2) { create(:purpose, name: 'Parent Purpose 2') }
+      let(:parent_tube_1) { create(:stock_tube, purpose: parent_purpose_1, uuid: 'parent-tube-uuid-1') }
+      let(:parent_tube_2) { create(:stock_tube, purpose: parent_purpose_2, uuid: 'parent-tube-uuid-2') }
 
       before do
         allow(labware).to receive_messages(parents: [parent_tube_1, parent_tube_2])
@@ -631,8 +629,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     end
 
     context 'when a tube has children' do
-      let(:child_purpose_1) { create(:v2_purpose, name: 'Child Purpose 1') }
-      let(:child_purpose_2) { create(:v2_purpose, name: 'Child Purpose 2') }
+      let(:child_purpose_1) { create(:purpose, name: 'Child Purpose 1') }
+      let(:child_purpose_2) { create(:purpose, name: 'Child Purpose 2') }
 
       before { allow(presenter).to receive(:suggested_purposes).and_return([child_purpose_1, child_purpose_2]) }
 

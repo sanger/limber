@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Viewing a plate', :js do
-  has_a_working_api
-
   let(:user) { create :user }
   let(:user_swipecard) { 'abcdef' }
   let(:plate_barcode) { example_plate.barcode.machine }
@@ -12,15 +10,15 @@ RSpec.feature 'Viewing a plate', :js do
   let(:state) { 'pending' }
   let(:purpose_uuid) { 'stock-plate-purpose-uuid' }
   let(:example_plate) do
-    create :v2_stock_plate,
+    create :stock_plate,
            uuid: plate_uuid,
            barcode_number: 1,
            state: state,
            wells: wells_collection,
            purpose_uuid: purpose_uuid
   end
-  let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_well, state: state, position: { 'name' => loc }) } }
-  let(:printer_list) { create_list(:v2_tube_barcode_printer, 2) + create_list(:v2_plate_barcode_printer, 2) }
+  let(:wells_collection) { %w[A1 B1].map { |loc| create(:well, state: state, position: { 'name' => loc }) } }
+  let(:printer_list) { create_list(:tube_barcode_printer, 2) + create_list(:plate_barcode_printer, 2) }
   let(:default_tube_printer) { printer_list.first.name }
   let(:purpose_config) { create :purpose_config, uuid: purpose_uuid }
 
@@ -36,13 +34,13 @@ RSpec.feature 'Viewing a plate', :js do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the actual plate
-    stub_v2_plate(example_plate)
-    stub_v2_plate(
+    stub_plate(example_plate)
+    stub_plate(
       example_plate,
       stub_search: false,
       custom_includes: 'wells.aliquots.request.poly_metadata'
     )
-    stub_v2_barcode_printers(printer_list)
+    stub_barcode_printers(printer_list)
   end
 
   scenario 'of a recognised type' do
@@ -88,7 +86,7 @@ RSpec.feature 'Viewing a plate', :js do
 
   feature 'with a suboptimal well' do
     let(:wells_collection) do
-      %w[A1 B1].map { |loc| create(:v2_well, state: state, location: loc, aliquot_factory: :v2_suboptimal_aliquot) }
+      %w[A1 B1].map { |loc| create(:well, state: state, location: loc, aliquot_factory: :suboptimal_aliquot) }
     end
 
     scenario 'there is a warning' do
@@ -115,7 +113,7 @@ RSpec.feature 'Viewing a plate', :js do
   end
 
   feature 'with passed pools' do
-    let(:example_plate) { create :v2_stock_plate, uuid: plate_uuid, library_state: ['passed'], pool_sizes: [5] }
+    let(:example_plate) { create :stock_plate, uuid: plate_uuid, library_state: ['passed'], pool_sizes: [5] }
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -127,7 +125,7 @@ RSpec.feature 'Viewing a plate', :js do
 
   feature 'with a tagged plate' do
     let(:purpose_config) { create :tagged_purpose_config, uuid: purpose_uuid }
-    let(:wells_collection) { %w[A1 B1].map { |loc| create(:v2_tagged_well, location: loc) } }
+    let(:wells_collection) { %w[A1 B1].map { |loc| create(:tagged_well, location: loc) } }
 
     scenario 'it shows tags' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
@@ -137,10 +135,10 @@ RSpec.feature 'Viewing a plate', :js do
 
   feature 'with transfers to tubes' do
     let(:example_plate) do
-      create :v2_plate,
+      create :plate,
              uuid: plate_uuid,
              transfer_targets: {
-               'A1' => create_list(:v2_asset_tube, 1)
+               'A1' => create_list(:asset_tube, 1)
              },
              purpose_uuid: 'child-purpose-0'
     end
@@ -163,7 +161,7 @@ RSpec.feature 'Viewing a plate', :js do
         # So RSpec cautions against this as a code smell, but tbh it feels vastly better than the
         # alternative in integration tests.
         allow_any_instance_of(PrintJob).to receive(:execute).and_return(true)
-        stub_v2_plate(example_plate)
+        stub_plate(example_plate)
         click_on('Print Label')
       end
     end

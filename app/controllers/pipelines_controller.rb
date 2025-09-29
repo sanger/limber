@@ -3,7 +3,6 @@
 # Provides an overview of the pipelines auto-generated from the configuration
 # Tailored to the needs of the pipeline graph
 class PipelinesController < ApplicationController
-  before_action :configure_api, except: :index
   def index
     respond_to do |format|
       # If we're html, just render the template, we'll populate it by ajax

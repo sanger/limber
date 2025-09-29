@@ -14,7 +14,9 @@ module LabwareCreators::CreatableFrom
     end
 
     def parent
-      @parent ||= Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
+      return @parent if defined?(@parent)
+
+      @parent = Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
     end
   end
 end

@@ -4,8 +4,6 @@ require 'rails_helper'
 require './app/controllers/robots_controller'
 
 RSpec.describe RobotsController, :robots, type: :controller do
-  has_a_working_api
-
   include FeatureHelpers
   include RobotHelpers
 
@@ -13,7 +11,7 @@ RSpec.describe RobotsController, :robots, type: :controller do
 
   describe '#start' do
     let(:user) { create :user }
-    let(:plate) { create :v2_plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
+    let(:plate) { create :plate, purpose_name: 'target_plate_purpose', purpose_uuid: 'target_plate_purpose_uuid' }
 
     let(:custom_metadatum_collections_attributes) do
       [{ user_id: user.id, asset_id: plate.id, metadata: { created_with_robot: 'robot_barcode' } }]
@@ -35,15 +33,9 @@ RSpec.describe RobotsController, :robots, type: :controller do
     before do
       Settings.robots['robot_id'] = settings[:robots][:robot_id]
       create :purpose_config, uuid: 'target_plate_purpose_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
-      stub_v2_user(user)
-      stub_v2_plate(plate)
+      stub_user(user)
+      stub_plate(plate)
       bed_labware_lookup(plate)
-
-      # Legacy asset search
-      stub_asset_search(
-        plate.barcode.machine,
-        json(:plate, uuid: plate.uuid, purpose_name: plate.purpose.name, purpose_uuid: plate.purpose.uuid)
-      )
     end
 
     it 'adds robot barcode to plate metadata' do
@@ -70,13 +62,13 @@ RSpec.describe RobotsController, :robots, type: :controller do
   describe '#verify' do
     let(:user) { create :user }
     let(:target_plate) do
-      create :v2_plate,
+      create :plate,
              purpose_name: 'target_plate_purpose',
              purpose_uuid: 'target_plate_purpose_uuid',
              parents: [source_plate]
     end
     let(:source_plate) do
-      create :v2_plate, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
+      create :plate, purpose_name: 'source_plate_purpose', purpose_uuid: 'source_plate_purpose_uuid'
     end
 
     it 'verifies robot and beds' do

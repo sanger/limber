@@ -5,26 +5,25 @@ require 'rails_helper'
 RSpec.describe Robots::SplittingRobot, :robots do
   include FeatureHelpers
   include RobotHelpers
-  has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
 
-  let(:wells) { %w[C1 D1].map { |location| create :v2_well, location: location, downstream_plates: transfer_target_1 } }
+  let(:wells) { %w[C1 D1].map { |location| create :well, location: location, downstream_plates: transfer_target_1 } }
   let(:transfer_target_1) { [target_plate_1] }
 
   let(:source_barcode) { source_plate.human_barcode }
   let(:source_purpose_name) { 'Limber Cherrypicked' }
   let(:source_plate_state) { 'passed' }
   let(:source_plate) do
-    create :v2_plate, barcode_number: 1, purpose_name: source_purpose_name, state: source_plate_state, wells: wells
+    create :plate, barcode_number: 1, purpose_name: source_purpose_name, state: source_plate_state, wells: wells
   end
   let(:target_barcode_1) { target_plate_1.human_barcode }
   let(:target_barcode_2) { target_plate_2.human_barcode }
   let(:target_purpose_name) { 'target_plate_purpose' }
-  let(:target_plate_1) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 2 }
-  let(:target_plate_2) { create :v2_plate, purpose_name: target_purpose_name, barcode_number: 3 }
+  let(:target_plate_1) { create :plate, purpose_name: target_purpose_name, barcode_number: 2 }
+  let(:target_plate_2) { create :plate, purpose_name: target_purpose_name, barcode_number: 3 }
 
-  let(:robot) { described_class.new(robot_spec.merge(api:, user_uuid:)) }
+  let(:robot) { described_class.new(robot_spec.merge(user_uuid:)) }
 
   describe '#verify' do
     subject { robot.verify(bed_labwares: scanned_layout) }
@@ -101,7 +100,7 @@ RSpec.describe Robots::SplittingRobot, :robots do
         end
 
         context 'but unrelated plates' do
-          let(:transfer_target_1) { [create(:v2_plate)] }
+          let(:transfer_target_1) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
@@ -141,7 +140,7 @@ RSpec.describe Robots::SplittingRobot, :robots do
     end
 
     let(:plate) do
-      create :v2_plate,
+      create :plate,
              barcode_number: '123',
              purpose_uuid: 'lb_end_prep_uuid',
              purpose_name: 'LB End Prep',

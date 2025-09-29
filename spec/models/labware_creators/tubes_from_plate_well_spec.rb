@@ -5,14 +5,12 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::TubesFromPlateWell do
-  has_a_working_api
-
   context 'for pre creation' do
     describe '#creatable_from?' do
       subject { described_class.creatable_from?(parent) }
 
       context 'with a plate' do
-        let(:parent) { build :v2_plate }
+        let(:parent) { build :plate }
 
         it { is_expected.to be true }
       end
@@ -20,7 +18,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
   end
 
   context 'for creation' do
-    subject { described_class.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
     let(:child_purpose_uuid) { SecureRandom.uuid }
     let(:parent_uuid) { SecureRandom.uuid }
@@ -28,7 +26,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
     let(:parent_purpose_name) { 'Parent Purpose 1' }
     let(:request_type_first) { create(:request_type, key: 'request-type-1') }
     let(:library_type_first) { 'library-type-1' }
-    let(:new_submission) { create(:v2_submission) }
+    let(:new_submission) { create(:submission) }
     let(:new_requests) do
       [
         create(
@@ -41,19 +39,19 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
         )
       ]
     end
-    let(:aliquots) { [create(:v2_aliquot, request: [new_requests[0]])] }
-    let(:wells) { [create(:v2_well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1')] }
+    let(:aliquots) { [create(:aliquot, request: [new_requests[0]])] }
+    let(:wells) { [create(:well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1')] }
     let(:parent) do
       create(
-        :v2_plate,
+        :plate,
         :has_pooling_metadata,
         purpose: parent_purpose_name,
         uuid: parent_uuid,
         wells: wells,
-        submission_pools: create_list(:v2_submission_pool, 1)
+        submission_pools: create_list(:submission_pool, 1)
       )
     end
-    let(:child_tubes) { create_list(:v2_tube, 2) }
+    let(:child_tubes) { create_list(:tube, 2) }
 
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
     let(:tubes_from_plate_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
@@ -65,7 +63,7 @@ RSpec.describe LabwareCreators::TubesFromPlateWell do
 
     describe '#save!' do
       before do
-        stub_v2_plate(parent)
+        stub_plate(parent)
         allow(Sequencescape::Api::V2::TubeFromPlateCreation).to receive(:create!).and_return(
           instance_double(Sequencescape::Api::V2::TubeFromPlateCreation, child: child_tubes.first)
         )

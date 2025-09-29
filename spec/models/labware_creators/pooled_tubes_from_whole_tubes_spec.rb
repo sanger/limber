@@ -8,22 +8,21 @@ require_relative 'shared_examples'
 # Each well on the plate gets transferred into a tube
 # transfer targets are determined by pool
 RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
-  has_a_working_api
-
   include FeatureHelpers
-  subject { described_class.new(api, form_attributes) }
+
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from tubes'
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
 
-  let(:parents) { create_list :v2_tube, 2 }
+  let(:parents) { create_list :tube, 2 }
   let(:parent_uuid) { parents.first.uuid }
 
   let(:barcodes) { parents.map { |parent| parent.barcode.to_s } }
 
-  let(:child_tube) { create(:v2_tube) }
+  let(:child_tube) { create(:tube) }
 
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_tubes'

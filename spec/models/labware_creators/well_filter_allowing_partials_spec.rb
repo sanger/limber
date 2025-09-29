@@ -8,20 +8,20 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
     let(:plate_size) { 96 }
 
     let(:well_a1) do
-      create(:v2_well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a], outer_request: nil)
+      create(:well, name: 'A1', position: { 'name' => 'A1' }, requests_as_source: [request_a], outer_request: nil)
     end
     let(:well_b1) do
-      create(:v2_well, name: 'B1', position: { 'name' => 'B1' }, requests_as_source: [request_b], outer_request: nil)
+      create(:well, name: 'B1', position: { 'name' => 'B1' }, requests_as_source: [request_b], outer_request: nil)
     end
     let(:well_c1) do
-      create(:v2_well, name: 'C1', position: { 'name' => 'C1' }, requests_as_source: [request_c], outer_request: nil)
+      create(:well, name: 'C1', position: { 'name' => 'C1' }, requests_as_source: [request_c], outer_request: nil)
     end
     let(:well_d1) do
-      create(:v2_well, name: 'D1', position: { 'name' => 'D1' }, requests_as_source: [request_d], outer_request: nil)
+      create(:well, name: 'D1', position: { 'name' => 'D1' }, requests_as_source: [request_d], outer_request: nil)
     end
 
     let(:parent_plate) do
-      create :v2_plate,
+      create :plate,
              uuid: parent_uuid,
              barcode_number: '2',
              size: plate_size,
@@ -30,9 +30,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
     end
 
     let(:basic_purpose) { 'test-purpose' }
-    let(:labware_creator) do
-      LabwareCreators::StampedPlate.new(nil, purpose_uuid: 'test-purpose', parent_uuid: parent_uuid)
-    end
+    let(:labware_creator) { LabwareCreators::StampedPlate.new(purpose_uuid: 'test-purpose', parent_uuid: parent_uuid) }
 
     let(:request_type_key_a) { 'rt_a' }
     let(:request_type_key_b) { 'rt_b' }
@@ -76,7 +74,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
     before do
       create :purpose_config, uuid: basic_purpose, creator_class: 'LabwareCreators::StampedPlate'
-      stub_v2_plate(parent_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
     end
 
     context 'when a state filter is applied' do
@@ -101,10 +99,10 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
     context 'when some wells have no requests' do
       let(:well_b1) do
-        create(:v2_well, name: 'B1', position: { 'name' => 'B1' }, requests_as_source: [], outer_request: nil)
+        create(:well, name: 'B1', position: { 'name' => 'B1' }, requests_as_source: [], outer_request: nil)
       end
       let(:well_c1) do
-        create(:v2_well, name: 'C1', position: { 'name' => 'C1' }, requests_as_source: [], outer_request: nil)
+        create(:well, name: 'C1', position: { 'name' => 'C1' }, requests_as_source: [], outer_request: nil)
       end
 
       context 'with a valid filter for some wells' do
@@ -130,7 +128,7 @@ RSpec.describe LabwareCreators::WellFilterAllowingPartials do
 
       let(:well_a1) do
         create(
-          :v2_well,
+          :well,
           name: 'A1',
           position: {
             'name' => 'A1'

@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Pool tubes at end of pipeline', :js do
-  has_a_working_api
   let(:user_uuid) { 'user-uuid' }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
@@ -14,7 +13,7 @@ RSpec.feature 'Pool tubes at end of pipeline', :js do
   let(:child_purpose_uuid) { 'child-purpose-0' }
   let(:tube) do
     create(
-      :v2_tube,
+      :tube,
       barcode_number: 1,
       purpose_name: 'Example Purpose',
       siblings_count: 1,
@@ -31,7 +30,7 @@ RSpec.feature 'Pool tubes at end of pipeline', :js do
           source_uuid: tube_uuid,
           transfer_template_uuid: 'tube-to-tube-by-sub'
         },
-        response: create(:v2_transfer_between_tubes, destination_uuid: multiplexed_library_tube_uuid)
+        response: create(:transfer_between_tubes, destination_uuid: multiplexed_library_tube_uuid)
       },
       {
         arguments: {
@@ -39,7 +38,7 @@ RSpec.feature 'Pool tubes at end of pipeline', :js do
           source_uuid: sibling_uuid,
           transfer_template_uuid: 'tube-to-tube-by-sub'
         },
-        response: create(:v2_transfer_between_tubes, destination_uuid: multiplexed_library_tube_uuid)
+        response: create(:transfer_between_tubes, destination_uuid: multiplexed_library_tube_uuid)
       }
     ]
   end
@@ -59,10 +58,10 @@ RSpec.feature 'Pool tubes at end of pipeline', :js do
     stub_swipecard_search(user_swipecard, user)
 
     # Stub tubes
-    stub_v2_tube(tube)
-    stub_v2_tube(create(:v2_tube, uuid: multiplexed_library_tube_uuid))
+    stub_tube(tube)
+    stub_tube(create(:tube, uuid: multiplexed_library_tube_uuid))
 
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   shared_examples 'a tube validation form' do

@@ -4,6 +4,7 @@
 module Presenters::Statemachine
   module AllowsLibraryPassing # rubocop:todo Style/Documentation
     extend ActiveSupport::Concern
+
     included do
       def control_library_passing
         yield if libraries_passable? && !suggest_library_passing?

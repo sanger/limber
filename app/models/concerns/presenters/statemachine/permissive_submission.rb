@@ -24,6 +24,7 @@ module Presenters::Statemachine
   # Other states: Typically not seen in standard scenarios.
   module PermissiveSubmission
     extend ActiveSupport::Concern
+
     included do
       include Shared
 
@@ -35,6 +36,7 @@ module Presenters::Statemachine
         state :pending do
           include StateAllowsChildCreation
           include DoesNotAllowLibraryPassing
+
           def sidebar_partial
             'default'
           end

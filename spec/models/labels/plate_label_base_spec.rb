@@ -6,7 +6,7 @@ RSpec.describe Labels::PlateLabelBase, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   context 'when creating the label of a plate' do
-    let(:labware) { create :v2_plate }
+    let(:labware) { create :plate }
     let(:label) { described_class.new(labware) }
 
     describe '#attributes' do

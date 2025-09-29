@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploader do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
 
@@ -17,7 +17,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
 
   let(:parent_well_a1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A1'
       },
@@ -28,7 +28,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_b1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'B1'
       },
@@ -39,7 +39,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_d1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'D1'
       },
@@ -50,7 +50,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_e1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'E1'
       },
@@ -61,7 +61,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_f1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'F1'
       },
@@ -72,7 +72,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_h1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'H1'
       },
@@ -83,7 +83,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_a2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A2'
       },
@@ -94,7 +94,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_b2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'B2'
       },
@@ -105,7 +105,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_c2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'C2'
       },
@@ -116,7 +116,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_d2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'D2'
       },
@@ -127,7 +127,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_e2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'E2'
       },
@@ -138,7 +138,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_f2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'F2'
       },
@@ -149,7 +149,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_g2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'G2'
       },
@@ -160,7 +160,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
   let(:parent_well_h2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'H2'
       },
@@ -171,7 +171,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
 
   let(:parent_plate) do
-    create :v2_plate,
+    create :plate,
            uuid: parent_uuid,
            barcode_number: '2',
            size: plate_size,
@@ -196,26 +196,26 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
 
   # Create child wells in order of the requests they originated from.
   # Which is to do with how the binning algorithm lays them out based on the value of PCR cycles.
-  let(:child_well_A2) { create(:v2_well, location: 'A2', position: { 'name' => 'A2' }, outer_request: requests[0]) }
-  let(:child_well_B2) { create(:v2_well, location: 'B2', position: { 'name' => 'B2' }, outer_request: requests[1]) }
-  let(:child_well_A1) { create(:v2_well, location: 'A1', position: { 'name' => 'A1' }, outer_request: requests[2]) }
-  let(:child_well_A3) { create(:v2_well, location: 'A3', position: { 'name' => 'A3' }, outer_request: requests[3]) }
-  let(:child_well_B3) { create(:v2_well, location: 'B3', position: { 'name' => 'B3' }, outer_request: requests[4]) }
-  let(:child_well_C3) { create(:v2_well, location: 'C3', position: { 'name' => 'C3' }, outer_request: requests[5]) }
-  let(:child_well_D3) { create(:v2_well, location: 'D3', position: { 'name' => 'D3' }, outer_request: requests[6]) }
-  let(:child_well_E3) { create(:v2_well, location: 'E3', position: { 'name' => 'E3' }, outer_request: requests[7]) }
-  let(:child_well_F3) { create(:v2_well, location: 'F3', position: { 'name' => 'F3' }, outer_request: requests[8]) }
-  let(:child_well_G3) { create(:v2_well, location: 'G3', position: { 'name' => 'G3' }, outer_request: requests[9]) }
-  let(:child_well_C2) { create(:v2_well, location: 'C2', position: { 'name' => 'C2' }, outer_request: requests[10]) }
-  let(:child_well_B1) { create(:v2_well, location: 'B1', position: { 'name' => 'B1' }, outer_request: requests[11]) }
-  let(:child_well_D2) { create(:v2_well, location: 'D2', position: { 'name' => 'D2' }, outer_request: requests[12]) }
-  let(:child_well_C1) { create(:v2_well, location: 'C1', position: { 'name' => 'C1' }, outer_request: requests[13]) }
+  let(:child_well_A2) { create(:well, location: 'A2', position: { 'name' => 'A2' }, outer_request: requests[0]) }
+  let(:child_well_B2) { create(:well, location: 'B2', position: { 'name' => 'B2' }, outer_request: requests[1]) }
+  let(:child_well_A1) { create(:well, location: 'A1', position: { 'name' => 'A1' }, outer_request: requests[2]) }
+  let(:child_well_A3) { create(:well, location: 'A3', position: { 'name' => 'A3' }, outer_request: requests[3]) }
+  let(:child_well_B3) { create(:well, location: 'B3', position: { 'name' => 'B3' }, outer_request: requests[4]) }
+  let(:child_well_C3) { create(:well, location: 'C3', position: { 'name' => 'C3' }, outer_request: requests[5]) }
+  let(:child_well_D3) { create(:well, location: 'D3', position: { 'name' => 'D3' }, outer_request: requests[6]) }
+  let(:child_well_E3) { create(:well, location: 'E3', position: { 'name' => 'E3' }, outer_request: requests[7]) }
+  let(:child_well_F3) { create(:well, location: 'F3', position: { 'name' => 'F3' }, outer_request: requests[8]) }
+  let(:child_well_G3) { create(:well, location: 'G3', position: { 'name' => 'G3' }, outer_request: requests[9]) }
+  let(:child_well_C2) { create(:well, location: 'C2', position: { 'name' => 'C2' }, outer_request: requests[10]) }
+  let(:child_well_B1) { create(:well, location: 'B1', position: { 'name' => 'B1' }, outer_request: requests[11]) }
+  let(:child_well_D2) { create(:well, location: 'D2', position: { 'name' => 'D2' }, outer_request: requests[12]) }
+  let(:child_well_C1) { create(:well, location: 'C1', position: { 'name' => 'C1' }, outer_request: requests[13]) }
 
   let(:child_plate) do
     # Wells listed in the order here to match the order of the list of original library requests,
     # i.e. the rearranged order after binning. Wells will be laid out by location so this has no
     # effect on the actual layout of the plate.
-    create :v2_plate,
+    create :plate,
            uuid: 'child-uuid',
            barcode_number: '3',
            size: plate_size,
@@ -251,8 +251,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   let(:user_uuid) { 'user-uuid' }
 
   context 'on new' do
-    has_a_working_api
-
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid } }
 
     it 'can be created' do
@@ -261,8 +259,6 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
   end
 
   describe '#save' do
-    has_a_working_api
-
     let(:form_attributes) do
       { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid, file: file }
     end
@@ -275,7 +271,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         library_type_name: library_type_name
       )
 
-      stub_v2_plate(
+      stub_plate(
         parent_plate,
         stub_search: false,
         custom_includes:
@@ -283,8 +279,8 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
       )
 
       # Some requests are made with standard includes, and others with the custom includes shown.
-      stub_v2_plate(child_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
+      stub_plate(child_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false, custom_includes: 'wells.aliquots')
     end
 
     context 'with an invalid file' do
@@ -414,7 +410,7 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForDuplexSeq, with: :uploade
         ]
       end
 
-      before { stub_api_v2_patch('Well') }
+      before { stub_patch('Well') }
 
       it 'makes the expected transfer requests to bin the wells' do
         expect_plate_creation

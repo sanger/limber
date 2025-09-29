@@ -9,8 +9,7 @@
 #           to the asset that has just been created, but may redirect to the parent if there are multiple children.
 class CreationController < ApplicationController
   before_action :check_for_current_user!
-  rescue_from Sequencescape::Api::ResourceInvalid, LabwareCreators::ResourceInvalid, with: :creation_failed
-  rescue_from Sequencescape::Api::ConnectionFactory::Actions::ServerError, with: :sequencescape_api_server_error
+  rescue_from LabwareCreators::ResourceInvalid, with: :creation_failed
 
   def new
     params[:parent_uuid] ||= parent_uuid
@@ -25,7 +24,7 @@ class CreationController < ApplicationController
   end
 
   def labware_creator(form_attributes)
-    creator_class.new(api, form_attributes.permit(permitted_attributes).merge(params_for_creator_build))
+    creator_class.new(form_attributes.permit(permitted_attributes).merge(params_for_creator_build))
   end
 
   def creation_failed(exception)
@@ -34,19 +33,6 @@ class CreationController < ApplicationController
     exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
 
     redirect_back_after_error('Cannot create the next piece of labware:', exception.resource.errors.full_messages)
-  end
-
-  def sequencescape_api_server_error(exception)
-    Rails.logger.error("Cannot create child of #{@labware_creator.parent.uuid}, Sequencescape api server error(s)")
-    Rails.logger.error(exception.message)
-    exception.backtrace.map(&Rails.logger.method(:error)) # rubocop:todo Performance/MethodObjectAsBlock
-
-    api_error_messages = extract_error_messages_from_api_exception(exception.message)
-
-    redirect_back_after_error(
-      'Cannot create the next piece of labware, Sequencescape server API error(s):',
-      api_error_messages
-    )
   end
 
   private
@@ -91,11 +77,6 @@ class CreationController < ApplicationController
 
   def parent_uuid
     params[:tube_id] || params[:plate_id] || params[:tube_rack_id]
-  end
-
-  def extract_error_messages_from_api_exception(api_message)
-    api_errors_hash = JSON.parse(api_message) || {}
-    api_errors_hash.key?('general') ? api_errors_hash['general'] : [api_message]
   end
 
   def redirect_back_after_error(prefix_message, error_messages)

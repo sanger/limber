@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Charge and pass libraries', :js do
-  has_a_working_api
-
   let(:user) { create :user, uuid: user_uuid }
   let(:user_uuid) { SecureRandom.uuid }
   let(:user_swipecard) { 'abcdef' }
@@ -18,30 +16,30 @@ RSpec.feature 'Charge and pass libraries', :js do
   background do
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   context 'plate with no submissions to be made' do
     before do
       create :purpose_config, uuid: 'example-purpose-uuid'
-      stub_v2_plate(plate)
-      stub_v2_plate(
+      stub_plate(plate)
+      stub_plate(
         plate,
         stub_search: false,
         custom_includes: 'wells.aliquots.request.poly_metadata'
       )
-      stub_v2_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
+      stub_plate(plate, custom_query: [:plate_for_completion, plate.uuid])
     end
 
     let(:plate_barcode) { plate.labware_barcode.machine }
     let(:submission_uuids) { %w[pool-1-uuid pool-2-uuid] }
     let(:plate) do
-      create :v2_plate,
+      create :plate,
              uuid: labware_uuid,
              state: 'passed',
              pool_sizes: [8, 8],
              include_submissions: true,
-             well_factory: :v2_tagged_well
+             well_factory: :tagged_well
     end
 
     scenario 'charge and pass libraries' do
@@ -57,13 +55,13 @@ RSpec.feature 'Charge and pass libraries', :js do
   context 'tube with submissions to be made' do
     before do
       create :passable_tube, submission: { request_options:, template_uuid: }, uuid: 'example-purpose-uuid'
-      stub_v2_tube(tube)
-      stub_v2_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
+      stub_tube(tube)
+      stub_tube(tube, custom_query: [:tube_for_completion, tube.uuid])
     end
 
     let(:submission_uuids) { [] }
     let(:request_options) { { read_length: '150' } }
-    let(:tube) { create :v2_tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
+    let(:tube) { create :tube, uuid: labware_uuid, state: 'passed', purpose_uuid: 'example-purpose-uuid' }
     let(:tube_barcode) { tube.labware_barcode.machine }
 
     let(:orders_attributes) do

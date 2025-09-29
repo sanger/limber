@@ -8,11 +8,9 @@ require_relative 'shared_examples'
 
 # rubocop:disable RSpec/HooksBeforeExamples
 RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
-  subject { described_class.new(api, form_attributes) }
+  subject { described_class.new(form_attributes) }
 
   it_behaves_like 'it only allows creation from plates'
-
-  has_a_working_api # Setup API V1 for the test
 
   let(:user_uuid) { 'user-uuid' }
 
@@ -26,7 +24,7 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
   let(:request_type_second) { create(:request_type, key: 'request-type-2') }
   let(:library_type_second) { 'library-type-2' }
 
-  let(:new_submission) { create(:v2_submission) }
+  let(:new_submission) { create(:submission) }
 
   # Requests on the wells because of the new submission.
   let(:new_requests) do
@@ -69,17 +67,17 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
 
   let(:aliquots) do
     [
-      create(:v2_aliquot, request: [old_requests[0]]),
-      create(:v2_aliquot, request: [old_requests[1]]),
-      create(:v2_aliquot, request: [old_requests[2]])
+      create(:aliquot, request: [old_requests[0]]),
+      create(:aliquot, request: [old_requests[1]]),
+      create(:aliquot, request: [old_requests[2]])
     ]
   end
 
   let(:wells) do
     [
-      create(:v2_well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1'),
-      create(:v2_well, requests_as_source: [new_requests[1]], aliquots: [aliquots[1]], location: 'B1'),
-      create(:v2_well, requests_as_source: [new_requests[2]], aliquots: [aliquots[2]], location: 'C1')
+      create(:well, requests_as_source: [new_requests[0]], aliquots: [aliquots[0]], location: 'A1'),
+      create(:well, requests_as_source: [new_requests[1]], aliquots: [aliquots[1]], location: 'B1'),
+      create(:well, requests_as_source: [new_requests[2]], aliquots: [aliquots[2]], location: 'C1')
     ]
   end
 
@@ -88,12 +86,12 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
   let(:parent_uuid) { 'parent-uuid' }
   let(:parent) do
     create(
-      :v2_plate,
+      :plate,
       :has_pooling_metadata,
       purpose: parent_purpose_name,
       uuid: parent_uuid,
       wells: wells,
-      submission_pools: create_list(:v2_submission_pool, 1)
+      submission_pools: create_list(:submission_pool, 1)
     )
   end
 
@@ -101,7 +99,7 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
   let(:child_purpose_name) { 'Child Purpose 1' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
 
-  let(:child) { create(:v2_plate, purpose: child_purpose_name, uuid: child_uuid) }
+  let(:child) { create(:plate, purpose: child_purpose_name, uuid: child_uuid) }
   let(:filters1_config) { { request_type_key: 'request-type-1', library_type: 'library-type-1' } }
   let(:filters2_config) { { request_type_key: ['request-type-2'], library_type: 'library-type-2' } }
 
@@ -117,7 +115,7 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     create(:pipeline, **pipeline1_config)
     create(:pipeline, **pipeline2_config)
 
-    stub_v2_plate(parent)
+    stub_plate(parent)
     allow(Sequencescape::Api::V2::PooledPlateCreation).to receive(:create!).and_return(
       instance_double(Sequencescape::Api::V2::PooledPlateCreation, child:)
     )
@@ -184,7 +182,7 @@ RSpec.describe LabwareCreators::CompositeWellFilteredCustomTaggedPlateCreator do
     end
 
     def expect_tag_layout_creation
-      expect_api_v2_posts(
+      expect_posts(
         'TagLayout',
         [
           {
