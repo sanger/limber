@@ -41,19 +41,4 @@ class Presenters::RequestInfoPresenter
     end
       .transform_values(&:size)
   end
-
-  # Returns a string of the active request types and their class names.
-  def active_request_info
-    grouped_active_request.inspect
-    # active_requests.map do |request|
-    #   "#{request.request_type.name} (#{
-    #     request.request_type.inspect
-    #   })"
-    # end.uniq.join(', ')
-  end
-
-  # # Returns the number of active requests.
-  # def request_count
-  #   active_requests.size
-  # end
 end
