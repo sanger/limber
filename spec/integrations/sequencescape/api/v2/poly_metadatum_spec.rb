@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Sequencescape::Api::V2::PolyMetadatum do
-  let(:aliquot) { create(:v2_aliquot) }
+  let(:aliquot) { create(:aliquot) }
 
   describe '.as_bulk_payload' do
     it 'returns a JSON:API compliant bulk payload' do
@@ -43,7 +43,7 @@ RSpec.describe Sequencescape::Api::V2::PolyMetadatum do
     end
 
     it 'sends a POST request to the bulk_create endpoint' do
-      stub_request(:post, '/poly_metadata/bulk_create')
+      stub_request(:post, %r{/poly_metadata/bulk_create})
         .to_return(
           status: 201,
           body: { data: [{ id: '1', type: 'poly_metadata',
@@ -53,7 +53,7 @@ RSpec.describe Sequencescape::Api::V2::PolyMetadatum do
 
       described_class.bulk_create(payload)
 
-      expect(WebMock).to have_requested(:post, '/poly_metadata/bulk_create')
+      expect(WebMock).to have_requested(:post, %r{/poly_metadata/bulk_create})
         .with(body: payload.to_json)
     end
   end
