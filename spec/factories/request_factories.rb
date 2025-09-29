@@ -115,6 +115,11 @@ FactoryBot.define do
       request_type { create :mx_request_type }
     end
 
+    # Sequencing request, representing the sequencing step at the end of most pipelines.
+    factory :sequencing_request do
+      request_type { create :sequencing_request_type }
+    end
+
     # Aggregation request, representing the transfer of many plates onto
     # one at the beginning of the process
     factory :aggregation_request do
@@ -177,6 +182,12 @@ FactoryBot.define do
       name { 'Limber Multiplexing' }
       key { 'limber_multiplexing' }
       for_multiplexing { true }
+    end
+
+    # Request type for the sequencing step at the end of most pipelines
+    factory :sequencing_request_type do
+      name { 'Limber Sequencing' }
+      key { 'limber_sequencing' }
     end
 
     # Request type for the aggregation
