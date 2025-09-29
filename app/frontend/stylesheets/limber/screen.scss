@@ -123,6 +123,44 @@ header.limber-header {
   }
 }
 
+// Subtle badges - sourced from https://getbootstrap.com/docs/5.3/examples/badges/
+// Usage example: <span class="badge subtle-primary rounded-pill">Subtle Badge</span>
+
+// Mixin for subtle badge styles
+@mixin subtle-badge($color) {
+  @extend .bg-#{$color}-subtle;
+  @extend .border;
+  // When light, use dark border for better contrast
+  @extend #{if($color == 'light', '.border-dark-subtle', '.border-#{$color}-subtle')};
+  @extend .text-#{$color}-emphasis;
+}
+
+// Use the mixin for each subtle badge class
+.subtle-primary {
+  @include subtle-badge('primary');
+}
+.subtle-secondary {
+  @include subtle-badge('secondary');
+}
+.subtle-success {
+  @include subtle-badge('success');
+}
+.subtle-danger {
+  @include subtle-badge('danger');
+}
+.subtle-warning {
+  @include subtle-badge('warning');
+}
+.subtle-info {
+  @include subtle-badge('info');
+}
+.subtle-light {
+  @include subtle-badge('light');
+}
+.subtle-dark {
+  @include subtle-badge('dark');
+}
+
 #app {
   margin-bottom: 50px;
 }
@@ -434,6 +472,33 @@ dl#samples-information {
 }
 .state-badge.empty {
   @extend.bg-dark;
+}
+
+.badge.subtle-pending {
+  @extend .subtle-warning;
+}
+.badge.subtle-started,
+.badge.subtle-process_1,
+.badge.subtle-process_2 {
+  @extend .subtle-info;
+}
+.badge.subtle-passed {
+  @extend .subtle-success;
+}
+.badge.subtle-qc_complete {
+  @extend .subtle-primary;
+}
+.badge.subtle-cancelled {
+  @extend .subtle-danger;
+}
+.badge.subtle-failed {
+  @extend .subtle-danger;
+}
+.badge.subtle-mixed {
+  @extend .subtle-secondary;
+}
+.badge.subtle-empty {
+  @extend .subtle-dark;
 }
 
 .flash {
