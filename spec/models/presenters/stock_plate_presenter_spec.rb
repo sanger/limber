@@ -6,7 +6,7 @@ require_relative 'shared_labware_presenter_examples'
 RSpec.describe Presenters::StockPlatePresenter do
   subject { described_class.new(labware:) }
 
-  let(:labware) { create :v2_stock_plate }
+  let(:labware) { create :stock_plate }
 
   let(:barcode_string) { labware.human_barcode }
 

@@ -10,7 +10,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
   it_behaves_like 'it only allows creation from plates'
 
   let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate) { create(:v2_plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
+  let(:plate) { create(:plate, :has_pooling_metadata, uuid: plate_uuid, barcode_number: 2, pool_sizes: [8, 8]) }
   let(:transfer_template_uuid) { 'custom-pooling' }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -20,7 +20,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
 
   before do
     create :purpose_config, uuid: child_purpose_uuid, name: child_purpose_name
-    stub_v2_plate(plate)
+    stub_plate(plate)
   end
 
   context 'on new' do
@@ -46,9 +46,9 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
         end
       end
 
-      let(:tag_layout_templates) { create_list :v2_tag_layout_template, 2 }
+      let(:tag_layout_templates) { create_list :tag_layout_template, 2 }
 
-      before { stub_v2_tag_layout_templates(tag_layout_templates) }
+      before { stub_tag_layout_templates(tag_layout_templates) }
 
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging.
       # Which is now unused.
@@ -78,7 +78,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
     let(:tag_template_uuid) { 'tag-layout-template' }
     let(:parents) { [plate_uuid, tag_plate_uuid] }
 
-    let(:child_plate) { create :v2_plate }
+    let(:child_plate) { create :plate }
 
     let(:pooled_plates_attributes) do
       [{ child_purpose_uuid: child_purpose_uuid, parent_uuids: parents, user_uuid: user_uuid }]
@@ -110,7 +110,7 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
     end
 
     def expect_tag_layout_creation
-      expect_api_v2_posts(
+      expect_posts(
         'TagLayout',
         [
           {
@@ -173,10 +173,10 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_v2_pooled_plate_creation
-            stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
-            stub_api_v2_post('StateChange')
+            stub_pooled_plate_creation
+            stub_post('TagLayout')
+            stub_post('Transfer')
+            stub_post('StateChange')
 
             expect(subject.save).to be true
 
@@ -211,9 +211,9 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_v2_pooled_plate_creation
-            stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
+            stub_pooled_plate_creation
+            stub_post('TagLayout')
+            stub_post('Transfer')
 
             expect(subject.save).to be true
 
@@ -237,9 +237,9 @@ RSpec.describe LabwareCreators::CustomTaggedPlate, :tag_plate do
           end
 
           it 'has the correct child (and uuid)' do
-            stub_v2_pooled_plate_creation
-            stub_api_v2_post('TagLayout')
-            stub_api_v2_post('Transfer')
+            stub_pooled_plate_creation
+            stub_post('TagLayout')
+            stub_post('Transfer')
 
             expect(subject.save).to be true
             expect(subject.child.uuid).to eq(child_plate.uuid)

@@ -8,11 +8,11 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
   context 'when creating the labels for a plate' do
     # current partner ids have the format ABCD_123 i.e. 4 characters, an underscore, and 3 numbers
     let(:partner_id) { 'ABCD_123' }
-    let(:sample_metadata) { create :v2_sample_metadata, sample_description: partner_id }
-    let(:sample) { create(:v2_sample, sample_metadata:) }
-    let(:aliquot) { create :v2_aliquot, sample: }
-    let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: [aliquot]) }
-    let(:labware) { create :v2_plate, wells: [well_c6] }
+    let(:sample_metadata) { create :sample_metadata, sample_description: partner_id }
+    let(:sample) { create(:sample, sample_metadata:) }
+    let(:aliquot) { create :aliquot, sample: }
+    let(:well_c6) { create(:well, position: { 'name' => 'C6' }, aliquots: [aliquot]) }
+    let(:labware) { create :plate, wells: [well_c6] }
 
     let(:label) { described_class.new(labware) }
 
@@ -53,7 +53,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
       end
 
       context 'when the partner id is empty' do
-        let(:sample_metadata) { create :v2_sample_metadata, sample_description: nil }
+        let(:sample_metadata) { create :sample_metadata, sample_description: nil }
 
         let(:expected_message) { 'NO PARTNER ID FOUND' }
 
@@ -69,20 +69,20 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
         let(:control_sample_description) { 'control description' }
 
         let!(:control_sample_metadata) do
-          create :v2_sample_metadata, supplier_name: control_sample_name, sample_description: control_sample_description
+          create :sample_metadata, supplier_name: control_sample_name, sample_description: control_sample_description
         end
 
         let(:control_sample) do
-          create :v2_sample,
+          create :sample,
                  name: control_sample_name,
                  control: true,
                  control_type: 'positive',
                  sample_metadata: control_sample_metadata
         end
 
-        let(:control_aliquot) { create :v2_aliquot, sample: control_sample }
-        let(:well_a1) { create(:v2_well, position: { 'name' => 'A1' }, aliquots: [control_aliquot]) }
-        let(:labware) { create :v2_plate, wells: [well_a1, well_c6] }
+        let(:control_aliquot) { create :aliquot, sample: control_sample }
+        let(:well_a1) { create(:well, position: { 'name' => 'A1' }, aliquots: [control_aliquot]) }
+        let(:labware) { create :plate, wells: [well_a1, well_c6] }
 
         it 'ignores the control sample in A1' do
           additional_label_definitions = label.additional_label_definitions[0]
@@ -93,7 +93,7 @@ RSpec.describe Labels::PlateLabel96Lysate, type: :model do
     end
 
     context 'when there are no wells with aliquots in the labware' do
-      let(:well_c6) { create(:v2_well, position: { 'name' => 'C6' }, aliquots: []) }
+      let(:well_c6) { create(:well, position: { 'name' => 'C6' }, aliquots: []) }
 
       it 'raises an error' do
         expect { label.additional_label_definitions }.to raise_error(
