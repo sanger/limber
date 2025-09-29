@@ -2,7 +2,8 @@
 
 module LabwareCreators
   # RebalancedPooledTube is a labware creator used in the Ultima pipeline, responsible for
-  # creating a rebalanced pooled tube based on user-provided rebalancing data from a
+  # Creating a rebalanced pooled tube based on user-provided rebalancing data from the outcome
+  # of a previous sequencing run (CSV file downloaded from the Nexus platform)
   #
   # In this pipeline, the user needs to create a rebalanced pooled tube (UPF Balanced Pool Tube)
   # based on the output of a previous sequencing run. The rebalancing is

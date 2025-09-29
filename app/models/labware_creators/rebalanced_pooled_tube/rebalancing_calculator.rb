@@ -65,7 +65,7 @@ module LabwareCreators
 
     # Calculates the average coverage for wafer 1 across all samples.
     #
-    # @return [BigDecimal] Average coverage value
+    # @return [Float] Average coverage value
     def average_cov_waf1
       (@mean_cvg.sum / @mean_cvg.length).round(4)
     end
@@ -73,7 +73,7 @@ module LabwareCreators
     # Calculates the coverage needed for wafers 2 & 3 for a given sample.
     #
     # @param sample_index [Integer] Index of the sample
-    # @return [BigDecimal] Coverage needed
+    # @return [Float] Coverage needed
     def cov_need_waf2_and_waf3(sample_index)
       ((3 * average_cov_waf1) - @mean_cvg[sample_index]).round(4)
     end
@@ -81,7 +81,7 @@ module LabwareCreators
     # Calculates the expected coverage for wafers 2 & 3 for a given sample.
     #
     # @param sample_index [Integer] Index of the sample
-    # @return [BigDecimal] Expected coverage
+    # @return [Float] Expected coverage
     def exp_cov_waf2_waf3(sample_index)
       (cov_need_waf2_and_waf3(sample_index) / 2).round(4)
     end
@@ -89,7 +89,7 @@ module LabwareCreators
     # Calculates the pooling correction factor for wafers 2 & 3.
     #
     # @param sample_index [Integer] Index of the sample
-    # @return [BigDecimal] Pooling correction factor
+    # @return [Float] Pooling correction factor
     def pool_cf_waf2_waf3(sample_index)
       (exp_cov_waf2_waf3(sample_index) / @mean_cvg[sample_index]).round(4)
     end
@@ -97,7 +97,7 @@ module LabwareCreators
     # Calculates the volume to pool for a given sample based on the pooling correction factor.
     #
     # @param sample_index [Integer] Index of the sample
-    # @return [BigDecimal] Volume to pool
+    # @return [Float] Volume to pool
     def vol_to_pool(sample_index)
       (pool_cf_waf2_waf3(sample_index) * 10).round(4)
     end

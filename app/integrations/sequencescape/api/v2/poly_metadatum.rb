@@ -22,14 +22,14 @@ class Sequencescape::Api::V2::PolyMetadatum < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
 
-  # Class method to convert metadata into JSON:API bulk payload
+  # Class method to convert metadata into jsonapi_resources bulk payload
   #
   # @param metadata_array [Array<Hash>] array of hashes, each containing:
   #   - :key [String] the metadata key
   #   - :value [String] the metadata value
   #   - :metadatable [Object] the associated API resource (must respond to #type and #id)
   #
-  # @return [Hash] JSON:API-compliant payload for use with .bulk_create
+  # @return [Hash] jsonapi_resources-compliant payload for use with .bulk_create
   #
   # Example:
   #   Sequencescape::Api::V2::PolyMetadatum.as_bulk_payload([
