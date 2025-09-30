@@ -23,7 +23,7 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   let(:tube_purpose_name) { 'tube_purpose_name' }
 
   # tube purpose
-  let(:tube_purpose) { create(:v2_purpose, name: tube_purpose_name, uuid: tube_purpose_uuid) }
+  let(:tube_purpose) { create(:purpose, name: tube_purpose_name, uuid: tube_purpose_uuid) }
 
   # tube states
   let(:tube1_state) { 'pending' }
@@ -32,7 +32,7 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   # tubes
   let(:tube1) do
     create(
-      :v2_tube,
+      :tube,
       uuid: tube1_uuid,
       barcode_prefix: 'FX',
       barcode_number: 4,
@@ -42,7 +42,7 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   end
   let(:tube2) do
     create(
-      :v2_tube,
+      :tube,
       uuid: tube2_uuid,
       barcode_prefix: 'FX',
       barcode_number: 5,
@@ -58,7 +58,7 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   let(:tube_rack_purpose_name) { 'tube_rack_purpose_name' }
 
   # tube rack purpose
-  let(:tube_rack_purpose) { create(:v2_tube_rack_purpose, name: tube_rack_purpose_name, uuid: tube_rack_purpose_uuid) }
+  let(:tube_rack_purpose) { create(:tube_rack_purpose, name: tube_rack_purpose_name, uuid: tube_rack_purpose_uuid) }
 
   # tube rack uuid
   let(:tube_rack_uuid) { 'tube_rack_uuid' }
@@ -91,19 +91,19 @@ RSpec.describe Robots::Bed::PlateToTubeRacksBed do
   end
 
   before do
-    stub_v2_user(user)
-    stub_v2_labware(tube_rack)
-    stub_v2_tube(tube1)
-    stub_v2_tube(tube2)
+    stub_user(user)
+    stub_labware(tube_rack)
+    stub_tube(tube1)
+    stub_tube(tube2)
 
     allow(subject).to receive_messages(labware: tube_rack, user_uuid: user_uuid)
   end
 
   describe '#labware_created_with_robot' do
     it 'updates the tube rack and the tube labware metadata with the robot barcode' do
-      expect_api_v2_posts('CustomMetadatumCollection', tube_rack_custom_metadatum_collections_attributes)
-      expect_api_v2_posts('CustomMetadatumCollection', tube1_custom_metadatum_collections_attributes)
-      expect_api_v2_posts('CustomMetadatumCollection', tube2_custom_metadatum_collections_attributes)
+      expect_posts('CustomMetadatumCollection', tube_rack_custom_metadatum_collections_attributes)
+      expect_posts('CustomMetadatumCollection', tube1_custom_metadatum_collections_attributes)
+      expect_posts('CustomMetadatumCollection', tube2_custom_metadatum_collections_attributes)
 
       subject.labware_created_with_robot(robot_barcode)
     end

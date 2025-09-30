@@ -6,7 +6,7 @@ RSpec.shared_examples 'it only allows creation from tubes' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'allows creation' do
           expect(is_creatable_from).to be true
@@ -14,7 +14,7 @@ RSpec.shared_examples 'it only allows creation from tubes' do
       end
 
       context 'from a plate' do
-        let(:parent) { create :v2_plate }
+        let(:parent) { create :plate }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -62,7 +62,7 @@ RSpec.shared_examples 'it only allows creation from plates' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -70,7 +70,7 @@ RSpec.shared_examples 'it only allows creation from plates' do
       end
 
       context 'from a plate' do
-        let(:parent) { build :v2_plate }
+        let(:parent) { build :plate }
 
         it 'allows creation' do
           expect(is_creatable_from).to be true
@@ -86,7 +86,7 @@ RSpec.shared_examples 'it only allows creation from tagged plates' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -94,7 +94,7 @@ RSpec.shared_examples 'it only allows creation from tagged plates' do
       end
 
       context 'from a plate' do
-        let(:parent) { build :v2_plate }
+        let(:parent) { build :plate }
 
         before { expect(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -124,7 +124,7 @@ RSpec.shared_examples 'it does not allow creation' do
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -132,7 +132,7 @@ RSpec.shared_examples 'it does not allow creation' do
       end
 
       context 'from a plate' do
-        let(:parent) { build :v2_plate }
+        let(:parent) { build :plate }
 
         before { allow(parent).to receive(:tagged?).and_return(tagged) }
 
@@ -162,7 +162,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -201,7 +201,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
         # Minor modifications for avoiding uuids, and removing bait libraries because they are irrelevant
         # Additional modifications made to convert to API v2
 
-        let(:aliquot_type) { :v2_aliquot }
+        let(:aliquot_type) { :aliquot }
         let(:labware_state) { 'pending' }
         let(:request_completed) { 'passed' }
         let(:request_active) { 'pending' }
@@ -223,49 +223,49 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates wi
           [
             # Previously pooled wells
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(3)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(3)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             ),
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(4)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(4)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             ),
             # Wells with active pooling (multiplexing) requests
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(3), active_multiplexing_request(5)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(3), active_multiplexing_request(6)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             ),
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(4), active_multiplexing_request(5)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(1))
             ),
             create(
-              :v2_well,
+              :well,
               requests_as_source: [completed_multiplexing_request(4), active_multiplexing_request(6)],
               aliquots: create_list(aliquot_type, 1, request: completed_library_request(2))
             )
           ]
         end
-        let(:parent) { build :v2_plate, state: labware_state, wells: wells }
+        let(:parent) { build :plate, state: labware_state, wells: wells }
         let(:tagged) { true }
 
         before { allow(parent).to receive(:tagged?).and_return(tagged) }
@@ -289,7 +289,7 @@ RSpec.shared_examples 'it only allows creation from charged and passed plates' d
       let(:is_creatable_from) { described_class.creatable_from?(parent) }
 
       context 'from a tube' do
-        let(:parent) { build :v2_tube }
+        let(:parent) { build :tube }
 
         it 'disallows creation' do
           expect(is_creatable_from).to be false
@@ -326,7 +326,7 @@ RSpec.shared_examples 'a QC assaying plate creator' do
     let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
     it 'makes the expected requests' do
-      expect_api_v2_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
+      expect_posts('QcAssay', [{ qc_results: dest_well_qc_attributes }])
       expect_plate_creation
       expect_transfer_request_collection_creation
 

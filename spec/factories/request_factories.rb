@@ -38,7 +38,7 @@ FactoryBot.define do
     pre_capture_pool { nil }
     uuid
     submission do
-      create :v2_submission, id: submission_id.to_s, uuid: "pool-#{submission_id + 1}-uuid" if include_submissions
+      create :submission, id: submission_id.to_s, uuid: "pool-#{submission_id + 1}-uuid" if include_submissions
     end
 
     after(:build) do |request, evaluator|
@@ -131,7 +131,7 @@ FactoryBot.define do
     end
 
     factory :scrna_customer_request do
-      request_metadata { create(:v2_request_metadata) }
+      request_metadata { create(:request_metadata) }
 
       after(:build) do |request, evaluator|
         request._cached_relationship(:request_metadata) { evaluator.request_metadata }
@@ -204,7 +204,7 @@ FactoryBot.define do
   end
 
   # Request Metadata
-  factory :v2_request_metadata, class: Sequencescape::Api::V2::RequestMetadata do
+  factory :request_metadata, class: Sequencescape::Api::V2::RequestMetadata do
     skip_create
 
     number_of_pools { nil }

@@ -12,7 +12,7 @@ RSpec.describe Tubes::TubesExportsController, type: :controller do
   let(:tube_selects) do
     { 'aliquot' => %w[tag_index tag2_index], 'sample_metadata' => %w[supplier_name cohort sample_description] }
   end
-  let(:tube) { create :v2_tube, barcode_number: 1 }
+  let(:tube) { create :tube, barcode_number: 1 }
   let(:tube_barcode) { tube.barcode.human }
 
   RSpec.shared_examples 'a tsv view' do

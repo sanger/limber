@@ -4,12 +4,12 @@ require 'spec_helper'
 
 RSpec.describe 'exports/hamilton_variable_volume_dilutions.csv.erb' do
   context 'when creating a variable volume dilutions csv' do
-    let(:source_well_a1) { create(:v2_well, location: 'A1') }
-    let(:source_well_b1) { create(:v2_well, location: 'B1') }
+    let(:source_well_a1) { create(:well, location: 'A1') }
+    let(:source_well_b1) { create(:well, location: 'B1') }
 
     let(:dest_well_a1) do
       create(
-        :v2_well_with_transfer_requests,
+        :well_with_transfer_requests,
         location: 'A1',
         transfer_request_as_target_source_asset: source_well_b1,
         plate_barcode: '2'
@@ -17,13 +17,13 @@ RSpec.describe 'exports/hamilton_variable_volume_dilutions.csv.erb' do
     end
     let(:dest_well_b1) do
       create(
-        :v2_well_with_transfer_requests,
+        :well_with_transfer_requests,
         location: 'B1',
         transfer_request_as_target_source_asset: source_well_a1,
         plate_barcode: '2'
       )
     end
-    let(:dest_labware) { create(:v2_plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 2) }
+    let(:dest_labware) { create(:plate, wells: [dest_well_a1, dest_well_b1], barcode_number: 2) }
     let(:workflow_name) { 'Test Workflow Name' }
 
     before do

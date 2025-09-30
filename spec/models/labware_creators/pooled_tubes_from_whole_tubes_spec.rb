@@ -17,12 +17,12 @@ RSpec.describe LabwareCreators::PooledTubesFromWholeTubes do
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
 
-  let(:parents) { create_list :v2_tube, 2 }
+  let(:parents) { create_list :tube, 2 }
   let(:parent_uuid) { parents.first.uuid }
 
   let(:barcodes) { parents.map { |parent| parent.barcode.to_s } }
 
-  let(:child_tube) { create(:v2_tube) }
+  let(:child_tube) { create(:tube) }
 
   describe '#new' do
     it_behaves_like 'it has a custom page', 'pooled_tubes_from_whole_tubes'
