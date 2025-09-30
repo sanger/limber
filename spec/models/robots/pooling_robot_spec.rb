@@ -34,11 +34,11 @@ RSpec.describe Robots::PoolingRobot, :robots do
   let(:source_purpose_name) { 'Parent Purpose' }
   let(:source_purpose_uuid) { SecureRandom.uuid }
   let(:target_plate_state) { 'pending' }
-  let(:source_plate) { create :v2_plate, source_plate_attributes }
+  let(:source_plate) { create :plate, source_plate_attributes }
   let(:target_barcode) { target_plate.human_barcode }
   let(:target_purpose_name) { 'Child Purpose' }
   let(:target_purpose_uuid) { SecureRandom.uuid }
-  let(:target_plate) { create :v2_plate, target_plate_attributes }
+  let(:target_plate) { create :plate, target_plate_attributes }
 
   let(:target_plate_parents) { [source_plate] }
 
@@ -98,7 +98,7 @@ RSpec.describe Robots::PoolingRobot, :robots do
   let(:transfer_source_plates) { [source_plate] }
 
   let(:wells) do
-    %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: transfer_source_plates }
+    %w[C1 D1].map { |location| create :well, location: location, upstream_plates: transfer_source_plates }
   end
 
   before do
@@ -135,7 +135,7 @@ RSpec.describe Robots::PoolingRobot, :robots do
         end
 
         context 'but unrelated plates' do
-          let(:transfer_source_plates) { [create(:v2_plate)] }
+          let(:transfer_source_plates) { [create(:plate)] }
 
           it { is_expected.not_to be_valid }
         end
@@ -153,12 +153,12 @@ RSpec.describe Robots::PoolingRobot, :robots do
         }
       end
       let(:source_barcode2) { source_plate2.human_barcode }
-      let(:source_plate2) { create :v2_plate, source_plate2_attributes }
+      let(:source_plate2) { create :plate, source_plate2_attributes }
       let(:transfer_source_plates) { [source_plate, source_plate2] }
 
       let(:wells) do
-        %w[C1 D1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[1]] } +
-          %w[A1 B1].map { |location| create :v2_well, location: location, upstream_plates: [transfer_source_plates[0]] }
+        %w[C1 D1].map { |location| create :well, location: location, upstream_plates: [transfer_source_plates[1]] } +
+          %w[A1 B1].map { |location| create :well, location: location, upstream_plates: [transfer_source_plates[0]] }
       end
 
       before { bed_plate_lookup(source_plate2, [:purpose, { wells: :upstream_plates }]) }

@@ -13,7 +13,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
 
     let(:well_a1) do
       create(
-        :v2_well,
+        :well,
         position: {
           'name' => 'A1'
         },
@@ -23,7 +23,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
     end
     let(:well_b1) do
       create(
-        :v2_well,
+        :well,
         position: {
           'name' => 'B1'
         },
@@ -33,7 +33,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
     end
     let(:well_c1) do
       create(
-        :v2_well,
+        :well,
         position: {
           'name' => 'C1'
         },
@@ -43,7 +43,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
     end
     let(:well_d1) do
       create(
-        :v2_well,
+        :well,
         position: {
           'name' => 'D1'
         },
@@ -53,7 +53,7 @@ RSpec.describe Utility::FixedNormalisationCalculator do
     end
 
     let(:parent_plate) do
-      create :v2_plate,
+      create :plate,
              uuid: parent_uuid,
              barcode_number: '2',
              size: plate_size,

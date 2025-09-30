@@ -4952,4 +4952,116 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # bed layout verification for UPF Cherrypicked -> UPF Shear
+    custom_robot(
+      'bravo-upf-cherrypicked-to-upf-shear',
+      name: 'UPF Cherrypicked => UPF Shear',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF Cherrypicked',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF Shear',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # bed layout verification for UPF Shear -> UPF Post Shear
+    custom_robot(
+      'bravo-upf-shear-to-upf-post-shear',
+      name: 'UPF Shear => UPF Post Shear',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'UPF Shear',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(7).barcode => {
+          purpose: 'UPF Post Shear',
+          states: ['pending'],
+          label: 'Bed 7',
+          parent: bed(9).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # bed layout verification for UPF Post Shear -> UPF End Prep XP1
+    custom_robot(
+      'bravo-upf-post-shear-to-upf-end-prep-xp1',
+      name: 'UPF Post Shear => UPF End Prep XP1',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'UPF Post Shear',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF End Prep XP1',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # bed layout verification for UPF End Prep XP1 -> UPF lib
+    custom_robot(
+      'bravo-upf-end-prep-xp1-to-upf-lib',
+      name: 'Bravo UPF End Prep XP1 => UPF Lib',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'UPF End Prep XP1',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'UPF Lib',
+          states: ['pending'],
+          label: 'Bed 6',
+          target_state: 'passed',
+          parent: bed(5).barcode
+        }
+      }
+    )
+
+    # bed layout verification for UPF Lib -> UPF Lib XP2
+    custom_robot(
+      'hamilton-upf-lib-to-upf-lib-xp2',
+      name: 'Hamilton UPF Lib => UPF Lib XP2',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF Lib',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF Lib XP2',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'UPF Lib',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF Lib XP2',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end

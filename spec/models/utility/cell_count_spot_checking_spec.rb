@@ -11,7 +11,7 @@ RSpec.describe Utility::CellCountSpotChecking do
     # Similar to LRC Blood Vac tubes.
     (1..number_of_tubes).each_with_object({}) do |index, hash|
       uuid = "sample-uuid-#{index}"
-      tube = create(:v2_stock_tube)
+      tube = create(:stock_tube)
       hash[uuid] = tube
     end
   end
@@ -24,13 +24,13 @@ RSpec.describe Utility::CellCountSpotChecking do
         suffix = ((index - 1) / 3) + 1
         uuid = "sample-uuid-#{suffix}" # Match the samples of tubes
         supplier_name = ancestor_tubes[uuid].barcode.human
-        sample_metadata = create(:v2_sample_metadata, supplier_name:)
-        sample = create(:v2_sample, uuid:, sample_metadata:)
-        aliquots = [create(:v2_aliquot, sample:)]
+        sample_metadata = create(:sample_metadata, supplier_name:)
+        sample = create(:sample, uuid:, sample_metadata:)
+        aliquots = [create(:aliquot, sample:)]
         location = WellHelpers.well_at_column_index(index - 1)
-        array << create(:v2_well, aliquots:, location:)
+        array << create(:well, aliquots:, location:)
       end
-    create(:v2_plate, wells:)
+    create(:plate, wells:)
   end
 
   let(:plate_wells_grouped_by_barcode) do
