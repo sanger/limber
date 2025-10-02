@@ -74,8 +74,6 @@ RSpec.describe 'exports/ultima_rebalancing.csv.erb' do
   end
 
   it 'renders the expected content' do
-    puts CSV.parse(render)
-    puts expected_content
     expect(CSV.parse(render)).to eq(expected_content)
   end
 end
