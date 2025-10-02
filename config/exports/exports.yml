@@ -289,7 +289,7 @@ kinnex_prep_plate_export:
   plate_includes: wells.downstream_tubes
 ultima_rebalancing:
   csv: 'exports/ultima_rebalancing'
-  tube_includes: transfer_requests_as_target.source_asset,receptacle.aliquots,receptacle.aliquots.tag.tag_group,receptacle.aliquots.tag2.tag_group,receptacle.aliquots.sample.sample_metadata,receptacle.aliquots.poly_metadata
+  tube_includes: receptacle.aliquots.poly_metadata
   filename:
     labware_barcode:
       append: true
