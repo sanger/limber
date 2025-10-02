@@ -287,3 +287,9 @@ hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig:
 kinnex_prep_plate_export:
   csv: kinnex_prep_plate_export
   plate_includes: wells.downstream_tubes
+ultima_rebalancing:
+  csv: 'exports/ultima_rebalancing'
+  tube_includes: transfer_requests_as_target.source_asset,receptacle.aliquots,receptacle.aliquots.tag.tag_group,receptacle.aliquots.tag2.tag_group,receptacle.aliquots.sample.sample_metadata,receptacle.aliquots.poly_metadata
+  filename:
+    labware_barcode:
+      append: true
