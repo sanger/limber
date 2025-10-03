@@ -8,7 +8,7 @@ module ExportsFilenameBehaviour
     filename = export.filename&.fetch('name', nil) || export.csv
 
     # Default to the Standard handler if none is specified
-    handler = export.filename&.fetch('handler', 'Standard')
+    handler = export.filename&.fetch('handler', 'Standard') || 'Standard'
     handler_class = "Exports::FilenameHandler::#{handler}".constantize
 
     filename = handler_class.build_filename(filename, labware, page, export)
