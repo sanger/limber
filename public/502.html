@@ -6,7 +6,7 @@
     <style>
       body.rails-default-error-page {
         background-color: #039be5;
-        background-image: url("/sanger-pattern-corner.svg"), linear-gradient(45deg, #343a41 0%, #6c757d 100%);
+        background-image: url('/sanger-pattern-corner.svg'), linear-gradient(45deg, #343a41 0%, #6c757d 100%);
         background-repeat: no-repeat;
         background-position: bottom right;
         background-size: cover;
@@ -39,7 +39,7 @@
         font-size: 200%;
         line-height: 0.5em;
       }
-      
+
       .rails-default-error-page .error-code {
         font-size: 150%;
         color: #8bc34a;
@@ -72,23 +72,24 @@
       <div>
         <h1 class="error-title">
           <span class="status-code">Bad Gateway</span>
-        </br>
+          <br />
         </h1>
         <small class="error-code">Error Code 502</small>
-        
-        <p>The server received an invalid response from Limber</p>
-      <div class="suggestion">
-        Please try refreshing the page, or come back later.<br />
-        If the problem persists, you can let us know using the link below.
-      </div>
 
-      <a
-        class="freshservice-link"
-        href="https://sanger.freshservice.com/support/catalog/items?category_id=53000051282"
-        target="_blank"
-        rel="noopener"
-        >Open a support ticket</a
-      >
+        <p>The server received an invalid response from Limber</p>
+        <div class="suggestion">
+          Please try refreshing the page, or come back later.<br />
+          If the problem persists, you can let us know using the link below.
+        </div>
+
+        <a
+          class="freshservice-link"
+          href="https://sanger.freshservice.com/support/catalog/items?category_id=53000051282"
+          target="_blank"
+          rel="noopener"
+          >Open a support ticket</a
+        >
+      </div>
+    </div>
   </body>
 </html>
-
