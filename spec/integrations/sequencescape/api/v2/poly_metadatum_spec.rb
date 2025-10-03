@@ -20,14 +20,14 @@ RSpec.describe Sequencescape::Api::V2::PolyMetadatum do
             type: 'poly_metadata',
             attributes: { key: 'vol to pool', value: '32.453' },
             relationships: {
-              metadatable: { data: { type: aliquot.type, id: aliquot.id } }
+              metadatable: { data: { type: aliquot.type.pluralize, id: aliquot.id } }
             }
           },
           {
             type: 'poly_metadata',
             attributes: { key: 'barcode', value: 'Z0001' },
             relationships: {
-              metadatable: { data: { type: aliquot.type, id: aliquot.id } }
+              metadatable: { data: { type: aliquot.type.pluralize, id: aliquot.id } }
             }
           }
         ]

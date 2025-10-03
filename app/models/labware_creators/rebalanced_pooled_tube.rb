@@ -45,7 +45,9 @@ module LabwareCreators
     # Iterates over the aliquots in the rebalanced pooled tube, looks up their
     # corresponding rebalancing variables, and builds a set of poly_metadata
     # to be created in bulk.
-    #
+    # This method relies on tag_index to match samples with those in the CSV file.
+    # This approach is fragile if the tag_index values do not align with the CSV data.
+    # A story exists to improve this (@todo Y25-585).
     # @return [void]
     def save_calculated_metadata_to_tube_aliquots
       aliquot_poly_metadata = []

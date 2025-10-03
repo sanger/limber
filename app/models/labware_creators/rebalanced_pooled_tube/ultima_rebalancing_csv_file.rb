@@ -3,17 +3,22 @@
 require './lib/nested_validation'
 require 'csv'
 
-# Parses and validates the Ultima rebalancing CSV file uploaded by the user.
+# Handles parsing and validation of Ultima rebalancing CSV files for the
+# rebalanced pooled tube workflow.
 #
-# The file is expected to contain specific rows of data:
-#   - "sample"           → list of sample identifiers
-#   - "barcode"          → barcodes corresponding to samples
-#   - "pf_barcode_reads" → numeric values for PF barcode reads
-#   - "mean_cvg"         → numeric values for mean coverage
-#
-# The filename must begin with a numeric batch ID followed by an underscore,
-# e.g "12345_rebalance.csv". The batch ID will be used when calculating
-# rebalancing variables.
+# This class is responsible for:
+#   - Extracting sample identifiers, barcodes, PF barcode reads, and mean coverage
+#     values from the uploaded CSV file.
+#   - Validating that the file follows the expected format:
+#       • Filename must start with a numeric batch ID followed by an underscore
+#         (e.g. "12345_rebalance.csv").
+#       • Rows for "sample", "barcode", "pf_barcode_reads", and "mean_cvg" must exist.
+#       • Row values must align in length with the number of samples.
+#   - Providing accessors for the parsed data and batch ID.
+#   - Running the rebalancing calculator to compute the rebalancing variables
+#     for downstream processing.
+# Errors during parsing or validation are captured and made available
+# via ActiveModel validations.
 module LabwareCreators
   require_dependency 'labware_creators/rebalanced_pooled_tube'
 

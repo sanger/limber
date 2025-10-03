@@ -49,7 +49,7 @@ class Sequencescape::Api::V2::PolyMetadatum < Sequencescape::Api::V2::Base
           },
           relationships: {
             metadatable: {
-              data: { type: meta[:metadatable].type, id: meta[:metadatable].id }
+              data: { type: meta[:metadatable].type.pluralize, id: meta[:metadatable].id }
             }
           }
         }
