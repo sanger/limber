@@ -291,5 +291,4 @@ ultima_rebalancing:
   csv: 'exports/ultima_rebalancing'
   tube_includes: receptacle.aliquots.poly_metadata
   filename:
-    labware_barcode:
-      append: true
+    handler: UltimaRebalancing
