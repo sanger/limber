@@ -10,9 +10,9 @@ module Exports
         end
 
         # If there are no batch_ids, return the default filename
-        return "Ultima_Rebalancing_#{labware.barcode.human}" if batch_ids.compact.empty?
-
-        batch_ids.uniq.join('_').to_s
+        file = "Ultima_rebalancing_#{labware.barcode.human}"
+        file += "_#{batch_ids.uniq.join('_')}" unless batch_ids.compact.empty?
+        file
       end
     end
   end
