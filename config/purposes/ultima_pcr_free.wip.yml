@@ -41,6 +41,9 @@ UPF Lib XP2:
       request_options:
         no_options: ''
       allowed_extra_barcodes: false
+  :manual_transfer:
+    states:
+      - 'pending'
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
