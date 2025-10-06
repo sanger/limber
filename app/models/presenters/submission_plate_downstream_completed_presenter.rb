@@ -24,8 +24,68 @@ module Presenters
   #   request_options:
   #     <request_option_key>: <request_option_value>
   #     ...
+  # rubocop:disable Metrics/ClassLength
   class SubmissionPlateDownstreamCompletedPresenter < PlatePresenter
-    include Presenters::Statemachine::SubmissionWhenPassed
+    include Statemachine::Shared
+
+    # Modified version of SubmissionWhenPassed state machine
+    state_machine :state, initial: :pending do
+      event :take_default_path, human_name: 'Manual Transfer' do
+        transition pending: :passed
+      end
+
+      state :pending do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :started do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :processed_1 do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :processed_2 do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :processed_3 do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :processed_4 do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :passed do
+        include Statemachine::StateAllowsChildCreation
+
+        # We only show the submission options sidebar if we are allowed to create a new submission
+        def sidebar_partial
+          return 'submission_default' if allow_new_submission?
+
+          'default'
+        end
+      end
+
+      state :qc_complete, human_name: 'QC Complete' do
+        include Statemachine::StateAllowsChildCreation
+      end
+
+      state :cancelled do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :failed do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+
+      state :unknown do
+        include Statemachine::StateDoesNotAllowChildCreation
+      end
+    end
+
     include Presenters::Statemachine::AllowsLibraryPassing
     include Presenters::SubmissionBehaviour
 
@@ -38,7 +98,8 @@ module Presenters
       'Created on' => :created_on
     }
 
-    TUBE_INCLUDES = 'receptacle,aliquots,aliquots.request,aliquots.request.request_type'
+    DESCENDANT_TUBE_INCLUDES =
+      'receptacle,aliquots,aliquots.request,aliquots.request.request_type,receptacle.requests_as_source.request_type'
 
     # Overridden from SubmissionBehaviour
     # Check for submission already in progress
@@ -106,9 +167,12 @@ module Presenters
     # Returns true if all checks pass, false otherwise
     def tube_matches_requirements?(labware_descendant)
       return false unless tube_type?(labware_descendant)
+
       return false unless tube_purpose?(labware_descendant)
 
-      false unless tube_state?(labware_descendant)
+      return false unless tube_state?(labware_descendant)
+
+      true
     end
 
     # Check that the tube has a request of the specified type and state
@@ -117,15 +181,27 @@ module Presenters
       v2_tube = fetch_v2_tube(labware_descendant)
       return false unless v2_tube
 
-      v2_tube_req = fetch_v2_tube_request(v2_tube)
-      return false unless v2_tube_req
+      v2_tube_reqs = fetch_v2_tube_requests(v2_tube)
+      return false if v2_tube_reqs.empty?
 
-      vtube_req_type = fetch_vtube_req_type(v2_tube_req)
+      # look for a request matching the type and allowed state
+      matching_request?(v2_tube_reqs)
+    end
 
-      return false unless vtube_req_type && req_type_name_matches?(vtube_req_type)
-      return false unless allowed_request_state?(v2_tube_req)
+    def matching_request?(v2_tube_reqs)
+      acceptable_request_found = false
+      v2_tube_reqs.each do |v2_tube_req|
+        tube_req_type = fetch_tube_req_type(v2_tube_req)
 
-      true
+        next unless tube_req_type.present? && req_type_name_matches?(tube_req_type)
+
+        next unless allowed_request_state?(v2_tube_req)
+
+        acceptable_request_found = true
+        break
+      end
+
+      acceptable_request_found
     end
 
     def tube_type?(labware_descendant)
@@ -143,24 +219,27 @@ module Presenters
     def fetch_v2_tube(labware_descendant)
       Sequencescape::Api::V2::Tube.find_all(
         { uuid: labware_descendant.uuid },
-        includes: TUBE_INCLUDES
+        includes: DESCENDANT_TUBE_INCLUDES
       ).first
     end
 
-    def fetch_v2_tube_request(v2_tube)
-      v2_tube.requests_as_source&.first
+    def fetch_v2_tube_requests(v2_tube)
+      # may be more than one request as source if they cancelled or failed a tube and repeated
+      v2_tube.requests_as_source || []
     end
 
-    def fetch_vtube_req_type(v2_tube_req)
-      Array(v2_tube_req).first&.request_type
+    def fetch_tube_req_type(v2_tube_req)
+      v2_tube_req.request_type.name
     end
 
-    def req_type_name_matches?(vtube_req_type)
-      vtube_req_type.name == downstream_seq_request_type_name
+    def req_type_name_matches?(tube_req_type)
+      tube_req_type == downstream_seq_request_type_name
     end
 
     def allowed_request_state?(v2_tube_req)
       downstream_seq_tube_request_allowed_states.include?(v2_tube_req.state)
     end
   end
+
+  # rubocop:enable Metrics/ClassLength
 end
