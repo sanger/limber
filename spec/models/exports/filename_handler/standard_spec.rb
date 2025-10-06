@@ -9,14 +9,14 @@ RSpec.describe Exports::FilenameHandler::Standard do
   let(:page) { 0 }
   let(:export) do
     instance_double(Export,
-                    filename: export_filename_config)
+                    filename: { **export_filename_config, 'name' => filename })
   end
 
   context 'when no barcode options are specified' do
     let(:export_filename_config) { {} }
 
     it 'returns the original filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq(filename)
     end
   end
@@ -25,7 +25,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     let(:export_filename_config) { { 'labware_barcode' => { 'prepend' => true } } }
 
     it 'prepends the labware barcode to the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("#{labware.human_barcode}_export_file")
     end
   end
@@ -35,7 +35,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     let(:export_filename_config) { { 'labware_barcode' => { 'prepend' => true } } }
 
     it 'prepends the labware barcode to the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("#{labware.human_barcode}_export_file")
     end
   end
@@ -44,7 +44,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     let(:export_filename_config) { { 'labware_barcode' => { 'append' => true } } }
 
     it 'appends the labware barcode to the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("export_file_#{labware.human_barcode}")
     end
   end
@@ -53,7 +53,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     let(:export_filename_config) { { 'parent_labware_barcode' => { 'prepend' => true } } }
 
     it 'prepends the parent labware barcode to the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("#{parent_labware.human_barcode}_export_file")
     end
   end
@@ -62,7 +62,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     let(:export_filename_config) { { 'parent_labware_barcode' => { 'append' => true } } }
 
     it 'appends the parent labware barcode to the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("export_file_#{parent_labware.human_barcode}")
     end
   end
@@ -76,7 +76,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     end
 
     it 'appends both barcodes in order' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("export_file_#{labware.human_barcode}_#{parent_labware.human_barcode}")
     end
   end
@@ -85,7 +85,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     let(:export_filename_config) { { 'include_page' => true } }
 
     it 'appends the page number to the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq('export_file_1')
     end
   end
@@ -100,7 +100,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     end
 
     it 'applies all options in correct order' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("#{labware.human_barcode}_export_file_#{parent_labware.human_barcode}_1")
     end
   end
@@ -111,7 +111,7 @@ RSpec.describe Exports::FilenameHandler::Standard do
     before { allow(labware).to receive(:parents).and_return(nil) }
 
     it 'returns the original filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq(filename)
     end
   end

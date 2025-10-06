@@ -16,13 +16,12 @@ RSpec.describe Exports::FilenameHandler::UltimaRebalancing do
     t
   end
   # These arent used but are passed in to keep the build_filename signature the same
-  let(:filename) { nil }
   let(:page) { nil }
   let(:export) { nil }
 
   context 'when the labware has aliquots with batch_id polymetadata' do
     it 'returns the batch_id as the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("Ultima_rebalancing_#{labware.barcode.human}_#{aliquot1_pm1.value}")
     end
   end
@@ -33,7 +32,7 @@ RSpec.describe Exports::FilenameHandler::UltimaRebalancing do
     end
 
     it 'returns the batch_ids as a list as the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("Ultima_rebalancing_#{labware.barcode.human}_#{aliquot1_pm1.value}_#{aliquot2_pm1.value}")
     end
   end
@@ -45,7 +44,7 @@ RSpec.describe Exports::FilenameHandler::UltimaRebalancing do
     end
 
     it 'returns the batch_id as the filename' do
-      result = described_class.build_filename(filename, labware, page, export)
+      result = described_class.build_filename(labware, page, export)
       expect(result).to eq("Ultima_rebalancing_#{labware.barcode.human}")
     end
   end

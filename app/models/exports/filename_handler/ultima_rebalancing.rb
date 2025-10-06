@@ -4,7 +4,7 @@ module Exports
   module FilenameHandler
     # Handles the filename for the Ultima Rebalancing export
     class UltimaRebalancing
-      def self.build_filename(_filename, labware, _page, _export)
+      def self.build_filename(labware, _page, _export)
         batch_ids = labware.aliquots.collect do |aliquot|
           aliquot.poly_metadata.find { |pm| pm.key == 'batch_id' }&.value
         end
