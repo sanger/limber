@@ -384,11 +384,10 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
 
     let(:seq_request) do
       create(
-        :sequencing_request,
+        :ultima_sequencing_request,
         state: state_cancelled,
         include_submissions: true,
-        submission_id: seq_submission.id,
-        request_type: 'sequencing_request_type'
+        submission_id: seq_submission.id
       )
     end
 
@@ -439,11 +438,10 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
 
       let(:seq_request) do
         create(
-          :sequencing_request,
+          :ultima_sequencing_request,
           state: state_started,
           include_submissions: true,
-          submission_id: seq_submission.id,
-          request_type: 'sequencing_request_type'
+          submission_id: seq_submission.id
         )
       end
 
@@ -465,11 +463,10 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
 
       let(:seq_request) do
         create(
-          :sequencing_request,
+          :ultima_sequencing_request,
           state: state_completed,
           include_submissions: true,
-          submission_id: seq_submission.id,
-          request_type: 'sequencing_request_type'
+          submission_id: seq_submission.id
         )
       end
 
@@ -492,21 +489,19 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
 
       let(:seq_request1) do
         create(
-          :sequencing_request,
+          :ultima_sequencing_request,
           state: state_cancelled,
           include_submissions: true,
-          submission_id: seq_submission.id,
-          request_type: 'sequencing_request_type'
+          submission_id: seq_submission.id
         )
       end
 
       let(:seq_request2) do
         create(
-          :sequencing_request,
+          :ultima_sequencing_request,
           state: state_completed,
           include_submissions: true,
-          submission_id: seq_submission.id,
-          request_type: 'sequencing_request_type'
+          submission_id: seq_submission.id
         )
       end
 
@@ -546,20 +541,18 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
 
     let(:pending_request1) do
       create(
-        :request,
+        :ultima_sequencing_request,
         state: state_pending,
         include_submissions: true,
-        submission_id: pending_submission.id,
-        request_type: 'pending_request_type'
+        submission_id: pending_submission.id
       )
     end
     let(:pending_request2) do
       create(
-        :request,
+        :ultima_sequencing_request,
         state: state_pending,
         include_submissions: true,
-        submission_id: pending_submission.id,
-        request_type: 'pending_request_type'
+        submission_id: pending_submission.id
       )
     end
 

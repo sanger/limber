@@ -377,7 +377,7 @@ FactoryBot.define do
             downstream_seq_tube: {
               purpose: 'Norm Tube Purpose',
               state: 'passed',
-              request_type: 'sequencing_request_type',
+              request_type: 'Ultima Sequencing',
               request_allowed_states: %w[started passed]
             }
           }

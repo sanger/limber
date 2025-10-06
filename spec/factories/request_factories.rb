@@ -120,6 +120,11 @@ FactoryBot.define do
       request_type { create :sequencing_request_type }
     end
 
+    # Ultima sequencing request, representing the sequencing step for Ultima technology.
+    factory :ultima_sequencing_request do
+      request_type { create :ultima_sequencing_request_type }
+    end
+
     # Aggregation request, representing the transfer of many plates onto
     # one at the beginning of the process
     factory :aggregation_request do
@@ -188,6 +193,12 @@ FactoryBot.define do
     factory :sequencing_request_type do
       name { 'Limber Sequencing' }
       key { 'limber_sequencing' }
+    end
+
+    # Request type for the sequencing step for Ultima technology
+    factory :ultima_sequencing_request_type do
+      name { 'Ultima Sequencing' }
+      key { 'ultima_sequencing' }
     end
 
     # Request type for the aggregation
