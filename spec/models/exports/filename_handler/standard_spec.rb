@@ -21,6 +21,15 @@ RSpec.describe Exports::FilenameHandler::Standard do
     end
   end
 
+  context 'when no filename export config is provided' do
+    let(:export) { instance_double(Export, filename: nil, csv: 'default_csv') }
+
+    it 'returns the csv name' do
+      result = described_class.build_filename(labware, page, export)
+      expect(result).to eq('default_csv')
+    end
+  end
+
   context 'when labware barcode is to be prepended' do
     let(:export_filename_config) { { 'labware_barcode' => { 'prepend' => true } } }
 
