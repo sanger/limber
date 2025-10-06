@@ -1,0 +1,29 @@
+<%= page(:'rebalanced-pooled-tube') do -%>
+  <%= content do %>
+    <%= card title: 'Help' do %>
+      <h4>Repooling Calculation</h4>
+      <p>Upload the coverage table data file downloaded from the Nexus platform.</p>
+      <p>The file must be in CSV format and its name should start with the batch ID (e.g., <code>425514_barcode-coverage-table-data.csv</code>).</p>
+      <p>The file should include the following columns (case-insensitive):</p>
+      <ul>
+        <li><code>sample</code></li>
+        <li><code>barcode</code></li>
+        <li><code>pf_barcode_reads</code></li>
+        <li><code>mean_cvg</code></li>
+      </ul>
+      <p>The file is expected to contain one sample per column.</p>
+      <p>You can download the repooling file from the UBF Balanced Tube once it has been created.</p>
+    <% end %>
+  <% end %>
+  <%= sidebar do %>
+    <%= card title: 'File upload' do %>
+      <%= form_for(@labware_creator, as: :tube, url: plate_child_tube_creations_path(@labware_creator.parent)) do |f| %>
+        <%= f.hidden_field :purpose_uuid %>
+        <div class="form-group">
+          <%= f.file_field :file, accept: '.csv', required: true %>
+        </div>
+        <%= f.submit class: 'btn btn-success' %>
+      <% end %>
+    <% end %>
+  <% end %>
+<%- end -%>
