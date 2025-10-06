@@ -38,7 +38,7 @@ FactoryBot.define do
     pre_capture_pool { nil }
     uuid
     submission do
-      create :submission, id: submission_id.to_s, uuid: "pool-#{submission_id + 1}-uuid" if include_submissions
+      create :submission, id: submission_id.to_s, uuid: "pool-#{submission_id.to_i + 1}-uuid" if include_submissions
     end
 
     after(:build) do |request, evaluator|
