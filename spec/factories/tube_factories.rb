@@ -12,7 +12,7 @@ FactoryBot.define do
     state { 'passed' }
     purpose_name { 'example-purpose' }
     purpose_uuid { 'example-purpose-uuid' }
-    receptacle { create(:receptacle, qc_results: [], aliquots: aliquots) }
+    receptacle { create(:receptacle, qc_results: [], aliquots: aliquots, requests_as_source: requests_as_source) }
     sibling_tubes { [{ name: name, uuid: uuid, ean13_barcode: ean13, state: state }] + siblings }
     created_at { '2017-06-29T09:31:59.000+01:00' }
     updated_at { '2017-06-29T09:31:59.000+01:00' }
@@ -31,6 +31,7 @@ FactoryBot.define do
       parents { [] }
       purpose { create :purpose, name: purpose_name, uuid: purpose_uuid }
       racked_tube { nil }
+      requests_as_source { [] }
 
       siblings_count { 0 }
       sibling_default_state { 'passed' }
