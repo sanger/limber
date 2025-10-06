@@ -369,6 +369,33 @@ FactoryBot.define do
       manual_transfer { { states: allowed_states } }
     end
 
+    factory :submission_plate_downstream_completed_purpose_config do
+      presenter_class do
+        {
+          name: 'Presenters::SubmissionPlateDownstreamCompletedPresenter',
+          args: {
+            downstream_seq_tube: {
+              purpose: 'Norm Tube Purpose',
+              state: 'passed',
+              request_type: 'sequencing_request_type',
+              request_allowed_states: %w[started passed]
+            }
+          }
+        }
+      end
+      submission_options do
+        {
+          'Example submission name' => {
+            'template_name' => 'Example template name',
+            'request_options' => {
+              'no_options' => ''
+            },
+            'allowed_extra_barcodes' => false
+          }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
