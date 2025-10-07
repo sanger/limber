@@ -66,6 +66,9 @@ UPF Balanced Pool:
   :creator_class: LabwareCreators::PooledTubesBySubmission
   :presenter_class: Presenters::SimpleTubePresenter
   :default_printer_type: :tube
+  :file_links:
+    - name: 'Download Rebalanced Library Pooling file'
+      id: 'ultima_rebalancing'
 UPF Balanced Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
