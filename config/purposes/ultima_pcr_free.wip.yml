@@ -22,6 +22,28 @@ UPF Lib:
 UPF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
+  :presenter_class:
+    name: Presenters::SubmissionPlateDownstreamCompletedPresenter
+    args:
+      downstream_seq_tube:
+        purpose: 'UPF EqVol Norm'
+        state: 'passed'
+        request_type: 'Ultima sequencing'
+        request_allowed_states:
+          - 'started'
+          - 'passed'
+  :submission_options:
+    Ultima Rebalancing:
+      template_name: 'Limber-Htp - Ultima PCR Free - Rebalancing'
+      # We don't really need request options, but the Sequencescape API expects to
+      # receive an object and won't accept an empty one, so we pass it a key that
+      # it won't use and this stops it complaining about a "blank" object.
+      request_options:
+        no_options: ''
+      allowed_extra_barcodes: false
+  :manual_transfer:
+    states:
+      - 'pending'
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -36,3 +58,28 @@ UPF EqVol Norm:
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
+UPF Balanced Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  # TODO: this creator needs to be replaced by one that takes the upload of the Nexus file
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+UPF Balanced Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :default_printer_type: :tube
+  # TODO: this creator needs to be replaced by one that creates 2 child tubes
+  :creator_class: LabwareCreators::TubeFromTube
+  # TODO: this presenter needs to be replaced by one that can do an automatic
+  # submission on a tube for Ultima sequencing.
+  # :presenter_class: Presenters::SubmissionTubePresenter
+  # :submission_options:
+  #   Ultima Sequencing - Automated Submission:
+  #     template_name: 'Limber-Htp - Ultima PCR Free - Ultima sequencing Automated'
+  #     allowed_extra_barcodes: false
+  #     request_options:
+  #       # TODO: what goes here for the Ultima sequencing submission?
+  :presenter_class: Presenters::FinalTubePresenter
