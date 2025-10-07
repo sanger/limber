@@ -32,11 +32,15 @@ module Presenters::SubmissionBehaviour
 
   def asset_groups
     @asset_groups ||=
-      labware
-        .wells
-        .reject { |well| exclude_well?(well) }
-        .group_by(&:order_group)
-        .map { |_, wells| format_asset_group(wells) }
+      if labware.type == 'tubes'
+        [{ assets: [labware.uuid], autodetect_studies: true, autodetect_projects: true }]
+      else
+        labware
+          .wells
+          .reject { |well| exclude_well?(well) }
+          .group_by(&:order_group)
+          .map { |_, wells| format_asset_group(wells) }
+      end
   end
 
   def exclude_well?(well)
