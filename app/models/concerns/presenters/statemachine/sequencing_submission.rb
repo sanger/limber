@@ -38,7 +38,7 @@ module Presenters::Statemachine
 
         state :passed do
           include StateDoesNotAllowChildCreation
-          include TubeAllowsLibraryPassing
+          include DoesNotAllowLibraryPassing
 
           def sidebar_partial
             'submission_default'
@@ -47,7 +47,7 @@ module Presenters::Statemachine
 
         state :qc_complete, human_name: 'QC Complete' do
           include StateDoesNotAllowChildCreation
-          include TubeAllowsLibraryPassing
+          include DoesNotAllowLibraryPassing
         end
 
         state :unknown do
