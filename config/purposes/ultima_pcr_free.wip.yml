@@ -30,7 +30,6 @@ UPF Lib XP2:
         state: 'passed'
         request_type: 'Ultima sequencing'
         request_allowed_states:
-          - 'started'
           - 'passed'
   :submission_options:
     Ultima Rebalancing:
@@ -60,7 +59,7 @@ UPF EqVol Norm:
   :default_printer_type: :tube
 UPF Balanced Pool:
   :asset_type: tube
-  :target: StockMultiplexedLibraryTube
+  # :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
   # TODO: this creator needs to be replaced by one that takes the upload of the Nexus file
   :creator_class: LabwareCreators::PooledTubesBySubmission
@@ -71,7 +70,7 @@ UPF Balanced Pool:
       id: 'ultima_rebalancing'
 UPF Balanced Norm:
   :asset_type: tube
-  :target: MultiplexedLibraryTube
+  # :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
   :default_printer_type: :tube
   :creator_class: LabwareCreators::TubeFromTube
