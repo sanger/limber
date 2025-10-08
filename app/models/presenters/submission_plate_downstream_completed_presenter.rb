@@ -106,10 +106,9 @@ module Presenters
     # If not, check that the first sequencing run has completed by checking the downstream tubes
     def allow_new_submission?
       # No more than one submission of a type can be active at time for a given labware.
-      # Prevent new submissions if any are currently in progress, as the submission type
+      # Prevent new submissions if any are currently pending (in progress), as the submission type
       # is currently not available.
-      submissions_in_progress = pending_submissions? || active_submissions?
-      return false if submissions_in_progress
+      return false if pending_submissions?
 
       # Next check if any downstream tubes exist matching the requirements (there may be more than one
       # depending on pooling and repeats, we need at least one to have completed the first run)
@@ -121,6 +120,13 @@ module Presenters
 
       # We found at least one downstream tube matching the requirements so we can allow a new submission
       true
+    end
+
+    def pending_submissions?
+      submissions.any? do |submission|
+        %w[building pending processing].include?(submission.state) ||
+          submission.building_in_progress?(ready_buffer: 20.seconds)
+      end
     end
 
     private
@@ -238,6 +244,63 @@ module Presenters
 
     def allowed_request_state?(v2_tube_req)
       downstream_seq_tube_request_allowed_states.include?(v2_tube_req.state)
+    end
+
+    # Overriden from SubmissionBehaviour
+    # Used to decide what suggested child labwares can be created from this labware.
+    # Checks the request types of the pipeline filtered suggested child purposes against the incomplete
+    # requests on the labware. Only purposes where request_type_key filters match an incomplete submission
+    # are returned.
+    # def suggested_purpose_options
+    #   spo = active_pipelines
+    #     .lazy
+    #     .filter_map do |pipeline, _store|
+    #     child_name = pipeline.child_for(labware.purpose_name)
+    #     uuid, settings =
+    #       compatible_purposes.detect { |_purpose_uuid, purpose_settings| purpose_settings[:name] == child_name }
+    #     next unless uuid
+
+    #     [uuid, settings.merge(filters: pipeline.filters)]
+    #   end
+    #     .uniq
+
+    #   # Collect all request_type_keys from labware.incomplete_requests
+    #   incomplete_request_type_keys = labware.incomplete_requests.filter_map(&:request_type_key)
+
+    #   spo.select do |(_uuid, settings)|
+    #     filter_keys = Array(settings[:filters][:request_type_key])
+    #     filter_keys.all? { |key| incomplete_request_type_keys.include?(key) }
+    #   end
+    # end
+    def suggested_purpose_options
+      spo = build_suggested_purpose_options
+      incomplete_request_type_keys = collect_incomplete_request_type_keys
+      filter_suggested_purpose_options(spo, incomplete_request_type_keys)
+    end
+
+    def build_suggested_purpose_options
+      active_pipelines
+        .lazy
+        .filter_map do |pipeline, _store|
+          child_name = pipeline.child_for(labware.purpose_name)
+          uuid, settings =
+            compatible_purposes.detect { |_purpose_uuid, purpose_settings| purpose_settings[:name] == child_name }
+          next unless uuid
+
+          [uuid, settings.merge(filters: pipeline.filters)]
+        end
+        .uniq
+    end
+
+    def collect_incomplete_request_type_keys
+      labware.incomplete_requests.filter_map(&:request_type_key)
+    end
+
+    def filter_suggested_purpose_options(spo, incomplete_request_type_keys)
+      spo.select do |(_uuid, settings)|
+        filter_keys = Array(settings[:filters][:request_type_key])
+        filter_keys.all? { |key| incomplete_request_type_keys.include?(key) }
+      end
     end
   end
 
