@@ -114,12 +114,8 @@ module Presenters
       # depending on pooling and repeats, we need at least one to have completed the first run)
       downstream_sequenced_tubes = find_downstream_sequenced_tubes
 
-      # If there are no downstream tube(s) yet, we have completed the first run so we cannot create the
-      # new submission
-      return false if downstream_sequenced_tubes.blank?
-
-      # We found at least one downstream tube matching the requirements so we can allow a new submission
-      true
+      # If we find downstream sequenced tubes, we can allow a new submission
+      downstream_sequenced_tubes.present?
     end
 
     def pending_submissions?
@@ -172,7 +168,7 @@ module Presenters
     # Check that the labware descendant is a tube of the specified purpose and state
     # Returns true if all checks pass, false otherwise
     def tube_matches_requirements?(labware_descendant)
-      return false unless tube_type?(labware_descendant)
+      return false unless labware_descendant.tube?
 
       return false unless tube_purpose?(labware_descendant)
 
@@ -208,10 +204,6 @@ module Presenters
       end
 
       acceptable_request_found
-    end
-
-    def tube_type?(labware_descendant)
-      labware_descendant.type == 'tubes'
     end
 
     def tube_purpose?(labware_descendant)
