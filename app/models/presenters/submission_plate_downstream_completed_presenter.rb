@@ -243,33 +243,14 @@ module Presenters
     # Checks the request types of the pipeline filtered suggested child purposes against the incomplete
     # requests on the labware. Only purposes where request_type_key filters match an incomplete submission
     # are returned.
-    # def suggested_purpose_options
-    #   spo = active_pipelines
-    #     .lazy
-    #     .filter_map do |pipeline, _store|
-    #     child_name = pipeline.child_for(labware.purpose_name)
-    #     uuid, settings =
-    #       compatible_purposes.detect { |_purpose_uuid, purpose_settings| purpose_settings[:name] == child_name }
-    #     next unless uuid
-
-    #     [uuid, settings.merge(filters: pipeline.filters)]
-    #   end
-    #     .uniq
-
-    #   # Collect all request_type_keys from labware.incomplete_requests
-    #   incomplete_request_type_keys = labware.incomplete_requests.filter_map(&:request_type_key)
-
-    #   spo.select do |(_uuid, settings)|
-    #     filter_keys = Array(settings[:filters][:request_type_key])
-    #     filter_keys.all? { |key| incomplete_request_type_keys.include?(key) }
-    #   end
-    # end
     def suggested_purpose_options
       spo = build_suggested_purpose_options
       incomplete_request_type_keys = collect_incomplete_request_type_keys
       filter_suggested_purpose_options(spo, incomplete_request_type_keys)
     end
 
+    # This identifies possible child purposes based on the active pipelines for this labware
+    # and the compatible purposes defined in the configuration files.
     def build_suggested_purpose_options
       active_pipelines
         .lazy
@@ -284,10 +265,14 @@ module Presenters
         .uniq
     end
 
+    # This identifies requests that are incomplete on the labware - i.e. from active submissions
     def collect_incomplete_request_type_keys
       labware.incomplete_requests.filter_map(&:request_type_key)
     end
 
+    # This filters the suggested purposes based on whether their request_type_key filters
+    # match any of the incomplete request type keys on the labware - i.e. we show buttons only
+    # for child purposes that we have active requests for.
     def filter_suggested_purpose_options(spo, incomplete_request_type_keys)
       spo.select do |(_uuid, settings)|
         filter_keys = Array(settings[:filters][:request_type_key])
