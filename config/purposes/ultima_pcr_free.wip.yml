@@ -59,7 +59,6 @@ UPF EqVol Norm:
   :default_printer_type: :tube
 UPF Balanced Pool:
   :asset_type: tube
-  # :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
   # TODO: this creator needs to be replaced by one that takes the upload of the Nexus file
   :creator_class: LabwareCreators::PooledTubesBySubmission
@@ -70,7 +69,6 @@ UPF Balanced Pool:
       id: 'ultima_rebalancing'
 UPF Balanced Norm:
   :asset_type: tube
-  # :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
   :default_printer_type: :tube
   :creator_class: LabwareCreators::TubeFromTube
@@ -83,7 +81,6 @@ UPF Balanced Norm:
         ot_recipe: Flex
         fragment_size_required_from: 300
         fragment_size_required_to: 400
-  # close off the rebalancing requests
+  # closes off the rebalancing requests
   :state_changer_class: StateChangers::AutomaticTubeStateChanger
   :work_completion_request_type: 'limber_rebalancing_ultima'
-
