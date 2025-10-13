@@ -370,6 +370,8 @@ FactoryBot.define do
     end
 
     factory :submission_plate_downstream_completed_purpose_config do
+      transient { request_type_name { 'Test Request Type' } }
+
       presenter_class do
         {
           name: 'Presenters::SubmissionPlateDownstreamCompletedPresenter',
@@ -377,20 +379,10 @@ FactoryBot.define do
             downstream_seq_tube: {
               purpose: 'Norm Tube Purpose',
               state: 'passed',
-              request_type: 'Ultima Sequencing',
-              request_allowed_states: %w[started passed]
-            }
-          }
-        }
-      end
-      submission_options do
-        {
-          'Example submission name' => {
-            'template_name' => 'Example template name',
-            'request_options' => {
-              'no_options' => ''
+              request_type: request_type_name,
+              request_allowed_states: %w[passed]
             },
-            'allowed_extra_barcodes' => false
+            child_tube_purposes: ['Child Tube Purpose']
           }
         }
       end

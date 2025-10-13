@@ -31,15 +31,8 @@ UPF Lib XP2:
         request_type: 'Ultima sequencing'
         request_allowed_states:
           - 'passed'
-  :submission_options:
-    Ultima Rebalancing:
-      template_name: 'Limber-Htp - Ultima PCR Free - Rebalancing'
-      # We don't really need request options, but the Sequencescape API expects to
-      # receive an object and won't accept an empty one, so we pass it a key that
-      # it won't use and this stops it complaining about a "blank" object.
-      request_options:
-        no_options: ''
-      allowed_extra_barcodes: false
+      child_tube_purposes:
+        - 'UPF Balanced Pool'
   :manual_transfer:
     states:
       - 'pending'
@@ -69,7 +62,7 @@ UPF Balanced Pool:
       id: 'ultima_rebalancing'
 UPF Balanced Norm:
   :asset_type: tube
-  :type: IlluminaHtp::MxTubePurpose
+  :type: IlluminaHtp::StockTubePurpose
   :default_printer_type: :tube
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SubmissionTubePresenter

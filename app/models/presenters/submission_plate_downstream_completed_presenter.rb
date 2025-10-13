@@ -2,28 +2,14 @@
 
 module Presenters
   #
-  # This Presenter presents the user with a selection of submission options,
-  # and allows them to generate corresponding Sequencescape submissions.
-  # It only presents these options when certain pre-requisites are met.
+  # This Presenter only shows the downstream labware creation button(s) if the specified
+  # downstream path has completed.
   # Namely, a downstream tube labware of specified purpose must have a specified
   # state, and must have sequencing requests of the specified type in the specified state.
   #
   # Designed for Ultima where we loop back to perform rebalancing. But only after
   # the initial sequencing run has been completed.
   #
-  # Submission options are defined by the submission_options config in the
-  # purposes/*.yml file. Structure is:
-  # <button text>:
-  #   template_name: <submission template name>
-  #   downstream_seq_tube:
-  #     purpose: <downstream tube purpose> e.g. 'UPF EqVol Norm'
-  #     state: <downstream tube state> e.g. 'passed'
-  #     request_type: <sequencing request type> e.g. 'ultima_sequencing'
-  #     N.B. The NPG team updates the state of sequencing requests
-  #     request_allowed_states: [<request state>, <request state>, etc.] e.g. ['completed', 'failed']
-  #   request_options:
-  #     <request_option_key>: <request_option_value>
-  #     ...
   # rubocop:disable Metrics/ClassLength
   class SubmissionPlateDownstreamCompletedPresenter < PlatePresenter
     include Statemachine::Shared
@@ -61,10 +47,7 @@ module Presenters
       state :passed do
         include Statemachine::StateAllowsChildCreation
 
-        # We only show the submission options sidebar if we are allowed to create a new submission
         def sidebar_partial
-          return 'submission_default' if allow_new_submission?
-
           'default'
         end
       end
@@ -87,7 +70,6 @@ module Presenters
     end
 
     include Presenters::Statemachine::AllowsLibraryPassing
-    include Presenters::SubmissionBehaviour
 
     self.summary_items = {
       'Barcode' => :barcode,
@@ -101,28 +83,14 @@ module Presenters
     DESCENDANT_TUBE_INCLUDES =
       'receptacle,aliquots,aliquots.request,aliquots.request.request_type,receptacle.requests_as_source.request_type'
 
-    # Overridden from SubmissionBehaviour
-    # Check for submission already in progress
-    # If not, check that the first sequencing run has completed by checking the downstream tubes
-    def allow_new_submission?
-      # No more than one submission of a type can be active at time for a given labware.
-      # Prevent new submissions if any are currently pending (in progress), as the submission type
-      # is currently not available.
-      return false if pending_submissions?
-
-      # Next check if any downstream tubes exist matching the requirements (there may be more than one
+    # Prevents the display of specific child creation buttons unless the first sequencing path has finished
+    def allow_specific_child_creation?
+      # Check if any downstream tubes exist matching the requirements (there may be more than one
       # depending on pooling and repeats, we need at least one to have completed the first run)
       downstream_sequenced_tubes = find_downstream_sequenced_tubes
 
-      # If we find downstream sequenced tubes, we can allow a new submission
+      # If we find downstream sequenced tubes, we can allow the specific child creation
       downstream_sequenced_tubes.present?
-    end
-
-    def pending_submissions?
-      submissions.any? do |submission|
-        %w[building pending processing].include?(submission.state) ||
-          submission.building_in_progress?(ready_buffer: 20.seconds)
-      end
     end
 
     private
@@ -145,6 +113,11 @@ module Presenters
     def downstream_seq_tube_request_allowed_states
       @downstream_seq_tube_request_allowed_states ||=
         Array(purpose_config.dig(:presenter_class, :args, :downstream_seq_tube, :request_allowed_states))
+    end
+
+    def child_tube_purposes
+      @child_tube_purposes ||=
+        Array(purpose_config.dig(:presenter_class, :args, :child_tube_purposes))
     end
 
     # Find downstream sequenced tubes matching the requirements
@@ -238,15 +211,19 @@ module Presenters
       downstream_seq_tube_request_allowed_states.include?(v2_tube_req.state)
     end
 
-    # Overriden from SubmissionBehaviour
     # Used to decide what suggested child labwares can be created from this labware.
     # Checks the request types of the pipeline filtered suggested child purposes against the incomplete
     # requests on the labware. Only purposes where request_type_key filters match an incomplete submission
     # are returned.
     def suggested_purpose_options
       spo = build_suggested_purpose_options
-      incomplete_request_type_keys = collect_incomplete_request_type_keys
-      filter_suggested_purpose_options(spo, incomplete_request_type_keys)
+
+      # filter out the purpose(s) specified in the purpose config if we cannot allow the child creation yet
+      if allow_specific_child_creation?
+        spo
+      else
+        filter_suggested_purpose_options(spo)
+      end
     end
 
     # This identifies possible child purposes based on the active pipelines for this labware
@@ -265,18 +242,12 @@ module Presenters
         .uniq
     end
 
-    # This identifies requests that are incomplete on the labware - i.e. from active submissions
-    def collect_incomplete_request_type_keys
-      labware.incomplete_requests.filter_map(&:request_type_key)
-    end
-
     # This filters the suggested purposes based on whether their request_type_key filters
     # match any of the incomplete request type keys on the labware - i.e. we show buttons only
     # for child purposes that we have active requests for.
-    def filter_suggested_purpose_options(spo, incomplete_request_type_keys)
-      spo.select do |(_uuid, settings)|
-        filter_keys = Array(settings[:filters][:request_type_key])
-        filter_keys.all? { |key| incomplete_request_type_keys.include?(key) }
+    def filter_suggested_purpose_options(spo)
+      spo.reject do |(_uuid, settings)|
+        child_tube_purposes.include?(settings[:name])
       end
     end
   end

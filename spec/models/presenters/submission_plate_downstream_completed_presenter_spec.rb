@@ -112,7 +112,7 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
   # current plate setup
   let(:current_plate_uuid) { 'current-plate-uuid' }
   let(:current_plate_purpose_uuid) { 'current-plate-purpose-uuid' }
-  let(:current_plate_purpose_name) { 'current Plate Purpose' }
+  let(:current_plate_purpose_name) { 'Current Plate Purpose' }
 
   # current plate aliquots
   let(:current_receptacle1_uuid) { 'current-receptacle1-uuid' }
@@ -185,6 +185,8 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
 
   let(:current_wells) { [current_well1, current_well2] }
 
+  let(:current_plate_purpose) { create(:purpose_config, name: current_plate_purpose_name) }
+
   # create the current plate with the ancestor plate as its stock plate
   let(:labware) do
     create :plate,
@@ -200,9 +202,30 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
 
   let(:state) { 'passed' }
 
+  # child tube purpose setup
+  let(:child_tube_purpose_name) { 'Child Tube Purpose' }
+  let(:child_tube_purpose_uuid) { 'child-tube-purpose-uuid' }
+
   before do
-    # set up the purpose config for the current plate purpose
-    create(:submission_plate_downstream_completed_purpose_config, uuid: labware.purpose.uuid)
+    # current plate purpose config setup
+    create(
+      :submission_plate_downstream_completed_purpose_config,
+      request_type_name: 'Ultima Sequencing',
+      uuid: current_plate_purpose_uuid,
+      name: current_plate_purpose_name,
+      state_changer_class: 'StateChangers::PlateStateChanger'
+    )
+
+    # child tube purpose config setup
+    create(
+      :purpose_config,
+      name: child_tube_purpose_name,
+      uuid: child_tube_purpose_uuid,
+      state_changer_class: 'StateChangers::TubeStateChanger'
+    )
+
+    # pipeline setup linking current plate purpose to child tube purpose
+    create(:pipeline, relationships: { current_plate_purpose_name => child_tube_purpose_name })
   end
 
   # with no downstream tubes yet, we should behave like a standard labware presenter
@@ -217,7 +240,7 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
     # state of plate should be 'passed' as library prep is completed
     let(:expected_state) { state_completed }
 
-    # sidebar should be the default one as submission cannot be made yet
+    # sidebar should be the default one
     let(:sidebar_partial) { 'default' }
 
     let(:summary_tab) do
@@ -239,17 +262,17 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
       labware.wells.each { |well| expect(well.aliquots.first.project).to eq(submission_project) }
     end
 
-    it 'has no pending submissions' do
-      expect(presenter.pending_submissions?).to be false
-    end
-
     it 'displays the default sidebar' do
       expect(presenter.sidebar_partial).to eq('default')
+    end
+
+    it 'does not display the child purpose in the suggested purposes' do
+      expect(presenter.suggested_purposes).not_to include('Child Tube Purpose')
     end
   end
 
   # with downstream tubes we check the requests and their states to determine if
-  # the initial run has completed and if we can now allow submissions
+  # the initial run has completed and if we can now allow child tube creation
   context 'with downstream tubes' do
     # create a multiplexing submission and it's requests
     let(:mx_submission) { create(:submission, state: 'completed') }
@@ -420,16 +443,16 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
     end
 
     context 'with a labware that has only a cancelled sequencing submission' do
-      it 'does not allow submissions yet' do
-        expect(presenter.allow_new_submission?).to be false
-      end
-
-      it 'has no pending submissions' do
-        expect(presenter.pending_submissions?).to be false
+      it 'does not allow child creation yet' do
+        expect(presenter.allow_specific_child_creation?).to be false
       end
 
       it 'displays the default sidebar' do
         expect(presenter.sidebar_partial).to eq('default')
+      end
+
+      it 'does not display the child purpose in the suggested purposes' do
+        expect(presenter.suggested_purposes).to be_empty
       end
     end
 
@@ -445,16 +468,16 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
         )
       end
 
-      it 'does allow submissions' do
-        expect(presenter.allow_new_submission?).to be true
+      it 'allows child creation' do
+        expect(presenter.allow_specific_child_creation?).to be false
       end
 
-      it 'has no pending submissions' do
-        expect(presenter.pending_submissions?).to be false
+      it 'displays the default sidebar' do
+        expect(presenter.sidebar_partial).to eq('default')
       end
 
-      it 'displays the submissions sidebar' do
-        expect(presenter.sidebar_partial).to eq('submission_default')
+      it 'displays the child purpose in the suggested purposes' do
+        expect(presenter.suggested_purposes).to be_empty
       end
     end
 
@@ -470,16 +493,28 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
         )
       end
 
-      it 'does allow submissions' do
-        expect(presenter.allow_new_submission?).to be true
+      it 'allows child creation' do
+        expect(presenter.allow_specific_child_creation?).to be true
       end
 
-      it 'has no pending submissions' do
-        expect(presenter.pending_submissions?).to be false
+      it 'displays the default sidebar' do
+        expect(presenter.sidebar_partial).to eq('default')
       end
 
-      it 'displays the submissions sidebar' do
-        expect(presenter.sidebar_partial).to eq('submission_default')
+      it 'suggested_purposes is an array' do
+        expect(presenter.suggested_purposes).to be_an Array
+      end
+
+      it 'suggested_purposes contains a CreatorButton as the first element' do
+        expect(presenter.suggested_purposes.first).to be_a LabwareCreators::CreatorButton
+      end
+
+      it 'suggested_purposes first element has the correct purpose_uuid' do
+        expect(presenter.suggested_purposes.first.purpose_uuid).to eq(child_tube_purpose_uuid)
+      end
+
+      it 'suggested_purposes first element has the correct name' do
+        expect(presenter.suggested_purposes.first.name).to eq(child_tube_purpose_name)
       end
     end
 
@@ -521,84 +556,29 @@ RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
         )
       end
 
-      it 'does allow submissions' do
-        expect(presenter.allow_new_submission?).to be true
+      it 'allows child creation' do
+        expect(presenter.allow_specific_child_creation?).to be true
       end
 
-      it 'has no pending submissions' do
-        expect(presenter.pending_submissions?).to be false
+      it 'displays the default sidebar' do
+        expect(presenter.sidebar_partial).to eq('default')
       end
 
-      it 'displays the submissions sidebar' do
-        expect(presenter.sidebar_partial).to eq('submission_default')
+      it 'suggested_purposes is an array' do
+        expect(presenter.suggested_purposes).to be_an Array
       end
-    end
-  end
 
-  # with an already active submission we hide the submission sidebar again
-  context 'when a submission has been created we no longer display the submission sidebar' do
-    let(:pending_submission) { create(:submission, state: state_pending) }
+      it 'suggested_purposes contains a CreatorButton as the first element' do
+        expect(presenter.suggested_purposes.first).to be_a LabwareCreators::CreatorButton
+      end
 
-    let(:pending_request1) do
-      create(
-        :ultima_sequencing_request,
-        state: state_pending,
-        include_submissions: true,
-        submission_id: pending_submission.id
-      )
-    end
-    let(:pending_request2) do
-      create(
-        :ultima_sequencing_request,
-        state: state_pending,
-        include_submissions: true,
-        submission_id: pending_submission.id
-      )
-    end
+      it 'suggested_purposes first element has the correct purpose_uuid' do
+        expect(presenter.suggested_purposes.first.purpose_uuid).to eq(child_tube_purpose_uuid)
+      end
 
-    let(:current_well1) do
-      create(
-        :well_with_transfer_requests,
-        aliquots: [current_aliquot1],
-        location: 'A1',
-        transfer_requests_as_source: [],
-        transfer_requests_as_target: [transfer_request1],
-        requests_as_source: [pending_request1]
-      )
-    end
-    let(:current_well2) do
-      create(
-        :well_with_transfer_requests,
-        aliquots: [current_aliquot2],
-        location: 'B1',
-        transfer_requests_as_source: [],
-        transfer_requests_as_target: [transfer_request2],
-        requests_as_source: [pending_request2]
-      )
-    end
-
-    let(:labware) do
-      create :plate,
-             uuid: current_plate_uuid,
-             purpose_name: current_plate_purpose_name,
-             purpose_uuid: current_plate_purpose_uuid,
-             wells: current_wells,
-             ancestors: [ancestor_plate],
-             barcode_number: '2',
-             state: 'passed',
-             direct_submissions: [pending_submission]
-    end
-
-    it 'has pending submissions' do
-      expect(presenter.send(:pending_submissions?)).to be true
-    end
-
-    it 'does not allow submissions' do
-      expect(presenter.allow_new_submission?).to be false
-    end
-
-    it 'displays the default sidebar' do
-      expect(presenter.sidebar_partial).to eq('default')
+      it 'suggested_purposes first element has the correct name' do
+        expect(presenter.suggested_purposes.first.name).to eq(child_tube_purpose_name)
+      end
     end
   end
 end

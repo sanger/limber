@@ -22,9 +22,7 @@ Ultima Multiplexing:
     UPF EqVol Pool: UPF EqVol Norm
 Ultima Rebalancing:
   pipeline_group: Ultima High Throughput PCR Free
-  filters:
-    request_type_key:
-      - limber_rebalancing_ultima
+  # NB. No filters as will create the requests at creation of the Pool tube
   relationships:
     UPF Lib XP2: UPF Balanced Pool
     UPF Balanced Pool: UPF Balanced Norm
