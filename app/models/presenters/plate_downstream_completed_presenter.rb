@@ -11,7 +11,7 @@ module Presenters
   # the initial sequencing run has been completed.
   #
   # rubocop:disable Metrics/ClassLength
-  class SubmissionPlateDownstreamCompletedPresenter < PlatePresenter
+  class PlateDownstreamCompletedPresenter < PlatePresenter
     include Statemachine::Shared
 
     # Modified version of SubmissionWhenPassed state machine

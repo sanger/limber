@@ -23,7 +23,7 @@ UPF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
   :presenter_class:
-    name: Presenters::SubmissionPlateDownstreamCompletedPresenter
+    name: Presenters::PlateDownstreamCompletedPresenter
     args:
       downstream_seq_tube:
         purpose: 'UPF EqVol Norm'

@@ -374,7 +374,7 @@ FactoryBot.define do
 
       presenter_class do
         {
-          name: 'Presenters::SubmissionPlateDownstreamCompletedPresenter',
+          name: 'Presenters::PlateDownstreamCompletedPresenter',
           args: {
             downstream_seq_tube: {
               purpose: 'Norm Tube Purpose',

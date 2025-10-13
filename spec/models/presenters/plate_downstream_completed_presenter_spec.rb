@@ -6,7 +6,7 @@ require_relative 'shared_labware_presenter_examples'
 DESCENDENT_TUBE_INCLUDES =
   'receptacle,aliquots,aliquots.request,aliquots.request.request_type,receptacle.requests_as_source.request_type'
 
-RSpec.describe Presenters::SubmissionPlateDownstreamCompletedPresenter do
+RSpec.describe Presenters::PlateDownstreamCompletedPresenter do
   subject(:presenter) { described_class.new(labware:) }
 
   let(:submission_study) { create :study, name: 'Submission Study' }
