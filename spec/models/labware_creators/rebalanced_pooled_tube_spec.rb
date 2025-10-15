@@ -64,12 +64,12 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
   end
 
   describe '#save' do
-    let(:child_tubes) do
-      # Prepare child tubes and stub their lookups.
-      child_tube = create(:tube, uuid: tube_uuid, name: 'DN5 A1:B1')
+    let(:child_tube) do
+      # Prepare child tube and stub its lookups.
+      child_tube = create(:tube, uuid: tube_uuid)
       stub_labware(child_tube)
       stub_find_by(Sequencescape::Api::V2::Tube, child_tube, custom_includes: 'aliquots')
-      [child_tube]
+      child_tube
     end
 
     let(:specific_tubes_attributes) do
@@ -77,22 +77,16 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
         {
           uuid: purpose_uuid,
           parent_uuids: [parent_uuid],
-          child_tubes: child_tubes,
-          tube_attributes: [{ name: 'DN5 A1:B1' }]
+          child_tubes: [child_tube],
+          tube_attributes: [{}]
         }
-      ]
-    end
-
-    let(:transfer_requests_attributes) do
-      [
-        { source_asset: 'example-well-uuid-A1', target_asset: 'tube-123', submission: 'pool-1-uuid' },
-        { source_asset: 'example-well-uuid-B1', target_asset: 'tube-123', submission: 'pool-1-uuid' }
       ]
     end
 
     before do
       allow(csv_file).to receive(:valid?).and_return(true)
       stub_plate(parent_plate, stub_search: false)
+      allow(Sequencescape::Api::V2::Transfer).to receive(:create!).and_return(true)
       allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:bulk_create).and_return(true)
       allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:as_bulk_payload) do |data|
         data # just return back the input for test assertions
@@ -102,12 +96,11 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
     describe '#save_calculated_metadata_to_tube_aliquots' do
       before do
         expect_specific_tube_creation
-        expect_transfer_request_collection_creation
         creator.save
       end
 
       it 'saves the tube and attaches poly_metadata' do
-        aliquots = child_tubes.map(&:aliquots).flatten
+        aliquots = child_tube.aliquots
         expect(Sequencescape::Api::V2::PolyMetadatum).to have_received(:bulk_create).with(
           array_including(
             hash_including(key: 'sample', value: 'S1', metadatable: aliquots[0]),
