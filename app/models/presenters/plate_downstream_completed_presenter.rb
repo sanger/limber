@@ -12,64 +12,7 @@ module Presenters
   #
   # rubocop:disable Metrics/ClassLength
   class PlateDownstreamCompletedPresenter < PlatePresenter
-    include Statemachine::Shared
-
-    # Modified version of SubmissionWhenPassed state machine
-    state_machine :state, initial: :pending do
-      event :take_default_path, human_name: 'Manual Transfer' do
-        transition pending: :passed
-      end
-
-      state :pending do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :started do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :processed_1 do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :processed_2 do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :processed_3 do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :processed_4 do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :passed do
-        include Statemachine::StateAllowsChildCreation
-
-        def sidebar_partial
-          'default'
-        end
-      end
-
-      state :qc_complete, human_name: 'QC Complete' do
-        include Statemachine::StateAllowsChildCreation
-      end
-
-      state :cancelled do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :failed do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-
-      state :unknown do
-        include Statemachine::StateDoesNotAllowChildCreation
-      end
-    end
-
-    include Presenters::Statemachine::AllowsLibraryPassing
+    include Presenters::Statemachine::Standard
 
     self.summary_items = {
       'Barcode' => :barcode,
