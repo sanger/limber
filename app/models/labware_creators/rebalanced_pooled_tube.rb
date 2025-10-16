@@ -10,8 +10,9 @@ module LabwareCreators
   # calculated from a CSV file provided by the user, which contains the
   # rebalancing variables per sample/tag index.
   #
-  # This class extends {PooledTubesBySubmission}, since in Ultima:
-  # - pooling is always one tube per submission
+  # This class extends {PooledTubesFromWholePlates}, using the transfer template {Whole plate to tube}.
+  # In the Ultima pipeline:
+  # - pooling always produces a single tube containing material from all wells of one XP2 plate
   # - aliquots in the tube are the samples that were in the submission
   #   sequenced in the previous run
   #
