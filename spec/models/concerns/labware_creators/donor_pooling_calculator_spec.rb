@@ -13,7 +13,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
   let(:aliquot1) { create :aliquot, request: request1 }
   let(:request1) { create :scrna_customer_request, request_metadata: request_metadata1 }
   let(:request_metadata1) { create :request_metadata, cells_per_chip_well:, allowance_band: }
-  let(:cells_per_chip_well) { 37_500 }
+  let(:cells_per_chip_well) { 48_750 }
   let(:allowance_band) { '2 pool attempts, 2 counts' }
 
   describe '#number_of_cells_per_chip_well_from_request' do
@@ -211,7 +211,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
     let(:dest_well) { create :well, uuid: 'dest_well_uuid', location: 'A1' }
     let(:dest_well_location) { dest_well.location }
 
-    context 'when the count of samples in pool is outside the range 5 to 10' do
+    context 'when the count of samples in pool is outside the range covered in the allowance table' do
       it 'stores the number of cells per chip well taken from the request on the destination well' do
         expect(instance_of_test_pooling_class).to receive(:create_new_well_metadata).with(
           Rails.application.config.scrna_config[:number_of_cells_per_chip_well_key],
@@ -223,7 +223,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       end
     end
 
-    context 'when the count of samples in pool is within the range 5 to 10' do
+    context 'when the count of samples in pool is within the range covered in the allowance table' do
       # 3rd source well
       let(:source_well3) { create :well, aliquots: [aliquot3] }
       let(:aliquot3) { create :aliquot, request: request3 }
@@ -267,7 +267,7 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
           allow(instance_of_test_pooling_class).to receive(:allowance_band_from_request).and_return(
             '1 pool attempt, 1 count'
           )
-          allow(instance_of_test_pooling_class).to receive(:calculate_chip_loading_volume).and_return(50)
+          allow(instance_of_test_pooling_class).to receive(:calculate_chip_loading_volume).and_return(55.0)
 
           expect do
             instance_of_test_pooling_class.check_pool_for_allowance_band(pool, dest_plate, dest_well_location)
