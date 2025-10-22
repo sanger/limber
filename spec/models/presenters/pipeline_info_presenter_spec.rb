@@ -575,6 +575,24 @@ RSpec.describe Presenters::PipelineInfoPresenter do
         expect(presenter.grandparent_purposes?).to be true
       end
     end
+
+    context 'when an error occurs during API calls' do
+      let(:parent_purpose) { create(:purpose, name: 'Parent Purpose') }
+
+      let(:parent_tube) { create(:stock_tube, purpose: parent_purpose, uuid: 'parent-tube-uuid') }
+
+      before do
+        allow(labware).to receive_messages(parents: [parent_tube])
+        stub_labware_find_all_barcode([parent_tube])
+
+        allow(Sequencescape::Api::V2::Labware).to receive(:find_all)
+          .and_raise(JsonApiClient::Errors::ClientError.new(500, 'Internal Server Error'))
+      end
+
+      it 'returns true' do
+        expect(presenter.grandparent_purposes?).to be true
+      end
+    end
   end
 
   describe '#parent_purposes' do
