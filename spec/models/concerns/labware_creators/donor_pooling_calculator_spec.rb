@@ -291,4 +291,23 @@ RSpec.describe LabwareCreators::DonorPoolingCalculator do
       end
     end
   end
+
+  # NB. This test also catches if the division in calculate_chip_loading_volume is not resulting in a float
+  describe '#adjust_number_of_cells_per_chip_well' do
+    let(:count_of_samples_in_pool) { 9 }
+    let(:number_of_cells_per_chip_well) { 88_126 }
+    let(:allowance_band) { '2 pool attempts, 2 counts' }
+
+    it 'returns the value from the allowance table if final suspension volume is less than volume needed' do
+      # Force final_suspension_volume < volume_needed
+      expect(
+        instance_of_test_pooling_class.send(
+          :adjust_number_of_cells_per_chip_well,
+          count_of_samples_in_pool,
+          number_of_cells_per_chip_well,
+          allowance_band
+        )
+      ).to eq 88_125
+    end
+  end
 end

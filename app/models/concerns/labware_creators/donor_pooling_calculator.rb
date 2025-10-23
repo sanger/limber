@@ -309,7 +309,8 @@ module LabwareCreators::DonorPoolingCalculator
   def calculate_chip_loading_volume(num_cells_per_chip_well)
     chip_loading_conc = Rails.application.config.scrna_config[:desired_chip_loading_concentration]
 
-    num_cells_per_chip_well / chip_loading_conc
+    # NB. the result needs to be a float for calculation purposes or we get rounding errors
+    num_cells_per_chip_well.to_f / chip_loading_conc
   end
 
   # This method calculates the allowance volume for a given chip loading volume and allowance band.
