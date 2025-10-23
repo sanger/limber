@@ -70,6 +70,9 @@ class Presenters::PipelineInfoPresenter
     grandparent_labwares = find_all_labware_parents_with_purposes(labwares: parent_labwares)
 
     true unless grandparent_labwares.empty?
+  rescue JsonApiClient::Errors::ClientError
+    # In case of any API errors, assume there are grandparent purposes
+    true
   end
 
   # Returns a comma-separated list of the purposes of the labware's parents.
