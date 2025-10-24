@@ -130,18 +130,18 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb'
         'Sample Volume (µL)',
         'Resuspension Volume (µL)'
       ],
-      %w[DN1S A1 DN3U A1 60.0 56.2],
-      %w[DN1S B1 DN3U B1 60.0 56.2],
-      %w[DN1S A2 DN3U A1 60.0 56.2],
-      %w[DN1S B2 DN3U B1 50.0 56.2],
-      %w[DN1S A3 DN3U A1 33.3 56.2],
-      %w[DN1S B3 DN3U B1 30.0 56.2],
-      %w[DN2T C1 DN3U A1 60.0 56.2],
-      %w[DN2T D1 DN3U B1 60.0 56.2],
-      %w[DN2T C2 DN3U A1 42.9 56.2],
-      %w[DN2T D2 DN3U B1 37.5 56.2],
-      %w[DN2T C3 DN3U A1 27.3 56.2],
-      %w[DN2T D3 DN3U B1 25.0 56.2]
+      %w[DN1S A1 DN3U A1 70.0 65.6],
+      %w[DN1S B1 DN3U B1 70.0 65.6],
+      %w[DN1S A2 DN3U A1 70.0 65.6],
+      %w[DN1S B2 DN3U B1 58.3 65.6],
+      %w[DN1S A3 DN3U A1 38.9 65.6],
+      %w[DN1S B3 DN3U B1 35.0 65.6],
+      %w[DN2T C1 DN3U A1 70.0 65.6],
+      %w[DN2T D1 DN3U B1 70.0 65.6],
+      %w[DN2T C2 DN3U A1 50.0 65.6],
+      %w[DN2T D2 DN3U B1 43.8 65.6],
+      %w[DN2T C3 DN3U A1 31.8 65.6],
+      %w[DN2T D3 DN3U B1 29.2 65.6]
     ]
   end
 

@@ -97,7 +97,7 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
         source_well_a1.location,
         dest_plate.barcode.human,
         mapping[dest_well_a1.location],
-        '8.8',
+        '11.9',
         '31.2',
         '6.2'
       ]
@@ -110,7 +110,7 @@ RSpec.describe 'exports/hamilton_gem_x_5p_chip_loading.csv.erb' do
         source_well_b1.location,
         dest_plate.barcode.human,
         mapping[dest_well_a2.location],
-        '83.8',
+        '99.4',
         '35.4',
         '2.1'
       ]

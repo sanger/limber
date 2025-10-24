@@ -177,8 +177,9 @@ module LabwareCreators::DonorPoolingCalculator
     # fetch allowance band from the request metadata of the first aliquot in the first source well
     allowance_band = allowance_band_from_request(pool)
 
-    # only consider adjusting the number of cells per chip well if the count of samples in the pool is between 5 and 10
-    if count_of_samples_in_pool.between?(5, 10)
+    # only consider adjusting the number of cells per chip well if the count of samples in the pool is between the min
+    # and max values from the allowance table
+    if count_of_samples_in_pool.between?(allowance_table_min_num_samples, allowance_table_max_num_samples)
       # check and adjust number of cells per chip well if needed
       number_of_cells_per_chip_well =
         adjust_number_of_cells_per_chip_well(count_of_samples_in_pool, number_of_cells_per_chip_well, allowance_band)
@@ -257,6 +258,14 @@ module LabwareCreators::DonorPoolingCalculator
     allowance_band
   end
 
+  def allowance_table_min_num_samples
+    Rails.application.config.scrna_config[:allowance_table][ALLOWANCE_BANDS[:two_pools_two_counts]].keys.min
+  end
+
+  def allowance_table_max_num_samples
+    Rails.application.config.scrna_config[:allowance_table][ALLOWANCE_BANDS[:two_pools_two_counts]].keys.max
+  end
+
   # This method adjusts the number of cells per chip well based on the count of samples in the pool.
   # If the final suspension volume is greater than or equal to the allowance band, the existing value is retained.
   # Otherwise, the number of cells per chip well is adjusted according to the allowance band table.
@@ -300,7 +309,8 @@ module LabwareCreators::DonorPoolingCalculator
   def calculate_chip_loading_volume(num_cells_per_chip_well)
     chip_loading_conc = Rails.application.config.scrna_config[:desired_chip_loading_concentration]
 
-    num_cells_per_chip_well / chip_loading_conc
+    # NB. the result needs to be a float for calculation purposes or we get rounding errors
+    num_cells_per_chip_well.to_f / chip_loading_conc
   end
 
   # This method calculates the allowance volume for a given chip loading volume and allowance band.
