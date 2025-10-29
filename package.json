@@ -14,8 +14,7 @@
     "tiny-emitter": "^2.1.0",
     "unique-slug": "^2.0.0",
     "vue": "^3.5.22",
-    "web-worker": "^1.5.0",
-    "yarn-deduplicate": "^6.0.2"
+    "web-worker": "^1.5.0"
   },
   "devDependencies": {
     "@prettier/plugin-ruby": "^4.0.0",
