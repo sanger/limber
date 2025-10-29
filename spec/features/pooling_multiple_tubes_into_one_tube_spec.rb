@@ -156,11 +156,11 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
     let(:aliquot_set_2) { create_list :tagged_aliquot, 2, library_state: 'passed' }
     let(:example_tube_2) do
       create :tube,
-            barcode_number: 2,
-            state: 'pending',
-            uuid: tube_uuid_2,
-            purpose_name: parent_purpose_name,
-            aliquots: aliquot_set_2
+             barcode_number: 2,
+             state: 'pending',
+             uuid: tube_uuid_2,
+             purpose_name: parent_purpose_name,
+             aliquots: aliquot_set_2
     end
 
     scenario 'creates multiple tubes' do
