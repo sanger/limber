@@ -151,4 +151,37 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
       )
     end
   end
+
+  context 'incorrect tube state' do
+    let(:aliquot_set_2) { create_list :tagged_aliquot, 2, library_state: 'passed' }
+    let(:example_tube_2) do
+      create :tube,
+             barcode_number: 2,
+             state: 'pending',
+             uuid: tube_uuid_2,
+             purpose_name: parent_purpose_name,
+             aliquots: aliquot_set_2
+    end
+
+    scenario 'creates multiple tubes' do
+      fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
+      tube_title = find_by_id('tube-title')
+      expect(tube_title).to have_text(parent_purpose_name)
+      click_on('Add an empty Pool tube tube')
+      scan_in('Tube 1', with: tube_barcode_1)
+      scan_in('Tube 2', with: tube_barcode_2)
+
+      expect(page).to have_text(
+        "Scanned tubes are currently in a 'pending' state when they should be in one of: passed, qc_complete."
+      )
+
+      # removes the error message if another scan is made (NB. currently validation and messages relate to
+      # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
+      scan_in('Tube 2', with: '')
+
+      expect(page).to have_no_text(
+        "Scanned tubes are currently in a 'pending' state when they should be in one of: passed, qc_complete."
+      )
+    end
+  end
 end

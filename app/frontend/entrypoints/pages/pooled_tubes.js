@@ -136,7 +136,8 @@ $('.labware-box').each(function () {
       let response = data[this.dataset.labwareType]
       if (SOURCE_STATES.indexOf(response.state) === -1) {
         this.badLabware()
-        SCAPE.message('Scanned ' + this.dataset.labwareType + 's are unsuitable', 'invalid')
+        const msg = `Scanned ${this.dataset.labwareType}s are currently in a '${response.state}' state when they should be in one of: ${SOURCE_STATES.join(', ')}.`
+        SCAPE.message(msg, 'invalid')
       } else {
         let position = $(this).data('position')
         if (pooler.record(response, position, scanned_barcode)) {
