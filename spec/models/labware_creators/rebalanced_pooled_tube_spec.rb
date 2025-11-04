@@ -90,7 +90,6 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
       ]
     end
 
-
     let(:transfers_attributes) do
       [parent_uuid].map do |source_uuid|
         {
