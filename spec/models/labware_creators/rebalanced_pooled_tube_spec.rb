@@ -83,6 +83,27 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
       ]
     end
 
+    let(:transfer_requests_attributes) do
+      [
+        { source_asset: 'example-well-uuid-A1', target_asset: 'tube-123', submission: 'pool-1-uuid' },
+        { source_asset: 'example-well-uuid-B1', target_asset: 'tube-123', submission: 'pool-1-uuid' }
+      ]
+    end
+
+
+    let(:transfers_attributes) do
+      [parent_uuid].map do |source_uuid|
+        {
+          arguments: {
+            user_uuid: user_uuid,
+            source_uuid: source_uuid,
+            destination_uuid: child_tube.uuid,
+            transfer_template_uuid: 'whole-plate-to-tube'
+          }
+        }
+      end
+    end
+
     before do
       allow(csv_file).to receive(:valid?).and_return(true)
       stub_plate(parent_plate, stub_search: false)
@@ -96,6 +117,7 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
     describe '#save_calculated_metadata_to_tube_aliquots' do
       before do
         expect_specific_tube_creation
+        expect_transfer_creation
         creator.save
       end
 
