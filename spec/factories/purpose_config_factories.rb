@@ -369,6 +369,25 @@ FactoryBot.define do
       manual_transfer { { states: allowed_states } }
     end
 
+    factory :submission_plate_downstream_completed_purpose_config do
+      transient { request_type_name { 'Test Request Type' } }
+
+      presenter_class do
+        {
+          name: 'Presenters::PlateDownstreamCompletedPresenter',
+          args: {
+            downstream_seq_tube: {
+              purpose: 'Norm Tube Purpose',
+              state: 'passed',
+              request_type: request_type_name,
+              request_allowed_states: %w[passed]
+            },
+            child_tube_purposes: ['Child Tube Purpose']
+          }
+        }
+      end
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }

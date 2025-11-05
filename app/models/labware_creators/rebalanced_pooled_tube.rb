@@ -10,8 +10,9 @@ module LabwareCreators
   # calculated from a CSV file provided by the user, which contains the
   # rebalancing variables per sample/tag index.
   #
-  # This class extends {PooledTubesBySubmission}, since in Ultima:
-  # - pooling is always one tube per submission
+  # This class extends {PooledTubesFromWholePlates}, using the transfer template {Whole plate to tube}.
+  # In the Ultima pipeline:
+  # - pooling always produces a single tube containing material from all wells of one XP2 plate
   # - aliquots in the tube are the samples that were in the submission
   #   sequenced in the previous run
   #
@@ -20,11 +21,7 @@ module LabwareCreators
   # 2. The CSV file is validated and parsed into rebalancing variables.
   # 3. For each aliquot in the rebalanced pooled tube, the calculated
   #    rebalancing variables are attached as poly_metadata.
-  #
-  # This will create the pooled tube and associate the calculated metadata
-  # with its aliquots via the Sequencescape v2 API.
-  #
-  class RebalancedPooledTube < PooledTubesBySubmission
+  class RebalancedPooledTube < PooledTubesFromWholePlates
     include LabwareCreators::CustomPage
     include CreatableFrom::PlateReadyForPoolingOnly
 
@@ -36,7 +33,25 @@ module LabwareCreators
     validates :file, presence: true
     validates_nested :csv_file, if: :file
 
-    # Saves the pooled tube and attaches calculated poly_metadata to its aliquots.
+    # Overrides PooledTubesFromWholePlates#parents=
+    # In Ultima, the parent is always known from the context, so this assigns it directly.
+    def parents
+      @parents ||= [parent]
+    end
+
+    # Overrides PooledTubesFromWholePlates#barcodes=
+    # In Ultima, the parent is always known from the context, so this assigns its barcode directly.
+    def barcodes=(_input)
+      @barcodes << parent.barcode
+    end
+
+    # Overrides PooledTubesFromWholePlates#parents_suitable
+    # Always returns true, since the parent labware is known from context and does not
+    # require user-entered validation (unlike the default behaviour).
+    def parents_suitable
+      true
+    end
+
     # @return [Boolean] true if the tube and poly_metadata were successfully saved
     def save
       super && save_calculated_metadata_to_tube_aliquots && true
@@ -80,7 +95,7 @@ module LabwareCreators
     def rebalanced_pool_tube
       return @rebalanced_pool_tube if defined?(@rebalanced_pool_tube)
 
-      @rebalanced_pool_tube = Sequencescape::Api::V2::Tube.find_by(uuid: @child_stock_tubes.values.first.uuid,
+      @rebalanced_pool_tube = Sequencescape::Api::V2::Tube.find_by(uuid: @child.uuid,
                                                                    includes: 'aliquots')
     end
 

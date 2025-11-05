@@ -1,0 +1,4 @@
+<%= sidebar do %>
+  <%= render 'logged_out_warning' %>
+  <%= render "tubes/sidebars/#{@presenter.sidebar_partial}", presenter: @presenter %>
+<% end %>

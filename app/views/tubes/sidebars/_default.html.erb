@@ -1,85 +1,82 @@
-<%= sidebar do %>
-  <%= render partial: 'tube_printing' %>
-  <%= render(partial: 'labware/qc_data_upload') %>
+<%= render partial: 'tube_printing' %>
+<%= render(partial: 'labware/qc_data_upload') %>
 
- <% if presenter.try(:export_to_traction) %>
-  <%= card title: 'Export to Traction' do %>
-        <div id="pool-xp-tube-submit-panel"
-          data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-          data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
-          data-traction-service-url="<%= Limber::Application.config.traction_service_uri %>"
-          data-traction-ui-url="<%= Limber::Application.config.traction_ui_uri %>"
-          data-barcode="<%= presenter.labware.barcode %>">
-        </div>
-  <% end %>
+<% if presenter.try(:export_to_traction) %>
+<%= card title: 'Export to Traction' do %>
+      <div id="pool-xp-tube-submit-panel"
+        data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+        data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+        data-traction-service-url="<%= Limber::Application.config.traction_service_uri %>"
+        data-traction-ui-url="<%= Limber::Application.config.traction_ui_uri %>"
+        data-barcode="<%= presenter.labware.barcode %>">
+      </div>
 <% end %>
-  <%= card title: 'QC Information' do %>
-    <div id="qc-information"
-         data-asset-uuid="<%= @presenter.uuid %>"
-         data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-         data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>">
+<% end %>
+<%= card title: 'QC Information' do %>
+  <div id="qc-information"
+        data-asset-uuid="<%= @presenter.uuid %>"
+        data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+        data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>">
+  </div>
+<% end %>
+
+<%= card title: 'Suggested Actions', css_class: 'suggested-actions' do %>
+  <% presenter.control_suggested_library_passing do %>
+    <%= render partial: 'work_completion_form', locals: { presenter: } %>
+  <% end %>
+  <% @presenter.control_additional_creation do -%>
+    <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
+  <% end %>
+  <% presenter.csv_file_links.each do |link_name, link_target| %>
+    <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
+  <% end %>
+  <% if presenter.transfer_volumes? %>
+    <div class="d-grid gap-2">
+      <%= link_to 'Validate tubes to view transfer volumes', validate_paired_tubes_path, class: 'btn btn-primary btn-lg' %>
     </div>
   <% end %>
-
-  <%= card title: 'Suggested Actions', css_class: 'suggested-actions' do %>
-    <% presenter.control_suggested_library_passing do %>
-      <%= render partial: 'work_completion_form', locals: { presenter: } %>
-    <% end %>
-    <% @presenter.control_additional_creation do -%>
-      <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
-    <% end %>
-    <% presenter.csv_file_links.each do |link_name, link_target| %>
-      <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
-    <% end %>
-    <% if presenter.transfer_volumes? %>
-      <div class="d-grid gap-2">
-        <%= link_to 'Validate tubes to view transfer volumes', validate_paired_tubes_path, class: 'btn btn-primary btn-lg' %>
-      </div>
-    <% end %>
-    <% if presenter.robot? %>
-      <div class="d-grid gap-2">
-        <% @presenter.each_robot do |robot_id, robot_name| %>
-          <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg' %>
-        <% end %>
-      </div>
-    <% else %>
-      <%= simple_state_change_form(@presenter) %>
-    <% end %>
-
-  <% end %>
-
-  <%= card title: 'Adding a Comment' do %>
-   <div id="asset-comments-add-form"
-      data-comment-title="<%= presenter.comment_title %>"
-      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
-      data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
-      data-asset-id="<%= presenter.id %>">
+  <% if presenter.robot? %>
+    <div class="d-grid gap-2">
+      <% @presenter.each_robot do |robot_id, robot_name| %>
+        <%= link_to robot_name, robot_path(robot_id), class: 'btn btn-primary btn-lg' %>
+      <% end %>
     </div>
+  <% else %>
+    <%= simple_state_change_form(@presenter) %>
   <% end %>
 
-  <%= card title: 'Adding Custom Metadata', css_class: 'logged_in_only' do %>
-    <div id="labware-custom-metadata-add-form"
-      data-custom-metadata-fields="<%= presenter.custom_metadata_fields %>"
-      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
-      data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
-      data-labware-id="<%= presenter.id %>">
-    </div>
+<% end %>
+
+<%= card title: 'Adding a Comment' do %>
+  <div id="asset-comments-add-form"
+    data-comment-title="<%= presenter.comment_title %>"
+    data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+    data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+    data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
+    data-asset-id="<%= presenter.id %>">
+  </div>
+<% end %>
+
+<%= card title: 'Adding Custom Metadata', css_class: 'logged_in_only' do %>
+  <div id="labware-custom-metadata-add-form"
+    data-custom-metadata-fields="<%= presenter.custom_metadata_fields %>"
+    data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
+    data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+    data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
+    data-labware-id="<%= presenter.id %>">
+  </div>
+<% end %>
+
+<%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
+  <% if presenter.robot? %>
+    <%= simple_state_change_form(@presenter) %>
   <% end %>
 
-  <%= card title: 'Other Actions', css_class: 'other-actions logged_in_only' do %>
-    <% if presenter.robot? %>
-      <%= simple_state_change_form(@presenter) %>
-    <% end %>
-
-    <%= @presenter.control_additional_creation do %>
-      <%= render partial: 'creation_dropdown', locals: { resource_type: 'tubes', resources: presenter.compatible_tube_purposes } %>
-    <% end %>
-
-    <div id="tube-state">
-      <%= state_change_form(@presenter) %>
-    </div>
+  <%= @presenter.control_additional_creation do %>
+    <%= render partial: 'creation_dropdown', locals: { resource_type: 'tubes', resources: presenter.compatible_tube_purposes } %>
   <% end %>
 
+  <div id="tube-state">
+    <%= state_change_form(@presenter) %>
+  </div>
 <% end %>
