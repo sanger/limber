@@ -11,8 +11,8 @@
           <%= tube.name %>
         <% end %>
       </dd>
-    <dt>Barcode</dt>
-    <dd><%= useful_barcode(tube.barcode) %></dd>
+    <dt>Barcode</dt><dd><%= useful_barcode(tube.barcode) %></dd>
+    <dt>Purpose</dt><dd><%= tube.purpose.name %></dd>
     <dt>Current state</dt><dd><%= content_tag(:span, state_badge(tube.state)) %></dd>
     <dt>Source wells</dt><dd><%= WellHelpers.formatted_range(tube.source_locations, size) %></dd>
   </dl>

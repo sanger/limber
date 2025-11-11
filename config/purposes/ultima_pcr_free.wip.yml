@@ -22,6 +22,20 @@ UPF Lib:
 UPF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
+  :presenter_class:
+    name: Presenters::PlateDownstreamCompletedPresenter
+    args:
+      downstream_seq_tube:
+        purpose: 'UPF EqVol Norm'
+        state: 'passed'
+        request_type: 'Ultima sequencing'
+        request_allowed_states:
+          - 'passed'
+      child_tube_purposes:
+        - 'UPF Balanced Pool'
+  :manual_transfer:
+    states:
+      - 'pending'
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -36,3 +50,29 @@ UPF EqVol Norm:
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
   :default_printer_type: :tube
+UPF Balanced Pool:
+  :asset_type: tube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::RebalancedPooledTube
+  :target: LibraryTube
+  :number_of_parent_labwares: 1
+  :transfer_template: 'Whole plate to tube'
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :file_links:
+    - name: 'Download Rebalanced Library Pooling file'
+      id: 'ultima_rebalancing'
+UPF Balanced Norm:
+  :asset_type: tube
+  :type: IlluminaHtp::StockTubePurpose
+  :default_printer_type: :tube
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SubmissionTubePresenter
+  :submission_options:
+    Ultima Sequencing - Automated Submission:
+      template_name: 'Limber-Htp - Ultima PCR Free - Ultima sequencing Automated'
+      allowed_extra_barcodes: false
+      request_options:
+        ot_recipe: Flex
+        fragment_size_required_from: 300
+        fragment_size_required_to: 400

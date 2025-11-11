@@ -287,3 +287,8 @@ hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig:
 kinnex_prep_plate_export:
   csv: kinnex_prep_plate_export
   plate_includes: wells.downstream_tubes
+ultima_rebalancing:
+  csv: 'exports/ultima_rebalancing'
+  tube_includes: receptacle.aliquots.poly_metadata
+  filename:
+    handler: UltimaRebalancing

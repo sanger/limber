@@ -22,7 +22,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
   has_one :receptacle, class_name: 'Sequencescape::Api::V2::Receptacle'
 
-  has_many :direct_submissions
+  has_many :direct_submissions, class_name: 'Sequencescape::Api::V2::Submission'
   has_many :parents, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :state_changes
   has_many :transfer_requests_as_target, class_name: 'Sequencescape::Api::V2::TransferRequest'
