@@ -43,7 +43,7 @@ LB Lib PCR-XP:
       id: concentrations_nm
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
-  # :mark_under_represented_wells: true
+  :mark_under_represented_wells: true
 LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
