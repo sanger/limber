@@ -108,5 +108,38 @@ RSpec.describe LabwareCreators::FinalTube do
         end
       end
     end
+
+    context 'when create returns exception RecordNotSaved' do
+      let(:parent_tube) { create(:tube, uuid: parent_uuid) }
+      let(:active_model_errors) do
+        errors = ActiveModel::Errors.new(subject)
+        errors.add(:destination_id, 'can only be transferred to once from the source')
+        errors
+      end
+
+      let(:tube_transfer) do
+        transfer = Sequencescape::Api::V2::Transfer.new(
+          type: 'transfers',
+          source_uuid: parent_uuid,
+          transfer_template_uuid: transfer_template_uuid,
+          user_uuid: user_uuid
+        )
+        # unsure how else to set the errors
+        transfer.singleton_class.class_eval { attr_accessor :errors }
+        transfer.errors = active_model_errors
+        transfer
+      end
+
+      let(:exception_obj) { JsonApiClient::Errors::RecordNotSaved.new('test', tube_transfer) }
+
+      it 'rescues RecordNotSaved and adds errors' do
+        # rubocop:disable RSpec/SubjectStub
+        allow(subject).to receive(:transfer!).and_raise(exception_obj)
+        # rubocop:enable RSpec/SubjectStub
+
+        expect(subject.create_labware!).to be false
+        expect(subject.errors[:parent]).to include(['Destination can only be transferred to once from the source'])
+      end
+    end
   end
 end
