@@ -250,33 +250,30 @@ let renderPoolingSummary = function (plates) {
 }
 
 let renderDuplicateTagsWarning = function (plates) {
-  if (plates.length <= 1) return;
+  if (plates.length <= 1) return
 
-  const lastScannedPlateIndex = plates.length - 1;
-  const lastScannedPlate = plates[lastScannedPlateIndex];
+  const lastScannedPlateIndex = plates.length - 1
+  const lastScannedPlate = plates[lastScannedPlateIndex]
 
-  const lastTagGroupsMap = new Map(
-    lastScannedPlate.tagGroupsList.map(tg => [tg.id, tg])
-  );
+  const lastTagGroupsMap = new Map(lastScannedPlate.tagGroupsList.map((tg) => [tg.id, tg]))
 
-  const warningMessages = [];
+  const warningMessages = []
 
   for (let i = 0; i < lastScannedPlateIndex; i++) {
-    const duplicateTags = plates[i].tagGroupsList.filter(tg => lastTagGroupsMap.has(tg.id));
+    const duplicateTags = plates[i].tagGroupsList.filter((tg) => lastTagGroupsMap.has(tg.id))
 
     if (duplicateTags.length > 0) {
-      const duplicateNames = duplicateTags.map(tg => tg.name).join(', ');
+      const duplicateNames = duplicateTags.map((tg) => tg.name).join(', ')
       warningMessages.push(
-        `Plate ${lastScannedPlate.barcode} and Plate ${plates[i].barcode} share the same tag group(s): ${duplicateNames}.`
-      );
+        `Plate ${lastScannedPlate.barcode} and Plate ${plates[i].barcode} share the same tag group(s): ${duplicateNames}.`,
+      )
     }
   }
 
   if (warningMessages.length > 0) {
-    SCAPE.message(`Warning: ${warningMessages.join('\n')}`, 'warning');
+    SCAPE.message(`Warning: ${warningMessages.join('\n')}`, 'warning')
   }
-};
-
+}
 
 SCAPE.renderDestinationPools = function () {
   $('.destination-plate .well').empty()
