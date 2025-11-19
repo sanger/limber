@@ -32,8 +32,14 @@ module Presenters::FilterMxChildrenCreationBehaviour
   private
 
   def child_tube_purposes_to_limit
-    @child_tube_purposes_to_limit ||=
-      purpose_config.dig(:presenter_class, :args, :downstream_mx_tube, :child_tube_purposes_to_limit) || []
+    @child_tube_purposes_to_limit ||= determine_child_tube_purposes_to_limit
+  end
+
+  def determine_child_tube_purposes_to_limit
+    # guard against basic presenter config line without args
+    return [] if purpose_config[:presenter_class].is_a?(String)
+
+    purpose_config.dig(:presenter_class, :args, :downstream_mx_tube, :child_tube_purposes_to_limit) || []
   end
 
   def find_downstream_mx_tubes
@@ -86,10 +92,7 @@ module Presenters::FilterMxChildrenCreationBehaviour
   end
 
   def fetch_child_v2_tube(labware_descendant)
-    Sequencescape::Api::V2::Tube.find_by(
-      uuid: labware_descendant.uuid,
-      includes: DESCENDANT_TUBE_INCLUDES
-    )
+    Sequencescape::Api::V2::Tube.find_by(uuid: labware_descendant.uuid, includes: DESCENDANT_TUBE_INCLUDES)
   end
 
   def fetch_child_v2_tube_requests(child_v2_tube)
