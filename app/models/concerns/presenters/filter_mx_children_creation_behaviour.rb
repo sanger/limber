@@ -110,10 +110,6 @@ module Presenters::FilterMxChildrenCreationBehaviour
     tube_req_type.for_multiplexing
   end
 
-  def allowed_request_state?(child_v2_tube_req)
-    downstream_mx_tube_request_allowed_states.include?(child_v2_tube_req.state)
-  end
-
   # rubocop:disable Metrics/MethodLength
   def display_warning_and_filter_child_options(spo)
     # NB. uses lazy.reject to return an enumerator, not an array, because that breaks creation behaviour
