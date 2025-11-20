@@ -166,5 +166,49 @@ RSpec.describe Presenters::SimpleTubePresenter do
         expect(subject.suggested_options_warnings[:tube].first).to include('has been hidden')
       end
     end
+
+    context 'when chid tube does not match requirements' do
+      let(:state) { 'passed' }
+      let(:some_other_child_tube_uuid) { 'some-other-child-tube-uuid' }
+
+      let(:some_other_child_tube_purpose_name) { 'Some Other Child Tube Purpose' }
+      let(:some_other_child_tube_purpose_uuid) { 'some-other-child-tube-purpose-uuid' }
+
+      let(:some_other_child_tube) do
+        create :tube,
+               uuid: some_other_child_tube_uuid,
+               state: 'passed',
+               purpose_name: some_other_child_tube_purpose_name,
+               purpose_uuid: some_other_child_tube_purpose_uuid
+      end
+
+      before do
+        create(
+          :tube_config,
+          name: some_other_child_tube_purpose_name,
+          creator_class: 'LabwareCreators::TubeFromTube',
+          uuid: some_other_child_tube_purpose_uuid
+        )
+        create :pipeline, relationships: { parent_tube_purpose_name => some_other_child_tube_purpose_name }
+
+        allow(labware).to receive(:descendants).and_return([some_other_child_tube])
+
+        stub_find_by(Sequencescape::Api::V2::Tube, some_other_child_tube,
+                     custom_includes: described_class::DESCENDANT_TUBE_INCLUDES)
+      end
+
+      it 'does not filter out the other child purpose from creation' do
+        expect(subject.suggested_purpose_options.force.pluck(0)).to include(some_other_child_tube_purpose_uuid)
+      end
+
+      it 'returns false from tube_matches_requirements?' do
+        expect(subject.send(:tube_matches_requirements?, some_other_child_tube)).to be false
+      end
+
+      it 'has no tube warnings for suggested options' do
+        subject.send(:tube_matches_requirements?, some_other_child_tube)
+        expect(subject.suggested_options_warnings[:tube]).to be_empty
+      end
+    end
   end
 end
