@@ -43,6 +43,8 @@ module Presenters::FilterMxChildrenCreationBehaviour
   end
 
   def find_downstream_mx_tubes
+    return [] if @labware.descendants.blank?
+
     @labware.descendants.each_with_object([]) do |labware_descendant, arr|
       next unless tube_matches_requirements?(labware_descendant)
 
