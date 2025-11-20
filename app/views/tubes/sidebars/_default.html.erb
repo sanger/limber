@@ -26,7 +26,7 @@
   <% end %>
   <% presenter.control_additional_creation do -%>
     <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
-    <% if presenter.suggested_options_warnings.present? %>
+    <% if presenter.try(:suggested_options_warnings).present? %>
       <% flash[:warning] ||= [] %>
       <div class="asset-warnings">
         <div class="row">
