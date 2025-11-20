@@ -27,14 +27,12 @@
   <% presenter.control_additional_creation do -%>
     <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
     <% if presenter.try(:suggested_options_warnings).present? %>
-      <% flash[:warning] ||= [] %>
       <div class="asset-warnings">
         <div class="row">
           <h3>Warning!</h3>
           <ul>
             <% presenter.suggested_options_warnings.full_messages.each do |message| %>
-              <%# add message to both flash and suggested options panel %>
-              <% flash[:warning] << message %>
+              <%# add warning message to suggested options panel %>
               <li><%= message %></li>
             <% end %>
           </ul>
