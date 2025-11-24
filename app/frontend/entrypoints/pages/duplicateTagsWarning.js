@@ -26,5 +26,4 @@ let sendDuplicateTagsWarning = function (plates) {
   }
 }
 
-
 export { sendDuplicateTagsWarning }

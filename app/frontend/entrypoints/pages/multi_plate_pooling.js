@@ -250,8 +250,6 @@ let renderPoolingSummary = function (plates) {
   }
 }
 
-
-
 SCAPE.renderDestinationPools = function () {
   $('.destination-plate .well').empty()
 
