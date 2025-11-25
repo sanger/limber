@@ -1,6 +1,6 @@
 import SCAPE from '@/javascript/lib/global_message_system'
 
-let sendDuplicateTagsWarning = function (plates) {
+let sendDuplicateTagGroupsWarning = function (plates) {
   if (plates.length <= 1) return
 
   const lastScannedPlateIndex = plates.length - 1
@@ -11,10 +11,10 @@ let sendDuplicateTagsWarning = function (plates) {
   const warningMessages = []
 
   for (let i = 0; i < lastScannedPlateIndex; i++) {
-    const duplicateTags = plates[i].tagGroupsList.filter((tg) => lastTagGroupsMap.has(tg.id))
+    const duplicateTagGroups = plates[i].tagGroupsList.filter((tg) => lastTagGroupsMap.has(tg.id))
 
-    if (duplicateTags.length > 0) {
-      const duplicateNames = duplicateTags.map((tg) => tg.name).join(', ')
+    if (duplicateTagGroups.length > 0) {
+      const duplicateNames = duplicateTagGroups.map((tg) => tg.name).join(', ')
       warningMessages.push(
         `Plate ${lastScannedPlate.humanBarcode} and Plate ${plates[i].humanBarcode} share the same tag group(s): ${duplicateNames}.`,
       )
@@ -26,4 +26,4 @@ let sendDuplicateTagsWarning = function (plates) {
   }
 }
 
-export { sendDuplicateTagsWarning }
+export { sendDuplicateTagGroupsWarning }
