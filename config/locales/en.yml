@@ -58,6 +58,7 @@ en:
       mark_wells_under_represented_failed: 'Failed to mark wells under-represented due to an unexpected error. Please try again or contact support.'
       fail_wells_failed: 'Failed to fail wells due to an unexpected error. Please try again or contact support.'
       no_wells_selected: 'No wells were selected. Please select at least one well to proceed.'
+      request_needs_closing: "%{request_name} request on %{parent_barcode} needs closing before creating %{purpose_name}."
   notices:
     wells_marked_under_represented: 'Selected wells have been marked as under-represented.'
     wells_failed: 'Selected wells have been failed.'
