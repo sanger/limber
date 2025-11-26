@@ -17,6 +17,8 @@ module LabwareCreators
     private
 
     def create_labware!
+      return false unless can_create_labware?
+
       @child =
         Sequencescape::Api::V2::PooledPlateCreation.create!(
           child_purpose_uuid: purpose_uuid,
@@ -28,6 +30,57 @@ module LabwareCreators
 
       yield(@child) if block_given?
       true
+    end
+
+    # Checks whether labware can be created based on active requests
+    # on parent plates if configured. For each parent plate, if it has any
+    # active requests not in the allowed list, an error is added to the
+    # creator's errors.
+    # @return [Boolean] true if labware can be created, false otherwise
+    def can_create_labware?
+      return true if allowed_active_requests.empty?
+
+      transfers.each_key do |parent_uuid|
+        parent = Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
+        parent.active_requests.map(&:request_type).uniq.each do |request|
+          add_request_error(request, parent) unless allowed_active_requests.include?(request.request_type_key)
+        end
+      end
+      errors.none?
+    end
+
+    # Adds an error to the creator's errors indicating that the given
+    # request needs closing before creating the child labware.
+    # @param request [Sequencescape::Api::V2::Request] the active request
+    # @param parent [Sequencescape::Api::V2::Plate] the parent plate
+    def add_request_error(request, parent)
+      errors.add(:base,
+                 I18n.t('errors.messages.request_needs_closing',
+                        request_name: request.name,
+                        parent_barcode: parent.human_barcode,
+                        purpose_name: purpose_name))
+    end
+
+    # Returns an array of allowed active request keys on the parents to create
+    # the child labware from the purpose config, or an empty array if not
+    # configured. The result is cached after the first call.
+    # @note This method handles two possible formats and normalizes them:
+    #
+    #   creator_class: LabwareCreators::MultiPlatePool
+    #
+    #   creator_class:
+    #     name: LabwareCreators::MultiPlatePool
+    #     args:
+    #       allowed_active_requests:
+    #         - limber_bge_isc
+    #
+    # @return [Array<String>] Array of allowed active request type keys
+    def allowed_active_requests
+      @allowed_active_requests ||= begin
+        creator = purpose_config[:creator_class]
+        creator_hash = creator.is_a?(Hash) ? creator : {}
+        creator_hash.dig(:args, :allowed_active_requests).to_a
+      end
     end
 
     # Returns an array of a hash describing individual transfers
