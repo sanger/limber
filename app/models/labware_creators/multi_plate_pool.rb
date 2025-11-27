@@ -38,12 +38,12 @@ module LabwareCreators
     # creator's errors.
     # @return [Boolean] true if labware can be created, false otherwise
     def can_create_labware?
-      return true if allowed_active_requests.empty?
+      return true if allowed_active_requests.blank? # No restrictions.
 
       transfers.each_key do |parent_uuid|
         parent = Sequencescape::Api::V2::Plate.find_by(uuid: parent_uuid)
-        parent.active_requests.map(&:request_type).uniq.each do |request|
-          add_request_error(request, parent) unless allowed_active_requests.include?(request.request_type_key)
+        parent.active_requests.map(&:request_type).uniq.each do |request_type|
+          add_request_error(request_type, parent) unless allowed_active_requests.include?(request_type.key)
         end
       end
       errors.none?
@@ -51,12 +51,12 @@ module LabwareCreators
 
     # Adds an error to the creator's errors indicating that the given
     # request needs closing before creating the child labware.
-    # @param request [Sequencescape::Api::V2::Request] the active request
+    # @param request [Sequencescape::Api::V2::RequestType] the active request type
     # @param parent [Sequencescape::Api::V2::Plate] the parent plate
-    def add_request_error(request, parent)
+    def add_request_error(request_type, parent)
       errors.add(:base,
                  I18n.t('errors.messages.request_needs_closing',
-                        request_name: request.name,
+                        request_type_name: request_type.name,
                         parent_barcode: parent.human_barcode,
                         purpose_name: purpose_name))
     end
@@ -79,7 +79,8 @@ module LabwareCreators
       @allowed_active_requests ||= begin
         creator = purpose_config[:creator_class]
         creator_hash = creator.is_a?(Hash) ? creator : {}
-        creator_hash.dig(:args, :allowed_active_requests).to_a
+        # Read the array, and reject blank values.
+        creator_hash.dig(:args, :allowed_active_requests).to_a.compact_blank
       end
     end
 
