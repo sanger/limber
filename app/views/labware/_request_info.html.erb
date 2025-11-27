@@ -1,0 +1,21 @@
+<%# Renders the current request in context. %>
+<%#
+Create the general effect of square boxes queued in a row with distinctive colours and symbols for each request type
+%>
+
+<div class="mt-3">
+  <%#
+    for [request_name, request_state]: count in the hash @request_info.grouped_active_requests
+    render using content_tag the html: <span class="badge text-bg-primary">[request_name: request_state | count]</span>
+  %>
+  <%= @request_info.grouped_active_requests.map do |(request_name, request_state), count|
+        content_tag :span, class: "badge subtle-#{request_state.to_s.downcase}",
+                           title: 'Request types and states', data: { 'bs-toggle': 'tooltip' } do
+          "#{request_name} · #{count} #{request_state}"
+        end
+      end.join(' ').html_safe %>
+
+  <% if @labware.for_multiplexing %>
+    <%= content_tag :span, 'MX', class: 'px-1 badge subtle-light', title: 'Has an active multiplexing request', data: { 'bs-toggle': 'tooltip', 'bs-placement': 'bottom' } %>
+  <% end %>
+</div>

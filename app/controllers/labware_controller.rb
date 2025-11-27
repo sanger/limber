@@ -18,6 +18,7 @@ class LabwareController < ApplicationController
 
   def show # rubocop:todo Metrics/AbcSize
     @pipeline_info = Presenters::PipelineInfoPresenter.new(@labware)
+    @request_info = Presenters::RequestInfoPresenter.new(@labware)
     @presenter = presenter_for(@labware)
 
     response.headers['Vary'] = 'Accept'
