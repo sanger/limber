@@ -32,5 +32,10 @@ GnT Pico Lib Pool XP:
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
-  :presenter_class: Presenters::SimpleTubePresenter
+  :presenter_class:
+    name: Presenters::SimpleTubePresenter
+    args:
+      downstream_mx_tube:
+        child_tube_purposes_to_limit:
+          - 'LB Lib Pool Norm'
   :default_printer_type: :tube

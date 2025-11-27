@@ -38,7 +38,7 @@ FactoryBot.define do
     pre_capture_pool { nil }
     uuid
     submission do
-      create :submission, id: submission_id.to_s, uuid: "pool-#{submission_id + 1}-uuid" if include_submissions
+      create :submission, id: submission_id.to_s, uuid: "pool-#{submission_id.to_i + 1}-uuid" if include_submissions
     end
 
     after(:build) do |request, evaluator|
@@ -115,6 +115,16 @@ FactoryBot.define do
       request_type { create :mx_request_type }
     end
 
+    # Sequencing request, representing the sequencing step at the end of most pipelines.
+    factory :sequencing_request do
+      request_type { create :sequencing_request_type }
+    end
+
+    # Ultima sequencing request, representing the sequencing step for Ultima technology.
+    factory :ultima_sequencing_request do
+      request_type { create :ultima_sequencing_request_type }
+    end
+
     # Aggregation request, representing the transfer of many plates onto
     # one at the beginning of the process
     factory :aggregation_request do
@@ -177,6 +187,18 @@ FactoryBot.define do
       name { 'Limber Multiplexing' }
       key { 'limber_multiplexing' }
       for_multiplexing { true }
+    end
+
+    # Request type for the sequencing step at the end of most pipelines
+    factory :sequencing_request_type do
+      name { 'Limber Sequencing' }
+      key { 'limber_sequencing' }
+    end
+
+    # Request type for the sequencing step for Ultima technology
+    factory :ultima_sequencing_request_type do
+      name { 'Ultima Sequencing' }
+      key { 'ultima_sequencing' }
     end
 
     # Request type for the aggregation
