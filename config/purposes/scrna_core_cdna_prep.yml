@@ -7,7 +7,8 @@
 # Plate representing tube rack received from BioResource.
 # In reality, the rack contains LRC Blood Seq & Spare tubes.
 # Cryostor is the name of the buffer used to freeze the PBMCs.
-LRC PBMC Cryostor:
+# 1ml tubes version of the Cryostor tube rack (represented as a plate for now)
+LRC PBMC Cryostor 1ml:
   :asset_type: plate
   :size: 96
   :stock_plate: false
@@ -20,15 +21,30 @@ LRC PBMC Cryostor:
       expected_tube_purpose_names:
         - 'LRC Bank Seq'
         - 'LRC Bank Spare'
-        - 'LRC Bank Input'
+        - 'LRC Bank Input 1ml'
+      filename_for_tube_rack_scan: 'scrna_cryostor_tube_rack_scan.csv'
+# 0.8ml tubes version of the Cryostor tube rack (represented as a plate for now)
+LRC PBMC Cryostor 0.8ml:
+  :asset_type: plate
+  :size: 96
+  :stock_plate: false
+  :input_plate: false
+  :creator_class:
+    name: LabwareCreators::MultiStampTubesUsingTubeRackScan
+    args:
+      expected_request_type_keys:
+        - 'limber_scrna_core_cdna_prep_gem_x_5p'
+      expected_tube_purpose_names:
+        - 'LRC Bank Input 0.8ml'
       filename_for_tube_rack_scan: 'scrna_cryostor_tube_rack_scan.csv'
 # Plate containing defrosted PBMCs in PBS buffer.
-LRC PBMC Defrost PBS:
+# 1ml path version
+LRC PBMC Defrost PBS 1ml:
   :asset_type: plate
   :label_template: plate_quad_qc # creates QC4 barcodes
   :file_links:
     - name: 'Download Cellaca Count CSV'
-      id: hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count
+      id: hamilton_lrc_pbmc_defrost_pbs_1ml_to_cellaca_count
   :qc_thresholds:
     viability:
       units: '%'
@@ -40,6 +56,29 @@ LRC PBMC Defrost PBS:
       decimal_places: 0
   :stock_plate: false
   :input_plate: false
+# 0.8ml path version
+# Differs from 1ml path because does not create QC labels or have Cell Count file link
+LRC PBMC Defrost PBS 0.8ml:
+  :asset_type: plate
+  :qc_thresholds:
+    viability:
+      units: '%'
+      default_threshold: <%= Rails.application.config.scrna_config[:viability_default_threshold] %>
+    total_cell_count:
+      name: Total cell count
+      units: 'cells/ml'
+      default_threshold: <%= Rails.application.config.scrna_config[:total_cell_count_default_threshold] %>
+      decimal_places: 0
+  :stock_plate: false
+  :input_plate: false
+# This plate is an extra step for the 0.8ml path only
+# QC labels and Cell Count file link are on this plate
+LRC PBMC Aliquot:
+  :asset_type: plate
+  :label_template: plate_quad_qc # creates QC4 barcodes
+  :file_links:
+    - name: 'Download Cellaca Count CSV'
+      id: hamilton_lrc_pbmc_aliquot_to_cellaca_count
 # Plate containing pooled PBMCs from different donors.
 # This plate has come from the LRC PBMC Defrost PBS plate, in SeqOps.
 LRC PBMC Pools:
