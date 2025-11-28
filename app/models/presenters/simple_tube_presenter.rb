@@ -2,6 +2,8 @@
 
 module Presenters
   class SimpleTubePresenter < TubePresenter # rubocop:todo Style/Documentation
+    include Presenters::FilterMxChildrenCreationBehaviour
+
     self.summary_items = {
       'Barcode' => :barcode,
       'Tube type' => :purpose_name,
