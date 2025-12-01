@@ -24,8 +24,21 @@
   <% presenter.control_suggested_library_passing do %>
     <%= render partial: 'work_completion_form', locals: { presenter: } %>
   <% end %>
-  <% @presenter.control_additional_creation do -%>
+  <% presenter.control_additional_creation do -%>
     <%= render presenter.suggested_purposes, locals: { parent: presenter.labware } %>
+    <% if presenter.try(:suggested_options_warnings).present? %>
+      <div class="asset-warnings">
+        <div class="row">
+          <h3>Warning!</h3>
+          <ul>
+            <% presenter.suggested_options_warnings.full_messages.each do |message| %>
+              <%# add warning message to suggested options panel %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
   <% end %>
   <% presenter.csv_file_links.each do |link_name, link_target| %>
     <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>

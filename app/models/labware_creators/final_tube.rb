@@ -28,7 +28,13 @@ module LabwareCreators
     end
 
     def create_labware!
-      @all_tube_transfers = parents.map { |this_parent_uuid| transfer!(source_uuid: this_parent_uuid) }
+      @all_tube_transfers = parents.map do |this_parent_uuid|
+        transfer!(source_uuid: this_parent_uuid)
+      rescue JsonApiClient::Errors::RecordNotSaved => e
+        # This will happen when they try to create more than one multiplexed library tube destination.
+        errors.add(:parent, e.record.errors.full_messages)
+        return false
+      end
       true
     end
 
