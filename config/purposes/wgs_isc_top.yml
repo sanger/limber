@@ -43,11 +43,16 @@ LB Lib PCR-XP:
       id: concentrations_nm
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
-  # :mark_under_represented_wells: true
+  :mark_under_represented_wells: true
 LB Lib Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
   :type: IlluminaHtp::InitialStockTubePurpose
   :creator_class: LabwareCreators::PooledTubesBySubmission
-  :presenter_class: Presenters::SimpleTubePresenter
+  :presenter_class:
+    name: Presenters::SimpleTubePresenter
+    args:
+      downstream_mx_tube:
+        child_tube_purposes_to_limit:
+          - 'LB Lib Pool Norm'
   :default_printer_type: :tube
