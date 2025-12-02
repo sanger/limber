@@ -104,8 +104,10 @@ LRC PBMC Pools:
   :stock_plate: false
   :input_plate: false
   :file_links:
-    - name: 'Download Hamilton LRC PBMC Defrost PBS to LRC PBMC Pools CSV'
-      id: hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools
+    - name: 'Download Hamilton LRC PBMC Defrost PBS 1ml to LRC PBMC Pools CSV'
+      id: hamilton_lrc_pbmc_defrost_pbs_1ml_to_lrc_pbmc_pools
+    - name: 'Download Hamilton LRC PBMC Aliquot to LRC PBMC Pools CSV'
+      id: hamilton_lrc_pbmc_aliquot_to_lrc_pbmc_pools
     - name: 'Download Cellaca Count CSV'
       id: 'hamilton_lrc_pbmc_pools_to_cellaca_count'
 # Plate containing pooled PBMCs from different donors.
