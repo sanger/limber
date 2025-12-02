@@ -3591,15 +3591,39 @@ ROBOT_CONFIG =
 
     # scRNA pipeline
     # Hamilton STAR bed verification
-    # LRC PBMC Defrost PBS to LRC PBMC Pools
+    # LRC PBMC Defrost PBS 1ml to LRC PBMC Pools
     # Transfers 1:1
     custom_robot(
-      'hamilton-star-lrc-pbmc-defrost-pbs-to-lrc-pbmc-pools',
-      name: 'Hamilton STAR LRC PBMC Defrost PBS => LRC PBMC Pools',
+      'hamilton-star-lrc-pbmc-defrost-pbs-1ml-to-lrc-pbmc-pools',
+      name: 'Hamilton STAR LRC PBMC Defrost PBS 1ml => LRC PBMC Pools',
       require_robot: true,
       beds: {
         bed(15).barcode => {
-          purpose: 'LRC PBMC Defrost PBS',
+          purpose: 'LRC PBMC Defrost PBS 1ml',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(13).barcode => {
+          purpose: 'LRC PBMC Pools',
+          states: ['pending'],
+          label: 'Bed 13',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton STAR bed verification
+    # LRC PBMC Aliquot to LRC PBMC Pools
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-star-lrc-pbmc-aliquot-to-lrc-pbmc-pools',
+      name: 'Hamilton STAR LRC PBMC Aliquot => LRC PBMC Pools',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC PBMC Aliquot',
           states: ['passed'],
           label: 'Bed 15'
         },
