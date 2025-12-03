@@ -83,7 +83,7 @@ class CreationController < ApplicationController
     flash_messages = [prefix_message] + Array(error_messages)
     respond_to do |format|
       format.html do
-        redirect_back(fallback_location: url_for(@labware_creator.parent), alert: truncate_flash(flash_messages))
+        redirect_back_or_to(url_for(@labware_creator.parent), alert: truncate_flash(flash_messages))
       end
     end
   end
