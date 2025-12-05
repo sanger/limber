@@ -17,6 +17,7 @@ class Sequencescape::Api::V2::Tube < Sequencescape::Api::V2::Base
   self.tube = true
 
   has_many :ancestors, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
+  has_many :descendants, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :children, class_name: 'Sequencescape::Api::V2::Asset' # Having issues with polymorphism, temporary class
   has_many :child_plates, class_name: 'Sequencescape::Api::V2::Plate'
   has_many :child_tubes, class_name: 'Sequencescape::Api::V2::Tube'
