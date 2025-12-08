@@ -8,6 +8,9 @@ class Sequencescape::Api::V2::Aliquot < Sequencescape::Api::V2::Base # rubocop:t
   has_one :project
   has_one :receptacle
 
+  has_one :tag, class_name: 'Sequencescape::Api::V2::Tag'
+  has_one :tag2, class_name: 'Sequencescape::Api::V2::Tag'
+
   def tagged?
     tag_oligo.present? || tag2_oligo.present?
   end
