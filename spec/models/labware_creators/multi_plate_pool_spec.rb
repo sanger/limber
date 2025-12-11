@@ -105,5 +105,103 @@ RSpec.describe LabwareCreators::MultiPlatePool do
         subject.save!
       end
     end
+
+    context 'with active requests on parent plates' do
+      let(:plate) { create(:plate) }
+      let(:plate_b) { create(:plate) }
+      let(:request_type_isc) { create(:request_type, key: 'limber_bge_isc', name: 'Limber BGE ISC') }
+      let(:request_type_transition) do
+        create(:request_type, key: 'limber_bge_transition', name: 'Limber BGE Transition')
+      end
+      let(:request_isc) { create(:request, request_type: request_type_isc) }
+      let(:request_b_isc) { create(:request, request_type: request_type_isc) }
+      let(:request_transition) { create(:request, request_type: request_type_transition) }
+
+      before do
+        # Override the purpose config to set allowed active requests.
+        create(:purpose_config,
+               name: child_purpose_name,
+               uuid: child_purpose_uuid,
+               creator_class: {
+                 args: {
+                   allowed_active_requests: [
+                     'limber_bge_isc'
+                   ]
+                 }
+               })
+
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with({ uuid: plate_uuid }).and_return(plate)
+        allow(Sequencescape::Api::V2::Plate).to receive(:find_by).with({ uuid: plate_b_uuid }).and_return(plate_b)
+      end
+
+      context 'when a parent has an active request not allowed' do
+        before do
+          allow(Sequencescape::Api::V2::PooledPlateCreation).to receive(:create!) # to spy on it
+          allow(plate).to receive(:active_requests).and_return([request_isc, request_transition])
+          allow(plate_b).to receive(:active_requests).and_return([request_b_isc])
+        end
+
+        it 'does not create child labware' do
+          subject.save # The creation controller calls save.
+          expect(Sequencescape::Api::V2::PooledPlateCreation).not_to have_received(:create!) # spied
+        end
+
+        it 'adds an error about the active request' do
+          subject.save
+          expect(subject.errors.full_messages).to include(
+            I18n.t('errors.messages.request_needs_closing',
+                   request_type_name: request_type_transition.name,
+                   parent_barcode: plate.human_barcode,
+                   purpose_name: child_purpose_name)
+          )
+        end
+      end
+
+      context 'when all parents have only allowed active requests' do
+        before do
+          allow(plate).to receive(:active_requests).and_return([request_isc])
+          allow(plate_b).to receive(:active_requests).and_return([request_b_isc])
+        end
+
+        it 'creates the child labware' do
+          expect_bulk_transfer_creation
+          expect_pooled_plate_creation
+          subject.save
+        end
+
+        it 'does not add any errors' do
+          expect_bulk_transfer_creation
+          expect_pooled_plate_creation
+          subject.save
+          expect(subject.errors).to be_empty
+        end
+      end
+
+      context 'when allowed_active_requests is empty' do
+        before do
+          create(:purpose_config,
+                 name: child_purpose_name,
+                 uuid: child_purpose_uuid,
+                 creator_class: {
+                   args: {
+                     allowed_active_requests: [nil, ''] # to test rejecting blank values as well.
+                   }
+                 })
+        end
+
+        it 'creates the child labware' do
+          expect_bulk_transfer_creation
+          expect_pooled_plate_creation
+          subject.save
+        end
+
+        it 'does not add any errors' do
+          expect_bulk_transfer_creation
+          expect_pooled_plate_creation
+          subject.save
+          expect(subject.errors).to be_empty
+        end
+      end
+    end
   end
 end
