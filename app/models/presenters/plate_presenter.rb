@@ -126,6 +126,13 @@ module Presenters
       wells.flat_map { |well| well.aliquots.map(&:tag_pair) }
     end
 
+    def tag_groups_list
+      wells.flat_map(&:aliquots)
+        .flat_map { |a| [a.tag, a.tag2] }.compact
+        .flat_map(&:tag_group).compact.uniq(&:id)
+        .map { |tg| { id: tg.id, name: tg.name } }
+    end
+
     def wells
       labware.wells_in_columns
     end

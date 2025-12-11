@@ -4,7 +4,6 @@ module PlateHelper # rubocop:todo Style/Documentation
   # Proxy object wrapping the form alongside the presenter.
   # This allows us to use the shared plate partial, but pass the form
   # object through to the custom aliquot partial
-  # rubocop:disable Rails/HelperInstanceVariable
   class WellFailingPresenter < BasicObject
     def initialize(form, presenter)
       @form = form
@@ -18,7 +17,6 @@ module PlateHelper # rubocop:todo Style/Documentation
     delegate_missing_to :_presenter
     attr_reader :form, :_presenter
   end
-  # rubocop:enable Rails/HelperInstanceVariable
 
   def fail_wells_presenter_from(form, presenter)
     WellFailingPresenter.new(form, presenter)
