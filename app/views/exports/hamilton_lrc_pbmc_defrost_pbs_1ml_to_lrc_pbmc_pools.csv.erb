@@ -1,0 +1,70 @@
+<%# This is a picking file for a Hamilton robot for LRC PBMC Defrost plate to LRC PBMC Pools plate transfers %>
+<%= CSV.generate_line [
+    'Workflow',
+    @workflow
+  ],
+  row_sep: ''
+%>
+<%= CSV.generate_line [], row_sep: "" %>
+<%= CSV.generate_line [
+    'Source Plate',
+    'Source Well',
+    'Destination Plate',
+    'Destination Well',
+    'Sample Volume (µL)',
+    'Resuspension Volume (µL)',
+  ],
+  row_sep: ''
+%>
+<%
+  # Constants from config/initializers/scrna_config.rb
+  scrna_config = Rails.application.config.scrna_config
+  required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
+  maximum_sample_volume = scrna_config[:maximum_sample_volume]
+  minimum_sample_volume = scrna_config[:minimum_sample_volume]
+  minimum_resuspension_volume = scrna_config[:minimum_resuspension_volume]
+  millilitres_to_microlitres = scrna_config[:millilitres_to_microlitres]
+  desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
+
+  # Make a mapping { src_barcode => { src_location => src_well } }
+
+  ancestor_plates_wells = @ancestor_plate_list.each_with_object({}) do |ancestor_plate, hash|
+    hash[ancestor_plate.labware_barcode.human] = ancestor_plate.wells.index_by(&:location)
+  end
+
+  # Prepare the fields determined from the transfer requests
+
+  transfer_request_data = []
+  each_source_metadata_for_plate(@plate) do |src_barcode, src_location, dest_well|
+    src_well = ancestor_plates_wells[src_barcode][src_location]
+    cell_count = src_well.latest_total_cell_count  # cells / millilitres
+    next if cell_count.nil?
+
+    # Calculate the sample volume required for the number of cells
+    required_volume = (millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f).clamp(minimum_sample_volume, maximum_sample_volume)
+
+    transfer_request_data << [
+      src_barcode,
+      src_location,
+      @plate.labware_barcode.human,
+      dest_well.location,
+      '%0.1f' % required_volume,
+      # We pass in the required number of cells so that we can calculate the resuspension volume later
+      required_number_of_cells_per_sample_in_pool
+    ]
+  end
+
+  # Calculate the resuspension volumes from the pooled samples count
+
+  samples_by_dest_well = transfer_request_data.group_by { |tr| tr[3] }  # index by dest_well.location
+
+  rows_array = transfer_request_data.map do |data|
+    samples_in_pool = samples_by_dest_well[data[3]].count
+    required_number_of_cells_per_sample_in_pool = data[5]
+    resuspension_volume = [(LabwareCreators::DonorPoolingCalculator.calculate_total_cells_in_300ul(samples_in_pool)) / desired_chip_loading_concentration, minimum_resuspension_volume].max
+    # Replace required number of cells with resuspension volume
+    data[5] = '%0.1f' % resuspension_volume
+    data
+  end
+%>
+<%= rows_array.sort_by{ |a| [ a[0], WellHelpers.well_coordinate(a[1])] }.map(&:to_csv).join %>

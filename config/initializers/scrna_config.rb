@@ -60,7 +60,7 @@ Rails.application.config.scrna_config = {
     }
   },
   # Default viability threshold when passing/failing samples (in percent)
-  viability_default_threshold: 65,
+  viability_default_threshold: 50,
   # Default total cell count threshold when passing/failing samples
   total_cell_count_default_threshold: 50_000,
   # Key for the number of cells per chip well metadata stored on pool wells (in poly_metadata)
