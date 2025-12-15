@@ -24,7 +24,7 @@ LRC PBMC Cryostor 1ml:
         - 'LRC Bank Input 1ml'
       filename_for_tube_rack_scan: 'scrna_cryostor_tube_rack_scan.csv'
 # 0.8ml tubes version of the Cryostor tube rack (represented as a plate for now)
-LRC PBMC Cryostor 0.8ml:
+LRC PBMC Cryostor 08ml:
   :asset_type: plate
   :size: 96
   :stock_plate: false
@@ -35,7 +35,7 @@ LRC PBMC Cryostor 0.8ml:
       expected_request_type_keys:
         - 'limber_scrna_core_cdna_prep_gem_x_5p'
       expected_tube_purpose_names:
-        - 'LRC Bank Input 0.8ml'
+        - 'LRC Bank Input 08ml'
       filename_for_tube_rack_scan: 'scrna_cryostor_tube_rack_scan.csv'
 # Plate containing defrosted PBMCs in PBS buffer.
 # 1ml path version
@@ -58,7 +58,7 @@ LRC PBMC Defrost PBS 1ml:
   :input_plate: false
 # 0.8ml path version
 # Differs from 1ml path because does not create QC labels or have Cell Count file link
-LRC PBMC Defrost PBS 0.8ml:
+LRC PBMC Defrost PBS 08ml:
   :asset_type: plate
   :qc_thresholds:
     viability:

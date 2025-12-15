@@ -160,7 +160,7 @@ LRC Bank Input 1ml:
   :creator_class: LabwareCreators::Uncreatable
   :presenter_class: Presenters::StockTubePresenter
 # FluidX tube frozen input faculty 0.8ml tube, created by manifest
-LRC Bank Input 0.8ml:
+LRC Bank Input 08ml:
   :asset_type: tube
   :target: SampleTube
   :type: Tube::Purpose

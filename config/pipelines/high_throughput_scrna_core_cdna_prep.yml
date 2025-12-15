@@ -13,14 +13,14 @@ scRNA Core cDNA Prep 1ml:
     LRC Bank Input 1ml: LRC PBMC Cryostor 1ml
     LRC PBMC Cryostor 1ml: LRC PBMC Defrost PBS 1ml
     LRC PBMC Defrost PBS 1ml: LRC PBMC Pools
-scRNA Core cDNA Prep 0.8ml:
+scRNA Core cDNA Prep 08ml:
   pipeline_group: scRNA Core cDNA Prep
   filters:
     request_type_key: limber_scrna_core_cdna_prep_gem_x_5p
   relationships:
-    LRC Bank Input 0.8ml: LRC PBMC Cryostor 0.8ml
-    LRC PBMC Cryostor 0.8ml: LRC PBMC Defrost PBS 0.8ml
-    LRC PBMC Defrost PBS 0.8ml: LRC PBMC Aliquot
+    LRC Bank Input 08ml: LRC PBMC Cryostor 08ml
+    LRC PBMC Cryostor 08ml: LRC PBMC Defrost PBS 08ml
+    LRC PBMC Defrost PBS 08ml: LRC PBMC Aliquot
     LRC PBMC Aliquot: LRC PBMC Pools
 scRNA Core cDNA Prep:
   pipeline_group: scRNA Core cDNA Prep
