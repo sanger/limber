@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# spec/lib/labware_creators/ultima_rebalancing_csv_file_spec.rb
+# spec/lib/labware_creators/ultima_balancing_csv_file_spec.rb
 require 'rails_helper'
 require 'csv'
 
-RSpec.describe LabwareCreators::RebalancedPooledTube::UltimaRebalancingCsvFile do
+RSpec.describe LabwareCreators::BalancedPooledTube::UltimaBalancingCsvFile do
   let(:valid_csv_content) do
     <<~CSV
       sample,,,,S1,S2
@@ -151,20 +151,20 @@ RSpec.describe LabwareCreators::RebalancedPooledTube::UltimaRebalancingCsvFile d
     end
   end
 
-  describe '#calculate_rebalancing_variables' do
+  describe '#calculate_balancing_variables' do
     before do
       calculator_double = instance_double(
-        LabwareCreators::RebalancedPooledTube::RebalancingCalculator,
+        LabwareCreators::BalancedPooledTube::BalancingCalculator,
         calculate: { 0 => {} }
       )
-      allow(LabwareCreators::RebalancedPooledTube::RebalancingCalculator).to receive(:new).and_return(calculator_double)
+      allow(LabwareCreators::BalancedPooledTube::BalancingCalculator).to receive(:new).and_return(calculator_double)
     end
 
-    it 'delegates to RebalancingCalculator with the parsed CSV data' do
+    it 'delegates to BalancingCalculator with the parsed CSV data' do
       csv_file = described_class.new(file)
       csv_file.validate!
-      csv_file.calculate_rebalancing_variables
-      expect(LabwareCreators::RebalancedPooledTube::RebalancingCalculator).to have_received(:new).with(
+      csv_file.calculate_balancing_variables
+      expect(LabwareCreators::BalancedPooledTube::BalancingCalculator).to have_received(:new).with(
         %w[S1 S2],
         %w[Z0001 Z0002],
         csv_file.pf_barcode_reads,

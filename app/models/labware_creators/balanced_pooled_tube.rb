@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module LabwareCreators
-  # RebalancedPooledTube is a labware creator used in the Ultima pipeline, responsible for
-  # Creating a rebalanced pooled tube based on user-provided rebalancing data from the outcome
+  # BalancedPooledTube is a labware creator used in the Ultima pipeline, responsible for
+  # Creating a balanced pooled tube based on user-provided balancing data from the outcome
   # of a previous sequencing run (CSV file downloaded from the Nexus platform)
   #
-  # In this pipeline, the user needs to create a rebalanced pooled tube (UPF Balanced Pool Tube)
-  # based on the output of a previous sequencing run. The rebalancing is
+  # In this pipeline, the user needs to create a balanced pooled tube (UPF Balanced Pool Tube)
+  # based on the output of a previous sequencing run. The balancing is
   # calculated from a CSV file provided by the user, which contains the
-  # rebalancing variables per sample/tag index.
+  # balancing variables per sample/tag index.
   #
   # This class extends {PooledTubesFromWholePlates}, using the transfer template {Whole plate to tube}.
   # In the Ultima pipeline:
@@ -18,14 +18,14 @@ module LabwareCreators
   #
   # Workflow:
   # 1. User uploads the previous run’s CSV file(downloaded from nexus platform).
-  # 2. The CSV file is validated and parsed into rebalancing variables.
-  # 3. For each aliquot in the rebalanced pooled tube, the calculated
-  #    rebalancing variables are attached as poly_metadata.
-  class RebalancedPooledTube < PooledTubesFromWholePlates
+  # 2. The CSV file is validated and parsed into balancing variables.
+  # 3. For each aliquot in the balanced pooled tube, the calculated
+  #    balancing variables are attached as poly_metadata.
+  class BalancedPooledTube < PooledTubesFromWholePlates
     include LabwareCreators::CustomPage
     include CreatableFrom::PlateReadyForPoolingOnly
 
-    self.page = 'rebalanced_pooled_tube'
+    self.page = 'balanced_pooled_tube'
     self.attributes += [:file]
 
     attr_accessor :file
@@ -57,8 +57,8 @@ module LabwareCreators
       super && save_calculated_metadata_to_tube_aliquots && true
     end
 
-    # Iterates over the aliquots in the rebalanced pooled tube, looks up their
-    # corresponding rebalancing variables, and builds a set of poly_metadata
+    # Iterates over the aliquots in the balanced pooled tube, looks up their
+    # corresponding balancing variables, and builds a set of poly_metadata
     # to be created in bulk.
     # This method relies on tag_index to match samples with those in the CSV file.
     # This approach is fragile if the tag_index values do not align with the CSV data.
@@ -66,11 +66,11 @@ module LabwareCreators
     # @return [void]
     def save_calculated_metadata_to_tube_aliquots
       aliquot_poly_metadata = []
-      rebalanced_pool_tube.aliquots.each do |aliquot|
-        rebalancing_variables_for_aliquot = rebalancing_variables_per_tag_index[aliquot.tag_index.to_i - 1]
-        next unless rebalancing_variables_for_aliquot
+      balanced_pool_tube.aliquots.each do |aliquot|
+        balancing_variables_for_aliquot = balancing_variables_per_tag_index[aliquot.tag_index.to_i - 1]
+        next unless balancing_variables_for_aliquot
 
-        rebalancing_variables_for_aliquot.each do |key, value|
+        balancing_variables_for_aliquot.each do |key, value|
           aliquot_poly_metadata << { key: key, value: value, metadatable: aliquot }
         end
       end
@@ -86,23 +86,23 @@ module LabwareCreators
     end
 
     def csv_file
-      @csv_file ||= UltimaRebalancingCsvFile.new(file)
+      @csv_file ||= UltimaBalancingCsvFile.new(file)
     end
 
     # Fetches the newly created pool tube (UPF Balanced Pool Tube) , including its aliquots.
     #
     # @return [Sequencescape::Api::V2::Tube]
-    def rebalanced_pool_tube
-      return @rebalanced_pool_tube if defined?(@rebalanced_pool_tube)
+    def balanced_pool_tube
+      return @balanced_pool_tube if defined?(@balanced_pool_tube)
 
-      @rebalanced_pool_tube = Sequencescape::Api::V2::Tube.find_by(uuid: @child.uuid,
+      @balanced_pool_tube = Sequencescape::Api::V2::Tube.find_by(uuid: @child.uuid,
                                                                    includes: 'aliquots')
     end
 
-    # Calculates the rebalancing variables and store them in hash map per tag index.
+    # Calculates the balancing variables and store them in hash map per tag index.
     #
-    def rebalancing_variables_per_tag_index
-      @rebalancing_variables_per_tag_index ||= @csv_file.calculate_rebalancing_variables
+    def balancing_variables_per_tag_index
+      @balancing_variables_per_tag_index ||= @csv_file.calculate_balancing_variables
     end
   end
 end

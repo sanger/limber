@@ -10,8 +10,9 @@ UPF Shear:
   :asset_type: plate
 UPF Post Shear:
   :asset_type: plate
-UPF End Prep XP1:
+UPF End Prep:
   :asset_type: plate
+  :default_printer_type: :ultima_lib_plate
 UPF Lib:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
@@ -19,6 +20,7 @@ UPF Lib:
   :tag_layout_templates:
     - 'Ultima P1'
     - 'Ultima P2'
+  :default_printer_type: :ultima_lib_plate
 UPF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
@@ -36,6 +38,7 @@ UPF Lib XP2:
   :manual_transfer:
     states:
       - 'pending'
+  :default_printer_type: :plate_xp2
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
@@ -47,30 +50,30 @@ UPF EqVol Pool:
       downstream_mx_tube:
         child_tube_purposes_to_limit:
           - 'UPF EqVol Norm'
-  :default_printer_type: :tube
+  :default_printer_type: :ultima_balanced_tube
 UPF EqVol Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
   :type: IlluminaHtp::MxTubePurpose
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::FinalTubePresenter
-  :default_printer_type: :tube
+  :default_printer_type: :ultima_balanced_norm_tube
 UPF Balanced Pool:
   :asset_type: tube
   :type: IlluminaHtp::InitialStockTubePurpose
-  :creator_class: LabwareCreators::RebalancedPooledTube
+  :creator_class: LabwareCreators::BalancedPooledTube
   :target: LibraryTube
   :number_of_parent_labwares: 1
   :transfer_template: 'Whole plate to tube'
   :presenter_class: Presenters::SimpleTubePresenter
-  :default_printer_type: :tube
+  :default_printer_type: :ultima_balanced_tube
   :file_links:
-    - name: 'Download Rebalanced Library Pooling file'
-      id: 'ultima_rebalancing'
+    - name: 'Download balanced Library Pooling file'
+      id: 'ultima_balancing'
 UPF Balanced Norm:
   :asset_type: tube
   :type: IlluminaHtp::StockTubePurpose
-  :default_printer_type: :tube
+  :default_printer_type: :ultima_balanced_norm_tube
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SubmissionTubePresenter
   :submission_options:
