@@ -41,7 +41,7 @@ namespace :config do
           plate_xp2: 'aa209bc2',
           ultima_lib_plate: 'aa212bc',
           ultima_balanced_tube: 'aa209bc1',
-          ultima_balanced__norm_tube: 'ssrtubebc-sq1',
+          ultima_balanced_norm_tube: 'ssrtubebc-sq1',
           tube_rack: 'heron-bc2',
           tube: 'g311bc1',
           limit: 5,
