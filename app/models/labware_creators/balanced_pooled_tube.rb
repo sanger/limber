@@ -96,7 +96,7 @@ module LabwareCreators
       return @balanced_pool_tube if defined?(@balanced_pool_tube)
 
       @balanced_pool_tube = Sequencescape::Api::V2::Tube.find_by(uuid: @child.uuid,
-                                                                   includes: 'aliquots')
+                                                                 includes: 'aliquots')
     end
 
     # Calculates the balancing variables and store them in hash map per tag index.

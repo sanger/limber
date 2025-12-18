@@ -8,7 +8,6 @@ module BarcodeLabelsHelper # rubocop:todo Style/Documentation
   )
     # labels are Labels::PlateLabel or Labels::TubeLabel so you can get the
     # default layout based on the class
-    byebug
     printer_types = labels.map(&:printer_type)
     printers = printers_of_type(printer_types)
 
