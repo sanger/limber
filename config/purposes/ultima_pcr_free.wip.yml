@@ -23,7 +23,6 @@ UPF Lib:
   :default_printer_type: :ultima_lib_plate
 UPF Lib XP2:
   :asset_type: plate
-  :label_template: plate_xp
   :presenter_class:
     name: Presenters::PlateDownstreamCompletedPresenter
     args:
