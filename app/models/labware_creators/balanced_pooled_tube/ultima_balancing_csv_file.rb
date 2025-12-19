@@ -3,8 +3,8 @@
 require './lib/nested_validation'
 require 'csv'
 
-# Handles parsing and validation of Ultima rebalancing CSV files for the
-# rebalanced pooled tube workflow.
+# Handles parsing and validation of Ultima balancing CSV files for the
+# balanced pooled tube workflow.
 #
 # This class is responsible for:
 #   - Extracting sample identifiers, barcodes, PF barcode reads, and mean coverage
@@ -15,14 +15,14 @@ require 'csv'
 #       • Rows for "sample", "barcode", "pf_barcode_reads", and "mean_cvg" must exist.
 #       • Row values must align in length with the number of samples.
 #   - Providing accessors for the parsed data and batch ID.
-#   - Running the rebalancing calculator to compute the rebalancing variables
+#   - Running the balancing calculator to compute the balancing variables
 #     for downstream processing.
 # Errors during parsing or validation are captured and made available
 # via ActiveModel validations.
 module LabwareCreators
-  require_dependency 'labware_creators/rebalanced_pooled_tube'
+  require_dependency 'labware_creators/balanced_pooled_tube'
 
-  # Parses and validates the Ultima rebalancing CSV file uploaded by the user.
+  # Parses and validates the Ultima balancing CSV file uploaded by the user.
   #
   # The file is expected to contain specific rows of data:
   #   - "sample"           → list of sample identifiers
@@ -32,12 +32,12 @@ module LabwareCreators
   #
   # The filename must begin with a numeric batch ID followed by an underscore,
   # e.g. "12345_rebalance.csv". The batch ID will be used when calculating
-  # rebalancing variables.
+  # balancing variables.
   #
-  class RebalancedPooledTube::UltimaRebalancingCsvFile
+  class BalancedPooledTube::UltimaBalancingCsvFile
     include ActiveModel::Validations
 
-    validate :validate_rebalancing_data
+    validate :validate_balancing_data
 
     SAMPLES_ROW = 'sample'
     BARCODE_ROW = 'barcode'
@@ -48,35 +48,35 @@ module LabwareCreators
 
     def initialize(file)
       @file = file
-      init_rebalancing_data
+      init_balancing_data
     rescue StandardError => e
       @parse_error = e.message
     ensure
       file.rewind if file.respond_to?(:rewind)
     end
 
-    # Runs the rebalancing calculator with the parsed CSV data.
+    # Runs the balancing calculator with the parsed CSV data.
     #
-    # @return [Array<Hash>] calculated rebalancing variables per tag index
-    def calculate_rebalancing_variables
-      rebalancing_calculator = RebalancedPooledTube::RebalancingCalculator.new(
+    # @return [Array<Hash>] calculated balancing variables per tag index
+    def calculate_balancing_variables
+      balancing_calculator = BalancedPooledTube::BalancingCalculator.new(
         @samples,
         @barcodes,
         @pf_barcode_reads,
         @mean_cvg,
         @batch_id
       )
-      rebalancing_calculator.calculate
+      balancing_calculator.calculate
     end
 
     private
 
-    def init_rebalancing_data
+    def init_balancing_data
       start_index = nil
       CSV.read(@file).each do |row|
         row_title = row[0].to_s.strip.downcase
         start_index ||= find_start_index(row) if row_title == SAMPLES_ROW
-        assign_rebalancing_data(row_title, row, start_index) if start_index
+        assign_balancing_data(row_title, row, start_index) if start_index
       end
     end
 
@@ -84,7 +84,7 @@ module LabwareCreators
     # @param row [Array<String>] CSV row
     # @param start_index [Integer, nil] starting column for values
     # @return [void]
-    def assign_rebalancing_data(row_title, row, start_index)
+    def assign_balancing_data(row_title, row, start_index)
       case row_title
       when SAMPLES_ROW
         @samples = row[start_index..]
@@ -120,7 +120,7 @@ module LabwareCreators
     # Validates that the file has the correct name format and required rows.
     #
     # @return [void]
-    def validate_rebalancing_data
+    def validate_balancing_data
       validate_file_name
       validate_samples_row
       validate_row(BARCODE_ROW, @barcodes)

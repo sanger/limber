@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
 #
-# This file defines the RebalancingCalculator class, which is responsible for
-# computing pooling metrics used to generate the drive file for rebalanced pooled
+# This file defines the BalancingCalculator class, which is responsible for
+# computing pooling metrics used to generate the drive file for balanced pooled
 # tubes in the Ultima pipeline. The calculator takes sample and sequencing data
-# extracted from a rebalancing CSV file (e.g., barcodes, PF barcode reads,
+# extracted from a balancing CSV file (e.g., barcodes, PF barcode reads,
 # coverage values, and batch ID) and derives key metrics required for a second pooling.
 module LabwareCreators
-  require_dependency 'labware_creators/rebalanced_pooled_tube'
+  require_dependency 'labware_creators/balanced_pooled_tube'
 
-  # RebalancingCalculator is responsible for calculating pooling metrics for aliquots
-  # to generate the drive file used for pooling rebalanced pooled tubes in the Ultima pipeline.
+  # BalancingCalculator is responsible for calculating pooling metrics for aliquots
+  # to generate the drive file used for pooling balanced pooled tubes in the Ultima pipeline.
   #
-  # It takes sample data extracted from the rebalancing CSV file and computes metrics such as:
+  # It takes sample data extracted from the balancing CSV file and computes metrics such as:
   # - Coverage needed for wafers 2 & 3
   # - Expected coverage for wafers
   # - Pooling correction factor
   # - Volume to pool per sample
   #
   # The results are returned as a hash keyed by the aliquot index.
-  class RebalancedPooledTube::RebalancingCalculator
+  class BalancedPooledTube::BalancingCalculator
     attr_reader :samples, :barcodes, :pf_barcode_reads, :mean_cvg, :batch_id
 
     # Initializes the calculator with the necessary data from the CSV file.
@@ -46,7 +46,7 @@ module LabwareCreators
     def calculate
       @samples.map.with_index do |sample, index|
         [
-          index, # key linked to tag_index, - 1 in the aliquot when creating the rebalanced pooled tube
+          index, # key linked to tag_index, - 1 in the aliquot when creating the balanced pooled tube
           {
             sample: sample,
             barcode: @barcodes[index],
