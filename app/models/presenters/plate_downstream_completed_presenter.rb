@@ -7,7 +7,7 @@ module Presenters
   # Namely, a downstream tube labware of specified purpose must have a specified
   # state, and must have sequencing requests of the specified type in the specified state.
   #
-  # Designed for Ultima where we loop back to perform rebalancing. But only after
+  # Designed for Ultima where we loop back to perform balancing. But only after
   # the initial sequencing run has been completed.
   #
   # rubocop:disable Metrics/ClassLength

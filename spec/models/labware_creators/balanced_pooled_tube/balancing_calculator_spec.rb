@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe LabwareCreators::RebalancedPooledTube::RebalancingCalculator do
+RSpec.describe LabwareCreators::BalancedPooledTube::BalancingCalculator do
   subject(:calculator) do
     described_class.new(samples, barcodes, pf_barcode_reads, mean_cvg, batch_id)
   end

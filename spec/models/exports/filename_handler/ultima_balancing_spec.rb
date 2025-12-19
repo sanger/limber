@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Exports::FilenameHandler::UltimaRebalancing do
+RSpec.describe Exports::FilenameHandler::UltimaBalancing do
   let(:aliquot1_pm1) { build :poly_metadatum, key: 'batch_id', value: 'batch_id_1' }
   let(:aliquot2_pm1) { build :poly_metadatum, key: 'batch_id', value: 'batch_id_1' }
 
@@ -22,7 +22,7 @@ RSpec.describe Exports::FilenameHandler::UltimaRebalancing do
   context 'when the labware has aliquots with batch_id polymetadata' do
     it 'returns the batch_id as the filename' do
       result = described_class.build_filename(labware, page, export)
-      expect(result).to eq("Ultima_rebalancing_#{labware.barcode.human}_#{aliquot1_pm1.value}")
+      expect(result).to eq("Ultima_balancing_#{labware.barcode.human}_#{aliquot1_pm1.value}")
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Exports::FilenameHandler::UltimaRebalancing do
 
     it 'returns the batch_ids as a list as the filename' do
       result = described_class.build_filename(labware, page, export)
-      expect(result).to eq("Ultima_rebalancing_#{labware.barcode.human}_#{aliquot1_pm1.value}_#{aliquot2_pm1.value}")
+      expect(result).to eq("Ultima_balancing_#{labware.barcode.human}_#{aliquot1_pm1.value}_#{aliquot2_pm1.value}")
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe Exports::FilenameHandler::UltimaRebalancing do
 
     it 'returns the batch_id as the filename' do
       result = described_class.build_filename(labware, page, export)
-      expect(result).to eq("Ultima_rebalancing_#{labware.barcode.human}")
+      expect(result).to eq("Ultima_balancing_#{labware.barcode.human}")
     end
   end
 end
