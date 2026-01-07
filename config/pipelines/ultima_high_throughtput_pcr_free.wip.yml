@@ -9,8 +9,8 @@ Ultima High Throughput PCR Free:
   relationships:
     UPF Cherrypicked: UPF Shear
     UPF Shear: UPF Post Shear
-    UPF Post Shear: UPF End Prep XP1
-    UPF End Prep XP1: UPF Lib
+    UPF Post Shear: UPF End Prep
+    UPF End Prep: UPF Lib
     UPF Lib: UPF Lib XP2
 Ultima Multiplexing:
   pipeline_group: Ultima High Throughput PCR Free
@@ -20,7 +20,7 @@ Ultima Multiplexing:
   relationships:
     UPF Lib XP2: UPF EqVol Pool
     UPF EqVol Pool: UPF EqVol Norm
-Ultima Rebalancing:
+Ultima Balancing:
   pipeline_group: Ultima High Throughput PCR Free
   relationships:
     UPF Lib XP2: UPF Balanced Pool

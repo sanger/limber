@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe LabwareCreators::RebalancedPooledTube do
+RSpec.describe LabwareCreators::BalancedPooledTube do
   subject(:creator) { described_class.new(pooling_tube_creator_attribute) }
 
   let(:user_uuid) { SecureRandom.uuid }
@@ -30,8 +30,8 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
   let(:source_plate) { create :plate, uuid: parent_uuid }
   let(:tube_uuid) { 'tube-123' }
 
-  let(:csv_file) { instance_double(LabwareCreators::RebalancedPooledTube::UltimaRebalancingCsvFile) }
-  let(:rebalancing_variables) do
+  let(:csv_file) { instance_double(LabwareCreators::BalancedPooledTube::UltimaBalancingCsvFile) }
+  let(:balancing_variables) do
     {
       0 => { 'sample' => 'S1', 'barcode' => 'Z001', 'mean_cvg' => 6.69, 'pf_barcode_reads' => 1000,
              'batch_id' => 12_345, 'CovNeed Waf2&3' => 13.01, 'PoolCF Waf2&3' => 1.0933, 'ExpCov Waf2' => 6.505,
@@ -44,8 +44,8 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
 
   before do
     stub_plate(source_plate, stub_search: false)
-    allow(csv_file).to receive(:calculate_rebalancing_variables).and_return(rebalancing_variables)
-    allow(LabwareCreators::RebalancedPooledTube::UltimaRebalancingCsvFile)
+    allow(csv_file).to receive(:calculate_balancing_variables).and_return(balancing_variables)
+    allow(LabwareCreators::BalancedPooledTube::UltimaBalancingCsvFile)
       .to receive(:new).with(file).and_return(csv_file)
   end
 
@@ -58,7 +58,7 @@ RSpec.describe LabwareCreators::RebalancedPooledTube do
   end
 
   describe '#csv_file' do
-    it 'initializes UltimaRebalancingCsvFile with the uploaded file' do
+    it 'initializes UltimaBalancingCsvFile with the uploaded file' do
       expect(creator.send(:csv_file)).to eq(csv_file)
     end
   end
