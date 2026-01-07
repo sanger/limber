@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import SCAPE from '@/javascript/lib/global_message_system.js'
+import { sendDuplicateTagGroupsWarning } from './duplicateTagGroupsWarning'
 
 const WELLS_IN_COLUMN_MAJOR_ORDER = [
   'A1',
@@ -331,6 +332,7 @@ const updateView = function () {
     $('#pooling-summary').empty()
     renderPoolingSummary(SCAPE.plates)
     SCAPE.message('Check pooling and create plate', 'valid')
+    sendDuplicateTagGroupsWarning(SCAPE.plates)
   } else {
     // Pooling Went wrong
     $('#pooling-summary').empty()

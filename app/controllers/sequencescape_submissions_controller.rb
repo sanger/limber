@@ -8,6 +8,6 @@ class SequencescapeSubmissionsController < ApplicationController
 
   def create
     create_submission
-    redirect_back fallback_location: :root
+    redirect_back_or_to :root
   end
 end

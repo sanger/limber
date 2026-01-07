@@ -26,7 +26,7 @@ module SessionHelper
   def check_for_login!
     return true if session[:user_uuid]
 
-    redirect_back alert: Ii18n.t('errors.messages.must_be_swiped_in'), fallback_location: :search
+    redirect_back_or_to :search, alert: Ii18n.t('errors.messages.must_be_swiped_in')
   end
 
   def session_switcher

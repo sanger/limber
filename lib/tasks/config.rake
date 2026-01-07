@@ -38,6 +38,10 @@ namespace :config do
         configuration[:printers] = {
           plate_a: 'g316bc',
           plate_b: 'g311bc2',
+          plate_xp2: 'aa209bc2',
+          ultima_lib_plate: 'aa212bc',
+          ultima_balanced_tube: 'aa209bc1',
+          ultima_balanced_norm_tube: 'ssrtubebc-sq1',
           tube_rack: 'heron-bc2',
           tube: 'g311bc1',
           limit: 5,

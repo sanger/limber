@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/ultima_rebalancing.csv.erb' do
+RSpec.describe 'exports/ultima_balancing.csv.erb' do
   let(:aliquot1_pm1) { build :poly_metadatum, key: 'sample', value: 's1' }
   let(:aliquot1_pm2) { build :poly_metadatum, key: 'barcode', value: 'Z0001' }
   let(:aliquot1_pm3) { build :poly_metadatum, key: 'pf_barcode_reads', value: '84' }

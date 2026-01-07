@@ -58,7 +58,11 @@ BGE Lib PCR XP:
 BGE Lib PrePool:
   :asset_type: plate
   :stock_plate: false
-  :creator_class: LabwareCreators::MultiPlatePool
+  :creator_class:
+    name: LabwareCreators::MultiPlatePool
+    args:
+      allowed_active_requests:
+        - limber_bge_isc
   :cherrypickable_target: false
   :input_plate: false
   :default_printer_type: :plate_b
