@@ -4993,10 +4993,10 @@ ROBOT_CONFIG =
       }
     )
 
-    # bed layout verification for UPF Post Shear -> UPF End Prep XP1
+    # bed layout verification for UPF Post Shear -> UPF End Prep
     custom_robot(
       'bravo-upf-post-shear-to-upf-end-prep-xp1',
-      name: 'UPF Post Shear => UPF End Prep XP1',
+      name: 'UPF Post Shear => UPF End Prep',
       beds: {
         bed(4).barcode => {
           purpose: 'UPF Post Shear',
@@ -5004,7 +5004,7 @@ ROBOT_CONFIG =
           label: 'Bed 4'
         },
         bed(14).barcode => {
-          purpose: 'UPF End Prep XP1',
+          purpose: 'UPF End Prep',
           states: ['pending'],
           label: 'Bed 14',
           parent: bed(4).barcode,
@@ -5013,13 +5013,13 @@ ROBOT_CONFIG =
       }
     )
 
-    # bed layout verification for UPF End Prep XP1 -> UPF lib
+    # bed layout verification for UPF End Prep -> UPF lib
     custom_robot(
       'bravo-upf-end-prep-xp1-to-upf-lib',
-      name: 'Bravo UPF End Prep XP1 => UPF Lib',
+      name: 'Bravo UPF End Prep => UPF Lib',
       beds: {
         bed(5).barcode => {
-          purpose: 'UPF End Prep XP1',
+          purpose: 'UPF End Prep',
           states: ['passed'],
           label: 'Bed 5'
         },
