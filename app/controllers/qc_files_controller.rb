@@ -31,15 +31,19 @@ class QcFilesController < ApplicationController
   end
 
   def create
-    Sequencescape::Api::V2::QcFile.create_for_labware!(
-      contents: params['qc_file'].read,
-      filename: params['qc_file'].original_filename,
-      labware: asset
-    )
-    redirect_to(
-      asset_path,
-      notice: 'Your file has been uploaded and is available from the file tab' # rubocop:todo Rails/I18nLocaleTexts
-    )
+    begin
+      Sequencescape::Api::V2::QcFile.create_for_labware!(
+        contents: params['qc_file'].read,
+        filename: params['qc_file'].original_filename,
+        labware: asset
+      )
+    rescue JSON::GeneratorError => e
+      flash[:alert] = "There was a problem uploading your file: #{e.message}"
+    else
+      flash[:notice] = 'Your file has been uploaded and is available from the file tab'
+    end
+
+    redirect_to asset_path
   end
 
   private
