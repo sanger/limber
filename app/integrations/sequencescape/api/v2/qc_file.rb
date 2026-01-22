@@ -12,16 +12,16 @@ class Sequencescape::Api::V2::QcFile < Sequencescape::Api::V2::Base
     sanitized_contents = sanitize_contents(contents)
 
     relationships = { labware: { data: { id: labware.id, type: 'labware' } } }
-    create!(contents: sanitized_contents, filename:, relationships:)
+    create!(contents: sanitized_contents, filename: filename, relationships: relationships)
   end
 
   def self.sanitize_contents(raw_contents)
     # Force binary encoding so we start from a known state
-    contents = raw_contents.dup.force_encoding("ASCII-8BIT")
+    contents = raw_contents.dup.force_encoding('ASCII-8BIT')
 
     # Try to transcode to UTF-8, raise if invalid bytes encountered
     begin
-      utf8_contents = contents.encode("UTF-8")
+      utf8_contents = contents.encode('UTF-8')
     rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError => e
       raise JSON::GeneratorError, "Invalid UTF-8 encoding in uploaded file: #{e.message}"
     end

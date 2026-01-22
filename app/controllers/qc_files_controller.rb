@@ -30,6 +30,7 @@ class QcFilesController < ApplicationController
     send_data(qc_file.contents, filename: qc_file.filename, type: 'sequencescape/qc_file')
   end
 
+  # rubocop:disable Rails/I18nLocaleTexts
   def create
     begin
       Sequencescape::Api::V2::QcFile.create_for_labware!(
@@ -45,6 +46,7 @@ class QcFilesController < ApplicationController
 
     redirect_to asset_path
   end
+  # rubocop:enable Rails/I18nLocaleTexts
 
   private
 
