@@ -98,7 +98,7 @@ templates:
   # narrow skirted 96-well plates. They needed the thinner 6mm label type usually
   # used for 384-well plates.
   # The class and printer type naming is still using 384.
-  plate_96_narrow_skirted:
+  plate_6mm_narrow_skirted_single:
     # using the same label class as plate_384_single
     :label_class: Labels::Plate384SingleLabel
     # printer type remains 384 Well Plate Double (poorly named, 6mm labels)
