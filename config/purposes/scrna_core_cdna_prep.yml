@@ -83,10 +83,8 @@ LRC GEM-X 5p GEMs Input:
   # will not be creatable in Limber
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
-  # Plate is a 96-well but is a semi-skirted type. Ideally we need a
-  # single label suitable for Toshiba but we're using the double label for now.
-  # (the single 6mm label version is only configured for Squix printers at present).
-  :label_template: plate_6mm_double
+  # Plate is a 96-well but is a semi-skirted type and so we use the narrow 6mm label.
+  :label_template: plate_6mm_narrow_skirted_single
 # 10X Chromium 8-well chip
 LRC GEM-X 5p Chip:
   :asset_type: plate
@@ -154,10 +152,8 @@ LRC GEM-X 5p GEMs Input CITE:
       messages:
         - "Please ensure you use the CITE-seq-compatible primer when working with 'LRC GEM-X 5p GEMs Input CITE' plates"
   :creator_class: LabwareCreators::Uncreatable
-  # Plate is a 96-well but is a semi-skirted type. Ideally we need a
-  # single label suitable for Toshiba but we're using the double label for now.
-  # (the single 6mm label version is only configured for Squix printers at present).
-  :label_template: plate_6mm_double
+  # Plate is a 96-well but is a semi-skirted type and so we use the narrow 6mm label.
+  :label_template: plate_6mm_narrow_skirted_single
 LRC GEM-X 5p cDNA PCR CITE:
   :asset_type: plate
   :stock_plate: false
