@@ -9,13 +9,13 @@ class Sequencescape::Api::V2::QcFile < Sequencescape::Api::V2::Base
   # The endpoint requires that the labware relationship is of a Labware type.
   # Since we create for plates and tubes, not the more generic labware type, we will declare the relationship manually.
   def self.create_for_labware!(labware:, contents:, filename:)
-    sanitized_contents = sanitize_contents(contents)
+    sanitised_contents = sanitise_contents(contents)
 
     relationships = { labware: { data: { id: labware.id, type: 'labware' } } }
-    create!(contents: sanitized_contents, filename: filename, relationships: relationships)
+    create!(contents: sanitised_contents, filename: filename, relationships: relationships)
   end
 
-  def self.sanitize_contents(raw_contents)
+  def self.sanitise_contents(raw_contents)
     # Force binary encoding so we start from a known state
     contents = raw_contents.dup.force_encoding('ASCII-8BIT')
 

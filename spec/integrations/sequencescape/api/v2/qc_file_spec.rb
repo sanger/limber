@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Sequencescape::Api::V2::QcFile do
-  describe '.sanitize_contents' do
-    let(:result) { described_class.sanitize_contents(test_string) }
+  describe '.sanitise_contents' do
+    let(:result) { described_class.sanitise_contents(test_string) }
 
     context 'with invalid UTF-8 bytes' do
       let(:test_string) { "\xC3\x28".b } # invalid UTF-8 sequence
