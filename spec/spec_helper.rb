@@ -220,6 +220,6 @@ RSpec.configure do |config|
       end
       unused_factories.each { |factory| csv << [factory, 'UNUSED', 0, 0, 0] }
     end
-    puts "\n📊 Output factory statistics to tmp/factories.csv"
+    puts "\n📊 Output factory statistics to tmp/factories.csv" # rubocop:disable RSpec/Output
   end
 end
