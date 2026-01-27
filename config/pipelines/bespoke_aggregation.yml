@@ -5,3 +5,8 @@ Bespoke Aggregation:
   relationships:
     LBC Stock: LBC Aggregate
     LBC Aggregate: LBC Cherrypick
+Bespoke Aggregation Bypass:
+  filters:
+    request_type_key: limber_bespoke_aggregation
+  relationships:
+    LBC Stock: LBC Cherrypick
