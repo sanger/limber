@@ -10,7 +10,6 @@ module Presenters
   # Designed for Ultima where we loop back to perform balancing. But only after
   # the initial sequencing run has been completed.
   #
-  # rubocop:disable Metrics/ClassLength
   class PlateDownstreamCompletedPresenter < PlatePresenter
     include Presenters::Statemachine::Standard
 
@@ -71,7 +70,10 @@ module Presenters
         child_tube_purposes.include?(settings[:name])
       end
     end
-  end
 
-  # rubocop:enable Metrics/ClassLength
+    def child_tube_purposes
+      @child_tube_purposes ||=
+        Array(purpose_config.dig(:presenter_class, :args, :child_tube_purposes))
+    end
+  end
 end
