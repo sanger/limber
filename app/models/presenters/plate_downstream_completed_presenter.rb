@@ -64,7 +64,7 @@ module Presenters
         .uniq
     end
 
-    # This removed purposes from the suggested list
+    # This removes purposes from the suggested list
     # if they are in a list specified in the purpose config.
     def filter_suggested_purpose_options(spo)
       spo.reject do |(_uuid, settings)|
