@@ -11,11 +11,17 @@
           <h3>Source Plates</h3>
             <% 4.times do |plate_id| %>
               <div class="plate source-plate plate-id-<%= plate_id %>">
-                <%= render partial: 'plates/empty_plate', locals: { css_class: "source-plate plate-id-#{plate_id}" } %>        
                 <div class="plate-data">
-                   <div>Plate ID: <span class="barcode"></span></div>
-                   <div>Cherry pick ID: <span class="input_barcode"></span></div>
+                   <div class="barcode">
+                      <span class="label"></span>
+                      <span class="value"></span>
+                   </div>
+                   <div class="input_barcode">
+                      <span class="label"></span>
+                      <span class="value"></span>
+                   </div>
                 </div>
+                <%= render partial: 'plates/empty_plate', locals: { css_class: "source-plate plate-id-#{plate_id}" } %>        
               </div>
             <% end %>
         </div>

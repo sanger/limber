@@ -48,3 +48,22 @@
   border: 2px $gray-100 solid;
   position: relative;
 }
+
+.plate-data {
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.input_barcode .label {
+  font-weight: 600;
+  color: #bbb;
+  margin-left: 1rem;
+}
+
+.barcode .label {
+  font-weight: 600;
+  color: #bbb;
+  margin-left: 1rem;
+}

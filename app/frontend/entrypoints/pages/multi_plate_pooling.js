@@ -335,8 +335,10 @@ const updateView = function () {
     SCAPE.plates.forEach(function (plate, index) {
       const container = $(`.source-plate.plate-id-${index}`)
       if (plate) {
-        container.find('.plate-data .barcode').text(plate.humanBarcode)
-        container.find('.plate-data .input_barcode').text(plate.inputBarcode)
+        container.find('.plate-data .input_barcode .label').text('Input Plate Barcode')
+        container.find('.plate-data .input_barcode .value').text(`${plate.inputBarcode}`)
+        container.find('.plate-data .barcode .label').text('Barcode')
+        container.find('.plate-data .barcode .value').text(`${plate.humanBarcode}`)
       }
     })
 
