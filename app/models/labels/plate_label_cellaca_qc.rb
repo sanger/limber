@@ -43,9 +43,9 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
       labware
         .wells
         .filter_map do |well|
-        next if well.empty?
+          next if well.empty?
 
-        well.coordinate.first # column
+          well.coordinate.first # column
       end
         .uniq
   end
