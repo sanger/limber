@@ -9,20 +9,8 @@
             <%= render partial: 'plates/empty_plate', locals: { plate_presenter: @labware_creator, css_class: 'destination-plate' } %>
           </div>
           <h3>Source Plates</h3>
-            <% 4.times do |plate_id| %>
-              <div class="plate source-plate plate-id-<%= plate_id %>">
-                <div class="plate-data">
-                   <div class="barcode">
-                      <span class="label"></span>
-                      <span class="value"></span>
-                   </div>
-                   <div class="input_barcode">
-                      <span class="label"></span>
-                      <span class="value"></span>
-                   </div>
-                </div>
+            <% 4.times do |plate_id| %> 
                 <%= render partial: 'plates/empty_plate', locals: { css_class: "source-plate plate-id-#{plate_id}" } %>
-              </div>
             <% end %>
         </div>
       </div>

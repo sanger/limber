@@ -49,21 +49,25 @@
   position: relative;
 }
 
-.plate-data {
-  display: flex;
-  align-items: center;
-  margin-left: 2rem;
-  margin-bottom: 1rem;
+.plate-view.source-plate caption {
+  caption-side: top;
+  color: #fff;
+  padding: 0.5rem;
+  text-align: center;
+  white-space: nowrap;
 }
 
-.input_barcode .label {
-  font-weight: 600;
-  color: #bbb;
-  margin-left: 1rem;
+.plate-view.source-plate caption .caption-separator {
+  display: inline-block;
+  width: 2rem; /* space between barcode & input barcode */
 }
 
-.barcode .label {
-  font-weight: 600;
-  color: #bbb;
-  margin-left: 1rem;
+.plate-view.source-plate caption .barcode-label {
+  font-weight: 700;
+}
+
+.plate-view.source-plate caption .barcode-value {
+  font-weight: 300;
+  opacity: 0.85;
+  margin-left: 0.25rem;
 }

@@ -273,9 +273,19 @@ SCAPE.renderSourceWells = function () {
     } else {
       let preCapPools = SCAPE.plates[plateIndex].preCapPools
       let barcode = SCAPE.plates[plateIndex].barcode
+      let inputBarcode = SCAPE.plates[plateIndex].inputBarcode
+
       $('.plate-id-' + plateIndex).show()
       $('.plate-id-' + plateIndex + ' .well').empty()
-      $('.plate-id-' + plateIndex + ' caption').text(barcode)
+
+      $('.plate-id-' + plateIndex + ' caption').html(`
+        <span class="barcode-label">Barcode:</span>
+        <span class="barcode-value">${barcode}</span>
+        <span class="caption-separator"></span>
+        <span class="barcode-label">Input Plate Barcode:</span>
+        <span class="barcode-value">${inputBarcode}</span>
+      `)
+
       $('#well-transfers-' + plateIndex).detach()
 
       let newInputs = $(document.createElement('div')).attr('id', 'well-transfers-' + plateIndex)
