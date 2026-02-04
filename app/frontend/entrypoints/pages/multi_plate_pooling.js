@@ -272,7 +272,7 @@ SCAPE.renderSourceWells = function () {
       $('.plate-id-' + plateIndex).hide()
     } else {
       let preCapPools = SCAPE.plates[plateIndex].preCapPools
-      let barcode = SCAPE.plates[plateIndex].barcode
+      let barcode = SCAPE.plates[plateIndex].humanBarcode
       let inputBarcode = SCAPE.plates[plateIndex].inputBarcode
 
       $('.plate-id-' + plateIndex).show()
@@ -341,7 +341,6 @@ const updateView = function () {
     plateSummaryHandler()
     $('#pooling-summary').empty()
     renderPoolingSummary(SCAPE.plates)
-
     SCAPE.message('Check pooling and create plate', 'valid')
     sendDuplicateTagGroupsWarning(SCAPE.plates)
   } else {
