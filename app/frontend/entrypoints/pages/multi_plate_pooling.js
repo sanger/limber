@@ -342,16 +342,6 @@ const updateView = function () {
     $('#pooling-summary').empty()
     renderPoolingSummary(SCAPE.plates)
 
-    SCAPE.plates.forEach(function (plate, index) {
-      const container = $(`.source-plate.plate-id-${index}`)
-      if (plate) {
-        container.find('.plate-data .input_barcode .label').text('Input Plate Barcode')
-        container.find('.plate-data .input_barcode .value').text(`${plate.inputBarcode}`)
-        container.find('.plate-data .barcode .label').text('Barcode')
-        container.find('.plate-data .barcode .value').text(`${plate.humanBarcode}`)
-      }
-    })
-
     SCAPE.message('Check pooling and create plate', 'valid')
     sendDuplicateTagGroupsWarning(SCAPE.plates)
   } else {
