@@ -40,7 +40,54 @@ module Presenters
       value&.to_i&.to_fs(:delimited) # Adds thousands separator for better readability
     end
 
+    # Returns the CSV file links for the plate based on the configured states.
+    # Checks for optional 'parent' parameter in link to not show button unless parent labware is of that purpose type.
+    #
+    # @return [Array<Array<String, Array>>] the CSV file links
+    def csv_file_links
+      parent_purposes = extract_parent_purposes
+      file_links = fetch_file_links
+      enabled_links = filter_enabled_links(file_links)
+      parent_filtered_links = filter_by_parent_purpose(enabled_links, parent_purposes)
+      links = build_csv_links(parent_filtered_links)
+      links << ['Download Worksheet CSV', { format: :csv }] if csv.present?
+      links
+    end
+
     private
+
+    def extract_parent_purposes
+      labware.parents&.map { |parent| parent.purpose.name }
+    end
+
+    def fetch_file_links
+      purpose_config.fetch(:file_links, [])
+    end
+
+    def filter_enabled_links(file_links)
+      file_links.select { |link| can_be_enabled?(link&.states) }
+    end
+
+    def filter_by_parent_purpose(links, parent_purposes)
+      links.select do |link|
+        !link.respond_to?(:parent) ||
+          link.parent.nil? ||
+          (parent_purposes || []).include?(link.parent)
+      end
+    end
+
+    def build_csv_links(links)
+      links.map do |link|
+        [
+          link.name,
+          [
+            :plate,
+            :export,
+            { id: link.id, plate_id: human_barcode, format: :csv, **link.params || {} }
+          ]
+        ]
+      end
+    end
 
     # Groups wells by a key generated from each well's study and project.
     #
