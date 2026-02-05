@@ -23,7 +23,7 @@ export default {
   props: {
     position: { type: String, required: true },
     colour_index: { type: Number, required: true },
-    tooltip_label: { type: String, default: null },
+    tooltipLabel: { type: String, default: null },
     tagMapIds: {
       type: Array,
       default: () => {
@@ -54,8 +54,8 @@ export default {
       return this.validity.valid ? '' : 'line-through'
     },
     tooltipText() {
-      if (this.tooltip_label) {
-        return `${this.position} - ${this.tooltip_label}`
+      if (this.tooltipLabel) {
+        return `${this.position} - ${this.tooltipLabel}`
       } else {
         return this.position
       }
