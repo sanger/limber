@@ -57,7 +57,12 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   # This is the form that includes plate barcodes, submitted by user.
   let(:form_attributes) do
-    { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes, user_uuid: user_uuid }
+    {
+      purpose_uuid: child_purpose_uuid,
+      parent_uuid: parent_1_plate_uuid,
+      barcodes: barcodes,
+      user_uuid: user_uuid
+    }
   end
   let(:barcodes) { source_plates.map(&:human_barcode) }
 
@@ -897,6 +902,23 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         expect(subject.errors[:source_plates]).to include(
           format(described_class::SOURCE_PLATES_MUST_EXIST, 'NOT-A-PLATE-BARCODE')
         )
+      end
+    end
+
+    describe '#have_scanned_the_parent' do
+      let(:some_other_plate) { build(:plate, uuid: 'some-other-plate-uuid', human_barcode: 'SOME_OTHER_BC') }
+      let(:source_plates) { [parent_2_plate, some_other_plate] }
+
+      before do
+        stub_plate(parent_1_plate)
+      end
+
+      it 'reports the error' do
+        expect(subject).not_to be_valid
+        expected_msg =
+          "You must include the parent plate (#{parent_1_plate.human_barcode}) " \
+          'in the source barcodes scanned.'
+        expect(subject.errors[:source_barcodes]).to include(expected_msg)
       end
     end
 
