@@ -830,6 +830,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#valid?' do
+    before do
+      stub_plate(parent_1_plate)
+    end
+
     describe '#source_barcodes_must_be_entered' do
       let(:barcodes) { [] }
 
@@ -908,10 +912,6 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     describe '#have_scanned_the_parent' do
       let(:some_other_plate) { build(:plate, uuid: 'some-other-plate-uuid', human_barcode: 'SOME_OTHER_BC') }
       let(:source_plates) { [parent_2_plate, some_other_plate] }
-
-      before do
-        stub_plate(parent_1_plate)
-      end
 
       it 'reports the error' do
         expect(subject).not_to be_valid
