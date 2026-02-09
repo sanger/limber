@@ -44,3 +44,30 @@ LCM Triomics WGS Custom Pooling:
   relationships:
     LCMT DNA PCR XP: LCMT DNA Pool XP
     LCMT DNA Pool XP: LCMT DNA Pool XP Norm
+
+# Pipeline configuration for RNA-seq
+LCM Triomics RNA-seq:
+  pipeline_group: LCM Triomics RNA-seq
+  filters:
+    request_type_key: limber_lcm_triomics_rnaseq
+    library_type: Combined LCM RNA
+  library_pass: LCMT cDNA Lib PCR
+  relationships:
+    LCMT Lysate: LCMT RNA OdT Beads
+    LCMT RNA OdT Beads: LCMT RNA Denat/Hyb
+    LCMT RNA Denat/Hyb: LCMT RNA RT
+    LCMT RNA RT: LCMT RNA Preamp
+    LCMT RNA Preamp: LCMT cDNA Reserve
+    LCMT cDNA Reserve: LCMT cDNA Frag/ER
+    LCMT cDNA Frag/ER: LCMT cDNA ADP Lig
+    LCMT cDNA ADP Lig: LCMT cDNA Lib PCR
+    LCMT cDNA Lib PCR: LCMT cDNA Lib PCR XP
+
+LCM Triomics RNA-seq Custom Pooling:
+  pipeline_group: LCM Triomics RNA-seq
+  filters:
+    request_type_key: limber_lcm_triomics_rnaseq
+    state: passed
+  relationships:
+    LCMT cDNA Lib PCR XP: LCMT cDNA Pool XP
+    LCMT cDNA Pool XP: LCMT cDNA Pool XP Norm
