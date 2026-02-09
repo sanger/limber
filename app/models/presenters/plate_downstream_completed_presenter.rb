@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# require "mysql2"
+
 module Presenters
   #
   # This Presenter only shows the downstream labware creation button(s) if the specified
@@ -25,12 +27,96 @@ module Presenters
     DESCENDANT_TUBE_INCLUDES =
       'receptacle,aliquots,aliquots.request,aliquots.request.request_type,receptacle.requests_as_source.request_type'
 
+    # Messages to display in banner on page load, to inform the user of the status of downstream runs and creation of child labware.
+    # STATUS_CONFIG = {
+    #   unknown: {
+    #     strength: 'error',
+    #     message: "Unable to determine the status of the downstream sequencing run, so creating child labware of the following types is disabled: #{child_tube_purposes}. \
+    #       Please refresh the page or contact PSD."
+    #   },
+    #   not_finished: {
+    #     strength: 'warning',
+    #     message: "The initial sequencing run is not yet complete, so creating child labware of the following types is disabled: #{child_tube_purposes}."
+    #   },
+    #   finished: {
+    #     strength: 'info',
+    #     message: "The initial sequencing run has completed, so creating child labware of the following types is enabled: #{child_tube_purposes}."
+    #   }
+    # }
+
     # Prevents the display of specific child creation buttons unless the first sequencing path has finished
     def allow_specific_child_creation?
-      # TODO: Check MLWH to see if the run has finished.
+      # TODO: Display status in UI.
+
+      @ultima_run_status = find_ultima_run_status
+      return true if @ultima_run_status == :finished
+
+      false
+    end
+
+    def find_ultima_run_status
+      # TODO: replace 'descendants' call with one like 'descendants_with_requests_as_source'
+      # to avoid requerying tubes individually in fetch_tube.
+      downstream_sequenced_tubes = @labware.descendants.all.select{ |d| d.purpose.name == downstream_seq_tube_purpose }
+      return :not_finished if downstream_sequenced_tubes.empty?
+
+      return :finished if Limber::Application.config.mock_ultima_run_check
+
+      # Collect the wafer IDs for all requests coming out of all downstream sequenced tubes
+      wafer_ids = downstream_sequenced_tubes.map do |tube|
+        # TODO: add id_wafer_lims to the API.
+        fetch_tube(tube)&.requests_as_source&.map(:id_wafer_lims)
+      end.flatten.compact.uniq
+
+      begin
+        if mlwh_contains_run_record(wafer_ids)
+          return :finished
+        else
+          return :not_finished
+        end
+      rescue => e
+        Rails.logger.error("Error checking for Useq Wafers with id_wafer_lims in #{wafer_ids}: #{e.message}")
+        return :unknown
+      end
+    end
+
+    # Use sql2 gem as don't need any Rails ORM functionality
+    # for this single query to an external database.
+    def mlwh_contains_run_record(wafer_ids)
+      client = Mysql2::Client.new(
+        host: Rails.application.config.mlwh_host,
+        username: Rails.application.config.mlwh_username,
+        password: Rails.application.config.mlwh_password,
+        database: Rails.application.config.mlwh_db
+      )
+
+      results = client.query("SELECT * FROM useq_wafer WHERE id_wafer_lims IN (#{wafer_ids.join(',')})")
+
+      client.close
+
+      results.count > 0
     end
 
     private
+
+    # --- parameters from purpose config ---
+    def downstream_seq_tube_purpose
+      @downstream_seq_tube_purpose ||=
+        purpose_config.dig(:presenter_class, :args, :downstream_seq_tube, :purpose)
+    end
+
+    def child_tube_purposes
+      @child_tube_purposes ||=
+        Array(purpose_config.dig(:presenter_class, :args, :child_tube_purposes))
+    end
+    # --- end parameters from purpose config ---
+
+    def fetch_tube(labware_descendant)
+      Sequencescape::Api::V2::Tube.find_all(
+        { uuid: labware_descendant.uuid },
+        includes: DESCENDANT_TUBE_INCLUDES
+      ).first
+    end
 
     # Used to decide what suggested child labwares can be created from this labware.
     # Checks the request types of the pipeline filtered suggested child purposes against the incomplete
@@ -69,11 +155,6 @@ module Presenters
       spo.reject do |(_uuid, settings)|
         child_tube_purposes.include?(settings[:name])
       end
-    end
-
-    def child_tube_purposes
-      @child_tube_purposes ||=
-        Array(purpose_config.dig(:presenter_class, :args, :child_tube_purposes))
     end
   end
 end

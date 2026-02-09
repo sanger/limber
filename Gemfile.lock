@@ -250,6 +250,8 @@ GEM
     msgpack (1.8.0)
     multipart-post (2.4.0)
     mutex_m (0.3.0)
+    mysql2 (0.5.7)
+      bigdecimal
     nenv (0.3.0)
     net-imap (0.5.12)
       date
@@ -501,6 +503,7 @@ DEPENDENCIES
   hashie
   json_api_client!
   launchy
+  mysql2
   oj
   pmb-client (= 0.1.0)!
   prettier_print

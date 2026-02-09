@@ -108,6 +108,15 @@ Rails.application.configure do
   config.traction_ui_uri = 'http://localhost:5173/#'
   config.traction_service_uri = 'http://localhost:3100/v1'
 
+  # MLWH credentials for Ultima run checking
+  # In dev, we assume we don't have a local MLWH set up, so we mock the check
+  config.mock_ultima_run_check = false
+  config.mlwh_host = 'localhost'
+  config.mlwh_port = 3306
+  config.mlwh_username = 'root'
+  config.mlwh_password = nil
+  config.mlwh_db = 'unified_warehouse_development'
+
   # Enable 'work in progress' pipelines by default in development mode, to save having to rename files.
   # Configured for other environments in the deployment project.
   config.deploy_wip_pipelines = true
