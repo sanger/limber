@@ -5504,7 +5504,7 @@ ROBOT_CONFIG =
           label: 'Bed 6',
           parent: bed(7).barcode,
           target_state: 'passed'
-        },
+        }
       }
     )
     # LCMT RNAseq Library PCR Cleanup Verification
