@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# require "mysql2"
-
 module Presenters
   #
   # This Presenter only shows the downstream labware creation button(s) if the specified
@@ -64,8 +62,7 @@ module Presenters
 
       # Collect the wafer IDs for all requests coming out of all downstream sequenced tubes
       wafer_ids = downstream_sequenced_tubes.map do |tube|
-        # TODO: add id_wafer_lims to the API.
-        fetch_tube(tube)&.requests_as_source&.map(:id_wafer_lims)
+        fetch_tube(tube)&.requests_as_source&.map(&:id_wafer_lims)
       end.flatten.compact.uniq
 
       begin
