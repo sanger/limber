@@ -37,6 +37,13 @@ LCMT DNA Adp Lig:
         library_type: 'LCMB'
         fragment_size_required_from: '450'
         fragment_size_required_to: '450'
+    RNA-Seq Branch - Automated Submission:
+      template_name: 'Limber-Htp - LCM Triomics RNA-Seq'
+      allowed_extra_barcodes: false
+      request_options:
+        library_type: 'LCMB'
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
   :size: 96
 
 # EM Branch
