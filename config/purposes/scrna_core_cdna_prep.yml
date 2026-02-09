@@ -83,6 +83,8 @@ LRC GEM-X 5p GEMs Input:
   # will not be creatable in Limber
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
+  # Plate is a 96-well but is a semi-skirted type and so we use the narrow 6mm label.
+  :label_template: plate_6mm_narrow_skirted_single
 # 10X Chromium 8-well chip
 LRC GEM-X 5p Chip:
   :asset_type: plate
@@ -105,11 +107,15 @@ LRC GEM-X 5p GEMs:
   :stock_plate: false
   :input_plate: false
   :creator_class: LabwareCreators::StampedPlateCompressed
+  # Plate is a 96-well but is a semi-skirted type and so we use the narrow 6mm label.
+  :label_template: plate_6mm_narrow_skirted_single
 # Plate containing cDNA (converted from RNA), straight stamp from above.
 LRC GEM-X 5p cDNA PCR:
   :asset_type: plate
   :stock_plate: false
   :input_plate: false
+  # Plate is a 96-well but is a semi-skirted type and so we use the narrow 6mm label.
+  :label_template: plate_6mm_narrow_skirted_single
 # Plate containing cleaned up cDNA, duplicate wells consolidated back together.
 # TODO: check whether the stock and or input plate flags are correct to allow an aggregation
 # submission to be created on this plate
@@ -146,6 +152,8 @@ LRC GEM-X 5p GEMs Input CITE:
       messages:
         - "Please ensure you use the CITE-seq-compatible primer when working with 'LRC GEM-X 5p GEMs Input CITE' plates"
   :creator_class: LabwareCreators::Uncreatable
+  # Plate is a 96-well but is a semi-skirted type and so we use the narrow 6mm label.
+  :label_template: plate_6mm_narrow_skirted_single
 LRC GEM-X 5p cDNA PCR CITE:
   :asset_type: plate
   :stock_plate: false
@@ -159,3 +167,5 @@ LRC GEM-X 5p cDNA PCR CITE:
         fragment_size_required_from: '100'
         fragment_size_required_to: '700'
         library_type: 'Chromium single cell GEM-X 5p v3 cell surface protein'
+  # Plate is a 96-well but is a semi-skirted type and so we use the narrow 6mm label.
+  :label_template: plate_6mm_narrow_skirted_single
