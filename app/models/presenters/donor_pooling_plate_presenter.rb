@@ -118,5 +118,39 @@ module Presenters
       aliquot = well.aliquots.first
       [aliquot.study.name, aliquot.project.name].join(' / ')
     end
+
+    # Override for RobotControlled method - to filter out unneeded robot links based on parent plate purpose
+    # If the labware is in pending state, we want robots with both the parent and current purpose so we can do the
+    # transfers.
+    # If the labware is in passed state, we only want to see the robot to create the next downstream child. No need
+    # to see robots for creating this current plate as it's already been transferred to.
+    def suitable_for_labware?(config)
+      main_match = find_main_match(config)
+      return main_match_result_for_pending(config, main_match) if pending_with_main_match?(main_match)
+
+      main_match.present?
+    end
+
+    def find_main_match(config)
+      config.beds.detect do |_bed, bed_config|
+        bed_config.purpose == purpose_name && bed_config.states.include?(labware.state)
+      end
+    end
+
+    def pending_with_main_match?(main_match)
+      labware.state == 'pending' && main_match
+    end
+
+    def main_match_result_for_pending(config, main_match)
+      parent_purposes = extract_parent_purposes
+      parent_match = find_parent_match(config, parent_purposes)
+      main_match.present? && parent_match.present?
+    end
+
+    def find_parent_match(config, parent_purposes)
+      config.beds.detect do |_bed, bed_config|
+        parent_purposes&.include?(bed_config.purpose)
+      end
+    end
   end
 end
