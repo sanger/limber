@@ -271,4 +271,57 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
       end
     end
   end
+
+  describe '#csv_file_links' do
+    let(:parent_purposes) { ['Parent Purpose 2'] }
+
+    # Had to use Hashie::Mash here to mimic the behavior of the actual file links, which are
+    # Hashie::Mash objects. Using simple hashes was causing issues with the `can_be_enabled?`
+    # method, which expects Hashie::Mash objects to call e.g. link.states
+    let(:file_links) do
+      [
+        Hashie::Mash.new('name' => 'Export 1', 'id' => 'one', 'parent' => 'Parent Purpose 1'),
+        Hashie::Mash.new('name' => 'Export 2', 'id' => 'two', 'parent' => 'Parent Purpose 2'),
+        Hashie::Mash.new('name' => 'Download Worksheet CSV', 'id' => 'worksheet')
+      ]
+    end
+
+    before do
+      # Stubbing methods called within csv_file_links to control the test environment
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive_messages(extract_parent_purposes: parent_purposes, fetch_file_links: file_links,
+                                         csv: true, human_barcode: 'DN3U')
+      allow(subject).to receive(:filter_enabled_links).with(file_links).and_return(file_links)
+      # rubocop:enable RSpec/SubjectStub
+    end
+
+    it 'includes links with matching parent' do
+      links = subject.csv_file_links
+      expect(links).to include(
+        [
+          'Export 2',
+          [:plate, :export, hash_including(id: 'two', plate_id: 'DN3U', format: :csv)]
+        ]
+      )
+    end
+
+    it 'does not include links with non-matching parent' do
+      links = subject.csv_file_links
+      expect(links.any? { |l| l[0] == 'Export 1' }).to be false
+    end
+
+    it 'includes worksheet csv link if csv is present' do
+      links = subject.csv_file_links
+      expect(links).to include(['Download Worksheet CSV', { format: :csv }])
+    end
+
+    it 'does not include worksheet csv link if csv is not present' do
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive(:csv).and_return(false)
+      # rubocop:enable RSpec/SubjectStub
+
+      links = subject.csv_file_links
+      expect(links).not_to include(['Download Worksheet CSV', { format: :csv }])
+    end
+  end
 end
