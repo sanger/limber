@@ -15,6 +15,7 @@
 export default {
   name: 'PlateSummary',
   props: {
+    colourIndex: { default: null, type: Number },
     state: { default: 'empty', type: String },
     plate: {
       default() {
@@ -25,7 +26,7 @@ export default {
   },
   computed: {
     colourClass() {
-      return `colour-${this.colour_index}`
+      return `colour-${this.colourIndex}`
     },
     isEmpty() {
       return this.plate === null

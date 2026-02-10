@@ -1,7 +1,7 @@
 <template>
   <div :id="wellId" :class="['well', position]">
     <div
-      v-if="colour_index"
+      v-if="colourIndex"
       :id="'aliquot_' + position"
       v-b-tooltip.hover="tooltipText"
       :class="['aliquot', colourClass]"
@@ -22,7 +22,7 @@ export default {
   name: 'LbWell',
   props: {
     position: { type: String, required: true },
-    colour_index: { type: Number, required: true },
+    colourIndex: { type: Number, required: true },
     tooltipLabel: { type: String, default: null },
     tagMapIds: {
       type: Array,
@@ -48,7 +48,7 @@ export default {
       return `well_${this.position}`
     },
     colourClass() {
-      return this.validity.valid ? `colour-${this.colour_index}` : 'failed'
+      return this.validity.valid ? `colour-${this.colourIndex}` : 'failed'
     },
     linethroughClass() {
       return this.validity.valid ? '' : 'line-through'
