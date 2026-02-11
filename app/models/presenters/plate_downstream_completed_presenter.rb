@@ -29,6 +29,11 @@ module Presenters
     # Other presenters use a similar pattern.
     validate :ultima_run_status
 
+    # Prevents the display of specific child creation buttons unless the first sequencing path has finished
+    def allow_specific_child_creation?
+      ultima_run_status == :finished
+    end
+
     private
 
     # --- parameters from purpose config ---
@@ -70,6 +75,8 @@ module Presenters
         fetch_tube(tube)&.requests_as_source&.map(&:id_wafer_lims)
       end.flatten.compact.uniq
 
+      return :not_finished if wafer_ids.empty?
+
       begin
         if mlwh_contains_run_record(wafer_ids)
           return :finished
@@ -99,8 +106,11 @@ module Presenters
         database: Rails.application.config.mlwh_db
       )
 
-      query_string = "SELECT * FROM useq_wafer WHERE id_wafer_lims IN ('#{wafer_ids.join('\',\'')}')"
-      results = client.query(query_string)
+      # Use a prepared statement to safely interpolate the wafer IDs into the query.
+      placeholders = (['?'] * wafer_ids.length).join(',')
+      query_string = "SELECT * FROM useq_wafer WHERE id_wafer_lims IN (#{placeholders})"
+      statement = client.prepare(query_string)
+      results = statement.execute(*wafer_ids)
       client.close
 
       results.count > 0
@@ -143,11 +153,6 @@ module Presenters
       spo.reject do |(_uuid, settings)|
         child_tube_purposes.include?(settings[:name])
       end
-    end
-
-    # Prevents the display of specific child creation buttons unless the first sequencing path has finished
-    def allow_specific_child_creation?
-      ultima_run_status == :finished
     end
   end
 end
