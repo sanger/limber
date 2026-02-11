@@ -6,6 +6,7 @@
     "uuid": "<%= @presenter.uuid %>",
     "state": "<%= @presenter.state %>",
     "purpose": "<%= @presenter.purpose_name %>",
+    "pipelineGroupName": "<%= @pipeline_info.pipeline_group_name %>",
     "preCapPools": <%= sorted_pre_cap_pool_json(@presenter.labware) %>,
     "tags": <%= @presenter.tag_sequences.to_json.html_safe %>,
     "tagGroupsList": <%= @presenter.tag_groups_list.to_json.html_safe %>
