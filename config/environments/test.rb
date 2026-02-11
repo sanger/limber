@@ -86,4 +86,8 @@ Rails.application.configure do
   # Traction
   config.traction_ui_uri = 'http://localhost:5173/#'
   config.traction_service_uri = 'http://localhost:3100/v1'
+
+  # MLWH credentials for Ultima run checking
+  # In dev, we assume we don't have a local MLWH set up, so we mock the check
+  config.mock_ultima_run_check = true
 end

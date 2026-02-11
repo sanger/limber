@@ -59,12 +59,13 @@ module Presenters
       when :finished
         # No error message if finished, as child creation will be allowed and there will be no issue for the user.
       end
+
+      @ultima_run_status
     end
 
     def find_ultima_run_status
       # TODO: replace 'descendants' call with one like 'descendants_with_requests_as_source'
       # to avoid requerying tubes individually in fetch_tube.
-      # binding.pry
       downstream_sequenced_tubes = @labware.descendants.all.select{ |d| d.purpose&.name == downstream_seq_tube_purpose }
       return :not_finished if downstream_sequenced_tubes.empty?
 
