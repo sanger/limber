@@ -50,6 +50,9 @@ module ExportsHelper
   end
 
   # Helper method for scRNA PBMC Pools plate to create rows for the driver files
+  # Used in the following exports:
+  # - Hamilton LRC PBMC Aliquot to LRC PBMC Pools CSV
+  # - Hamilton LRC PBMC Defrost PBS 1ml to LRC PBMC Pools CSV
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def pbmc_transfer_request_rows(plate, ancestor_plate_list)
     scrna_config = Rails.application.config.scrna_config
