@@ -275,13 +275,8 @@ SCAPE.renderSourceWells = function () {
       let barcode = SCAPE.plates[plateIndex].humanBarcode
       let inputBarcode = SCAPE.plates[plateIndex].inputBarcode
       let purpose = SCAPE.plates[plateIndex].purpose
-      let pipelineGroupName = SCAPE.plates[plateIndex].pipelineGroupName
-      let label
-      if (pipelineGroupName === 'ISC') {
-        label = 'Cherry Pick Plate ID'
-      } else {
-        label = 'Input Plate Barcode'
-      }
+      let InputPlateLabel = SCAPE.plates[plateIndex].inputPlateLabel
+
       $('.plate-id-' + plateIndex).show()
       $('.plate-id-' + plateIndex + ' .well').empty()
 
@@ -289,7 +284,7 @@ SCAPE.renderSourceWells = function () {
         <span class="barcode-label">${purpose}</span>
         <span class="barcode-value">${barcode}</span>
         <span class="caption-separator"></span>
-        <span class="barcode-label">${label}</span>
+        <span class="barcode-label">${InputPlateLabel}</span>
         <span class="barcode-value">${inputBarcode}</span>
       `)
 

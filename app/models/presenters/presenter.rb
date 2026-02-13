@@ -93,6 +93,17 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     useful_barcode(labware.stock_plate.try(:barcode))
   end
 
+  def input_plate_label
+    purpose_name = labware.stock_plate&.purpose&.name
+    return 'Input plate Barcode' if purpose_name.blank?
+
+    if purpose_name.downcase.include?('cherrypick')
+      'Cherry pick plate ID'
+    else
+      'Input plate Barcode'
+    end
+  end
+
   def inspect
     "<#{self.class.name} labware:#{labware.uuid} ...>"
   end

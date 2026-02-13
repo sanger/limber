@@ -29,6 +29,7 @@ module Presenters
       'Plate type' => :purpose_name,
       'Current plate state' => :state,
       'Input plate barcode' => :input_barcode,
+      'Input plate label' => :input_plate_label,
       'PCR Cycles' => :requested_pcr_cycles,
       'Created on' => :created_on
     }
