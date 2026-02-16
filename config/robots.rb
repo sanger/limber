@@ -4300,7 +4300,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM APOBEC Deam',
-          states: ['passed'],
+          states: ['pending'],
           label: 'Bed 5'
         },
         bed(6).barcode => {
@@ -5378,12 +5378,13 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA OdT Beads First Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Bravo LCMT RNA OdT Beads First Verification',
       beds: {
         bed(8).barcode => {
           purpose: 'LCMT RNA OdT Beads',
           states: ['started'],
           label: 'Bed 8',
-          target_state: 'pending'
+          target_state: 'processed'
         }
       }
     )
@@ -5392,10 +5393,11 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA OdT Beads Second Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Bravo LCMT RNA OdT Beads Second Verification',
       beds: {
         bed(8).barcode => {
           purpose: 'LCMT RNA OdT Beads',
-          states: ['pending'],
+          states: ['processed'],
           label: 'Bed 8',
           target_state: 'passed'
         }
@@ -5408,6 +5410,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA Denat/Hyb Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Bravo LCMT RNA Denat/Hyb Verification',
       beds: {
         bed(8).barcode => {
           purpose: 'LCMT RNA Denat/Hyb',
@@ -5424,6 +5427,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA RT Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Bravo LCMT RNA RT Verification',
       beds: {
         bed(8).barcode => {
           purpose: 'LCMT RNA RT',
@@ -5442,8 +5446,9 @@ ROBOT_CONFIG =
       beds: {
         bed(4).barcode => {
           purpose: 'LCMT RNA Preamp',
-          states: ['passed'],
-          label: 'Bed 4'
+          states: ['started'],
+          label: 'Bed 4',
+          target_state: 'passed'
         },
         car('4,3').barcode => {
           purpose: 'LCMT cDNA Reserve',
@@ -5475,6 +5480,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT cDNA Frag/ER Verification',
       require_robot: true,
       verify_robot: true,
+      start_button_text: 'Bravo LCMT cDNA Frag/ER Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT cDNA Frag/ER',
@@ -5515,8 +5521,9 @@ ROBOT_CONFIG =
       beds: {
         bed(7).barcode => {
           purpose: 'LCMT cDNA Lib PCR',
-          states: ['passed'],
-          label: 'Bed 7'
+          states: ['pending'],
+          label: 'Bed 7',
+          target_state: 'passed'
         },
         bed(9).barcode => {
           purpose: 'LCMT cDNA Lib PCR XP',
@@ -5527,8 +5534,9 @@ ROBOT_CONFIG =
         },
         bed(12).barcode => {
           purpose: 'LCMT cDNA Lib PCR',
-          states: ['passed'],
-          label: 'Bed 12'
+          states: ['pending'],
+          label: 'Bed 12',
+          target_state: 'passed'
         },
         bed(14).barcode => {
           purpose: 'LCMT cDNA Lib PCR XP',

@@ -5,6 +5,7 @@ LCMT RNA OdT Beads:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
+  :presenter_class: Presenters::PermissivePresenter
   :size: 96
 LCMT RNA Denat/Hyb:
   :asset_type: plate
@@ -53,7 +54,7 @@ LCMT cDNA Lib PCR:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :presenter_class: Presenters::PcrPresenter
+  :presenter_class: Presenters::PcrPermissivePresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
     - TS_pWGSA_UDI96v2

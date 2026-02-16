@@ -51,7 +51,7 @@ LCM Triomics RNA-seq:
   filters:
     request_type_key: limber_lcm_triomics_rnaseq
     library_type: Combined LCM RNA
-  library_pass: LCMT cDNA Lib PCR
+  library_pass: LCMT cDNA Lib PCR XP
   relationships:
     LCMT Lysate: LCMT RNA OdT Beads
     LCMT RNA OdT Beads: LCMT RNA Denat/Hyb

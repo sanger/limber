@@ -2,12 +2,20 @@
 ---
 LCMT Lysate:
   :asset_type: plate
-  :stock_plate: true
+  :stock_plate: false
   :cherrypickable_target: false
   :input_plate: true
   :presenter_class: Presenters::StockPlatePresenter
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
+  :submission_options:
+    RNA-Seq Branch - Automated Submission:
+      template_name: 'Limber-Htp - LCM Triomics RNA-seq'
+      allowed_extra_barcodes: false
+      request_options:
+        library_type: 'Combined LCM RNA'
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
 LCMT DNA Frag:
   :asset_type: plate
   :stock_plate: false
