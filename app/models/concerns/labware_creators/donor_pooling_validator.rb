@@ -8,6 +8,7 @@ module LabwareCreators::DonorPoolingValidator
     validate :source_barcodes_must_be_entered
     validate :source_barcodes_must_be_different
     validate :source_plates_must_exist
+    validate :parent_plate_must_be_scanned
     validate :wells_with_aliquots_must_have_donor_id
     validate :wells_with_aliquots_must_have_cell_count
     validate :validate_pools_can_be_built
@@ -20,6 +21,9 @@ module LabwareCreators::DonorPoolingValidator
   SOURCE_PLATES_MUST_EXIST =
     'Source plates not found: %s. ' \
     'Please check you scanned the correct source plates. '
+
+  PARENT_PLATE_MUST_BE_SCANNED =
+    'You must include the parent plate (%s) in the source barcodes scanned.'
 
   WELLS_WITH_ALIQUOTS_MUST_HAVE_DONOR_ID =
     'All samples must have the donor_id specified. ' \
@@ -60,6 +64,23 @@ module LabwareCreators::DonorPoolingValidator
     formatted_string = (minimal_barcodes - source_plates.map(&:human_barcode)).join(', ')
 
     errors.add(:source_plates, format(SOURCE_PLATES_MUST_EXIST, formatted_string))
+  end
+
+  # Validates that the parent plate on which you clicked the 'add child' button has been scanned.
+  # If the parent plate has not been scanned, an error is added to the :source_barcodes attribute.
+  #
+  # Without this validation, if the user scans a different plate in the custom screen to which they
+  # clicked add child, the child is still created but there is confusion in the code between what the
+  # parent is and what the ancestors are via the transfer requests. This was breaking driver file
+  # creation (500 error).
+  #
+  # @return [void]
+  def parent_plate_must_be_scanned
+    return if minimal_barcodes.include?(parent.human_barcode)
+
+    msg = format(PARENT_PLATE_MUST_BE_SCANNED, parent.human_barcode)
+
+    errors.add(:source_barcodes, msg)
   end
 
   # Validates that all wells with aliquots must have a donor_id.
