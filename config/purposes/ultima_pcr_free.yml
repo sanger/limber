@@ -23,17 +23,6 @@ UPF Lib:
   :default_printer_type: :ultima_lib_plate
 UPF Lib XP2:
   :asset_type: plate
-  :presenter_class:
-    name: Presenters::PlateDownstreamCompletedPresenter
-    args:
-      downstream_seq_tube:
-        purpose: 'UPF EqVol Norm'
-        state: 'passed'
-        request_type: 'Ultima sequencing'
-        request_allowed_states:
-          - 'passed'
-      child_tube_purposes:
-        - 'UPF Balanced Pool'
   :manual_transfer:
     states:
       - 'pending'
