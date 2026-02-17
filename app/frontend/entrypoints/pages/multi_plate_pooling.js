@@ -282,15 +282,10 @@ SCAPE.renderSourceWells = function () {
 
       const caption = $('.plate-id-' + plateIndex + ' caption')
       caption.empty()
-
       $('<span>').addClass('barcode-label').text(purpose).appendTo(caption)
-
       $('<span>').addClass('barcode-value').text(barcode).appendTo(caption)
-
       $('<span>').addClass('caption-separator').appendTo(caption)
-
       $('<span>').addClass('barcode-label').text(InputPlateLabel).appendTo(caption)
-
       $('<span>').addClass('barcode-value').text(inputBarcode).appendTo(caption)
 
       $('#well-transfers-' + plateIndex).detach()
