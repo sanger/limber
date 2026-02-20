@@ -12,6 +12,8 @@ LCMT Lysate:
     EM-seq (+ WGS) Branch - Automated Submission:
       template_name: 'Limber-Htp - LCM Triomics EMSeq'
       allowed_extra_barcodes: false
+      # autodetect_studies: true
+      # autodetect_projects: false
       request_options:
         library_type: 'emSEQ'
         fragment_size_required_from: '450'
@@ -19,8 +21,12 @@ LCMT Lysate:
     RNA-Seq Branch - Automated Submission:
       template_name: 'Limber-Htp - LCM Triomics RNASeq'
       allowed_extra_barcodes: false
+      # autodetect_studies: true
+      # autodetect_projects: false
       request_options:
         library_type: 'Combined LCM RNA'
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
   :size: 96
 LCMT DNA Frag:
   :asset_type: plate
