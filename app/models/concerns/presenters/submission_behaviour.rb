@@ -33,7 +33,7 @@ module Presenters::SubmissionBehaviour
   def asset_groups
     @asset_groups ||=
       if labware.type == 'tubes'
-        [{ assets: [labware.uuid], autodetect_studies: true, autodetect_projects: true }]
+        [{ assets: [labware.uuid], autodetect_studies: false, autodetect_projects: false }]
       else
         labware
           .wells
