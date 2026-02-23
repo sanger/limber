@@ -189,21 +189,39 @@ rvi_pcr_xp_concentrations_for_custom_pooling:
   csv: rvi_pcr_xp_concentrations_for_custom_pooling
   plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
   ancestor_purpose: RVI Cherrypick
-hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools:
-  csv: hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools
+hamilton_lrc_pbmc_defrost_pbs_1ml_to_lrc_pbmc_pools:
+  csv: hamilton_lrc_pbmc_defrost_pbs_1ml_to_lrc_pbmc_pools
   workflow: scRNA Core Donor Pooling
   plate_includes:
     - wells.qc_results
     - wells.transfer_requests_as_target.source_asset
     - wells.aliquots.study.poly_metadata
-  ancestor_purpose: LRC PBMC Defrost PBS
+  ancestor_purpose: LRC PBMC Defrost PBS 1ml
+hamilton_lrc_pbmc_aliquot_to_lrc_pbmc_pools:
+  csv: hamilton_lrc_pbmc_aliquot_to_lrc_pbmc_pools
+  workflow: scRNA Core Donor Pooling
+  plate_includes:
+    - wells.qc_results
+    - wells.transfer_requests_as_target.source_asset
+    - wells.aliquots.study.poly_metadata
+  ancestor_purpose: LRC PBMC Aliquot
 hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_ge_dil:
   csv: hamilton_fixed_volume_dilutions
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
-hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count:
-  csv: hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count
-  workflow: scRNA Core LRC PBMC Defrost PBS Cell Count
+hamilton_lrc_pbmc_defrost_pbs_1ml_to_cellaca_count:
+  csv: hamilton_lrc_pbmc_defrost_pbs_1ml_to_cellaca_count
+  workflow: scRNA Core LRC PBMC Defrost PBS 1ml Cell Count
+  plate_includes:
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+  filename:
+    labware_barcode:
+      prepend: true
+hamilton_lrc_pbmc_aliquot_to_cellaca_count:
+  csv: hamilton_lrc_pbmc_aliquot_to_cellaca_count
+  workflow: scRNA Core LRC PBMC Aliquot Cell Count
   plate_includes:
     - wells.aliquots
     - wells.aliquots.sample
