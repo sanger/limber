@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'presenters'
-
+# rubocop:disable Metrics/ModuleLength
 module Presenters::Presenter # rubocop:todo Style/Documentation
   extend ActiveSupport::Concern
 
@@ -93,6 +93,17 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     useful_barcode(labware.stock_plate.try(:barcode))
   end
 
+  def input_plate_label
+    purpose_name = labware.stock_plate&.purpose&.name
+    return 'Input plate Barcode' if purpose_name.blank?
+
+    if purpose_name.downcase.include?('cherrypick')
+      'Cherry pick plate ID'
+    else
+      'Input plate Barcode'
+    end
+  end
+
   def inspect
     "<#{self.class.name} labware:#{labware.uuid} ...>"
   end
@@ -161,3 +172,4 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     metadata.present? ? metadata.fetch('stock_barcode', barcode) : 'N/A'
   end
 end
+# rubocop:enable Metrics/ModuleLength

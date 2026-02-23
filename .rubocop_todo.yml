@@ -384,7 +384,7 @@ RSpec/MultipleExpectations:
     - 'spec/views/exports/cardinal_tagging_csv_for_custom_pooling.csv.erb_spec.rb'
     - 'spec/views/exports/hamilton_gem_x_5p_chip_loading.csv.erb_spec.rb'
     - 'spec/views/exports/hamilton_lrc_blood_bank_to_lrc_pbmc_bank.csv.erb_spec.rb'
-    - 'spec/views/exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count.csv.erb_spec.rb'
+    - 'spec/views/exports/hamilton_lrc_pbmc_defrost_pbs_1ml_to_cellaca_count.csv.erb_spec.rb'
     - 'spec/views/exports/hamilton_lrc_pbmc_pools_to_cellaca_count.csv.erb_spec.rb'
     - 'spec/views/exports/scrna_core_cell_extraction_sample_arraying_tube_layout.csv.erb_spec.rb'
 
