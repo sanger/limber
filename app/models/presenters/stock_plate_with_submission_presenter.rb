@@ -6,7 +6,7 @@ module Presenters
         include Presenters::Statemachine::Submission
         include Presenters::SubmissionBehaviour
         include Presenters::StockBehaviour
-        include Presenters::StateChangeless
+        # include Presenters::StateChangeless
         include Presenters::Statemachine::DoesNotAllowLibraryPassing
 
         self.allow_well_failure_in_states = []
