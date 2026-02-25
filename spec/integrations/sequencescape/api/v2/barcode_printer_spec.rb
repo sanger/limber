@@ -43,5 +43,21 @@ RSpec.describe Sequencescape::Api::V2::BarcodePrinter do
         expect(described_class.all).to eq(printers)
       end
     end
+
+    context 'when cache is present but expired' do
+      before do
+        # Simulate cache expiry by advancing time beyond the cache expiry period
+        travel 4.minutes
+        described_class.all
+      end
+
+      it 'calls the API again to fetch printers' do
+        expect(api_base_class).to have_received(:all).twice
+      end
+
+      it 'returns the new list of printers after cache expiry' do
+        expect(described_class.all).to eq(printers)
+      end
+    end
   end
 end
