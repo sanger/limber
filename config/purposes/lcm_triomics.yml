@@ -20,8 +20,8 @@ LCMT Lysate:
       allowed_extra_barcodes: false
       request_options:
         library_type: 'Combined LCM RNA'
-        fragment_size_required_from: '450'
-        fragment_size_required_to: '450'
+        fragment_size_required_from: '100'
+        fragment_size_required_to: '500'
   :size: 96
 LCMT DNA Frag:
   :asset_type: plate
