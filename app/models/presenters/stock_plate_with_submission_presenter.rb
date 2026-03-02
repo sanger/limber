@@ -18,5 +18,18 @@ module Presenters
     def allow_new_submission?
       true
     end
+
+    def submission_in_progress?
+       labware.requests_in_progress.any?
+    end
+
+    def requests_pending?
+       labware.all_requests.any?(&:pending?)
+    end
+
+    def allow_workflow_creation?
+       return false if (submission_in_progress? || requests_pending?)
+       true
+    end
   end
 end
