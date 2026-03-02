@@ -8,16 +8,9 @@ module Presenters
   # the input plate for the submission, and the user should be able to create
   # the submission when the plate is passed.
   #
-  class StockPlateWithSubmissionPresenter < PlatePresenter
-    include Presenters::Statemachine::Submission
-    include Presenters::SubmissionBehaviour
+  class StockPlateWithSubmissionPresenter < SubmissionPlatePresenter
     include Presenters::StockBehaviour
-    include Presenters::StateChangeless
-    include Presenters::Statemachine::DoesNotAllowLibraryPassing
     include Presenters::Statemachine::SubmissionWhenPassed
-
-    self.allow_well_failure_in_states = []
-    self.style_class = 'stock'
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator
