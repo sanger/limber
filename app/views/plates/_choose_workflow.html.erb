@@ -45,7 +45,7 @@
             <% end %>
           <% end %>
 
-          <%= submit_tag name, class: 'create-submission-button' %>
+          <%= submit_tag name, class: 'create-submission-button', disabled: presenter.disable_workflow_creation? %>
         <% end %>
       <% end %>
     <% end %>

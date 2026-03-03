@@ -190,6 +190,10 @@ module Presenters
       can_be_enabled?(purpose_config.dig(:manual_transfer, :states))
     end
 
+    def disable_workflow_creation?
+      false
+    end
+
     private
 
     def libraries_passable?
