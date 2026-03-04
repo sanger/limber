@@ -19,18 +19,27 @@ module Presenters
       true
     end
 
-    def submission_in_progress?
-      labware.requests_in_progress.any?
+    def button_request_type_map
+      {
+        'EM-seq (+ WGS) Branch - Automated Submission' => 'limber_lcm_triomics_emseq',
+        'RNA-Seq Branch' => 'limber_rna_seq'
+      }
     end
 
-    def requests_pending?
-      labware.requests_as_source.any?(&:pending?)
+    def active_request_types
+      wells.flat_map(&:active_requests)
+        .map(&:request_type_key)
+        .uniq
     end
 
-    def disable_workflow_creation?
-      return true if pending_submissions? || requests_pending?
+    def disable_button_for_label?(label)
+      # Disable all buttons if any submission is in progress
+      return true if pending_submissions?
 
-      false
+      # Map the button label to its request type key
+      request_type = button_request_type_map[label]
+      # Disable only if there is an active request of this type
+      request_type && active_request_types.include?(request_type)
     end
   end
 end
