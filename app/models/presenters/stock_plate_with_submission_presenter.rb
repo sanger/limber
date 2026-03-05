@@ -19,10 +19,12 @@ module Presenters
       true
     end
 
+    # This is hard coded, need to match the SS submission template config request_type_keys
+    # and Limber config submission options label, not ideal
     def button_request_type_map
       {
         'EM-seq (+ WGS) Branch - Automated Submission' => 'limber_lcm_triomics_emseq',
-        'RNA-Seq Branch' => 'limber_rna_seq'
+        'RNA-Seq Branch - Automated Submission' => 'limber_lcm_triomics_rnaseq'
       }
     end
 
