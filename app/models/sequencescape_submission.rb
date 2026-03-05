@@ -31,6 +31,7 @@ class SequencescapeSubmission
   attr_reader :asset_groups
 
   attr_accessor :allowed_extra_barcodes, :extra_barcodes, :num_extra_barcodes, :labware_barcode, :submission_uuid
+  attr_accessor :supplied_project_uuid
 
   validates :user, :assets, :template_uuid, :request_options, presence: true
   validate :check_extra_barcodes
@@ -127,12 +128,13 @@ class SequencescapeSubmission
 
   def generate_submissions
     orders = generate_orders
-    @submission_uuid =
-      Sequencescape::Api::V2::Submission.create!(
-        and_submit: true,
-        order_uuids: orders.map(&:uuid),
-        user_uuid: user
-      ).uuid
+    submission_params = {
+      and_submit: true,
+      order_uuids: orders.map(&:uuid),
+      user_uuid: user
+    }
+    submission_params[:project_uuid] = supplied_project_uuid if supplied_project_uuid.present?
+    @submission_uuid = Sequencescape::Api::V2::Submission.create!(submission_params).uuid
     true
   rescue JsonApiClient::Errors::ConnectionError => e
     errors.add(:sequencescape_connection, e.message)
