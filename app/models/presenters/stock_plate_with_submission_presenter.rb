@@ -24,7 +24,7 @@ module Presenters
     end
 
     def requests_pending?
-      labware.requests_as_source.any?(&:pending?)
+      labware.all_requests.any?(&:pending?)
     end
 
     def disable_workflow_creation?
