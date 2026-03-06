@@ -4300,7 +4300,7 @@ ROBOT_CONFIG =
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT EM APOBEC Deam',
-          states: ['pending'],
+          states: ['passed'],
           label: 'Bed 5'
         },
         bed(6).barcode => {
@@ -5429,10 +5429,10 @@ ROBOT_CONFIG =
       verify_robot: true,
       start_button_text: 'Bravo LCMT RNA RT Verification',
       beds: {
-        bed(8).barcode => {
+        bed(5).barcode => {
           purpose: 'LCMT RNA RT',
           states: ['started'],
-          label: 'Bed 8',
+          label: 'Bed 5',
           target_state: 'passed'
         }
       }
@@ -5516,7 +5516,8 @@ ROBOT_CONFIG =
     # LCMT RNAseq Library PCR Cleanup Verification
     custom_robot(
       'bravo-lib-pcr-purification',
-      name: 'Bravo LCMT cDNA Lib PCR => LCMT cDNA Lib PCR XP',
+      name: 'Hamilton LCMT cDNA Lib PCR => LCMT cDNA Lib PCR XP',
+      require_robot: true,
       verify_robot: false,
       beds: {
         bed(7).barcode => {
