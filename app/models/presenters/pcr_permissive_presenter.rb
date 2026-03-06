@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Presenters
   #
   # Combines PCR rendering (tagged aliquots) with permissive plate creation behavior
