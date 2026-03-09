@@ -46,19 +46,29 @@ LCM Triomics WGS Custom Pooling:
     LCMT DNA Pool XP: LCMT DNA Pool XP Norm
 
 # Pipeline configuration for RNA-seq
-LCM Triomics RNA-seq:
+# Split into two steps so Limber can expose two labware creation buttons,
+# allowing two child labware (LCMT cDNA Reserve and LCMT cDNA Frag/ER)
+# to be created from the same parent labware (LCMT RNA Preamp).
+LCM Triomics RNA-seq-step-1:
   pipeline_group: LCM Triomics RNA-seq
   filters:
     request_type_key: limber_lcm_triomics_rnaseq
     library_type: Combined LCM RNA
-  library_pass: LCMT cDNA Lib PCR XP
   relationships:
     LCMT Lysate: LCMT RNA OdT Beads
     LCMT RNA OdT Beads: LCMT RNA Denat/Hyb
     LCMT RNA Denat/Hyb: LCMT RNA RT
     LCMT RNA RT: LCMT RNA Preamp
     LCMT RNA Preamp: LCMT cDNA Reserve
-    LCMT cDNA Reserve: LCMT cDNA Frag/ER
+
+# Pipeline configuration for RNA-seq
+LCM Triomics RNA-seq-step-2:
+  pipeline_group: LCM Triomics RNA-seq
+  library_pass: LCMT cDNA Lib PCR XP
+  filters:
+    request_type_key: limber_lcm_triomics_rnaseq
+  relationships:
+    LCMT RNA Preamp: LCMT cDNA Frag/ER
     LCMT cDNA Frag/ER: LCMT cDNA ADP Lig
     LCMT cDNA ADP Lig: LCMT cDNA Lib PCR
     LCMT cDNA Lib PCR: LCMT cDNA Lib PCR XP

@@ -5410,7 +5410,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA Denat/Hyb Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: 'Bravo LCMT RNA Denat/Hyb Verification',
+      start_button_text: 'Finish Bravo LCMT RNA Denat/Hyb Verification',
       beds: {
         bed(8).barcode => {
           purpose: 'LCMT RNA Denat/Hyb',
@@ -5427,7 +5427,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA RT Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: 'Bravo LCMT RNA RT Verification',
+      start_button_text: 'Finish Bravo LCMT RNA RT Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT RNA RT',
@@ -5461,7 +5461,7 @@ ROBOT_CONFIG =
           purpose: 'LCMT cDNA Frag/ER',
           states: ['pending'],
           label: 'Carousel 1,4',
-          parent: car('4,3').barcode,
+          parent: bed(4).barcode,
           target_state: 'started'
         },
         car('3,5').barcode => {
@@ -5480,7 +5480,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT cDNA Frag/ER Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: 'Bravo LCMT cDNA Frag/ER Verification',
+      start_button_text: 'Finish Bravo LCMT cDNA Frag/ER Verification',
       beds: {
         bed(5).barcode => {
           purpose: 'LCMT cDNA Frag/ER',
