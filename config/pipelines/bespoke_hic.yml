@@ -1,4 +1,5 @@
 Bespoke PCR MX HiC:
+  pipeline_group: Bespoke Multiplexing HiC
   filters:
     request_type_key: limber_multiplexing_hic
   relationships:
