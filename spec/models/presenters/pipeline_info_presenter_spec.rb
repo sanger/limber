@@ -56,8 +56,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     context 'when no pipelines match' do
       let(:pipelines_config) { {} }
 
-      it 'returns nil' do
-        expect(presenter.pipeline_groups).to be_nil
+      it 'returns an empty array' do
+        expect(presenter.pipeline_groups).to eq([])
       end
     end
 
