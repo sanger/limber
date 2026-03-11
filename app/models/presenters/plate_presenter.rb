@@ -190,7 +190,7 @@ module Presenters
       can_be_enabled?(purpose_config.dig(:manual_transfer, :states))
     end
 
-    def disable_button_for_label?(_label)
+    def disable_button_for_submission?(_submission)
       false
     end
 
