@@ -19,29 +19,23 @@ module Presenters
       true
     end
 
-    # This is hard coded, need to match the SS submission template config request_type_keys
-    # and Limber config submission options label, not ideal
-    def button_request_type_map
-      {
-        'EM-seq (+ WGS) Branch - Automated Submission' => 'limber_lcm_triomics_emseq',
-        'RNA-Seq Branch - Automated Submission' => 'limber_lcm_triomics_rnaseq'
-      }
-    end
-
     def active_request_types
       wells.flat_map(&:active_requests)
         .map(&:request_type_key)
         .uniq
     end
 
-    def disable_button_for_label?(label)
-      # Disable all buttons if any submission is in progress
+    def template_request_type(uuid)
+      template = Sequencescape::Api::V2::SubmissionTemplate.find_by_uuid(uuid)
+      template.request_type_keys.first
+    end
+
+    def disable_button_for_submission?(submission)
       return true if pending_submissions?
 
-      # Map the button label to its request type key
-      request_type = button_request_type_map[label]
-      # Disable only if there is an active request of this type
-      request_type && active_request_types.include?(request_type)
+      request_type = template_request_type(submission.template_uuid)
+      active_request_types.include?(request_type)
     end
+
   end
 end
