@@ -36,6 +36,5 @@ module Presenters
       request_type = template_request_type(submission.template_uuid)
       active_request_types.include?(request_type)
     end
-
   end
 end
