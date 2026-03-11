@@ -1,0 +1,22 @@
+<%# This is a picking file for a Hamilton robot for LRC PBMC Defrost plate to LRC PBMC Pools plate transfers %>
+<%= CSV.generate_line [
+    'Workflow',
+    @workflow
+  ],
+  row_sep: ''
+%>
+<%= CSV.generate_line [], row_sep: "" %>
+<%= CSV.generate_line [
+    'Source Plate',
+    'Source Well',
+    'Destination Plate',
+    'Destination Well',
+    'Sample Volume (µL)',
+    'Resuspension Volume (µL)',
+  ],
+  row_sep: ''
+%>
+<%
+  rows_array = pbmc_transfer_request_rows(@plate, @ancestor_plate_list)
+%>
+<%= rows_array.map(&:to_csv).join %>
