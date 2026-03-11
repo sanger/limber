@@ -5378,7 +5378,6 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA OdT Beads First Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: 'Bravo LCMT RNA OdT Beads First Verification',
       beds: {
         bed(8).barcode => {
           purpose: 'LCMT RNA OdT Beads',
@@ -5393,7 +5392,7 @@ ROBOT_CONFIG =
       name: 'Bravo LCMT RNA OdT Beads Second Verification',
       require_robot: true,
       verify_robot: true,
-      start_button_text: 'Bravo LCMT RNA OdT Beads Second Verification',
+      start_button_text: 'Finish Bravo LCMT RNA OdT Beads Second Verification',
       beds: {
         bed(8).barcode => {
           purpose: 'LCMT RNA OdT Beads',
@@ -5515,7 +5514,7 @@ ROBOT_CONFIG =
     )
     # LCMT RNAseq Library PCR Cleanup Verification
     custom_robot(
-      'bravo-lib-pcr-purification',
+      'hamilton-lib-pcr-purification',
       name: 'Hamilton LCMT cDNA Lib PCR => LCMT cDNA Lib PCR XP',
       require_robot: true,
       verify_robot: false,
