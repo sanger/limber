@@ -136,24 +136,6 @@ RSpec.describe Presenters::PipelineInfoPresenter do
 
     context 'when pipelines match by purpose and library type' do
       # Based on Bioscan pipeline
-      # Bioscan Lysate Prep:
-      #   filters:
-      #     request_type_key: limber_bioscan_lysate_prep
-      #   library_pass:
-      #     - LBSN-96 Lysate
-      #   relationships:
-      #     LILYS-96 Stock: LBSN-96 Lysate
-      # Bioscan Library Prep:
-      #   filters:
-      #     request_type_key: limber_bioscan_library_prep
-      #     library_type:
-      #       - Bioscan
-      #   library_pass:
-      #     - LBSN-384 PCR 2
-      #   relationships:
-      #     LBSN-96 Lysate: LBSN-384 PCR 1
-      #
-
       let(:pipelines_config) do
         {
           'bioscan_lysate_prep' => {
@@ -179,7 +161,7 @@ RSpec.describe Presenters::PipelineInfoPresenter do
       let(:labware) { create(:plate, purpose:) }
 
       it 'returns the pipeline group matching the purpose' do
-        expect(presenter.pipeline_groups).to eq(['bioscan_lysate_prep'])
+        expect(presenter.pipeline_groups).to eq(%w[bioscan_library_prep bioscan_lysate_prep])
       end
 
       context 'with added request filter' do
