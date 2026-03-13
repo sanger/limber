@@ -66,6 +66,20 @@ class Pipeline
     end
   end
 
+  def active_for_in_progress_requests?(labware)
+    return false unless purpose_in_relationships?(labware.purpose)
+    return true if filters.blank?
+
+    # NB. do not include completed requests here
+    labware.incomplete_requests.any? do |request|
+      # For each attribute (eg. library_type) check that the matching property
+      # on request is included in the list of permitted values.
+      filters.all? do |request_attribute, permitted_values|
+        permitted_values.include? request.public_send(request_attribute)
+      end
+    end
+  end
+
   def filters=(filters)
     # Convert any singlular values to an array to provide a consistent interface
     @filters = filters.transform_values { |value| Array(value) }
