@@ -4,6 +4,7 @@
 # the LILYS-96 Stock plate wells, then adding Lysis buffer, then transferring the lysed material
 # and adding controls into the destination LBSN-96 Lysate plate.
 Bioscan Lysate Prep:
+  pipeline_group: Bioscan
   filters:
     request_type_key: limber_bioscan_lysate_prep
   library_pass:
@@ -14,6 +15,7 @@ Bioscan Lysate Prep:
 # 1. Faculty has created the lysed plate manually and it enters the pipeline via a Sample manifest
 # 2. The Beckman automation has created the lysed plate from the initial insect stock plate
 Bioscan Library Prep:
+  pipeline_group: Bioscan
   filters:
     request_type_key: limber_bioscan_library_prep
     library_type:

@@ -2,6 +2,7 @@
 # This is the pipeline configuration for ANOSPP Lysate preparation.
 # It is essentially a straight stamp, no controls added.
 ANOSPP Lysate Prep:
+  pipeline_group: ANOSPP
   filters:
     request_type_key: limber_anospp_lysate_prep
   library_pass:

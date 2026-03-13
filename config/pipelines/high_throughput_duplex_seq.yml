@@ -1,5 +1,6 @@
 ---
 Duplex Seq:
+  pipeline_group: Duplex Seq
   filters:
     request_type_key: limber_duplex-seq
     library_type:
