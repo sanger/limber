@@ -569,10 +569,9 @@ RSpecRails/TravelAround:
     - 'spec/models/presenters/permissive_submission_presenter_spec.rb'
     - 'spec/models/presenters/submission_plate_presenter_spec.rb'
 
-# Offense count: 3
+# Offense count: 2
 Style/FileOpen:
   Exclude:
-    - 'config/initializers/settings.rb'
     - 'script/limber'
 
 # Offense count: 4
