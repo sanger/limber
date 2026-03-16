@@ -19,18 +19,22 @@ module Presenters
       true
     end
 
-    def submission_in_progress?
-      labware.requests_in_progress.any?
+    def active_request_types
+      wells.flat_map(&:active_requests)
+        .map(&:request_type_key)
+        .uniq
     end
 
-    def requests_pending?
-      labware.all_requests.any?(&:pending?)
+    def template_request_type(uuid)
+      template = Sequencescape::Api::V2::SubmissionTemplate.find_by(uuid:)
+      template&.request_type_keys&.first
     end
 
-    def disable_workflow_creation?
-      return true if pending_submissions? || requests_pending?
+    def disable_button_for_submission?(submission)
+      return true if pending_submissions?
 
-      false
+      request_type = template_request_type(submission.template_uuid)
+      active_request_types.include?(request_type)
     end
   end
 end

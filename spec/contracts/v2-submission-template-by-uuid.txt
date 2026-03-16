@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Content-Type: application/vnd.api+json
+
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "submission_templates",
+      "attributes": {
+        "uuid": "7a8029bc-1094-11f1-bb65-16cc5efe8600",
+        "name": "RNA-Seq Branch"
+      }
+    }
+  ]
+}
