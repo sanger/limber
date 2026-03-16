@@ -57,7 +57,7 @@ LBSN-96 Lysate Input:
   :label_template: plate_96_lysate
   :creator_class: LabwareCreators::Uncreatable
   :size: 96
-  :presenter_class: Presenters::SubmissionPlatePresenter
+  :presenter_class: Presenters::BioscanSubmissionPlatePresenter
   :submission_options:
     Bioscan Library Prep:
       template_name: 'Limber-Htp - Bioscan Library Prep - Automated'
