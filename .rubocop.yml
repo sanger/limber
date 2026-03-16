@@ -15,6 +15,9 @@ AllCops:
     - vendor/**/*
   NewCops: enable
 
+Layout/IndentationWidth:
+  EnforcedStyleAlignWith: relative_to_receiver
+
 Layout/LeadingCommentSpace:
   AllowRBSInlineAnnotation: true
 
