@@ -6,20 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 8
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Width, EnforcedStyleAlignWith, AllowedPatterns.
-# SupportedStylesAlignWith: start_of_line, relative_to_receiver
-Layout/IndentationWidth:
-  Exclude:
-    - 'app/helpers/plate_helper.rb'
-    - 'app/models/labels/plate_label_cellaca_qc.rb'
-    - 'app/models/labware_creators/donor_pooling_plate.rb'
-    - 'app/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan.rb'
-    - 'app/models/presenters/pcr_cycles_binned_plate_using_request_metadata_presenter.rb'
-    - 'app/models/presenters/pcr_cycles_binned_plate_using_well_metadata_presenter.rb'
-    - 'spec/models/utility/cell_count_spot_checking_spec.rb'
-
 # Offense count: 2
 # Configuration parameters: LengthThreshold.
 Metrics/CollectionLiteralLength:
