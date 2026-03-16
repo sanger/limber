@@ -27,7 +27,7 @@ module Presenters
 
     def template_request_type(uuid)
       template = Sequencescape::Api::V2::SubmissionTemplate.find_by(uuid:)
-      template.request_type_keys.first
+      template&.request_type_keys&.first
     end
 
     def disable_button_for_submission?(submission)
