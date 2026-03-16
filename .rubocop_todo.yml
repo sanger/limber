@@ -574,15 +574,6 @@ Style/FileOpen:
   Exclude:
     - 'script/limber'
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: braces, no_braces
-Style/HashAsLastArrayItem:
-  Exclude:
-    - 'app/integrations/sequencescape/api/v2/plate.rb'
-    - 'spec/models/labware_metadata_spec.rb'
-
 # Offense count: 2
 Style/MultilineBlockChain:
   Exclude:

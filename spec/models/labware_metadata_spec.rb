@@ -35,7 +35,9 @@ RSpec.describe LabwareMetadata do
     let(:plate) { create :stock_plate }
     let(:plate_with_metadata) { create :stock_plate_with_metadata }
 
-    let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: plate.id, metadata: updated_metadata] }
+    let(:custom_metadatum_collections_attributes) do
+      [{ user_id: user.id, asset_id: plate.id, metadata: updated_metadata }]
+    end
 
     before do
       stub_plate(plate)
@@ -79,7 +81,9 @@ RSpec.describe LabwareMetadata do
     let(:tube) { create :stock_tube }
     let(:tube_with_metadata) { create :stock_tube_with_metadata }
 
-    let(:custom_metadatum_collections_attributes) { [user_id: user.id, asset_id: tube.id, metadata: updated_metadata] }
+    let(:custom_metadatum_collections_attributes) do
+      [{ user_id: user.id, asset_id: tube.id, metadata: updated_metadata }]
+    end
 
     before do
       stub_tube(tube)
