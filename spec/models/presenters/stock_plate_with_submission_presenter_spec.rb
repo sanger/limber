@@ -36,7 +36,9 @@ RSpec.describe Presenters::StockPlateWithSubmissionPresenter do
     end
 
     context 'when request type already exists on the plate' do
+      # rubocop:disable RSpec/VerifiedDoubleReference
       let(:request) { instance_double('Request', request_type_key: 'rna_seq') }
+      # rubocop:enable RSpec/VerifiedDoubleReference
       let(:well) { create(:well, coordinate: 'A1') }
 
       before do
