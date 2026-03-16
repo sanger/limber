@@ -39,7 +39,7 @@ LBSN-96 Lysate:
     - type: well_exclusions
       value:
         - H12
-  :presenter_class: Presenters::SubmissionWhenPassedPlatePresenter
+  :presenter_class: Presenters::BioscanSubmissionWhenPassedPlatePresenter
   :submission_options:
     Bioscan Library Prep:
       template_name: 'Limber-Htp - Bioscan Library Prep - Automated'
