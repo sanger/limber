@@ -3,7 +3,7 @@
 require 'spec_helper'
 require_relative 'shared_labware_presenter_examples'
 
-RSpec.describe Presenters::BioscanSubmissionPlatePresenter do
+RSpec.describe Presenters::BioscanSubmissionWhenPassedPlatePresenter do
   describe '#active_pipelines' do
     it_behaves_like 'a presenter defining active pipelines as having active requests', lambda { |labware|
       described_class.new(labware:)
