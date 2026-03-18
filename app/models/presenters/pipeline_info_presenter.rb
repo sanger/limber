@@ -35,6 +35,7 @@ class Presenters::PipelineInfoPresenter
     purpose_filter_groups = [groups_by_purpose, groups_by_filters].compact.reject(&:empty?)
 
     # Find intersection if possible
+    # &:& is a combination of to_proc and Array#&, which allows us to find the intersection of multiple arrays
     intersected_all_groups = all_groups.reduce(&:&)
     intersected_purpose_filters = purpose_filter_groups.reduce(&:&)
 
