@@ -124,24 +124,48 @@ RSpec.describe Presenters::SubmissionBehaviour do
     end
   end
 
-  describe '#well_has_incomplete_requests?' do
-    subject { instance.well_has_incomplete_requests?(well) }
+  describe '#incomplete_requests?' do
+    context 'when labware is a tube' do
+      subject { instance.incomplete_requests?(tube) }
 
-    let(:well) { build(:well, location: 'A1', requests_as_source: requests) }
+      let(:tube) { build(:tube, requests_as_source: requests) }
 
-    context 'when all requests are completed' do
-      let(:requests) { [build(:request, state: 'passed'), build(:request, state: 'failed')] }
+      context 'when all requests are completed' do
+        let(:requests) { [build(:request, state: 'passed'), build(:request, state: 'failed')] }
 
-      it 'returns false' do
-        expect(instance.send(:well_has_incomplete_requests?, well)).to be false
+        it 'returns false' do
+          expect(instance.send(:incomplete_requests?, tube)).to be false
+        end
+      end
+
+      context 'when at least one request is incomplete' do
+        let(:requests) { [build(:request, state: 'pending'), build(:request, state: 'passed')] }
+
+        it 'returns true' do
+          expect(instance.send(:incomplete_requests?, tube)).to be true
+        end
       end
     end
 
-    context 'when at least one request is incomplete' do
-      let(:requests) { [build(:request, state: 'pending'), build(:request, state: 'passed')] }
+    context 'when labware is a plate' do
+      subject { instance.incomplete_requests?(well) }
 
-      it 'returns true' do
-        expect(instance.send(:well_has_incomplete_requests?, well)).to be true
+      let(:well) { build(:well, location: 'A1', requests_as_source: requests) }
+
+      context 'when all requests are completed' do
+        let(:requests) { [build(:request, state: 'passed'), build(:request, state: 'failed')] }
+
+        it 'returns false' do
+          expect(instance.send(:incomplete_requests?, well)).to be false
+        end
+      end
+
+      context 'when at least one request is incomplete' do
+        let(:requests) { [build(:request, state: 'pending'), build(:request, state: 'passed')] }
+
+        it 'returns true' do
+          expect(instance.send(:incomplete_requests?, well)).to be true
+        end
       end
     end
   end

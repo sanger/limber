@@ -76,11 +76,16 @@ module Presenters::SubmissionBehaviour
   def submission_ready_with_incomplete_requests?(submission)
     return false unless submission.ready?
 
-    labware.wells.any? { |well| well_has_incomplete_requests?(well) }
+    if labware.type == 'tubes'
+      incomplete_requests?(labware)
+    else
+      labware.wells.any? { |well| incomplete_requests?(well) }
+    end
   end
 
-  def well_has_incomplete_requests?(well)
-    well.requests_as_source.any? { |request| incomplete_request_state?(request.state) }
+  # For plate wells or tubes
+  def incomplete_requests?(well_or_tube)
+    well_or_tube.requests_as_source.any? { |request| incomplete_request_state?(request.state) }
   end
 
   def incomplete_request_state?(state)
