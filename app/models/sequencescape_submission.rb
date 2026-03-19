@@ -119,10 +119,12 @@ class SequencescapeSubmission
 
   def generate_orders
     asset_groups_for_orders_creation.map do |asset_group|
-      Sequencescape::Api::V2::Order.create!(
+      order_params = {
         submission_template_attributes: { request_options: request_options, user_uuid: user }.merge(asset_group),
         submission_template_uuid: template_uuid
-      )
+      }
+      order_params[:project_uuid] = supplied_project_uuid if supplied_project_uuid.present?
+      Sequencescape::Api::V2::Order.create!(order_params)
     end
   end
 
@@ -133,7 +135,6 @@ class SequencescapeSubmission
       order_uuids: orders.map(&:uuid),
       user_uuid: user
     }
-    submission_params[:project_uuid] = supplied_project_uuid if supplied_project_uuid.present?
     @submission_uuid = Sequencescape::Api::V2::Submission.create!(submission_params).uuid
     true
   rescue JsonApiClient::Errors::ConnectionError => e
