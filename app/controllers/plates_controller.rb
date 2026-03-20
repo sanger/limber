@@ -5,19 +5,20 @@
 # fail_wells => Updates the state of individual wells when failing
 # Note: Finds plates via the v2 api
 class PlatesController < LabwareController
-    # AJAX endpoint to search for a Project by id using Sequencescape API
-    def find_project_by_id
-      project_id = params[:project_id]
-      begin
-        project = Sequencescape::Api::V2::Project.find!(project_id)
-        # Ensure we return both id and uuid for clarity
-        render json: { found: true, project: { id: project.first.id, uuid: project.first.uuid, name: project.first.name } }
-      rescue JsonApiClient::Errors::NotFound
-        render json: { found: false, error: 'Project not found' }, status: :not_found
-      rescue StandardError => e
-        render json: { found: false, error: e.message }, status: :internal_server_error
-      end
+  # AJAX endpoint to search for a Project by id using Sequencescape API
+  def find_project_by_id
+    project_id = params[:project_id]
+    begin
+      project = Sequencescape::Api::V2::Project.find!(project_id)
+      # Ensure we return both id and uuid for clarity
+      render json: { found: true,
+                     project: { id: project.first.id, uuid: project.first.uuid, name: project.first.name } }
+    rescue JsonApiClient::Errors::NotFound
+      render json: { found: false, error: 'Project not found' }, status: :not_found
+    rescue StandardError => e
+      render json: { found: false, error: e.message }, status: :internal_server_error
     end
+  end
   before_action :check_for_current_user!, only: %i[update fail_wells] # rubocop:todo Rails/LexicallyScopedActionFilter
 
   def fail_wells # rubocop:todo Metrics/AbcSize
