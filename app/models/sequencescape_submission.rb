@@ -130,12 +130,12 @@ class SequencescapeSubmission
 
   def generate_submissions
     orders = generate_orders
-    submission_params = {
-      and_submit: true,
-      order_uuids: orders.map(&:uuid),
-      user_uuid: user
-    }
-    @submission_uuid = Sequencescape::Api::V2::Submission.create!(submission_params).uuid
+    @submission_uuid =
+      Sequencescape::Api::V2::Submission.create!(
+        and_submit: true,
+        order_uuids: orders.map(&:uuid),
+        user_uuid: user
+      ).uuid
     true
   rescue JsonApiClient::Errors::ConnectionError => e
     errors.add(:sequencescape_connection, e.message)
