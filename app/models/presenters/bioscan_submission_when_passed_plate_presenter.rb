@@ -3,7 +3,7 @@
 module Presenters
   #
   # This version of the Presenter is for Bioscan, to only show the PCR 1 plate creation button
-  # if there are valid lirbary prep requests.
+  # if there are valid library prep requests.
   class BioscanSubmissionWhenPassedPlatePresenter < SubmissionWhenPassedPlatePresenter
     # Checks for in progress requests before allowing the child creation button to show
     def active_pipelines

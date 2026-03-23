@@ -31,7 +31,7 @@ RSpec.describe Presenters::SubmissionBehaviour do
     end
 
     context 'when not all submissions are ready' do
-      let(:submissions) { [build(:submission, ready?: false)] }
+      let(:submissions) { [build(:submission, state: 'pending')] }
 
       it 'returns false' do
         expect(instance.send(:active_submissions?)).to be false
@@ -39,7 +39,7 @@ RSpec.describe Presenters::SubmissionBehaviour do
     end
 
     context 'when all submissions are ready but no wells have incomplete requests' do
-      let(:submissions) { [build(:submission, ready?: true)] }
+      let(:submissions) { [build(:submission, state: 'ready')] }
       let(:wells) do
         [build(:well, location: 'A1', requests_as_source: [build(:request, state: 'passed')])]
       end
@@ -50,7 +50,7 @@ RSpec.describe Presenters::SubmissionBehaviour do
     end
 
     context 'when all submissions are ready and at least one well has an incomplete request' do
-      let(:submissions) { [build(:submission, ready?: true)] }
+      let(:submissions) { [build(:submission, state: 'ready')] }
       let(:wells) do
         [build(:well, location: 'A1', requests_as_source: [build(:request, state: 'pending')])]
       end
@@ -61,7 +61,7 @@ RSpec.describe Presenters::SubmissionBehaviour do
     end
 
     context 'when multiple wells, some with incomplete requests' do
-      let(:submissions) { [build(:submission, ready?: true)] }
+      let(:submissions) { [build(:submission, state: 'ready')] }
       let(:wells) do
         [
           build(:well, location: 'A1', requests_as_source: [build(:request, state: 'passed')]),
@@ -75,7 +75,7 @@ RSpec.describe Presenters::SubmissionBehaviour do
     end
 
     context 'when multiple submissions, all ready, some wells with incomplete requests' do
-      let(:submissions) { [build(:submission, ready?: true), build(:submission, ready?: true)] }
+      let(:submissions) { [build(:submission, state: 'ready'), build(:submission, state: 'ready')] }
       let(:wells) do
         [build(:well, location: 'A1', requests_as_source: [build(:request, state: 'pending')])]
       end
