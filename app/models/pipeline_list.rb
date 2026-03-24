@@ -115,7 +115,7 @@ class PipelineList
 
   def find_purposes_without_child(relationship_config)
     # reject purposes that are a 'key' in the config, meaning they have a child
-    extract_purposes_from_relationships(relationship_config).reject { |p| (relationship_config.key? p) }
+    extract_purposes_from_relationships(relationship_config).reject { |p| relationship_config.key? p }
   end
 
   def extract_purposes_from_relationships(relationship_config)

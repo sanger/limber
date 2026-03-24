@@ -48,6 +48,9 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :test
   config.action_mailer.smtp_settings = {}
 
+  # Logging configuration
+  config.log_level = ENV.fetch('LOG_LEVEL', :debug).to_sym
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
