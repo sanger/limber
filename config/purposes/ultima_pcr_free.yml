@@ -20,6 +20,8 @@ UPF Lib:
   :tag_layout_templates:
     - 'Ultima P1'
     - 'Ultima P2'
+    - 'Ultima P3'
+    - 'Ultima P4'
   :default_printer_type: :ultima_lib_plate
 UPF Lib XP2:
   :asset_type: plate
@@ -70,5 +72,13 @@ UPF Balanced Norm:
       allowed_extra_barcodes: false
       request_options:
         ot_recipe: Flex
+        fragment_size_required_from: 300
+        fragment_size_required_to: 400
+    Ultima UG200 Sequencing - Automated Submission:
+      template_name: 'Limber-Htp - Ultima PCR Free - Ultima UG200 sequencing Automated'
+      allowed_extra_barcodes: false
+      request_options:
+        wafer_size: 10TB
+        read_length: 300
         fragment_size_required_from: 300
         fragment_size_required_to: 400
