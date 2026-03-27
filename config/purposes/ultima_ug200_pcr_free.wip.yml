@@ -1,6 +1,6 @@
 ---
 # Ultima UG200 PCR Free Pipeline purposes
-UPF2 Cherrypicked :
+UPF2 Cherrypicked:
   :asset_type: plate
   :stock_plate: true
   :cherrypickable_target: true
