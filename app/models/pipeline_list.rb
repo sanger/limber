@@ -23,6 +23,15 @@ class PipelineList
     @list.select { |pipeline| pipeline.active_for?(labware) }
   end
 
+  # This version of active pipelines does not consider completed requests when determining whether
+  # a pipeline is active for a piece of labware.
+  # NB. added to resolve confusion in Bioscan where the PCR 1 button was showing on repeat runs,
+  # despite no new active library prep submission being made yet. Then in the next page, quad stamping,
+  # you would have no wells to transfer into the new PCR 1.
+  def active_pipelines_for_in_progress_requests(labware)
+    @list.select { |pipeline| pipeline.active_for_in_progress_requests?(labware) }
+  end
+
   # For the given pipeline group
   # return a object with key: group, and value: list of the pipeline names in that group
   # e.g {"Bespoke Chromium 3pv2"=>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]}
