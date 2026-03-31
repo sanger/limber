@@ -53,7 +53,7 @@
 
           <input type="hidden" name="submission[project_cost_code]" class="project-cost-code-hidden" />
           <input type="hidden" name="sequencescape_submission[supplied_project_uuid]" class="supplied-project-uuid-hidden" />
-          
+
           <%= submit_tag name, class: 'create-submission-button', disabled: presenter.disable_button_for_submission?(submission) %>
         <% end %>
       <% end %>
