@@ -58,52 +58,5 @@
         <% end %>
       <% end %>
     <% end %>
-
   </div>
-
-  <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-      const globalInput = document.getElementById('project_cost_code_global');
-      const resultDiv = document.getElementById('project_search_result');
-      let foundProjectId = null;
-
-      globalInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const projectId = globalInput.value.trim();
-          if (!projectId) return;
-          resultDiv.textContent = 'Searching...';
-          fetch(`/plates/find_project_by_id?project_id=${encodeURIComponent(projectId)}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.found) {
-                foundProjectId = data.project.uuid;
-                resultDiv.textContent = `Project found: ${data.project.name || data.project.uuid}`;
-              } else {
-                foundProjectId = null;
-                resultDiv.textContent = data.error || 'Project not found.';
-              }
-            })
-            .catch(() => {
-              foundProjectId = null;
-              resultDiv.textContent = 'Error searching for project.';
-            });
-        }
-      });
-
-      document.querySelectorAll('#submission_forms form').forEach(function(form) {
-        form.addEventListener('submit', function() {
-          const hidden = form.querySelector('.project-cost-code-hidden');
-          const projectIdHidden = form.querySelector('.supplied-project-uuid-hidden');
-          if (hidden && globalInput) {
-            hidden.value = globalInput.value;
-          }
-          if (projectIdHidden) {
-            projectIdHidden.value = foundProjectId || '';
-          }
-        });
-      });
-    });
-  </script>
-
 <% end %>
