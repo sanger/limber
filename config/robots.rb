@@ -5529,10 +5529,10 @@ ROBOT_CONFIG =
         },
         bed(6).barcode => {
           purpose: 'LCMT cDNA Lib PCR',
-          states: ['started'],
+          states: ['pending'],
           label: 'Bed 6',
           parent: bed(7).barcode,
-          target_state: 'passed'
+          target_state: 'started'
         }
       }
     )
@@ -5545,7 +5545,7 @@ ROBOT_CONFIG =
       beds: {
         bed(7).barcode => {
           purpose: 'LCMT cDNA Lib PCR',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 7',
           target_state: 'passed'
         },
@@ -5558,7 +5558,7 @@ ROBOT_CONFIG =
         },
         bed(12).barcode => {
           purpose: 'LCMT cDNA Lib PCR',
-          states: ['pending'],
+          states: ['started'],
           label: 'Bed 12',
           target_state: 'passed'
         },
