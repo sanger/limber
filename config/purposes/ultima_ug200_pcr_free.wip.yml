@@ -20,7 +20,7 @@ UPF2 Lib:
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
     - 'Ultima P3'
-    - 'Ultima P4'
+    - 'UG-RD-1916 (Solaris 2.0 V1 PCR-Free Adapters for Ultima Genomics P4)'
   :default_printer_type: :ultima_lib_plate
 UPF2 Lib XP2:
   :asset_type: plate
@@ -67,7 +67,7 @@ UPF2 Balanced Norm:
   :presenter_class: Presenters::SubmissionTubePresenter
   :submission_options:
     Ultima Sequencing - Automated Submission:
-      template_name: 'Limber-Htp - Ultima PCR Free - Ultima sequencing Automated'
+      template_name: 'Limber-Htp - Ultima PCR Free - Ultima UG200 sequencing Automated'
       allowed_extra_barcodes: false
       request_options:
         ot_recipe: Flex
