@@ -5354,7 +5354,7 @@ ROBOT_CONFIG =
     )
 
     # Ultima UG200 bed verification
-    # bed layout verification for UPF2 Cherrypicked -> UPF2 Shear
+    # UPF2 Cherrypicked => UPF2 Shear
     custom_robot(
       'bravo-upf2-cherrypicked-to-upf2-shear',
       name: 'UPF2 Cherrypicked => UPF2 Shear',
@@ -5375,7 +5375,7 @@ ROBOT_CONFIG =
     )
 
     # Ultima UG200 bed verification
-    # bed layout verification for UPF2 Shear -> UPF2 Post Shear
+    # UPF2 Shear => UPF2 Post Shear
     custom_robot(
       'bravo-upf2-shear-to-upf2-post-shear',
       name: 'UPF2 Shear => UPF2 Post Shear',
@@ -5396,7 +5396,7 @@ ROBOT_CONFIG =
     )
 
     # Ultima UG200 bed verification
-    # bed layout verification for UPF2 Post Shear -> UPF2 End Prep
+    # UPF2 Post Shear => UPF2 End Prep
     custom_robot(
       'bravo-upf2-post-shear-to-upf2-end-prep-xp1',
       name: 'UPF2 Post Shear => UPF2 End Prep',
@@ -5417,7 +5417,7 @@ ROBOT_CONFIG =
     )
 
     # Ultima UG200 bed verification
-    # bed layout verification for UPF2 End Prep -> UPF2 lib
+    # UPF2 End Prep => UPF2 Lib
     custom_robot(
       'bravo-upf2-end-prep-xp1-to-upf2-lib',
       name: 'Bravo UPF2 End Prep => UPF2 Lib',
@@ -5438,7 +5438,7 @@ ROBOT_CONFIG =
     )
 
     # Ultima UG200 bed verification
-    # bed layout verification for UPF2 Lib -> UPF2 Lib XP2
+    # UPF2 Lib => UPF2 Lib XP2
     custom_robot(
       'hamilton-upf2-lib-to-upf2-lib-xp2',
       name: 'Hamilton UPF2 Lib => UPF2 Lib XP2',
