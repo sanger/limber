@@ -5,7 +5,7 @@ Ultima UG200 High Throughput PCR Free:
   filters:
     request_type_key: limber_ultima_htp_pcr_free
     library_type:
-      - Ultima High Throughput PCR Free 96 # same as Ultima
+      - Ultima High Throughput PCR Free 96
   library_pass: UPF2 Lib XP2
   relationships:
     UPF2 Cherrypicked: UPF2 Shear
