@@ -70,6 +70,7 @@ UPF2 Balanced Norm:
       template_name: 'Limber-Htp - Ultima PCR Free - Ultima UG200 sequencing Automated'
       allowed_extra_barcodes: false
       request_options:
-        ot_recipe: Flex
+        ot_recipe: Free
         fragment_size_required_from: 300
         fragment_size_required_to: 400
+        wafer_size: 10T
