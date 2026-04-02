@@ -4,8 +4,9 @@
 # Use this to limit dissemination of sensitive information.
 # See the ActiveSupport::ParameterFilter documentation for supported notations and behaviors.
 #
+# Explicitly remove 'key'
 # Tests are in spec/controllers/searches_controller_spec.rb
 Rails.application.config.filter_parameters += [
-  :passw, :email, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn, :cvv, :cvc
+  :passw, :email, :secret, :token, :crypt, :salt, :certificate, :otp, :ssn, :cvv, :cvc
 ]
 Rails.application.config.filter_parameters += [/(?<!request_type)_key/]
