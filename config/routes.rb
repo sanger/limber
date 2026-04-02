@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     post '/qcables', action: :qcables, as: :qcables_search
   end
 
-  resource :sessions, only: %i[create delete] do
+  resource :sessions, only: %i[create destroy] do
     # Also map logout to destroy
     get 'logout', action: :destroy
   end
