@@ -67,3 +67,38 @@
     <% end %>
   </div>
 <% end %>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const projectInput = document.getElementById("project_cost_code_global");
+  const resultDiv = document.getElementById("project_search_result");
+
+  // Attach to ALL forms inside submission_forms
+  document.querySelectorAll("#submission_forms form").forEach(form => {
+    form.addEventListener("submit", function (e) {
+      const value = projectInput.value.trim();
+
+      // Block submit if empty
+      if (!value) {
+        e.preventDefault();
+
+        // show message
+        resultDiv.innerHTML = `
+          <div class="alert alert-danger">
+            Project / Cost Code is required before submission.
+          </div>
+        `;
+
+        // highlight input
+        projectInput.classList.add("is-invalid");
+
+        return false;
+      }
+
+      // clear error if valid
+      projectInput.classList.remove("is-invalid");
+      resultDiv.innerHTML = "";
+    });
+  });
+});
+</script>
