@@ -73,4 +73,4 @@ UPF2 Balanced Norm:
         ot_recipe: Free
         fragment_size_required_from: 300
         fragment_size_required_to: 400
-        wafer_size: 10T
+        wafer_size: 10TB
