@@ -7,10 +7,17 @@
   </p>
 
   <div class="form-group row">
-    <label for="project_cost_code_global" class="plate-label col-md-2">Project / Cost Code</label>
-    <input type="text" id="project_cost_code_global" class="form-control col-md-8" placeholder="Enter project id and hit enter" />
+    <label for="project_cost_code_global" class="plate-label col-md-2 fw-bold ">Project / Cost Code</label>
+    <div class="col-md-12">
+      <input type="text"
+           id="project_cost_code_global"
+           class="form-control"
+           placeholder="Enter project id and hit enter" />
+    </div>
   </div>
-  <div id="project_search_result" class="col-md-8 offset-md-2" style="margin-bottom: 1em;"></div>
+  <div class="row">
+    <div id="project_search_result" class="col-md-8 offset-md-2" style="margin-bottom: 1em;"></div>
+  </div>
 
   <div id="submission_forms">
     <% presenter.each_submission_option do |name, submission| %>
