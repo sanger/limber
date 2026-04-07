@@ -32,7 +32,7 @@ jobs:
           install-dependencies: true
 
       - name: Additional setup
-        run: bin/setup
+        run: bin/setup --skip-server
 
       - name: Run rspec
         run: bundle exec rspec
