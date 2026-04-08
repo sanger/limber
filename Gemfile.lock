@@ -533,7 +533,7 @@ DEPENDENCIES
   syslog
   vite_rails
   vite_ruby
-  web-console (~> 4.2.1)
+  web-console
   webmock
   yard
 
