@@ -20,10 +20,6 @@ module Presenters
       true
     end
 
-    def require_project?
-      true
-    end
-
     def active_request_types
       wells.flat_map(&:active_requests)
         .map(&:request_type_key)
