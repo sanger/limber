@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/sanger/json_api_client.git
-  revision: 95e2a28c40d82ccd189fed7972ca45537a69d75d
-  tag: v1.23.0-sanger.1-rc.2
+  revision: efd4c46b04bd8344c4ff0f318b5642baeeba6a01
+  tag: v1.23.0-sanger.1
   specs:
     json_api_client (1.23.0.pre.sanger.1)
       activemodel (>= 6.0.0)
