@@ -1,14 +1,12 @@
 // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import WellModal from './WellModal.vue'
-import localVue from '@/javascript/test_support/base_vue.js'
+import { nextTick } from 'vue'
 
-// Here are some Jasmine 2.0 tests, though you can
-// use any test runner / assertion library combo you prefer
 describe('WellModal', () => {
   const wrapperFactory = function () {
-    return shallowMount(WellModal, {
-      propsData: {
+    return mount(WellModal, {
+      props: {
         wellModalDetails: {
           position: 'A1',
           originalTag: 1,
@@ -18,7 +16,11 @@ describe('WellModal', () => {
         },
         isWellModalVisible: true,
       },
-      localVue,
+      global: {
+        stubs: {
+          teleport: true,
+        },
+      },
     })
   }
 
@@ -124,7 +126,7 @@ describe('WellModal', () => {
 
       wrapper.setProps({ wellModalDetails: tagClashWellModalDetails })
 
-      await localVue.nextTick()
+      await nextTick()
 
       expect(wrapper.find('#well_error_message').exists()).toBe(true)
       expect(wrapper.find('#well_error_message').text()).toEqual('Tag clash with Submission')
@@ -170,13 +172,13 @@ describe('WellModal', () => {
   describe('#integration tests', () => {
     it('emits a call to the parent on clicking Ok button with valid substitution', () => {
       const wrapper = wrapperFactory()
-      const emitted = wrapper.emitted()
 
       wrapper.setData({ substituteTagId: '3' })
 
       // cannot click ok button in modal from here, plus cannot handle evt.preventDefault
       wrapper.vm.handleWellModalOk()
 
+      const emitted = wrapper.emitted()
       expect(emitted.wellmodalsubtituteselected.length).toBe(1)
       expect(emitted.wellmodalsubtituteselected[0]).toEqual([3])
     })

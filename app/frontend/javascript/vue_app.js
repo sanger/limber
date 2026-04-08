@@ -1,20 +1,21 @@
+/* eslint-disable vue/one-component-per-file */
 /* eslint no-console: 0 */
 
-import Vue from 'vue'
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { createApp, h } from 'vue'
+import { createBootstrap } from 'bootstrap-vue-next'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 import axios from 'axios'
 import cookieJar from '@/javascript/shared/cookieJar.js'
 import PoolXPTubeSubmitPanel from '@/javascript/pool-xp-tube-panel/components/PoolXPTubeSubmitPanel.vue'
 import AssetComments from '@/javascript/asset-comments/components/AssetComments.vue'
 import AssetCommentsCounter from '@/javascript/asset-comments/components/AssetCommentsCounter.vue'
 import AssetCommentsAddForm from '@/javascript/asset-comments/components/AssetCommentsAddForm.vue'
+import BlendedTube from '@/javascript/blended-tube/components/BlendedTube.vue'
 import CustomTaggedPlate from '@/javascript/custom-tagged-plate/components/CustomTaggedPlate.vue'
 import FileList from '@/javascript/file-list/components/FileList.vue'
 import LabwareCustomMetadataAddForm from '@/javascript/labware-custom-metadata/components/LabwareCustomMetadataAddForm.vue'
 import MultiStamp from '@/javascript/multi-stamp/components/MultiStamp.vue'
-import MultiStampLibrarySpliter from '@/javascript/multi-stamp/components/MultiStampLibrarySplitter.js'
+import MultiStampLibrarySplitter from '@/javascript/multi-stamp/components/MultiStampLibrarySplitter.js'
 import MultiStampTubes from '@/javascript/multi-stamp-tubes/components/MultiStampTubes.vue'
 import QcInformation from '@/javascript/qc-information/components/QcInformation.vue'
 import TubesToRack from '@/javascript/tubes-to-rack/components/TubesToRack.vue'
@@ -23,12 +24,6 @@ import ValidatePairedTubes from '@/javascript/validate-paired-tubes/components/V
 import MainContent from '@/javascript/shared/components/MainContent.vue'
 import Page from '@/javascript/shared/components/Page.vue'
 import Sidebar from '@/javascript/shared/components/Sidebar.vue'
-
-Vue.use(BootstrapVue)
-Vue.use(BootstrapVueIcons)
-Vue.component('LbMainContent', MainContent)
-Vue.component('LbPage', Page)
-Vue.component('LbSidebar', Sidebar)
 
 export const missingUserIdError = `
     Unfortunately Limber can't find your user id, which is required to add custom metadata.
@@ -57,18 +52,25 @@ export const renderVueComponent = (selector, component, props = {}, userIdRequir
 
   let app
   if (userIdRequired && !userId) {
-    console.error('User id is required to render this component.')
-    app = new Vue({
-      el: selector_val,
-      render: (h) => h('div', missingUserIdError),
+    const component_name = component.name
+    console.warn(`User id is required to render the ${component_name} component.`)
+    app = createApp({
+      render: () => h('div', missingUserIdError),
     })
   } else {
     props.userId = userId
-    app = new Vue({
-      el: selector_val,
-      render: (h) => h(component, { props }),
+    app = createApp({
+      render: () => h(component, props),
     })
   }
+  app.use(createBootstrap())
+
+  app.component('LbMainContent', MainContent)
+  app.component('LbPage', Page)
+  app.component('LbSidebar', Sidebar)
+
+  setAxiosHeaderToken(app)
+  app.mount(selector_val)
   return app
 }
 
@@ -85,16 +87,16 @@ const elements = [
   {
     id: 'asset-comments-counter',
     component: AssetCommentsCounter,
-    userIdRequired: true,
+    userIdRequired: false,
   },
   {
     id: 'asset-comments',
     component: AssetComments,
-    userIdRequired: true,
+    userIdRequired: false,
   },
   {
-    id: 'pool-xp-tube-submit-panel',
-    component: PoolXPTubeSubmitPanel,
+    id: 'blended-tube-page',
+    component: BlendedTube,
     userIdRequired: true,
   },
   {
@@ -116,11 +118,16 @@ const elements = [
   },
   {
     id: 'multi-stamp-library-splitter-page',
-    component: MultiStampLibrarySpliter,
+    component: MultiStampLibrarySplitter,
   },
   {
     id: 'multi-stamp-tubes-page',
     component: MultiStampTubes,
+  },
+  {
+    id: 'pool-xp-tube-submit-panel',
+    component: PoolXPTubeSubmitPanel,
+    userIdRequired: true,
   },
   {
     id: 'qc-information',
@@ -139,11 +146,11 @@ const elements = [
 /**
  * Set the CSRF token in the Axios header.
  */
-const setAxiosHeaderToken = () => {
+const setAxiosHeaderToken = (app) => {
   axios.defaults.headers.common['X-CSRF-Token'] = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute('content')
-  Vue.prototype.$axios = axios
+  app.config.globalProperties.$axios = axios
 }
 
 /**
@@ -159,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const assetElem = document.getElementById(id)
     if (!assetElem) continue
     if (id) {
-      setAxiosHeaderToken()
       renderVueComponent(id, component, assetElem.dataset, userIdRequired)
     } else {
       console.warn(`No initialization logic defined for element with id: ${id}`)

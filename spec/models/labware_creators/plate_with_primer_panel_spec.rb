@@ -6,14 +6,12 @@ require_relative 'shared_examples'
 # A plate with primer panel has a preview page, but otherwise
 # behaves exactly as a normal plate stamp
 RSpec.describe LabwareCreators::PlateWithPrimerPanel do
-  has_a_working_api
-  it_behaves_like 'it only allows creation from plates'
+  subject { described_class.new(form_attributes) }
 
-  subject { LabwareCreators::PlateWithPrimerPanel.new(api, form_attributes) }
+  it_behaves_like 'it only allows creation from plates'
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:purpose_uuid) { SecureRandom.uuid }
-  let(:purpose) { json :purpose, uuid: purpose_uuid }
   let(:parent_uuid) { SecureRandom.uuid }
   let(:plate_size) { 384 }
   let(:requests) do
@@ -22,20 +20,20 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
   end
   let(:parent_plate) do
-    create :v2_plate_with_primer_panels,
+    create :plate_with_primer_panels,
            barcode_number: '2',
            uuid: parent_uuid,
            size: plate_size,
            outer_requests: requests
   end
-  let(:child_plate) { create :v2_plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
+  let(:child_plate) { create :plate_with_primer_panels, barcode_number: '3', size: plate_size, uuid: 'child-uuid' }
 
   let(:form_attributes) { { user_uuid:, purpose_uuid:, parent_uuid: } }
 
   before { create :purpose_config, pcr_stage: 'pcr 1', uuid: purpose_uuid }
 
-  it 'should have page' do
-    expect(LabwareCreators::PlateWithPrimerPanel.page).to eq 'plate_with_primer_panel'
+  it 'has page' do
+    expect(described_class.page).to eq 'plate_with_primer_panel'
   end
 
   # Essentially plate creation behaves as standard. The primer panel information
@@ -46,8 +44,8 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
     end
 
     before do
-      stub_v2_plate(parent_plate, stub_search: false)
-      stub_v2_plate(child_plate, stub_search: false)
+      stub_plate(parent_plate, stub_search: false)
+      stub_plate(child_plate, stub_search: false)
     end
 
     describe '#panel_name' do
@@ -76,11 +74,11 @@ RSpec.describe LabwareCreators::PlateWithPrimerPanel do
         end
     end
 
-    it 'should create objects' do
+    it 'creates objects' do
       expect_plate_creation
       expect_transfer_request_collection_creation
 
-      expect(subject.save!).to eq true
+      expect(subject.save!).to be true
     end
   end
 end

@@ -7,7 +7,7 @@
       data-enforce-same-template-within-pool="<%= @labware_creator.enforce_same_template_within_pool? %>">
   </div>
 
-  <% form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
+  <% form_for(@labware_creator, as: :plate, url: plate_child_plate_creations_path(@labware_creator.parent), html: { class: 'row' }) do |f| %>
     <%= content do %>
       <%= card without_block: true, id: 'main-content' do %>
         <div id="labware-summary-div">
@@ -19,23 +19,25 @@
 
     <%= sidebar do %>
       <%= card title: 'Tag plate addition', id: 'tag-help' do %>
-        <%= t("#{@labware_creator.help}_html", scope: [:tagged_plate, :help]) %>
+        <%= t("#{@labware_creator.help}_html", scope: %i[tagged_plate help]) %>
       <% end %>
 
-      <%= card title:'Set up tags' do %>
+      <%= card title: 'Set up tags' do %>
         <%= f.hidden_field :purpose_uuid %>
         <%= f.hidden_field :parent_uuid %>
-        <%= f.label :tag_plate_barcode %>
-        <%= f.text_field :tag_plate_barcode,
-                         data: {
-                           'info-panel'=>'tag-plate-info',
-                           'qcable-type'=>'tag plate',
-                           'approved-list'=>'tag_plates_list',
-                           'requires-dual-indexing' => @labware_creator.requires_tag2?
-                         },
-                         class: 'form-control', required: true %>
+        <div class="row mb-2">
+          <%= f.label :tag_plate_barcode, class: 'col-4 col-form-label' %>
+          <%= f.text_field :tag_plate_barcode,
+                           data: {
+                             'info-panel' => 'tag-plate-info',
+                             'qcable-type' => 'tag plate',
+                             'approved-list' => 'tag_plates_list',
+                             'requires-dual-indexing' => @labware_creator.requires_tag2?
+                           },
+                           class: 'form-control col', required: true %>
+        </div>
         <%= f.submit 'Create Plate', disabled: 'disabled', class: 'btn btn-success btn-lg', id: 'plate_submit' %>
-        <small id="submit-summary" class="form-text text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>
+        <small id="submit-summary" class="form-text d-block text-muted">Scan in all required tag sources before clicking 'Create Plate'</small>
       <%- end -%>
     <%- end -%>
   <%- end -%>

@@ -5,6 +5,7 @@ import {
   mountWithCommentFactory,
   testCommentFactoryInitAndDestroy,
 } from '@/javascript/asset-comments/components/component-test-utils.js'
+import { flushPromises } from '@vue/test-utils'
 
 describe('AssetCommentsCounter', () => {
   testCommentFactoryInitAndDestroy(AssetCommentsCounter, [{ id: 1, text: 'Test comment' }])
@@ -41,39 +42,43 @@ describe('AssetCommentsCounter', () => {
 
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, mockComments)
 
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.badge.badge-success').exists()).toBe(true)
-    expect(wrapper.find('.badge.badge-success').text()).toContain('2')
+    await flushPromises()
+
+    expect(wrapper.find('.badge.bg-success').exists()).toBe(true)
+    expect(wrapper.find('.badge.bg-success').text()).toContain('2')
   })
 
   it('renders a greyed out zero indicating no comments', async () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, [])
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.badge.badge-secondary').exists()).toBe(true)
-    expect(wrapper.find('.badge.badge-secondary').text()).toContain('0')
+    await flushPromises()
+
+    expect(wrapper.find('.badge.bg-secondary').exists()).toBe(true)
+    expect(wrapper.find('.badge.bg-secondary').text()).toContain('0')
   })
 
   it('renders greyed out dots indicating searching for comments', () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter)
 
-    expect(wrapper.find('.badge.badge-secondary').exists()).toBe(true)
-    expect(wrapper.find('.badge.badge-secondary').text()).toContain('...')
+    expect(wrapper.find('.badge.bg-secondary').exists()).toBe(true)
+    expect(wrapper.find('.badge.bg-secondary').text()).toContain('...')
   })
 
   it('updates comments when eventBus emits update-comments', async () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, [])
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.badge.badge-secondary').text()).toContain('0')
+    await flushPromises()
+
+    expect(wrapper.find('.badge.bg-secondary').text()).toContain('0')
     eventBus.$emit('update-comments', { assetId: '123', comments: [{ id: 1, text: 'Test comment' }] })
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.badge.badge-success').text()).toContain('1')
+    expect(wrapper.find('.badge.bg-success').text()).toContain('1')
   })
   it('does not update comments when eventBus emits update-comments for a different assetId', async () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsCounter, [])
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.badge.badge-secondary').text()).toContain('0')
+    await flushPromises()
+
+    expect(wrapper.find('.badge.bg-secondary').text()).toContain('0')
     eventBus.$emit('update-comments', { assetId: '456', comments: [{ id: 1, text: 'Test comment' }] })
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.badge.badge-secondary').text()).toContain('0')
+    expect(wrapper.find('.badge.bg-secondary').text()).toContain('0')
   })
 })

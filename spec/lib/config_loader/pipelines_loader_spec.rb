@@ -3,11 +3,10 @@
 require 'rails_helper'
 require 'config_loader/pipelines_loader'
 
-RSpec.describe ConfigLoader::PipelinesLoader, type: :model, loader: true do
+RSpec.describe ConfigLoader::PipelinesLoader, :loader, type: :model do
   subject(:loader) { described_class.new(directory: test_directory, files: selected_files) }
 
   let(:test_directory) { Rails.root.join('spec/fixtures/config/pipelines') }
-  let(:created_purposes) { ['Basic Plate', 'Other Plate', 'Type with creator'] }
 
   context 'with no files specified' do
     let(:selected_files) { nil }

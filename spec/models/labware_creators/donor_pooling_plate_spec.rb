@@ -4,16 +4,14 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 RSpec.describe LabwareCreators::DonorPoolingPlate do
+  subject { described_class.new(form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has a custom page', 'donor_pooling_plate'
 
-  has_a_working_api
-
-  subject { described_class.new(api, form_attributes) }
   let(:user_uuid) { 'user-uuid' }
   let(:parent_1_plate_uuid) { 'parent-1-plate-uuid' }
   let(:parent_2_plate_uuid) { 'parent-2-plate-uuid' }
-  let(:parent_purpose_uuid) { 'parent-purpose-uuid' }
   let(:child_purpose_uuid) { 'child-purpose-uuid' }
   let(:child_plate_uuid) { 'child-plate-uuid' }
   let(:number_of_pools) { 8 }
@@ -22,14 +20,14 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       :scrna_customer_request,
       192,
       submission_id: 1,
-      request_metadata: create(:v2_request_metadata, number_of_pools:)
+      request_metadata: create(:request_metadata, number_of_pools:)
     )
   end
 
   let(:parent_1_plate) do
     # The aliquots_without_requests parameter is to prevent the default
     # request creation so we can use the same submission_id on requests.
-    plate = create(:v2_plate, uuid: parent_1_plate_uuid, aliquots_without_requests: 1)
+    plate = create(:plate, uuid: parent_1_plate_uuid, aliquots_without_requests: 1)
     plate.wells.each_with_index do |well, index|
       well.aliquots.first.request = requests[index]
       well.aliquots.first.sample.sample_metadata.donor_id = nil
@@ -40,7 +38,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   let(:parent_2_plate) do
     # The aliquots_without_requests parameter is to prevent the default
     # request creation so we can use the same submission_id on requests.
-    plate = create(:v2_plate, uuid: parent_2_plate_uuid, aliquots_without_requests: 1)
+    plate = create(:plate, uuid: parent_2_plate_uuid, aliquots_without_requests: 1)
     plate.wells.each_with_index do |well, index|
       well.aliquots.first.request = requests[96 + index]
       well.aliquots.first.sample.sample_metadata.donor_id = nil
@@ -49,21 +47,22 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
   let(:source_plates) { [parent_1_plate, parent_2_plate] }
 
-  let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
+  let(:child_plate) { create(:plate, uuid: child_plate_uuid) }
 
   # Usually we need three studies for testing.
-  let(:study_1) { create(:v2_study, name: 'study-1-name') }
-  let(:study_2) { create(:v2_study, name: 'study-2-name') }
-  let(:study_3) { create(:v2_study, name: 'study-3-name') }
+  let(:study_1) { create(:study, name: 'study-1-name') }
 
   # Usually we need three projects for testing.
-  let(:project_1) { create(:v2_project, name: 'project-1-name') }
-  let(:project_2) { create(:v2_project, name: 'project-2-name') }
-  let(:project_3) { create(:v2_project, name: 'project-3-name') }
+  let(:project_1) { create(:project, name: 'project-1-name') }
 
   # This is the form that includes plate barcodes, submitted by user.
   let(:form_attributes) do
-    { purpose_uuid: child_purpose_uuid, parent_uuid: parent_1_plate_uuid, barcodes: barcodes, user_uuid: user_uuid }
+    {
+      purpose_uuid: child_purpose_uuid,
+      parent_uuid: parent_1_plate_uuid,
+      barcodes: barcodes,
+      user_uuid: user_uuid
+    }
   end
   let(:barcodes) { source_plates.map(&:human_barcode) }
 
@@ -219,8 +218,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   describe '#build_pools' do
     context 'when standard behaviour' do
-      let(:studies) { create_list(:v2_study, 2) }
-      let(:projects) { create_list(:v2_project, 2) }
+      let(:studies) { create_list(:study, 2) }
+      let(:projects) { create_list(:project, 2) }
       let(:donor_ids) { (1..160).to_a }
       let(:wells) { Array(parent_1_plate.wells[0..24]) }
       let(:number_of_pools) { 2 }
@@ -270,8 +269,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     # Checks for behaviour using the numbers used in a real lab test run
     context 'when test run for 10 samples per pool and 8 pools' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:donor_ids) { (1..80).to_a }
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 8 }
@@ -326,11 +325,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when the test run has 32 wells and 8 pools' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:donor_ids) { (1..32).to_a }
       let(:wells) { parent_1_plate.wells[0..31] }
-      let(:expected_number_of_pools) { 8 }
       let(:number_of_pools) { 8 }
 
       before do
@@ -347,15 +345,15 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       it 'fails due to pool sizing constraints (5 to 25)' do
         expected_message =
           'Invalid distribution: Each pool must have between ' \
-            '5 and 25 wells.'
+          '5 and 25 wells.'
 
         expect { subject.build_pools }.to raise_error(expected_message)
       end
     end
 
     context 'when the test run has 80 wells and 9 pools per study/project group' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:donor_ids) { (1..80).to_a }
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:number_of_pools) { 9 }
@@ -379,8 +377,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when the test run has wells with multiple duplicate donor IDs' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:donor_ids) { (1..40).to_a * 2 } # Repeats 1-40 twice, creating 80 donor IDs
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
@@ -420,8 +418,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when the test run has wells with multiple duplicate IDs (shuffled)' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:donor_ids) { (1..20).to_a.shuffle * 4 } # Repeats 1-40 twice, creating 80 donor IDs
       let(:wells) { parent_1_plate.wells[0..79] }
       let(:expected_number_of_pools) { 4 }
@@ -460,12 +458,11 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when the test run cannot distribute wells with duplicate IDs' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       # Only 10 unique donor ids, but 20 samples needed per pool - impossible to distribute correctly
       let(:donor_ids) { (1..10).to_a * 8 }
       let(:wells) { parent_1_plate.wells[0..79] }
-      let(:expected_number_of_pools) { 4 }
       let(:number_of_pools) { 4 }
 
       before do
@@ -491,8 +488,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
       # If don't deal with the largest group first, you might find some pools are full and there aren't
       # enough pools left to split the large group between.
       # This is solved by sorting the wells first, in `reorder_wells_by_donor_id`.
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:wells) { parent_1_plate.wells[0..14] }
       let(:number_of_pools) { 3 }
 
@@ -520,8 +517,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when the groups of donor ids are ordered largest to smallest' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:wells) { parent_1_plate.wells[0..14] }
       let(:number_of_pools) { 3 }
 
@@ -549,8 +546,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when the pools are not quite the same size' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:donor_ids) { (1..40).to_a * 2 }
       let(:wells) { parent_1_plate.wells[0..72] }
       let(:expected_number_of_pools) { 4 }
@@ -605,8 +602,8 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     end
 
     context 'when test run for 24 samples per pool and 8 pools' do
-      let(:study) { create(:v2_study) }
-      let(:project) { create(:v2_project) }
+      let(:study) { create(:study) }
+      let(:project) { create(:project) }
       let(:donor_ids) { (1..192).to_a }
       let(:wells) { parent_1_plate.wells + parent_2_plate.wells }
       let(:expected_number_of_pools) { 8 }
@@ -752,6 +749,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
   describe '#tag_depth_hash' do
     let(:number_of_pools) { 2 }
+
     it 'returns a hash mapping positions of wells in their pools' do
       wells = Array(parent_1_plate.wells[0..4]) + Array(parent_2_plate.wells[0..4])
       wells.each_with_index do |well, index|
@@ -801,7 +799,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
     let(:requests) do
       Array.new(10) do |_i|
         create :scrna_customer_request,
-               request_metadata: create(:v2_request_metadata, number_of_pools:, cells_per_chip_well:, allowance_band:)
+               request_metadata: create(:request_metadata, number_of_pools:, cells_per_chip_well:, allowance_band:)
       end
     end
 
@@ -819,9 +817,10 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     let(:transfer_requests_attributes) { subject.transfer_request_attributes(child_plate) }
 
-    before { stub_v2_plate(child_plate) }
-
-    let!(:stub_metadata_creation) { stub_api_v2_save('PolyMetadatum') }
+    before do
+      stub_plate(child_plate)
+      stub_save('PolyMetadatum')
+    end
 
     it 'posts transfer requests to Sequencescape' do
       expect_transfer_request_collection_creation
@@ -831,8 +830,13 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
   end
 
   describe '#valid?' do
+    before do
+      stub_plate(parent_1_plate)
+    end
+
     describe '#source_barcodes_must_be_entered' do
       let(:barcodes) { [] }
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_barcodes]).to include(described_class::SOURCE_BARCODES_MUST_BE_ENTERED)
@@ -846,7 +850,9 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
           includes: described_class::SOURCE_PLATE_INCLUDES
         ).and_return([parent_1_plate])
       end
+
       let(:barcodes) { [parent_1_plate.human_barcode] * 2 }
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_barcodes]).to include(described_class::SOURCE_BARCODES_MUST_BE_DIFFERENT)
@@ -875,7 +881,9 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
             includes: described_class::SOURCE_PLATE_INCLUDES
           ).and_return([parent_1_plate])
         end
+
         let(:barcodes) { [parent_1_plate.human_barcode] }
+
         it 'allows plate creation' do
           expect(wells.first.latest_live_cell_count&.value).to eq(1_000_000) # sanity check
           expect(subject).to be_valid
@@ -885,17 +893,32 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
 
     describe '#source_plates_must_exist' do
       let(:barcodes) { [parent_1_plate.human_barcode, 'NOT-A-PLATE-BARCODE'] }
+
       before do
         allow(Sequencescape::Api::V2::Plate).to receive(:find_all).with(
           { barcode: barcodes },
           includes: described_class::SOURCE_PLATE_INCLUDES
         ).and_return([parent_1_plate])
       end
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         expect(subject.errors[:source_plates]).to include(
           format(described_class::SOURCE_PLATES_MUST_EXIST, 'NOT-A-PLATE-BARCODE')
         )
+      end
+    end
+
+    describe '#have_scanned_the_parent' do
+      let(:some_other_plate) { build(:plate, uuid: 'some-other-plate-uuid', human_barcode: 'SOME_OTHER_BC') }
+      let(:source_plates) { [parent_2_plate, some_other_plate] }
+
+      it 'reports the error' do
+        expect(subject).not_to be_valid
+        expected_msg =
+          "You must include the parent plate (#{parent_1_plate.human_barcode}) " \
+          'in the source barcodes scanned.'
+        expect(subject.errors[:source_barcodes]).to include(expected_msg)
       end
     end
 
@@ -915,6 +938,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         wells[5].aliquots.first.sample.sample_metadata.donor_id = ' ' # ERROR
         wells
       end
+
       it 'reports the error' do
         expect(subject).not_to be_valid
         invalid_wells_hash = {
@@ -942,6 +966,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         wells[3].qc_results << create(:qc_result, key: 'live_cell_count', units: 'cells/ml', value: 2_000_000) # OK
         wells
       end
+
       it 'reports the error' do
         # We should see an error report on index = 2 of plate 1 and
         # index = 1 and 2 of plate 2. They correspond to wells[2], wells[4] and
@@ -975,6 +1000,7 @@ RSpec.describe LabwareCreators::DonorPoolingPlate do
         end
         wells
       end
+
       before { wells[0..1].map { |well| well.aliquots.first.sample.sample_metadata.donor_id = 'DUPLICATE' } }
 
       it 'converts exceptions to errors' do

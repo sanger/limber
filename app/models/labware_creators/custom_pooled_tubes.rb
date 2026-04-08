@@ -9,7 +9,7 @@ module LabwareCreators
   # drive the robot.
   class CustomPooledTubes < PooledTubesBase
     include LabwareCreators::CustomPage
-    include SupportParent::PlateReadyForCustomPoolingOnly
+    include CreatableFrom::PlateReadyForCustomPoolingOnly
 
     self.page = 'custom_pooled_tubes'
     self.attributes += [:file]

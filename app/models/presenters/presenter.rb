@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-require_dependency 'presenters'
 
+require_dependency 'presenters'
+# rubocop:disable Metrics/ModuleLength
 module Presenters::Presenter # rubocop:todo Style/Documentation
   extend ActiveSupport::Concern
 
@@ -92,8 +93,49 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     useful_barcode(labware.stock_plate.try(:barcode))
   end
 
+  def input_plate_label
+    purpose_name = labware.stock_plate&.purpose&.name
+    return 'Input plate Barcode' if purpose_name.blank?
+
+    if purpose_name.downcase.include?('cherrypick')
+      'Cherry pick plate ID'
+    else
+      'Input plate Barcode'
+    end
+  end
+
   def inspect
     "<#{self.class.name} labware:#{labware.uuid} ...>"
+  end
+
+  # A collection of parents for this labware including purposes.
+  # Returns an empty array if there are no parents.
+  #
+  # @return [Array<Sequencescape::Api::V2::Labware>] Array of parent labwares with purposes.
+  def parent_labwares
+    parents = labware.parents || []
+    parent_uuids = parents.compact.map(&:uuid).uniq
+    return [] if parent_uuids.empty?
+
+    parent_labwares = Sequencescape::Api::V2::Labware.find_all({ uuid: parent_uuids }, includes: %w[purpose])
+
+    # some old or 'lane' labwares may not have a purpose, so filter those out
+    parent_labwares.filter { |labware| labware.purpose.present? }
+  end
+
+  # A collection of child labwares for this labware including purposes.
+  # Returns an empty array if there are no children.
+  #
+  # @return [Array<Sequencescape::Api::V2::Labware>] Array of child labwares with purposes.
+  def child_labwares
+    children = labware.children || []
+    child_uuids = children.compact.map(&:uuid).uniq
+    return [] if child_uuids.empty?
+
+    child_labwares = Sequencescape::Api::V2::Labware.find_all({ uuid: child_uuids }, includes: %w[purpose])
+
+    # some old or 'lane' labwares may not have a purpose, so filter those out
+    child_labwares.filter { |labware| labware.purpose.present? }
   end
 
   def child_assets
@@ -124,9 +166,10 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
   def stock_plate_barcode_from_metadata(plate_machine_barcode)
     begin
       metadata = LabwareMetadata.new(barcode: plate_machine_barcode).metadata
-    rescue Sequencescape::Api::ResourceNotFound
+    rescue JsonApiClient::Errors::NotFound
       metadata = nil
     end
     metadata.present? ? metadata.fetch('stock_barcode', barcode) : 'N/A'
   end
 end
+# rubocop:enable Metrics/ModuleLength

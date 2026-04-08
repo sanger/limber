@@ -1,5 +1,5 @@
 <div class="card-body bg-dark">
-  <table id="<%= id ||= "tube-rack" %>"
+  <table id="<%= id ||= 'tube-rack' %>"
          class="tube-rack-view tube-rack-<%= tube_rack_presenter.size %> <%= tube_rack_presenter.state %>"
          data-animate-tags="true">
     <thead>
@@ -13,17 +13,17 @@
 
     <tbody>
       <% aliquot_partial = "aliquots/#{tube_rack_presenter.aliquot_partial}" %>
-      <% tube_rack_presenter.tubes_by_row.each do |row_label, row_wells| %>
+      <% tube_rack_presenter.tubes_by_row.each do |row_label, row_tubes| %>
       <tr>
         <th class="first-col"><%= row_label %></th>
         <% 1.upto(tube_rack_presenter.number_of_columns) do |column| %>
-        <% well = row_wells[column - 1] %>
+        <% tube = row_tubes[column - 1] %>
         <td>
           <% location = "#{row_label}#{column}" %>
           <%# Don't remove the empty data-pool or data-aliquot-count attributes.  They're used by custom pooling. %>
-          <div id="<%= "well_#{location}" %>" class="well" data-location="<%= location %>" data-pool="" data-aliquot-count="">
-            <% if well.try(:aliquots).present? -%>
-            <%= render partial: aliquot_partial, locals: { presenter: tube_rack_presenter, id: location, container: well } %>
+          <div id="<%= "well_#{location}" %>" class="well" data-location="<%= location %>" data-pool="" data-aliquot-count="" data-toggle="tooltip" title="<%= racked_tube_tooltip(tube, location).html_safe %>">
+            <% if tube.try(:aliquots).present? -%>
+            <%= render partial: aliquot_partial, locals: { presenter: tube_rack_presenter, id: location, container: tube } %>
             <% end -%>
           </div>
         </td>

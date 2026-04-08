@@ -1,11 +1,11 @@
 <% if item.custom_form? %>
-  <%= link_to "Add an empty #{item.name} #{item.type}", new_polymorphic_path([item.parent, item], purpose_uuid: item.purpose_uuid), class: "dropdown-item" %>
+  <%= link_to "Add an empty #{item.name} #{item.type}", new_polymorphic_path([item.parent, item], purpose_uuid: item.purpose_uuid), class: 'dropdown-item' %>
 <% else %>
   <%= form_for [item.parent, item], as: item.type, namespace: item.purpose_uuid do |f| %>
     <%= f.hidden_field :purpose_uuid %>
     <%= f.hidden_field :parent_uuid %>
     <%= f.submit "Add an empty #{item.name} #{item.type}",
-                   name:  nil,
-                   class: "dropdown-item" %>
+                 name: nil,
+                 class: 'dropdown-item' %>
   <% end %>
 <% end %>

@@ -1,0 +1,26 @@
+<%# raw allows us the render the content "as is" preventing escaping for charcters like & in our csv workflows. %>
+<%= raw CSV.generate_line ['sample', 'barcode', 'pf_barcode_reads', 'Mean_cvg', 'CovNeed Waf2&3', 'PoolCF Waf2&3', 'ExpCov Waf2', 'ExpCov Waf3', 'AverageCov Waf1', 'Vol to pool'], row_sep: "" %>
+<%
+    keys = [
+        "sample",
+        "barcode",
+        "pf_barcode_reads",
+        "mean_cvg",
+        "CovNeed Waf2&3",
+        "PoolCF Waf2&3",
+        "ExpCov Waf2",
+        "ExpCov Waf2", # Assuming Waf2 and Waf3 are the same as in original code
+        "Average Cov Waf1", # Should this poly metadata be renamed to remove space
+        "Vol to pool"
+    ]
+
+    rows = @tube.aliquots.map do |aliquot|
+        keys.map do |key|
+            # Return empty string if the poly_metadata key is not found to keep CSV structure
+            aliquot.poly_metadata.find { |pm| pm.key == key }&.value || ''
+        end
+    end
+%>
+<% rows.each do |row| %>
+<%= CSV.generate_line row, row_sep: "" %>
+<% end %>

@@ -1,4 +1,6 @@
-import jQuery from 'jquery'
-jQuery(function () {
-  jQuery('[data-toggle="tooltip"]').tooltip()
+import { Tooltip } from 'bootstrap'
+
+let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new Tooltip(tooltipTriggerEl)
 })

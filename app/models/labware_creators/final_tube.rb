@@ -8,7 +8,7 @@ module LabwareCreators
   #    all tubes in the submission
   # This check is based on the contents of sibling_tubes in the json
   class FinalTube < Base
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
 
     self.default_transfer_template_name = 'Transfer from tube to tube by submission'
     self.page = 'final_tube'
@@ -28,7 +28,13 @@ module LabwareCreators
     end
 
     def create_labware!
-      @all_tube_transfers = parents.map { |this_parent_uuid| transfer!(source_uuid: this_parent_uuid) }
+      @all_tube_transfers = parents.map do |this_parent_uuid|
+        transfer!(source_uuid: this_parent_uuid)
+      rescue JsonApiClient::Errors::RecordNotSaved => e
+        # This will happen when they try to create more than one multiplexed library tube destination.
+        errors.add(:parent, e.record.errors.full_messages)
+        return false
+      end
       true
     end
 
@@ -41,11 +47,9 @@ module LabwareCreators
     def redirection_target
       return :contents_not_transfered_to_mx_tube if all_tube_transfers.nil?
 
+      # Return a single tube as a redirection target
       destination_uuids = all_tube_transfers.map(&:destination_uuid).uniq
-
-      # The client_api returns a 'barcoded asset' here, rather than a tube.
-      # We know that its a tube though, so wrap it in this useful tool
-      return TubeProxy.new(destination_uuids.first) if destination_uuids.one?
+      return Tube.new(destination_uuids.first) if destination_uuids.one?
 
       raise StandardError, 'Multiple targets found. You may have scanned tubes from separate submissions.'
     end
@@ -58,7 +62,9 @@ module LabwareCreators
     end
 
     def parent
-      @parent ||= Sequencescape::Api::V2::Tube.find_by(uuid: parent_uuid)
+      return @parent if defined?(@parent)
+
+      @parent = Sequencescape::Api::V2::Tube.find_by(uuid: parent_uuid)
     end
     alias tube parent
 
@@ -93,9 +99,8 @@ module LabwareCreators
 
         errors.add(
           :base,
-          # rubocop:todo Layout/LineLength
-          "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
-          # rubocop:enable Layout/LineLength
+          "Tube #{s.name} was missing. No transfer has been performed. This is a bug, as you should have been " \
+          'prevented from getting this far.'
         )
         valid = false
       end
@@ -103,9 +108,8 @@ module LabwareCreators
 
       errors.add(
         :base,
-        # rubocop:todo Layout/LineLength
-        "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have been prevented from getting this far."
-        # rubocop:enable Layout/LineLength
+        "#{val_barcodes.join(', ')} are not valid. No transfer has been performed. This is a bug, as you should have " \
+        'been prevented from getting this far.'
       )
       false
     end

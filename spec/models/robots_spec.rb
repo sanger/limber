@@ -2,19 +2,17 @@
 
 require 'rails_helper'
 
-RSpec.describe Robots, robots: true do
+RSpec.describe Robots, :robots do
   include FeatureHelpers
-
-  has_a_working_api
 
   let(:settings) { YAML.load_file(Rails.root.join('spec/data/settings.yml')).with_indifferent_access }
 
   before { Settings.robots = settings[:robots] }
 
   describe '::find' do
-    let(:user_uuid) { SecureRandom.uuid }
+    subject { described_class.find(id: robot_id, user_uuid: user_uuid) }
 
-    subject { Robots.find(id: robot_id, api: api, user_uuid: user_uuid) }
+    let(:user_uuid) { SecureRandom.uuid }
 
     context 'with a standard robot' do
       let(:robot_id) { 'robot_id' }
@@ -37,7 +35,7 @@ RSpec.describe Robots, robots: true do
 
   describe '::each_robot' do
     it 'yields each robot name and id' do
-      expect { |b| Robots.each_robot(&b) }.to yield_successive_args(
+      expect { |b| described_class.each_robot(&b) }.to yield_successive_args(
         ['bravo-lb-end-prep', 'bravo LB End Prep'],
         ['bravo-lb-post-shear-to-lb-end-prep', 'bravo LB Post Shear => LB End Prep'],
         %w[grandparent_robot robot_name],

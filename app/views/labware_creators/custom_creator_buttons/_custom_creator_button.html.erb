@@ -11,11 +11,11 @@
     options[:purpose_uuid] = custom_creator_button.purpose_uuid
     options[:parent_uuid] = custom_creator_button.parent_uuid
     custom_creator_button.filters.map do |filter_key, filter_values|
-        filter_values.each do |filter_value|
-            options["filters[#{filter_key}][]"] = filter_value
-        end
+      filter_values.each do |filter_value|
+        options["filters[#{filter_key}][]"] = filter_value
+      end
     end
 %>
 <%= link_to "Add an empty #{custom_creator_button.name} #{custom_creator_button.type}",
-    new_polymorphic_path([custom_creator_button.parent, custom_creator_button], options),
-    class:  "create-#{custom_creator_button.type}-button logged_in_only" %>
+            new_polymorphic_path([custom_creator_button.parent, custom_creator_button], options),
+            class: "create-#{custom_creator_button.type}-button logged_in_only" %>

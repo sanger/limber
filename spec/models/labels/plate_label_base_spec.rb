@@ -6,10 +6,10 @@ RSpec.describe Labels::PlateLabelBase, type: :model do
   it { expect(described_class).to be < Labels::Base }
 
   context 'when creating the label of a plate' do
-    let(:labware) { create :v2_plate }
-    let(:label) { Labels::PlateLabelBase.new(labware) }
+    let(:labware) { create :plate }
+    let(:label) { described_class.new(labware) }
 
-    context '#attributes' do
+    describe '#attributes' do
       it 'has the correct attributes' do
         attributes = label.attributes
         expect(attributes[:top_left]).to eq Time.zone.today.strftime('%e-%^b-%Y')

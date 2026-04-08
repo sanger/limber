@@ -2,8 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Creating a plate', js: true, tag_plate: true do
-  has_a_working_api
+RSpec.feature 'Creating a plate', :js, :tag_plate do
   let(:user_uuid) { 'user-uuid' }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
@@ -12,7 +11,6 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   let(:another_plate_uuid) { SecureRandom.uuid }
   let(:child_purpose_uuid) { 'child-purpose-0' }
   let(:child_purpose_name) { 'Basic' }
-  let(:pools) { 1 }
   let(:request_type_a) { create :request_type, key: 'rt_a' }
   let(:request_type_b) { create :request_type, key: 'rt_b' }
   let(:request_a) { create :library_request, request_type: request_type_a, uuid: 'request-0' }
@@ -21,18 +19,18 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   let(:request_d) { create :library_request, request_type: request_type_b, uuid: 'request-3' }
   let(:wells) do
     [
-      create(:v2_stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a]),
-      create(:v2_stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c]),
-      create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+      create(:stock_well, uuid: '6-well-A1', location: 'A1', aliquot_count: 1, requests_as_source: [request_a]),
+      create(:stock_well, uuid: '6-well-B1', location: 'B1', aliquot_count: 1, requests_as_source: [request_c]),
+      create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
     ]
   end
 
   let(:example_plate) do
-    create :v2_stock_plate, barcode_number: 6, uuid: plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
+    create :stock_plate, barcode_number: 6, uuid: plate_uuid, wells: wells, purpose_name: 'Limber Cherrypicked'
   end
 
   let(:another_plate) do
-    create :v2_stock_plate,
+    create :stock_plate,
            barcode_number: 106,
            uuid: another_plate_uuid,
            wells: wells,
@@ -40,7 +38,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   end
 
   let(:alternative_plate) do
-    create :v2_stock_plate,
+    create :stock_plate,
            barcode_number: 107,
            uuid: another_plate_uuid,
            wells: wells,
@@ -50,7 +48,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
   let(:alternative_purpose_name) { 'Alternative identifier plate' }
 
   let(:child_plate) do
-    create :v2_plate, uuid: 'child-uuid', barcode_number: 7, state: 'passed', purpose_name: child_purpose_name
+    create :plate, uuid: 'child-uuid', barcode_number: 7, state: 'passed', purpose_name: child_purpose_name
   end
 
   let(:plate_creations_attributes) do
@@ -76,9 +74,19 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     stub_swipecard_search(user_swipecard, user)
 
     # We get the actual plate
-    2.times { stub_v2_plate(example_plate) }
-    stub_v2_plate(child_plate, stub_search: false)
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    2.times { stub_plate(example_plate) }
+    stub_plate(child_plate, stub_search: false)
+    stub_plate(
+      example_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
+    stub_plate(
+      child_plate,
+      stub_search: false,
+      custom_includes: 'wells.aliquots.request.poly_metadata'
+    )
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'basic plate creation' do
@@ -86,7 +94,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     expect_transfer_request_collection_creation
 
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    plate_title = find('#plate-title')
+    plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('Limber Cherrypicked')
     click_on('Add an empty Basic plate')
     expect(page).to have_content('New empty labware added to the system.')
@@ -117,7 +125,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       allow(PMB::LabelTemplate).to receive(:where).and_return(label_templates)
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
     end
 
@@ -153,6 +161,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
       context 'when there is not alternative workline_identifiers' do
         let(:alternatives) { nil }
+
         it 'prints the last stock plate in the top right of the label' do
           first_label = @data_printed[:labels][:body][0]
           expect(first_label['main_label']['top_right']).to eq(stock_plates.last.barcode.human)
@@ -161,6 +170,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
 
       context 'when there is alternative workline identifier' do
         let(:alternatives) { alternative_purpose_name }
+
         it 'prints the workline identifier' do
           first_label = @data_printed[:labels][:body][0]
           expect(first_label['main_label']['top_right']).to eq(alternative_plate.barcode.human)
@@ -173,30 +183,30 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     let(:wells) do
       [
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-A1',
           location: 'A1',
           aliquot_count: 1,
           requests_as_source: [request_a, request_b]
         ),
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-B1',
           location: 'B1',
           aliquot_count: 1,
           requests_as_source: [request_c, request_d]
         ),
-        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 
     # We'll eventually add in a disambiguation page here
     scenario 'basic plate creation' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
-      expect(page).to have_content('Cannot create the next piece of labware:')
+      expect(page).to have_content('Cannot create the next piece of labware')
       expect(page).to have_content('Well filter found 2 eligible requests for A1')
     end
   end
@@ -206,20 +216,20 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     let(:wells) do
       [
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-A1',
           location: 'A1',
           aliquot_count: 1,
           requests_as_source: [request_a, request_b]
         ),
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-B1',
           location: 'B1',
           aliquot_count: 1,
           requests_as_source: [request_c, request_d]
         ),
-        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 
@@ -228,7 +238,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       expect_transfer_request_collection_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
       expect(page).to have_content('New empty labware added to the system.')
@@ -250,20 +260,20 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
     let(:wells) do
       [
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-A1',
           location: 'A1',
           aliquot_count: 1,
           requests_as_source: [request_a, request_b]
         ),
         create(
-          :v2_stock_well,
+          :stock_well,
           uuid: '6-well-B1',
           location: 'B1',
           aliquot_count: 1,
           requests_as_source: [request_c, request_d]
         ),
-        create(:v2_stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
+        create(:stock_well, uuid: '6-well-C1', location: 'C1', aliquot_count: 0, requests_as_source: [])
       ]
     end
 
@@ -272,7 +282,7 @@ RSpec.feature 'Creating a plate', js: true, tag_plate: true do
       expect_transfer_request_collection_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      plate_title = find('#plate-title')
+      plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
       expect(page).to have_content('New empty labware added to the system.')

@@ -4,7 +4,6 @@ module PlateHelper # rubocop:todo Style/Documentation
   # Proxy object wrapping the form alongside the presenter.
   # This allows us to use the shared plate partial, but pass the form
   # object through to the custom aliquot partial
-  # rubocop:disable Rails/HelperInstanceVariable
   class WellFailingPresenter < BasicObject
     def initialize(form, presenter)
       @form = form
@@ -19,10 +18,24 @@ module PlateHelper # rubocop:todo Style/Documentation
     attr_reader :form, :_presenter
   end
 
-  # rubocop:enable Rails/HelperInstanceVariable
-
   def fail_wells_presenter_from(form, presenter)
     WellFailingPresenter.new(form, presenter)
+  end
+
+  # Proxy presenter for well marking functionality.
+  # Inherits from WellFailingPresenter to reuse well handling logic
+  # such as form integration and presenter behavior.
+  #
+  # Overrides `aliquot_partial` so that the shared plate partial
+  # will render the correct custom aliquot template (`_well_marking_aliquot.html.erb`)
+  class WellMarkingPresenter < WellFailingPresenter
+    def aliquot_partial
+      'well_marking_aliquot'
+    end
+  end
+
+  def mark_wells_presenter_from(form, presenter)
+    WellMarkingPresenter.new(form, presenter)
   end
 
   # Returns an array of all pre-capture pools for a plate, with wells sorted
@@ -63,11 +76,23 @@ module PlateHelper # rubocop:todo Style/Documentation
             pool_store[pool_id] ||= { pool_id: pool_id, order_id: request.order_id, wells: [] }
             pool_store[pool_id][:wells] << well.location
           end
-        end
+      end
         .values
 
     # sort the pool hashes by Order id
     sorted = unsorted.sort_by { |k| k[:order_id] }
     sorted.to_json.html_safe # rubocop:todo Rails/OutputSafety
+  end
+
+  def well_under_represented?(well)
+    return false unless well
+
+    aliquot = well.aliquots.first
+    return false unless aliquot
+
+    return false unless aliquot.request.respond_to?(:poly_metadata)
+    return false unless aliquot.request.poly_metadata
+
+    aliquot.request.poly_metadata.any? { |pm| pm.key == LimberConstants::UNDER_REPRESENTED_KEY && pm.value == 'true' }
   end
 end

@@ -1,5 +1,4 @@
-import flushPromises from 'flush-promises'
-import localVue from '@/javascript/test_support/base_vue.js'
+import { flushPromises } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import LabwareCustomMetadataAddForm from './LabwareCustomMetadataAddForm.vue'
 
@@ -42,18 +41,13 @@ describe('LabwareCustomMetadataAddForm', () => {
 
     return mount(LabwareCustomMetadataAddForm, {
       attachTo: createContainer(),
-      localVue,
       parentComponent: parent,
-      propsData: {
+      props: {
         customMetadataFields,
         labwareId,
         userId,
         sequencescapeApi,
         sequencescapeUrl,
-      },
-      // b-icon is unknown to the component so we stub it
-      stubs: {
-        'b-icon': true,
       },
     })
   }

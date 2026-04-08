@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
+  subject(:presenter) { described_class.new(labware:) }
+
   let(:purpose_name) { 'Limber example purpose' }
   let(:title) { purpose_name }
   let(:state) { 'pending' }
@@ -26,7 +28,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   # B       *
   let(:well_a1) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A1'
       },
@@ -36,7 +38,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
   let(:well_a2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A2'
       },
@@ -46,7 +48,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
   let(:well_b2) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'B2'
       },
@@ -56,7 +58,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
   let(:well_a3) do
     create(
-      :v2_well,
+      :well,
       position: {
         'name' => 'A3'
       },
@@ -66,7 +68,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
   end
 
   let(:labware) do
-    build :v2_plate,
+    build :plate,
           purpose_name: purpose_name,
           state: state,
           barcode_number: 1,
@@ -78,18 +80,13 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
 
   let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
-  let(:warnings) { {} }
-  let(:label_class) { 'Labels::PlateLabel' }
-
-  before { stub_v2_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
-
-  subject(:presenter) { Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter.new(labware:) }
+  before { stub_plate(labware, stub_search: false, custom_includes: 'wells.aliquots,wells.qc_results') }
 
   context 'when binning' do
     it_behaves_like 'a labware presenter'
 
     context 'pcr cycles binned plate display' do
-      it 'should create a key for the bins that will be displayed' do
+      it 'creates a key for the bins that will be displayed' do
         # NB. contains min/max because just using bins template, but fields not needed in presentation
         expected_bins_key = [
           { 'colour' => 1, 'pcr_cycles' => 16 },
@@ -100,7 +97,7 @@ RSpec.describe Presenters::PcrCyclesBinnedPlateUsingWellMetadataPresenter do
         expect(presenter.bins_key).to eq(expected_bins_key)
       end
 
-      it 'should create bin details which will be used to colour and annotate the well aliquots' do
+      it 'creates bin details which will be used to colour and annotate the well aliquots' do
         expected_bin_details = {
           'A1' => {
             'colour' => 1,

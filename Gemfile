@@ -10,6 +10,9 @@ group :default do
   gem 'rake'
   gem 'state_machines'
 
+  # Packages removed from the standard Ruby library
+  gem 'csv' # removed from Ruby 3.4.0
+
   # Build dependencies
   gem 'vite_rails'
   gem 'vite_ruby'
@@ -20,11 +23,8 @@ group :default do
   # Used in the setting object, allows access by object and hash notation.
   gem 'hashie'
 
-  # Communications with JSON APIs, allows us to begin migration to the new Sequencescape API
-  gem 'json_api_client', github: 'sanger/json_api_client', branch: 'v1.21.0a'
-
-  # Older Sequencescape API
-  gem 'sequencescape-client-api', require: 'sequencescape'
+  # Communications with JSON APIs
+  gem 'json_api_client', github: 'sanger/json_api_client', tag: 'v1.23.0-sanger.1'
 
   # Speed up json encoding/decoding with oj
   gem 'oj'
@@ -34,6 +34,7 @@ group :default do
 
   gem 'puma'
   gem 'sanger_barcode_format', github: 'sanger/sanger_barcode_format', branch: 'development'
+  gem 'syslog'
 end
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -66,8 +67,11 @@ end
 group :lint do
   gem 'erb_lint', require: false
   gem 'rubocop', require: false
+  gem 'rubocop-capybara', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec_rails', require: false
 
   # Ruby dependencies specifically requested by prettier/plugin-ruby v4
   # https://github.com/prettier/plugin-ruby

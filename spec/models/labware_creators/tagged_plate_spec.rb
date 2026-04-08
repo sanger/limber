@@ -4,17 +4,17 @@ require 'spec_helper'
 require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
-RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
-  it_behaves_like 'it only allows creation from plates'
+RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
+  subject { described_class.new(form_attributes) }
 
-  has_a_working_api
+  it_behaves_like 'it only allows creation from plates'
 
   let(:plate_uuid) { 'example-plate-uuid' }
   let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:pools) { 0 }
   let(:plate) do
     create(
-      :v2_plate,
+      :plate,
       :has_pooling_metadata,
       uuid: plate_uuid,
       barcode_number: 2,
@@ -22,7 +22,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       submission_pools_count: pools
     )
   end
-  let(:wells_in_column_order) { WellHelpers.column_order }
   let(:transfer_template_uuid) { 'custom-pooling' }
   let(:expected_transfers) { WellHelpers.stamp_hash(96) }
 
@@ -40,16 +39,14 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       uuid: child_purpose_uuid,
       disable_cross_plate_pool_detection: disable_cross_plate_pool_detection
     )
-    stub_v2_plate(plate)
+    stub_plate(plate)
   end
-
-  subject { LabwareCreators::TaggedPlate.new(api, form_attributes) }
 
   context 'on new' do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
 
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::TaggedPlate
+      expect(subject).to be_a described_class
     end
 
     it 'describes the parent barcode' do
@@ -74,7 +71,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
       let(:tag_layout_templates) { create_list :tag_layout_template, 2 }
 
-      before { stub_v2_tag_layout_templates(tag_layout_templates) }
+      before { stub_tag_layout_templates(tag_layout_templates) }
 
       # Recording existing behaviour here before refactoring, but this looks like it might be just for pool tagging.
       # Which is now unused. No method explicitly called `tag_plates_list` comes from
@@ -140,8 +137,6 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
     let(:tag_plate_barcode) { '1234567890' }
     let(:tag_plate_uuid) { 'tag-plate' }
     let(:tag_template_uuid) { 'tag-layout-template' }
-    let(:tag2_tube_uuid) { 'tag2-tube' }
-    let(:tag2_template_uuid) { 'tag2-layout-template' }
 
     let(:plate_conversions_attributes) do
       [{ parent_uuid: plate_uuid, purpose_uuid: child_purpose_uuid, target_uuid: tag_plate_uuid, user_uuid: user_uuid }]
@@ -200,7 +195,7 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
       it_behaves_like 'it has a custom page', 'tagged_plate'
 
       it 'can be created' do
-        expect(subject).to be_a LabwareCreators::TaggedPlate
+        expect(subject).to be_a described_class
       end
 
       context 'on save' do
@@ -215,9 +210,9 @@ RSpec.describe LabwareCreators::TaggedPlate, tag_plate: true do
 
         it 'has the correct child (and uuid)' do
           expect_plate_conversion_creation # We need the return value and this expectation mocks it for us.
-          stub_api_v2_post('StateChange')
-          stub_api_v2_post('TagLayout')
-          stub_api_v2_post('Transfer')
+          stub_post('StateChange')
+          stub_post('TagLayout')
+          stub_post('Transfer')
 
           expect(subject.save).to be true
           expect(subject.child.uuid).to eq(tag_plate_uuid)

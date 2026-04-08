@@ -2,9 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Failing quadrants', js: true do
-  has_a_working_api
-
+RSpec.feature 'Failing quadrants', :js do
   let(:user_uuid) { 'user-uuid' }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
@@ -12,15 +10,15 @@ RSpec.feature 'Failing quadrants', js: true do
   let(:plate_uuid) { SecureRandom.uuid }
   let(:wells) do
     [
-      create(:v2_well, location: 'A1', state: 'passed'),
-      create(:v2_well, location: 'B1', state: 'passed'),
-      create(:v2_well, location: 'A2', state: 'passed'),
-      create(:v2_well, location: 'B2', state: 'failed'),
-      create(:v2_well, location: 'A3', state: 'passed')
+      create(:well, location: 'A1', state: 'passed'),
+      create(:well, location: 'B1', state: 'passed'),
+      create(:well, location: 'A2', state: 'passed'),
+      create(:well, location: 'B2', state: 'failed'),
+      create(:well, location: 'A3', state: 'passed')
     ]
   end
   let(:example_plate) do
-    create :v2_plate,
+    create :plate,
            uuid: plate_uuid,
            purpose_uuid: 'stock-plate-purpose-uuid',
            state: 'passed',
@@ -53,10 +51,15 @@ RSpec.feature 'Failing quadrants', js: true do
     # We get the actual plate
 
     2.times do # For both the initial find, and the redirect post state change
-      stub_v2_plate(example_plate)
+      stub_plate(example_plate)
+      stub_plate(
+        example_plate,
+        stub_search: false,
+        custom_includes: 'wells.aliquots.request.poly_metadata'
+      )
     end
 
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   scenario 'failing wells' do
@@ -69,6 +72,6 @@ RSpec.feature 'Failing quadrants', js: true do
     click_on('Select Quadrant 4')
 
     click_on('Fail selected wells')
-    expect(find('#flashes')).to have_content('Selected wells have been failed')
+    expect(find_by_id('flashes')).to have_content('Selected wells have been failed')
   end
 end

@@ -33,13 +33,13 @@
             @change="updateTube(i, $event)"
           />
         </b-form-group>
-        <b-alert :show="transfersError !== ''" variant="danger">
+        <b-alert :model-value="transfersError !== ''" variant="danger">
           {{ transfersError }}
         </b-alert>
         <component
           :is="transfersCreatorComponent"
           :valid-transfers="validTransfers"
-          @change="transfersCreatorObj = $event"
+          @update:model-value="transfersCreatorObj = $event"
         />
         <hr />
         <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>
@@ -60,7 +60,7 @@ import {
 import devourApi from '@/javascript/shared/devourApi.js'
 import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
-import { transferTubesCreator } from '@/javascript/shared/transfersCreators.js'
+import { transferTubesToPlateCreator } from '@/javascript/shared/transfersCreators.js'
 import { transfersForTubes } from '@/javascript/shared/transfersLayouts.js'
 import { buildTubeObjs } from '@/javascript/shared/tubeHelpers.js'
 import { findUniqueIndex, indexToName } from '@/javascript/shared/wellHelpers.js'
@@ -326,11 +326,11 @@ export default {
      *   }
      */
     updateTube(index, data) {
-      this.$set(this.tubes, index - 1, { ...data, index: index - 1 })
+      this.tubes[index - 1] = { ...data, index: index - 1 }
     },
     apiTransfers() {
       // what we want to transfer when creating the plate
-      return transferTubesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
+      return transferTubesToPlateCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {
       this.progressMessage = 'Creating plate...'

@@ -7,9 +7,9 @@ import SCAPE from '@/javascript/lib/global_message_system.js'
 
 let closeIcon = function () {
   return $(document.createElement('a'))
-    .attr('class', 'close')
-    .attr('aria-label', 'close')
-    .append($(document.createElement('span')).attr('aria-hidden', 'true').text('×'))
+    .attr('class', 'btn-close float-end')
+    .attr('aria-label', 'Close')
+    .append($(document.createElement('span')).attr('aria-hidden', 'true'))
 }
 
 SCAPE.robot_beds = {}
@@ -129,10 +129,17 @@ const fail = function () {
 }
 
 $('#plate_scan').on('change', function () {
-  let plate_barcode, bed_barcode, robot_barcode
-  plate_barcode = this.value
-  bed_barcode = $('#bed_scan').val()
-  robot_barcode = $('#robot_scan').val()
+  let bed_barcode = $('#bed_scan').val()
+  if (!bed_barcode) {
+    SCAPE.message('Scan the bed before the plate please!', 'warning')
+    $('#bed_scan').focus()
+    this.value = ''
+    return
+  }
+  // clear the message field if we have a bed barcode
+  SCAPE.message('', '')
+  let plate_barcode = this.value
+  let robot_barcode = $('#robot_scan').val()
   SCAPE.robot_scan = robot_barcode
   this.value = ''
   $('#bed_scan').val('')

@@ -5,13 +5,12 @@
     <% if presenter.try(:priority) %>
       <%
         # Priorities are defined in Sequencescape:app/models/sample.rb
-        priorities = {0=>:no_priority, 1=>:backlog, 2=>:surveillance, 3=>:priority}
+        priorities = { 0 => :no_priority, 1 => :backlog, 2 => :surveillance, 3 => :priority }
       %>
       <%= vite_image_tag("images/icon_#{presenter.priority}_flag.png",
-            size: "32x32",
-            title: "Labware Priority: #{priorities[presenter.priority].to_s.titleize}",
-            data: { toggle: 'tooltip' }
-          ) %>
+                         size: '32x32',
+                         title: "Labware Priority: #{priorities[presenter.priority].to_s.titleize}",
+                         data: { 'bs-toggle': 'tooltip' }) %>
     <% end %>
   </h2>
   <dl class="descriptive-list-inline">

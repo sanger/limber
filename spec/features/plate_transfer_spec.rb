@@ -2,10 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Plate transfer', js: true, robots: true do
+RSpec.feature 'Plate transfer', :js, :robots do
   include RobotHelpers
-
-  has_a_working_api
 
   let(:user_uuid) { SecureRandom.uuid }
   let(:user) { create :user, uuid: user_uuid }
@@ -15,10 +13,10 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
   let(:plate_barcode_2) { 'DN2T' }
   let(:plate_uuid) { SecureRandom.uuid }
   let(:example_plate) do
-    create :v2_plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', barcode_number: 2
+    create :plate, uuid: plate_uuid, purpose_name: 'LB End Prep', purpose_uuid: 'lb_end_prep_uuid', barcode_number: 2
   end
   let(:example_plate_without_metadata) do
-    create :v2_plate,
+    create :plate,
            uuid: plate_uuid,
            purpose_name: 'LB End Prep',
            purpose_uuid: 'lb_end_prep_uuid',
@@ -29,7 +27,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     create :custom_metadatum_collection, metadata: { 'created_with_robot' => 'robot_barcode' }
   end
   let(:example_plate_with_metadata) do
-    create :v2_plate,
+    create :plate,
            uuid: plate_uuid,
            purpose_name: 'LB End Prep',
            purpose_uuid: 'lb_end_prep_uuid',
@@ -46,7 +44,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     Settings.robots['bravo-lb-end-prep'] = settings[:robots]['bravo-lb-end-prep']
 
     # We look up the user
-    stub_v2_user(user, swipecard)
+    stub_user(user, swipecard)
   end
 
   let(:custom_metadatum_collections_attributes) do
@@ -79,21 +77,10 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
       message: ''
     )
 
-    create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::DefaultStateChanger'
+    create :purpose_config, uuid: 'lb_end_prep_uuid', state_changer_class: 'StateChangers::PlateStateChanger'
 
     bed_labware_lookup(example_plate)
-    stub_v2_plate(example_plate)
-
-    # Legacy asset search
-    stub_asset_search(
-      example_plate.barcode.machine,
-      json(
-        :plate,
-        uuid: example_plate.uuid,
-        purpose_name: example_plate.purpose.name,
-        purpose_uuid: example_plate.purpose.uuid
-      )
-    )
+    stub_plate(example_plate)
 
     fill_in_swipecard(swipecard)
 
@@ -107,19 +94,19 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan bed', with: '580000004838'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
     end
     scan_in 'Scan robot', with: robot_barcode
     within('#robot') do
-      expect(page).not_to have_content('123')
+      expect(page).to have_no_content('123')
       expect(page).to have_content(robot_barcode.to_s)
     end
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_2
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000004838')
       expect(page).to have_content("Labware: #{plate_barcode_2}")
@@ -135,7 +122,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
 
   scenario 'informs if the robot barcode is wrong' do
     bed_labware_lookup(example_plate_without_metadata)
-    stub_v2_plate(example_plate_without_metadata)
+    stub_plate(example_plate_without_metadata)
 
     fill_in_swipecard(swipecard)
 
@@ -148,7 +135,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end
@@ -160,7 +147,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
 
   scenario 'verifies robot barcode' do
     bed_labware_lookup(example_plate_with_metadata)
-    stub_v2_plate(example_plate_with_metadata)
+    stub_plate(example_plate_with_metadata)
 
     fill_in_swipecard(swipecard)
 
@@ -173,7 +160,7 @@ RSpec.feature 'Plate transfer', js: true, robots: true do
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).not_to have_content("Robot: #{robot_barcode}")
+      expect(page).to have_no_content("Robot: #{robot_barcode}")
       expect(page).to have_content("Labware: #{plate_barcode_1}")
       expect(page).to have_content('Bed: 580000014851')
     end

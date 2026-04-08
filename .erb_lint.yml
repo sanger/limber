@@ -12,6 +12,7 @@ linters:
     rubocop_config:
       inherit_from:
         - .rubocop.yml
+      # Recommended settings from erb_lint
       Layout/InitialIndentation:
         Enabled: false
       Layout/LineLength:
@@ -27,4 +28,8 @@ linters:
       Lint/UselessAssignment:
         Enabled: false
       Rails/OutputSafety:
+        Enabled: false
+
+      # This rule removes the "<%" and "<%="  from the code, if enabled
+      Layout/LeadingEmptyLines:
         Enabled: false

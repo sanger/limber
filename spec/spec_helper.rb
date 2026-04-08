@@ -35,7 +35,6 @@ SimpleCov.start :rails
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'factory_bot'
-require_relative 'support/contract_helper'
 require_relative 'support/api_url_helper'
 require_relative 'support/feature_helpers'
 require_relative 'support/robot_helpers'
@@ -46,6 +45,7 @@ require 'capybara/rspec'
 require 'webmock/rspec'
 require 'selenium/webdriver'
 require 'csv'
+require 'syslog/logger'
 
 begin
   require 'pry'
@@ -220,6 +220,6 @@ RSpec.configure do |config|
       end
       unused_factories.each { |factory| csv << [factory, 'UNUSED', 0, 0, 0] }
     end
-    puts "\n📊 Output factory statistics to tmp/factories.csv"
+    puts "\n📊 Output factory statistics to tmp/factories.csv" # rubocop:disable RSpec/Output
   end
 end

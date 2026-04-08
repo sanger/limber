@@ -1,0 +1,120 @@
+---
+# BGE Pipeline Purposes
+# 'Limber-Htp - BGE PCR Free' manual submission is on BGE Cherrypick
+BGE Cherrypick:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StockPlatePresenter
+BGE Shear:
+  :asset_type: plate
+BGE Post Shear:
+  :asset_type: plate
+BGE End Prep:
+  :asset_type: plate
+BGE Lib:
+  :asset_type: plate
+  :presenter_class: Presenters::PermissivePresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+    - 'IDT for Illumina UDI v2'
+# 'Limber-Htp - BGE Transition - Automated' submission is on BGE Lib XP2
+BGE Lib XP2:
+  :asset_type: plate
+  :label_template: plate_xp
+  :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
+  # NOTE: We use automatic plate state changer rather than Charge and Pass.
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_bge_pcr_free'
+  :submission_options:
+    BGE Transition - Automated:
+      template_name: 'Limber-Htp - BGE Transition - Automated'
+      request_options:
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
+        library_type: 'BGE'
+      allowed_extra_barcodes: false
+BGE Lib Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'limber_multiplexing_bge_pcr_free'
+BGE Lib PCR:
+  :asset_type: plate
+# 'Limber-Htp - BGE ISC' manual submission is on BGE Lib PCR XP
+BGE Lib PCR XP:
+  :asset_type: plate
+  :file_links:
+    - name: Download Concentration (nM) CSV
+      id: concentrations_nm
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+BGE Lib PrePool:
+  :asset_type: plate
+  :stock_plate: false
+  :creator_class:
+    name: LabwareCreators::MultiPlatePool
+    args:
+      allowed_active_requests:
+        - limber_bge_isc
+  :cherrypickable_target: false
+  :input_plate: false
+  :default_printer_type: :plate_b
+  :csv_template: 'show_extended'
+  :alternative_workline_identifier: BGE Lib PCR XP
+BGE Hyb:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::BaitedPlate
+BGE Cap Lib:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+BGE Cap Lib PCR:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+BGE Cap Lib PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+BGE Cap Lib Pool:
+  :asset_type: plate
+  :default_printer_type: :plate_b
+  :creator_class: LabwareCreators::PlateWithTemplate
+  :transfer_template: 'Pool wells based on submission'
+BGE Cap Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+BGE Blended Cap Lib Pool:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class:
+    name: LabwareCreators::BlendedTube
+    args:
+      ancestor_labware_purpose_name: BGE Lib XP2
+      acceptable_parent_tube_purposes:
+        - BGE Lib Pool
+        - BGE Cap Lib Pool Norm
+      single_ancestor_parent_tube_purpose: BGE Lib Pool
+      preferred_purpose_name_when_deduplicating: BGE Cap Lib Pool Norm
+      list_of_aliquot_attributes_to_consider_a_duplicate:
+        - sample_id
+        - tag_id
+        - tag2_id
+  :presenter_class: Presenters::SimpleTubePresenter
+BGE Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube

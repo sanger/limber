@@ -1,0 +1,8 @@
+<%# locals: (tube_rack:, open_in_new_window: false) -%>
+<% tube_rack_path = "#{tube_rack_path(tube_rack.uuid)}#relatives" %>
+<div class="relative-item">
+    <%= tube_rack.purpose.name %> - <%= link_to tube_rack_path, class: 'card-link stretched-link', target: (open_in_new_window ? '_blank' : '_self') do %>
+        <%= tube_rack.barcode.human.presence || tube_rack.barcode.machine %>
+    <% end %>
+    <%= content_tag(:span, state_badge(tube_rack.state), class: 'float-right') %>
+</div>

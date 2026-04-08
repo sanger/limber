@@ -1,0 +1,33 @@
+---
+# GSLP RVI Bait Capture Library pipeline configuration
+GSLP RVI Bait Capture Library: # Top of the pipeline (Library Prep)
+  pipeline_group: GSLP RVI Bait Capture Library
+  filters:
+    request_type_key:
+      - limber_rvig_bait_capture_library_prep
+      - limber_reisc # Typically reISC should occur on RVIG Lib PCR XP
+    library_type:
+      - RVIG-BCL
+  library_pass:
+    - RVIG Cap Lib PCR XP
+  relationships:
+    RVI Cherrypick: RVIG RT
+    RVIG RT: RVIG cDNA XP
+    RVIG cDNA XP: RVIG Lig
+    RVIG Lig: RVIG Lig Bind
+    RVIG Lig Bind: RVIG Lib PCR
+    RVIG Lib PCR: RVIG Lib PCR XP
+    RVIG Lib PCR XP: RVIG Lib PrePool
+    RVIG Lib PrePool: RVIG Hyb
+    RVIG Hyb: RVIG Cap Lib
+    RVIG Cap Lib: RVIG Cap Lib PCR
+    RVIG Cap Lib PCR: RVIG Cap Lib PCR XP
+
+GSLP RVI Bait Capture Library MX:
+  pipeline_group: GSLP RVI Bait Capture Library
+  filters:
+    request_type_key:
+      - limber_multiplexing
+  relationships:
+    RVIG Cap Lib PCR XP: RVIG Cap Lib Pool
+    RVIG Cap Lib Pool: Cap Lib Pool Norm

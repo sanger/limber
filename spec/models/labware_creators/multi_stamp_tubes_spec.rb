@@ -7,8 +7,6 @@ require_relative 'shared_examples'
 RSpec.describe LabwareCreators::MultiStampTubes do
   it_behaves_like 'it only allows creation from tubes'
 
-  has_a_working_api
-
   let(:parent1_tube_uuid) { 'example-tube1-uuid' }
   let(:parent2_tube_uuid) { 'example-tube2-uuid' }
 
@@ -16,17 +14,17 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   let(:parent2_receptacle_uuid) { 'example-receptacle2-uuid' }
   let(:parent_receptacle_uuids) { [parent1_receptacle_uuid, parent2_receptacle_uuid] }
 
-  let(:parent1_receptacle) { create(:v2_receptacle, uuid: parent1_receptacle_uuid, qc_results: []) }
-  let(:parent2_receptacle) { create(:v2_receptacle, uuid: parent2_receptacle_uuid, qc_results: []) }
+  let(:parent1_receptacle) { create(:receptacle, uuid: parent1_receptacle_uuid, qc_results: []) }
+  let(:parent2_receptacle) { create(:receptacle, uuid: parent2_receptacle_uuid, qc_results: []) }
 
   let(:parent1) do
-    create :v2_stock_tube,
+    create :stock_tube,
            uuid: parent1_tube_uuid,
            purpose_uuid: 'parent-tube-purpose-uuid',
            receptacle: parent1_receptacle
   end
   let(:parent2) do
-    create :v2_stock_tube,
+    create :stock_tube,
            uuid: parent2_tube_uuid,
            purpose_uuid: 'parent-tube-purpose-uuid',
            receptacle: parent2_receptacle
@@ -36,7 +34,6 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   let(:child_purpose_name) { 'Child Purpose' }
 
   let(:user_uuid) { 'user-uuid' }
-  let(:user) { json :v1_user, uuid: user_uuid }
 
   let(:example_template_uuid) { SecureRandom.uuid }
 
@@ -44,17 +41,17 @@ RSpec.describe LabwareCreators::MultiStampTubes do
 
   before do
     Settings.submission_templates = { 'example' => example_template_uuid }
-    stub_v2_tube(parent1, stub_search: false)
-    stub_v2_tube(parent2, stub_search: false)
+    stub_tube(parent1, stub_search: false)
+    stub_tube(parent2, stub_search: false)
   end
 
   context 'on new' do
+    subject { described_class.new(form_attributes) }
+
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent1_tube_uuid } }
 
-    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes) }
-
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::MultiStampTubes
+      expect(subject).to be_a described_class
     end
 
     it 'renders the "multi_stamp_tubes" page' do
@@ -67,7 +64,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
   end
 
   context 'on create' do
-    subject { LabwareCreators::MultiStampTubes.new(api, form_attributes.merge(user_uuid:)) }
+    subject { described_class.new(form_attributes.merge(user_uuid:)) }
 
     let(:form_attributes) do
       {
@@ -88,7 +85,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
     end
 
     let(:child_plate) do
-      create :v2_plate_for_submission, purpose_name: child_purpose_name, barcode_number: '5', size: 96
+      create :plate_for_submission, purpose_name: child_purpose_name, barcode_number: '5', size: 96
     end
 
     let(:pooled_plates_attributes) do
@@ -121,6 +118,7 @@ RSpec.describe LabwareCreators::MultiStampTubes do
           let!(:purpose_config) do
             create :multi_stamp_tubes_purpose_configs, name: child_purpose_name, uuid: child_purpose_uuid
           end
+
           it 'adds an error' do
             subject.send(:configured_params)
             expect(subject.errors.full_messages).to include('Expected only one submission')
@@ -130,17 +128,19 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         describe '#autodetect_studies' do
           it 'returns true when specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ autodetect_studies: true, request_options: {} })
-            expect(subject.send(:autodetect_studies)).to eq(true)
+            expect(subject.send(:autodetect_studies)).to be(true)
           end
+
           it 'returns false when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_studies: false, request_options: {} }
             )
-            expect(subject.send(:autodetect_studies)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to be(false)
           end
+
           it 'returns false if not specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ request_options: {} })
-            expect(subject.send(:autodetect_studies)).to eq(false)
+            expect(subject.send(:autodetect_studies)).to be(false)
           end
         end
 
@@ -149,101 +149,99 @@ RSpec.describe LabwareCreators::MultiStampTubes do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_projects: true, request_options: {} }
             )
-            expect(subject.send(:autodetect_projects)).to eq(true)
+            expect(subject.send(:autodetect_projects)).to be(true)
           end
+
           it 'returns false when specified in the config' do
             expect(subject).to receive(:configured_params).and_return(
               { autodetect_projects: false, request_options: {} }
             )
-            expect(subject.send(:autodetect_projects)).to eq(false)
+            expect(subject.send(:autodetect_projects)).to be(false)
           end
+
           it 'returns false if not specified in the config' do
             expect(subject).to receive(:configured_params).and_return({ request_options: {} })
-            expect(subject.send(:autodetect_projects)).to eq(false)
+            expect(subject.send(:autodetect_projects)).to be(false)
           end
         end
       end
     end
 
-    context '#save!' do
-      setup do
+    describe '#save!' do
+      before do
         expect(subject).to receive(:parent_tubes).and_return([parent1, parent2])
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent1).and_return('outer-request-1')
         expect(subject).to receive(:source_tube_outer_request_uuid).with(parent2).and_return('outer-request-2')
       end
 
-      let!(:submission_submit) { stub_api_post('sub-uuid', 'submit') }
-
       context 'when sources are from multiple studies' do
-        setup do
+        before do
           expect('Sequencescape::Api::V2::Submission'.constantize).to receive(:where).and_return(
             [multiple_study_submission]
           )
         end
 
         # set up two tube to plate well transfers, each from a different study
-        let(:aliquot1) { create :v2_aliquot, study_id: 1 }
-        let(:aliquot2) { create :v2_aliquot, study_id: 2 }
+        let(:aliquot1) { create :aliquot, study_id: 1 }
+        let(:aliquot2) { create :aliquot, study_id: 2 }
 
         let(:parent1) do
-          create :v2_stock_tube,
+          create :stock_tube,
                  uuid: parent1_tube_uuid,
                  purpose_uuid: 'parent-tube-purpose-uuid',
                  receptacle: parent1_receptacle,
                  aliquots: [aliquot1]
         end
         let(:parent2) do
-          create :v2_stock_tube,
+          create :stock_tube,
                  uuid: parent2_tube_uuid,
                  purpose_uuid: 'parent-tube-purpose-uuid',
                  receptacle: parent2_receptacle,
                  aliquots: [aliquot2]
         end
 
-        let!(:order_request) do
-          stub_api_get(example_template_uuid, body: json(:submission_template, uuid: example_template_uuid))
-          stub_api_post(
-            example_template_uuid,
-            'orders',
-            payload: {
-              order: {
-                assets: parent_receptacle_uuids,
-                request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
-                user: user_uuid,
-                autodetect_studies: false,
-                autodetect_projects: false
-              }
-            },
-            body: '{"order":{"uuid":"order-uuid"}}'
-          )
+        let(:orders_attributes) do
+          [
+            {
+              attributes: {
+                submission_template_uuid: example_template_uuid,
+                submission_template_attributes: {
+                  asset_uuids: parent_receptacle_uuids,
+                  request_options: purpose_config[:submission_options]['Cardinal library prep']['request_options'],
+                  user_uuid: user_uuid,
+                  autodetect_studies: false,
+                  autodetect_projects: false
+                }
+              },
+              uuid_out: 'order-uuid'
+            }
+          ]
         end
 
-        let!(:submission_request) do
-          stub_api_post(
-            'submissions',
-            payload: {
-              submission: {
-                orders: ['order-uuid'],
-                user: user_uuid
-              }
-            },
-            body: json(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }])
-          )
+        let(:submissions_attributes) do
+          [
+            {
+              attributes: {
+                and_submit: true,
+                order_uuids: ['order-uuid'],
+                user_uuid: user_uuid
+              },
+              uuid_out: 'sub-uuid'
+            }
+          ]
         end
 
         let!(:multiple_study_submission) do
-          create(:v2_submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
+          create(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
         end
 
         it 'creates a plate!' do
+          expect_order_creation
           expect_pooled_plate_creation
+          expect_submission_creation
           expect_transfer_request_collection_creation
 
           subject.save!
-
-          expect(order_request).to have_been_made.once
-          expect(submission_request).to have_been_made.once
-          expect(submission_submit).to have_been_made.once
         end
       end
     end

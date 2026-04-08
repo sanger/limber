@@ -9,7 +9,7 @@ module Robots::Bed
     attr_accessor :purpose, :states, :label, :parents, :target_state, :robot, :child, :shared_parent
     attr_writer :barcodes
 
-    delegate :api, :user_uuid, :well_order, to: :robot
+    delegate :user_uuid, :well_order, to: :robot
     delegate :state, to: :labware, allow_nil: true, prefix: true
     delegate :empty?, to: :barcodes
 
@@ -20,7 +20,7 @@ module Robots::Bed
               }
     validates :labware,
               presence: {
-                message: lambda { |bed, _data| "Could not find a labware with the barcode '#{bed.barcode}'." }
+                message: ->(bed, _data) { "Could not find a labware with the barcode '#{bed.barcode}'." }
               },
               if: :barcode
     validate :correct_labware_purpose, if: :labware
@@ -46,12 +46,12 @@ module Robots::Bed
       target_state.present?
     end
 
-    def transition # rubocop:todo Metrics/AbcSize
+    def transition
       return if target_state.nil? || labware.nil? # We have nothing to do
 
       StateChangers
         .lookup_for(labware.purpose.uuid)
-        .new(api, labware.uuid, user_uuid)
+        .new(labware.uuid, user_uuid)
         .move_to!(target_state, "Robot #{robot.name} started")
     end
 
@@ -100,9 +100,9 @@ module Robots::Bed
     private
 
     def correct_labware_purpose
-      return true if Array(purpose).include?(labware.purpose_name)
+      return true if Array(purpose).include?(labware.purpose.name)
 
-      error("Labware #{labware.human_barcode} is a #{labware.purpose_name} not a #{purpose_labels} labware.")
+      error("Labware #{labware.human_barcode} is a #{labware.purpose.name} not a #{purpose_labels} labware.")
     end
 
     def correct_labware_state

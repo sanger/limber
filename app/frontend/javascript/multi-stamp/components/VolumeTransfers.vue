@@ -22,6 +22,7 @@ export default {
       type: Number,
     },
   },
+  emits: ['update:model-value'],
   data() {
     return {
       volume: null,
@@ -39,7 +40,7 @@ export default {
   },
   watch: {
     volume: function () {
-      this.$emit('change', {
+      this.$emit('update:model-value', {
         extraParams: this.transferFunc,
         isValid: this.isValid,
       })

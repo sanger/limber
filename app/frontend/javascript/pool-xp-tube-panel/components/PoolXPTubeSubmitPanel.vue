@@ -5,8 +5,8 @@
       :class="['p-2', 'mt-2', stateStyles.text]"
       :style="{ fontSize: '1.0rem', display: 'flex', alignItems: 'center' }"
     >
-      <b-spinner v-show="displaySpinner" id="progress_spinner" small type="border" class="mr-2" />
-      <component :is="statusIcon" id="status_icon" class="mr-1" :color="stateStyles.icon" />
+      <b-spinner v-show="displaySpinner" id="progress_spinner" small type="border" class="me-2" />
+      <component :is="statusIcon" id="status_icon" class="me-1" :color="stateStyles.icon" />
       {{ statusText }}
     </label>
 
@@ -167,9 +167,10 @@ const StateData = {
     icon: ErrorIcon,
   },
   [StateEnum.FAILURE_TUBE_CHECK_AFTER_EXPORT]: {
-    statusText: 'The export cannot be verified. Try again',
-    buttonText: 'Try again',
-    styles: { button: 'danger', text: 'text-danger', icon: 'red' },
+    statusText:
+      'The export process to Traction has been initiated. Verification may take a few seconds to complete, depending on factors like network speed. Please revisit or refresh the page after 10 minutes.',
+    buttonText: 'Refresh',
+    styles: { button: 'primary', text: 'text-primary', icon: 'blue' },
     icon: ErrorIcon,
   },
   [StateEnum.FAILURE_EXPORT_TUBE]: {

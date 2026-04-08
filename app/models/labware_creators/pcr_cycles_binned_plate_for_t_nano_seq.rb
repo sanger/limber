@@ -22,13 +22,12 @@ module LabwareCreators
     # @raise [StandardError] if a request cannot be identified for a child well
     # rubocop:disable Metrics/AbcSize
     def after_transfer!
-      # called as part of the 'super' call in the 'save' method
-      # retrieve child plate through v2 api, using uuid got through v1 api
-      child_v2_plate = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
+      # re-request the child plate to include additional metadata
+      child_plate = Sequencescape::Api::V2.plate_with_custom_includes(CHILD_PLATE_INCLUDES, uuid: child.uuid)
 
       # cycle through the child wells and for each get the related request and write some metadata
       # to it based on the details in the customer file
-      child_wells_by_location = child_v2_plate.wells.index_by(&:location)
+      child_wells_by_location = child_plate.wells.index_by(&:location)
 
       filtered_well_details_without_wells_flagged_to_be_ignored.each do |parent_location, details|
         child_well_location = transfer_hash[parent_location]['dest_locn']
@@ -109,7 +108,7 @@ module LabwareCreators
       errors.add(
         :base,
         "Parent plate should only contain active requests of type (#{expected_binning_request_type}), " \
-          "found unexpected types (#{request_types_present})"
+        "found unexpected types (#{request_types_present})"
       )
     end
 
@@ -151,9 +150,9 @@ module LabwareCreators
       errors.add(
         :base,
         'The uploaded Customer file does not contain the same number of valid rows ' \
-          "(#{well_locns_from_filtered_well_details.count}) " \
-          "as there are wells submitted for work on the parent plate (#{parent_wells_with_requests.count}). " \
-          "Please check the Customer file vs the Submission for missing or extra rows. #{msg_list.join(', ')}"
+        "(#{well_locns_from_filtered_well_details.count}) " \
+        "as there are wells submitted for work on the parent plate (#{parent_wells_with_requests.count}). " \
+        "Please check the Customer file vs the Submission for missing or extra rows. #{msg_list.join(', ')}"
       )
     end
 
@@ -212,7 +211,7 @@ module LabwareCreators
 
       raise StandardError,
             "Existing metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
-              "could not be updated for request at child well location #{child_well_location}"
+            "could not be updated for request at child well location #{child_well_location}"
     end
 
     # Creates a new metadata for a given request with the provided key and value.
@@ -231,7 +230,7 @@ module LabwareCreators
 
       raise StandardError,
             "New metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
-              "did not save for request at child well location #{child_well_location}"
+            "did not save for request at child well location #{child_well_location}"
     end
 
     # Filename for the customer file upload (inherits from the base class - cannot reference the constant directly)

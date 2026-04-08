@@ -3,8 +3,9 @@
 module LabwareCreators
   # Pools one or more plates into a single tube. Useful for MiSeqQC
   class PooledTubesFromWholePlates < Base
-    include SupportParent::TaggedPlateOnly
+    include CreatableFrom::TaggedPlateOnly
     include LabwareCreators::CustomPage
+
     attr_reader :tube_transfer, :child, :barcodes
 
     self.page = 'pooled_tubes_from_whole_plates'
@@ -21,7 +22,9 @@ module LabwareCreators
           .create!(
             child_purpose_uuids: [purpose_uuid],
             parent_uuids: [parents.first.uuid],
-            tube_attributes: [{ name: "#{stock_plate_barcode}+" }],
+            # NB. name is overridden in the after_create method in Transfer::FromPlateToTube
+            # in Sequencescape, to use the stock plate barcode and well range, so not set here
+            tube_attributes: [{}],
             user_uuid: user_uuid
           )
           .children
@@ -35,23 +38,18 @@ module LabwareCreators
       @barcodes = (input || []).map(&:strip).compact_blank
     end
 
-    def stock_plate_barcode
-      "#{parents.first.stock_plate.barcode.prefix}#{parents.first.stock_plate.barcode.number}"
-    end
-
     def redirection_target
-      TubeProxy.new(@child.uuid)
+      Tube.new(@child.uuid)
     end
 
     # TODO: This should probably be asynchronous
     def available_plates
       @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
-      @search_results = plate_search.all(Limber::Plate, @search_options.search_parameters)
+      @search_results = Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters)
     end
 
     def parents
-      @parents ||=
-        api.search.find(Settings.searches['Find assets by barcode']).all(Limber::BarcodedAsset, barcode: barcodes)
+      @parents ||= Sequencescape::Api::V2::Labware.find(barcode: barcodes)
     end
 
     def parents_suitable
@@ -59,10 +57,6 @@ module LabwareCreators
       return if missing_barcodes.empty?
 
       errors.add(:barcodes, "could not be found: #{missing_barcodes}")
-    end
-
-    def plate_search
-      api.search.find(Settings.searches['Find plates'])
     end
 
     def number_of_parent_labwares

@@ -6,11 +6,11 @@
         <div class="card-body bg-dark text-white">
           <div id="output-plate-block">
             <h3>Target Plate</h3>
-            <%= render partial: "plates/empty_plate", locals: {plate_presenter: @labware_creator, css_class: "destination-plate"} %>
+            <%= render partial: 'plates/empty_plate', locals: { plate_presenter: @labware_creator, css_class: 'destination-plate' } %>
           </div>
           <h3>Source Plates</h3>
             <% 4.times do |plate_id| %>
-              <%= render partial: "plates/empty_plate", locals: {css_class: "source-plate plate-id-#{plate_id}"} %>
+              <%= render partial: 'plates/empty_plate', locals: { css_class: "source-plate plate-id-#{plate_id}" } %>
             <% end %>
         </div>
       </div>
@@ -26,17 +26,18 @@
       </div>
       <div class="card-body">
       <%= form_for(
-        @labware_creator,
-        url: limber_plate_children_path(@labware_creator.parent_uuid),
-        as: :plate,
-        html: { method: :post }) do |form| %>
+            @labware_creator,
+            url: plate_child_plate_creations_path(@labware_creator.parent_uuid),
+            as: :plate,
+            html: { method: :post }
+          ) do |form| %>
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
         <% 4.times do |i| %>
-          <div class="labware-container scan-labware form-group row">
-            <label for="plate[<%= i %>]" class="plate-label col-2">Plate <%= i+1 %></label>
-            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control labware-box col-8" tabindex="1" data-position="<%= i %>">
+          <div class="labware-container scan-labware form-group row me-2">
+            <label for="plate[<%= i %>]" class="plate-label col-2 col-form-label">Plate <%= i + 1 %></label>
+            <input id="plate[<%= i %>]" name="plate[<%= i %>]" class="form-control labware-box col" tabindex="1" data-position="<%= i %>">
           </div>
         <% end %>
         <%= form.submit 'Make Pre-Cap pool Plate', class: 'btn btn-success btn-lg', id: 'create-labware', disabled: true %>

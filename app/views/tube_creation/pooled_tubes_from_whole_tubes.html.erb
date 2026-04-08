@@ -13,17 +13,18 @@
       </div>
       <div class="card-body">
       <%= form_for(
-        @labware_creator,
-        url: limber_plate_tubes_path(@labware_creator.parent),
-        as: :tube,
-        html: { method: :post }) do |form| %>
+            @labware_creator,
+            url: plate_child_tube_creations_path(@labware_creator.parent),
+            as: :tube,
+            html: { method: :post }
+          ) do |form| %>
 
         <%= form.hidden_field :parent_uuid %>
         <%= form.hidden_field :purpose_uuid %>
         <% @labware_creator.number_of_parent_labwares.times do |i| %>
           <div class="labware-container scan-labware form-group row">
-            <label for="tube[barcodes][<%= i %>]" class="plate-label col-2">Tube <%= i+1 %></label>
-            <input id="tube[barcodes][<%= i %>]" name="tube[barcodes][]" class="form-control labware-box col-8" tabindex="1" autocomplete="off" data-position="<%= i %>" data-labware-type="tube" />
+            <label for="tube[barcodes][<%= i %>]" class="plate-label col-4 form-label">Tube <%= i + 1 %></label>
+            <input id="tube[barcodes][<%= i %>]" name="tube[barcodes][]" class="form-control labware-box col" tabindex="1" autocomplete="off" data-position="<%= i %>" data-labware-type="tube">
           </div>
         <% end %>
         <%= form.submit 'Make Pool', class: 'btn btn-success btn-lg', id: 'create-labware', disabled: true %>

@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe PlateWalking::Walker do
-  subject { PlateWalking::Walker.new(plate, plate.wells) }
-  let(:plate) { build :v2_plate }
+  subject { described_class.new(plate, plate.wells) }
+
+  let(:plate) { build :plate }
 
   it 'yields wells in rows' do
     expect { |b| subject.each(&b) }.to yield_control.exactly(8).times

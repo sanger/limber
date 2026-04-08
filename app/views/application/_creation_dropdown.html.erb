@@ -1,8 +1,8 @@
 <% unless resources.empty? %>
   <% button_id = SecureRandom.uuid %>
-  <div role="group">
-    <button id="<%= button_id %>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Create <%= resource_type %>
+  <div role="d-grid w-100 gap-2">
+    <button id="<%= button_id %>" class="w-100 my-1 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Create <%= resource_type.humanize.titleize %>
     </button>
     <div class="dropdown-menu" aria-labelledby="<%= button_id %>">
       <%= render partial: 'dropdown_item', collection: resources.sort_by(&:name), as: :item %>

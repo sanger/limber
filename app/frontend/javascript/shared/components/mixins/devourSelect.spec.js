@@ -1,9 +1,7 @@
-import Vue from 'vue'
 import DevourSelect from '@/javascript/shared/components/mixins/devourSelect.js'
 import { mount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import mockApi from '@/javascript/test_support/mock_api.js'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 describe('DevourSelect mixin', () => {
   const testResourceName = 'test'
@@ -27,10 +25,13 @@ describe('DevourSelect mixin', () => {
       fields: testFields,
       validation: testValidation,
     }
-    cmp = Vue.extend({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
-    devourSelectInstance = new cmp({
-      propsData: data,
-    })
+    cmp = mount(
+      { component: '<div></div>', mixins: [DevourSelect], props: Object.keys(data) },
+      {
+        props: { ...data },
+      },
+    )
+    devourSelectInstance = cmp.vm
   })
 
   describe('checking props:', () => {
@@ -61,18 +62,20 @@ describe('DevourSelect mixin', () => {
 
   describe('checking api behaviour', () => {
     const wrapperFactory = function (api = mockApi()) {
-      const MyComponent = Vue.extend({ mixins: [DevourSelect] }) // eslint-disable-line vue/one-component-per-file
-      return mount(MyComponent, {
-        propsData: {
-          api: api.devour,
-          resourceName: testResourceName,
-          includes: testIncludes,
-          filter: testFilter,
-          fields: testFields,
-          validation: testValidationApiError,
+      data = {
+        api: api.devour,
+        resourceName: testResourceName,
+        includes: testIncludes,
+        filter: testFilter,
+        fields: testFields,
+        validation: testValidationApiError,
+      }
+      return mount(
+        { component: '<div></div>', mixins: [DevourSelect], props: Object.keys(data) },
+        {
+          props: { ...data },
         },
-        localVue,
-      })
+      )
     }
 
     it('is invalid if there are api troubles', async () => {

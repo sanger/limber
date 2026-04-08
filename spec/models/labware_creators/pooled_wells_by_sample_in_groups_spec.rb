@@ -3,10 +3,10 @@
 require 'spec_helper'
 
 RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
-  has_a_working_api
-
   # In these tests, sample uuid and well state are modified at specific
   # wells for setup.
+
+  subject { described_class.new(form_attributes) }
 
   let(:user_uuid) { 'user-uuid' }
   let(:parent_plate_uuid) { 'parent-plate-uuid' }
@@ -16,7 +16,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   # Create a plate with 96 wells in pending state and 1 aliquot in each well
   # and then add requests to the aliquots with the same submission_id.
   let(:parent_plate) do
-    plate = create(:v2_plate, uuid: parent_plate_uuid, aliquots_without_requests: 1)
+    plate = create(:plate, uuid: parent_plate_uuid, aliquots_without_requests: 1)
     requests = create_list(:request, 96, submission_id: 2)
     plate.wells.each_with_index { |well, index| well.aliquots.first.request = requests[index] }
     plate
@@ -26,16 +26,14 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_plate_uuid, user_uuid: user_uuid } }
 
   # Child plate assumed to be created
-  let(:child_plate) { create(:v2_plate, uuid: child_plate_uuid) }
-
-  subject { described_class.new(api, form_attributes) }
+  let(:child_plate) { create(:plate, uuid: child_plate_uuid) }
 
   before do
     # Create a purpose config for the plate (number_of_source_wells is 2)
     create(:pooled_wells_by_sample_in_groups_purpose_config, uuid: child_purpose_uuid)
     allow(subject).to receive(:parent).and_return(parent_plate)
-    stub_v2_plate(parent_plate, stub_search: false)
-    stub_v2_plate(child_plate, stub_search: false)
+    stub_plate(parent_plate, stub_search: false)
+    stub_plate(child_plate, stub_search: false)
   end
 
   describe '#number_of_source_wells' do
@@ -71,6 +69,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         expect(wells[1].location).to eq('H1')
       end
     end
+
     context 'when wells are not ordered between columns' do
       before do
         # Swap wells between columns so that they are not in correct order
@@ -213,7 +212,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
       # Assume A1 to A1 transfer
       expect(request[:source_asset]).to eq(source_well.uuid)
       expect(request[:target_asset]).to eq(child_plate.wells.first.uuid)
-      expect(request[:merge_equivalent_aliquots]).to eq(true)
+      expect(request[:merge_equivalent_aliquots]).to be(true)
       expect(request[:submission_id]).to eq(submission_id)
     end
   end
@@ -221,6 +220,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
   describe '#transfer_request_attributes' do
     context 'when there is no passed source well' do
       before { parent_plate.wells.map { |well| well.state = 'failed' } }
+
       it 'returns empty list' do
         expect(subject.transfer_request_attributes(child_plate)).to eq([])
       end
@@ -243,7 +243,7 @@ RSpec.describe LabwareCreators::PooledWellsBySampleInGroups do
         # Source wells: A1, B1, C1, D1
         requests.each_with_index do |request, index|
           expect(request[:source_asset]).to eq(parent_plate.wells[index].uuid)
-          expect(request[:merge_equivalent_aliquots]).to eq(true)
+          expect(request[:merge_equivalent_aliquots]).to be(true)
         end
 
         # Destination wells: A1, A1, B1, C1

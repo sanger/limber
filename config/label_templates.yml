@@ -94,6 +94,20 @@ templates:
     :pmb_template: sqsc_384plate_label_template_code39
     :sprint_template: plate_384_single.yml.erb
 
+  # This single 6mm label version developed for scRNA where they are using
+  # narrow skirted 96-well plates. They needed the thinner 6mm label type usually
+  # used for 384-well plates.
+  # The class and printer type naming is still using 384.
+  plate_6mm_narrow_skirted_single:
+    # using the same label class as plate_384_single
+    :label_class: Labels::Plate384SingleLabel
+    # printer type remains 384 Well Plate Double (poorly named, 6mm labels)
+    :printer_type: 384 Well Plate Double
+    # not developed for Toshiba printers as yet.
+    :pmb_template: sqsc_384plate_label_template_code39
+    # template is similar to plate_384_single but with change to X positions on right
+    :sprint_template: plate_6mm_narrow_skirted_single.yml.erb
+
   plate_96_lysate:
     :label_class: Labels::PlateLabel96Lysate
     :printer_type: 96 Well Plate
@@ -105,3 +119,9 @@ templates:
     :printer_type: 96 Well Plate
     :pmb_template: sqsc_96plate_label_template_code39
     :sprint_template: plate_96_2d.yml.erb
+
+  kinnex_tube:
+    :label_class: Labels::TubeLabelKinnex
+    :printer_type: 1D Tube
+    :pmb_template: tube_label_template_1d
+    :sprint_template: tube_label_traction_compatible.yml.erb

@@ -1,16 +1,12 @@
-import { mount, createLocalVue } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import PoolXPTubeSubmitPanel from './PoolXPTubeSubmitPanel.vue'
-import BootstrapVue from 'bootstrap-vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import flushPromises from 'flush-promises'
+import { flushPromises } from '@vue/test-utils'
 import ReadyIcon from '../../icons/ReadyIcon.vue'
 import TubeSearchIcon from '../../icons/TubeSearchIcon.vue'
 import SuccessIcon from '../../icons/SuccessIcon.vue'
 import ErrorIcon from '../../icons/ErrorIcon.vue'
 import TubeIcon from '../../icons/TubeIcon.vue'
-
-const localVue = createLocalVue()
-localVue.use(BootstrapVue)
 
 // Default props
 const defaultProps = {
@@ -24,8 +20,7 @@ const defaultProps = {
 // Helper function to create the wrapper with the given state and props
 const createWrapper = (state = 'checking_tube_status', props = { ...defaultProps }) => {
   return mount(PoolXPTubeSubmitPanel, {
-    localVue,
-    propsData: {
+    props: {
       ...props,
     },
     data() {
@@ -93,7 +88,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBeUndefined()
+      expect(exportButton.element.disabled).toBe(false)
       expect(exportButton.classes()).toContain('btn-success')
       expect(statusLabel.classes()).toContain('text-success')
       expect(statusLabel.text()).toBe('Ready to export')
@@ -109,7 +104,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(true)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBe('disabled')
+      expect(exportButton.element.disabled).toBe(true)
       expect(exportButton.classes()).toContain('btn-success')
       expect(statusLabel.classes()).toContain('text-black')
       expect(statusLabel.text()).toBe('Checking tube is in Traction')
@@ -125,7 +120,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBeUndefined()
+      expect(exportButton.element.disabled).toBe(false)
       expect(exportButton.classes()).toContain('btn-primary')
       expect(statusLabel.classes()).toContain('text-success')
       expect(statusLabel.text()).toBe('Tube already exported to Traction')
@@ -141,7 +136,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(true)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBe('disabled')
+      expect(exportButton.element.disabled).toBe(true)
       expect(exportButton.classes()).toContain('btn-success')
       expect(statusLabel.classes()).toContain('text-black')
       expect(statusLabel.text()).toBe('Tube is being exported to Traction')
@@ -157,7 +152,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBeUndefined()
+      expect(exportButton.element.disabled).toBe(false)
       expect(exportButton.classes()).toContain('btn-primary')
       expect(statusLabel.classes()).toContain('text-success')
       expect(statusLabel.text()).toBe('Tube has been exported to Traction')
@@ -173,7 +168,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBeUndefined()
+      expect(exportButton.element.disabled).toBe(false)
       expect(exportButton.classes()).toContain('btn-danger')
       expect(statusLabel.classes()).toContain('text-danger')
       expect(statusLabel.text()).toBe('The tube export to Traction failed. Try again')
@@ -189,7 +184,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBeUndefined()
+      expect(exportButton.element.disabled).toBe(false)
       expect(exportButton.classes()).toContain('btn-danger')
       expect(statusLabel.classes()).toContain('text-danger')
       expect(statusLabel.text()).toBe('The export cannot be verified. Refresh to try again')
@@ -205,14 +200,16 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBeUndefined()
-      expect(exportButton.classes()).toContain('btn-danger')
-      expect(statusLabel.classes()).toContain('text-danger')
-      expect(statusLabel.text()).toBe('The export cannot be verified. Try again')
-      expect(exportButton.text()).toBe('Try again')
+      expect(exportButton.element.disabled).toBe(false)
+      expect(exportButton.classes()).toContain('btn-primary')
+      expect(statusLabel.classes()).toContain('text-primary')
+      expect(statusLabel.text()).toBe(
+        'The export process to Traction has been initiated. Verification may take a few seconds to complete, depending on factors like network speed. Please revisit or refresh the page after 10 minutes.',
+      )
+      expect(exportButton.text()).toBe('Refresh')
       const iconComponent = statusIcon.findComponent(ErrorIcon)
       expect(iconComponent.exists()).toBe(true)
-      expect(iconComponent.props().color).toContain('red')
+      expect(iconComponent.props().color).toContain('blue')
       break
     }
 
@@ -221,7 +218,7 @@ const verifyComponentState = (wrapper, state) => {
       expect(statusLabel.exists()).toBe(true)
       expect(spinner.isVisible()).toBe(false)
       expect(statusIcon.isVisible()).toBe(true)
-      expect(exportButton.attributes('disabled')).toBe('disabled')
+      expect(exportButton.element.disabled).toBe(true)
       expect(exportButton.classes()).toContain('btn-danger')
       expect(statusLabel.classes()).toContain('text-danger')
       expect(statusLabel.text()).toBe('Required props are missing')

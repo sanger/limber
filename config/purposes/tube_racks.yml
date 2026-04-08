@@ -1,7 +1,4 @@
 ---
-# I'm not sure how long this will stay around, as I *think* we'll probably want
-# to handle tube racks slightly differently. But popping this here while I
-# investigate
 TR Stock 96:
   :asset_type: tube_rack
   :size: 96

@@ -1,6 +1,6 @@
 <% if threshold.enabled? %>
   <div data-qc-key="qc<%= threshold.key.camelcase %>" class="form-group alert alert-success">
-    <h4 class="alert-heading"><label for="qc-<%= threshold.key %>"><%= threshold.name.titlecase %></label></h4>
+    <h4 class="alert-heading"><label class="form-label" for="qc-<%= threshold.key %>"><%= threshold.name.titlecase %></label></h4>
     <input type="range"
            id="qc-<%= threshold.key %>-range"
            name="<%= threshold.key %>"
@@ -13,7 +13,7 @@
              # This allows for example, setting the thresholds outside the maximum and minimum values
              # of the slider, or introducing arbitary precision in the input field. %>
            form
-           class="form-control-range mb-3">
+           class="d-block w-100 mb-3">
     <div class="input-group">
       <input type="number"
              id="qc-<%= threshold.key %>"
@@ -22,9 +22,7 @@
              list="<%= threshold.key %>-data"
              form
              class="form-control">
-      <div class="input-group-append">
-        <span class="input-group-text"><%= threshold.units %></span>
-      </div>
+      <span class="input-group-text"><%= threshold.units %></span>
     </div>
     <datalist id="<%= threshold.key %>-data">
       <% threshold.options do |value, label| %>

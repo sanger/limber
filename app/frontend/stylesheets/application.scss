@@ -1,6 +1,8 @@
-@import 'limber/_bootstrap-variables';
+// Primary stylesheet for the application
+
+@import 'limber/_bootstrap';
 @import 'limber/_labware-mixins';
-@import 'bootstrap';
+
 @import 'limber/screen';
 @import 'limber/icons';
 @import 'limber/plate';

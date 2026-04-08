@@ -2,43 +2,29 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Pooling multiple tubes into a tube', js: true do
-  has_a_working_api
-
+RSpec.feature 'Pooling multiple tubes into a tube', :js do
   let(:user_uuid) { SecureRandom.uuid }
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
 
-  let(:aliquot_set_1) { create_list :v2_tagged_aliquot, 2, library_state: 'passed' }
+  let(:aliquot_set_1) { create_list :tagged_aliquot, 2, library_state: 'passed' }
 
   let(:tube_barcode_1) { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
   let(:tube_uuid) { SecureRandom.uuid }
   let(:parent_purpose_name) { 'example-purpose' }
   let(:example_tube) do
-    create :v2_tube,
+    create :tube,
            barcode_number: 1,
            state: 'passed',
            uuid: tube_uuid,
            purpose_name: parent_purpose_name,
            aliquots: aliquot_set_1
   end
-  let(:example_tube_v1) do
-    json(
-      :tube,
-      {
-        barcode_number: 1,
-        state: 'passed',
-        uuid: tube_uuid,
-        purpose_name: parent_purpose_name,
-        aliquots: aliquot_set_1
-      }
-    )
-  end
 
   let(:tube_barcode_2) { SBCF::SangerBarcode.new(prefix: 'NT', number: 2).machine_barcode.to_s }
   let(:tube_uuid_2) { SecureRandom.uuid }
   let(:example_tube_2) do
-    create :v2_tube,
+    create :tube,
            barcode_number: 2,
            state: 'passed',
            uuid: tube_uuid_2,
@@ -49,10 +35,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:template_uuid) { SecureRandom.uuid }
 
-  let(:barcodes) { [tube_barcode_1, tube_barcode_2] }
-
   let(:child_uuid) { 'tube-0' }
-  let(:child_tube) { create :v2_tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
+  let(:child_tube) { create :tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
 
   let(:tube_from_tubes_attributes) do
     [{ child_purpose_uuid: purpose_uuid, parent_uuid: tube_uuid, user_uuid: user_uuid }]
@@ -64,18 +48,17 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
   before do
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      include_used: false,
-      purpose_name: ['example-purpose'],
-      includes: 'purpose',
-      paginate: {
-        size: 30,
-        number: 1
-      }
+      {
+        include_used: false,
+        purpose_name: ['example-purpose'],
+        state: %w[pending started passed qc_complete failed cancelled]
+      },
+      { includes: 'purpose', paginate: { page: 1, per_page: 30 } }
     ).and_return([example_tube, example_tube_2])
 
     # Parent lookup
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      barcode: [tube_barcode_1, tube_barcode_2],
+      { barcode: [tube_barcode_1, tube_barcode_2] },
       includes: []
     ).and_return([example_tube, example_tube_2])
   end
@@ -95,17 +78,18 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
     # We look up the user
     stub_swipecard_search(user_swipecard, user)
-    stub_v2_tube(example_tube)
-    stub_v2_tube(example_tube_2)
+    stub_tube(example_tube)
+    stub_tube(example_tube_2)
 
     # Available tubes search
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
       include_used: false,
       purpose_name: ['example-purpose'],
       includes: 'purpose',
+      state: %w[pending started passed qc_complete failed cancelled],
       paginate: {
-        size: 30,
-        number: 1
+        per_page: 30,
+        page: 1
       }
     ).and_return([example_tube, example_tube_2])
 
@@ -116,12 +100,12 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
     ).and_return([example_tube, example_tube_2])
 
     # Used in the redirect. This call is probably unnecessary
-    stub_v2_tube(child_tube)
-    stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3))
+    stub_tube(child_tube)
+    stub_barcode_printers(create_list(:plate_barcode_printer, 3))
   end
 
   context 'unique tags' do
-    let(:aliquot_set_2) { create_list :v2_tagged_aliquot, 2, library_state: 'passed' }
+    let(:aliquot_set_2) { create_list :tagged_aliquot, 2, library_state: 'passed' }
 
     scenario 'creates multiple tubes' do
       # This isn't strictly speaking correct to test. But there isn't a great way
@@ -131,7 +115,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
       expect_tube_from_tube_creation
 
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
-      tube_title = find('#tube-title')
+      tube_title = find_by_id('tube-title')
       expect(tube_title).to have_text(parent_purpose_name)
       click_on('Add an empty Pool tube tube')
       scan_in('Tube 1', with: tube_barcode_1)
@@ -147,7 +131,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
     scenario 'detects tag clash' do
       fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
-      tube_title = find('#tube-title')
+      tube_title = find_by_id('tube-title')
       expect(tube_title).to have_text('example-purpose')
       click_on('Add an empty Pool tube tube')
       scan_in('Tube 1', with: tube_barcode_1)
@@ -155,15 +139,48 @@ RSpec.feature 'Pooling multiple tubes into a tube', js: true do
 
       expect(page).to have_text(
         'The scanned tube contains tags that would clash with those in other tubes in the pool. ' \
-          'Tag clashes found between: NT1 (3980000001795) and NT2 (3980000002808)'
+        'Tag clashes found between: NT1 (3980000001795) and NT2 (3980000002808)'
       )
 
       # removes the error message if another scan is made (NB. currently validation and messages relate to
       # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
       scan_in('Tube 2', with: '')
 
-      expect(page).to_not have_text(
+      expect(page).to have_no_text(
         'The scanned tube contains tags that would clash with those in other tubes in the pool.'
+      )
+    end
+  end
+
+  context 'incorrect tube state' do
+    let(:aliquot_set_2) { create_list :tagged_aliquot, 2, library_state: 'passed' }
+    let(:example_tube_2) do
+      create :tube,
+             barcode_number: 2,
+             state: 'pending',
+             uuid: tube_uuid_2,
+             purpose_name: parent_purpose_name,
+             aliquots: aliquot_set_2
+    end
+
+    scenario 'creates multiple tubes' do
+      fill_in_swipecard_and_barcode(user_swipecard, tube_barcode_1)
+      tube_title = find_by_id('tube-title')
+      expect(tube_title).to have_text(parent_purpose_name)
+      click_on('Add an empty Pool tube tube')
+      scan_in('Tube 1', with: tube_barcode_1)
+      scan_in('Tube 2', with: tube_barcode_2)
+
+      expect(page).to have_text(
+        "Scanned tubes are currently in a 'pending' state when they should be in one of: passed, qc_complete."
+      )
+
+      # removes the error message if another scan is made (NB. currently validation and messages relate to
+      # just the currently scanned labware field, the code does NOT re-validate all the scanned fields)
+      scan_in('Tube 2', with: '')
+
+      expect(page).to have_no_text(
+        "Scanned tubes are currently in a 'pending' state when they should be in one of: passed, qc_complete."
       )
     end
   end

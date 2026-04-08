@@ -5,40 +5,49 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
       .rails-default-error-page {
-        background-color: #efefef;
         color: #2e2f30;
+        background-image: url('/sanger-pattern-corner.svg'), linear-gradient(45deg, #343a41 0%, #6c757d 100%);
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        background-size: cover;
         text-align: center;
         font-family: arial, sans-serif;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
         margin: 0;
+        display: flex;
       }
 
       .rails-default-error-page div.dialog {
         width: 95%;
         max-width: 33em;
-        margin: 4em auto 0;
       }
 
       .rails-default-error-page div.dialog > div {
-        border: 1px solid #ccc;
-        border-right-color: #999;
-        border-left-color: #999;
-        border-bottom-color: #bbb;
-        border-top: #b00100 solid 4px;
-        border-top-left-radius: 9px;
-        border-top-right-radius: 9px;
+        border-radius: 9px;
         background-color: white;
         padding: 7px 12% 0;
         box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
       }
 
-      .rails-default-error-page h1 {
-        font-size: 100%;
-        color: #730e15;
-        line-height: 1.5em;
+      .rails-default-error-page .error-title {
+        font-size: 200%;
+        line-height: 0.5em;
+      }
+
+      .rails-default-error-page .error-code {
+        font-size: 150%;
+        color: #8bc34a;
+        line-height: 1em;
+      }
+
+      .rails-default-error-page .freshservice-link {
+        line-height: 4em;
       }
 
       .rails-default-error-page div.dialog > p {
-        margin: 0 0 1em;
+        margin: 0 0 10em;
         padding: 1em;
         background-color: #f7f7f7;
         border: 1px solid #ccc;
@@ -55,16 +64,27 @@
   </head>
 
   <body class="rails-default-error-page">
-    <!-- This file lives in public/422.html -->
     <div class="dialog">
       <div>
-        <h1>The change you wanted was rejected.</h1>
-        <p>
+        <h1 class="error-title">
+          <span class="status-code">Unprocessable Entity</span>
+          <br />
+        </h1>
+        <small class="error-code">Error Code 422</small>
+        <p>The change you wanted was rejected.</p>
+        <div class="suggestion">
           Maybe you tried to change something you didn't have access to. If you didn't expect to end up here, please let
           us know.
-        </p>
+        </div>
+
+        <a
+          class="freshservice-link"
+          href="https://sanger.freshservice.com/support/catalog/items?category_id=53000051282"
+          target="_blank"
+          rel="noopener"
+          >Open a support ticket</a
+        >
       </div>
-      <p>If you are the application owner check the logs for more information.</p>
     </div>
   </body>
 </html>

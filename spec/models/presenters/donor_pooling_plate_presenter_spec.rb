@@ -5,16 +5,18 @@ require 'spec_helper'
 RSpec.describe Presenters::DonorPoolingPlatePresenter do
   # First set of source wells
 
-  let(:source_well_a1) { create(:v2_well, location: 'A1') }
-  let(:source_well_b1) { create(:v2_well, location: 'B1') }
-  let(:source_well_c1) { create(:v2_well, location: 'D1') }
-  let(:source_well_d1) { create(:v2_well, location: 'C1') }
+  subject { described_class.new(labware:) }
+
+  let(:source_well_a1) { create(:well, location: 'A1') }
+  let(:source_well_b1) { create(:well, location: 'B1') }
+  let(:source_well_c1) { create(:well, location: 'D1') }
+  let(:source_well_d1) { create(:well, location: 'C1') }
 
   # target_asset is nil because it causes cycles and not used in this test
-  let(:transfer_request_a1) { create(:v2_transfer_request, source_asset: source_well_a1, target_asset: nil) }
-  let(:transfer_request_b1) { create(:v2_transfer_request, source_asset: source_well_b1, target_asset: nil) }
-  let(:transfer_request_c1) { create(:v2_transfer_request, source_asset: source_well_c1, target_asset: nil) }
-  let(:transfer_request_d1) { create(:v2_transfer_request, source_asset: source_well_d1, target_asset: nil) }
+  let(:transfer_request_a1) { create(:transfer_request, source_asset: source_well_a1, target_asset: nil) }
+  let(:transfer_request_b1) { create(:transfer_request, source_asset: source_well_b1, target_asset: nil) }
+  let(:transfer_request_c1) { create(:transfer_request, source_asset: source_well_c1, target_asset: nil) }
+  let(:transfer_request_d1) { create(:transfer_request, source_asset: source_well_d1, target_asset: nil) }
 
   # First destination well
 
@@ -22,11 +24,18 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:transfers_to_a1) { [transfer_request_a1, transfer_request_b1, transfer_request_c1, transfer_request_d1] }
 
   let(:dest_well_a1) do
+    poly_metadatum =
+      create(
+        :poly_metadatum,
+        key: scrna_config[:number_of_cells_per_chip_well_key],
+        value: '30000'
+      )
     create(
-      :v2_well_with_transfer_requests,
+      :well_with_transfer_requests_and_polymetadata,
       location: 'A1',
       transfer_requests_as_target: transfers_to_a1,
-      plate_barcode: 'DN3U'
+      plate_barcode: 'DN3U',
+      poly_metadata: [poly_metadatum]
     )
   end
 
@@ -34,16 +43,16 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
 
   # Second set of source wells
 
-  let(:source_well_e1) { create(:v2_well, location: 'E1') }
-  let(:source_well_f1) { create(:v2_well, location: 'F1') }
-  let(:source_well_g1) { create(:v2_well, location: 'G1') }
-  let(:source_well_h1) { create(:v2_well, location: 'H1') }
+  let(:source_well_e1) { create(:well, location: 'E1') }
+  let(:source_well_f1) { create(:well, location: 'F1') }
+  let(:source_well_g1) { create(:well, location: 'G1') }
+  let(:source_well_h1) { create(:well, location: 'H1') }
 
   # target_asset is nil because it causes cycles and not used in this test
-  let(:transfer_request_e1) { create(:v2_transfer_request, source_asset: source_well_e1, target_asset: nil) }
-  let(:transfer_request_f1) { create(:v2_transfer_request, source_asset: source_well_f1, target_asset: nil) }
-  let(:transfer_request_g1) { create(:v2_transfer_request, source_asset: source_well_g1, target_asset: nil) }
-  let(:transfer_request_h1) { create(:v2_transfer_request, source_asset: source_well_h1, target_asset: nil) }
+  let(:transfer_request_e1) { create(:transfer_request, source_asset: source_well_e1, target_asset: nil) }
+  let(:transfer_request_f1) { create(:transfer_request, source_asset: source_well_f1, target_asset: nil) }
+  let(:transfer_request_g1) { create(:transfer_request, source_asset: source_well_g1, target_asset: nil) }
+  let(:transfer_request_h1) { create(:transfer_request, source_asset: source_well_h1, target_asset: nil) }
 
   # Second destination well
 
@@ -51,34 +60,38 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
   let(:transfers_to_b1) { [transfer_request_e1, transfer_request_f1, transfer_request_g1, transfer_request_h1] }
 
   let(:dest_well_b1) do
+    poly_metadatum =
+      create(
+        :poly_metadatum,
+        key: scrna_config[:number_of_cells_per_chip_well_key],
+        value: '30000'
+      )
     create(
-      :v2_well_with_transfer_requests,
+      :well_with_transfer_requests_and_polymetadata,
       location: 'B1',
       transfer_requests_as_target: transfers_to_b1,
-      plate_barcode: 'DN3U'
+      plate_barcode: 'DN3U',
+      poly_metadata: [poly_metadatum]
     )
   end
 
-  let(:all_source_wells) { source_wells_to_a1 + source_wells_to_b1 }
   let(:all_dest_wells) { [dest_well_a1, dest_well_b1] }
 
-  let(:labware) { create :v2_plate, wells: all_dest_wells, barcode_number: 3 }
+  let(:labware) { create :plate, wells: all_dest_wells, barcode_number: 3 }
 
   # Studies to assign to aliquots
 
-  let(:study_to_a1) { create(:study_with_poly_metadata, name: 'First Study', poly_metadata: []) } # empty poly_metadata
-  let(:study_to_b1) { create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: []) } # empty poly_metadata
-
-  let(:warning_template) do
-    Validators::RequiredNumberOfCellsValidator::STUDIES_WITHOUT_REQUIRED_NUMBER_OF_CELLS_PER_SAMPLE_PER_POOL
+  # empty poly_metadata
+  let(:study_to_a1) do
+    create(:study_with_poly_metadata, name: 'First Study', poly_metadata: [])
+  end
+  # empty poly_metadata
+  let(:study_to_b1) do
+    create(:study_with_poly_metadata, name: 'Second Study', poly_metadata: [])
   end
 
   # Constants from config/initializers/scrna_config.rb
   let(:scrna_config) { Rails.application.config.scrna_config }
-
-  let(:required_number_of_cells_per_sample_in_pool) { scrna_config[:required_number_of_cells_per_sample_in_pool] }
-
-  subject { Presenters::DonorPoolingPlatePresenter.new(labware:) }
 
   before do
     Settings.purposes = { labware.purpose.uuid => { presenter_class: {} } }
@@ -91,6 +104,224 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
 
     it 'does not warn the user about any study' do
       expect(subject).to be_valid # There are no warnings.
+    end
+  end
+
+  context 'when displaying the pooling info' do
+    context 'when all wells have the same number of aliquots' do
+      it 'returns the correct count' do
+        wells = [dest_well_a1, dest_well_b1]
+        expect(subject.num_samples_per_pool(wells)).to eq '1'
+      end
+    end
+
+    context 'when wells have different numbers of aliquots' do
+      it 'returns a comma-separated list' do
+        allow(dest_well_a1).to receive(:aliquots).and_return([double, double])
+        allow(dest_well_b1).to receive(:aliquots).and_return([double, double, double])
+        wells = [dest_well_a1, dest_well_b1]
+        expect(subject.num_samples_per_pool(wells)).to eq '2, 3'
+      end
+    end
+
+    it 'returns a comma-separated list of well positions' do
+      wells = [source_well_a1, source_well_b1, source_well_c1]
+      expect(subject.get_source_wells(wells)).to eq 'A1, B1, D1'
+    end
+
+    it 'returns "Unknown" for wells without a position name' do
+      allow(source_well_a1).to receive(:position).and_return({})
+      wells = [source_well_a1]
+      expect(subject.get_source_wells(wells)).to eq 'Unknown'
+    end
+
+    it 'returns a delimited string for the cell count value' do
+      expect(subject.cells_per_chip_well(dest_well_a1)).to eq '30,000'
+    end
+
+    it 'returns nil if no matching poly_metadata is found' do
+      allow(dest_well_a1).to receive(:poly_metadata).and_return([])
+      expect(subject.cells_per_chip_well(dest_well_a1)).to be_nil
+    end
+
+    it 'returns the correct study and project groups from wells' do
+      expected_groups = [['Well Study / Well Project', [dest_well_a1, dest_well_b1]]]
+      expect(subject.study_project_groups_from_wells).to eq expected_groups
+    end
+
+    it 'returns true for show_scrna_pooling?' do
+      expect(subject.show_scrna_pooling?).to be true
+    end
+  end
+
+  describe '#suitable_for_labware?' do
+    let(:child_purpose_name) { 'Test Purpose' }
+    let(:parent_purpose_name) { 'Parent Purpose' }
+    let(:parent_plate) { create(:plate, purpose_name: parent_purpose_name) }
+    let(:other_purpose) { 'Other Purpose' }
+    let(:user_uuid) { SecureRandom.uuid }
+
+    let(:parents) { [parent_plate] }
+
+    let(:robot_config) do
+      {
+        'name' => 'robot_name',
+        'require_robot' => true,
+        'beds' => {
+          'bed1_barcode' => {
+            'purpose' => parent_purpose_name,
+            'states' => ['passed'],
+            'label' => 'Bed 2'
+          },
+          'bed2_barcode' => {
+            'purpose' => child_purpose_name,
+            'states' => ['pending'],
+            'label' => 'Bed 1',
+            'parent' => 'bed1_barcode',
+            'target_state' => 'passed'
+          }
+        }
+      }
+    end
+
+    let(:robot) { Robots::Robot.new(robot_config.merge(user_uuid:)) }
+
+    let(:irrelevant_robot_config) do
+      {
+        'name' => 'robot_name',
+        'require_robot' => true,
+        'beds' => {
+          'bed1_barcode' => {
+            'purpose' => 'irrelevant_parent_purpose',
+            'states' => ['passed'],
+            'label' => 'Bed 2'
+          },
+          'bed2_barcode' => {
+            'purpose' => 'irrelevant_child_purpose',
+            'states' => ['pending'],
+            'label' => 'Bed 1',
+            'parent' => 'bed1_barcode',
+            'target_state' => 'passed'
+          }
+        }
+      }
+    end
+
+    let(:irrelevant_robot) { Robots::Robot.new(irrelevant_robot_config.merge(user_uuid:)) }
+
+    before do
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive_messages(
+        purpose_name: child_purpose_name,
+        extract_parent_purposes: parents.map { |p| p.purpose.name }
+      )
+
+      # rubocop:enable RSpec/SubjectStub
+    end
+
+    context 'when labware.state is passed' do
+      let(:labware_state) { 'passed' }
+
+      it 'returns true if a main match is found' do
+        expect(subject.send(:suitable_for_labware?, robot)).to be true
+      end
+
+      it 'returns false if no main match is found' do
+        robot_config['beds']['bed2_barcode']['purpose'] = other_purpose
+        robot_with_wrong_parent_purpose = Robots::Robot.new(robot_config.merge(user_uuid:))
+        expect(subject.send(:suitable_for_labware?, robot_with_wrong_parent_purpose)).to be false
+      end
+
+      context 'when neither match exists' do
+        it 'returns false' do
+          expect(subject.send(:suitable_for_labware?, irrelevant_robot)).to be false
+        end
+      end
+    end
+
+    context 'when labware.state is pending' do
+      let(:labware_state) { 'pending' }
+
+      context 'when both main and parent match exist' do
+        it 'returns true' do
+          expect(subject.send(:suitable_for_labware?, robot)).to be true
+        end
+      end
+
+      context 'when only main match exists' do
+        it 'returns false' do
+          robot_config['beds']['bed1_barcode']['purpose'] = other_purpose
+          robot_with_wrong_parent_purpose = Robots::Robot.new(robot_config.merge(user_uuid:))
+          expect(subject.send(:suitable_for_labware?, robot_with_wrong_parent_purpose)).to be false
+        end
+      end
+
+      context 'when only parent match exists' do
+        it 'returns false' do
+          robot_config['beds']['bed2_barcode']['purpose'] = other_purpose
+          robot_with_wrong_child_purpose = Robots::Robot.new(robot_config.merge(user_uuid:))
+          expect(subject.send(:suitable_for_labware?, robot_with_wrong_child_purpose)).to be false
+        end
+      end
+
+      context 'when neither match exists' do
+        it 'returns false' do
+          expect(subject.send(:suitable_for_labware?, irrelevant_robot)).to be false
+        end
+      end
+    end
+  end
+
+  describe '#csv_file_links' do
+    let(:parent_purposes) { ['Parent Purpose 2'] }
+
+    # Had to use Hashie::Mash here to mimic the behavior of the actual file links, which are
+    # Hashie::Mash objects. Using simple hashes was causing issues with the `can_be_enabled?`
+    # method, which expects Hashie::Mash objects to call e.g. link.states
+    let(:file_links) do
+      [
+        Hashie::Mash.new('name' => 'Export 1', 'id' => 'one', 'parent' => 'Parent Purpose 1'),
+        Hashie::Mash.new('name' => 'Export 2', 'id' => 'two', 'parent' => 'Parent Purpose 2'),
+        Hashie::Mash.new('name' => 'Download Worksheet CSV', 'id' => 'worksheet')
+      ]
+    end
+
+    before do
+      # Stubbing methods called within csv_file_links to control the test environment
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive_messages(extract_parent_purposes: parent_purposes, fetch_file_links: file_links,
+                                         csv: true, human_barcode: 'DN3U')
+      allow(subject).to receive(:filter_enabled_links).with(file_links).and_return(file_links)
+      # rubocop:enable RSpec/SubjectStub
+    end
+
+    it 'includes links with matching parent' do
+      links = subject.csv_file_links
+      expect(links).to include(
+        [
+          'Export 2',
+          [:plate, :export, hash_including(id: 'two', plate_id: 'DN3U', format: :csv)]
+        ]
+      )
+    end
+
+    it 'does not include links with non-matching parent' do
+      links = subject.csv_file_links
+      expect(links.any? { |l| l[0] == 'Export 1' }).to be false
+    end
+
+    it 'includes worksheet csv link if csv is present' do
+      links = subject.csv_file_links
+      expect(links).to include(['Download Worksheet CSV', { format: :csv }])
+    end
+
+    it 'does not include worksheet csv link if csv is not present' do
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive(:csv).and_return(false)
+      # rubocop:enable RSpec/SubjectStub
+
+      links = subject.csv_file_links
+      expect(links).not_to include(['Download Worksheet CSV', { format: :csv }])
     end
   end
 end

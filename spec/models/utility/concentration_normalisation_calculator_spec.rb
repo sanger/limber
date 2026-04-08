@@ -5,18 +5,18 @@ require 'support/shared_examples/common_calculations_shared_examples'
 
 RSpec.describe Utility::ConcentrationNormalisationCalculator do
   context 'when computing values for normalised binning' do
+    subject { described_class.new(dilutions_config) }
+
     let(:assay_version) { 'v1.0' }
     let(:parent_uuid) { 'example-plate-uuid' }
     let(:plate_size) { 96 }
-    let(:num_rows) { 8 }
-    let(:num_cols) { 12 }
 
     let(:well_a1) do
-      create(:v2_well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))
+      create(:well, position: { 'name' => 'A1' }, qc_results: create_list(:qc_result_concentration, 1, value: '1.0'))
     end
     let(:well_b1) do
       create(
-        :v2_well,
+        :well,
         position: {
           'name' => 'B1'
         },
@@ -24,14 +24,14 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
       )
     end
     let(:well_c1) do
-      create(:v2_well, position: { 'name' => 'C1' }, qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
+      create(:well, position: { 'name' => 'C1' }, qc_results: create_list(:qc_result_concentration, 1, value: '3.5'))
     end
     let(:well_d1) do
-      create(:v2_well, position: { 'name' => 'D1' }, qc_results: create_list(:qc_result_concentration, 1, value: '1.8'))
+      create(:well, position: { 'name' => 'D1' }, qc_results: create_list(:qc_result_concentration, 1, value: '1.8'))
     end
 
     let(:parent_plate) do
-      create :v2_plate,
+      create :plate,
              uuid: parent_uuid,
              barcode_number: '2',
              size: plate_size,
@@ -42,8 +42,6 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
     let(:requests) { Array.new(4) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
     let(:dilutions_config) { { 'target_amount_ng' => 50, 'target_volume' => 20, 'minimum_source_volume' => 0.2 } }
-
-    subject { Utility::ConcentrationNormalisationCalculator.new(dilutions_config) }
 
     describe '#normalisation_details' do
       it 'calculates normalisation details correctly' do
@@ -185,7 +183,7 @@ RSpec.describe Utility::ConcentrationNormalisationCalculator do
 
         it 'creates the correct transfers' do
           expect(subject.compute_well_transfers(parent_plate)).to eq(expd_transfers)
-          expect(subject.errors.messages.empty?).to eq(true)
+          expect(subject.errors.messages.empty?).to be(true)
         end
       end
     end

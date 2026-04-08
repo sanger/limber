@@ -2,6 +2,7 @@
 
 module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   extend ActiveSupport::Concern
+
   included do
     class_attribute :bed_prefix
     self.bed_prefix = 'PCRXP'
@@ -10,7 +11,7 @@ module Presenters::ExtendedCsv # rubocop:todo Style/Documentation
   # Yields information for the show_extended.csv
   def each_well_transfer(offset = 0) # rubocop:todo Metrics/AbcSize
     index = 0
-    transfers_for_csv[offset * 4...(offset + 1) * 4].each_with_index do |transfers_list, bed_index|
+    transfers_for_csv[(offset * 4)...((offset + 1) * 4)].each_with_index do |transfers_list, bed_index|
       transfers_list[:transfers].each do |transfer|
         source_well, destination_wells = transfer
         Array(destination_wells).each do |destination_well|

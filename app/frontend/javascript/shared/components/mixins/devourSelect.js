@@ -72,6 +72,7 @@ export default {
       },
     },
   },
+  emits: ['change'],
   data() {
     return {
       results: null, // holds the query results

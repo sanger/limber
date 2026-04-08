@@ -8,8 +8,9 @@ module LabwareCreators
     class SubmissionFailure < StandardError
     end
 
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
     include LabwareCreators::CustomPage
+
     attr_reader :tube_transfer, :child, :barcodes
 
     self.page = 'pooled_tubes_from_whole_tubes'
@@ -43,14 +44,14 @@ module LabwareCreators
       @search_options = OngoingTube.new(purpose_names: [parent.purpose.name], include_used: false)
       @search_results =
         Sequencescape::Api::V2::Tube.find_all(
-          **@search_options.v2_search_parameters,
+          @search_options.search_parameters,
           includes: 'purpose',
-          paginate: @search_options.v2_pagination
+          paginate: @search_options.pagination
         )
     end
 
     def parents
-      @parents ||= Sequencescape::Api::V2::Tube.find_all(barcode: barcodes, includes: [])
+      @parents ||= Sequencescape::Api::V2::Tube.find_all({ barcode: barcodes }, includes: [])
     end
 
     def parents_suitable
@@ -68,7 +69,7 @@ module LabwareCreators
     end
 
     def redirection_target
-      TubeProxy.new(@child.uuid)
+      Tube.new(@child.uuid)
     end
 
     private

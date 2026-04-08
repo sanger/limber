@@ -3,7 +3,7 @@
 module LabwareCreators
   class MultiStampTubes < Base # rubocop:todo Style/Documentation, Metrics/ClassLength
     include LabwareCreators::CustomPage
-    include SupportParent::TubeOnly
+    include CreatableFrom::TubeOnly
 
     attr_accessor :transfers, :parents
 
@@ -85,7 +85,7 @@ module LabwareCreators
     end
 
     def parent_tubes
-      Sequencescape::Api::V2::Tube.find_all(uuid: parent_uuids, includes: 'receptacle,aliquots,aliquots.study')
+      Sequencescape::Api::V2::Tube.find_all({ uuid: parent_uuids }, includes: 'receptacle,aliquots,aliquots.study')
     end
 
     def transfer_material_from_parent!
@@ -161,10 +161,7 @@ module LabwareCreators
       sequencescape_submission_parameters = {
         template_name: configured_params[:template_name],
         request_options: configured_params[:request_options],
-        asset_groups: [
-          { assets: asset_uuids, autodetect_studies: autodetect_studies, autodetect_projects: autodetect_projects }
-        ],
-        api: api,
+        asset_groups: [{ asset_uuids:, autodetect_studies:, autodetect_projects: }],
         user: user_uuid
       }
 

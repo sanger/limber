@@ -1,12 +1,9 @@
 // // Import the component being tested
-import { shallowMount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { mount } from '@vue/test-utils'
+import { flushPromises } from '@vue/test-utils'
 import { aggregate } from '@/javascript/shared/components/scanValidators.js'
-import localVue from '@/javascript/test_support/base_vue.js'
 import { tubeFactory } from '@/javascript/test_support/factories.js'
 import MultiStampTubes from './MultiStampTubes.vue'
-
-import MockAdapter from 'axios-mock-adapter'
 
 const mockLocation = {}
 
@@ -14,8 +11,8 @@ describe('MultiStampTubes', () => {
   const wrapperFactory = function (options = {}) {
     // Not ideal using mount here, but having massive trouble
     // triggering change events on unmounted components
-    return shallowMount(MultiStampTubes, {
-      propsData: {
+    return mount(MultiStampTubes, {
+      props: {
         parentPurposeName: 'parent',
         purposeName: 'purpose',
         purposeUuid: 'test',
@@ -32,14 +29,18 @@ describe('MultiStampTubes', () => {
         acceptablePurposes: '[]',
         ...options,
       },
-      localVue,
+      global: {
+        stubs: {
+          LbPlate: true,
+        },
+      },
     })
   }
 
   it('renders the header', () => {
     const wrapper = wrapperFactory()
 
-    expect(wrapper.findComponent('b-card-stub').attributes('header')).toEqual('Sample Arraying: parent → purpose')
+    expect(wrapper.findComponent({ name: 'b-card' }).vm.header).toEqual('Sample Arraying: parent → purpose')
   })
 
   it('disables creation if there are no tubes', () => {
@@ -74,7 +75,7 @@ describe('MultiStampTubes', () => {
 
     wrapper.setData({ tubes: [] })
 
-    expect(wrapper.find('b-button-stub').element.getAttribute('disabled')).toEqual('true')
+    expect(wrapper.findComponent({ name: 'b-button' }).vm.disabled).toEqual(true)
   })
 
   it('disables creation when there are some invalid tubes', () => {
@@ -137,8 +138,6 @@ describe('MultiStampTubes', () => {
   })
 
   it('sends a post request when the button is clicked', async () => {
-    let mock = new MockAdapter(localVue.prototype.$axios)
-
     const tube = {
       state: 'valid',
       labware: tubeFactory({ uuid: 'tube-uuid' }),
@@ -166,17 +165,22 @@ describe('MultiStampTubes', () => {
     }
 
     mockLocation.href = null
-    mock.onPost().reply((config) => {
-      expect(config.url).toEqual('example/example')
-      expect(config.data).toEqual(JSON.stringify(expectedPayload))
-      return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
-    })
+    wrapper.vm.$axios = vi
+      .fn()
+      .mockResolvedValue({ data: { redirect: 'http://wwww.example.com', message: 'Creating...' } })
 
     // Ideally we'd emit the event from the button component, but I'm having difficulty.
     wrapper.vm.createPlate()
 
     await flushPromises()
 
+    expect(wrapper.vm.$axios).toHaveBeenCalledWith({
+      method: 'post',
+      url: 'example/example',
+      data: expectedPayload,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    })
+    expect(wrapper.vm.progressMessage).toEqual('Creating...')
     expect(mockLocation.href).toEqual('http://wwww.example.com')
   })
 

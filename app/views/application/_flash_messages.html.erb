@@ -1,8 +1,8 @@
 <div id="flashes">
   <% flash.each do |name, message| %>
     <div class="flash flash-<%= name %>">
-      <span class='font-weight-bold'><%= name.titleize %></span>
-      <ul class='mb-0'><% Array(message).each do |m| %><li><%= m %> <% end %></li></ul>
+      <span class='fw-bold w-auto'><%= name.titleize %></span>
+      <ul class='mb-0 ms-2 w-auto'><% Array(message).each do |m| %><li><%= m %> <% end %></li></ul>
     </div>
   <% end %>
 </div>

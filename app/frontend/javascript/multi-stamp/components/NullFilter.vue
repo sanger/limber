@@ -6,6 +6,7 @@ export default {
   props: {
     requestsWithPlates: { type: Array, required: true },
   },
+  emits: ['change'],
   watch: {
     requestsWithPlates: function () {
       this.$emit('change', this.requestsWithPlates)

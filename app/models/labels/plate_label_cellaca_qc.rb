@@ -46,7 +46,7 @@ class Labels::PlateLabelCellacaQc < Labels::PlateLabelBase
           next if well.empty?
 
           well.coordinate.first # column
-        end
+      end
         .uniq
   end
 end

@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb' do
-  has_a_working_api
-
   let(:qc_result_options_a1) { { value: 1.5, key: 'concentration', units: 'ng/ul' } }
   let(:qc_result_options_b1) { { value: 1.2, key: 'concentration', units: 'ng/ul' } }
 
@@ -34,7 +32,7 @@ RSpec.describe 'exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb' do
 
   let(:well_a1) do
     create(
-      :v2_well,
+      :well,
       location: 'A1',
       position: {
         'name' => 'A1'
@@ -45,7 +43,7 @@ RSpec.describe 'exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb' do
   end
   let(:well_b1) do
     create(
-      :v2_well,
+      :well,
       location: 'B1',
       position: {
         'name' => 'B1'
@@ -55,7 +53,7 @@ RSpec.describe 'exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb' do
     )
   end
 
-  let(:labware) { create(:v2_plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
+  let(:labware) { create(:plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
 
   let(:well_a1_sanger_id) { well_a1.aliquots.first.sample.sanger_sample_id }
   let(:well_b1_sanger_id) { well_b1.aliquots.first.sample.sanger_sample_id }
@@ -121,7 +119,7 @@ RSpec.describe 'exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb' do
   context 'when the wells are rearranged by binning, it orders correctly by original plate and well id' do
     let(:well_a1) do
       create(
-        :v2_well,
+        :well,
         location: 'A1',
         position: {
           'name' => 'A1'
@@ -132,7 +130,7 @@ RSpec.describe 'exports/targeted_nanoseq_pcr_xp_merged_file.csv.erb' do
     end
     let(:well_b1) do
       create(
-        :v2_well,
+        :well,
         location: 'B1',
         position: {
           'name' => 'B1'

@@ -4,7 +4,7 @@ module LabwareCreators
   # Creates a new tube per submission, and transfers all the wells matching that submission
   # into each tube.
   class PooledTubesBySubmission < PooledTubesBase
-    include SupportParent::PlateReadyForPoolingOnly
+    include CreatableFrom::PlateReadyForPoolingOnly
 
     def pools
       @pools ||= determine_pools

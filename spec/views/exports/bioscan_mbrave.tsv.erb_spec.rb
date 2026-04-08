@@ -3,61 +3,59 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/bioscan_mbrave.tsv.erb' do
-  has_a_working_api
-
   let(:labware) do
     outer_request = create :library_request, state: 'pending', priority: 0
     meta0 =
-      create(:v2_sample_metadata_for_mbrave, supplier_name: 'meta0', cohort: 'cohort0', sample_description: 'desc0')
-    sample0 = create(:v2_sample, sample_metadata: meta0)
+      create(:sample_metadata_for_mbrave, supplier_name: 'meta0', cohort: 'cohort0', sample_description: 'desc0')
+    sample0 = create(:sample, sample_metadata: meta0)
     meta1 =
-      create(:v2_sample_metadata_for_mbrave, supplier_name: 'meta1', cohort: 'cohort1', sample_description: 'desc1')
-    sample1 = create(:v2_sample, sample_metadata: meta1)
+      create(:sample_metadata_for_mbrave, supplier_name: 'meta1', cohort: 'cohort1', sample_description: 'desc1')
+    sample1 = create(:sample, sample_metadata: meta1)
     meta2 =
-      create(:v2_sample_metadata_for_mbrave, supplier_name: 'meta2', cohort: 'cohort2', sample_description: 'desc2')
-    sample2 = create(:v2_sample, sample_metadata: meta2)
+      create(:sample_metadata_for_mbrave, supplier_name: 'meta2', cohort: 'cohort2', sample_description: 'desc2')
+    sample2 = create(:sample, sample_metadata: meta2)
     meta3 =
-      create(:v2_sample_metadata_for_mbrave, supplier_name: 'meta3', cohort: 'cohort3', sample_description: 'desc3')
-    sample3 = create(:v2_sample, sample_metadata: meta3)
+      create(:sample_metadata_for_mbrave, supplier_name: 'meta3', cohort: 'cohort3', sample_description: 'desc3')
+    sample3 = create(:sample, sample_metadata: meta3)
     aliquots = [
       create(
-        :v2_tagged_aliquot_for_mbrave,
+        :tagged_aliquot_for_mbrave,
         well_location: 'C10',
         library_state: 'pending',
         outer_request: outer_request,
         sample: sample1,
-        tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
-        tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_11_v2'))
+        tag: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_forward_96_v2')),
+        tag2: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_reverse_4_11_v2'))
       ),
       create(
-        :v2_tagged_aliquot_for_mbrave,
+        :tagged_aliquot_for_mbrave,
         well_location: 'A01',
         library_state: 'pending',
         outer_request: outer_request,
         sample: sample2,
-        tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
-        tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_7_v2'))
+        tag: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_forward_96_v2')),
+        tag2: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_reverse_4_7_v2'))
       ),
       create(
-        :v2_tagged_aliquot_for_mbrave,
+        :tagged_aliquot_for_mbrave,
         well_location: 'A01',
         library_state: 'pending',
         outer_request: outer_request,
         sample: sample0,
-        tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
-        tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_1_v2'))
+        tag: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_forward_96_v2')),
+        tag2: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_reverse_4_1_v2'))
       ),
       create(
-        :v2_tagged_aliquot_for_mbrave,
+        :tagged_aliquot_for_mbrave,
         well_location: 'H12',
         library_state: 'pending',
         outer_request: outer_request,
         sample: sample3,
-        tag: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_forward_96_v2')),
-        tag2: create(:v2_tag, tag_group: create(:v2_tag_group, name: 'Bioscan_reverse_4_24_v2'))
+        tag: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_forward_96_v2')),
+        tag2: create(:tag, tag_group: create(:tag_group, name: 'Bioscan_reverse_4_24_v2'))
       )
     ]
-    create(:v2_tube, aliquots:)
+    create(:tube, aliquots:)
   end
 
   before { assign(:tube, labware) }

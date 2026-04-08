@@ -2,11 +2,8 @@ import { shallowMount } from '@vue/test-utils'
 
 import MultiStamp from './MultiStamp.vue'
 import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.shared_spec'
-import flushPromises from 'flush-promises'
-import localVue from '@/javascript/test_support/base_vue.js'
+import { flushPromises } from '@vue/test-utils'
 import { plateFactory } from '@/javascript/test_support/factories.js'
-
-import MockAdapter from 'axios-mock-adapter'
 
 describe('MultiStamp', () => {
   itBehavesLikeMultiStamp({ subject: MultiStamp })
@@ -16,7 +13,7 @@ describe('MultiStamp', () => {
       // Not ideal using mount here, but having massive trouble
       // triggering change events on unmounted components
       return shallowMount(MultiStamp, {
-        propsData: {
+        props: {
           targetRows: '16',
           targetColumns: '24',
           sourcePlates: '4',
@@ -28,12 +25,10 @@ describe('MultiStamp', () => {
           transfersCreator: 'multi-stamp',
           ...options,
         },
-        localVue,
       })
     }
 
     it('sends a post request when the button is clicked', async () => {
-      let mock = new MockAdapter(localVue.prototype.$axios)
       const locationObj = {}
 
       const plate = {
@@ -66,17 +61,25 @@ describe('MultiStamp', () => {
         },
       }
 
-      mock.onPost().reply((config) => {
-        expect(config.url).toEqual('example/example')
-        expect(config.data).toEqual(JSON.stringify(expectedPayload))
-        return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
-      })
+      wrapper.vm.$axios = vi
+        .fn()
+        .mockResolvedValue({ data: { redirect: 'http://wwww.example.com', message: 'Creating...' } })
 
       // Ideally we'd emit the event from the button component, but I'm having difficulty.
       wrapper.vm.createPlate()
 
       await flushPromises()
 
+      expect(wrapper.vm.$axios).toHaveBeenCalledTimes(1)
+      expect(wrapper.vm.$axios).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: 'post',
+          url: 'example/example',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          data: expectedPayload,
+        }),
+      )
+      expect(wrapper.vm.progressMessage).toEqual('Creating...')
       expect(locationObj.href).toEqual('http://wwww.example.com')
     })
 

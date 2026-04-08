@@ -29,7 +29,7 @@ module Presenters
             raise "No pcr_cycles value found on well #{well.location}" if pcr_cycles.nil?
 
             details[well.location] = { 'pcr_cycles' => pcr_cycles }
-          end
+        end
     end
   end
 end

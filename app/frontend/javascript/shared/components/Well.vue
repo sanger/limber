@@ -12,10 +12,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import BootstrapVue from 'bootstrap-vue'
+// TODO: Why did we need to import it here separately?
+// import Vue from 'vue'
+// import BootstrapVue from 'bootstrap-vue'
 
-Vue.use(BootstrapVue)
+// Vue.use(BootstrapVue)
 
 export default {
   name: 'LbWell',
@@ -36,6 +37,7 @@ export default {
       },
     },
   },
+  emits: ['onwellclicked'],
   data() {
     return {
       tagIndex: 0,

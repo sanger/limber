@@ -27,7 +27,7 @@
             @change="updatePlate(i, $event)"
           />
         </b-form-group>
-        <b-alert :show="transfersError !== ''" variant="danger">
+        <b-alert :model-value="transfersError !== ''" variant="danger">
           {{ transfersError }}
         </b-alert>
         <component
@@ -39,7 +39,7 @@
           :is="transfersCreatorComponent"
           :default-volume="defaultVolumeNumber"
           :valid-transfers="validTransfers"
-          @change="transfersCreatorObj = $event"
+          @update:model-value="transfersCreatorObj = $event"
         />
         <b-button :disabled="!valid" variant="success" @click="createPlate()"> Create </b-button>
       </b-card>
@@ -60,7 +60,7 @@ import devourApi from '@/javascript/shared/devourApi.js'
 import buildPlateObjs from '@/javascript/shared/plateHelpers.js'
 import { handleFailedRequest, requestIsActive, requestsFromPlates } from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
-import { baseTransferCreator } from '@/javascript/shared/transfersCreators.js'
+import { transferPlatesToPlatesCreator } from '@/javascript/shared/transfersCreators.js'
 import { transfersFromRequests } from '@/javascript/shared/transfersLayouts.js'
 import MultiStampTransfers from './MultiStampTransfers.vue'
 import NullFilter from './NullFilter.vue'
@@ -279,10 +279,10 @@ export default {
   },
   methods: {
     updatePlate(index, data) {
-      this.$set(this.plates, index - 1, { ...data, index: index - 1 })
+      this.plates[index - 1] = { ...data, index: index - 1 }
     },
     apiTransfers() {
-      return baseTransferCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
+      return transferPlatesToPlatesCreator(this.validTransfers, this.transfersCreatorObj.extraParams)
     },
     createPlate() {
       this.progressMessage = 'Creating plate...'

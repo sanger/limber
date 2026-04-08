@@ -2,9 +2,9 @@
   <div class='card-body'>
     <%= form_tag("#{@presenter.uuid}/qc_files/", multipart: true, method: 'post', authenticity_token: true) do %>
       <div>
-        <label class="custom-file">
-          <input type="file" id="qc_file" name="qc_file" required="true" />
-          <small id="fileHelp" class="form-text text-muted">Select a file above, then click upload. Uploaded files will appear in the files tab.</small>
+        <label class="form-label">
+          <input class="form-control" type="file" id="qc_file" name="qc_file" required="true" />
+          <small id="fileHelp" class="form-text d-block text-muted">Select a file above, then click upload. Uploaded files will appear in the files tab.</small>
         </label>
       </div>
       <input type="submit" value="Upload" class="btn-upload" />

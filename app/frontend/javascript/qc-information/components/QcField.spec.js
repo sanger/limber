@@ -1,6 +1,5 @@
 // Import the component being tested
 import { mount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
 
 import QcField from './QcField.vue'
 // Here are some Jasmine 2.0 tests, though you can
@@ -8,14 +7,13 @@ import QcField from './QcField.vue'
 describe('QcField', () => {
   const wrapperFactory = function () {
     return mount(QcField, {
-      propsData: {
+      props: {
         name: 'volume',
         units: 'ul',
         defaultAssayType: 'One',
         assayTypes: ['One', 'Two'],
         assetUuid: 'uuid',
       },
-      localVue,
     })
   }
 
@@ -30,8 +28,8 @@ describe('QcField', () => {
   it('renders the units', () => {
     let wrapper = wrapperFactory()
 
-    expect(wrapper.find('.input-group-append').exists()).toBe(true)
-    expect(wrapper.find('.input-group-append').text()).toBe('ul')
+    expect(wrapper.find('.input-group-text').exists()).toBe(true)
+    expect(wrapper.find('.input-group-text').text()).toBe('ul')
   })
 
   it('renders possible assay types', () => {
@@ -63,29 +61,27 @@ describe('QcField', () => {
     await wrapper.find('input').setValue('1.5')
     await wrapper.find('select').setValue('Two')
 
-    expect(wrapper.emitted()).toEqual({
-      change: [
-        [
-          {
-            value: '1.5',
-            assay_type: 'One',
-            units: 'ul',
-            key: 'volume',
-            assay_version: 'manual',
-            uuid: 'uuid',
-          },
-        ],
-        [
-          {
-            value: '1.5',
-            assay_type: 'Two',
-            units: 'ul',
-            key: 'volume',
-            assay_version: 'manual',
-            uuid: 'uuid',
-          },
-        ],
+    expect(wrapper.emitted().change).toEqual([
+      [
+        {
+          value: '1.5',
+          assay_type: 'One',
+          units: 'ul',
+          key: 'volume',
+          assay_version: 'manual',
+          uuid: 'uuid',
+        },
       ],
-    })
+      [
+        {
+          value: '1.5',
+          assay_type: 'Two',
+          units: 'ul',
+          key: 'volume',
+          assay_version: 'manual',
+          uuid: 'uuid',
+        },
+      ],
+    ])
   })
 })

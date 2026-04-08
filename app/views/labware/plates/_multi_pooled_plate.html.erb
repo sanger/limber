@@ -1,10 +1,10 @@
 <h2>Source Plates</h2>
 <% presenter.labware.transfers_as_destination.each_with_index do |transfer,i| %>
-  <h3><%= "#{@presenter.bed_prefix}#{i+1}: #{transfer.source.stock_plate.barcode.prefix}#{transfer.source.stock_plate.barcode.number} (#{transfer.source.barcode.prefix}#{transfer.source.barcode.number})" %></h3>
-  <%= render partial: "pooled_plate", locals: {plate_presenter: presenter, walker: presenter.walk_source, transfers: transfer.transfers} %>
+  <h3><%= "#{@presenter.bed_prefix}#{i + 1}: #{transfer.source.stock_plate.barcode.prefix}#{transfer.source.stock_plate.barcode.number} (#{transfer.source.barcode.prefix}#{transfer.source.barcode.number})" %></h3>
+  <%= render partial: 'pooled_plate', locals: { plate_presenter: presenter, walker: presenter.walk_source, transfers: transfer.transfers } %>
 <% end %>
 <br />
-<h2>Pooled Plates <%= vite_image_tag("images/icon_#{presenter.labware.priority}_flag.png", size: "16x16") %></h2>
+<h2>Pooled Plates <%= vite_image_tag("images/icon_#{presenter.labware.priority}_flag.png", size: '16x16') %></h2>
 
-<%= render partial: "pooled_plate", locals: {plate_presenter: presenter, walker: presenter.walk_destination, transfers: presenter.target_plate_transfers} %>
+<%= render partial: 'pooled_plate', locals: { plate_presenter: presenter, walker: presenter.walk_destination, transfers: presenter.target_plate_transfers } %>
 <%= render partial: 'plate_summary', locals: { presenter: } %>

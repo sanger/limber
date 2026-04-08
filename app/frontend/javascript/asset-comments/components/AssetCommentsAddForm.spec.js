@@ -14,7 +14,7 @@ describe('AssetCommentsAddForm', () => {
     expect(wrapper.find('textarea').exists()).toBe(true)
     expect(wrapper.find('textarea').text()).toEqual('')
     expect(wrapper.find('button').exists()).toBe(true)
-    expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('button').element.disabled).toBeTruthy()
     expect(wrapper.find('button').text()).toEqual('Add Comment to Sequencescape')
   })
 
@@ -22,7 +22,7 @@ describe('AssetCommentsAddForm', () => {
     const { wrapper } = mountWithCommentFactory(AssetCommentsAddForm, [], { commentTitle: 'Test title' })
     await wrapper.setData({ assetComment: 'Test comment', state: 'pending' })
 
-    expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
+    expect(wrapper.find('button').element.disabled).toBeFalsy()
     expect(wrapper.find('button').text()).toEqual('Add Comment to Sequencescape')
   })
 
@@ -32,7 +32,7 @@ describe('AssetCommentsAddForm', () => {
 
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('button').element.disabled).toBeTruthy()
     expect(wrapper.find('button').text()).toEqual('Sending...')
   })
 
@@ -42,7 +42,7 @@ describe('AssetCommentsAddForm', () => {
 
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('button').element.disabled).toBeTruthy()
     expect(wrapper.find('button').text()).toEqual('Comment successfully added')
   })
 
@@ -52,7 +52,7 @@ describe('AssetCommentsAddForm', () => {
 
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
+    expect(wrapper.find('button').element.disabled).toBeFalsy()
     expect(wrapper.find('button').text()).toEqual('Failed to add comment, retry?')
   })
 
@@ -78,7 +78,7 @@ describe('AssetCommentsAddForm', () => {
     await wrapper.vm.submit()
 
     expect(wrapper.vm.state).toEqual('success')
-    expect(wrapper.find('button').element.getAttribute('disabled')).toBeTruthy()
+    expect(wrapper.find('button').element.disabled).toBeTruthy()
     expect(wrapper.find('button').text()).toEqual('Comment successfully added')
   })
 
@@ -90,14 +90,14 @@ describe('AssetCommentsAddForm', () => {
     await wrapper.vm.submit()
 
     expect(wrapper.vm.state).toEqual('failure')
-    expect(wrapper.find('button').element.getAttribute('disabled')).toBeFalsy()
+    expect(wrapper.find('button').element.disabled).toBeFalsy()
     expect(wrapper.find('button').text()).toEqual('Failed to add comment, retry?')
   })
-  it('removes eventBus listener on destroy', () => {
+  it('removes eventBus listener on unmount', () => {
     const { wrapper, removeCommentFactoryMockFn } = mountWithCommentFactory(AssetCommentsAddForm, [], {
       commentTitle: 'Test title',
     })
-    wrapper.destroy()
+    wrapper.unmount()
     expect(removeCommentFactoryMockFn).toHaveBeenCalled()
   })
 })

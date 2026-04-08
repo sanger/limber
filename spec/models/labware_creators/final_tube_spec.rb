@@ -5,22 +5,18 @@ require_relative 'shared_examples'
 
 # TaggingForm creates a plate and applies the given tag templates
 RSpec.describe LabwareCreators::FinalTube do
-  has_a_working_api
-
   it_behaves_like 'it only allows creation from tubes'
 
   context 'on creation' do
-    subject { LabwareCreators::FinalTube.new(api, form_attributes) }
+    subject { described_class.new(form_attributes) }
 
-    before { stub_v2_tube(parent_tube) }
+    before { stub_tube(parent_tube) }
 
-    let(:controller) { TubeCreationController.new }
     let(:child_purpose_uuid) { 'child-purpose-uuid' }
     let(:parent_uuid) { 'parent-uuid' }
     let(:user_uuid) { 'user-uuid' }
-    let(:multiplexed_library_tube_uuid) { 'multiplexed-library-tube--uuid' }
     let(:transfer_template_uuid) { 'tube-to-tube-by-sub' } # Defined in spec_helper.rb
-    let(:transfer) { create :v2_transfer }
+    let(:transfer) { create :transfer }
     let(:transfers_attributes) do
       [
         {
@@ -37,10 +33,10 @@ RSpec.describe LabwareCreators::FinalTube do
     let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
     context 'with a sibling-less parent tube' do
-      let(:parent_tube) { create :v2_tube, uuid: parent_uuid }
+      let(:parent_tube) { create :tube, uuid: parent_uuid }
 
       describe '#save' do
-        it 'should be vaild' do
+        it 'is valid' do
           expect_transfer_creation
 
           expect(subject.save).to be true
@@ -51,15 +47,15 @@ RSpec.describe LabwareCreators::FinalTube do
 
     context 'with a parent tube with siblings' do
       context 'when all are passed' do
-        let(:parent_tube) { create(:v2_tube, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
+        let(:parent_tube) { create(:tube, uuid: parent_uuid, siblings_count: 1, state: 'passed', barcode_number: 1) }
 
         describe '#save' do
-          it 'should return false' do
+          it 'returns false' do
             expect(subject.save).to be false
           end
         end
 
-        it 'should be ready' do
+        it 'is ready' do
           subject.each_sibling do |sibling|
             expect(sibling).to be_a(Sibling)
             expect(sibling.ready?).to be true
@@ -80,7 +76,7 @@ RSpec.describe LabwareCreators::FinalTube do
           end
 
           let(:sibling_uuid) { 'sibling-tube-0' }
-          let(:transfer_b) { create :v2_transfer }
+          let(:transfer_b) { create :transfer }
 
           let(:transfers_attributes) do
             [
@@ -103,13 +99,46 @@ RSpec.describe LabwareCreators::FinalTube do
             ]
           end
 
-          it 'should create transfers per sibling' do
+          it 'creates transfers per sibling' do
             expect_transfer_creation
 
             expect(subject).to be_valid
             expect(subject.save).to be true
           end
         end
+      end
+    end
+
+    context 'when create returns exception RecordNotSaved' do
+      let(:parent_tube) { create(:tube, uuid: parent_uuid) }
+      let(:active_model_errors) do
+        errors = ActiveModel::Errors.new(subject)
+        errors.add(:destination_id, 'can only be transferred to once from the source')
+        errors
+      end
+
+      let(:tube_transfer) do
+        transfer = Sequencescape::Api::V2::Transfer.new(
+          type: 'transfers',
+          source_uuid: parent_uuid,
+          transfer_template_uuid: transfer_template_uuid,
+          user_uuid: user_uuid
+        )
+        # unsure how else to set the errors
+        transfer.singleton_class.class_eval { attr_accessor :errors }
+        transfer.errors = active_model_errors
+        transfer
+      end
+
+      let(:exception_obj) { JsonApiClient::Errors::RecordNotSaved.new('test', tube_transfer) }
+
+      it 'rescues RecordNotSaved and adds errors' do
+        # rubocop:disable RSpec/SubjectStub
+        allow(subject).to receive(:transfer!).and_raise(exception_obj)
+        # rubocop:enable RSpec/SubjectStub
+
+        expect(subject.create_labware!).to be false
+        expect(subject.errors[:parent]).to include(['Destination can only be transferred to once from the source'])
       end
     end
   end

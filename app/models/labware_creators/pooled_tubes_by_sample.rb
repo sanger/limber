@@ -8,7 +8,7 @@ module LabwareCreators
   # NB. Currently this is specific to the Cardinal usage of FluidX tubes
   ##
   class PooledTubesBySample < PooledTubesBase # rubocop:todo Metrics/ClassLength
-    include SupportParent::PlateOnly
+    include CreatableFrom::PlateOnly
     include LabwareCreators::CustomPage
 
     self.page = 'tube_creation/pooled_tubes_by_sample'

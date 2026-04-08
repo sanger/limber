@@ -3,7 +3,7 @@
 # Stores constants used in pooling and chip loading calculations for samples in the scRNA Core pipeline.
 Rails.application.config.scrna_config = {
   # Maximum volume to take into the pools plate for each sample (in microlitres)
-  maximum_sample_volume: 60.0,
+  maximum_sample_volume: 70.0,
   # Minimum volume to take into the pools plate for each sample (in microlitres)
   minimum_sample_volume: 5.0,
   # Minimum volume required for resuspension in microlitres
@@ -11,13 +11,18 @@ Rails.application.config.scrna_config = {
   # Conversion factor from millilitres to microlitres
   millilitres_to_microlitres: 1_000.0,
   # Number of cells required for each sample going into the pool
-  required_number_of_cells_per_sample_in_pool: 30_000,
+  required_number_of_cells_per_sample_in_pool: 35_000,
   # Factor accounting for wastage of material when transferring between labware
-  wastage_factor: 0.95,
+  wastage_factor: lambda { |number_of_samples_in_pool|
+    return 0.75 if number_of_samples_in_pool <= 13
+
+    0.6
+  },
   # Fixed wastage volume in microlitres
   wastage_volume: 5.0,
   # Desired concentration of cells per microlitre for chip loading
-  desired_chip_loading_concentration: 2400,
+  # NB. needs to be a float for calculation purposes
+  desired_chip_loading_concentration: 2400.0,
   # Desired volume in the chip well (in microlitres)
   desired_chip_loading_volume: 37.5,
   # Volume taken for cell counting in microlitres
@@ -26,26 +31,36 @@ Rails.application.config.scrna_config = {
   # with values dependent on the Allowance band
   allowance_table: {
     '2 pool attempts, 2 counts' => {
-      5 => 41_428,
-      6 => 55_714,
-      7 => 70_000,
-      8 => 84_285
+      5 => 35_625,
+      6 => 48_750,
+      7 => 61_875,
+      8 => 75_000,
+      9 => 88_125
     },
     '2 pool attempts, 1 count' => {
-      5 => 53_428,
-      6 => 67_714,
-      7 => 82_000,
-      8 => nil
+      5 => 47_625,
+      6 => 60_750,
+      7 => 73_875,
+      8 => 87_000,
+      9 => nil
     },
     '1 pool attempt, 2 counts' => {
-      5 => 82_857,
+      5 => 71_250,
       6 => nil,
       7 => nil,
-      8 => nil
+      8 => nil,
+      9 => nil
+    },
+    '1 pool attempt, 1 count' => {
+      5 => nil,
+      6 => nil,
+      7 => nil,
+      8 => nil,
+      9 => nil
     }
   },
   # Default viability threshold when passing/failing samples (in percent)
-  viability_default_threshold: 65,
+  viability_default_threshold: 50,
   # Default total cell count threshold when passing/failing samples
   total_cell_count_default_threshold: 50_000,
   # Key for the number of cells per chip well metadata stored on pool wells (in poly_metadata)

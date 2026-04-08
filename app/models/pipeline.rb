@@ -25,7 +25,7 @@ class Pipeline
   # Keys should be attributes on request (eg. library_type) whereas values are either an array
   # of acceptable values, or a single acceptable value
   # @example
-  #   pipeline.filters = { 'request_type_key' => 'library_request', 'library_type' => ['Stndard', 'Other'] }
+  #   pipeline.filters = { 'request_type_key' => 'library_request', 'library_type' => ['Standard', 'Other'] }
   # @return [Hash] Filter options
   def filters
     @filters || {}
@@ -45,14 +45,33 @@ class Pipeline
   # when there are more than one ancestors that are Stock plates
   attr_accessor :alternative_workline_identifier
 
-  # Checks if a piece of labware meets the filter criteria for a pipeline
-  # If there are no filter criteria, the pipeline could be active for any labware
-  # @param  labware  On load of plate / tube pages, is a Sequencescape::Api::V2::Plate / Sequencescape::Api::V2::Tube
-  # @return [Boolean] returns true if labware meets the filter criteria or there are no filters
+  # Checks if the given labware meets the purpose and filter criteria for this pipeline.
+  # If the labware's purpose is in the pipeline relationships, it will return true. If there are no
+  # filter criteria, the pipeline could be active for any labware, and will return true if the
+  # purpose is in the relationships. Otherwise, it will check if any of the active requests on the
+  # labware meet the filter criteria, returning true if any do.
+  #
+  # @param labware [Sequencescape::Api::V2::Plate, Sequencescape::Api::V2::Tube] The labware to check
+  # @return [Boolean] Returns true if the labware meets the criteria, false otherwise
   def active_for?(labware)
+    return false unless purpose_in_relationships?(labware.purpose)
     return true if filters.blank?
 
     labware.active_requests.any? do |request|
+      # For each attribute (eg. library_type) check that the matching property
+      # on request is included in the list of permitted values.
+      filters.all? do |request_attribute, permitted_values|
+        permitted_values.include? request.public_send(request_attribute)
+      end
+    end
+  end
+
+  def active_for_in_progress_requests?(labware)
+    return false unless purpose_in_relationships?(labware.purpose)
+    return true if filters.blank?
+
+    # NB. do not include completed requests here
+    labware.incomplete_requests.any? do |request|
       # For each attribute (eg. library_type) check that the matching property
       # on request is included in the list of permitted values.
       filters.all? do |request_attribute, permitted_values|
@@ -79,5 +98,14 @@ class Pipeline
   # @return [Boolean] True if it should suggest passing
   def library_pass?(purpose)
     Array(library_pass).include?(purpose)
+  end
+
+  # Checks if a given purpose is present in the relationships of this pipeline.
+  #
+  # @param purpose [String] The purpose to look for.
+  #
+  # @return [Boolean] Returns true if the purpose is present in this pipeline, false otherwise.
+  def purpose_in_relationships?(purpose)
+    (relationships.keys + relationships.values).include?(purpose.name)
   end
 end

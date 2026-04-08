@@ -5,11 +5,6 @@ require 'rails_helper'
 RSpec.describe SearchController, type: :controller do
   include FeatureHelpers
 
-  has_a_working_api
-
-  let(:plate_uuid) { 'example-plate-uuid' }
-  let(:barcode_printers_request) { stub_v2_barcode_printers(create_list(:v2_plate_barcode_printer, 3)) }
-  let(:user_uuid) { SecureRandom.uuid }
   let(:uuid) { SecureRandom.uuid }
 
   describe '#new' do
@@ -26,25 +21,28 @@ RSpec.describe SearchController, type: :controller do
 
     context 'for a plate' do
       let(:labware) { create :labware_plate, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_plate_path(uuid))
+        expect(response).to redirect_to(plate_path(uuid))
       end
     end
 
     context 'for a tube' do
       let(:labware) { create :labware_tube, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_path(uuid))
+        expect(response).to redirect_to(tube_path(uuid))
       end
     end
 
     context 'for a tube rack' do
       let(:labware) { create :labware_tube_rack, uuid: }
+
       it 'redirects to the found labware' do
         post :create, params: { plate_barcode: barcode }
-        expect(response).to redirect_to(limber_tube_rack_path(uuid))
+        expect(response).to redirect_to(tube_rack_path(uuid))
       end
     end
   end
@@ -82,47 +80,79 @@ RSpec.describe SearchController, type: :controller do
         expect(response.parsed_body).to eq('error' => 'You have not supplied a labware barcode')
       end
     end
+
+    context 'when logs should be checked for sensitive parameters' do
+      let(:barcode) { 'ABC123' }
+      let(:params) do
+        {
+          plate_barcode: barcode,
+          _key: 'sensitive',
+          api_key: 'sensitive',
+          bananas: 'public',
+          keywords: 'public',
+          monkey: 'public',
+          request_type_key: 'public',
+          token: 'sensitive',
+          user_key: 'sensitive'
+        }
+      end
+
+      before do
+        allow(controller).to receive(:find_labware).with(barcode).and_return('/labware/ABC123')
+        allow(Rails.logger).to receive(:info)
+
+        post :create, params: params, session: { format: :json }
+      end
+
+      public_params = %w[bananas keywords monkey request_type_key]
+      sensitive_params = %w[_key api_key token user_key]
+
+      public_params.each do |param|
+        it "does not filter '#{param}' from logs" do
+          expect(Rails.logger).to have_received(:info).with(a_string_including("\"#{param}\" => \"public\""))
+        end
+      end
+
+      sensitive_params.each do |param|
+        it "filters sensitive '#{param}' from logs" do
+          expect(Rails.logger).to have_received(:info).with(a_string_including("\"#{param}\" => \"[FILTERED]\""))
+        end
+      end
+    end
   end
 
   context 'configured plates and tubes' do
     before do
-      create(:purpose_config, uuid: 'uuid-1')
-      create(:minimal_purpose_config, uuid: 'uuid-2')
-      create(:tube_config, uuid: 'uuid-3')
-      create(:tube_config, uuid: 'uuid-4')
+      create(:purpose_config, name: 'purpose-config', uuid: 'purpose-config-uuid')
+      create(:minimal_purpose_config, name: 'minimal-purpose-config', uuid: 'minimal-purpose-config-uuid')
+      create(:tube_config, name: 'tube-config-3', uuid: 'uuid-3')
+      create(:tube_config, name: 'tube-config-4', uuid: 'uuid-4')
     end
-    let(:expected_search) { stub_search_and_multi_result(search_name, { 'search' => search_parameters }, [result]) }
+
+    let(:expected_search) do
+      stub_find_all_with_pagination(api_class, search_parameters, { page: 1, per_page: 30 }, [result])
+    end
 
     describe '#ongoing_plates' do
-      let(:search_name) { 'Find plates' }
-      let(:result) { associated :plate }
+      let(:api_class) { :plates }
+      let(:result) { create :plate }
+
       context 'without parameters' do
         let(:search_parameters) do
-          {
-            states: %w[pending started passed qc_complete failed cancelled],
-            plate_purpose_uuids: %w[uuid-1 uuid-2],
-            show_my_plates_only: false,
-            include_used: false,
-            page: 1
-          }
+          { state: %w[pending started passed qc_complete failed cancelled], purpose_name: [], include_used: false }
         end
 
         it 'finds all plates' do
           expected_search
           get :ongoing_plates
-          expect(expected_search).to have_been_made.once
+          expected_search.once
+          expect(response).to have_http_status(:ok)
         end
       end
 
       context 'with parameters' do
         let(:search_parameters) do
-          {
-            states: %w[pending started passed qc_complete failed cancelled],
-            plate_purpose_uuids: ['uuid-1'],
-            show_my_plates_only: true,
-            include_used: true,
-            page: 1
-          }
+          { state: %w[pending started passed qc_complete failed cancelled], purpose_name: [], include_used: true }
         end
 
         it 'finds specified plates' do
@@ -130,34 +160,33 @@ RSpec.describe SearchController, type: :controller do
           get :ongoing_plates,
               params: {
                 ongoing_plate: {
-                  purposes: ['uuid-1'],
-                  show_my_plates_only: '1',
+                  purpose_name: %w[purpose-config minimal-purpose-config],
                   include_used: '1'
                 }
               }
-          expect(expected_search).to have_been_made.once
+          expected_search.once
           expect(response).to have_http_status(:ok)
         end
       end
     end
 
     describe '#ongoing_tubes' do
-      let(:search_name) { 'Find tubes' }
-      let(:result) { associated :tube }
+      let(:api_class) { :tubes }
+      let(:result) { create :tube }
+
       context 'without parameters' do
         let(:search_parameters) do
           {
-            states: %w[pending started passed qc_complete failed cancelled],
-            tube_purpose_uuids: %w[uuid-3 uuid-4],
-            include_used: false,
-            page: 1
+            state: %w[pending started passed qc_complete failed cancelled],
+            purpose_name: %w[tube-config-3 tube-config-4],
+            include_used: false
           }
         end
 
         it 'finds all tubes' do
           expected_search
           get :ongoing_tubes
-          expect(expected_search).to have_been_made.once
+          expected_search.once
           expect(response).to have_http_status(:ok)
         end
       end
@@ -165,17 +194,16 @@ RSpec.describe SearchController, type: :controller do
       context 'with parameters' do
         let(:search_parameters) do
           {
-            states: %w[pending started passed qc_complete failed cancelled],
-            tube_purpose_uuids: ['uuid-3'],
-            include_used: true,
-            page: 1
+            state: %w[pending started passed qc_complete failed cancelled],
+            purpose_name: ['tube-config-3'],
+            include_used: true
           }
         end
 
         it 'finds specified tubes' do
           expected_search
           get :ongoing_tubes, params: { ongoing_tube: { purposes: ['uuid-3'], include_used: '1' } }
-          expect(expected_search).to have_been_made.once
+          expected_search.once
           expect(response).to have_http_status(:ok)
         end
       end

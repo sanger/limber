@@ -1,0 +1,84 @@
+# This configuration file is the BCR branch of scRNA Core library prep pipeline
+---
+LRC GEM-X 5p BCR Dil 1:
+  :asset_type: plate
+  :creator_class: LabwareCreators::FixedNormalisedPlate
+  :dilutions:
+    :source_volume: 2
+    :diluent_volume: 33
+  :file_links:
+    - name: 'Download Hamilton LRC GEM-X 5p Cherrypick to LRC GEM-X 5p BCR Dilution 1 CSV'
+      id: 'hamilton_cherrypick_to_bcr_dilution1'
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+LRC GEM-X 5p BCR Enrich1 2XSPRI:
+  :asset_type: plate
+  :file_links:
+    - name: 'Download Hamilton LRC GEM-X 5p BCR Dil 1 to LRC GEM-X 5p BCR Enrich1 2XSPRI CSV'
+      id: 'hamilton_lrc_gemx_5p_bcr_dil_1_to_lrc_gemx_5p_bcr_enrich1'
+LRC GEM-X 5p BCR Enrich2 2XSPRI:
+  :asset_type: plate
+  :file_links:
+    - name: 'Download Hamilton LRC GEM-X 5p BCR Enrich1 2XSPRI to LRC GEM-X 5p BCR Enrich2 2XSPRI CSV'
+      id: 'hamilton_lrc_gemx_5p_bcr_enrich1_to_lrc_gemx_5p_bcr_enrich2'
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+LRC GEM-X 5p BCR Dil 2:
+  :asset_type: plate
+  :presenter_class: Presenters::ConcentrationBinnedPlatePresenter
+  :creator_class: LabwareCreators::ConcentrationBinnedFullPlate
+  :dilutions:
+    :source_volume: 10
+    :diluent_volume: 0
+    :bins:
+      - max: 25.0
+        pcr_cycles: 9
+        colour: 1
+      - min: 25.0
+        max: 151.0
+        pcr_cycles: 8
+        colour: 2
+      - min: 151.0
+        max: 501.0
+        pcr_cycles: 7
+        colour: 3
+      - min: 501.0
+        max: 1_001.0
+        pcr_cycles: 6
+        colour: 4
+      - min: 1_001.0
+        pcr_cycles: 5
+        colour: 5
+  :file_links:
+    - name: 'Download Hamilton LRC GEM-X 5p BCR Enrich2 2XSPRI to LRC GEM-X 5p BCR Dil 2 CSV'
+      id: 'hamilton_lrc_gemx_5p_bcr_enrich2_to_lrc_gemx_5p_bcr_dil_2'
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+LRC GEM-X 5p BCR Post Lig 1XSPRI:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :tags_per_well: 1
+  :file_links:
+    - name: 'Download Hamilton LRC GEM-X 5p BCR Dil 2 to LRC GEM-X 5p BCR Post Lig 1XSPRI CSV'
+      id: 'hamilton_lrc_gemx_5p_bcr_dil_2_to_lrc_gemx_5p_bcr_post_lig'
+LRC GEM-X 5p BCR Post PCR:
+  :asset_type: plate
+  :file_links:
+    - name: Download Concentration (ng/ul) CSV
+      id: concentrations_ngul
+LRC GEM-X 5p BCR LibPS:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+LRC GEM-X 5p BCR Pool Norm:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :tube
+  :state_changer_class: StateChangers::AutomaticTubeStateChanger
+  :work_completion_request_type: 'scrna_core_pool_norm'

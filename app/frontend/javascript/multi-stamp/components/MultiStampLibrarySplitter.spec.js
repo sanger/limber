@@ -1,9 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
-import localVue from '@/javascript/test_support/base_vue.js'
-import flushPromises from 'flush-promises'
-
-import MockAdapter from 'axios-mock-adapter'
-
+import { h } from 'vue'
+import { flushPromises } from '@vue/test-utils'
 const mockLocation = {}
 
 // Import the component being tested
@@ -18,7 +15,7 @@ describe('MultiStampLibrarySplitter', () => {
       // Not ideal using mount here, but having massive trouble
       // triggering change events on unmounted components
       return shallowMount(MultiStampLibrarySplitter, {
-        propsData: {
+        props: {
           targetRows: '16',
           targetColumns: '24',
           sourcePlates: '4',
@@ -34,7 +31,9 @@ describe('MultiStampLibrarySplitter', () => {
           }),
           ...options,
         },
-        localVue,
+        render() {
+          return h('div')
+        },
       })
     }
 
@@ -43,8 +42,6 @@ describe('MultiStampLibrarySplitter', () => {
         // This will check receiving 3 plates, plate 1 and 2 received in positions
         // 1 and 2; and plate 3 received in position 4, so there will be a gap for
         // the wells corresponding to the missing plate at position 3
-        let mock = new MockAdapter(localVue.prototype.$axios)
-
         const plateContent = {
           uuid: 'plate-uuid',
           wells: [
@@ -274,12 +271,8 @@ describe('MultiStampLibrarySplitter', () => {
 
         let payloads = [plate1Payload, plate2Payload]
 
-        let numCalls = 0
-        let listChecks = []
-        mock.onPost().reply((config) => {
-          listChecks.push(config)
-          numCalls = numCalls + 1
-          return [201, { redirect: 'http://wwww.example.com', message: 'Creating...' }]
+        wrapper.vm.$axios = vi.fn().mockResolvedValue({
+          data: { redirect: 'http://wwww.example.com', message: 'Creating...' },
         })
 
         // Ideally we'd emit the event from the button component
@@ -287,15 +280,25 @@ describe('MultiStampLibrarySplitter', () => {
 
         await flushPromises()
 
-        expect(numCalls).toEqual(2)
+        expect(wrapper.vm.$axios).toHaveBeenCalledTimes(2)
+        expect(wrapper.vm.$axios).toHaveBeenCalledWith(
+          expect.objectContaining({
+            method: 'post',
+            url: 'example/example',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            data: payloads[0],
+          }),
+        )
+        expect(wrapper.vm.$axios).toHaveBeenCalledWith(
+          expect.objectContaining({
+            method: 'post',
+            url: 'example/example',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            data: payloads[1],
+          }),
+        )
 
-        for (let i = 0; i < listChecks.length; i++) {
-          let config = listChecks[i]
-          let payload = payloads[i]
-          expect(config.url).toEqual('example/example')
-          expect(config.data).toEqual(JSON.stringify(payload))
-        }
-
+        expect(wrapper.vm.progressMessage).toEqual('Creating...')
         expect(mockLocation.href).toEqual('http://wwww.example.com')
       })
     })

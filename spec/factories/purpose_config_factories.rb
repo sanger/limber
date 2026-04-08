@@ -16,7 +16,7 @@ FactoryBot.define do
     name { 'Plate Purpose' }
     creator_class { 'LabwareCreators::StampedPlate' }
     presenter_class { 'Presenters::StandardPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     default_printer_type { :plate_a }
     asset_type { 'plate' }
     label_class { 'Labels::PlateLabel' }
@@ -104,6 +104,23 @@ FactoryBot.define do
     factory :concentration_binning_purpose_config do
       presenter_class { 'Presenters::ConcentrationBinnedPlatePresenter' }
       creator_class { 'LabwareCreators::ConcentrationBinnedPlate' }
+      dilutions do
+        {
+          source_volume: 10,
+          diluent_volume: 25,
+          bins: [
+            { colour: 1, pcr_cycles: 16, max: 25 },
+            { colour: 2, pcr_cycles: 12, min: 25, max: 500 },
+            { colour: 3, pcr_cycles: 8, min: 500 }
+          ]
+        }
+      end
+    end
+
+    # Sets up the configuration required for a Concentration Binned Full plate
+    factory :concentration_binning_stamp_purpose_config do
+      presenter_class { 'Presenters::ConcentrationBinnedPlatePresenter' }
+      creator_class { 'LabwareCreators::ConcentrationBinnedFullPlate' }
       dilutions do
         {
           source_volume: 10,
@@ -248,13 +265,11 @@ FactoryBot.define do
         {
           'Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {
-            }
+            'request_options' => {}
           },
           'Another Cardinal library prep' => {
             'template_name' => 'example',
-            'request_options' => {
-            }
+            'request_options' => {}
           }
         }
       end
@@ -262,18 +277,47 @@ FactoryBot.define do
 
     # Configuration for a plate split to tube racks purpose
     factory :plate_split_to_tube_racks_purpose_config do
+      asset_type { 'tube_rack' }
+      target { 'TubeRack' }
+      size { 96 }
+      type { 'TubeRack::Purpose' }
       creator_class do
         {
           name: 'LabwareCreators::PlateSplitToTubeRacks',
           args: {
-            child_seq_tube_purpose_name: 'Seq Child Purpose',
+            child_seq_tube_purpose_name: 'SEQ Tube Purpose',
             child_seq_tube_name_prefix: 'SEQ',
-            child_spare_tube_purpose_name: 'Spare Child Purpose',
-            child_spare_tube_name_prefix: 'SPR'
+            child_seq_tube_rack_purpose_name: 'SEQ TubeRack Purpose',
+            child_spare_tube_purpose_name: 'SPR Tube Purpose',
+            child_spare_tube_name_prefix: 'SPR',
+            child_spare_tube_rack_purpose_name: 'SPR TubeRack Purpose',
+            ancestor_stock_tube_purpose_name: 'Ancestor Tube Purpose'
           }
         }
       end
-      ancestor_stock_tube_purpose_name { 'Ancestor Tube Purpose' }
+      presenter_class { 'Presenters::TubeRackPresenter' }
+    end
+
+    factory :blended_tube_purpose_config do
+      transient { ancestor_labware_purpose_name { 'ancestor_plate_purpose1' } }
+      transient { acceptable_parent_tube_purposes { %w[parent_tube_purpose1 parent_tube_purpose2] } }
+      transient { single_ancestor_parent_tube_purpose { 'single_ancestor_parent_tube_purpose' } }
+      transient { preferred_purpose_name_when_deduplicating { 'preferred_purpose_name_when_deduplicating' } }
+      transient { list_of_aliquot_attributes_to_consider_a_duplicate { %w[attribute1 attribute2] } }
+
+      creator_class do
+        {
+          name: 'LabwareCreators::BlendedTube',
+          args: {
+            ancestor_plate_purpose:,
+            acceptable_parent_tube_purposes:,
+            single_ancestor_parent_tube_purpose:,
+            preferred_purpose_name_when_deduplicating:,
+            list_of_aliquot_attributes_to_consider_a_duplicate:
+          }
+        }
+      end
+      presenter_class { 'Presenters::SimpleTubePresenter' }
     end
 
     # Configuration to set number_of_source_wells argument
@@ -319,6 +363,12 @@ FactoryBot.define do
       end
     end
 
+    factory :purpose_config_with_manual_transfer_allowed_states do
+      transient { allowed_states { %w[started] } }
+      presenter_class { 'Presenters::MinimalPCRPlatePresenter' }
+      manual_transfer { { states: allowed_states } }
+    end
+
     # Basic tube purpose configuration
     factory :tube_config do
       asset_type { 'tube' }
@@ -359,7 +409,7 @@ FactoryBot.define do
     asset_type { 'tube_rack' }
     default_printer_type { :tube_rack }
     presenter_class { 'Presenters::TubeRackPresenter' }
-    state_changer_class { 'StateChangers::DefaultStateChanger' }
+    state_changer_class { 'StateChangers::PlateStateChanger' }
     submission { {} }
     label_class { nil }
     printer_type { '96 Well Plate' }

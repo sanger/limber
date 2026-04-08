@@ -66,13 +66,13 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
       end
 
       describe '#valid?' do
-        it 'should be valid' do
+        it 'is valid' do
           expect(subject.valid?).to be true
         end
       end
 
       describe '#position_details' do
-        it 'should parse the expected well details' do
+        it 'parses the expected well details' do
           expect(subject.position_details).to eq expected_position_details
         end
       end
@@ -87,13 +87,13 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
       end
 
       describe '#valid?' do
-        it 'should be valid' do
+        it 'is valid' do
           expect(subject.valid?).to be true
         end
       end
 
       describe '#position_details' do
-        it 'should parse the expected well details' do
+        it 'parses the expected well details' do
           expect(subject.position_details).to eq expected_position_details
         end
       end
@@ -153,13 +153,13 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
       end
 
       describe '#valid?' do
-        it 'should be valid' do
+        it 'is valid' do
           expect(subject.valid?).to be true
         end
       end
 
       describe '#position_details' do
-        it 'should parse the expected well details' do
+        it 'parses the expected well details' do
           expect(subject.position_details).to eq expected_position_details
         end
       end
@@ -177,7 +177,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
     before { allow(CSV).to receive(:parse).and_raise('Really bad file') }
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -197,7 +197,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -214,7 +214,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
     let(:file) { fixture_file_upload('spec/fixtures/files/test_file.txt', 'sequencescape/qc_file') }
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -231,7 +231,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
         )
         expect(subject.errors.full_messages).to include(
           'Tube rack scan contains an unexpected number of columns (1 expecting 2) ' \
-            'at row 2 [It is used to test qc file upload]'
+          'at row 2 [It is used to test qc file upload]'
         )
         expect(subject.errors.full_messages).to include(
           'Tube rack scan tube position contains an invalid coordinate, in row 2 [It is used to test qc file upload]'
@@ -252,7 +252,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -270,13 +270,13 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
     let(:file) do
       fixture_file_upload(
         'spec/fixtures/files/common_file_handling/' \
-          'tube_rack/tube_rack_scan_with_duplicate_positions.csv',
+        'tube_rack/tube_rack_scan_with_duplicate_positions.csv',
         'sequencescape/qc_file'
       )
     end
 
     describe '#valid?' do
-      it 'should be invalid' do
+      it 'is invalid' do
         expect(subject.valid?).to be false
       end
 
@@ -297,7 +297,7 @@ RSpec.describe LabwareCreators::CommonFileHandling::CsvFileForTubeRack, with: :u
     end
 
     describe '#valid?' do
-      it 'should not be valid' do
+      it 'is not valid' do
         expect(subject.valid?).to be false
       end
 

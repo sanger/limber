@@ -14,7 +14,10 @@ class LabwareController < ApplicationController
 
   rescue_from Presenters::UnknownLabwareType, with: :unknown_type
 
+  layout 'labware'
+
   def show # rubocop:todo Metrics/AbcSize
+    @pipeline_info = Presenters::PipelineInfoPresenter.new(@labware)
     @presenter = presenter_for(@labware)
 
     response.headers['Vary'] = 'Accept'
@@ -22,26 +25,23 @@ class LabwareController < ApplicationController
       format.html { render @presenter.page }
       format.csv do
         render @presenter.csv
-        response.headers[
-          'Content-Disposition'
-        ] = "attachment; filename=#{@presenter.filename(params['offset'])}" if @presenter.filename
+        if @presenter.filename
+          response.headers[
+            'Content-Disposition'
+          ] = "attachment; filename=#{@presenter.filename(params['offset'])}"
+        end
       end
       format.json
     end
   end
 
-  def update # rubocop:todo Metrics/AbcSize
+  def update
     state_changer.move_to!(*update_params)
 
     notice = "Labware: #{params[:labware_barcode]} has been changed to a state of #{params[:state].titleize}."
     notice << ' The customer will still be charged.' if update_params[2]
 
     respond_to { |format| format.html { redirect_to(search_path, notice:) } }
-  rescue StateChangers::StateChangeError => e
-    respond_to do |format|
-      format.html { redirect_to(search_path, alert: e.message) }
-      format.csv
-    end
   end
 
   private
@@ -86,7 +86,7 @@ class LabwareController < ApplicationController
   end
 
   def state_changer_for(purpose_uuid, labware_uuid)
-    StateChangers.lookup_for(purpose_uuid).new(api, labware_uuid, current_user_uuid)
+    StateChangers.lookup_for(purpose_uuid).new(labware_uuid, current_user_uuid)
   end
 
   def presenter_for(labware)

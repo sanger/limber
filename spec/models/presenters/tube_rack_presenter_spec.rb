@@ -4,6 +4,8 @@ require 'rails_helper'
 require_relative 'shared_labware_presenter_examples'
 
 RSpec.describe Presenters::TubeRackPresenter do
+  subject(:presenter) { described_class.new(labware:) }
+
   let(:purpose_name) { 'TR96' }
   let(:tube_purpose_name) { 'Tube purpose' }
   let(:title) { "#{purpose_name} : #{tube_purpose_name}" }
@@ -26,9 +28,9 @@ RSpec.describe Presenters::TubeRackPresenter do
 
   let(:tubes) do
     {
-      'A1' => create(:v2_tube, priority: 1, purpose_name: tube_purpose_name, state: states[0]),
-      'B1' => create(:v2_tube, priority: 3, purpose_name: tube_purpose_name, state: states[1]),
-      'C1' => create(:v2_tube, priority: 0, purpose_name: tube_purpose_name, state: states[2])
+      'A1' => create(:tube, priority: 1, purpose_name: tube_purpose_name, state: states[0]),
+      'B1' => create(:tube, priority: 3, purpose_name: tube_purpose_name, state: states[1]),
+      'C1' => create(:tube, priority: 0, purpose_name: tube_purpose_name, state: states[2])
     }
   end
 
@@ -45,8 +47,6 @@ RSpec.describe Presenters::TubeRackPresenter do
     )
     create(:stock_plate_config, uuid: 'stock-plate-purpose-uuid')
   end
-
-  subject(:presenter) { described_class.new(labware:) }
 
   it_behaves_like 'a labware presenter'
 
@@ -65,6 +65,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'everything failed' do
       let(:states) { %w[failed failed failed] }
+
       it 'returns failed' do
         expect(presenter.state).to eq('failed')
       end
@@ -72,6 +73,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of passed and failed' do
       let(:states) { %w[passed failed failed] }
+
       it 'returns passed' do
         expect(presenter.state).to eq('passed')
       end
@@ -79,6 +81,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of passed and cancelled' do
       let(:states) { %w[passed cancelled cancelled] }
+
       it 'returns passed' do
         expect(presenter.state).to eq('passed')
       end
@@ -86,6 +89,7 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of failed and cancelled' do
       let(:states) { %w[failed cancelled cancelled] }
+
       it 'returns failed' do
         expect(presenter.state).to eq('failed')
       end
@@ -93,29 +97,10 @@ RSpec.describe Presenters::TubeRackPresenter do
 
     context 'mix of other states' do
       let(:states) { %w[passed pending started] }
+
       it 'returns mixed' do
         expect(presenter.state).to eq('mixed')
       end
-    end
-  end
-
-  describe '#label' do
-    it 'is a Labels::TubeRackLabel' do
-      expect(presenter.label).to be_a(Labels::TubeRackLabel)
-    end
-
-    it 'has the correct labware' do
-      expect(presenter.label.labware).to eq(labware)
-    end
-  end
-
-  describe '#tube_labels' do
-    it 'returns a label for each tube' do
-      expect(presenter.tube_labels.length).to eq(3)
-    end
-
-    it 'returns tube labels' do
-      expect(presenter.tube_labels).to all be_a(Labels::TubeLabel)
     end
   end
 
@@ -160,9 +145,9 @@ RSpec.describe Presenters::TubeRackPresenter do
           [
             'Second type CSV',
             [
-              :limber_tube_rack,
-              :export,
-              { format: :csv, id: 'second_csv_id', limber_tube_rack_id: labware.human_barcode }
+              :tube_rack,
+              :tube_racks_export,
+              { format: :csv, id: 'second_csv_id', tube_rack_id: labware.uuid }
             ]
           ]
         )

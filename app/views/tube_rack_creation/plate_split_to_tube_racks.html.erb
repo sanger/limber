@@ -1,0 +1,146 @@
+<%= page(:'plate-split-to-tube-racks') do -%>
+  <div class="row">
+    <!-- Help Area -->
+    <div class="col-lg-6 col-md-6" style="font-size: 0.90rem">
+      <div class="accordion" id="helpAccordion" style="border-radius: 0;">
+        <div class="accordion-item" style="border-radius: 0;">
+          <h2 class="accordion-header" id="helpHeading" style="border-radius: 0;">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#helpCollapse" aria-expanded="true" aria-controls="helpCollapse" style="background-color: #d5dde2ff; border-radius: 0;">
+              <span class="fw-bold">Help &amp; Example</span>
+            </button>
+            <div style="height: 4px; background: #fff; width: 100%; border-bottom: 1px solid #e0e0e0; border-radius: 0;"></div>
+          </h2>
+          <div id="helpCollapse" class="accordion-collapse collapse show" aria-labelledby="helpHeading" data-bs-parent="#helpAccordion" style="border-radius: 0;">
+            <div class="accordion-body" style="background-color:  #d5dde2ff; border-radius: 0;">
+              <p>
+                Upload the tube rack scan CSV file(s) describing the tube rack barcode, tube positions, and tube barcodes of the tubes.
+                A <span class="badge fw-bold" style="background-color: #ede7fb; color: #a084e8;">sequencing</span> tube rack file is always required.<br>
+                In addition, a <span class="badge bg-info fw-bold" style="color: #085078;">contingency</span> tube rack file is needed if more than one well contains the same sample.
+              </p>
+              <p>An example is shown below:</p>
+              <div class="table-responsive">
+                <table class="table table-sm table-bordered table-striped align-middle shadow-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="font-size: 0.8rem; color: #444;">Tube Rack Barcode</th>
+                      <th style="font-size: 0.8rem; color: #444;">Position</th>
+                      <th style="font-size: 0.8rem; color: #444;">Tube Barcode</th>
+                    </tr>
+                  </thead>
+                  <tbody style="font-size: 0.8rem;">
+                    <tr><td>TR00000001</td><td>A1</td><td>AB00000001</td></tr>
+                    <tr><td>TR00000001</td><td>B1</td><td>AB00000002</td></tr>
+                    <tr><td>TR00000001</td><td>C1</td><td>AB00000003</td></tr>
+                    <tr><td>TR00000001</td><td>D1</td><td>AB00000004</td></tr>
+                    <tr><td>TR00000001</td><td>E1</td><td>AB00000005</td></tr>
+                    <tr><td>TR00000001</td><td>F1</td><td>AB00000006</td></tr>
+                    <tr><td>TR00000001</td><td>G1</td><td>AB00000007</td></tr>
+                    <tr><td>TR00000001</td><td>H1</td><td>AB00000008</td></tr>
+                    <tr><td>TR00000001</td><td>A2</td><td>AB00000009</td></tr>
+                    <tr><td>TR00000001</td><td>B2</td><td>AB00000010</td></tr>
+                    <tr><td>TR00000001</td><td>C2</td><td>AB00000011</td></tr>
+                    <tr>
+                      <td style="background-color: #fffbe6;">TR00000001</td>
+                      <td style="background-color: #fffbe6;">D2</td>
+                      <td style="background-color: #fffbe6;">
+                        <span class="fw-bold" style="color: #b8860b;">NO READ</span>
+                      </td>
+                    </tr>
+                    <tr class="table-danger">
+                      <td>TR00000001</td>
+                      <td>E2</td>
+                      <td>
+                        <span class="text-danger fw-bold">DECODE FAILURE</span>
+                      </td>
+                    </tr>
+                    <tr class="table-active"><td>etc...</td><td></td><td></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="alert alert-info mt-3" role="alert" style="background-color:#fffbe6; border-color:#ffe58f;">
+                <strong>NB:</strong>
+                <span class="fw-bold" style="color: #b8860b;">NO READ</span>,
+                <span class="fw-bold" style="color: #b8860b;">NOSCAN</span>, or
+                <span class="fw-bold" style="color: #b8860b;">EMPTY</span>
+                are also valid values for the second column. This means the tube rack scanner was not able to read a tube barcode in that position.
+                <span class="fw-bold">The system will ignore these tubes when deciding which tubes to pool samples into.</span>
+              </div>
+              <div class="alert alert-danger" role="alert">
+                <strong>NB:</strong>
+                If the value <span class="text-danger fw-bold">DECODE FAILURE</span> appears in the second column,
+                this means the scanner could not decode a barcode in one or more positions.
+                <span class="fw-bold">In this case, you will be blocked from progressing and shown an error message.</span>
+                Please check your file and re-scan the affected tubes.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <!-- Main Action Area -->
+    <div class="col-lg-6 col-md-6 mb-4 mt-2">
+      <div class="card border-0" style="box-shadow: 0 16px 48px 0 rgba(30, 60, 93, 0.22), 0 3px 16px 0 rgba(30, 60, 93, 0.14);">
+        <div class="card-header d-flex align-items-center" style="border-radius: .5rem .5rem 0 0; background-color: #bfe4f4ff; color: #1a3c5d;">
+          <i class="bi bi-upload me-2 fs-4"></i>
+          <div>
+            <div class="fw-bold fs-5">Upload tube rack scan files</div>
+          </div>
+        </div>
+        <div class="card-body bg-light">
+          <% num_uniq_samples = @labware_creator.num_parent_unique_samples %>
+          <% num_parent_wells = @labware_creator.num_parent_wells %>
+          <% num_spare_samples = @labware_creator.num_parent_wells - @labware_creator.num_parent_unique_samples %>
+          <div class="mb-3">
+            <div class="mb-2">
+              <span>For this parent plate with</span>
+              <span class="text-success fw-bold"><%= num_uniq_samples %></span> distinct samples
+              <span class="text-success fw-bold"><%= num_parent_wells %></span> transferable wells, you will need:
+            </div>
+
+            <ul class="mb-2 d-inline-block text-start" style="margin: 0 auto;">
+              <li>
+                <span class="fw-bold" style="color: #a084e8;"><%= num_uniq_samples %></span>
+                <span class="fw-bold" style="color: #a084e8;">sequencing tubes</span>
+              </li>
+              <li>
+                <span class="text-info fw-bold"><%= num_spare_samples %></span>
+                <span class="text-info fw-bold">contingency tubes</span>
+              </li>
+            </ul>
+          </div>
+          <%= form_for(@labware_creator, as: :tube, url: plate_child_tube_creations_path(@labware_creator.parent)) do |f| %>
+            <%= f.hidden_field :purpose_uuid %>
+            <div class="mb-4">
+              <h5 class="mb-2" style="color: #a084e8;">Sequencing tube rack scan file </h5>
+                <div class="text-muted small mb-2">
+                  <span class="fw-semibold text-info">Note:</span>
+                  A sequencing file is always required.
+                </div>
+              <div class="form-group mb-3">
+                <%= f.file_field :sequencing_file, accept: '.csv', required: true, class: 'form-control' %>
+              </div>
+            </div>
+            <% if num_spare_samples > 0 %>
+              <div class="mb-4">
+                <h5 class="mb-2 text-info">Contingency tube rack scan file </h5>
+                <div class="text-muted small mb-2">
+                  <span class="fw-semibold text-info">Note:</span>
+                  A sequencing file must be uploaded before you can use a contingency file.
+                </div>
+                <div class="form-group mb-3">
+                  <%= f.file_field :contingency_file, accept: '.csv', required: false, class: 'form-control' %>
+                </div>
+              </div>
+            <% else %>
+              <div class="mb-4">
+                <h5 class="mb-2 text-info">No Contingency tube rack scan file needed</h5>
+              </div>
+            <% end %>
+            <%= f.submit class: 'btn btn-success w-100 fw-bold' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<%- end -%>

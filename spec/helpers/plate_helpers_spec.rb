@@ -3,9 +3,9 @@
 require 'spec_helper'
 
 RSpec.describe PlateHelper do
-  include PlateHelper
+  include described_class
 
-  context '#sorted_pre_cap_pool_json' do
+  describe '#sorted_pre_cap_pool_json' do
     # create 3 pre-cap pools with ids not in sequential order
     let(:pre_cap_pool_1) { build :pre_capture_pool, id: 123, uuid: 'pre-cap-pool-1' }
     let(:pre_cap_pool_2) { build :pre_capture_pool, id: 122, uuid: 'pre-cap-pool-2' }
@@ -67,7 +67,7 @@ RSpec.describe PlateHelper do
     end
 
     let(:plate_for_precap) do
-      build :v2_plate_for_pooling, state: 'passed', pool_sizes: [8], outer_requests: outer_requests
+      build :plate_for_pooling, state: 'passed', pool_sizes: [8], outer_requests: outer_requests
     end
 
     let(:expected_result) do
@@ -83,6 +83,51 @@ RSpec.describe PlateHelper do
       pool_store = JSON.parse(pool_store_safebuffer.to_str.gsub('=>', ':'))
 
       expect(pool_store).to eq(expected_result)
+    end
+  end
+
+  describe '#well_under_represented?' do
+    context 'when the request has UNDER_REPRESENTED_KEY set to true' do
+      let(:poly_metadatum) { build(:poly_metadatum, key: LimberConstants::UNDER_REPRESENTED_KEY, value: 'true') }
+      let(:request) { build(:library_request_with_poly_metadata, poly_metadata: [poly_metadatum]) }
+      let(:aliquot) { build(:aliquot, outer_request: request) }
+      let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
+
+      it 'returns true' do
+        expect(well_under_represented?(well)).to be true
+      end
+    end
+
+    context 'when no request' do
+      let(:aliquot) { build(:aliquot, outer_request: nil) }
+      let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
+
+      it 'returns false' do
+        expect(well_under_represented?(well)).to be false
+      end
+    end
+
+    context 'when no poly_metadata present' do
+      let(:request) { build(:library_request) }
+      let(:aliquot) { build(:aliquot, outer_request: request) }
+      let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
+
+      it 'returns false' do
+        expect(well_under_represented?(well)).to be false
+      end
+    end
+
+    context 'when metadata key is something else' do
+      let(:request) do
+        build(:library_request_with_poly_metadata,
+              poly_metadata: [build(:poly_metadatum, key: 'other_key', value: 'true')])
+      end
+      let(:aliquot) { build(:aliquot, outer_request: request) }
+      let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
+
+      it 'returns false' do
+        expect(well_under_represented?(well)).to be false
+      end
     end
   end
 end

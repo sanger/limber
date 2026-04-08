@@ -3,7 +3,7 @@
     <h2>Baited Plate Preview</h2>
     <div>
       <div>
-        <%= render partial: "plates/plate", locals: { plate_presenter: @labware_creator } %>
+        <%= render partial: 'plates/plate', locals: { plate_presenter: @labware_creator } %>
       </div>
     </div>
     <br />
@@ -24,10 +24,10 @@
               </li>
           <%- end -%>
         </ul>
-        <%= form_for(@labware_creator, as: :plate, url: limber_plate_children_path(@labware_creator.parent)) do |f| %>
-          <%= f.hidden_field :purpose_uuid, as: :hidden, value:@labware_creator.purpose_uuid %>
+        <%= form_for(@labware_creator, as: :plate, url: plate_child_plate_creations_path(@labware_creator.parent)) do |f| %>
+          <%= f.hidden_field :purpose_uuid, as: :hidden, value: @labware_creator.purpose_uuid %>
           <%= f.hidden_field :parent_uuid, as: :hidden, value: @labware_creator.parent_uuid %>
-          <%= f.submit'Create plate', class: 'btn btn-outline-primary w-100', style: 'padding: 10px' %>
+          <%= f.submit 'Create plate', class: 'btn btn-outline-primary w-100', style: 'padding: 10px' %>
         <% end %>
     <% end %>
   <% end %>

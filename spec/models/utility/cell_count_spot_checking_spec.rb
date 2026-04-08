@@ -3,13 +3,15 @@
 # This test checks well selection for different number of ancestor tubes and
 # specifications of the number of wells to select.
 RSpec.describe Utility::CellCountSpotChecking do
+  subject { described_class.new(plate) }
+
   let(:number_of_tubes) { 4 }
 
   let(:ancestor_tubes) do
     # Similar to LRC Blood Vac tubes.
     (1..number_of_tubes).each_with_object({}) do |index, hash|
       uuid = "sample-uuid-#{index}"
-      tube = create(:v2_stock_tube)
+      tube = create(:stock_tube)
       hash[uuid] = tube
     end
   end
@@ -22,13 +24,13 @@ RSpec.describe Utility::CellCountSpotChecking do
         suffix = ((index - 1) / 3) + 1
         uuid = "sample-uuid-#{suffix}" # Match the samples of tubes
         supplier_name = ancestor_tubes[uuid].barcode.human
-        sample_metadata = create(:v2_sample_metadata, supplier_name:)
-        sample = create(:v2_sample, uuid:, sample_metadata:)
-        aliquots = [create(:v2_aliquot, sample:)]
+        sample_metadata = create(:sample_metadata, supplier_name:)
+        sample = create(:sample, uuid:, sample_metadata:)
+        aliquots = [create(:aliquot, sample:)]
         location = WellHelpers.well_at_column_index(index - 1)
-        array << create(:v2_well, aliquots:, location:)
+        array << create(:well, aliquots:, location:)
       end
-    create(:v2_plate, wells:)
+    create(:plate, wells:)
   end
 
   let(:plate_wells_grouped_by_barcode) do
@@ -40,8 +42,6 @@ RSpec.describe Utility::CellCountSpotChecking do
       .group_by { |well| well.aliquots.first.sample.sample_metadata.supplier_name }
       .values
   end
-
-  subject { described_class.new(plate) }
 
   describe '#initialize' do
     it 'sets the plate and ancestor tubes' do
@@ -62,12 +62,14 @@ RSpec.describe Utility::CellCountSpotChecking do
         expect(result).to eq(selected_wells)
       end
     end
+
     context 'when a first replicate is failed' do
       before do
         # Well state is set for testing purposes. In the actual code, the state
         # is a computed property; there is no way to set it directly.
         plate.wells_in_columns.first.state = 'failed' # Fail A1
       end
+
       it 'returns the second replicate as the first replicate' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
@@ -99,6 +101,7 @@ RSpec.describe Utility::CellCountSpotChecking do
         # is a computed property; there is no way to set it directly.
         plate.wells_in_columns.second.state = 'failed' # Fail B1
       end
+
       it 'returns the following replicate as the second replicate' do
         # ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'A2', 'B2', 'C2', 'D2']
         # ->
@@ -131,7 +134,7 @@ RSpec.describe Utility::CellCountSpotChecking do
             .select do |well|
               sample = well.aliquots.first.sample
               sample.sample_metadata.supplier_name == ancestor_tubes.values.first.barcode.human
-            end
+          end
             .drop(1)
         plate.wells.reject! { |well| second_replicates_to_remove.include?(well) }
       end

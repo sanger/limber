@@ -8,17 +8,17 @@ require_relative 'shared_examples'
 # Adds the controls to randomised well locations on the child plate, potentially displacing samples
 # that would otherwise have been stamped across.
 RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
+  subject { described_class.new(form_attributes) }
+
   it_behaves_like 'it only allows creation from plates'
   it_behaves_like 'it has no custom page'
-
-  has_a_working_api
 
   let(:parent_uuid) { 'example-plate-uuid' }
   let(:plate_size) { 96 }
   let(:parent_plate) do
-    create :v2_stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
+    create :stock_plate, uuid: parent_uuid, barcode_number: '2', size: plate_size, outer_requests: requests
   end
-  let(:child_plate) { create :v2_plate_empty, uuid: 'child-uuid', barcode_number: '3', size: plate_size }
+  let(:child_plate) { create :plate_empty, uuid: 'child-uuid', barcode_number: '3', size: plate_size }
   let(:requests) { Array.new(plate_size) { |i| create :library_request, state: 'started', uuid: "request-#{i}" } }
 
   let(:child_purpose_uuid) { 'child-purpose' }
@@ -33,10 +33,10 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   let(:control_well_locations) { %w[B5 H3] }
 
   let(:control_study_name) { 'UAT Study' }
-  let(:control_study) { create :v2_study, name: control_study_name }
+  let(:control_study) { create :study, name: control_study_name }
 
   let(:control_project_name) { 'UAT Project' }
-  let(:control_project) { create :v2_project, name: control_project_name }
+  let(:control_project) { create :project, name: control_project_name }
 
   let(:sample_md_cohort) { 'Cohort' }
   let(:sample_md_sample_description) { 'Description' }
@@ -45,21 +45,21 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   let(:control_neg_sample_name) { 'CONTROL_NEG_Description_B5' }
 
   let!(:control_pos_sample_metadata) do
-    create :v2_sample_metadata,
+    create :sample_metadata,
            supplier_name: control_pos_sample_name,
            cohort: sample_md_cohort,
            sample_description: sample_md_sample_description
   end
 
   let!(:control_neg_sample_metadata) do
-    create :v2_sample_metadata,
+    create :sample_metadata,
            supplier_name: control_neg_sample_name,
            cohort: sample_md_cohort,
            sample_description: sample_md_sample_description
   end
 
   let(:control_sample_pos) do
-    create :v2_sample,
+    create :sample,
            name: control_pos_sample_name,
            control: true,
            control_type: 'pcr positive',
@@ -67,30 +67,11 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
   end
 
   let(:control_sample_neg) do
-    create :v2_sample,
+    create :sample,
            name: control_neg_sample_name,
            control: true,
            control_type: 'pcr negative',
            sample_metadata: control_neg_sample_metadata
-  end
-
-  let(:child_well_pos) { child_plate.wells.find { |well| well.position['name'] == control_well_locations[0] } }
-  let(:child_well_neg) { child_plate.wells.find { |well| well.position['name'] == control_well_locations[1] } }
-
-  let(:control_aliquot_pos) do
-    create :v2_aliquot,
-           sample: control_sample_pos,
-           study: control_study,
-           project: control_project,
-           receptacle: child_well_pos
-  end
-
-  let(:control_aliquot_neg) do
-    create :v2_aliquot,
-           sample: control_sample_neg,
-           study: control_study,
-           project: control_project,
-           receptacle: child_well_neg
   end
 
   before do
@@ -100,19 +81,17 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       uuid: child_purpose_uuid,
       control_study_name: control_study_name
     )
-    stub_v2_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
-    stub_v2_plate(parent_plate, stub_search: false, custom_includes: parent_plate_includes)
-    stub_v2_study(control_study)
-    stub_v2_project(control_project)
+    stub_plate(child_plate, stub_search: false, custom_query: [:plate_with_wells, child_plate.uuid])
+    stub_plate(parent_plate, stub_search: false, custom_includes: parent_plate_includes)
+    stub_study(control_study)
+    stub_project(control_project)
   end
 
   let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_uuid, user_uuid: user_uuid } }
 
-  subject { LabwareCreators::StampedPlateAddingRandomisedControls.new(api, form_attributes) }
-
   context 'on new' do
     it 'can be created' do
-      expect(subject).to be_a LabwareCreators::StampedPlateAddingRandomisedControls
+      expect(subject).to be_a described_class
     end
   end
 
@@ -121,16 +100,16 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
       let(:plate_creations_attributes) { [{ child_purpose_uuid:, parent_uuid:, user_uuid: }] }
 
       before do
-        stub_api_v2_patch('Sample')
-        stub_api_v2_patch('SampleMetadata')
-        stub_api_v2_save('Aliquot')
+        stub_patch('Sample')
+        stub_patch('SampleMetadata')
+        stub_save('Aliquot')
       end
 
       it 'makes the expected requests' do
         expect_plate_creation
         expect_transfer_request_collection_creation
 
-        expect(subject.save!).to eq true
+        expect(subject.save!).to be true
       end
     end
   end
@@ -146,6 +125,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .each_with_index
         .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
+
           {
             source_asset: "2-well-#{well_name}",
             target_asset: "3-well-#{well_name}",
@@ -173,6 +153,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         .each_with_index
         .filter_map do |well_name, index|
           next if control_locations.include?(well_name)
+
           {
             source_asset: "2-well-#{well_name}",
             target_asset: "3-well-#{well_name}",
@@ -254,7 +235,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[H1 G1] }
 
         it 'returns false' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq false
+          expect(subject.validate_control_rules(control_well_locations)).to be false
         end
       end
 
@@ -262,7 +243,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 C2] }
 
         it 'returns true' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq true
+          expect(subject.validate_control_rules(control_well_locations)).to be true
         end
       end
     end
@@ -282,7 +263,7 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 H12] }
 
         it 'returns false' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq false
+          expect(subject.validate_control_rules(control_well_locations)).to be false
         end
       end
 
@@ -290,9 +271,122 @@ RSpec.describe LabwareCreators::StampedPlateAddingRandomisedControls do
         let(:control_well_locations) { %w[A1 C2] }
 
         it 'returns true' do
-          expect(subject.validate_control_rules(control_well_locations)).to eq true
+          expect(subject.validate_control_rules(control_well_locations)).to be true
         end
       end
+    end
+  end
+
+  describe '#register_stock_for_plate' do
+    let(:logger) { instance_double(Logger) }
+    let(:child_uuid) { 'child-uuid' }
+    let(:child_plate_with_wells) { create(:plate) }
+    let(:child) { create(:plate, uuid: child_uuid) }
+
+    before do
+      allow(Rails).to receive(:logger).and_return(logger)
+      subject.instance_variable_set(:@child_plate_with_wells, child_plate_with_wells)
+      subject.instance_variable_set(:@child, child)
+    end
+
+    context 'when stock registration succeeds' do
+      before { allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_return(true) }
+
+      it 'logs a success message' do
+        expect(logger).to receive(:info).with(/Stock registration successful for plate #{child_uuid}/)
+        subject.send(:register_stock_for_plate)
+      end
+    end
+
+    context 'when stock registration fails' do
+      before do
+        allow(child_plate_with_wells).to receive(:register_stock_for_plate).and_return(false)
+        allow(child_plate_with_wells).to receive_message_chain(:errors, :full_messages)
+          .and_return(['Something went wrong'])
+      end
+
+      it 'logs an error message with the errors' do
+        expect(logger).to receive(:error).with(
+          /Stock registration failed for plate #{child_uuid}: Something went wrong/
+        )
+        subject.send(:register_stock_for_plate)
+      end
+    end
+
+    context 'when an exception occurs' do
+      before do
+        allow(child_plate_with_wells).to receive(:register_stock_for_plate)
+          .and_raise(StandardError, 'unexpected failure')
+      end
+
+      it 'logs an exception error message' do
+        expect(logger).to receive(:error).with(/Stock registration error for plate #{child_uuid}: unexpected failure/)
+        subject.send(:register_stock_for_plate)
+      end
+    end
+  end
+
+  describe '#generate_control_sample_desc' do
+    let(:plate_size) { 96 }
+    let(:sample_metadata) { create :sample_metadata, sample_description: test_description }
+    let(:sample) { create :sample, sample_metadata: }
+    let(:aliquot) { create :aliquot, sample: }
+
+    before do
+      allow(parent_plate).to receive_message_chain(
+        :wells,
+        :first,
+        :aliquots,
+        :first,
+        :sample,
+        :sample_metadata,
+        :sample_description
+      ).and_return(test_description)
+      # Setup the parent_wells_with_aliquots method to return a well with our test aliquot
+      allow(subject).to receive(:parent_wells_with_aliquots).and_return([instance_double('Well', aliquots: [aliquot])])
+    end
+
+    context 'when sample description is present' do
+      let(:test_description) { 'Test Description' }
+
+      it 'returns the sample description from the parent well' do
+        expect(subject.send(:generate_control_sample_desc)).to eq(test_description)
+      end
+    end
+
+    context 'when sample description is blank' do
+      let(:test_description) { '' }
+
+      before { allow(parent_plate).to receive(:human_barcode).and_return('TEST-BARCODE') }
+
+      it 'returns the parent plate barcode' do
+        expect(subject.send(:generate_control_sample_desc)).to eq('TEST-BARCODE')
+      end
+    end
+  end
+
+  describe '#create_control_sample_name' do
+    let(:plate_size) { 96 }
+    let(:control) { instance_double('Control', name_prefix: 'CONTROL_POS_') }
+    let(:well_location) { 'B5' }
+    let(:child_barcode) { 'CHILD-12345' }
+
+    before do
+      RSpec::Mocks.configuration.allow_message_expectations_on_nil = true
+      # subject.@child is created at initialisation, so is expected to be nil at this point - therefore allow it
+      allow(subject.instance_variable_get(:@child)).to receive_message_chain(:labware_barcode, :human).and_return(
+        child_barcode
+      )
+    end
+
+    it 'returns a properly formatted control sample name' do
+      expected_name = 'CONTROL_POS_CHILD-12345_B5'
+      expect(subject.send(:create_control_sample_name, control, well_location)).to eq(expected_name)
+    end
+
+    it 'includes the control name prefix, child barcode, and well location' do
+      sample_name = subject.send(:create_control_sample_name, control, well_location)
+      expect(sample_name).to include(control.name_prefix, child_barcode, well_location)
     end
   end
 end

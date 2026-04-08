@@ -2,9 +2,15 @@
 concentrations_ngul:
   csv: concentrations_ngul
   plate_includes: wells.qc_results
+tube_rack_concentrations_ngul:
+  csv: tube_rack_concentrations_ngul
+  tube_rack_includes: racked_tubes.tube.receptacle.qc_results
 concentrations_nm:
   csv: concentrations_nm
   plate_includes: wells.qc_results
+tube_rack_concentrations_nm:
+  csv: tube_rack_concentrations_nm
+  tube_rack_includes: racked_tubes.tube.receptacle.qc_results
 duplex_seq_al_lib_concentrations_for_customer:
   csv: duplex_seq_al_lib_concentrations_for_customer
   plate_includes: wells.qc_results,wells.aliquots.sample.sample_metadata
@@ -150,11 +156,7 @@ scrna_core_cell_extraction_sample_arraying_tube_layout:
 hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
   csv: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
   workflow: scRNA Core PBMC Bank
-  plate_includes:
-    - wells.downstream_tubes
-    - wells.aliquots
-    - wells.aliquots.sample
-    - wells.aliquots.sample.sample_metadata
+  tube_rack_includes: racked_tubes.tube
   ancestor_tube_purpose: LRC Blood Vac
   filename:
     name: hamilton_pbmc_bank
@@ -187,21 +189,39 @@ rvi_pcr_xp_concentrations_for_custom_pooling:
   csv: rvi_pcr_xp_concentrations_for_custom_pooling
   plate_includes: wells.qc_results,wells.aliquots,wells.aliquots.sample
   ancestor_purpose: RVI Cherrypick
-hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools:
-  csv: hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools
+hamilton_lrc_pbmc_defrost_pbs_1ml_to_lrc_pbmc_pools:
+  csv: hamilton_lrc_pbmc_defrost_pbs_1ml_to_lrc_pbmc_pools
   workflow: scRNA Core Donor Pooling
   plate_includes:
     - wells.qc_results
     - wells.transfer_requests_as_target.source_asset
     - wells.aliquots.study.poly_metadata
-  ancestor_purpose: LRC PBMC Defrost PBS
+  ancestor_purpose: LRC PBMC Defrost PBS 1ml
+hamilton_lrc_pbmc_aliquot_to_lrc_pbmc_pools:
+  csv: hamilton_lrc_pbmc_aliquot_to_lrc_pbmc_pools
+  workflow: scRNA Core Donor Pooling
+  plate_includes:
+    - wells.qc_results
+    - wells.transfer_requests_as_target.source_asset
+    - wells.aliquots.study.poly_metadata
+  ancestor_purpose: LRC PBMC Aliquot
 hamilton_lrc_gem_x_5p_cherrypick_to_lrc_gem_x_5p_ge_dil:
   csv: hamilton_fixed_volume_dilutions
   plate_includes: wells.transfer_requests_as_target.source_asset
   workflow: Sample Dilution
-hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count:
-  csv: hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count
-  workflow: scRNA Core LRC PBMC Defrost PBS Cell Count
+hamilton_lrc_pbmc_defrost_pbs_1ml_to_cellaca_count:
+  csv: hamilton_lrc_pbmc_defrost_pbs_1ml_to_cellaca_count
+  workflow: scRNA Core LRC PBMC Defrost PBS 1ml Cell Count
+  plate_includes:
+    - wells.aliquots
+    - wells.aliquots.sample
+    - wells.aliquots.sample.sample_metadata
+  filename:
+    labware_barcode:
+      prepend: true
+hamilton_lrc_pbmc_aliquot_to_cellaca_count:
+  csv: hamilton_lrc_pbmc_aliquot_to_cellaca_count
+  workflow: scRNA Core LRC PBMC Aliquot Cell Count
   plate_includes:
     - wells.aliquots
     - wells.aliquots.sample
@@ -250,3 +270,43 @@ hamilton_gem_x_5p_chip_loading:
     - LRC PBMC Pools
     - LRC GEM-X 5p GEMs Input
     - LRC GEM-X 5p GEMs Input CITE
+hamilton_lrc_gemx_5p_bcr_dil_1_to_lrc_gemx_5p_bcr_enrich1:
+  csv: hamilton_plate_stamp
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: 10X VDJ Post Target Enrichment 1 Double SPRI
+hamilton_lrc_gemx_5p_bcr_enrich1_to_lrc_gemx_5p_bcr_enrich2:
+  csv: hamilton_plate_stamp
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: 10X GEM-X 5' VDJ Post Target Enrichment 2 Double SPRI
+hamilton_lrc_gemx_5p_bcr_enrich2_to_lrc_gemx_5p_bcr_dil_2:
+  csv: hamilton_fixed_volume_dilutions
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: Sample Dilution
+hamilton_lrc_gemx_5p_bcr_dil_2_to_lrc_gemx_5p_bcr_post_lig:
+  csv: hamilton_plate_stamp
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: 10X GEM-X 5' VDJ Post Ligation SPRI
+hamilton_lrc_gemx_5p_tcr_dil_1_to_lrc_gemx_5p_tcr_enrich1:
+  csv: hamilton_plate_stamp
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: 10X VDJ Post Target Enrichment 1 Double SPRI
+hamilton_lrc_gemx_5p_tcr_enrich1_to_lrc_gemx_5p_tcr_enrich2:
+  csv: hamilton_plate_stamp
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: 10X GEM-X 5' VDJ Post Target Enrichment 2 Double SPRI
+hamilton_lrc_gemx_5p_tcr_enrich2_to_lrc_gemx_5p_tcr_dil_2:
+  csv: hamilton_fixed_volume_dilutions
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: Sample Dilution
+hamilton_lrc_gemx_5p_tcr_dil_2_to_lrc_gemx_5p_tcr_post_lig:
+  csv: hamilton_plate_stamp
+  plate_includes: wells.transfer_requests_as_target.source_asset
+  workflow: 10X GEM-X 5' VDJ Post Ligation SPRI
+kinnex_prep_plate_export:
+  csv: kinnex_prep_plate_export
+  plate_includes: wells.downstream_tubes
+ultima_balancing:
+  csv: 'exports/ultima_balancing'
+  tube_includes: receptacle.aliquots.poly_metadata
+  filename:
+    handler: UltimaBalancing

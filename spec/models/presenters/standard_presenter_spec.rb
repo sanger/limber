@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Presenters::StandardPresenter do
+  subject { described_class.new(labware:) }
+
   let(:purpose_name) { 'Example purpose' }
-  let(:aliquot_type) { :v2_aliquot }
+  let(:aliquot_type) { :aliquot }
   let(:state) { 'pending' }
   let(:labware) do
-    create :v2_plate,
+    create :plate,
            barcode_number: 1,
            state: state,
            purpose_name: purpose_name,
@@ -16,30 +18,28 @@ RSpec.describe Presenters::StandardPresenter do
   let(:wells) do
     [
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 1),
         aliquots: create_list(aliquot_type, 1)
       ),
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 1),
         aliquots: create_list(aliquot_type, 1)
       ),
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 2),
         aliquots: create_list(aliquot_type, 1)
       ),
       create(
-        :v2_well,
+        :well,
         requests_as_source: create_list(:mx_request, 1, priority: 1),
         aliquots: create_list(aliquot_type, 1)
       )
     ]
   end
   let(:suggest_passes) { nil }
-
-  subject { Presenters::StandardPresenter.new(labware:) }
 
   it 'returns the priority' do
     expect(subject.priority).to eq(2)
@@ -130,22 +130,22 @@ RSpec.describe Presenters::StandardPresenter do
     let(:wells) do
       [
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'started'))
         )
@@ -154,24 +154,34 @@ RSpec.describe Presenters::StandardPresenter do
 
     describe '#control_library_passing' do
       before do
-        create :pipeline, filters: { 'request_type_key' => suggest_passes }, library_pass: 'Example purpose'
+        create :pipeline,
+               relationships: {
+                 'Example purpose' => 'Next example purpose'
+               },
+               filters: {
+                 'request_type_key' => suggest_passes
+               },
+               library_pass: 'Example purpose'
         create(:purpose_config, name: 'Example purpose', uuid: 'test-purpose')
       end
 
       context 'tagged' do
-        let(:aliquot_type) { :v2_tagged_aliquot }
+        let(:aliquot_type) { :tagged_aliquot }
 
         context 'and passed' do
           let(:state) { 'passed' }
 
           context 'when not suggested' do
             let(:suggest_passes) { ['other_pipeline'] }
+
             it 'supports passing' do
               expect { |b| subject.control_library_passing(&b) }.to yield_control
             end
           end
+
           context 'when suggested' do
             let(:suggest_passes) { ['limber_wgs'] }
+
             it 'does not have inactive passing' do
               expect { |b| subject.control_library_passing(&b) }.not_to yield_control
             end
@@ -180,6 +190,7 @@ RSpec.describe Presenters::StandardPresenter do
 
         context 'and pending' do
           let(:state) { 'pending' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -187,9 +198,11 @@ RSpec.describe Presenters::StandardPresenter do
       end
 
       context 'untagged' do
-        let(:aliquot_type) { :v2_aliquot }
+        let(:aliquot_type) { :aliquot }
+
         context 'and passed' do
           let(:state) { 'passed' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -198,12 +211,21 @@ RSpec.describe Presenters::StandardPresenter do
     end
 
     describe '#control_suggested_library_passing' do
-      let(:aliquot_type) { :v2_tagged_aliquot }
+      let(:aliquot_type) { :tagged_aliquot }
       before do
-        create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
+        create :pipeline,
+               relationships: {
+                 'Example purpose' => 'Next example purpose'
+               },
+               filters: {
+                 request_type_key: suggest_passes
+               },
+               library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
+
       let(:suggest_passes) { ['limber_wgs'] }
+
       context 'and passed' do
         let(:state) { 'passed' }
 
@@ -211,6 +233,7 @@ RSpec.describe Presenters::StandardPresenter do
           expect { |b| subject.control_suggested_library_passing(&b) }.to yield_control
         end
       end
+
       context 'and pending' do
         let(:state) { 'pending' }
 
@@ -225,22 +248,22 @@ RSpec.describe Presenters::StandardPresenter do
     let(:wells) do
       [
         create(
-          :v2_well,
+          :well,
           requests_as_source: create_list(:mx_request, 1, priority: 1),
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: create_list(:mx_request, 1, priority: 1),
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: [],
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'failed'))
         ),
         create(
-          :v2_well,
+          :well,
           requests_as_source: create_list(:mx_request, 1, priority: 1),
           aliquots: create_list(aliquot_type, 1, request: create(:library_request, state: 'passed'))
         )
@@ -254,7 +277,7 @@ RSpec.describe Presenters::StandardPresenter do
       end
 
       context 'tagged' do
-        let(:aliquot_type) { :v2_tagged_aliquot }
+        let(:aliquot_type) { :tagged_aliquot }
 
         context 'and passed' do
           let(:state) { 'passed' }
@@ -264,8 +287,10 @@ RSpec.describe Presenters::StandardPresenter do
               expect { |b| subject.control_library_passing(&b) }.not_to yield_control
             end
           end
+
           context 'when suggested' do
             let(:suggest_passes) { ['limber_wgs'] }
+
             it 'does not have inactive passing' do
               expect { |b| subject.control_library_passing(&b) }.not_to yield_control
             end
@@ -274,6 +299,7 @@ RSpec.describe Presenters::StandardPresenter do
 
         context 'and pending' do
           let(:state) { 'pending' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -281,9 +307,11 @@ RSpec.describe Presenters::StandardPresenter do
       end
 
       context 'untagged' do
-        let(:aliquot_type) { :v2_aliquot }
+        let(:aliquot_type) { :aliquot }
+
         context 'and passed' do
           let(:state) { 'passed' }
+
           it 'supports passing' do
             expect { |b| subject.control_library_passing(&b) }.not_to yield_control
           end
@@ -292,12 +320,14 @@ RSpec.describe Presenters::StandardPresenter do
     end
 
     describe '#control_suggested_library_passing' do
-      let(:aliquot_type) { :v2_tagged_aliquot }
+      let(:aliquot_type) { :tagged_aliquot }
       before do
         create :pipeline, filters: { request_type_key: suggest_passes }, library_pass: 'Example purpose'
         create(:purpose_config, uuid: 'test-purpose', name: 'Example purpose')
       end
+
       let(:suggest_passes) { ['limber_wgs'] }
+
       context 'and passed' do
         let(:state) { 'passed' }
 
@@ -305,6 +335,7 @@ RSpec.describe Presenters::StandardPresenter do
           expect { |b| subject.control_suggested_library_passing(&b) }.not_to yield_control
         end
       end
+
       context 'and pending' do
         let(:state) { 'pending' }
 

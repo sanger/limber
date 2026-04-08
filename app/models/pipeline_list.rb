@@ -23,6 +23,15 @@ class PipelineList
     @list.select { |pipeline| pipeline.active_for?(labware) }
   end
 
+  # This version of active pipelines does not consider completed requests when determining whether
+  # a pipeline is active for a piece of labware.
+  # NB. added to resolve confusion in Bioscan where the PCR 1 button was showing on repeat runs,
+  # despite no new active library prep submission being made yet. Then in the next page, quad stamping,
+  # you would have no wells to transfer into the new PCR 1.
+  def active_pipelines_for_in_progress_requests(labware)
+    @list.select { |pipeline| pipeline.active_for_in_progress_requests?(labware) }
+  end
+
   # For the given pipeline group
   # return a object with key: group, and value: list of the pipeline names in that group
   # e.g {"Bespoke Chromium 3pv2"=>["Bespoke Chromium 3pv2", "Bespoke Chromium 3pv2 MX"]}
@@ -57,7 +66,23 @@ class PipelineList
     flatten_relationships_into_purpose_list(combined_relationships)
   end
 
+  # Given a list of pipeline configs and a purpose, return the pipelines that
+  # have that purpose in their relationships
+  def select_pipelines_with_purpose(pipeline_configs, purpose)
+    pipeline_configs.select { |pipeline| purpose_in_relationships?(pipeline, purpose.name) }
+  end
+
   private
+
+  # Checks if a given purpose is present in a pipeline.
+  #
+  # @param pipeline [Object] The pipeline to check.
+  # @param purpose [String] The purpose to look for.
+  #
+  # @return [Boolean] Returns true if the purpose is present in the the pipeline, false otherwise.
+  def purpose_in_relationships?(pipeline, purpose_name)
+    (pipeline.relationships.keys + pipeline.relationships.values).include?(purpose_name)
+  end
 
   def extract_combined_relationships(pipeline_configs)
     {}.tap do |combined_relationships|
@@ -99,7 +124,7 @@ class PipelineList
 
   def find_purposes_without_child(relationship_config)
     # reject purposes that are a 'key' in the config, meaning they have a child
-    extract_purposes_from_relationships(relationship_config).reject { |p| (relationship_config.key? p) }
+    extract_purposes_from_relationships(relationship_config).reject { |p| relationship_config.key? p }
   end
 
   def extract_purposes_from_relationships(relationship_config)

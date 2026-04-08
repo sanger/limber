@@ -1,4 +1,4 @@
-@import 'bootstrap';
+@import '_bootstrap';
 
 @mixin labware-view {
   .unknown {
@@ -24,7 +24,15 @@
   .failed {
     background-color: $danger;
   }
+  .under_represented {
+    background-color: #ff9100;
+  }
+
   .cancelled {
+    background-color: $danger;
+  }
+
+  .aliquot.failed.under_represented {
     background-color: $danger;
   }
 }

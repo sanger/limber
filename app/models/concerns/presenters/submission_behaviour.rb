@@ -21,25 +21,74 @@ module Presenters::SubmissionBehaviour
 
   # Determine whether the Choose Workflow buttons should be displayed
   def allow_new_submission?
-    # No more than one submission of a type can be active at time for a given labware.
-    # Prevent new submissions if any are currently in progress, as the submission type
-    # is currently not available.
-    submissions_in_progress = pending_submissions? || active_submissions?
-    submissions_in_progress == false
+    !(pending_submissions? || active_submissions?)
   end
 
   private
 
   def asset_groups
     @asset_groups ||=
-      labware
-        .wells
-        .compact_blank
-        .group_by(&:order_group)
-        .map { |_, wells| { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true } }
+      if labware.type == 'tubes'
+        [{ assets: [labware.uuid], autodetect_studies: true, autodetect_projects: true }]
+      else
+        labware
+          .wells
+          .reject { |well| exclude_well?(well) }
+          .group_by(&:order_group)
+          .map { |_, wells| format_asset_group(wells) }
+      end
+  end
+
+  def exclude_well?(well)
+    empty_well?(well) || all_aliquot_requests_failed?(well)
+  end
+
+  def empty_well?(well)
+    well.aliquots.blank?
+  end
+
+  def all_aliquot_requests_failed?(well)
+    well.aliquots.present? && well.aliquots.all? { |aliquot| aliquot_request_failed?(aliquot) }
+  end
+
+  def aliquot_request_failed?(aliquot)
+    aliquot.request&.state == 'failed'
+  end
+
+  def format_asset_group(wells)
+    { assets: wells.map(&:uuid), autodetect_studies: true, autodetect_projects: true }
   end
 
   def active_submissions?
-    submissions.any?(&:ready?)
+    # Guard for zero submissions, ok to make a new one
+    return false if submissions.blank?
+
+    # NB. submission state just tells you the state of the asynchronous sequencescape submission creation
+    # job, not the state of the submission requests. State 'ready' means job completed successfully.
+    # If any submission is not yet ready, it is still being built and we should not make more submissions
+    return false unless submissions.all?(&:ready?)
+
+    # Check if any submission requests are incomplete (not passed, failed, cancelled)
+    # Returns true if all requests are completed, false otherwise (indicating a submission is still active).
+    submissions.any? { |submission| submission_ready_with_incomplete_requests?(submission) }
+  end
+
+  def submission_ready_with_incomplete_requests?(submission)
+    return false unless submission.ready?
+
+    if labware.type == 'tubes'
+      incomplete_requests?(labware)
+    else
+      labware.wells.any? { |well| incomplete_requests?(well) }
+    end
+  end
+
+  # For plate wells or tubes
+  def incomplete_requests?(well_or_tube)
+    well_or_tube.requests_as_source.any? { |request| incomplete_request_state?(request.state) }
+  end
+
+  def incomplete_request_state?(state)
+    %w[passed failed cancelled].exclude?(state)
   end
 end
