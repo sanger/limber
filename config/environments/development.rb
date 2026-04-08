@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-require 'active_support/core_ext/integer/time'
+require "active_support/core_ext/integer/time"
 
 # Localhost might need to be rewritten if running inside an environment/container.
 # In which case, the value in the LOCALHOST environment variable will be substituted.
@@ -11,9 +9,7 @@ end
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # In the development environment your application's code is reloaded any time
-  # it changes. This slows down response time but is perfect for development
-  # since you don't have to restart the web server when you make code changes.
+  # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
   # Eager load code on boot.
@@ -25,14 +21,14 @@ Rails.application.configure do
   # Enable server timing.
   config.server_timing = true
 
-  # Enable/disable caching. By default caching is disabled.
-  # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp/caching-dev.txt').exist?
+  # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
+  # Run rails dev:cache to toggle Action Controller caching.
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :memory_store
-    config.public_file_server.headers = { 'Cache-Control' => "public, max-age=#{2.days.to_i}" }
+    config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
     config.cache_store = :null_store
@@ -41,10 +37,12 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
-  # Disable caching for Action Mailer templates even if Action Controller
-  # caching is enabled.
+  # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3001 }
+
+  # Set localhost to be used by links generated in mailer templates.
+  config.action_mailer.default_url_options = { host: "localhost", port: 3001 }
+
   config.action_mailer.delivery_method = :test
   config.action_mailer.smtp_settings = {}
 
@@ -69,10 +67,6 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   config.action_view.annotate_rendered_view_with_filenames = true
 
-  # Admin email
-  config.admin_email = 'nnnnnnnnnnnnnnnn'
-  config.exception_recipients = 'nnnnnnnnnnnnnnnn'
-
   config.api = ActiveSupport::OrderedOptions.new
   # API v2 config
   config.api.v2 = ActiveSupport::OrderedOptions.new
@@ -92,16 +86,6 @@ Rails.application.configure do
 
   # URL for Sequencescape
   config.sequencescape_url = 'http://localhost:3000'
-
-  # is this used? no reference in Limber
-  config.qc_submission_name = 'MiSeq for QC'
-
-  # By default used first study/project  - are these used? no reference in Limber
-  config.study_uuid = nil
-  config.project_uuid = nil
-
-  # is this used?
-  config.request_options = { 'read_length' => 11 }
 
   # Label printing services
   config.pmb_uri = ENV.fetch('PMB_URI', rewrite_localhost('http://localhost:3002/v1/'))
