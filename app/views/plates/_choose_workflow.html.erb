@@ -6,18 +6,20 @@
     allowing you to proceed.
   </p>
 
-  <div class="form-group row">
-    <label for="project_cost_code_global" class="plate-label col-md-2 fw-bold ">Project / Cost Code</label>
-    <div class="col-md-12">
-      <input type="text"
-           id="project_cost_code_global"
-           class="form-control"
-           placeholder="Enter project id and hit enter" />
+  <% if presenter.require_project? %>  
+    <div class="form-group row">
+      <label for="project_cost_code_global" class="plate-label col-md-2 fw-bold ">Project / Cost Code</label>
+      <div class="col-md-12">
+        <input type="text"
+            id="project_cost_code_global"
+            class="form-control"
+            placeholder="Enter project id and hit enter" />
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div id="project_search_result" class="col-md-8 offset-md-2" style="margin-bottom: 1em;"></div>
-  </div>
+    <div class="row">
+      <div id="project_search_result" class="col-md-8 offset-md-2" style="margin-bottom: 1em;"></div>
+    </div>
+  <% end %>
 
   <div id="submission_forms">
     <% presenter.each_submission_option do |name, submission| %>
@@ -58,8 +60,10 @@
             <% end %>
           <% end %>
 
-          <input type="hidden" name="submission[project_cost_code]" class="project-cost-code-hidden" />
-          <input type="hidden" name="sequencescape_submission[supplied_project_uuid]" class="supplied-project-uuid-hidden" />
+          <% if presenter.require_project? %>
+            <input type="hidden" name="submission[project_cost_code]" class="project-cost-code-hidden" />
+            <input type="hidden" name="sequencescape_submission[supplied_project_uuid]" class="supplied-project-uuid-hidden" />
+          <% end %>
 
           <%= submit_tag name, class: 'create-submission-button', disabled: presenter.disable_button_for_submission?(submission) %>
         <% end %>
@@ -73,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const projectInput = document.getElementById("project_cost_code_global");
   const resultDiv = document.getElementById("project_search_result");
 
+  if (!projectInput) return;
   // Attach to ALL forms inside submission_forms
   document.querySelectorAll("#submission_forms form").forEach(form => {
     form.addEventListener("submit", function (e) {
