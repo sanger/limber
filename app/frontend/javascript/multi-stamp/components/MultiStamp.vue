@@ -55,6 +55,7 @@ import {
   checkDuplicates,
   checkSize,
   checkForUnacceptablePlatePurpose,
+  checkMinCountRequests,
 } from '@/javascript/shared/components/plateScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import buildPlateObjs from '@/javascript/shared/plateHelpers.js'
@@ -274,6 +275,7 @@ export default {
         checkSize(12, 8),
         checkDuplicates(currPlates),
         checkForUnacceptablePlatePurpose(this.acceptablePurposesArray),
+        checkMinCountRequests(1),
       ]
     },
   },
