@@ -57,7 +57,7 @@ group :development do
   gem 'guard-rspec', require: false
   gem 'pry'
   gem 'pry-byebug'
-  gem 'web-console', '~> 4.2.1' # version 4.3.0 requires Rails 8.0
+  gem 'web-console'
 
   # MiniProfiler allows you to see the speed of a request conveniently on the page.
   gem 'rack-mini-profiler'
