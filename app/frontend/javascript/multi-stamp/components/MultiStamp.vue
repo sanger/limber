@@ -286,6 +286,8 @@ export default {
         checkDuplicates(currPlates),
         checkForUnacceptablePlatePurpose(this.acceptablePurposesArray),
       ]
+      // We can't enforce this check for all multi stamp plates because some may not be the first step of the workflow,
+      // and therefore may not have library requests yet. So we make it optional to check if the scanned plates have active library requests.
       if (this.requireActiveLibraryRequests === 'true') {
         validators.push(checkMinCountRequests(1))
       }
