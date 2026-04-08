@@ -6,7 +6,7 @@
     allowing you to proceed.
   </p>
 
-  <% if presenter.require_project? %>  
+  <% if presenter.collect_project? %>
     <div class="form-group row">
       <label for="project_cost_code_global" class="plate-label col-md-2 fw-bold ">Project / Cost Code</label>
       <div class="col-md-12">
@@ -60,7 +60,7 @@
             <% end %>
           <% end %>
 
-          <% if presenter.require_project? %>
+          <% if presenter.collect_project? %>
             <input type="hidden" name="submission[project_cost_code]" class="project-cost-code-hidden" />
             <input type="hidden" name="sequencescape_submission[supplied_project_uuid]" class="supplied-project-uuid-hidden" />
           <% end %>
