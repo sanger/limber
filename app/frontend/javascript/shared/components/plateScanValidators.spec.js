@@ -44,18 +44,6 @@ describe('checkDuplicates', () => {
     })
   })
 
-  it.skip('fails if there are duplicate plates even when the parent has not been updated', () => {
-    // We emit the plate and state as a single event, and want to avoid the situation
-    // where plates flick from valid to invalid
-    const empty = null
-    const plate1 = { uuid: 'plate-uuid-1' }
-
-    expect(checkDuplicates([empty, plate1])(plate1)).toEqual({
-      valid: false,
-      message: 'Barcode has been scanned multiple times',
-    })
-  })
-
   it('passes if it has distinct plates and the parent has not been updated', () => {
     const empty = null
     const plate1 = { uuid: 'plate-uuid-1' }
