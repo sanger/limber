@@ -141,6 +141,15 @@ export default {
     // If present is used in scanValidation to check if the user has scanned an
     // a plate of the correct type.
     acceptablePurposes: { type: String, required: false, default: '[]' },
+
+    // Flag to determine whether we should check if the scanned plates have active library requests. It is optional and
+    // defaults to 'false' if not provided.
+    // Also referenced as require-active-library-requests and require_active_library_requests
+    requireActiveLibraryRequests: {
+      type: String,
+      required: false,
+      default: 'false',
+    },
   },
   data() {
     return {
@@ -271,12 +280,17 @@ export default {
     },
     scanValidation() {
       const currPlates = this.plates.map((plateItem) => plateItem.plate)
-      return [
+
+      const validators = [
         checkSize(12, 8),
         checkDuplicates(currPlates),
         checkForUnacceptablePlatePurpose(this.acceptablePurposesArray),
-        checkMinCountRequests(1),
       ]
+      if (this.requireActiveLibraryRequests === 'true') {
+        validators.push(checkMinCountRequests(1))
+      }
+
+      return validators
     },
   },
   methods: {

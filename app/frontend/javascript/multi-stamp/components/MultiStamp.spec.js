@@ -23,6 +23,7 @@ describe('MultiStamp', () => {
           locationObj: options.locationObj,
           transfersLayout: 'quadrant',
           transfersCreator: 'multi-stamp',
+          requireActiveLibraryRequests: 'false',
           ...options,
         },
       })

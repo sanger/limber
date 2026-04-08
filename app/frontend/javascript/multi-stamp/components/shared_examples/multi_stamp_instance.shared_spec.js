@@ -5,6 +5,7 @@
 // Import the component being tested
 import { mount } from '@vue/test-utils'
 import { plateFactory, wellFactory, requestFactory } from '@/javascript/test_support/factories.js'
+import { aggregate } from '@/javascript/shared/components/scanValidators.js'
 
 const sharedSpecs = (args) => {
   const subject = args.subject
@@ -177,6 +178,73 @@ const sharedSpecs = (args) => {
       expect(wrapper.vm.transfersError).toEqual(
         'This would result in multiple transfers into the same well. Check if the source plates (DN1S) have more than one active submission.',
       )
+    })
+
+    describe('displays the correct error message when wells require active library requests', () => {
+      it('is not valid when we scan plates with wells with no requests', async () => {
+        const wrapper = wrapperFactory({ requireActiveLibraryRequests: 'true' })
+        const well1 = wellFactory({
+          uuid: 'well-1-uuid',
+          requests_as_source: [],
+          position: { name: 'A1' },
+        })
+        const plate1 = {
+          state: 'valid',
+          plate: plateFactory({ uuid: 'plate-1-uuid', wells: [well1] }),
+        }
+        wrapper.vm.updatePlate(1, plate1)
+
+        const validation = aggregate(wrapper.vm.scanValidation, plate1.plate)
+        expect(validation.message).toContain(
+          'Plate should have at least 1 wells with submissions for library preparation (0)',
+        )
+        expect(validation.valid).toEqual(false)
+      })
+
+      it('is not valid when we scan plates with wells with non-library requests', async () => {
+        const wrapper = wrapperFactory({ requireActiveLibraryRequests: 'true' })
+        const request1 = requestFactory({ uuid: 'req-1-uuid' })
+        const well1 = wellFactory({
+          uuid: 'well-1-uuid',
+          requests_as_source: [request1],
+          position: { name: 'A1' },
+        })
+        const plate1 = {
+          state: 'valid',
+          plate: plateFactory({ uuid: 'plate-1-uuid', wells: [well1] }),
+        }
+        wrapper.vm.updatePlate(1, plate1)
+
+        const validation = aggregate(wrapper.vm.scanValidation, plate1.plate)
+        expect(validation.message).toContain(
+          'Plate should have at least 1 wells with submissions for library preparation (0)',
+        )
+        expect(validation.valid).toEqual(false)
+      })
+
+      it('is valid when we scan plates with at least one well with library requests', async () => {
+        const wrapper = wrapperFactory({ requireActiveLibraryRequests: 'true' })
+        const request1 = requestFactory({ uuid: 'req-1-uuid', library_type: 'Standard' })
+        const well1 = wellFactory({
+          uuid: 'well-1-uuid',
+          requests_as_source: [request1],
+          position: { name: 'A1' },
+        })
+        // Second well with no library requests
+        const well2 = wellFactory({
+          uuid: 'well-2-uuid',
+          requests_as_source: [],
+          position: { name: 'A2' },
+        })
+        const plate1 = {
+          state: 'valid',
+          plate: plateFactory({ uuid: 'plate-1-uuid', wells: [well1, well2] }),
+        }
+        wrapper.vm.updatePlate(1, plate1)
+
+        const validation = aggregate(wrapper.vm.scanValidation, plate1.plate)
+        expect(validation.valid).toEqual(true)
+      })
     })
 
     describe('defaultVolume', () => {

@@ -69,7 +69,10 @@ LBSN-96 Lysate Input:
       allowed_extra_barcodes: false
 LBSN-384 PCR 1:
   :asset_type: plate
-  :creator_class: LabwareCreators::QuadrantStamp
+  :creator_class:
+    name: LabwareCreators::QuadrantStamp
+    params:
+      require_active_library_requests: yes
   :merger_plate: true
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :label_template: plate_384_single
