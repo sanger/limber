@@ -63,18 +63,27 @@ if (globalInput && resultDiv) {
     globalInput.classList.remove('is-invalid')
   })
 
-  globalInput.addEventListener('keydown', async function (event) {
-    if (event.key !== 'Enter') return
-
-    event.preventDefault()
+  const triggerLookup = async function ({ requireValue = false } = {}) {
     const projectCode = globalInput.value.trim()
 
     if (!projectCode) {
-      showError('Project / Cost Code is required')
+      if (requireValue) showError('Project / Cost Code is required')
       return
     }
 
+    if (validatedProjectCode === projectCode && foundProjectId) return
+
     await lookupProject(projectCode)
+  }
+
+  globalInput.addEventListener('keydown', async function (event) {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    await triggerLookup({ requireValue: true })
+  })
+
+  globalInput.addEventListener('blur', function () {
+    triggerLookup()
   })
 
   document.querySelectorAll('#submission_forms form').forEach(function (form) {
