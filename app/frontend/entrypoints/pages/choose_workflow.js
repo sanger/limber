@@ -56,13 +56,6 @@ if (globalInput && resultDiv) {
     }
   }
 
-  globalInput.addEventListener('input', function () {
-    foundProjectId = null
-    validatedProjectCode = null
-    resultDiv.textContent = ''
-    globalInput.classList.remove('is-invalid')
-  })
-
   const triggerLookup = async function ({ requireValue = false } = {}) {
     const projectCode = globalInput.value.trim()
 
@@ -70,11 +63,16 @@ if (globalInput && resultDiv) {
       if (requireValue) showError('Project / Cost Code is required')
       return
     }
-
     if (validatedProjectCode === projectCode && foundProjectId) return
-
     await lookupProject(projectCode)
   }
+
+  globalInput.addEventListener('input', function () {
+    foundProjectId = null
+    validatedProjectCode = null
+    resultDiv.textContent = ''
+    globalInput.classList.remove('is-invalid')
+  })
 
   globalInput.addEventListener('keydown', async function (event) {
     if (event.key !== 'Enter') return
