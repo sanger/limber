@@ -56,8 +56,8 @@ RSpec.describe Presenters::PipelineInfoPresenter do
     context 'when no pipelines match' do
       let(:pipelines_config) { {} }
 
-      it 'returns nil' do
-        expect(presenter.pipeline_groups).to be_nil
+      it 'returns an empty array' do
+        expect(presenter.pipeline_groups).to eq([])
       end
     end
 
@@ -130,6 +130,49 @@ RSpec.describe Presenters::PipelineInfoPresenter do
 
         it 'returns the pipeline groups matching the library type' do
           expect(presenter.pipeline_groups).to eq(['Group D'])
+        end
+      end
+    end
+
+    context 'when pipelines match by purpose and library type' do
+      # Based on Bioscan pipeline
+      let(:pipelines_config) do
+        {
+          'bioscan_lysate_prep' => {
+            filters: {
+              request_type_key: 'limber_bioscan_lysate_prep'
+            },
+            relationships: {
+              'LILYS-96 Stock' => 'LBSN-96 Lysate'
+            }
+          },
+          'bioscan_library_prep' => {
+            filters: {
+              request_type_key: 'limber_bioscan_library_prep',
+              library_type: 'Bioscan'
+            },
+            relationships: {
+              'LBSN-96 Lysate' => 'LBSN-384 PCR 1'
+            }
+          }
+        }
+      end
+      let(:purpose) { create(:purpose, name: 'LBSN-96 Lysate') }
+      let(:labware) { create(:plate, purpose:) }
+
+      it 'returns the pipeline group matching the purpose' do
+        expect(presenter.pipeline_groups).to eq(%w[bioscan_library_prep bioscan_lysate_prep])
+      end
+
+      context 'with added request filter' do
+        let(:request_type) { create(:request_type, key: 'limber_bioscan_library_prep') }
+        let(:request) { [create(:request, request_type: request_type, library_type: 'Bioscan', state: 'passed')] }
+        let(:aliquot) { [create(:aliquot, request:)] }
+        let(:wells) { [create(:well, aliquots: aliquot, location: 'A1')] }
+        let(:labware) { create(:plate, purpose:, wells:) }
+
+        it 'returns the pipeline group matching the purpose and library type' do
+          expect(presenter.pipeline_groups).to eq(['bioscan_library_prep'])
         end
       end
     end
