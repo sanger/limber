@@ -41,6 +41,7 @@ describe('choose_workflow submission form project fields', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
+        ok: true,
         json: vi.fn().mockResolvedValue({
           found: true,
           project: { uuid: 'project-uuid-123', name: 'Example Project' },
@@ -60,6 +61,40 @@ describe('choose_workflow submission form project fields', () => {
     expect(hiddenProjectUuid.value).toBe('project-uuid-123')
   })
 
+  it('validates and submits the form when project is entered without pressing enter first', async () => {
+    vi.resetModules()
+
+    const projectInput = document.getElementById('project_cost_code_global')
+    const resultDiv = document.getElementById('project_search_result')
+    const form = document.querySelector('#submission_forms form')
+    const hiddenProjectCode = form.querySelector('.project-cost-code-hidden')
+    const hiddenProjectUuid = form.querySelector('.supplied-project-uuid-hidden')
+
+    form.submit = vi.fn()
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue({
+          found: true,
+          project: { uuid: 'project-uuid-456', name: 'Validated Project' },
+        }),
+      }),
+    )
+
+    await import('./choose_workflow.js')
+
+    projectInput.value = '67890'
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+
+    await waitForCondition(() => resultDiv.textContent === 'Project found: Validated Project')
+    await waitForCondition(() => form.submit.mock.calls.length === 1)
+
+    expect(hiddenProjectCode.value).toBe('67890')
+    expect(hiddenProjectUuid.value).toBe('project-uuid-456')
+  })
+
   it('sets project uuid hidden field to empty string when no project is found', async () => {
     vi.resetModules()
 
@@ -72,6 +107,7 @@ describe('choose_workflow submission form project fields', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
+        ok: false,
         json: vi.fn().mockResolvedValue({
           found: false,
           error: 'Project not found',
@@ -87,7 +123,26 @@ describe('choose_workflow submission form project fields', () => {
 
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 
-    expect(hiddenProjectCode.value).toBe('99999')
+    expect(hiddenProjectCode.value).toBe('')
     expect(hiddenProjectUuid.value).toBe('')
+  })
+
+  it('shows an error and does not submit when project code is blank', async () => {
+    vi.resetModules()
+
+    const projectInput = document.getElementById('project_cost_code_global')
+    const resultDiv = document.getElementById('project_search_result')
+    const form = document.querySelector('#submission_forms form')
+
+    form.submit = vi.fn()
+
+    await import('./choose_workflow.js')
+
+    projectInput.value = '   '
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+
+    expect(resultDiv.textContent).toContain('Project / Cost Code is required')
+    expect(projectInput.classList.contains('is-invalid')).toBe(true)
+    expect(form.submit).not.toHaveBeenCalled()
   })
 })
