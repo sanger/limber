@@ -67,7 +67,7 @@ UPF2 Balanced Norm:
   :presenter_class: Presenters::SubmissionTubePresenter
   :submission_options:
     Ultima Sequencing - Automated Submission:
-      template_name: 'Limber-Htp - Ultima PCR Free - Ultima UG200 sequencing Automated'
+      template_name: 'Limber-Htp - Ultima UG200 PCR Free - Ultima UG200 sequencing Automated'
       allowed_extra_barcodes: false
       request_options:
         ot_recipe: Free
