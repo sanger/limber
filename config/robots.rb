@@ -5352,4 +5352,121 @@ ROBOT_CONFIG =
         }
       }
     )
+
+    # Ultima UG200 bed verification
+    # UPF2 Cherrypicked => UPF2 Shear
+    custom_robot(
+      'bravo-upf2-cherrypicked-to-upf2-shear',
+      name: 'UPF2 Cherrypicked => UPF2 Shear',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF2 Cherrypicked',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF2 Shear',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Shear => UPF2 Post Shear
+    custom_robot(
+      'bravo-upf2-shear-to-upf2-post-shear',
+      name: 'UPF2 Shear => UPF2 Post Shear',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'UPF2 Shear',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(7).barcode => {
+          purpose: 'UPF2 Post Shear',
+          states: ['pending'],
+          label: 'Bed 7',
+          parent: bed(9).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Post Shear => UPF2 End Prep
+    custom_robot(
+      'bravo-upf2-post-shear-to-upf2-end-prep-xp1',
+      name: 'UPF2 Post Shear => UPF2 End Prep',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'UPF2 Post Shear',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF2 End Prep',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 End Prep => UPF2 Lib
+    custom_robot(
+      'bravo-upf2-end-prep-xp1-to-upf2-lib',
+      name: 'Bravo UPF2 End Prep => UPF2 Lib',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'UPF2 End Prep',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['pending'],
+          label: 'Bed 6',
+          target_state: 'passed',
+          parent: bed(5).barcode
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Lib => UPF2 Lib XP2
+    custom_robot(
+      'hamilton-upf2-lib-to-upf2-lib-xp2',
+      name: 'Hamilton UPF2 Lib => UPF2 Lib XP2',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF2 Lib XP2',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF2 Lib XP2',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
   end
