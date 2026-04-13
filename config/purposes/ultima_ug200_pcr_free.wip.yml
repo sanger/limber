@@ -61,7 +61,8 @@ UPF2 Balanced Pool:
       id: 'ultima_balancing'
 UPF2 Balanced Norm:
   :asset_type: tube
-  :type: IlluminaHtp::StockTubePurpose
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
   :default_printer_type: :ultima_balanced_norm_tube
   :creator_class: LabwareCreators::TubeFromTube
   :presenter_class: Presenters::SubmissionTubePresenter
