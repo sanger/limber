@@ -5387,10 +5387,10 @@ ROBOT_CONFIG =
           parent: car('2,3').barcode,
           target_state: 'started'
         },
-        car('4,5').barcode => {
+        car('3,4').barcode => {
           purpose: 'LCMT RNA Preamp',
           states: ['pending'],
-          label: 'Carousel 4,5',
+          label: 'Carousel 3,4',
           parent: car('3,5').barcode,
           target_state: 'started'
         }
