@@ -19,6 +19,7 @@ class Settings
       # Immutability is good here though, so we should probably fix that.
       # Added flag onto safe_load to allow read of anchors (aliases) in yml files.
       @instance = File.open(configuration_filename, 'r:bom|utf-8') do |config_file_descriptor|
+        # Silence verbose warnings about reused parameters while a better long-term solution is implemented
         Hashie::Mash.quiet(:max, :min, :size, :class).new(
           YAML.safe_load(config_file_descriptor, permitted_classes: [Symbol], aliases: true)
         )
