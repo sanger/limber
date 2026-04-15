@@ -8,7 +8,7 @@ module ConfigLoader
   # class attribute.
   class Base
     BASE_CONFIG_PATH = %w[config].freeze
-    EXTENSIONS = ['.yml', '.erb']
+    EXTENSION = '.yml'
     WIP_EXTENSION = '.wip.yml'
 
     class_attribute :config_folder
@@ -46,7 +46,7 @@ module ConfigLoader
     # @return [Bool] returns true if the file is a yaml file, false otherwise
     #
     def yaml?(filename)
-      EXTENSIONS.include?(filename.extname)
+      filename.extname == EXTENSION
     end
 
     def default_path
@@ -78,9 +78,7 @@ module ConfigLoader
     end
 
     def load_yaml_file(file)
-      content = file.read
-
-      content = ERB.new(content).result if file.extname == '.erb'
+      content = ERB.new(file.read).result
 
       YAML.load(content, aliases: true)
     end
