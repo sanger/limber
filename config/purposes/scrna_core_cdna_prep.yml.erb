@@ -48,11 +48,11 @@ LRC PBMC Defrost PBS 1ml:
   :qc_thresholds:
     viability:
       units: '%'
-      default_threshold: 50
+      default_threshold: <%= Rails.application.config.scrna_config[:viability_default_threshold] %>
     total_cell_count:
       name: Total cell count
       units: 'cells/ml'
-      default_threshold: 500_000
+      default_threshold: <%= Rails.application.config.scrna_config[:total_cell_count_default_threshold] %>
       decimal_places: 0
   :stock_plate: false
   :input_plate: false
@@ -70,11 +70,11 @@ LRC PBMC Aliquot:
   :qc_thresholds:
     viability:
       units: '%'
-      default_threshold: 50
+      default_threshold: <%= Rails.application.config.scrna_config[:viability_default_threshold] %>
     total_cell_count:
       name: Total cell count
       units: 'cells/ml'
-      default_threshold: 500_000
+      default_threshold: <%= Rails.application.config.scrna_config[:total_cell_count_default_threshold] %>
       decimal_places: 0
   :file_links:
     - name: 'Download Cellaca Count CSV'
@@ -87,11 +87,11 @@ LRC PBMC Pools:
   :qc_thresholds:
     viability:
       units: '%'
-      default_threshold: 50
+      default_threshold: <%= Rails.application.config.scrna_config[:viability_default_threshold] %>
     total_cell_count:
       name: Total cell count
       units: 'cells/ml'
-      default_threshold: 500_000
+      default_threshold: <%= Rails.application.config.scrna_config[:total_cell_count_default_threshold] %>
       decimal_places: 0
   :presenter_class:
     name: Presenters::DonorPoolingPlatePresenter

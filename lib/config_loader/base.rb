@@ -8,7 +8,7 @@ module ConfigLoader
   # class attribute.
   class Base
     BASE_CONFIG_PATH = %w[config].freeze
-    EXTENSION = '.yml'
+    EXTENSIONS = ['.yml', '.erb']
     WIP_EXTENSION = '.wip.yml'
 
     class_attribute :config_folder
@@ -46,7 +46,7 @@ module ConfigLoader
     # @return [Bool] returns true if the file is a yaml file, false otherwise
     #
     def yaml?(filename)
-      filename.extname == EXTENSION
+      EXTENSIONS.include?(filename.extname)
     end
 
     def default_path
@@ -67,7 +67,7 @@ module ConfigLoader
     def load_config
       @config =
         @files.each_with_object({}) do |file, store|
-          latest_file = YAML.load_file(file, aliases: true)
+          latest_file = load_yaml_file(file)
           if latest_file.nil?
             warn "Cannot parse file: #{file}"
           else
@@ -75,6 +75,14 @@ module ConfigLoader
             store.merge!(latest_file)
           end
         end
+    end
+
+    def load_yaml_file(file)
+      content = file.read
+
+      content = ERB.new(content).result if file.extname == '.erb'
+
+      YAML.load(content, aliases: true)
     end
 
     def check_duplicates(stored_keys, new_keys)
