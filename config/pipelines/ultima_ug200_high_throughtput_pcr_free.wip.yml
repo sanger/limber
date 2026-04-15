@@ -1,0 +1,28 @@
+---
+# Ultima UG200 PCR Free Pipeline
+Ultima UG200 High Throughput PCR Free:
+  pipeline_group: Ultima UG200 High Throughput PCR Free
+  filters:
+    request_type_key: limber_ultima_ug200_htp_pcr_free
+    library_type:
+      - Ultima High Throughput PCR Free 96 # same as UG100
+  library_pass: UPF2 Lib XP2
+  relationships:
+    UPF2 Cherrypicked: UPF2 Shear
+    UPF2 Shear: UPF2 Post Shear
+    UPF2 Post Shear: UPF2 End Prep
+    UPF2 End Prep: UPF2 Lib
+    UPF2 Lib: UPF2 Lib XP2
+Ultima UG200 Multiplexing:
+  pipeline_group: Ultima UG200 High Throughput PCR Free
+  filters:
+    request_type_key:
+      - limber_multiplexing_ultima_ug200
+  relationships:
+    UPF2 Lib XP2: UPF2 EqVol Pool
+    UPF2 EqVol Pool: UPF2 EqVol Norm
+Ultima UG200 Balancing:
+  pipeline_group: Ultima UG200 High Throughput PCR Free
+  relationships:
+    UPF2 Lib XP2: UPF2 Balanced Pool
+    UPF2 Balanced Pool: UPF2 Balanced Norm
