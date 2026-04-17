@@ -33,6 +33,7 @@ Bespoke PCR:
       - TraDIS
       - TruSeq mRNA (RNA Seq)
       - SGE Library v0.2
+      - Custom 2-step amplicon PCR
   library_pass: LBB Lib PCR-XP
   relationships:
     Stock Plate: LBB Ligation
