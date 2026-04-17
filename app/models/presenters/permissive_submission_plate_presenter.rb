@@ -22,6 +22,7 @@ module Presenters
   class PermissiveSubmissionPlatePresenter < PlatePresenter
     include Presenters::Statemachine::PermissiveSubmission
     include Presenters::SubmissionBehaviour
+    include Presenters::CollectProjectBehaviour
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator

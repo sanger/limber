@@ -19,6 +19,7 @@ module Presenters
     include Presenters::Statemachine::DoesNotAllowLibraryPassing
     include Presenters::SubmissionBehaviour
     include Presenters::StateChangeless
+    include Presenters::CollectProjectBehaviour
 
     self.allow_well_failure_in_states = []
 
