@@ -11,7 +11,6 @@ module Presenters
   class StockPlateWithSubmissionPresenter < SubmissionPlatePresenter
     include Presenters::StockBehaviour
     include Presenters::Statemachine::SubmissionWhenPassed
-    include Presenters::CollectProjectBehaviour
 
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator
