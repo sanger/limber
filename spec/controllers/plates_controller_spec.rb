@@ -92,6 +92,61 @@ RSpec.describe PlatesController, type: :controller do
     end
   end
 
+  describe '#find_project_by_id' do
+    let(:project_id) { '123' }
+    let(:project_uuid) { 'project-uuid-example' }
+    let(:project_name) { 'Test Project' }
+    let(:project) { build(:project, id: project_id, uuid: project_uuid, name: project_name) }
+
+    context 'when the project is found' do
+      before do
+        allow(Sequencescape::Api::V2::Project).to receive(:find!).with(project_id).and_return([project])
+      end
+
+      it 'returns found true with project details' do
+        get :find_project_by_id, params: { project_id: }, format: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to include(
+          'found' => true,
+          'project' => include('id' => project_id, 'uuid' => project_uuid, 'name' => project_name)
+        )
+      end
+    end
+
+    context 'when the project is not found' do
+      before do
+        allow(Sequencescape::Api::V2::Project).to receive(:find!).with(project_id)
+          .and_raise(JsonApiClient::Errors::NotFound.new(nil))
+      end
+
+      it 'returns found false with a not found error' do
+        get :find_project_by_id, params: { project_id: }, format: :json
+
+        expect(response).to have_http_status(:not_found)
+        json = response.parsed_body
+        expect(json['found']).to be false
+        expect(json['error']).to eq('Project not found')
+      end
+    end
+
+    context 'when an unexpected error occurs' do
+      before do
+        allow(Sequencescape::Api::V2::Project).to receive(:find!).with(project_id)
+          .and_raise(StandardError, 'Something went wrong')
+      end
+
+      it 'returns found false with the error message' do
+        get :find_project_by_id, params: { project_id: }, format: :json
+
+        expect(response).to have_http_status(:internal_server_error)
+        json = response.parsed_body
+        expect(json['found']).to be false
+        expect(json['error']).to eq('Something went wrong')
+      end
+    end
+  end
+
   describe '#process_mark_under_represented_wells' do
     let(:well_locations) { %w[A1 B2] }
     let(:wells) do

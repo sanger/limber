@@ -12,6 +12,7 @@ module Presenters
     include Presenters::RobotControlled
     include Presenters::ExtendedCsv
     include Presenters::CreationBehaviour
+    include Presenters::CollectProjectBehaviour
 
     class_attribute :aliquot_partial, :allow_well_failure_in_states, :style_class, :samples_partial
 
@@ -188,6 +189,10 @@ module Presenters
     # If no states are defined, it will return true by default.
     def display_manual_transfer_button?
       can_be_enabled?(purpose_config.dig(:manual_transfer, :states))
+    end
+
+    def disable_button_for_submission?(_submission)
+      false
     end
 
     private

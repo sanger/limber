@@ -24,7 +24,7 @@ const filterProps = {
   null: {
     plateFields: {
       plates: 'labware_barcode,purpose,wells,uuid,number_of_rows,number_of_columns',
-      requests: 'uuid,state',
+      requests: 'uuid,state,library_type',
       wells: 'position,requests_as_source,aliquots,uuid',
       aliquots: 'request',
     },

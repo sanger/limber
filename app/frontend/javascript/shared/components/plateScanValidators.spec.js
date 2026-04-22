@@ -44,18 +44,6 @@ describe('checkDuplicates', () => {
     })
   })
 
-  it.skip('fails if there are duplicate plates even when the parent has not been updated', () => {
-    // We emit the plate and state as a single event, and want to avoid the situation
-    // where plates flick from valid to invalid
-    const empty = null
-    const plate1 = { uuid: 'plate-uuid-1' }
-
-    expect(checkDuplicates([empty, plate1])(plate1)).toEqual({
-      valid: false,
-      message: 'Barcode has been scanned multiple times',
-    })
-  })
-
   it('passes if it has distinct plates and the parent has not been updated', () => {
     const empty = null
     const plate1 = { uuid: 'plate-uuid-1' }
@@ -162,37 +150,60 @@ describe('checkMaxCountRequests', () => {
 })
 
 describe('checkMinCountRequests', () => {
-  const plate_bad = {
-    wells: [
-      { position: { name: 'A1' }, requests_as_source: [{ library_type: 'A' }] },
-      { position: { name: 'B1' }, requests_as_source: [{ library_type: 'A' }] },
-      { position: { name: 'C1' }, requests_as_source: [] },
-    ],
-  }
-  const plate_good = {
-    wells: [
-      {
-        position: { name: 'A1' },
-        requests_as_source: [{ library_type: 'A' }, { library_type: 'B' }],
-      },
-      {
-        position: { name: 'B1' },
-        requests_as_source: [{ library_type: 'A' }, { library_type: 'B' }],
-      },
-      {
-        position: { name: 'C1' },
-        requests_as_source: [{ library_type: 'A' }, { library_type: 'B' }],
-      },
-    ],
-  }
-
   const validator = checkMinCountRequests(3)
 
-  it('validates has more than minimum requests', () => {
-    expect(validator(plate_good)).toEqual({ valid: true })
+  it('passes when it has more than the minimum library requests', () => {
+    const plate = {
+      wells: [
+        { position: { name: 'A1' }, requests_as_source: [{ library_type: 'A' }] },
+        { position: { name: 'B1' }, requests_as_source: [{ library_type: 'A' }] },
+        { position: { name: 'C1' }, requests_as_source: [{ library_type: 'A' }] },
+      ],
+    }
+    const validation = validator(plate)
+    expect(validation.valid).toEqual(true)
   })
-  it('fails when has less than minimum requests', () => {
-    expect(validator(plate_bad).valid).toEqual(false)
+
+  it('fails when it has less than minimum requests', () => {
+    const plate = {
+      wells: [
+        { position: { name: 'A1' }, requests_as_source: [{ library_type: 'A' }] },
+        { position: { name: 'B1' }, requests_as_source: [{ library_type: 'A' }] },
+        { position: { name: 'C1' }, requests_as_source: [] },
+      ],
+    }
+    const validation = validator(plate)
+    expect(validation.valid).toEqual(false)
+    expect(validation.message).toEqual(
+      'Plate should have at least 3 wells with submissions for library preparation (2)',
+    )
+  })
+
+  it('fails when it has enough requests but they are not for library preparation', () => {
+    // Note: The omission of library_type is what determines that these requests are not for library preparation
+    const plate = {
+      wells: [
+        { position: { name: 'A1' }, requests_as_source: [{ uuid: 'req-uuid-1' }] },
+        { position: { name: 'B1' }, requests_as_source: [{ uuid: 'req-uuid-2' }] },
+        { position: { name: 'C1' }, requests_as_source: [{ uuid: 'req-uuid-3' }] },
+      ],
+    }
+    const validation = validator(plate)
+    expect(validation.valid).toEqual(false)
+    expect(validation.message).toEqual(
+      'Plate should have at least 3 wells with submissions for library preparation (0)',
+    )
+  })
+
+  it('fails when it has no wells', () => {
+    const plate = {
+      wells: [],
+    }
+    const validation = validator(plate)
+    expect(validation.valid).toEqual(false)
+    expect(validation.message).toEqual(
+      'Plate should have at least 3 wells with submissions for library preparation (0)',
+    )
   })
 })
 
