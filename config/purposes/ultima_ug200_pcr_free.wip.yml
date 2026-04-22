@@ -1,0 +1,77 @@
+---
+# Ultima UG200 PCR Free Pipeline purposes
+UPF2 Cherrypicked:
+  :asset_type: plate
+  :stock_plate: true
+  :cherrypickable_target: true
+  :input_plate: true
+  :default_printer_type: :plate_a
+  :presenter_class: Presenters::StockPlatePresenter
+UPF2 Shear:
+  :asset_type: plate
+UPF2 Post Shear:
+  :asset_type: plate
+UPF2 End Prep:
+  :asset_type: plate
+  :default_printer_type: :ultima_lib_plate
+UPF2 Lib:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::TaggedPlate
+  :tag_layout_templates:
+    - 'Ultima P3'
+    - 'UG-RD-1916 (Solaris 2.0 V1 PCR-Free Adapters for Ultima Genomics P4)'
+  :default_printer_type: :ultima_lib_plate
+UPF2 Lib XP2:
+  :asset_type: plate
+  :manual_transfer:
+    states:
+      - 'pending'
+  :default_printer_type: :plate_xp2
+UPF2 EqVol Pool:
+  :asset_type: tube
+  :target: StockMultiplexedLibraryTube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::PooledTubesBySubmission
+  :presenter_class:
+    name: Presenters::SimpleTubePresenter
+    args:
+      downstream_mx_tube:
+        child_tube_purposes_to_limit:
+          - 'UPF2 EqVol Norm'
+  :default_printer_type: :ultima_balanced_tube
+UPF2 EqVol Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :ultima_balanced_norm_tube
+UPF2 Balanced Pool:
+  :asset_type: tube
+  :type: IlluminaHtp::InitialStockTubePurpose
+  :creator_class: LabwareCreators::BalancedPooledTube
+  :target: LibraryTube
+  :number_of_parent_labwares: 1
+  :transfer_template: 'Whole plate to tube'
+  :presenter_class: Presenters::SimpleTubePresenter
+  :default_printer_type: :ultima_balanced_tube
+  :file_links:
+    - name: 'Download balanced Library Pooling file'
+      id: 'ultima_balancing'
+UPF2 Balanced Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :default_printer_type: :ultima_balanced_norm_tube
+  :creator_class: LabwareCreators::TubeFromTube
+  :presenter_class: Presenters::SubmissionTubePresenter
+  :submission_options:
+    Ultima Sequencing - Automated Submission:
+      template_name: 'Limber-Htp - Ultima UG200 PCR Free - Ultima UG200 sequencing Automated'
+      allowed_extra_barcodes: false
+      request_options:
+        ot_recipe: Free
+        fragment_size_required_from: 300
+        fragment_size_required_to: 400
+        wafer_size: 10TB

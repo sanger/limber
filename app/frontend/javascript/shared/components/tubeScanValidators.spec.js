@@ -36,18 +36,6 @@ describe('checkDuplicates', () => {
     })
   })
 
-  it.skip('fails if there are duplicate tubes even when the parent has not been updated', () => {
-    // We emit the tube and state as a single event, and want to avoid the situation
-    // where tubes flick from valid to invalid
-    const empty = null
-    const tube1 = { uuid: 'tube-uuid-1' }
-
-    expect(checkDuplicates([empty, tube1])(tube1)).toEqual({
-      valid: false,
-      message: 'Barcode has been scanned multiple times',
-    })
-  })
-
   it('passes if it has distinct tubes and the parent has not been updated', () => {
     const empty = null
     const tube1 = { uuid: 'tube-uuid-1' }

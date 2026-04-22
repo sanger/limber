@@ -21,6 +21,7 @@ module SequencescapeSubmissionBehaviour
     params
       .expect(sequencescape_submission: [
                 :template_uuid,
+                :supplied_project_uuid,
                 :labware_barcode, {
                   request_options: {}, assets: [], asset_groups: {}, extra_barcodes: []
                 }

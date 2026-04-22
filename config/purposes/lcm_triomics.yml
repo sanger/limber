@@ -5,8 +5,26 @@ LCMT Lysate:
   :stock_plate: true
   :cherrypickable_target: false
   :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
+  :presenter_class:
+    name: Presenters::StockPlateWithSubmissionPresenter
+    args:
+      collect_project: true
   :creator_class: LabwareCreators::Uncreatable
+  :submission_options:
+    EM-seq (+ WGS) Branch - Automated Submission:
+      template_name: 'Limber-Htp - LCM Triomics EMSeq'
+      allowed_extra_barcodes: false
+      request_options:
+        library_type: 'emSEQ'
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
+    RNA-Seq Branch - Automated Submission:
+      template_name: 'Limber-Htp - LCM Triomics RNASeq'
+      allowed_extra_barcodes: false
+      request_options:
+        library_type: 'Combined LCM RNA'
+        fragment_size_required_from: '100'
+        fragment_size_required_to: '500'
   :size: 96
 LCMT DNA Frag:
   :asset_type: plate
