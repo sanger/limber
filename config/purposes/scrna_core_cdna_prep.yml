@@ -60,6 +60,13 @@ LRC PBMC Defrost PBS 1ml:
 # Differs from 1ml path because does not create QC labels or have Cell Count file link
 LRC PBMC Defrost PBS 08ml:
   :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+# This plate is an extra step for the 0.8ml path only
+# QC labels and Cell Count file link are on this plate
+LRC PBMC Aliquot:
+  :asset_type: plate
+  :label_template: plate_quad_qc # creates QC4 barcodes
   :qc_thresholds:
     viability:
       units: '%'
@@ -69,13 +76,6 @@ LRC PBMC Defrost PBS 08ml:
       units: 'cells/ml'
       default_threshold: <%= Rails.application.config.scrna_config[:total_cell_count_default_threshold] %>
       decimal_places: 0
-  :stock_plate: false
-  :input_plate: false
-# This plate is an extra step for the 0.8ml path only
-# QC labels and Cell Count file link are on this plate
-LRC PBMC Aliquot:
-  :asset_type: plate
-  :label_template: plate_quad_qc # creates QC4 barcodes
   :file_links:
     - name: 'Download Cellaca Count CSV'
       id: hamilton_lrc_pbmc_aliquot_to_cellaca_count

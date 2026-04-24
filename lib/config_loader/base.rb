@@ -67,7 +67,7 @@ module ConfigLoader
     def load_config
       @config =
         @files.each_with_object({}) do |file, store|
-          latest_file = YAML.load_file(file, aliases: true)
+          latest_file = load_yaml_file(file)
           if latest_file.nil?
             warn "Cannot parse file: #{file}"
           else
@@ -75,6 +75,12 @@ module ConfigLoader
             store.merge!(latest_file)
           end
         end
+    end
+
+    def load_yaml_file(file)
+      content = ERB.new(file.read).result
+
+      YAML.load(content, aliases: true)
     end
 
     def check_duplicates(stored_keys, new_keys)
