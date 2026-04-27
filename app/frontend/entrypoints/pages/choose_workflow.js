@@ -30,7 +30,7 @@ if (globalInput && resultDiv) {
   }
 
   const showSuccess = function (project) {
-    resultDiv.textContent = `Project found: ${project.name || project.uuid}`
+    resultDiv.textContent = `Project found: ${project.name || project.uuid} (State: ${project.state})`
     globalInput.classList.remove('is-invalid')
   }
 
@@ -44,6 +44,10 @@ if (globalInput && resultDiv) {
 
       if (!response.ok || !data.found) {
         throw new Error(data.error || 'Project not found')
+      }
+
+       if (data.project.state === 'inactive') {
+        throw new Error(`Project "${data.project.name}" is inactive`)
       }
 
       foundProjectId = data.project.uuid

@@ -12,7 +12,7 @@ class PlatesController < LabwareController
       project = Sequencescape::Api::V2::Project.find!(project_id)
       # Ensure we return both id and uuid for clarity
       render json: { found: true,
-                     project: { id: project.first.id, uuid: project.first.uuid, name: project.first.name } }
+                     project: { id: project.first.id, uuid: project.first.uuid, name: project.first.name, state: project.first.state } }
     rescue JsonApiClient::Errors::NotFound
       render json: { found: false, error: 'Project not found' }, status: :not_found
     rescue StandardError => e
