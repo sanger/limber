@@ -6,7 +6,7 @@ import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
 
 export default defineConfig({
   build: {
-    target: 'chrome65',
+    targets: ['chrome65', 'baseline-widely-available'],
   },
   css: {
     preprocessorOptions: {
