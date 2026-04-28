@@ -19,7 +19,7 @@
   "devDependencies": {
     "@prettier/plugin-ruby": "^4.0.0",
     "@vitejs/plugin-vue": "^6.0",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/coverage-v8": "^4.0",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.27",
     "eslint": "^8.0.0",

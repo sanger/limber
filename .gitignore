@@ -22,6 +22,8 @@ doc/
 /coverage
 /spec/examples.txt
 lcov.info
+# vitest test cache file
+results.json
 
 # Tempfiles
 tmp/
