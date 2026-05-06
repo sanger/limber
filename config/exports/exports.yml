@@ -153,6 +153,10 @@ scrna_core_cell_extraction_sample_arraying_tube_layout:
   csv: scrna_core_cell_extraction_sample_arraying_tube_layout
   plate_includes:
     - wells.upstream_tubes
+scrna_core_final_pooling_strategy:
+  csv: scrna_core_final_pooling_strategy
+  plate_includes:
+    - wells.upstream_tubes
 hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare:
   csv: hamilton_lrc_pbmc_bank_to_lrc_bank_seq_and_spare
   workflow: scRNA Core PBMC Bank
