@@ -73,6 +73,6 @@ RSpec.feature 'Cancelling a whole plate', :js do
 
     click_on('Cancel Labware')
 
-    expect(find_by_id('flashes')).to have_content("Labware: #{plate_barcode} has been changed to a state of Cancelled.")
+    expect(find_by_id('flashes')).to have_text("Labware: #{plate_barcode} has been changed to a state of Cancelled.")
   end
 end

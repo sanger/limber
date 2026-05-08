@@ -79,7 +79,7 @@ RSpec.feature 'Pool tubes at end of pipeline', :js do
       scan_in('Tube barcode', with: sibling_barcode)
       find_field('Tube barcode').send_keys barcode_reader_key
       click_on('Make Tube')
-      expect(page).to have_content('New empty labware added to the system.')
+      expect(page).to have_text('New empty labware added to the system.')
     end
   end
 
