@@ -35,6 +35,10 @@ GBS PCR2:
     - GbS Tag Set B
     - GbS Tag Set C
     - GbS Tag Set D
+    - IDT GbS Tag Set A
+    - IDT GbS Tag Set B
+    - IDT GbS Tag Set C
+    - IDT GbS Tag Set D
   :presenter_class: Presenters::MinimalPcrPlatePresenter
   :input_plate: false
   :size: 384
