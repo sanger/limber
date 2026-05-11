@@ -54,6 +54,7 @@ group :test do
 end
 
 group :development do
+  gem 'chrome_devtools_rails' # Automatically serves the Chrome DevTools workspace mapping file
   gem 'guard-rspec', require: false
   gem 'pry'
   gem 'pry-byebug'
