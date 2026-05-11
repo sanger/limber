@@ -59,10 +59,15 @@ import {
 } from '@/javascript/shared/components/plateScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import buildPlateObjs from '@/javascript/shared/plateHelpers.js'
-import { handleFailedRequest, requestIsActive, requestsFromPlates } from '@/javascript/shared/requestHelpers.js'
+import {
+  allWellsFromPlates,
+  handleFailedRequest,
+  requestIsActive,
+  requestsFromPlates,
+} from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
 import { transferPlatesToPlatesCreator } from '@/javascript/shared/transfersCreators.js'
-import { transfersFromRequests } from '@/javascript/shared/transfersLayouts.js'
+import { transfersFromRequests, transfersFromAllWells } from '@/javascript/shared/transfersLayouts.js'
 import MultiStampTransfers from './MultiStampTransfers.vue'
 import NullFilter from './NullFilter.vue'
 import PlateSummary from './PlateSummary.vue'
@@ -150,6 +155,11 @@ export default {
       required: false,
       default: 'false',
     },
+
+    // Flag to transfer all wells with aliquots, regardless of whether they have requests.
+    // Defaults to false.
+    // Also referenced as transfer-all-wells and transfer_all_wells
+    transferAllWells: { type: String, required: false, default: 'false' },
   },
   data() {
     return {
@@ -226,7 +236,13 @@ export default {
       }
       return requestsWithPlatesArray
     },
+    allWellsWithAliquots() {
+      return allWellsFromPlates(this.validPlates)
+    },
     transfers() {
+      if (this.transferAllWells === 'true') {
+        return transfersFromAllWells(this.allWellsWithAliquots, this.transfersLayout)
+      }
       return transfersFromRequests(this.requestsWithPlatesFiltered, this.transfersLayout)
     },
     validTransfers() {

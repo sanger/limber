@@ -134,8 +134,20 @@ LRC GEM-X 5p CITE SUP Input:
   :asset_type: plate
   :stock_plate: true # Uploaded via sample manifest.
   :input_plate: true # Passed when submission is built.
+  :default_state: passed # Allow to progress to Cherrypick directly
   :cherrypickable_target: false # Not destination in Sequencescape cherrypicking.
-  :presenter_class: Presenters::StockPlatePresenter # Display as stock plate.
+  :presenter_class: Presenters::StockPlateWithNoSubmissionPresenter # Allow creation of child plate without submission
+LRC GEM-X 5p CITE Cherrypick:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+  :cherrypickable_target: true
+  :creator_class:
+    name: LabwareCreators::TenStampAllWells
+    args:
+      acceptable_purposes:
+        - LRC GEM-X 5p CITE SUP XP
+        - LRC GEM-X 5p CITE SUP Input
 LRC GEM-X 5p CITE Ligation:
   :asset_type: plate
   :stock_plate: false
