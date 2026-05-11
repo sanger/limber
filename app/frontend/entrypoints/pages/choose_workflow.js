@@ -30,7 +30,7 @@ if (globalInput && resultDiv) {
   }
 
   const showSuccess = function (project) {
-    resultDiv.textContent = `Project found: ${project.name || project.uuid} (State: ${project.state})`
+    resultDiv.textContent = `Project found: ${project.name || project.uuid}`
     globalInput.classList.remove('is-invalid')
   }
 
