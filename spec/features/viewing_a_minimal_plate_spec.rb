@@ -30,8 +30,8 @@ RSpec.feature 'Viewing a plate', :js do
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.state-badge')).to have_content('Pending')
+    expect(find_by_id('plate-show-page')).to have_text('Limber Cherrypicked')
+    expect(find('.state-badge')).to have_text('Pending')
   end
 
   context 'a passed plate' do
@@ -39,8 +39,8 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'if a plate is passed creation of a child is allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(find('.state-badge')).to have_content('Passed')
+      expect(find_by_id('plate-show-page')).to have_text('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_text('Passed')
       expect(page).to have_button('Add an empty Child Purpose 0 plate')
     end
   end
@@ -50,8 +50,8 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'if a plate is started creation of a child is not allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(find('.state-badge')).to have_content('Started')
+      expect(find_by_id('plate-show-page')).to have_text('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_text('Started')
       expect(page).to have_no_button('Add an empty Limber Example Purpose plate')
     end
   end
@@ -61,7 +61,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('.asset-warnings')).to have_content(
+      expect(find('.asset-warnings')).to have_text(
         'Submission Requests of type Limber WGS have already been down the pipeline and were completed.'
       )
     end
@@ -72,7 +72,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('.asset-warnings')).to have_content(
+      expect(find('.asset-warnings')).to have_text(
         'Submission on this plate has some failed wells (A1-E1). You should not carry out further work. ' \
         'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
@@ -84,7 +84,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('.asset-warnings')).to have_content(
+      expect(find('.asset-warnings')).to have_text(
         'Wells on this plate (A1-E1) have cancelled requests. You should not carry out further work. ' \
         'Any further work conducted from this plate will run into issues at the end of the pipeline.'
       )
@@ -102,7 +102,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('.asset-warnings')).to have_content(
+      expect(find('.asset-warnings')).to have_text(
         'Submission Requests of type Limber WGS have already been down the pipeline and were completed.'
       )
     end
@@ -121,14 +121,14 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'we see the tube label form' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(page).to have_content('Print tube labels')
+      expect(page).to have_text('Print tube labels')
       expect(page).to have_select('Barcode Printer', selected: default_tube_printer)
     end
 
     scenario 'we can use the tube label form' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       within('.tube-printing') do
-        expect(page).to have_content('Print tube labels')
+        expect(page).to have_text('Print tube labels')
         select(barcode_printer, from: 'Barcode Printer')
 
         allow_any_instance_of(PrintJob).to receive(:execute).and_return(true)
