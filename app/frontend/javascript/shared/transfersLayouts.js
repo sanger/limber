@@ -338,6 +338,12 @@ const transfersFromRequests = function (requestsWithPlates, transfersLayout) {
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 
+// Receives an array of allWellsWithAliquots and a transfer layout name (developed
+// for 'sequential' only).
+// Returns an object containing an array of valid transfers and an array of
+// duplicated transfers.
+// Throws an error if the transfers layout string is not mapped to a transfer
+// function.
 const transfersFromAllWells = function (allWellsWithAliquots, transfersLayout) {
   const transferFunction = transferFunctions[transfersLayout]
   if (transferFunction === undefined) {

@@ -1,5 +1,6 @@
 import {
   transfersFromRequests,
+  transfersFromAllWells,
   buildPlatesMatrix,
   buildLibrarySplitPlatesMatrix,
   buildSequentialLibrarySplitTransfersArray,
@@ -279,6 +280,38 @@ describe('transfersLayouts.js', () => {
           targetWell: 'D3',
         },
       ])
+    })
+  })
+
+  describe('#transfersFromAllWells', () => {
+    const allWells = [
+      { request: undefined, well: well1, plateObj: plateObj1 },
+      { request: undefined, well: well2, plateObj: plateObj2 },
+    ]
+
+    it('throws an error if invalid layout is provided', () => {
+      expect(() => transfersFromAllWells(allWells, 'invalid')).toThrow('Invalid transfers layout name: invalid')
+    })
+
+    it('creates the correct transfers with sequential layout', () => {
+      const transfersResults = transfersFromAllWells(allWells, 'sequential')
+
+      expect(transfersResults.valid).toEqual([
+        {
+          request: undefined,
+          well: well1,
+          plateObj: plateObj1,
+          targetWell: 'A1',
+        },
+        {
+          request: undefined,
+          well: well2,
+          plateObj: plateObj2,
+          targetWell: 'B1',
+        },
+      ])
+
+      expect(transfersResults.duplicated).toEqual([])
     })
   })
 })
