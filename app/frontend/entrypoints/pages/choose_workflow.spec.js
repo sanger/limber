@@ -145,4 +145,39 @@ describe('choose_workflow submission form project fields', () => {
     expect(projectInput.classList.contains('is-invalid')).toBe(true)
     expect(form.submit).not.toHaveBeenCalled()
   })
+
+  it('shows an error when the project is inactive', async () => {
+    vi.resetModules()
+
+    const projectInput = document.getElementById('project_cost_code_global')
+    const resultDiv = document.getElementById('project_search_result')
+    const form = document.querySelector('#submission_forms form')
+    const hiddenProjectCode = form.querySelector('.project-cost-code-hidden')
+    const hiddenProjectUuid = form.querySelector('.supplied-project-uuid-hidden')
+
+    form.submit = vi.fn()
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue({
+          found: true,
+          project: { uuid: 'project-uuid-789', name: 'Dormant Project', state: 'inactive' },
+        }),
+      }),
+    )
+
+    await import('./choose_workflow.js')
+
+    projectInput.value = 'INACTIVE123'
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+
+    await waitForCondition(() => resultDiv.textContent.includes('Project "Dormant Project" is inactive'))
+
+    expect(projectInput.classList.contains('is-invalid')).toBe(true)
+    expect(hiddenProjectCode.value).toBe('')
+    expect(hiddenProjectUuid.value).toBe('')
+    expect(form.submit).not.toHaveBeenCalled()
+  })
 })

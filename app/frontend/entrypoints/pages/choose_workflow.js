@@ -46,6 +46,10 @@ if (globalInput && resultDiv) {
         throw new Error(data.error || 'Project not found')
       }
 
+      if (data.project.state === 'inactive') {
+        throw new Error(`Project "${data.project.name}" is inactive`)
+      }
+
       foundProjectId = data.project.uuid
       validatedProjectCode = projectCode
       showSuccess(data.project)
