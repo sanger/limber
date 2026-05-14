@@ -96,7 +96,8 @@ RSpec.describe PlatesController, type: :controller do
     let(:project_id) { '123' }
     let(:project_uuid) { 'project-uuid-example' }
     let(:project_name) { 'Test Project' }
-    let(:project) { build(:project, id: project_id, uuid: project_uuid, name: project_name) }
+    let(:project_state) { 'active' }
+    let(:project) { build(:project, id: project_id, uuid: project_uuid, name: project_name, state: project_state) }
 
     context 'when the project is found' do
       before do
@@ -109,7 +110,8 @@ RSpec.describe PlatesController, type: :controller do
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body).to include(
           'found' => true,
-          'project' => include('id' => project_id, 'uuid' => project_uuid, 'name' => project_name)
+          'project' => include('id' => project_id, 'uuid' => project_uuid, 'name' => project_name,
+                               'state' => project_state)
         )
       end
     end

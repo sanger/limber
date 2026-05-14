@@ -29,7 +29,7 @@ module FeatureHelpers
 
     within '.content-main' do
       swipe_in 'User Swipecard', with: swipecard
-      expect(page).to have_content('Jane Doe')
+      expect(page).to have_text('Jane Doe')
       scan_in 'Plate or Tube Barcode', with: barcode
     end
   end
@@ -39,7 +39,7 @@ module FeatureHelpers
 
     within '.content-main' do
       swipe_in 'User Swipecard', with: swipecard
-      expect(page).to have_content('Jane Doe')
+      expect(page).to have_text('Jane Doe')
     end
   end
 

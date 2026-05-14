@@ -97,7 +97,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
     plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('Limber Cherrypicked')
     click_on('Add an empty Basic plate')
-    expect(page).to have_content('New empty labware added to the system.')
+    expect(page).to have_text('New empty labware added to the system.')
   end
 
   context 'when printing a label' do
@@ -134,7 +134,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
 
       before do
         click_on('Add an empty Basic plate')
-        expect(page).to have_content('New empty labware added to the system.')
+        expect(page).to have_text('New empty labware added to the system.')
 
         click_on('Print Label')
         expect(PMB::PrintJob).to have_received(:new)
@@ -151,7 +151,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
         allow(SearchHelper).to receive(:alternative_workline_reference_name).with(child_plate).and_return(alternatives)
 
         click_on('Add an empty Basic plate')
-        expect(page).to have_content('New empty labware added to the system.')
+        expect(page).to have_text('New empty labware added to the system.')
 
         click_on('Print Label')
         expect(PMB::PrintJob).to have_received(:new)
@@ -206,8 +206,8 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
       plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
-      expect(page).to have_content('Cannot create the next piece of labware')
-      expect(page).to have_content('Well filter found 2 eligible requests for A1')
+      expect(page).to have_text('Cannot create the next piece of labware')
+      expect(page).to have_text('Well filter found 2 eligible requests for A1')
     end
   end
 
@@ -241,7 +241,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
       plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
-      expect(page).to have_content('New empty labware added to the system.')
+      expect(page).to have_text('New empty labware added to the system.')
     end
   end
 
@@ -285,7 +285,7 @@ RSpec.feature 'Creating a plate', :js, :tag_plate do
       plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Basic plate')
-      expect(page).to have_content('New empty labware added to the system.')
+      expect(page).to have_text('New empty labware added to the system.')
     end
   end
 end
