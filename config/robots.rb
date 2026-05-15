@@ -1976,6 +1976,26 @@ ROBOT_CONFIG =
       }
     )
 
+    # For scRNA Core pipeline SPRI and PCR verification
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-ge-ligxp-to-lrc-gem-x-5p-ge-pcr-2xp',
+      name: 'Hamilton LRC GEM-X 5p GE LigXP => LRC GEM-X 5p GE PCR 2XP',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LRC GEM-X 5p GE LigXP',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(10).barcode => {
+          purpose: 'LRC GEM-X 5p GE PCR 2XP',
+          states: ['pending'],
+          label: 'Bed 10',
+          target_state: 'passed',
+          parent: bed(7).barcode
+        }
+      }
+    )
+
     # Robots for Chromium 10x pipeline 5p TCR route
     custom_robot(
       'hamilton-lbc-cherrypick-to-lbc-tcr-dil-1',
