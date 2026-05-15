@@ -1,22 +1,6 @@
-scRNA Core Aggregation:
+scRNA Core cDNA Cherrypicking:
   pipeline_group: scRNA Core Library Prep
-  filters:
-    request_type_key: limber_scrna_core_aggregation
-  relationships:
-    # 2 input routes to this pipeline:
-    #  - LRC GEM-X 5p cDNA PCR XP coming through SeqOps.
-    #  - LRC GEM-X 5p cDNA Input coming as direct input from faculty.
-    # So first stage of aggregation can take either PCR XP or Input plates,
-    # with a mixture of up to 10 plates used to create an Aggregate plate.
-    LRC GEM-X 5p cDNA Input: LRC GEM-X 5p Aggregate
-    LRC GEM-X 5p cDNA PCR XP: LRC GEM-X 5p Aggregate
-    # 2nd stage aggregation takes up to 10 Aggregate plates to make a Cherrypick plate.
-    # The Cherrypick plate is then submitted for Library Prep.
-    LRC GEM-X 5p Aggregate: LRC GEM-X 5p Cherrypick
-scRNA Core Aggregation Bypass:
-  pipeline_group: scRNA Core Library Prep
-  filters:
-    request_type_key: limber_scrna_core_aggregation
+  # NB. no filters here as there will be no requests to check
   relationships:
     # Directly create Cherrypick plate from either PCR XP or Input plates,
     # bypassing the Aggregate stage.
@@ -80,7 +64,7 @@ scRNA Core Chromium GEM-X 5p CITE SUP Input:
   relationships:
     LRC GEM-X 5p CITE Cherrypick: LRC GEM-X 5p CITE Ligation
     LRC GEM-X 5p CITE Ligation: LRC GEM-X 5p CITE Lib PCR-XP
-scRNA Core Chromium GEM-X 5p CITE SUP Input Aggregation:
+scRNA Core Cite Cherrypicking:
   pipeline_group: scRNA Core Library Prep
   # NB. no filters here as there will be no requests to check
   relationships:

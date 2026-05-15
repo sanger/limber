@@ -8,14 +8,19 @@ module Presenters
   #
   class StockPlateWithNoSubmissionPresenter < PlatePresenter
     include Presenters::StockNoSubmissionBehaviour
-    include Presenters::Statemachine::Permissive
+    include Presenters::Statemachine::Standard
 
+    # Allow wells to be failed
+    self.allow_well_failure_in_states = [:passed]
+
+    # Stock style class causes well state to inherit from plate state.
+    self.style_class = 'stock'
+
+    # Checks for suboptimal wells
     validates_with Validators::SuboptimalValidator
 
-    def allow_new_submission?
-      true
-    end
-
+    # This presenter is used for plates which do not require a submission,
+    # so we override the state to always be 'passed'.
     def state
       'passed'
     end
