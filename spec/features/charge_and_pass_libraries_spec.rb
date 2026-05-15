@@ -46,9 +46,9 @@ RSpec.feature 'Charge and pass libraries', :js do
       expect_work_completion_creation
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('plate-show-page')).to have_content('Passed')
+      expect(find_by_id('plate-show-page')).to have_text('Passed')
       click_button('Charge and pass libraries')
-      expect(page).to have_content('Requests have been passed')
+      expect(page).to have_text('Requests have been passed')
     end
   end
 
@@ -90,10 +90,10 @@ RSpec.feature 'Charge and pass libraries', :js do
       expect_work_completion_creation
 
       fill_in_swipecard_and_barcode user_swipecard, tube_barcode
-      expect(find_by_id('tube-show-page')).to have_content('Passed')
+      expect(find_by_id('tube-show-page')).to have_text('Passed')
       click_button('Charge and pass libraries')
-      expect(page).to have_content('Requests have been passed')
-      expect(page).to have_content('Your submissions have been made and should be built shortly.')
+      expect(page).to have_text('Requests have been passed')
+      expect(page).to have_text('Your submissions have been made and should be built shortly.')
     end
   end
 end

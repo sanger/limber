@@ -41,15 +41,15 @@ RSpec.feature 'Viewing an inbox', :js do
     fill_in_swipecard user_swipecard
     click_button 'Inboxes'
     click_link 'All Ongoing Plates'
-    expect(page).to have_content('Ongoing Plates')
-    expect(page).to have_content('DN3')
+    expect(page).to have_text('Ongoing Plates')
+    expect(page).to have_text('DN3')
   end
 
   scenario 'ongoing tubes' do
     fill_in_swipecard user_swipecard
     click_button 'Inboxes'
     click_link 'All Ongoing Tubes'
-    expect(page).to have_content('Ongoing Tubes')
-    expect(page).to have_content('NT2')
+    expect(page).to have_text('Ongoing Tubes')
+    expect(page).to have_text('NT2')
   end
 end
