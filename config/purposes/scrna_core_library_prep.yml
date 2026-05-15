@@ -1,22 +1,10 @@
 # This configuration file is for the plate and tube purposes required for the
 # high throughput scRNA Core library prep pipeline
 ---
-# There will be a manual submission on a sub-selection of samples in the LRC GEM-X 5p cDNA PCR XP and
-# LRC GEM-X 5p cDNA Input plates for aggregation into a single LRC GEM-X 5p Cherrypick plate. Multiple plates
-# could be aggregated into a single cherrypick plate.
-# e.g. if single samples are selected from each plate then up to 10 aggregate plates could be made which are
-# then combined into a single cherrypick plate.
-LRC GEM-X 5p Aggregate:
-  :asset_type: plate
-  :stock_plate: false
-  :input_plate: false
-  :creator_class:
-    name: LabwareCreators::TenStamp
-    args:
-      acceptable_purposes:
-        - LRC GEM-X 5p cDNA Input
-        - LRC GEM-X 5p cDNA PCR XP
-  :file_links: []
+# The LRC GEM-X 5p cDNA PCR XP and LRC GEM-X 5p cDNA Input plates for aggregated into a single
+# LRC GEM-X 5p Cherrypick plate. Up to 10 plates can be aggregated into a single cherrypick plate.
+# (Liquid handler deck is limited to 10 source plates.)
+# NB. All sample wells on the sources are transferred. There is no aggregation submission required.
 # NB. QC concentrations need to be uploaded via QuantHub for the Cherrypick plate in order for the binning
 # calculations in the Dil plate step to work.
 LRC GEM-X 5p Cherrypick:
@@ -25,14 +13,11 @@ LRC GEM-X 5p Cherrypick:
   :input_plate: false
   :cherrypickable_target: true
   :creator_class:
-    name: LabwareCreators::TenStamp
+    name: LabwareCreators::TenStampAllWells
     args:
       acceptable_purposes:
-        - LRC GEM-X 5p Aggregate
-        - LRC GEM-X 5p cDNA Input # bypass aggregation
-        - LRC GEM-X 5p cDNA PCR XP # bypass aggregation
-  :state_changer_class: StateChangers::AutomaticPlateStateChanger
-  :work_completion_request_type: 'limber_scrna_core_aggregation'
+        - LRC GEM-X 5p cDNA Input
+        - LRC GEM-X 5p cDNA PCR XP
   :file_links:
     - name: 'Download Hamilton Aggregate Cherrypick CSV'
       id: 'hamilton_aggregate_cherrypick'
@@ -135,7 +120,23 @@ LRC GEM-X 5p CITE SUP Input:
   :stock_plate: true # Uploaded via sample manifest.
   :input_plate: true # Passed when submission is built.
   :cherrypickable_target: false # Not destination in Sequencescape cherrypicking.
-  :presenter_class: Presenters::StockPlatePresenter # Display as stock plate.
+  :presenter_class: Presenters::StockPlateWithNoSubmissionPresenter # Allow creation of child plate without submission
+  :creator_class: LabwareCreators::Uncreatable # Plate is created by manifest upload in Sequencescape, not in Limber.
+# The LRC GEM-X 5p CITE SUP XP and LRC GEM-X 5p CITE SUP Input plates for aggregated into a single
+# LRC GEM-X 5p CITE Cherrypick plate. Up to 10 plates can be aggregated into a single cherrypick plate.
+# (Liquid handler deck is limited to 10 source plates.)
+# NB. All sample wells on the sources are transferred. There is no aggregation submission required.
+LRC GEM-X 5p CITE Cherrypick:
+  :asset_type: plate
+  :stock_plate: false
+  :input_plate: false
+  :cherrypickable_target: true
+  :creator_class:
+    name: LabwareCreators::TenStampAllWells
+    args:
+      acceptable_purposes:
+        - LRC GEM-X 5p CITE SUP XP
+        - LRC GEM-X 5p CITE SUP Input
 LRC GEM-X 5p CITE Ligation:
   :asset_type: plate
   :stock_plate: false

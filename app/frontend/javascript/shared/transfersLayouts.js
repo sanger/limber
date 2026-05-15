@@ -93,12 +93,12 @@ const quadrantTransfers = function (requestsWithPlates) {
 // duplicatedRequests array.
 //
 // Note: Indexes are calculated for 96 wells plates only.
-const buildPlatesMatrix = function (requestsWithPlates, maxPlates, maxWellsPerPlate) {
+const buildPlatesMatrix = function (requestsWithPlates, maxPlates, maxWellsPerPlate, transferAllWells = false) {
   const platesMatrix = buildArray(maxPlates, () => new Array(maxWellsPerPlate))
   const duplicatedRequests = []
   for (let i = 0; i < requestsWithPlates.length; i++) {
     const { request, well, plateObj } = requestsWithPlates[i]
-    if (request === undefined) {
+    if (request === undefined && !transferAllWells) {
       continue
     }
     const wellIndex = nameToIndex(well.position.name, 8)
@@ -167,11 +167,12 @@ const buildSequentialTransfersArray = function (transferRequests) {
   const transfers = new Array(transferRequests.length)
   for (let i = 0; i < transferRequests.length; i++) {
     const requestWithPlate = transferRequests[i]
+    const targetWell = indexToName(i, 8)
     transfers[i] = {
       request: requestWithPlate.request,
       well: requestWithPlate.well,
       plateObj: requestWithPlate.plateObj,
-      targetWell: indexToName(i, 8),
+      targetWell: targetWell,
     }
   }
   return transfers
@@ -273,8 +274,8 @@ const buildSequentialTubesTransfersArray = function (transferRequests) {
 // |C1|C2|        |  |  |         |P1D1|P2A1|P2D3
 // +--+--+--~     +--+--+--~      +----+----+----~
 // |D1|  |D3      |  |D2|D3       |P1C2|P2B2|
-const sequentialTransfers = function (requestsWithPlates) {
-  const { platesMatrix, duplicatedRequests } = buildPlatesMatrix(requestsWithPlates, 10, 96)
+const sequentialTransfers = function (requestsWithPlates, transferAllWells = false) {
+  const { platesMatrix, duplicatedRequests } = buildPlatesMatrix(requestsWithPlates, 10, 96, transferAllWells)
   const transferRequests = platesMatrix.flat()
   const validTransfers = buildSequentialTransfersArray(transferRequests)
   const duplicatedTransfers = buildSequentialTransfersArray(duplicatedRequests)
@@ -337,6 +338,21 @@ const transfersFromRequests = function (requestsWithPlates, transfersLayout) {
   return { valid: validTransfers, duplicated: duplicatedTransfers }
 }
 
+// Receives an array of allWellsWithAliquots and a transfer layout name (developed
+// for 'sequential' only).
+// Returns an object containing an array of valid transfers and an array of
+// duplicated transfers.
+// Throws an error if the transfers layout string is not mapped to a transfer
+// function.
+const transfersFromAllWells = function (allWellsWithAliquots, transfersLayout) {
+  const transferFunction = transferFunctions[transfersLayout]
+  if (transferFunction === undefined) {
+    throw `Invalid transfers layout name: ${transfersLayout}`
+  }
+  const { validTransfers, duplicatedTransfers } = transferFunction(allWellsWithAliquots, true)
+  return { valid: validTransfers, duplicated: duplicatedTransfers }
+}
+
 // Receives an array of potential transfers and a transfer layout name
 // (valid options: 'sequentialtubes').
 // Returns an object containing an array of valid transfers
@@ -367,6 +383,7 @@ const transfersForTubes = function (validTubes) {
 
 export {
   transfersFromRequests,
+  transfersFromAllWells,
   transfersForTubes,
   buildPlatesMatrix,
   buildLibrarySplitPlatesMatrix,
