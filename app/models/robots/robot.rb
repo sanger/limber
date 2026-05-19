@@ -3,6 +3,31 @@
 module Robots
   # Core robot class. Used when plates have a simple
   # 1:1 parent child relationship.
+  #
+  # A Robot represents a physical laboratory robot used to perform transfers
+  # between labware (typically plates). It is configured with a set of beds,
+  # each holding labware, and validates that the labware has been loaded onto
+  # the correct beds before allowing a transfer (state transition) to proceed.
+  #
+  # Robot layout validation is controlled by three flags:
+  #
+  # - +require_robot+:
+  #   Enforces entry of a robot barcode before the transfer can proceed.
+  #
+  # - +verify_robot+:
+  #   Validates the entered robot barcode against the barcode stored in the
+  #   custom metadata of the scanned labware.
+  #
+  #   Labware custom metadata may contain robot barcodes under:
+  #   - +'created_with'+: used for plates created from tube racks
+  #   - +'original_robot'+: used for plates that were previously placed on a
+  #     robot, underwent additional processing (for example freezing, heating,..), and
+  #     must later be placed back onto the same robot and bed for another
+  #     transfer.
+  #
+  # - +store_robot+:
+  #   Stores the entered robot barcode in the scanned labware custom metadata
+  #   collection under the key +'original_robot'+.
   # Todo: Improve class length by using rails error handling
   # rubocop:disable Metrics/ClassLength
   class Robot
@@ -17,10 +42,12 @@ module Robots
                   :class,
                   :robot_barcode,
                   :require_robot,
-                  :start_button_text
+                  :start_button_text,
+                  :store_robot
 
     alias verify_robot? verify_robot
     alias require_robot? require_robot
+    alias store_robot? store_robot
 
     def well_order
       :coordinate
@@ -97,21 +124,26 @@ module Robots
     end
 
     def robot_present_if_required
-      if require_robot? && robot_barcode.blank?
+      if (require_robot? || store_robot?) && robot_barcode.blank?
         error_messages << 'Please scan the robot barcode'
         return false
       end
       true
     end
 
+    def custom_metadatum_collection
+      beds.values.first.labware.custom_metadatum_collection
+    end
+
     def missing_custom_metadatum_collection
-      beds.values.first.labware.custom_metadatum_collection.nil?
+      custom_metadatum_collection.nil?
     end
 
     def original_robot
       return nil if missing_custom_metadatum_collection
 
-      beds.values.first.labware.custom_metadatum_collection.metadata['created_with_robot']
+      custom_metadatum_collection.metadata['created_with_robot'] ||
+        custom_metadatum_collection.metadata['original_robot']
     end
 
     def valid_labwares

@@ -930,6 +930,64 @@ RSpec.describe Robots::Robot, :robots do
           end
         end
       end
+
+      describe 'when store_robot is set to true' do
+        let(:robot_spec) do
+          {
+            'name' => 'robot_name',
+            'store_robot' => true,
+            'beds' => {
+              'bed1_barcode' => {
+                'purpose' => source_purpose_name,
+                'states' => ['passed'],
+                'label' => 'Bed 7'
+              }
+            }
+          }
+        end
+
+        before { bed_labware_lookup(source_plate) }
+
+        context 'when the robot barcode is not scanned' do
+          let(:report) { robot.verify(robot_barcode: '') }
+
+          it 'invalid if the robot barcode is not scanned' do
+            expect(report).not_to be_valid
+          end
+
+          it 'prints error message' do
+            expect(report.message).to include('Please scan the robot barcode')
+          end
+        end
+
+        context 'when a robot barcode is scanned' do
+          it 'is valid if the robot barcode is scanned' do
+            expect(robot.verify(robot_barcode: 'robot_barcode')).to be_valid
+          end
+        end
+      end
+
+      describe 'when store_robot is set to false' do
+        let(:robot_spec) do
+          {
+            'name' => 'robot_name',
+            'store_robot' => false,
+            'beds' => {
+              'bed1_barcode' => {
+                'purpose' => source_purpose_name,
+                'states' => ['passed'],
+                'label' => 'Bed 7'
+              }
+            }
+          }
+        end
+
+        before { bed_labware_lookup(source_plate) }
+
+        it 'does not require a robot barcode' do
+          expect(robot.verify(robot_barcode: '')).to be_valid
+        end
+      end
     end
   end
 

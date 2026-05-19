@@ -140,5 +140,15 @@
         :label: Bed 4
     :destination_bed: 'bed5_barcode'
     :class: Robots::PoolingRobot
+  robot_id_store:
+    name: storage_robot_name
+    layout: bed
+    beds:
+      bed1_barcode:
+        purpose: source_plate_purpose
+        states: [ 'passed' ]
+        label: 'Bed 1'
+    class: Robots::Robot
+    store_robot: true
 :locations: {}
 :qc_purposes: []

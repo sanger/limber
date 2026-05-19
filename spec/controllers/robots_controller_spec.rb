@@ -57,6 +57,35 @@ RSpec.describe RobotsController, :robots, type: :controller do
 
       expect(flash[:notice]).to match 'Robot robot_name has been started.'
     end
+
+    context 'when the robot has store_robot? set to true' do
+      let(:custom_metadatum_collections_attributes) do
+        [{ user_id: user.id, asset_id: plate.id, metadata: { original_robot: 'robot_barcode' } }]
+      end
+
+      before do
+        # A robot configuration with store_robot: true and a bed that does not transition.
+        Settings.robots['robot_id_store'] = settings[:robots][:robot_id_store]
+      end
+
+      it 'writes the robot barcode into the labware metadata under original_robot' do
+        expect_custom_metadatum_collection_creation
+
+        post :start,
+             params: {
+               bed_labwares: {
+                 'bed1_barcode' => [plate.human_barcode]
+               },
+               robot_barcode: 'robot_barcode',
+               id: 'robot_id_store'
+             },
+             session: {
+               user_uuid: user.uuid
+             }
+
+        expect(flash[:notice]).to match 'has been started.'
+      end
+    end
   end
 
   describe '#verify' do

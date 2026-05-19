@@ -824,9 +824,16 @@ ROBOT_CONFIG =
       }
     )
 
+    # When `store_robot` is set to true, the LIMS stores the robot barcode
+    # in the labware custom metadata under the `original_robot` key.
+    #
+    # This is required for subsequent layout validation steps where the
+    # labware must be verified as having been placed on the same robot
+    # (`verify_robot == true`).
     custom_robot(
       'bravo-ribo-hyb-setup',
       name: 'Bravo Ribo Hyb Setup',
+      store_robot: true,
       beds: {
         bed(6).barcode => {
           purpose: 'LBR Cherrypick',

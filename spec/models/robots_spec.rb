@@ -41,7 +41,8 @@ RSpec.describe Robots, :robots do
         %w[grandparent_robot robot_name],
         ['pooling_robot_id', 'Pooling Robot'],
         %w[robot_id robot_name],
-        %w[robot_id_2 robot_name]
+        %w[robot_id_2 robot_name],
+        %w[robot_id_store storage_robot_name]
       )
     end
   end
