@@ -146,7 +146,7 @@
     beds:
       bed1_barcode:
         purpose: source_plate_purpose
-        states: [ 'passed' ]
+        states: ['passed']
         label: 'Bed 1'
     class: Robots::Robot
     store_robot: true
