@@ -1532,155 +1532,69 @@ ROBOT_CONFIG =
       class: 'Robots::PoolingRobot'
     )
 
-    # For scRNA Core pipeline LRC GEM-X 5p cDNA Input to Cherrypick
+    # For scRNA Core pipeline
+    # LRC GEM-X 5p cDNA PCR XP or LRC GEM-X 5p cDNA Input to LRC GEM-X 5p Cherrypick
+    # Allows for pooling of 1-10 source plates of either type into 1 destination cherrypick plate
     custom_robot(
-      'hamilton-lrc-gem-x-5p-cdna-input-to-lrc-gem-x-5p-cherrypick',
-      name: 'Hamilton LRC GEM-X 5p cDNA Input => LRC GEM-X 5p Cherrypick',
+      'hamilton-lrc-gem-x-5p-cdna-input-or-pcr-xp-to-lrc-gem-x-5p-cherrypick',
+      name: 'Hamilton LRC GEM-X 5p cDNA Input or PCR XP => LRC GEM-X 5p Cherrypick',
       beds: {
         bed(1).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 1'
-        },
-        bed(2).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 2'
-        },
-        bed(3).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 3'
-        },
-        bed(4).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 4'
-        },
-        bed(5).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 5'
-        },
-        bed(6).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 6'
-        },
-        bed(7).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 7'
-        },
-        bed(8).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 8'
-        },
-        bed(9).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 9'
-        },
-        bed(10).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[pending passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 10'
-        },
-        bed(13).barcode => {
-          purpose: 'LRC GEM-X 5p Cherrypick',
-          states: %w[pending started],
-          parents: [
-            bed(1).barcode,
-            bed(2).barcode,
-            bed(3).barcode,
-            bed(4).barcode,
-            bed(5).barcode,
-            bed(6).barcode,
-            bed(7).barcode,
-            bed(8).barcode,
-            bed(9).barcode,
-            bed(10).barcode
-          ],
-          target_state: 'passed',
-          label: 'Bed 13'
-        }
-      },
-      destination_bed: bed(13).barcode,
-      class: 'Robots::PoolingRobot'
-    )
-
-    # For scRNA Core pipeline LRC GEM-X 5p cDNA PCR XP to Cherrypick
-    custom_robot(
-      'hamilton-lrc-gem-x-5p-cdna-pcr-xp-to-lrc-gem-x-5p-cherrypick',
-      name: 'Hamilton LRC GEM-X 5p cDNA PCR XP => LRC GEM-X 5p Cherrypick',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 1'
         },
         bed(2).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 2'
         },
         bed(3).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 3'
         },
         bed(4).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 4'
         },
         bed(5).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 5'
         },
         bed(6).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 6'
         },
         bed(7).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 7'
         },
         bed(8).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 8'
         },
         bed(9).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 9'
         },
         bed(10).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 10'
