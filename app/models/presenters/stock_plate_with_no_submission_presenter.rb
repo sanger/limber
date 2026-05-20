@@ -6,6 +6,9 @@ module Presenters
   # which do not need a submission to continue.
   # This is used for the scRNA Core pipeline, specifically for LRC GEM-X 5p CITE SUP Input plates.
   #
+  # NB. State is determined from the InputPlate purpose class in Sequencescape, where we check for a default_state
+  # (value 'passed') in the purpose configuration and use that value instead of relying on transfer requests or well
+  # submission requests.
   class StockPlateWithNoSubmissionPresenter < PlatePresenter
     include Presenters::StockNoSubmissionBehaviour
     include Presenters::Statemachine::Standard
@@ -18,11 +21,5 @@ module Presenters
 
     # Checks for suboptimal wells
     validates_with Validators::SuboptimalValidator
-
-    # This presenter is used for plates which do not require a submission,
-    # so we override the state to always be 'passed'.
-    def state
-      'passed'
-    end
   end
 end
