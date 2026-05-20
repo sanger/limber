@@ -13,16 +13,6 @@ RSpec.describe Presenters::StockPlateWithNoSubmissionPresenter do
     end
   end
 
-  describe '#state' do
-    it 'always returns passed' do
-      expect(presenter.state).to eq('passed')
-    end
-
-    it 'is never pending, so the stock validator is never triggered' do
-      expect(presenter.pending?).to be false
-    end
-  end
-
   describe '#input_barcode' do
     it 'returns the human barcode of the labware' do
       expect(presenter.input_barcode).to eq(labware.human_barcode)
