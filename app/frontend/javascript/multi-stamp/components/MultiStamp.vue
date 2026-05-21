@@ -55,6 +55,7 @@ import {
   checkDuplicates,
   checkSize,
   checkForUnacceptablePlatePurpose,
+  checkForPlateOverfull,
   checkMinCountRequests,
 } from '@/javascript/shared/components/plateScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
@@ -306,6 +307,17 @@ export default {
       // and therefore may not have library requests yet. So we make it optional to check if the scanned plates have active library requests.
       if (this.requireActiveLibraryRequests === 'true') {
         validators.push(checkMinCountRequests(1))
+      }
+
+      // This check is only applicable if we want to transfer all wells with aliquots from a source plate.
+      // We need to check that number of samples in the source plate is not higher than the number of remaining empty destination wells.
+      if (this.transferAllWells === 'true') {
+        validators.push(
+          checkForPlateOverfull(
+            this.targetRowsNumber * this.targetColumnsNumber,
+            (plate) => this.transfers.valid.filter((t) => t.plateObj.plate.uuid !== plate.uuid).length,
+          ),
+        )
       }
 
       return validators

@@ -382,6 +382,33 @@ const checkForUnacceptablePlatePurpose = (acceptable_purposes) => {
   }
 }
 
+// Returns a validator that checks the number of wells with aliquots on the scanned plate
+// does not exceed the number of remaining empty wells on the destination plate.
+// Args:
+//   targetCapacity - Integer with the total number of wells on the destination plate
+//   getOtherTransferCount - A function that, given the plate being validated, returns the
+//                           number of transfers already allocated from OTHER plates (not this
+//                           one). Excluding the current plate's own transfers breaks the Vue
+//                           reactive cycle: if the plate is in `validPlates` its transfers are
+//                           excluded, so the result is stable regardless of whether the plate
+//                           is currently considered valid or not.
+// Returns:
+//   Validator handler that receives a plate and returns a validation message
+const checkForPlateOverfull = (targetCapacity, getOtherTransferCount) => {
+  return (plate) => {
+    if (!plate) return { valid: false, message: 'Plate not found' }
+    const wellsWithAliquotsOnCurrentPlate = plate.wells.filter((well) => well.aliquots.length > 0).length
+    const remainingDestinationWells = targetCapacity - getOtherTransferCount(plate)
+    if (wellsWithAliquotsOnCurrentPlate <= remainingDestinationWells) {
+      return validScanMessage()
+    }
+    return {
+      valid: false,
+      message: `This plate has ${wellsWithAliquotsOnCurrentPlate} wells with samples but only ${remainingDestinationWells} destination wells remain.`,
+    }
+  }
+}
+
 export {
   checkSize,
   checkDuplicates,
@@ -396,4 +423,5 @@ export {
   checkMinCountRequests,
   checkAllSamplesInColumnsList,
   checkForUnacceptablePlatePurpose,
+  checkForPlateOverfull,
 }
