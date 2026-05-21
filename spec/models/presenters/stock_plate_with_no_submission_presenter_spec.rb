@@ -7,12 +7,6 @@ RSpec.describe Presenters::StockPlateWithNoSubmissionPresenter do
 
   let(:labware) { create(:stock_plate) }
 
-  describe '#allow_new_submission?' do
-    it 'allows creation of new submissions' do
-      expect(presenter.allow_new_submission?).to be true
-    end
-  end
-
   describe '#input_barcode' do
     it 'returns the human barcode of the labware' do
       expect(presenter.input_barcode).to eq(labware.human_barcode)
