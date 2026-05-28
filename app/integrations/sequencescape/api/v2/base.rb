@@ -26,6 +26,11 @@ class Sequencescape::Api::V2::Base < JsonApiClient::Resource # rubocop:todo Styl
   api_key = Limber::Application.config.api.v2.connection_options.authorisation
   connection.faraday.headers['X-Sequencescape-Client-Id'] = api_key
 
+  # Increase the TCP socket read timeout to prevent timeouts until Y26-168 (#2863) is fixed
+  connection(true) do |conn| # connection(true) rebuilds the connection
+    conn.faraday.options[:timeout] = 120
+  end
+
   self.plate = false
   self.tube = false
   self.tube_rack = false
