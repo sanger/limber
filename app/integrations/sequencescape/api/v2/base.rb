@@ -21,14 +21,15 @@ class Sequencescape::Api::V2::Base < JsonApiClient::Resource # rubocop:todo Styl
     self.per_page_param = 'size'
   end
 
+  # set the api base url in an abstract base class
+  self.site = Limber::Application.config.api.v2.connection_options.url
+
   # Increase the TCP socket read timeout to prevent timeouts until Y26-168 (#2863) is fixed
-  # This must happen before the API keys are set below.
+  # This must happen after setting the site and and before setting the API below.
   connection(true) do |conn| # connection(true) rebuilds the connection
     conn.faraday.options[:timeout] = 120
   end
 
-  # set the api base url in an abstract base class
-  self.site = Limber::Application.config.api.v2.connection_options.url
   api_key = Limber::Application.config.api.v2.connection_options.authorisation
   connection.faraday.headers['X-Sequencescape-Client-Id'] = api_key
 
