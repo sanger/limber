@@ -27,7 +27,7 @@ class Sequencescape::Api::V2::Base < JsonApiClient::Resource # rubocop:todo Styl
   # Increase the TCP socket read timeout to prevent timeouts until Y26-168 (#2863) is fixed
   # This must happen after setting the site and and before setting the API below.
   connection(true) do |conn| # connection(true) rebuilds the connection
-    conn.faraday.options[:timeout] = 120
+    conn.faraday.options[:read_timeout] = 120
   end
 
   api_key = Limber::Application.config.api.v2.connection_options.authorisation
