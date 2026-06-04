@@ -694,7 +694,7 @@ describe('checkForPlateOverfull', () => {
     const getOtherTransferCount = () => 94
     expect(checkForPlateOverfull(96, getOtherTransferCount)(plate)).toEqual({
       valid: false,
-      message: 'This plate has 3 wells with samples but only 2 destination wells remain.',
+      message: `There are only 2 destination wells remaining, but this plate has 3 wells with samples.`,
     })
   })
 

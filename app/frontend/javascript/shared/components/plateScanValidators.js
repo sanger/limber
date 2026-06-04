@@ -404,7 +404,7 @@ const checkForPlateOverfull = (targetCapacity, getOtherTransferCount) => {
     }
     return {
       valid: false,
-      message: `This plate has ${wellsWithAliquotsOnCurrentPlate} wells with samples but only ${remainingDestinationWells} destination wells remain.`,
+      message: `There are only ${remainingDestinationWells} destination wells remaining, but this plate has ${wellsWithAliquotsOnCurrentPlate} wells with samples.`,
     }
   }
 }
