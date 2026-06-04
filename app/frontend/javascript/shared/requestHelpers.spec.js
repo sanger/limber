@@ -34,14 +34,6 @@ describe('allWellsFromPlates', () => {
     expect(result[0].well).toBe(occupiedWell)
   })
 
-  it('sets request to undefined for each returned entry', () => {
-    const plateObj = buildPlateObj(0, [buildWell('A1', 2)])
-
-    const result = allWellsFromPlates([plateObj])
-
-    expect(result[0].request).toBeUndefined()
-  })
-
   it('includes the correct plateObj reference on each entry', () => {
     const plateObj = buildPlateObj(0, [buildWell('A1', 1)])
 

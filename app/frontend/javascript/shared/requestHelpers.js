@@ -30,7 +30,7 @@ const requestsFromPlates = function (plateObjs) {
 }
 
 // Gets all wells with aliquots from an array of plateObjs, regardless of whether they have requests.
-// Returns one object per occupied well, with request set to undefined.
+// Returns one object per occupied well.
 const allWellsFromPlates = function (plateObjs) {
   const wellsArray = []
   for (let p = 0; p < plateObjs.length; p++) {
@@ -40,7 +40,6 @@ const allWellsFromPlates = function (plateObjs) {
       const well = wells[w]
       if (well.aliquots.length > 0) {
         wellsArray.push({
-          request: undefined,
           well: well,
           plateObj: plateObj,
         })
