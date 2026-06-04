@@ -90,9 +90,10 @@ RSpec.feature 'Pooling multiple plates into a tube', :js do
     # We'll look up both plates.
 
     # We have a basic inbox search running
-    stub_find_all(
+    stub_find_all_with_pagination(
       :plates,
-      { state: ['passed'], purpose_name: ['purpose-config'], include_used: false },
+      { include_used: false, purpose_name: ['purpose-config'], state: ['passed'] },
+      { page: 1, per_page: 30 },
       [example_plate_listed, example_plate_2_listed]
     )
 
