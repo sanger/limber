@@ -46,7 +46,7 @@ module LabwareCreators
     def available_plates
       @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
       # @search_results = Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters)
-      Sequencescape::Api::V2::Plate.includes([]).where(@search_options.search_parameters).all
+      Sequencescape::Api::V2::Plate.includes([]).where(@search_options.search_parameters).paginate(paginate: { page: 1, per_page: 30 }).all
     end
 
     def parents
