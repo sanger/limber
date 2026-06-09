@@ -1,19 +1,34 @@
 # frozen_string_literal: true
 
 module FeatureHelpers
-  def stub_find_all(klass, query, result)
+  def stub_find_all(klass, query, result, **expected_kwargs)
     api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
-    allow(api_class).to receive(:find_all).with(query).and_return(result)
+
+    allow(api_class).to receive(:find_all) do |actual_query, **actual_kwargs|
+      next result if actual_query == query && expected_kwargs.all? { |key, value| actual_kwargs[key] == value }
+
+      raise RSpec::Mocks::MockExpectationError,
+            "Unexpected #{api_class}.find_all call with #{actual_query.inspect}, #{actual_kwargs.inspect}"
+    end
   end
 
-  def stub_find_all_with_pagination(klass, query, paginate, result)
+  def stub_find_all_with_pagination(klass, query, paginate, result, **expected_kwargs)
     api_class = Sequencescape::Api::V2.const_get(klass.to_s.classify)
 
     # Return a mock that looks like a an array of results with result-set methods
     result.define_singleton_method(:total_count) { length } # add total_count method to array
     result.define_singleton_method(:total_pages) { (length / 5.0).ceil } # add total_pages method to array
 
-    allow(api_class).to receive(:find_all).with(query, paginate:).and_return(result)
+    allow(api_class).to receive(:find_all) do |actual_query, **actual_kwargs|
+      matches_query = actual_query == query
+      matches_paginate = actual_kwargs[:paginate] == paginate
+      matches_kwargs = expected_kwargs.all? { |key, value| actual_kwargs[key] == value }
+
+      next result if matches_query && matches_paginate && matches_kwargs
+
+      raise RSpec::Mocks::MockExpectationError,
+            "Unexpected #{api_class}.find_all call with #{actual_query.inspect}, #{actual_kwargs.inspect}"
+    end
   end
 
   def stub_swipecard_search(swipecard, user)
