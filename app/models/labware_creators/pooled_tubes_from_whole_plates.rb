@@ -43,20 +43,18 @@ module LabwareCreators
     end
 
     # TODO: This should probably be asynchronous
-    #
     # NOTE ON INCLUDES
-    # If an explicit `.includes(...)` is not provided on a query, the
-    # JsonApiClient will fall back to the model's default includes. For
-    # `Sequencescape::Api::V2::Plate` that is `Plate::DEFAULT_INCLUDES` which
-    # may side-load a large tree of relationships. To avoid N+1 HTTP calls we
-    # explicitly provide the minimal includes required by this view.
+    # `available_plates` uses `Sequencescape::Api::V2::Plate.find_all` without
+    # passing an explicit `includes:` argument, so `Plate.find_all` falls back
+    # to `Plate::DEFAULT_INCLUDES`. The default includes preload all information required to render the plate.
+    # Without them, Limber would make additional API calls for each well, resulting in a significant increase
+    # in the number of requests and slower page rendering.
     #
     # NOTE ON SORTING
-    # Results are sorted by `updated_at` (most recently updated first) on the
-    # Sequencescape side. The `order_by` parameter from `OngoingPlate` is passed
-    # to `Plate.find_all` and applied to the query chain via `.order()`. Note that
-    # `priority` (computed in Ruby from each plate's active requests via
-    # `Shared::HasRequests`) cannot be sorted server-side.
+    # We pass `order_by: { updated_at: :desc }` via `OngoingPlate`, and
+    # `Plate.find_all` applies this to the Sequencescape query. This ensures
+    # that the API returns the most recently updated plates first.
+    # If no ordering is specified, the default order is by ID ascending.
     def available_plates
       @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'],
                                          order_by: { updated_at: :desc })
