@@ -12,6 +12,7 @@ import {
   checkState,
   checkQCableWalkingBy,
   checkForUnacceptablePlatePurpose,
+  checkForPlateOverfull,
 } from '@/javascript/shared/components/plateScanValidators'
 
 describe('checkSize', () => {
@@ -662,6 +663,61 @@ describe('checkPlateWithSameReadyLibrarySubmissions', () => {
           'The submission from this plate are different from the submissions from previous scanned plates in this screen.',
       })
     })
+  })
+})
+
+describe('checkForPlateOverfull', () => {
+  const makeWell = (aliquotCount) => ({ aliquots: Array(aliquotCount).fill({}) })
+  const makeTransfer = (plateUuid) => ({ plateObj: { plate: { uuid: plateUuid } } })
+
+  it('fails when plate is null', () => {
+    expect(checkForPlateOverfull(96, () => 0)(null)).toEqual({
+      valid: false,
+      message: 'Plate not found',
+    })
+  })
+
+  it('passes when the number of wells with aliquots is less than the remaining destination wells', () => {
+    const plate = { uuid: 'plate-1', wells: [makeWell(1), makeWell(1), makeWell(0)] }
+    const getOtherTransferCount = () => 90
+    expect(checkForPlateOverfull(96, getOtherTransferCount)(plate)).toEqual({ valid: true })
+  })
+
+  it('passes when the number of wells with aliquots exactly equals the remaining destination wells', () => {
+    const plate = { uuid: 'plate-1', wells: [makeWell(1), makeWell(1), makeWell(1)] }
+    const getOtherTransferCount = () => 93
+    expect(checkForPlateOverfull(96, getOtherTransferCount)(plate)).toEqual({ valid: true })
+  })
+
+  it('fails when the number of wells with aliquots exceeds the remaining destination wells', () => {
+    const plate = { uuid: 'plate-1', wells: [makeWell(1), makeWell(1), makeWell(1)] }
+    const getOtherTransferCount = () => 94
+    expect(checkForPlateOverfull(96, getOtherTransferCount)(plate)).toEqual({
+      valid: false,
+      message: `There are only 2 destination wells remaining, but this plate has 3 wells with samples.`,
+    })
+  })
+
+  it('excludes the current plate own transfers so validation is stable when the plate is already in validPlates', () => {
+    // plate-1 has 96 wells and exactly fills the target. When it is already in validPlates its
+    // own 96 transfers must not be counted against itself, otherwise valid→invalid→valid looping occurs.
+    const plate = { uuid: 'plate-1', wells: Array(96).fill(makeWell(1)) }
+    const transfers = Array(96).fill(makeTransfer('plate-1'))
+    const getOtherTransferCount = (p) => transfers.filter((t) => t.plateObj.plate.uuid !== p.uuid).length
+    // plate-1's own transfers are excluded → otherCount = 0, remaining = 96, valid
+    expect(checkForPlateOverfull(96, getOtherTransferCount)(plate)).toEqual({ valid: true })
+  })
+
+  it('counts transfers from other plates correctly', () => {
+    const plate1 = { uuid: 'plate-1', wells: [makeWell(1), makeWell(1)] } // 2 wells
+    const plate2 = { uuid: 'plate-2', wells: [makeWell(1), makeWell(1), makeWell(1)] } // 3 wells
+    // plate-1 already has 2 transfers in the list; validating plate-2 sees 2 other transfers
+    const transfers = [makeTransfer('plate-1'), makeTransfer('plate-1')]
+    const getOtherTransferCount = (p) => transfers.filter((t) => t.plateObj.plate.uuid !== p.uuid).length
+    // remaining for plate-2 = 5 - 2 = 3, plate-2 has 3 wells → exactly fits
+    expect(checkForPlateOverfull(5, getOtherTransferCount)(plate2)).toEqual({ valid: true })
+    // remaining for plate-1 = 5 - 0 = 5, plate-1 has 2 wells → valid
+    expect(checkForPlateOverfull(5, getOtherTransferCount)(plate1)).toEqual({ valid: true })
   })
 })
 

@@ -55,14 +55,20 @@ import {
   checkDuplicates,
   checkSize,
   checkForUnacceptablePlatePurpose,
+  checkForPlateOverfull,
   checkMinCountRequests,
 } from '@/javascript/shared/components/plateScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import buildPlateObjs from '@/javascript/shared/plateHelpers.js'
-import { handleFailedRequest, requestIsActive, requestsFromPlates } from '@/javascript/shared/requestHelpers.js'
+import {
+  allWellsFromPlates,
+  handleFailedRequest,
+  requestIsActive,
+  requestsFromPlates,
+} from '@/javascript/shared/requestHelpers.js'
 import resources from '@/javascript/shared/resources.js'
 import { transferPlatesToPlatesCreator } from '@/javascript/shared/transfersCreators.js'
-import { transfersFromRequests } from '@/javascript/shared/transfersLayouts.js'
+import { transfersFromRequests, transfersFromAllWells } from '@/javascript/shared/transfersLayouts.js'
 import MultiStampTransfers from './MultiStampTransfers.vue'
 import NullFilter from './NullFilter.vue'
 import PlateSummary from './PlateSummary.vue'
@@ -150,6 +156,11 @@ export default {
       required: false,
       default: 'false',
     },
+
+    // Flag to transfer all wells with aliquots, regardless of whether they have requests.
+    // Defaults to false.
+    // Also referenced as transfer-all-wells and transfer_all_wells
+    transferAllWells: { type: String, required: false, default: 'false' },
   },
   data() {
     return {
@@ -226,7 +237,13 @@ export default {
       }
       return requestsWithPlatesArray
     },
+    allWellsWithAliquots() {
+      return allWellsFromPlates(this.validPlates)
+    },
     transfers() {
+      if (this.transferAllWells === 'true') {
+        return transfersFromAllWells(this.allWellsWithAliquots, this.transfersLayout)
+      }
       return transfersFromRequests(this.requestsWithPlatesFiltered, this.transfersLayout)
     },
     validTransfers() {
@@ -290,6 +307,17 @@ export default {
       // and therefore may not have library requests yet. So we make it optional to check if the scanned plates have active library requests.
       if (this.requireActiveLibraryRequests === 'true') {
         validators.push(checkMinCountRequests(1))
+      }
+
+      // This check is only applicable if we want to transfer all wells with aliquots from a source plate.
+      // We need to check that number of samples in the source plate is not higher than the number of remaining empty destination wells.
+      if (this.transferAllWells === 'true') {
+        validators.push(
+          checkForPlateOverfull(
+            this.targetRowsNumber * this.targetColumnsNumber,
+            (plate) => this.transfers.valid.filter((t) => t.plateObj.plate.uuid !== plate.uuid).length,
+          ),
+        )
       }
 
       return validators

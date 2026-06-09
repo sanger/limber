@@ -1,5 +1,60 @@
-import { handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
+import { allWellsFromPlates, handleFailedRequest } from '@/javascript/shared/requestHelpers.js'
 import eventBus from '@/javascript/shared/eventBus.js'
+
+describe('allWellsFromPlates', () => {
+  const buildPlateObj = (index, wells) => ({
+    index,
+    state: 'valid',
+    plate: { uuid: `plate-uuid-${index}`, wells },
+  })
+
+  const buildWell = (position, aliquotCount = 0) => ({
+    uuid: `well-uuid-${position}`,
+    position: { name: position },
+    aliquots: Array.from({ length: aliquotCount }, (_, i) => ({ uuid: `aliquot-${position}-${i}` })),
+  })
+
+  it('returns an empty array when given no plates', () => {
+    expect(allWellsFromPlates([])).toEqual([])
+  })
+
+  it('returns an empty array when all wells are empty', () => {
+    const plateObj = buildPlateObj(0, [buildWell('A1'), buildWell('B1')])
+    expect(allWellsFromPlates([plateObj])).toEqual([])
+  })
+
+  it('returns only wells that have aliquots', () => {
+    const emptyWell = buildWell('A1', 0)
+    const occupiedWell = buildWell('B1', 1)
+    const plateObj = buildPlateObj(0, [emptyWell, occupiedWell])
+
+    const result = allWellsFromPlates([plateObj])
+
+    expect(result).toHaveLength(1)
+    expect(result[0].well).toBe(occupiedWell)
+  })
+
+  it('includes the correct plateObj reference on each entry', () => {
+    const plateObj = buildPlateObj(0, [buildWell('A1', 1)])
+
+    const result = allWellsFromPlates([plateObj])
+
+    expect(result[0].plateObj).toBe(plateObj)
+  })
+
+  it('returns entries for all occupied wells across multiple plates', () => {
+    const plate0 = buildPlateObj(0, [buildWell('A1', 1), buildWell('B1', 0)])
+    const plate1 = buildPlateObj(1, [buildWell('A1', 0), buildWell('C1', 3)])
+
+    const result = allWellsFromPlates([plate0, plate1])
+
+    expect(result).toHaveLength(2)
+    expect(result[0].well.position.name).toBe('A1')
+    expect(result[0].plateObj).toBe(plate0)
+    expect(result[1].well.position.name).toBe('C1')
+    expect(result[1].plateObj).toBe(plate1)
+  })
+})
 
 describe('handleFailedRequest', () => {
   it('emits a danger alert with a formatted message when response contains an array', () => {

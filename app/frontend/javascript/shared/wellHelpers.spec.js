@@ -40,8 +40,7 @@ describe('wellHelpers', () => {
       expect(requestsForWell(well).sort()).toEqual([request2, request1])
     })
 
-    // Different aliquots in the same well can reference the same request:
-    // this happens on the LRC GEM-X 5p Aggregate plate in the scRNA Core pipeline.
+    // Different aliquots in the same well can reference the same request.
     // The same request could theoretically be present in both requests_as_source and aliquots,
     // or twice in requests_as_source,
     // although I don't know of a realistic scenario where this would happen.
