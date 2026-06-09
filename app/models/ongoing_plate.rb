@@ -18,6 +18,10 @@ class OngoingPlate < AssetSearchForm
     { page: page, per_page: PER_PAGE }
   end
 
+  def order_by
+    @order_by.presence || {}
+  end
+
   # @note
   # This is currently only being used by the SearchController, as other usages pass in `purposes`,
   #   and therefore don't use the default_purposes method.

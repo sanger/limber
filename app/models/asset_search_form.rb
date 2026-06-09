@@ -7,7 +7,7 @@ class AssetSearchForm
 
   include ActiveModel::Model
 
-  attr_accessor :include_used, :states, :total_pages
+  attr_accessor :include_used, :states, :total_pages, :order_by
   attr_writer :purposes, :page, :purpose_names
 
   class_attribute :form_partial
