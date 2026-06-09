@@ -43,9 +43,26 @@ module LabwareCreators
     end
 
     # TODO: This should probably be asynchronous
+    #  using eager loading reduces the page from 93k to 58k
+    #
+    # Results are sorted by priority (highest first) and then by updated_at
+    # (most recently updated first). Note that `priority` is computed in Ruby
+    # from each plate's active requests (see Shared::HasRequests), so it cannot
+    # be sorted server-side via the JSON:API `sort` parameter - we have to sort
+    # the returned page after fetching.
     def available_plates
       @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
-      @search_results = Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters)
+      @search_results =
+        Sequencescape::Api::V2::Plate
+          .includes(
+            :purpose,
+            { wells: [{ requests_as_source: %i[primer_panel],
+                        aliquots: [{ request: %i[primer_panel request_type] }] }] }
+          )
+          .where(@search_options.search_parameters)
+          .paginate({ page: 1, per_page: 10 })
+          .to_a
+          .sort_by { |plate| [-plate.priority.to_i, -plate.updated_at.to_i] }
     end
 
     def parents
