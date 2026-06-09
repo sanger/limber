@@ -15,7 +15,7 @@ class OngoingTube < AssetSearchForm
   def pagination
     return {} if page.nil? # No pagination
 
-    { page: page, per_page: PER_PAGE }
+    { page:, per_page: }
   end
 
   def default_purposes

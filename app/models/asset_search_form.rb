@@ -2,8 +2,9 @@
 
 # Simple class to handle form input for searching
 class AssetSearchForm
-  PER_PAGE = 30
   MAX_TABS = 10
+
+  class_attribute :per_page, default: 30
 
   include ActiveModel::Model
 
