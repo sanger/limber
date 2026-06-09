@@ -57,7 +57,7 @@ module LabwareCreators
     # If no ordering is specified, the default order is by ID ascending.
     def available_plates
       @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'],
-                                         order_by: { updated_at: :desc })
+                                         page: 1, order_by: { updated_at: :desc })
       @search_results = Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters,
                                                                paginate: @search_options.pagination,
                                                                order_by: @search_options.order_by)
