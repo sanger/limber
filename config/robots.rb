@@ -827,11 +827,13 @@ ROBOT_CONFIG =
     custom_robot(
       'bravo-ribo-hyb-setup',
       name: 'Bravo Ribo Hyb Setup',
+      require_robot: true,
       beds: {
         bed(6).barcode => {
           purpose: 'LBR Cherrypick',
           states: ['passed'],
-          label: 'Bed 6'
+          label: 'Bed 6',
+          target_state: 'passed'
         },
         car('4,3').barcode => {
           purpose: 'LBR Ribo DNase',
