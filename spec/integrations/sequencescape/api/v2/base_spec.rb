@@ -45,4 +45,10 @@ RSpec.describe Sequencescape::Api::V2::Base do
       expect(described_class.connection.faraday.headers['X-Sequencescape-Client-Id']).to eq('test')
     end
   end
+
+  describe 'connection timeout' do
+    it 'sets the connection timeout to 120 seconds' do
+      expect(described_class.connection.faraday.options[:read_timeout]).to eq(120)
+    end
+  end
 end
