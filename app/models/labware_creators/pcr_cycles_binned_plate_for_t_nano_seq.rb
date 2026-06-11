@@ -195,7 +195,8 @@ module LabwareCreators
     def find_existing_metadata(metadata_key, request_id)
       # Note metadatable_type is 'Request' as we are looking for metadata on the request specifically
       # This also allows us to make use of the index on the table during the lookup for better performance
-      Sequencescape::Api::V2::PolyMetadatum.find(key: metadata_key, metadatable_id: request_id, metadatable_type: 'Request').first
+      Sequencescape::Api::V2::PolyMetadatum.find(key: metadata_key, metadatable_id: request_id,
+                                                 metadatable_type: 'Request').first
     end
 
     # Updates the value of an existing metadata if it's different from the provided value.
