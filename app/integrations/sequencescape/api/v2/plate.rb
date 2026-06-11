@@ -39,8 +39,10 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
     Sequencescape::Api::V2.plate_for_presenter(**options)
   end
 
-  def self.find_all(options, includes: DEFAULT_INCLUDES, paginate: {})
-    Sequencescape::Api::V2::Plate.includes(*includes).where(**options).paginate(paginate).all
+  def self.find_all(options, includes: DEFAULT_INCLUDES, paginate: {}, order_by: {})
+    query = Sequencescape::Api::V2::Plate.includes(*includes).where(**options)
+    query = query.order(**order_by) if order_by.present?
+    query.paginate(paginate).all
   end
 
   # Override the model used in form/URL helpers such as polymorphic_path

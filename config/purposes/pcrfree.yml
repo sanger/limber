@@ -54,6 +54,7 @@ PF-384 Lib XP2:
 PF Lib XP2:
   :asset_type: plate
   :label_template: plate_xp
+  :mark_under_represented_wells: true
 PF Lib Q-XP2:
   :asset_type: plate
   :creator_class: LabwareCreators::QuadrantSplitPlate

@@ -111,6 +111,7 @@ LCMT EM PCR XP:
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
   :size: 96
+  :mark_under_represented_wells: true
 # Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
 # pooling so the flow is directly from PCR XP to Pool XP).
 LCMT EM Pool XP:
@@ -156,6 +157,7 @@ LCMT DNA PCR XP:
     - name: Download Concentration (ng/ul) CSV
       id: concentrations_ngul
   :size: 96
+  :mark_under_represented_wells: true
 # Change all 'pool' refs to 'pool XP' (libraries are clean-up prior to
 # pooling so the flow is directly from PCR XP to Pool XP).
 LCMT DNA Pool XP:
