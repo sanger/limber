@@ -1461,15 +1461,15 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
       before do
         allow(pm_pcr_cycles).to receive(:update).and_return(true)
 
-        stub_polymetadata(pm_original_plate_barcode, loop_2_request.id)
-        stub_polymetadata(pm_original_well_id, loop_2_request.id)
-        stub_polymetadata(pm_concentration_nm, loop_2_request.id)
-        stub_polymetadata(pm_input_amount_available, loop_2_request.id)
-        stub_polymetadata(pm_input_amount_desired, loop_2_request.id)
-        stub_polymetadata(pm_sample_volume, loop_2_request.id)
-        stub_polymetadata(pm_diluent_volume, loop_2_request.id)
-        stub_polymetadata(pm_pcr_cycles, loop_2_request.id)
-        stub_polymetadata(pm_hyb_panel, loop_2_request.id)
+        stub_polymetadata(pm_original_plate_barcode, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_original_well_id, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_concentration_nm, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_input_amount_available, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_input_amount_desired, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_sample_volume, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_diluent_volume, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_pcr_cycles, loop_2_request.id, 'Request')
+        stub_polymetadata(pm_hyb_panel, loop_2_request.id, 'Request')
       end
 
       it 'makes the expected method calls when creating the child plate' do
