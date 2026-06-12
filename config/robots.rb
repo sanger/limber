@@ -195,6 +195,50 @@ ROBOT_CONFIG =
       class: 'Robots::PoolingRobot'
     )
 
+    # Used for ISC and re-ISC pipelines
+    # Handles both LB Lib PCR-XP and LTN Lib PCR XP (for targeted nanoseq) source plates
+    # 4:1 pooling into the destination LB Lib PrePool plate
+    # Replacement robot for nx-8
+    custom_robot(
+      'i5-8-lib-pcr-xp-to-isch-lib-pool',
+      name: 'i5-8 Lib PCR-XP => LB Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'LB Lib PrePool',
+          states: %w[pending started],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
     simple_robot('nx-8') do
       from 'LB Lib PrePool', bed(2)
       to 'LB Hyb', bed(4)
@@ -246,11 +290,6 @@ ROBOT_CONFIG =
         }
       }
     )
-
-    simple_robot('nx-8') do
-      from 'LB Cap Lib PCR-XP', bed(4)
-      to 'LB Cap Lib Pool', bed(2)
-    end
 
     simple_robot('nx-8') do
       from 'LB Cap Lib PCR-XP', bed(4)
