@@ -1551,6 +1551,14 @@ RSpec.describe LabwareCreators::PcrCyclesBinnedPlateForTNanoSeq, with: :uploader
         subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
       end
 
+      it 'does not update existing metadata when the value is the same' do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).and_return([existing_metadata_1,
+                                                                                   existing_metadata_2])
+        expect(existing_metadata_1).not_to receive(:update)
+        expect(existing_metadata_2).not_to receive(:update)
+        subject.create_or_update_request_metadata(request, request_metadata, child_well_location)
+      end
+
       it 'raises an error when new metadata fails to save' do
         allow(new_metadata_1).to receive(:save).and_return(false)
         expect do
