@@ -244,6 +244,12 @@ ROBOT_CONFIG =
       to 'LB Hyb', bed(4)
     end
 
+    # Replacement robot for nx-8
+    simple_robot('i5-8') do
+      from 'LB Lib PrePool', bed(5)
+      to 'LB Hyb', bed(9)
+    end
+
     bravo_robot do
       from 'LB Hyb', bed(4)
       to 'LB Cap Lib', car('1,3')
@@ -294,6 +300,12 @@ ROBOT_CONFIG =
     simple_robot('nx-8') do
       from 'LB Cap Lib PCR-XP', bed(4)
       to 'LB Cap Lib Pool', bed(2)
+    end
+
+    # Replacement robot for nx-8
+    simple_robot('i5-8') do
+      from 'LB Cap Lib PCR-XP', bed(5)
+      to 'LB Cap Lib Pool', bed(9)
     end
 
     bravo_robot do
