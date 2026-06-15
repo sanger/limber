@@ -260,11 +260,6 @@ ROBOT_CONFIG =
       to 'LB Cap Lib PCR', car('4,5')
     end
 
-    simple_robot('nx-96') do
-      from 'LB Cap Lib PCR', bed(1)
-      to 'LB Cap Lib PCR-XP', bed(9)
-    end
-
     custom_robot(
       'star-96-post-cap-pcr-purification',
       name: 'STAR-96 LB Cap Lib PCR => LB Cap Lib PCR-XP',
@@ -322,61 +317,6 @@ ROBOT_CONFIG =
       from 'PF Post Shear', bed(4)
       to 'PF Post Shear XP', car('2,3')
     end
-
-    custom_robot(
-      'nx-96-pf-post-shear-to-pf-post-shear-xp',
-      name: 'nx-96 PF Post-Shear => PF Post-Shear XP',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 1'
-        },
-        bed(9).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 9',
-          parent: bed(1).barcode,
-          target_state: 'started'
-        },
-        bed(2).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 2'
-        },
-        bed(10).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 10',
-          parent: bed(2).barcode,
-          target_state: 'started'
-        },
-        bed(3).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 3'
-        },
-        bed(11).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 11',
-          parent: bed(3).barcode,
-          target_state: 'started'
-        },
-        bed(4).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 4'
-        },
-        bed(12).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 12',
-          parent: bed(4).barcode,
-          target_state: 'started'
-        }
-      }
-    )
 
     bravo_robot transition_to: 'started' do
       from 'scRNA Stock', bed(4)
@@ -2341,51 +2281,6 @@ ROBOT_CONFIG =
           label: 'Bed 6',
           target_state: 'passed',
           parent: bed(9).barcode
-        }
-      }
-    )
-
-    custom_robot(
-      'nx-96-lhr-pcr-1-and-2-to-lhr-xp',
-      name: 'NX-96 LHR PCR 1 and 2 => LHR XP',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'LHR PCR 1',
-          states: ['passed'],
-          label: 'Bed 1',
-          child: bed(9).barcode
-        },
-        bed(2).barcode => {
-          purpose: 'LHR PCR 2',
-          states: ['passed'],
-          label: 'Bed 2',
-          child: bed(9).barcode
-        },
-        bed(3).barcode => {
-          purpose: 'LHR PCR 1',
-          states: ['passed'],
-          label: 'Bed 3',
-          child: bed(11).barcode
-        },
-        bed(4).barcode => {
-          purpose: 'LHR PCR 2',
-          states: ['passed'],
-          label: 'Bed 4',
-          child: bed(11).barcode
-        },
-        bed(9).barcode => {
-          purpose: 'LHR XP',
-          label: 'Bed 9',
-          states: ['pending'],
-          target_state: 'passed',
-          parents: [bed(1).barcode, bed(2).barcode]
-        },
-        bed(11).barcode => {
-          purpose: 'LHR XP',
-          label: 'Bed 11',
-          states: ['pending'],
-          target_state: 'passed',
-          parents: [bed(3).barcode, bed(4).barcode]
         }
       }
     )
