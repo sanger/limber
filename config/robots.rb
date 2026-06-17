@@ -239,12 +239,16 @@ ROBOT_CONFIG =
       class: 'Robots::PoolingRobot'
     )
 
+    # Deprecating nx-8 robot in favour of the i5-8 version
     simple_robot('nx-8') do
       from 'LB Lib PrePool', bed(2)
       to 'LB Hyb', bed(4)
     end
 
-    # Replacement robot for nx-8
+    # ISC pipeline
+    # Beckman i5-8 bed verification
+    # LB Hyb source to LB Cap Lib destination
+    # 1:1 transfer
     simple_robot('i5-8') do
       from 'LB Lib PrePool', bed(5)
       to 'LB Hyb', bed(9)
@@ -297,7 +301,10 @@ ROBOT_CONFIG =
       to 'LB Cap Lib Pool', bed(2)
     end
 
-    # Replacement robot for nx-8
+    # ISC pipeline
+    # Beckman i5-8 bed verification
+    # LB Cap Lib PCR-XP source to LB Cap Lib Pool destination
+    # 1:1 transfer
     simple_robot('i5-8') do
       from 'LB Cap Lib PCR-XP', bed(5)
       to 'LB Cap Lib Pool', bed(9)
@@ -3693,6 +3700,7 @@ ROBOT_CONFIG =
       }
     )
 
+    # Deprecating this in favor of the i5 version
     custom_robot(
       'beckman-rvi-lib-pcr-xp-to-rvi-lib-prepool',
       name: 'Beckman RVI Lib PCR XP => RVI Lib PrePool',
@@ -3730,6 +3738,50 @@ ROBOT_CONFIG =
         }
       },
       destination_bed: bed(4).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    # RVI pipeline
+    # Beckman i5-8 bed verification
+    # RVI Lib PCR XP source to RVI Lib PrePool destination
+    # 4:1 transfer
+    custom_robot(
+      'i5-8-rvi-lib-pcr-xp-to-rvi-lib-prepool',
+      name: 'i5-8 RVI Lib PCR XP => RVI Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Lib PrePool',
+          states: %w[pending],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
       class: 'Robots::PoolingRobot'
     )
 
@@ -3802,6 +3854,7 @@ ROBOT_CONFIG =
       }
     )
 
+    # Deprecating in favour of the i5 version
     custom_robot(
       'beckman-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
       name: 'Beckman RVI Cap Lib PCR XP => RVI Cap Lib Pool',
@@ -3816,6 +3869,29 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 2',
           parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # RVI pipeline
+    # Beckman i5-8 bed verification
+    # RVI Cap Lib PCR XP source to RVI Cap Lib Pool destination
+    # 1:1 transfer
+    custom_robot(
+      'i5-8-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
+      name: 'i5-8 RVI Cap Lib PCR XP => RVI Cap Lib Pool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI Cap Lib PCR XP',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Cap Lib Pool',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }
