@@ -263,14 +263,6 @@ RSpec/LetSetup:
     - 'spec/models/presenters/tube_presenter_spec.rb'
 
 # Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/MatchWithSimpleRegex:
-  Exclude:
-    - 'spec/integrations/sequencescape/api/v2/plate_spec.rb'
-    - 'spec/models/labels/tube_label_spec.rb'
-    - 'spec/models/labels/tube_label_traction_compatible_spec.rb'
-
-# Offense count: 5
 RSpec/MessageChain:
   Exclude:
     - 'spec/controllers/exports_controller_spec.rb'
