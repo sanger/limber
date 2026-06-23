@@ -452,13 +452,12 @@ RSpec/RepeatedExampleGroupDescription:
     - 'spec/models/labware_creators/final_tube_spec.rb'
     - 'spec/models/robots/robot_spec.rb'
 
-# Offense count: 10
+# Offense count: 9
 # Configuration parameters: CustomTransform, IgnoreMethods, IgnoreMetadata, InflectorPath, EnforcedInflector.
 # SupportedInflectors: default, active_support
 RSpec/SpecFilePathFormat:
   Exclude:
     - 'spec/controllers/searches_controller_spec.rb'
-    - 'spec/helpers/plate_helpers_spec.rb'
     - 'spec/models/labels/plate_384_single_label_spec.rb'
     - 'spec/models/labels/plate_label_96_lysate_spec.rb'
     - 'spec/models/plate_walking_spec.rb'
