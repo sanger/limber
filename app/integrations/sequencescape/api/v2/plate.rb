@@ -11,6 +11,7 @@ class Sequencescape::Api::V2::Plate < Sequencescape::Api::V2::Base
   include Sequencescape::Api::V2::Shared::HasBarcode
   include Sequencescape::Api::V2::Shared::HasWorklineIdentifier
   include Sequencescape::Api::V2::Shared::HasQcFiles
+  include Sequencescape::Api::V2::Shared::HasPolyMetadata
 
   UNKNOWN = 'Unknown'
 
