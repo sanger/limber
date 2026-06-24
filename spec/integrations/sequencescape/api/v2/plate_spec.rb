@@ -158,7 +158,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
       it 'returns a successful response' do
         response = plate.register_stock_for_plate
-        expect(response.first.attributes['message']).to match(/Stock successfully registered for plate wells/)
+        expect(response.first.attributes['message']).to include('Stock successfully registered for plate wells')
       end
     end
 
@@ -179,7 +179,7 @@ RSpec.describe Sequencescape::Api::V2::Plate do
 
       it 'returns an error result' do
         response = plate.register_stock_for_plate
-        expect(response.errors.first['title']).to match(/Stock registration failed/)
+        expect(response.errors.first['title']).to include('Stock registration failed')
       end
     end
   end
