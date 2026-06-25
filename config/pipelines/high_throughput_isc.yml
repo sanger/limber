@@ -12,6 +12,8 @@ ISC:
       - Targeted NanoSeq Pulldown Twist
       - Targeted NanoSeq Pulldown Agilent
       - BGE
+      - UD-Seq
+      - UD-Seq Pulldown Twist
   library_pass:
     - LB Cap Lib PCR-XP
   relationships:
