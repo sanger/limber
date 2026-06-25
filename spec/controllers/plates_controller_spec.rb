@@ -163,23 +163,26 @@ RSpec.describe PlatesController, type: :controller do
 
     before do
       # Stub the API to return our plate with wells
-      allow(controller).to receive(:fetch_plate_with_requests).and_return(plate_with_wells)
+      allow(controller).to receive(:fetch_plate_with_poly_metadata).and_return(plate_with_wells)
       stub_request(:post, 'http://example.com:3000/api/v2/poly_metadata')
         .to_return(status: 200, body: '', headers: {})
     end
 
     context 'when wells are selected' do
       let(:expected_args) do
-        wells.map do |well|
+        plate_args = [{ key: LimberConstants::UNDER_REPRESENTED_KEY, value: 'true',
+                        relationships: { metadatable: plate_with_wells } }]
+        well_args = wells.map do |well|
           {
             key: LimberConstants::UNDER_REPRESENTED_KEY,
             value: 'true',
-            relationships: { metadatable: well.aliquots.first.request }
+            relationships: { metadatable: well }
           }
         end
+        plate_args + well_args
       end
 
-      it 'creates poly metadata for each selected well and redirects with notice' do
+      it 'creates poly metadata for the plate and each selected well and redirects with notice' do
         expect_posts('PolyMetadatum', expected_args)
 
         post :process_mark_under_represented_wells,
@@ -205,7 +208,7 @@ RSpec.describe PlatesController, type: :controller do
 
     context 'when an error occurs' do
       before do
-        allow(controller).to receive(:fetch_plate_with_requests).and_raise(StandardError, 'Unexpected error')
+        allow(controller).to receive(:fetch_plate_with_poly_metadata).and_raise(StandardError, 'Unexpected error')
         allow(controller).to receive(:log_plate_error)
       end
 
