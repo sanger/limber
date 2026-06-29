@@ -252,9 +252,9 @@ module ApiUrlHelper
       stub_labware(plate)
     end
 
-    def stub_polymetadata(polymetadata, metadatable_id)
-      arguments = [{ key: polymetadata.key, metadatable_id: metadatable_id }]
-      allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return([polymetadata])
+    def stub_polymetadata(polymetadata, metadatable_id, metadatable_type)
+      arguments = [{ metadatable_id:, metadatable_type: }]
+      allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:find).with(*arguments).and_return(polymetadata)
     end
 
     def stub_project(project)
