@@ -380,6 +380,7 @@ dl#samples-information {
     @extend .list-group-item-warning;
   }
   li.state-started,
+  li.state-processed,
   li.state-process_1,
   li.state-process_2 {
     @extend .list-group-item-info;
@@ -413,6 +414,7 @@ dl#samples-information {
   @extend.bg-warning;
 }
 .state-badge.started,
+.state-badge.processed,
 .state-badge.process_1,
 .state-badge.process_2 {
   @extend.bg-info;

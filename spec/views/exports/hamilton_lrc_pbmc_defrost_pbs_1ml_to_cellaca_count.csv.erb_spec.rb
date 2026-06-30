@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count.csv.erb' do
+RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_1ml_to_cellaca_count.csv.erb' do
   let(:wells) do
     (1..12).map do |index| # one-based index
       supplier_name = "vac-tube-barcode-#{index}"
@@ -24,7 +24,7 @@ RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_cellaca_count.csv.erb' 
     create(:plate, wells:)
   end
 
-  let(:workflow) { 'scRNA Core LRC PBMC Defrost PBS Cell Count' }
+  let(:workflow) { 'scRNA Core LRC PBMC Defrost PBS 1ml Cell Count' }
 
   let(:expected_content) do
     header = [

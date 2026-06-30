@@ -24,7 +24,7 @@ group :default do
   gem 'hashie'
 
   # Communications with JSON APIs
-  gem 'json_api_client', github: 'sanger/json_api_client', branch: 'v1.21.0a'
+  gem 'json_api_client', github: 'sanger/json_api_client', tag: 'v1.23.0-sanger.1'
 
   # Speed up json encoding/decoding with oj
   gem 'oj'
@@ -54,6 +54,7 @@ group :test do
 end
 
 group :development do
+  gem 'chrome_devtools_rails' # Automatically serves the Chrome DevTools workspace mapping file, drop in Rails 8.2
   gem 'guard-rspec', require: false
   gem 'pry'
   gem 'pry-byebug'

@@ -45,8 +45,8 @@ RSpec.feature 'Viewing a plate', :js do
 
   scenario 'of a recognised type' do
     fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-    expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
-    expect(find('.state-badge')).to have_content('Pending')
+    expect(find_by_id('plate-show-page')).to have_text('Limber Cherrypicked')
+    expect(find('.state-badge')).to have_text('Pending')
     find_link('Download Concentration CSV', href: '/plates/DN1S/exports/concentrations.csv')
   end
 
@@ -55,8 +55,8 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'of a recognised type' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(find('.state-badge')).to have_content('Pending')
+      expect(find_by_id('plate-show-page')).to have_text('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_text('Pending')
       find_link('Download Worksheet CSV', href: "/plates/#{plate_uuid}.csv")
       find_link('Download Concentration CSV', href: '/plates/DN1S/exports/concentrations.csv')
     end
@@ -67,8 +67,8 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'creation of a child is allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(find('.state-badge')).to have_content('Passed')
+      expect(find_by_id('plate-show-page')).to have_text('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_text('Passed')
       expect(page).to have_button('Add an empty Child Purpose 0 plate')
     end
   end
@@ -78,8 +78,8 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'if a plate is started creation of a child is not allowed' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('plate-show-page')).to have_content('Limber Cherrypicked')
-      expect(find('.state-badge')).to have_content('Started')
+      expect(find_by_id('plate-show-page')).to have_text('Limber Cherrypicked')
+      expect(find('.state-badge')).to have_text('Started')
       expect(page).to have_no_button('Add an empty Limber Example Purpose plate')
     end
   end
@@ -91,7 +91,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('.asset-warnings')).to have_content('Wells contain suboptimal aliquots')
+      expect(find('.asset-warnings')).to have_text('Wells contain suboptimal aliquots')
     end
 
     scenario 'the well is flagged as suboptimal' do
@@ -103,7 +103,7 @@ RSpec.feature 'Viewing a plate', :js do
   feature 'without a suboptimal well' do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('plate-show-page')).to have_no_content('Wells contain suboptimal aliquots')
+      expect(find_by_id('plate-show-page')).to have_no_text('Wells contain suboptimal aliquots')
     end
 
     scenario 'the well is flagged as suboptimal' do
@@ -117,7 +117,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find('.asset-warnings')).to have_content(
+      expect(find('.asset-warnings')).to have_text(
         'Submission Requests of type Limber WGS have already been down the pipeline and were completed.'
       )
     end
@@ -129,7 +129,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'it shows tags' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(find_by_id('aliquot_A1')).to have_content('1')
+      expect(find_by_id('aliquot_A1')).to have_text('1')
     end
   end
 
@@ -146,7 +146,7 @@ RSpec.feature 'Viewing a plate', :js do
 
     scenario 'we see the tube label form' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
-      expect(page).to have_content('Print tube labels')
+      expect(page).to have_text('Print tube labels')
       expect(page).to have_select('Barcode Printer', selected: default_tube_printer)
     end
 
@@ -155,7 +155,7 @@ RSpec.feature 'Viewing a plate', :js do
 
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       within('.tube-printing') do
-        expect(page).to have_content('Print tube labels')
+        expect(page).to have_text('Print tube labels')
         select(barcode_printer, from: 'Barcode Printer')
 
         # So RSpec cautions against this as a code smell, but tbh it feels vastly better than the

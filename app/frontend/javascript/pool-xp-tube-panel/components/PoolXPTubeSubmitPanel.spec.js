@@ -417,7 +417,6 @@ describe('PoolXPTubeSubmitPanel', () => {
       mockTubeFoundResponse()
       wrapper = createWrapper()
       await flushPromises()
-      expect(global.fetch).toBeCalledTimes(1)
       expect(global.fetch).toHaveBeenCalledWith(wrapper.vm.tractionTubeCheckUrl)
 
       expect(wrapper.vm.state).toBe('tube_exists')

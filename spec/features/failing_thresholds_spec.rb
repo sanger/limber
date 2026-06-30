@@ -77,6 +77,6 @@ RSpec.feature 'Failing thresholds', :js do
     fill_in 'Molarity', with: 15
     click_on('Fail selected wells')
 
-    expect(find_by_id('flashes')).to have_content('Selected wells have been failed')
+    expect(find_by_id('flashes')).to have_text('Selected wells have been failed')
   end
 end

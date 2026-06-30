@@ -30,7 +30,8 @@ class SequencescapeSubmission
   #                       project: The project uuid
   attr_reader :asset_groups
 
-  attr_accessor :allowed_extra_barcodes, :extra_barcodes, :num_extra_barcodes, :labware_barcode, :submission_uuid
+  attr_accessor :allowed_extra_barcodes, :extra_barcodes, :num_extra_barcodes, :labware_barcode, :submission_uuid,
+                :supplied_project_uuid
 
   validates :user, :assets, :template_uuid, :request_options, presence: true
   validate :check_extra_barcodes
@@ -118,10 +119,12 @@ class SequencescapeSubmission
 
   def generate_orders
     asset_groups_for_orders_creation.map do |asset_group|
-      Sequencescape::Api::V2::Order.create!(
+      order_params = {
         submission_template_attributes: { request_options: request_options, user_uuid: user }.merge(asset_group),
         submission_template_uuid: template_uuid
-      )
+      }
+      order_params[:project_uuid] = supplied_project_uuid if supplied_project_uuid.present?
+      Sequencescape::Api::V2::Order.create!(order_params)
     end
   end
 

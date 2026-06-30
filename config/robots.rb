@@ -827,11 +827,13 @@ ROBOT_CONFIG =
     custom_robot(
       'bravo-ribo-hyb-setup',
       name: 'Bravo Ribo Hyb Setup',
+      require_robot: true,
       beds: {
         bed(6).barcode => {
           purpose: 'LBR Cherrypick',
           states: ['passed'],
-          label: 'Bed 6'
+          label: 'Bed 6',
+          target_state: 'passed'
         },
         car('4,3').barcode => {
           purpose: 'LBR Ribo DNase',
@@ -1972,6 +1974,26 @@ ROBOT_CONFIG =
           label: 'Bed 3',
           target_state: 'passed',
           parent: bed(13).barcode
+        }
+      }
+    )
+
+    # For scRNA Core pipeline SPRI and PCR verification
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-ge-ligxp-to-lrc-gem-x-5p-ge-pcr-2xp',
+      name: 'Hamilton LRC GEM-X 5p GE LigXP => LRC GEM-X 5p GE PCR 2XP',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LRC GEM-X 5p GE LigXP',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(10).barcode => {
+          purpose: 'LRC GEM-X 5p GE PCR 2XP',
+          states: ['pending'],
+          label: 'Bed 10',
+          target_state: 'passed',
+          parent: bed(7).barcode
         }
       }
     )
@@ -3855,15 +3877,39 @@ ROBOT_CONFIG =
 
     # scRNA pipeline
     # Hamilton STAR bed verification
-    # LRC PBMC Defrost PBS to LRC PBMC Pools
+    # LRC PBMC Defrost PBS 1ml to LRC PBMC Pools
     # Transfers 1:1
     custom_robot(
-      'hamilton-star-lrc-pbmc-defrost-pbs-to-lrc-pbmc-pools',
-      name: 'Hamilton STAR LRC PBMC Defrost PBS => LRC PBMC Pools',
+      'hamilton-star-lrc-pbmc-defrost-pbs-1ml-to-lrc-pbmc-pools',
+      name: 'Hamilton STAR LRC PBMC Defrost PBS 1ml => LRC PBMC Pools',
       require_robot: true,
       beds: {
         bed(15).barcode => {
-          purpose: 'LRC PBMC Defrost PBS',
+          purpose: 'LRC PBMC Defrost PBS 1ml',
+          states: ['passed'],
+          label: 'Bed 15'
+        },
+        bed(13).barcode => {
+          purpose: 'LRC PBMC Pools',
+          states: ['pending'],
+          label: 'Bed 13',
+          parent: bed(15).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # scRNA pipeline
+    # Hamilton STAR bed verification
+    # LRC PBMC Aliquot to LRC PBMC Pools
+    # Transfers 1:1
+    custom_robot(
+      'hamilton-star-lrc-pbmc-aliquot-to-lrc-pbmc-pools',
+      name: 'Hamilton STAR LRC PBMC Aliquot => LRC PBMC Pools',
+      require_robot: true,
+      beds: {
+        bed(15).barcode => {
+          purpose: 'LRC PBMC Aliquot',
           states: ['passed'],
           label: 'Bed 15'
         },
@@ -5321,6 +5367,342 @@ ROBOT_CONFIG =
         },
         bed(14).barcode => {
           purpose: 'UPF Lib XP2',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Cherrypicked => UPF2 Shear
+    custom_robot(
+      'bravo-upf2-cherrypicked-to-upf2-shear',
+      name: 'UPF2 Cherrypicked => UPF2 Shear',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF2 Cherrypicked',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF2 Shear',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Shear => UPF2 Post Shear
+    custom_robot(
+      'bravo-upf2-shear-to-upf2-post-shear',
+      name: 'UPF2 Shear => UPF2 Post Shear',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'UPF2 Shear',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(7).barcode => {
+          purpose: 'UPF2 Post Shear',
+          states: ['pending'],
+          label: 'Bed 7',
+          parent: bed(9).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Post Shear => UPF2 End Prep
+    custom_robot(
+      'bravo-upf2-post-shear-to-upf2-end-prep-xp1',
+      name: 'UPF2 Post Shear => UPF2 End Prep',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'UPF2 Post Shear',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF2 End Prep',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 End Prep => UPF2 Lib
+    custom_robot(
+      'bravo-upf2-end-prep-xp1-to-upf2-lib',
+      name: 'Bravo UPF2 End Prep => UPF2 Lib',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'UPF2 End Prep',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['pending'],
+          label: 'Bed 6',
+          target_state: 'passed',
+          parent: bed(5).barcode
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Lib => UPF2 Lib XP2
+    custom_robot(
+      'hamilton-upf2-lib-to-upf2-lib-xp2',
+      name: 'Hamilton UPF2 Lib => UPF2 Lib XP2',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF2 Lib XP2',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF2 Lib XP2',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics RNAseq pipeline bed verification
+    # Verify initial positions
+    custom_robot(
+      'bravo-lcmt-rnaseq-verify-initial-setup',
+      name: 'Bravo LCMT RNAseq Verify Initial Setup',
+      require_robot: true, # Robot barcode must be scanned in.
+      verify_robot: false, # First robot step; no previous robot.
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT Lysate',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMT RNA OdT Beads',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(5).barcode,
+          target_state: 'started'
+        },
+        car('2,3').barcode => {
+          purpose: 'LCMT RNA Denat/Hyb',
+          states: ['pending'],
+          label: 'Carousel 2,3',
+          parent: bed(6).barcode,
+          target_state: 'started'
+        },
+        car('3,5').barcode => {
+          purpose: 'LCMT RNA RT',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: car('2,3').barcode,
+          target_state: 'started'
+        },
+        car('3,4').barcode => {
+          purpose: 'LCMT RNA Preamp',
+          states: ['pending'],
+          label: 'Carousel 3,4',
+          parent: car('3,5').barcode,
+          target_state: 'started'
+        }
+      }
+    )
+    # LCMT RNA OdT beads Verification
+    custom_robot(
+      'bravo-rnaseq-odt-beads-first-verification',
+      name: 'Bravo LCMT RNA OdT Beads First Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LCMT RNA OdT Beads',
+          states: ['started'],
+          label: 'Bed 8',
+          target_state: 'processed'
+        }
+      }
+    )
+    custom_robot(
+      'bravo-rnaseq-odt-beads-second-verification',
+      name: 'Bravo LCMT RNA OdT Beads Second Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT RNA OdT Beads Second Verification',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LCMT RNA OdT Beads',
+          states: ['processed'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMT RNA Denat/Hyb Verification
+    custom_robot(
+      'bravo-rnaseq-denat-hyb-verification',
+      name: 'Bravo LCMT RNA Denat/Hyb Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT RNA Denat/Hyb Verification',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LCMT RNA Denat/Hyb',
+          states: ['started'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMT RNA RT Verification
+    custom_robot(
+      'bravo-rnaseq-rt-verification',
+      name: 'Bravo LCMT RNA RT Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT RNA RT Verification',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT RNA RT',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+    # Verify day 2 starting positions before preamp
+    custom_robot(
+      'bravo-lcmt-rnaseq-verify-positions-day-2-setup',
+      name: 'Bravo LCMT RNA Verify Initial Setup Day 2',
+      require_robot: true,
+      verify_robot: false,
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LCMT RNA Preamp',
+          states: ['started'],
+          label: 'Bed 4',
+          target_state: 'passed'
+        },
+        car('4,3').barcode => {
+          purpose: 'LCMT cDNA Reserve',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        car('1,4').barcode => {
+          purpose: 'LCMT cDNA Frag/ER',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        car('3,5').barcode => {
+          purpose: 'LCMT cDNA ADP Lig',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: car('1,4').barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
+    # LCMT cDNA Frag/ER Verification
+    custom_robot(
+      'bravo-rnaseq-cdna-frag-er-verification',
+      name: 'Bravo LCMT cDNA Frag/ER Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT cDNA Frag/ER Verification',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT cDNA Frag/ER',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMT RNAseq CDNA Lib PCR Verification
+    custom_robot(
+      'bravo-rnaseq-cdna-lib-pcr-verification',
+      name: 'Bravo LCMT cDNA ADP Lig => LCMT cDNA Lib PCR',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMT cDNA ADP Lig',
+          states: ['started'],
+          label: 'Bed 7',
+          target_state: 'passed'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMT cDNA Lib PCR',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(7).barcode,
+          target_state: 'started'
+        }
+      }
+    )
+    # LCMT RNAseq Library PCR Cleanup Verification
+    custom_robot(
+      'hamilton-lib-pcr-purification',
+      name: 'Hamilton LCMT cDNA Lib PCR => LCMT cDNA Lib PCR XP',
+      require_robot: true,
+      verify_robot: false,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMT cDNA Lib PCR',
+          states: ['started'],
+          label: 'Bed 7',
+          target_state: 'passed'
+        },
+        bed(9).barcode => {
+          purpose: 'LCMT cDNA Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'LCMT cDNA Lib PCR',
+          states: ['started'],
+          label: 'Bed 12',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LCMT cDNA Lib PCR XP',
           states: ['pending'],
           label: 'Bed 14',
           parent: bed(12).barcode,

@@ -153,4 +153,175 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
       expect(subject.show_scrna_pooling?).to be true
     end
   end
+
+  describe '#suitable_for_labware?' do
+    let(:child_purpose_name) { 'Test Purpose' }
+    let(:parent_purpose_name) { 'Parent Purpose' }
+    let(:parent_plate) { create(:plate, purpose_name: parent_purpose_name) }
+    let(:other_purpose) { 'Other Purpose' }
+    let(:user_uuid) { SecureRandom.uuid }
+
+    let(:parents) { [parent_plate] }
+
+    let(:robot_config) do
+      {
+        'name' => 'robot_name',
+        'require_robot' => true,
+        'beds' => {
+          'bed1_barcode' => {
+            'purpose' => parent_purpose_name,
+            'states' => ['passed'],
+            'label' => 'Bed 2'
+          },
+          'bed2_barcode' => {
+            'purpose' => child_purpose_name,
+            'states' => ['pending'],
+            'label' => 'Bed 1',
+            'parent' => 'bed1_barcode',
+            'target_state' => 'passed'
+          }
+        }
+      }
+    end
+
+    let(:robot) { Robots::Robot.new(robot_config.merge(user_uuid:)) }
+
+    let(:irrelevant_robot_config) do
+      {
+        'name' => 'robot_name',
+        'require_robot' => true,
+        'beds' => {
+          'bed1_barcode' => {
+            'purpose' => 'irrelevant_parent_purpose',
+            'states' => ['passed'],
+            'label' => 'Bed 2'
+          },
+          'bed2_barcode' => {
+            'purpose' => 'irrelevant_child_purpose',
+            'states' => ['pending'],
+            'label' => 'Bed 1',
+            'parent' => 'bed1_barcode',
+            'target_state' => 'passed'
+          }
+        }
+      }
+    end
+
+    let(:irrelevant_robot) { Robots::Robot.new(irrelevant_robot_config.merge(user_uuid:)) }
+
+    before do
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive_messages(
+        purpose_name: child_purpose_name,
+        extract_parent_purposes: parents.map { |p| p.purpose.name }
+      )
+
+      # rubocop:enable RSpec/SubjectStub
+    end
+
+    context 'when labware.state is passed' do
+      let(:labware_state) { 'passed' }
+
+      it 'returns true if a main match is found' do
+        expect(subject.send(:suitable_for_labware?, robot)).to be true
+      end
+
+      it 'returns false if no main match is found' do
+        robot_config['beds']['bed2_barcode']['purpose'] = other_purpose
+        robot_with_wrong_parent_purpose = Robots::Robot.new(robot_config.merge(user_uuid:))
+        expect(subject.send(:suitable_for_labware?, robot_with_wrong_parent_purpose)).to be false
+      end
+
+      context 'when neither match exists' do
+        it 'returns false' do
+          expect(subject.send(:suitable_for_labware?, irrelevant_robot)).to be false
+        end
+      end
+    end
+
+    context 'when labware.state is pending' do
+      let(:labware_state) { 'pending' }
+
+      context 'when both main and parent match exist' do
+        it 'returns true' do
+          expect(subject.send(:suitable_for_labware?, robot)).to be true
+        end
+      end
+
+      context 'when only main match exists' do
+        it 'returns false' do
+          robot_config['beds']['bed1_barcode']['purpose'] = other_purpose
+          robot_with_wrong_parent_purpose = Robots::Robot.new(robot_config.merge(user_uuid:))
+          expect(subject.send(:suitable_for_labware?, robot_with_wrong_parent_purpose)).to be false
+        end
+      end
+
+      context 'when only parent match exists' do
+        it 'returns false' do
+          robot_config['beds']['bed2_barcode']['purpose'] = other_purpose
+          robot_with_wrong_child_purpose = Robots::Robot.new(robot_config.merge(user_uuid:))
+          expect(subject.send(:suitable_for_labware?, robot_with_wrong_child_purpose)).to be false
+        end
+      end
+
+      context 'when neither match exists' do
+        it 'returns false' do
+          expect(subject.send(:suitable_for_labware?, irrelevant_robot)).to be false
+        end
+      end
+    end
+  end
+
+  describe '#csv_file_links' do
+    let(:parent_purposes) { ['Parent Purpose 2'] }
+
+    # Had to use Hashie::Mash here to mimic the behavior of the actual file links, which are
+    # Hashie::Mash objects. Using simple hashes was causing issues with the `can_be_enabled?`
+    # method, which expects Hashie::Mash objects to call e.g. link.states
+    let(:file_links) do
+      [
+        Hashie::Mash.new('name' => 'Export 1', 'id' => 'one', 'parent' => 'Parent Purpose 1'),
+        Hashie::Mash.new('name' => 'Export 2', 'id' => 'two', 'parent' => 'Parent Purpose 2'),
+        Hashie::Mash.new('name' => 'Download Worksheet CSV', 'id' => 'worksheet')
+      ]
+    end
+
+    before do
+      # Stubbing methods called within csv_file_links to control the test environment
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive_messages(extract_parent_purposes: parent_purposes, fetch_file_links: file_links,
+                                         csv: true, human_barcode: 'DN3U')
+      allow(subject).to receive(:filter_enabled_links).with(file_links).and_return(file_links)
+      # rubocop:enable RSpec/SubjectStub
+    end
+
+    it 'includes links with matching parent' do
+      links = subject.csv_file_links
+      expect(links).to include(
+        [
+          'Export 2',
+          [:plate, :export, hash_including(id: 'two', plate_id: 'DN3U', format: :csv)]
+        ]
+      )
+    end
+
+    it 'does not include links with non-matching parent' do
+      links = subject.csv_file_links
+      expect(links.any? { |l| l[0] == 'Export 1' }).to be false
+    end
+
+    it 'includes worksheet csv link if csv is present' do
+      links = subject.csv_file_links
+      expect(links).to include(['Download Worksheet CSV', { format: :csv }])
+    end
+
+    it 'does not include worksheet csv link if csv is not present' do
+      # rubocop:disable RSpec/SubjectStub
+      allow(subject).to receive(:csv).and_return(false)
+      # rubocop:enable RSpec/SubjectStub
+
+      links = subject.csv_file_links
+      expect(links).not_to include(['Download Worksheet CSV', { format: :csv }])
+    end
+  end
 end

@@ -55,6 +55,7 @@ import {
   checkDuplicates,
   checkSize,
   checkForUnacceptablePlatePurpose,
+  checkMinCountRequests,
 } from '@/javascript/shared/components/plateScanValidators.js'
 import devourApi from '@/javascript/shared/devourApi.js'
 import buildPlateObjs from '@/javascript/shared/plateHelpers.js'
@@ -140,6 +141,15 @@ export default {
     // If present is used in scanValidation to check if the user has scanned an
     // a plate of the correct type.
     acceptablePurposes: { type: String, required: false, default: '[]' },
+
+    // Flag to determine whether we should check if the scanned plates have active library requests. It is optional and
+    // defaults to 'false' if not provided.
+    // Also referenced as require-active-library-requests and require_active_library_requests
+    requireActiveLibraryRequests: {
+      type: String,
+      required: false,
+      default: 'false',
+    },
   },
   data() {
     return {
@@ -270,11 +280,19 @@ export default {
     },
     scanValidation() {
       const currPlates = this.plates.map((plateItem) => plateItem.plate)
-      return [
+
+      const validators = [
         checkSize(12, 8),
         checkDuplicates(currPlates),
         checkForUnacceptablePlatePurpose(this.acceptablePurposesArray),
       ]
+      // We can't enforce this check for all multi stamp plates because some may not be the first step of the workflow,
+      // and therefore may not have library requests yet. So we make it optional to check if the scanned plates have active library requests.
+      if (this.requireActiveLibraryRequests === 'true') {
+        validators.push(checkMinCountRequests(1))
+      }
+
+      return validators
     },
   },
   methods: {

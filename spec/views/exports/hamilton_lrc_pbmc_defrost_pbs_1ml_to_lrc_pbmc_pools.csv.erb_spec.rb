@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_to_lrc_pbmc_pools.csv.erb' do
+RSpec.describe 'exports/hamilton_lrc_pbmc_defrost_pbs_1ml_to_lrc_pbmc_pools.csv.erb' do
   let(:workflow) { 'workflow_name' }
 
   let(:plate1_barcode) { 'DN1S' }

@@ -48,4 +48,61 @@ module ExportsHelper
 
     Rails.configuration.mbrave[tag_group_name][:num_plate]
   end
+
+  # Helper method for scRNA PBMC Pools plate to create rows for the driver files
+  # Used in the following exports:
+  # - Hamilton LRC PBMC Aliquot to LRC PBMC Pools CSV
+  # - Hamilton LRC PBMC Defrost PBS 1ml to LRC PBMC Pools CSV
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def pbmc_transfer_request_rows(plate, ancestor_plate_list)
+    scrna_config = Rails.application.config.scrna_config
+    required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
+    maximum_sample_volume = scrna_config[:maximum_sample_volume]
+    minimum_sample_volume = scrna_config[:minimum_sample_volume]
+    minimum_resuspension_volume = scrna_config[:minimum_resuspension_volume]
+    millilitres_to_microlitres = scrna_config[:millilitres_to_microlitres]
+    desired_chip_loading_concentration = scrna_config[:desired_chip_loading_concentration]
+
+    ancestor_plates_wells = ancestor_plate_list.each_with_object({}) do |ancestor_plate, hash|
+      hash[ancestor_plate.labware_barcode.human] = ancestor_plate.wells.index_by(&:location)
+    end
+
+    transfer_request_data = []
+    each_source_metadata_for_plate(plate) do |src_barcode, src_location, dest_well|
+      src_well = ancestor_plates_wells[src_barcode][src_location]
+      cell_count = src_well.latest_total_cell_count
+      next if cell_count.nil?
+
+      required_volume = (
+          millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f
+        ).clamp(
+          minimum_sample_volume, maximum_sample_volume
+        )
+
+      transfer_request_data << [
+        src_barcode,
+        src_location,
+        plate.labware_barcode.human,
+        dest_well.location,
+        format('%0.1f', required_volume),
+        required_number_of_cells_per_sample_in_pool
+      ]
+    end
+
+    samples_by_dest_well = transfer_request_data.group_by { |tr| tr[3] }
+
+    rows_array = transfer_request_data.map do |data|
+      samples_in_pool = samples_by_dest_well[data[3]].count
+      required_number_of_cells_per_sample_in_pool = data[5]
+      resuspension_volume = [
+        LabwareCreators::DonorPoolingCalculator.calculate_total_cells_in_300ul(samples_in_pool) /
+          desired_chip_loading_concentration,
+        minimum_resuspension_volume
+      ].max
+      data[5] = format('%0.1f', resuspension_volume)
+      data
+    end
+    rows_array.sort_by { |a| [a[0], WellHelpers.well_coordinate(a[1])] }
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 end

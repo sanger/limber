@@ -64,7 +64,7 @@ RSpec.feature 'Creating a plate with bait', :js do
     plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('example-purpose')
     click_on 'Add an empty with-baits plate'
-    expect(page).to have_content('Carefully check the bait layout')
+    expect(page).to have_text('Carefully check the bait layout')
     click_on 'Create plate'
     # rubocop:todo Layout/LineLength
     # I do not check the show page for a new plate, as it will be rendered based on my own stubs only, so it is not very informative

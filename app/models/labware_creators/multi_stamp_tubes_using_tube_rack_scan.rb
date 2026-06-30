@@ -141,7 +141,7 @@ module LabwareCreators
     def tubes_must_not_have_ean13_barcodes
       return unless file_valid?
 
-      # parent tube should be LRC Bank Seq or LRC Bank Spare barcoded SQ01125101 or similar
+      # parent tube should be barcoded SQ01125101 or similar
       return if labware.barcode.ean13.nil?
 
       errors.add(

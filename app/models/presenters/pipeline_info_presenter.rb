@@ -29,22 +29,21 @@ class Presenters::PipelineInfoPresenter
   #
   # In some cases, an intersection of these three groups might be required to accurately determine
   # the pipeline and pipeline group, in others the parent purpose might be used to determine the pipeline.
-  def pipeline_groups
-    pipeline_groups = [
-      pipeline_groups_by_purpose, # allows matching pipeline purposes with no active requests
-      pipeline_groups_by_parent_purposes, # any matching pipeline MIGHT match the labware's parent purposes
-      pipeline_groups_by_requests_and_libraries # any matching pipeline MIGHT match the active requests and library type
-    ]
+  def pipeline_groups # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity,Metrics/AbcSize
+    # Build arrays from different methods, removing nils and empties
+    all_groups = [groups_by_purpose, groups_by_parent, groups_by_filters].compact.reject(&:empty?)
+    purpose_filter_groups = [groups_by_purpose, groups_by_filters].compact.reject(&:empty?)
 
-    # Remove nil values and empty arrays from the pipeline_groups array
-    pipeline_groups.compact!
-    pipeline_groups.reject!(&:empty?)
+    # Find intersection if possible
+    # &:& is a combination of to_proc and Array#&, which allows us to find the intersection of multiple arrays
+    intersected_all_groups = all_groups.reduce(&:&)
+    intersected_purpose_filters = purpose_filter_groups.reduce(&:&)
 
-    # intersect the pipeline groups to find the common pipelines
-    pipeline_groups = pipeline_groups.reduce { |acc, group| acc & group }
+    # Prefer full intersection, then partial, else empty array
+    return intersected_all_groups.sort if intersected_all_groups&.any?
+    return intersected_purpose_filters.sort if intersected_purpose_filters&.any?
 
-    # Return the remaining pipeline groups as a sorted array, or nil if none are found.
-    pipeline_groups.sort if pipeline_groups&.any?
+    []
   end
 
   # Returns the pipeline group name if there is only one pipeline group, otherwise nil.
@@ -92,17 +91,12 @@ class Presenters::PipelineInfoPresenter
 
   private
 
-  def cache_key
-    "pipeline_info_presenter/#{@labware.barcode}"
-  end
-
-  def join_up_to(max_listed, array, separator = ', ')
-    return array.join(separator) if array.size <= max_listed
-
-    "#{array[0..(max_listed - 1)].join(separator)}, ...(#{array.size - max_listed} more)"
-  end
-
-  def pipeline_groups_by_purpose
+  # Returns the pipeline group names associated with the labware's purpose from the pipeline configuration.
+  # Some purposes are associated with multiple pipelines.
+  # Allows matching of pipeline purposes with no active requests.
+  #
+  # @return [Array<String>] Array of unique pipeline group names.
+  def groups_by_purpose
     Settings
       .pipelines
       .select_pipelines_with_purpose(Settings.pipelines.list, @labware.purpose)
@@ -110,7 +104,30 @@ class Presenters::PipelineInfoPresenter
       .uniq
   end
 
-  def pipeline_groups_by_requests_and_libraries
+  # Returns the pipeline group names associated with the purposes of the labware's parents.
+  # Any matching pipeline MIGHT match the labware's parent purposes.
+  # This method is most useful for cases where the parent labware purpose is more specific to the pipeline group,
+  # such as with 'LB Lib Pool Norm' tubes. It finds all parent labware, extracts their purposes,
+  # and determines the intersection of pipeline groups associated with those purposes.
+  # This approach could cause problems if the parent labware is in a different pipeline,
+  # however, in this case it is normally in the same pipeline *group*.
+  #
+  # @return [Array<String>] Array of unique pipeline group names.
+  def groups_by_parent
+    find_all_labware_parents_with_purposes
+      .map(&:purpose)
+      .map do |parent_purpose|
+        Settings.pipelines.select_pipelines_with_purpose(Settings.pipelines.list, parent_purpose).map(&:pipeline_group)
+      end
+      .reduce(:&)&.compact
+  end
+
+  # Returns the pipeline group name determined by the active pipelines for the labware,
+  # based on its requests and library type.
+  # Any matching pipeline MIGHT match the active requests and library type.
+  #
+  # @return [Array<String>] Array of unique pipeline group names.
+  def groups_by_filters
     active_pipelines.map(&:pipeline_group).uniq
   end
 
@@ -130,17 +147,13 @@ class Presenters::PipelineInfoPresenter
     )
   end
 
-  # On `LB Lib Pool Norm` tubes, it's hard to find the correct pipeline,
-  # because the same purpose and request type is used in many pipelines.
-  # This looks at the parent labware, as this is normally specific to the pipeline.
-  # This approach could cause problems if the parent labware is in a different pipeline,
-  # however, in this case it is normally in the same pipeline *group*.
-  def pipeline_groups_by_parent_purposes
-    find_all_labware_parents_with_purposes
-      .map(&:purpose)
-      .map do |parent_purpose|
-        Settings.pipelines.select_pipelines_with_purpose(Settings.pipelines.list, parent_purpose).map(&:pipeline_group)
-      end
-      .reduce(:&)
+  def cache_key
+    "pipeline_info_presenter/#{@labware.barcode}"
+  end
+
+  def join_up_to(max_listed, array, separator = ', ')
+    return array.join(separator) if array.size <= max_listed
+
+    "#{array[0..(max_listed - 1)].join(separator)}, ...(#{array.size - max_listed} more)"
   end
 end

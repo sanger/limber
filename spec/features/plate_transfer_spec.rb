@@ -85,39 +85,39 @@ RSpec.feature 'Plate transfer', :js, :robots do
     fill_in_swipecard(swipecard)
 
     # if we don't do this the next step doesn't work
-    expect(page).to have_content('Jane Doe')
+    expect(page).to have_text('Jane Doe')
     click_button('Robots')
     click_link 'bravo LB Post Shear => LB End Prep'
-    expect(page).to have_content('bravo LB Post Shear => LB End Prep')
+    expect(page).to have_text('bravo LB Post Shear => LB End Prep')
     scan_in 'Scan robot', with: '123'
-    within('#robot') { expect(page).to have_content('123') }
+    within('#robot') { expect(page).to have_text('123') }
     scan_in 'Scan bed', with: '580000004838'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).to have_no_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Labware: #{plate_barcode_1}")
-      expect(page).to have_content('Bed: 580000004838')
+      expect(page).to have_no_text("Robot: #{robot_barcode}")
+      expect(page).to have_text("Labware: #{plate_barcode_1}")
+      expect(page).to have_text('Bed: 580000004838')
     end
     scan_in 'Scan robot', with: robot_barcode
     within('#robot') do
-      expect(page).to have_no_content('123')
-      expect(page).to have_content(robot_barcode.to_s)
+      expect(page).to have_no_text('123')
+      expect(page).to have_text(robot_barcode.to_s)
     end
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_2
     within('#bed_list') do
-      expect(page).to have_no_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Labware: #{plate_barcode_1}")
-      expect(page).to have_content('Bed: 580000004838')
-      expect(page).to have_content("Labware: #{plate_barcode_2}")
-      expect(page).to have_content('Bed: 580000014851')
+      expect(page).to have_no_text("Robot: #{robot_barcode}")
+      expect(page).to have_text("Labware: #{plate_barcode_1}")
+      expect(page).to have_text('Bed: 580000004838')
+      expect(page).to have_text("Labware: #{plate_barcode_2}")
+      expect(page).to have_text('Bed: 580000014851')
     end
     click_link('Validate Layout')
     within '#validation_report' do
-      expect(page).to have_content('No problems detected!')
+      expect(page).to have_text('No problems detected!')
     end
     click_button('Start the bravo LB Post Shear => LB End Prep')
-    expect(page).to have_content('Robot bravo LB Post Shear => LB End Prep has been started.')
+    expect(page).to have_text('Robot bravo LB Post Shear => LB End Prep has been started.')
   end
 
   scenario 'informs if the robot barcode is wrong' do
@@ -126,22 +126,22 @@ RSpec.feature 'Plate transfer', :js, :robots do
 
     fill_in_swipecard(swipecard)
 
-    expect(page).to have_content('Jane Doe')
+    expect(page).to have_text('Jane Doe')
     click_button('Robots')
     click_link 'bravo LB End Prep'
-    expect(page).to have_content('bravo LB End Prep')
+    expect(page).to have_text('bravo LB End Prep')
     scan_in 'Scan robot', with: robot_barcode
-    within('#robot') { expect(page).to have_content(robot_barcode.to_s) }
+    within('#robot') { expect(page).to have_text(robot_barcode.to_s) }
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).to have_no_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Labware: #{plate_barcode_1}")
-      expect(page).to have_content('Bed: 580000014851')
+      expect(page).to have_no_text("Robot: #{robot_barcode}")
+      expect(page).to have_text("Labware: #{plate_barcode_1}")
+      expect(page).to have_text('Bed: 580000014851')
     end
     click_link('Validate Layout')
     within '#validation_report' do
-      expect(page).to have_content('There were problems: Your labware is not on the right robot')
+      expect(page).to have_text('There were problems: Your labware is not on the right robot')
     end
   end
 
@@ -151,23 +151,23 @@ RSpec.feature 'Plate transfer', :js, :robots do
 
     fill_in_swipecard(swipecard)
 
-    expect(page).to have_content('Jane Doe')
+    expect(page).to have_text('Jane Doe')
     click_button('Robots')
     click_link 'bravo LB End Prep'
-    expect(page).to have_content('bravo LB End Prep')
+    expect(page).to have_text('bravo LB End Prep')
     scan_in 'Scan robot', with: robot_barcode
-    within('#robot') { expect(page).to have_content(robot_barcode.to_s) }
+    within('#robot') { expect(page).to have_text(robot_barcode.to_s) }
     scan_in 'Scan bed', with: '580000014851'
     scan_in 'Scan plate', with: plate_barcode_1
     within('#bed_list') do
-      expect(page).to have_no_content("Robot: #{robot_barcode}")
-      expect(page).to have_content("Labware: #{plate_barcode_1}")
-      expect(page).to have_content('Bed: 580000014851')
+      expect(page).to have_no_text("Robot: #{robot_barcode}")
+      expect(page).to have_text("Labware: #{plate_barcode_1}")
+      expect(page).to have_text('Bed: 580000014851')
     end
 
     click_link('Validate Layout')
     within '#validation_report' do
-      expect(page).to have_content('No problems detected!')
+      expect(page).to have_text('No problems detected!')
     end
   end
 end

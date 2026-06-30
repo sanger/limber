@@ -48,3 +48,26 @@
   border: 2px $gray-100 solid;
   position: relative;
 }
+
+.plate-view.source-plate caption {
+  caption-side: top;
+  color: #fff;
+  padding: 0.5rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.plate-view.source-plate caption .caption-separator {
+  display: inline-block;
+  width: 2rem; /* space between barcode & input barcode */
+}
+
+.plate-view.source-plate caption .barcode-label {
+  font-weight: 700;
+}
+
+.plate-view.source-plate caption .barcode-value {
+  font-weight: 300;
+  opacity: 0.85;
+  margin-left: 0.25rem;
+}

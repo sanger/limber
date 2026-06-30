@@ -23,6 +23,15 @@ module Presenters::Statemachine
           include DoesNotAllowLibraryPassing
         end
 
+        state :processed do
+          include StateAllowsChildCreation
+          include DoesNotAllowLibraryPassing
+
+          def sidebar_partial
+            'default'
+          end
+        end
+
         state :processed_1 do
           include StateAllowsChildCreation
           include DoesNotAllowLibraryPassing
