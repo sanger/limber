@@ -1,63 +1,67 @@
-const {
-    defineConfig,
-} = require("eslint/config");
+const { defineConfig } = require('eslint/config')
 
-const globals = require("globals");
-const vitest = require("eslint-plugin-vitest");
-const vue = require("eslint-plugin-vue");
-const js = require("@eslint/js");
+const globals = require('globals')
+const vitest = require('eslint-plugin-vitest')
+const vue = require('eslint-plugin-vue')
+const js = require('@eslint/js')
 
-const {
-    FlatCompat,
-} = require("@eslint/eslintrc");
+const { FlatCompat } = require('@eslint/eslintrc')
 
 const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
+})
 
-module.exports = defineConfig([{
+module.exports = defineConfig([
+  {
     languageOptions: {
-        globals: {
-            ...vitest.environments.env.globals,
-            ...globals.browser,
-            ...globals.node,
-        },
+      globals: {
+        ...vitest.environments.env.globals,
+        ...globals.browser,
+        ...globals.node,
+      },
 
-        ecmaVersion: "latest",
-        sourceType: "module",
+      ecmaVersion: 'latest',
+      sourceType: 'module',
 
-        parserOptions: {
-            requireConfigFile: false,
-        },
+      parserOptions: {
+        requireConfigFile: false,
+      },
     },
 
     plugins: {
-        vitest,
-        vue,
+      vitest,
+      vue,
     },
 
-    extends: compat.extends("eslint:recommended", "plugin:vue/recommended", "prettier"),
+    extends: compat.extends('eslint:recommended', 'plugin:vue/recommended', 'prettier'),
 
     rules: {
-        "linebreak-style": ["error", "unix"],
+      'linebreak-style': ['error', 'unix'],
 
-        "no-unused-vars": ["error", {
-            vars: "all",
-            args: "after-used",
-            ignoreRestSiblings: false,
-            argsIgnorePattern: "^_",
-        }],
+      'no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: false,
+          argsIgnorePattern: '^_',
+        },
+      ],
 
-        "no-var": "error",
+      'no-var': 'error',
 
-        // We need a proper logging solution (see https://github.com/sanger/limber/issues/836), but until then:
-        "no-console": ["error", {
-            allow: ["warn", "error", "log"],
-        }],
+      // We need a proper logging solution (see https://github.com/sanger/limber/issues/836), but until then:
+      'no-console': [
+        'error',
+        {
+          allow: ['warn', 'error', 'log'],
+        },
+      ],
 
-        // Legacy in from the old days. We should remove these:
-        "vue/prop-name-casing": ["warn"],
+      // Legacy in from the old days. We should remove these:
+      'vue/prop-name-casing': ['warn'],
     },
-}]);
+  },
+])
