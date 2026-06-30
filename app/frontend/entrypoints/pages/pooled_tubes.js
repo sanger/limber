@@ -133,6 +133,7 @@ $('.labware-box').each(function () {
       return $(this).closest('.labware-container')
     },
     checkLabware: function (data, status, scanned_barcode) {
+      // response from search_controller#create
       let response = data[this.dataset.labwareType]
       if (response === undefined) {
         this.badLabware()

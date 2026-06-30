@@ -7,6 +7,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
   let(:user) { create :user, uuid: user_uuid }
   let(:user_swipecard) { 'abcdef' }
 
+  # First parent tube
   let(:aliquot_set_1) { create_list :tagged_aliquot, 2, library_state: 'passed' }
 
   let(:tube_barcode_1) { SBCF::SangerBarcode.new(prefix: 'NT', number: 1).machine_barcode.to_s }
@@ -21,6 +22,7 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
            aliquots: aliquot_set_1
   end
 
+  # Second parent tube
   let(:tube_barcode_2) { SBCF::SangerBarcode.new(prefix: 'NT', number: 2).machine_barcode.to_s }
   let(:tube_uuid_2) { SecureRandom.uuid }
   let(:example_tube_2) do
@@ -32,12 +34,14 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
            aliquots: aliquot_set_2
   end
 
+  # Child tube
   let(:purpose_uuid) { SecureRandom.uuid }
   let(:template_uuid) { SecureRandom.uuid }
 
   let(:child_uuid) { 'tube-0' }
   let(:child_tube) { create :tube, purpose_uuid: purpose_uuid, purpose_name: 'Pool tube', uuid: child_uuid }
 
+  # Referred to in api_url_helper
   let(:tube_from_tubes_attributes) do
     [{ child_purpose_uuid: purpose_uuid, parent_uuid: tube_uuid, user_uuid: user_uuid }]
   end
@@ -47,6 +51,8 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
   end
 
   before do
+    # Stubbing API calls
+    # Called from the view to populate the list of avaliable parent tubes.
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
       {
         include_used: false,
@@ -56,14 +62,20 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
       { includes: 'purpose', paginate: { page: 1, per_page: 30 } }
     ).and_return([example_tube, example_tube_2])
 
-    # Parent lookup
+    # Stub for find_labware_for_pooling: includes receptacle.aliquots then find by uuid
+    tube_with_aliquots_query = double('tube_with_aliquots_query')
+    allow(Sequencescape::Api::V2::Tube).to receive(:includes).with('receptacle.aliquots').and_return(
+      tube_with_aliquots_query
+    )
+    allow(tube_with_aliquots_query).to receive(:find).with(uuid: tube_uuid).and_return([example_tube])
+    allow(tube_with_aliquots_query).to receive(:find).with(uuid: tube_uuid_2).and_return([example_tube_2])
+
+    # Called when looking up the parent tubes that have been scanned in.
     allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
       { barcode: [tube_barcode_1, tube_barcode_2] },
       includes: []
     ).and_return([example_tube, example_tube_2])
-  end
 
-  background do
     create :tube_config, name: parent_purpose_name, uuid: 'example-purpose-uuid'
     create :pooled_tube_from_tubes_purpose_config,
            uuid: purpose_uuid,
@@ -80,24 +92,6 @@ RSpec.feature 'Pooling multiple tubes into a tube', :js do
     stub_swipecard_search(user_swipecard, user)
     stub_tube(example_tube)
     stub_tube(example_tube_2)
-
-    # Available tubes search
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      include_used: false,
-      purpose_name: ['example-purpose'],
-      includes: 'purpose',
-      state: %w[pending started passed qc_complete failed cancelled],
-      paginate: {
-        per_page: 30,
-        page: 1
-      }
-    ).and_return([example_tube, example_tube_2])
-
-    # Parent lookup
-    allow(Sequencescape::Api::V2::Tube).to receive(:find_all).with(
-      barcode: [tube_barcode_1, tube_barcode_2],
-      includes: []
-    ).and_return([example_tube, example_tube_2])
 
     # Used in the redirect. This call is probably unnecessary
     stub_tube(child_tube)
