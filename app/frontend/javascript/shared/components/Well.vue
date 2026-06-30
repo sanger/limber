@@ -22,6 +22,7 @@ export default {
   name: 'LbWell',
   props: {
     position: { type: String, required: true },
+    // eslint-disable-next-line vue/prop-name-casing
     colour_index: { type: Number, required: true },
     tooltipLabel: { type: String, default: null },
     tagMapIds: {
