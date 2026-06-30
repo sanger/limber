@@ -206,6 +206,81 @@ RSpec.describe PlatesController, type: :controller do
       end
     end
 
+    context 'when marking additional wells on an already marked plate' do
+      # this well already marked on a previous cycle, along with the plate
+      let(:already_marked_well) do
+        build(:well_with_polymetadata,
+              location: 'A1',
+              aliquots: [build(:aliquot, request: build(:request))],
+              poly_metadata: [
+                build(:poly_metadatum, key: LimberConstants::UNDER_REPRESENTED_KEY, value: 'true')
+              ])
+      end
+
+      let(:unmarked_well) do
+        build(:well, location: 'B2', aliquots: [build(:aliquot, request: build(:request))])
+      end
+
+      let(:plate_with_wells) do
+        create :plate_with_polymetadata,
+               uuid: plate_uuid,
+               wells: [already_marked_well, unmarked_well],
+               poly_metadata: [
+                 build(:poly_metadatum,
+                       key: LimberConstants::UNDER_REPRESENTED_KEY,
+                       value: 'true')
+               ]
+      end
+
+      it 'creates poly metadata only for the unmarked well and redirects with notice' do
+        expected_args = [
+          {
+            key: LimberConstants::UNDER_REPRESENTED_KEY,
+            value: 'true',
+            relationships: { metadatable: unmarked_well }
+          }
+        ]
+
+        expect_posts('PolyMetadatum', expected_args)
+
+        post :process_mark_under_represented_wells,
+             params: {
+               id: plate_uuid,
+               plate: { wells: { 'A1' => '1', 'B2' => '1' } }
+             }
+
+        expect(response).to redirect_to(plate_path(plate_uuid))
+        expect(flash[:notice]).to eq(I18n.t('notices.wells_marked_under_represented'))
+      end
+    end
+
+    context 'when the plate already has under-represented metadata' do
+      let(:plate_with_wells) do
+        create :plate_with_polymetadata,
+               uuid: plate_uuid,
+               wells: wells,
+               poly_metadata: [
+                 build(:poly_metadatum,
+                       key: LimberConstants::UNDER_REPRESENTED_KEY,
+                       value: 'true')
+               ]
+      end
+
+      it 'does not create duplicate poly metadata for the plate' do
+        allow(Sequencescape::Api::V2::PolyMetadatum).to receive(:create!).and_call_original
+
+        post :process_mark_under_represented_wells,
+             params: { id: plate_uuid, plate: { wells: { 'A1' => '1' } } }
+
+        expect(Sequencescape::Api::V2::PolyMetadatum).not_to have_received(:create!)
+          .with(hash_including(key: LimberConstants::UNDER_REPRESENTED_KEY,
+                               relationships: { metadatable: plate_with_wells }))
+
+        expect(response).to redirect_to(plate_path(plate_uuid))
+        expect(flash[:notice]).to eq(I18n.t('notices.wells_marked_under_represented'))
+      end
+    end
+
     context 'when an error occurs' do
       before do
         allow(controller).to receive(:fetch_plate_with_poly_metadata).and_raise(StandardError, 'Unexpected error')

@@ -59,7 +59,7 @@ class PlatesController < LabwareController
   end
 
   def fetch_plate_with_poly_metadata(plate_id)
-    # fecth with polymetadata included, so we can check for plate/wells already having
+    # fetch with poly-metadata included, so we can check for plate/wells already having
     # under-represented metadata, and avoid attempting to create duplicates
     Sequencescape::Api::V2.plate_with_custom_includes(
       'poly_metadata,wells.poly_metadata',
