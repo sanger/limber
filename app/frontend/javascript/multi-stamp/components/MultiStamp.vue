@@ -7,7 +7,7 @@
           v-for="plate in plates"
           :key="plate.index"
           :state="plate.state"
-          :colour-index="plate.index + 1"
+          :colour_index="plate.index + 1"
           :plate="plate.plate"
         />
         <lb-plate caption="New Plate" :rows="targetRowsNumber" :columns="targetColumnsNumber" :wells="targetWells" />
