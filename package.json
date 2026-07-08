@@ -2,7 +2,7 @@
   "dependencies": {
     "@popperjs/core": "^2.0.0",
     "@rails/ujs": "^7.1.600",
-    "axios": "^1.17.0",
+    "axios": "^1.18.1",
     "bootstrap": "^5.3.8",
     "bootstrap-vue-next": "^0.26.28",
     "cytoscape": "^3.34.0",
@@ -28,7 +28,7 @@
     "eslint-plugin-vue": "^9.33.0",
     "jsdom": "^24.1.2",
     "markdown-toc": "^1.2.0",
-    "postcss": "^8.5.14",
+    "postcss": "^8.5.16",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "16.1.0",
     "postcss-nested": "^6.0.1",
