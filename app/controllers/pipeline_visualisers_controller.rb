@@ -1,0 +1,90 @@
+# frozen_string_literal: true
+
+# Controller for visualizing a single labware's pipeline workflow
+class PipelineVisualisersController < ApplicationController
+  def show
+    barcode = params[:id]
+    labware = retrieve_labware_by_barcode(barcode)
+
+    return render_not_found unless labware
+
+    @labware_data = {
+      record: labware,
+      state: decide_state(labware),
+      ancestors: labware.ancestors
+    }
+
+    respond_to do |format|
+      format.html
+      format.json { render json: { graph_data: labware_to_cytoscape_graph(labware) } }
+    end
+  end
+
+  private
+
+  def render_not_found
+    respond_to do |format|
+      format.html { render status: :not_found }
+      format.json { render json: { error: 'Labware not found' }, status: :not_found }
+    end
+  end
+
+  def retrieve_labware_by_barcode(barcode)
+    Sequencescape::Api::V2::Labware
+      .select(
+        { plates: %w[uuid purpose labware_barcode state_changes updated_at ancestors] },
+        { tubes: %w[uuid purpose labware_barcode state_changes updated_at ancestors] }
+      )
+      .includes(:state_changes, :purpose, 'ancestors.purpose')
+      .where(barcode:)
+      .first
+  end
+
+  def decide_state(labware)
+    labware.state_changes&.max_by(&:id)&.target_state || 'pending'
+  end
+
+  # Convert labware and ancestors into Cytoscape graph format
+  def labware_to_cytoscape_graph(labware)
+    all_labware = build_labware_chain(labware)
+    nodes = all_labware.map { |item| build_node(item) }
+    edges = build_edges(all_labware)
+
+    { elements: nodes + edges }
+  end
+
+  def build_labware_chain(labware)
+    (labware.ancestors || []).reverse + [labware]
+  end
+
+  def build_node(item)
+    {
+      data: {
+        id: item.uuid,
+        label: "#{item.labware_barcode&.human_barcode} (#{item.purpose&.name})",
+        type: item.class.name.demodulize.downcase,
+        size: item.size || 96,
+        barcode: item.labware_barcode&.human_barcode,
+        purpose: item.purpose&.name,
+        state: decide_state(item)
+      }
+    }
+  end
+
+  def build_edges(all_labware)
+    return [] if all_labware.length < 2
+
+    Array.new(all_labware.length - 1) do |i|
+      source = all_labware[i]
+      target = all_labware[i + 1]
+
+      {
+        data: {
+          source: source.uuid,
+          target: target.uuid,
+          pipeline: source.purpose&.name || 'unknown'
+        }
+      }
+    end
+  end
+end
