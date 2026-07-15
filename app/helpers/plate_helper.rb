@@ -87,12 +87,15 @@ module PlateHelper # rubocop:todo Style/Documentation
   def well_under_represented?(well)
     return false unless well
 
+    # well should have at least one aliquot to be considered for under-representation
     aliquot = well.aliquots.first
     return false unless aliquot
 
-    return false unless aliquot.request.respond_to?(:poly_metadata)
-    return false unless aliquot.request.poly_metadata
+    # well should have poly_metadata to be considered for under-representation
+    return false unless well.respond_to?(:poly_metadata)
+    return false if well.poly_metadata.blank?
 
-    aliquot.request.poly_metadata.any? { |pm| pm.key == LimberConstants::UNDER_REPRESENTED_KEY && pm.value == 'true' }
+    # well should have a poly_metadata with the under-represented key and value true
+    well.poly_metadata.any? { |pm| pm.key == LimberConstants::UNDER_REPRESENTED_KEY && pm.value == 'true' }
   end
 end

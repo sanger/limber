@@ -15,7 +15,11 @@ class OngoingPlate < AssetSearchForm
   def pagination
     return {} if page.nil? # No pagination
 
-    { page: page, per_page: PER_PAGE }
+    { page:, per_page: }
+  end
+
+  def order_by
+    @order_by.presence || {}
   end
 
   # @note

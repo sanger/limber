@@ -195,9 +195,63 @@ ROBOT_CONFIG =
       class: 'Robots::PoolingRobot'
     )
 
+    # Used for ISC and re-ISC pipelines
+    # Handles both LB Lib PCR-XP and LTN Lib PCR XP (for targeted nanoseq) source plates
+    # 4:1 pooling into the destination LB Lib PrePool plate
+    # Replacement robot for nx-8
+    custom_robot(
+      'i5-8-lib-pcr-xp-to-isch-lib-pool',
+      name: 'i5-8 Lib PCR-XP => LB Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'LB Lib PrePool',
+          states: %w[pending started],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    # Deprecating nx-8 robot in favour of the i5-8 version
     simple_robot('nx-8') do
       from 'LB Lib PrePool', bed(2)
       to 'LB Hyb', bed(4)
+    end
+
+    # ISC pipeline
+    # Beckman i5-8 bed verification
+    # LB Hyb source to LB Cap Lib destination
+    # 1:1 transfer
+    simple_robot('i5-8') do
+      from 'LB Lib PrePool', bed(5)
+      to 'LB Hyb', bed(9)
     end
 
     bravo_robot do
@@ -208,11 +262,6 @@ ROBOT_CONFIG =
     bravo_robot do
       from 'LB Cap Lib', bed(4)
       to 'LB Cap Lib PCR', car('4,5')
-    end
-
-    simple_robot('nx-96') do
-      from 'LB Cap Lib PCR', bed(1)
-      to 'LB Cap Lib PCR-XP', bed(9)
     end
 
     custom_robot(
@@ -252,9 +301,13 @@ ROBOT_CONFIG =
       to 'LB Cap Lib Pool', bed(2)
     end
 
-    simple_robot('nx-8') do
-      from 'LB Cap Lib PCR-XP', bed(4)
-      to 'LB Cap Lib Pool', bed(2)
+    # ISC pipeline
+    # Beckman i5-8 bed verification
+    # LB Cap Lib PCR-XP source to LB Cap Lib Pool destination
+    # 1:1 transfer
+    simple_robot('i5-8') do
+      from 'LB Cap Lib PCR-XP', bed(5)
+      to 'LB Cap Lib Pool', bed(9)
     end
 
     bravo_robot do
@@ -271,61 +324,6 @@ ROBOT_CONFIG =
       from 'PF Post Shear', bed(4)
       to 'PF Post Shear XP', car('2,3')
     end
-
-    custom_robot(
-      'nx-96-pf-post-shear-to-pf-post-shear-xp',
-      name: 'nx-96 PF Post-Shear => PF Post-Shear XP',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 1'
-        },
-        bed(9).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 9',
-          parent: bed(1).barcode,
-          target_state: 'started'
-        },
-        bed(2).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 2'
-        },
-        bed(10).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 10',
-          parent: bed(2).barcode,
-          target_state: 'started'
-        },
-        bed(3).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 3'
-        },
-        bed(11).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 11',
-          parent: bed(3).barcode,
-          target_state: 'started'
-        },
-        bed(4).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 4'
-        },
-        bed(12).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 12',
-          parent: bed(4).barcode,
-          target_state: 'started'
-        }
-      }
-    )
 
     bravo_robot transition_to: 'started' do
       from 'scRNA Stock', bed(4)
@@ -2120,51 +2118,6 @@ ROBOT_CONFIG =
       }
     )
 
-    custom_robot(
-      'nx-96-lhr-pcr-1-and-2-to-lhr-xp',
-      name: 'NX-96 LHR PCR 1 and 2 => LHR XP',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'LHR PCR 1',
-          states: ['passed'],
-          label: 'Bed 1',
-          child: bed(9).barcode
-        },
-        bed(2).barcode => {
-          purpose: 'LHR PCR 2',
-          states: ['passed'],
-          label: 'Bed 2',
-          child: bed(9).barcode
-        },
-        bed(3).barcode => {
-          purpose: 'LHR PCR 1',
-          states: ['passed'],
-          label: 'Bed 3',
-          child: bed(11).barcode
-        },
-        bed(4).barcode => {
-          purpose: 'LHR PCR 2',
-          states: ['passed'],
-          label: 'Bed 4',
-          child: bed(11).barcode
-        },
-        bed(9).barcode => {
-          purpose: 'LHR XP',
-          label: 'Bed 9',
-          states: ['pending'],
-          target_state: 'passed',
-          parents: [bed(1).barcode, bed(2).barcode]
-        },
-        bed(11).barcode => {
-          purpose: 'LHR XP',
-          label: 'Bed 11',
-          states: ['pending'],
-          target_state: 'passed',
-          parents: [bed(3).barcode, bed(4).barcode]
-        }
-      }
-    )
-
     bravo_robot transition_to: 'started', require_robot: true do
       from 'LHR XP', bed(4)
       to 'LHR End Prep', car('1,4')
@@ -3573,6 +3526,7 @@ ROBOT_CONFIG =
       }
     )
 
+    # Deprecating this in favor of the i5 version
     custom_robot(
       'beckman-rvi-lib-pcr-xp-to-rvi-lib-prepool',
       name: 'Beckman RVI Lib PCR XP => RVI Lib PrePool',
@@ -3610,6 +3564,50 @@ ROBOT_CONFIG =
         }
       },
       destination_bed: bed(4).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    # RVI pipeline
+    # Beckman i5-8 bed verification
+    # RVI Lib PCR XP source to RVI Lib PrePool destination
+    # 4:1 transfer
+    custom_robot(
+      'i5-8-rvi-lib-pcr-xp-to-rvi-lib-prepool',
+      name: 'i5-8 RVI Lib PCR XP => RVI Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Lib PrePool',
+          states: %w[pending],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
       class: 'Robots::PoolingRobot'
     )
 
@@ -3682,6 +3680,7 @@ ROBOT_CONFIG =
       }
     )
 
+    # Deprecating in favour of the i5 version
     custom_robot(
       'beckman-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
       name: 'Beckman RVI Cap Lib PCR XP => RVI Cap Lib Pool',
@@ -3696,6 +3695,29 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 2',
           parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # RVI pipeline
+    # Beckman i5-8 bed verification
+    # RVI Cap Lib PCR XP source to RVI Cap Lib Pool destination
+    # 1:1 transfer
+    custom_robot(
+      'i5-8-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
+      name: 'i5-8 RVI Cap Lib PCR XP => RVI Cap Lib Pool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI Cap Lib PCR XP',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Cap Lib Pool',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }

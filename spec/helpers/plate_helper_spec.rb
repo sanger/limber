@@ -89,9 +89,11 @@ RSpec.describe PlateHelper do
   describe '#well_under_represented?' do
     context 'when the request has UNDER_REPRESENTED_KEY set to true' do
       let(:poly_metadatum) { build(:poly_metadatum, key: LimberConstants::UNDER_REPRESENTED_KEY, value: 'true') }
-      let(:request) { build(:library_request_with_poly_metadata, poly_metadata: [poly_metadatum]) }
+      let(:request) { build(:library_request) }
       let(:aliquot) { build(:aliquot, outer_request: request) }
-      let(:well) { build(:well, location: 'A1', aliquots: [aliquot]) }
+      let(:well) do
+        build(:well_with_polymetadata, location: 'A1', aliquots: [aliquot], poly_metadata: [poly_metadatum])
+      end
 
       it 'returns true' do
         expect(well_under_represented?(well)).to be true

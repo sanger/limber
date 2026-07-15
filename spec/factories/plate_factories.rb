@@ -309,6 +309,24 @@ FactoryBot.define do
         end
       end
     end
+
+    factory :plate_with_polymetadata do
+      transient { poly_metadata { [] } }
+
+      after(:build) do |plate, evaluator|
+        # initialise the poly_metadata array
+        plate.poly_metadata = []
+
+        # add each polymetadatum to the plate
+        evaluator.poly_metadata.each do |pm|
+          # set the relationship between the polymetadatum and the plate
+          pm.relationships.metadatable = plate
+
+          # link the polymetadatum to the plate
+          plate.poly_metadata.push(pm)
+        end
+      end
+    end
   end
 
   # Dummy stock plate for the stock_plate association

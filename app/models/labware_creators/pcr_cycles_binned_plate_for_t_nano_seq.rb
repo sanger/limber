@@ -69,11 +69,14 @@ module LabwareCreators
     # are metadata values
     # @param child_well_location [String] the location of the child well associated with the request
     def create_or_update_request_metadata(request, request_metadata, child_well_location)
-      request_metadata.each do |metadata_key, metadata_value|
-        existing_metadata_v2 = find_existing_metadata(metadata_key, request.id)
+      # Fetch all existing metadata for this request
+      existing_metadata_by_key = fetch_existing_metadata(request.id)
 
-        if existing_metadata_v2.present?
-          update_existing_metadata(existing_metadata_v2, metadata_value, metadata_key, child_well_location)
+      request_metadata.each do |metadata_key, metadata_value|
+        existing_metadata = existing_metadata_by_key[metadata_key]
+
+        if existing_metadata.present?
+          update_existing_metadata(existing_metadata, metadata_value, metadata_key, child_well_location)
         else
           create_new_metadata(metadata_key, metadata_value, request, child_well_location)
         end
@@ -186,28 +189,27 @@ module LabwareCreators
       @well_filter ||= WellFilterAllowingPartials.new(creator: self, request_state: 'pending')
     end
 
-    # Finds and returns the first existing metadata that matches the provided key and request ID.
-    # If no matching metadata is found, it returns nil.
+    # Fetches all existing metadata for a request returns a hash keyed by metadata key.
     #
-    # @param metadata_key [String] the key of the metadata to find
     # @param request_id [Integer] the ID of the request associated with the metadata
-    # @return [Sequencescape::Api::V2::PolyMetadatum, nil] the found metadata or nil if no matching metadata is found
-    def find_existing_metadata(metadata_key, request_id)
-      Sequencescape::Api::V2::PolyMetadatum.find(key: metadata_key, metadatable_id: request_id).first
+    # @return [Hash<String, Sequencescape::Api::V2::PolyMetadatum>] hash of metadata keyed by metadata key
+    def fetch_existing_metadata(request_id)
+      Sequencescape::Api::V2::PolyMetadatum.find(metadatable_id: request_id,
+                                                 metadatable_type: 'Request').index_by(&:key)
     end
 
     # Updates the value of an existing metadata if it's different from the provided value.
     # If the metadata fails to update, it raises a StandardError with a descriptive message.
     #
-    # @param existing_metadata_v2 [Sequencescape::Api::V2::Metadatum] the existing metadata to update
+    # @param existing_metadata [Sequencescape::Api::V2::Metadatum] the existing metadata to update
     # @param metadata_value [String] the new value for the metadata
     # @param metadata_key [String] the key of the metadata
     # @param child_well_location [String] the location of the child well associated with the request
     # @raise [StandardError] if the existing metadata fails to update
-    def update_existing_metadata(existing_metadata_v2, metadata_value, metadata_key, child_well_location)
-      return if existing_metadata_v2.value == metadata_value
+    def update_existing_metadata(existing_metadata, metadata_value, metadata_key, child_well_location)
+      return if existing_metadata.value == metadata_value
 
-      return if existing_metadata_v2.update(value: metadata_value)
+      return if existing_metadata.update(value: metadata_value)
 
       raise StandardError,
             "Existing metadata for request (key: #{metadata_key}, value: #{metadata_value}) " \
