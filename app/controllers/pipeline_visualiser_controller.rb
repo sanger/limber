@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Controller for visualizing a single labware's pipeline workflow
-class PipelineVisualisersController < ApplicationController
+class PipelineVisualiserController < ApplicationController
   def show
     barcode = params[:id]
     labware = retrieve_labware_by_barcode(barcode)
@@ -47,7 +47,7 @@ class PipelineVisualisersController < ApplicationController
   # Convert labware and ancestors into Cytoscape graph format
   def labware_to_cytoscape_graph(labware)
     all_labware = build_labware_chain(labware)
-    nodes = all_labware.map { |item| build_node(item) }
+    nodes = all_labware.map { |item| build_node(item, searched: item.uuid == labware.uuid) }
     edges = build_edges(all_labware)
 
     { elements: nodes + edges }
@@ -57,16 +57,17 @@ class PipelineVisualisersController < ApplicationController
     (labware.ancestors || []).reverse + [labware]
   end
 
-  def build_node(item)
+  def build_node(item, searched: false)
     {
       data: {
         id: item.uuid,
-        label: "#{item.labware_barcode&.human_barcode} (#{item.purpose&.name})",
+        label: "#{item.labware_barcode&.human} (#{item.purpose&.name})",
         type: item.class.name.demodulize.downcase,
-        size: item.size || 96,
-        barcode: item.labware_barcode&.human_barcode,
+        size: 96,
+        barcode: item.labware_barcode&.human,
         purpose: item.purpose&.name,
-        state: decide_state(item)
+        state: decide_state(item),
+        searched: searched
       }
     }
   end
