@@ -29,6 +29,26 @@ const requestsFromPlates = function (plateObjs) {
   return requestsArray
 }
 
+// Gets all wells with aliquots from an array of plateObjs, regardless of whether they have requests.
+// Returns one object per occupied well.
+const allWellsFromPlates = function (plateObjs) {
+  const wellsArray = []
+  for (let p = 0; p < plateObjs.length; p++) {
+    const plateObj = plateObjs[p]
+    const wells = plateObj.plate.wells
+    for (let w = 0; w < wells.length; w++) {
+      const well = wells[w]
+      if (well.aliquots.length > 0) {
+        wellsArray.push({
+          well: well,
+          plateObj: plateObj,
+        })
+      }
+    }
+  }
+  return wellsArray
+}
+
 const handleFailedRequest = function (request) {
   // generate an alert on the page
   let title = 'Unexpected error'
@@ -50,4 +70,4 @@ const handleFailedRequest = function (request) {
   })
 }
 
-export { handleFailedRequest, requestIsActive, requestIsLibraryCreation, requestsFromPlates }
+export { allWellsFromPlates, handleFailedRequest, requestIsActive, requestIsLibraryCreation, requestsFromPlates }

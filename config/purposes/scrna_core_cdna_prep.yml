@@ -179,7 +179,7 @@ LRC GEM-X 5p cDNA Input:
   :stock_plate: true
   :input_plate: true
   # display as a stock plate in the UI
-  :presenter_class: Presenters::StockPlatePresenter
+  :presenter_class: Presenters::StockPlateWithNoSubmissionPresenter # Allow creation of child plate without submission
   # will not be creatable in Limber (created by manifest in Sequencescape)
   :creator_class: LabwareCreators::Uncreatable
   :file_links:
