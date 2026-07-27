@@ -1,0 +1,10 @@
+---
+Ultima PCR XP:
+  :asset_type: plate
+  :presenter_class: Presenters::PcrPresenter
+  # TODO: Replace this with a custom creator class that validates
+  # the Illumina library type against the scanned Ultima primer/tag plate.
+  # This may allow downloading a file and then uploading back for customisation.
+  :creator_class: LabwareCreators::CustomTaggedPlate
+Ultima PCR XP Norm:
+  :asset_type: plate
