@@ -21,7 +21,7 @@ module Presenters::SubmissionBehaviour
 
   # Determine whether the Choose Workflow buttons should be displayed
   def allow_new_submission?
-    !(pending_submissions? || active_submissions?)
+    !(pending_submissions? || active_submissions? || labware.active_requests.any?)
   end
 
   private
