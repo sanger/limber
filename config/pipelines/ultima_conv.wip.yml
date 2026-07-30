@@ -1,15 +1,16 @@
 ---
-Bespoke PCR Ultima HiC Conv:
-  pipeline_group: Bespoke PCR Ultima HiC Conv
+Ultima Conv:
+  pipeline_group: Ultima Conv
   filters:
-    request_type_key: limber_ultima_hic_conv
+    request_type_key: limber_ultima_conv
   library_pass: Ultima PCR XP
   relationships:
     LBB Lib PCR-XP: Ultima PCR XP
 
-Bespoke PCR MX Ultima HiC Conv:
+Multiplexing Ultima Conv:
+  pipeline_group: Ultima Conv
   filters:
-    request_type_key: limber_multiplexing_ultima_hic_conv
+    request_type_key: limber_multiplexing_ultima_conv
   relationships:
     Ultima PCR XP: Ultima PCR XP Norm
     Ultima PCR XP Norm: LBB Lib Pool Stock
