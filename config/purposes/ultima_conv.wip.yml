@@ -1,7 +1,7 @@
 ---
 Ultima PCR XP:
   :asset_type: plate
-  :presenter_class: Presenters::PcrPresenter
-  :creator_class: LabwareCreators::CustomTaggedPlate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::TaggedPlate
 Ultima PCR XP Norm:
   :asset_type: plate
