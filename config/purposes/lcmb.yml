@@ -35,6 +35,7 @@ LCMB Lib PCR-XP:
   :file_links:
     - name: 'Download Concentration (ng/ul) CSV for Custom Pooling'
       id: lcmb_pcr_xp_concentrations_for_custom_pooling
+  :mark_under_represented_wells: true
 LCMB Custom Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube

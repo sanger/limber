@@ -43,9 +43,24 @@ module LabwareCreators
     end
 
     # TODO: This should probably be asynchronous
+    # NOTE ON INCLUDES
+    # `available_plates` uses `Sequencescape::Api::V2::Plate.find_all` without
+    # passing an explicit `includes:` argument, so `Plate.find_all` falls back
+    # to `Plate::DEFAULT_INCLUDES`. The default includes preload all information required to render the plate.
+    # Without them, Limber would make additional API calls for each well, resulting in a significant increase
+    # in the number of requests and slower page rendering.
+    #
+    # NOTE ON SORTING
+    # We pass `order_by: { updated_at: :desc }` via `OngoingPlate`, and
+    # `Plate.find_all` applies this to the Sequencescape query. This ensures
+    # that the API returns the most recently updated plates first.
+    # If no ordering is specified, the default order is by ID ascending.
     def available_plates
-      @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'])
-      @search_results = Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters)
+      @search_options = OngoingPlate.new(purposes: [parent.purpose.uuid], include_used: false, states: ['passed'],
+                                         page: 1, per_page: 10, order_by: { updated_at: :desc })
+      @search_results = Sequencescape::Api::V2::Plate.find_all(@search_options.search_parameters,
+                                                               paginate: @search_options.pagination,
+                                                               order_by: @search_options.order_by)
     end
 
     def parents

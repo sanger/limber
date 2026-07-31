@@ -30,4 +30,19 @@ RSpec.describe Sequencescape::Api::V2::Base do
       end
     end
   end
+
+  describe 'API key header' do
+    it 'sets the X-Sequencescape-Client-Id header from configuration' do
+      # The header should be set from connection_options.authorisation
+      expected_header_value = Limber::Application.config.api.v2.connection_options.authorisation
+
+      actual_header = described_class.connection.faraday.headers['X-Sequencescape-Client-Id']
+      expect(actual_header).to eq(expected_header_value)
+    end
+
+    it 'sets the X-Sequencescape-Client-Id header to the test authorization value' do
+      # In test environment, this should be 'test'
+      expect(described_class.connection.faraday.headers['X-Sequencescape-Client-Id']).to eq('test')
+    end
+  end
 end

@@ -224,7 +224,7 @@ Heron-384 B: # Heron 384-well pipeline specific to PCR 2 plate (uses above relat
 
 ```yaml
   relationships:
-    LRC GEM-X 5p cDNA Input: LRC GEM-X 5p Aggregate
-    LRC GEM-X 5p cDNA PCR XP: LRC GEM-X 5p Aggregate
-    LRC GEM-X 5p Aggregate: LRC GEM-X 5p Cherrypick
+    ABC Example cDNA Input: ABC Example Aggregate
+    ABC Example cDNA PCR XP: ABC Example Aggregate
+    ABC Example Aggregate: ABC Example Cherrypick
 ```

@@ -30,8 +30,7 @@ module WorkCompletionBehaviour
 
   def sequencescape_submission_parameters
     params
-      .require(:sequencescape_submission)
-      .permit(:template_uuid, request_options: {}, assets: [])
+      .expect(sequencescape_submission: [:template_uuid, { request_options: {}, assets: [] }])
       .merge(user: current_user_uuid)
   end
 end

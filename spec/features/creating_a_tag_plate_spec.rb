@@ -117,13 +117,13 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
       plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
-      expect(page).to have_content('Tag plate addition')
-      expect(find_by_id('tag-help')).to have_content(help_text)
+      expect(page).to have_text('Tag plate addition')
+      expect(find_by_id('tag-help')).to have_text(help_text)
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
-      expect(page).to have_content(qcable_lot.lot_number)
-      expect(find_by_id('well_A2')).to have_content(a2_tag)
+      expect(page).to have_text(qcable_lot.lot_number)
+      expect(find_by_id('well_A2')).to have_text(a2_tag)
       click_on('Create Plate')
-      expect(page).to have_content('New empty labware added to the system.')
+      expect(page).to have_text('New empty labware added to the system.')
     end
   end
 
@@ -135,10 +135,10 @@ RSpec.feature 'Creating a tag plate', :js, :tag_plate do
       plate_title = find_by_id('plate-title')
       expect(plate_title).to have_text('Limber Cherrypicked')
       click_on('Add an empty Tag Purpose plate')
-      expect(page).to have_content('Tag plate addition')
+      expect(page).to have_text('Tag plate addition')
       swipe_in('Tag plate barcode', with: tag_plate_barcode)
       expect(page).to have_button('Create Plate', disabled: true)
-      expect(page).to have_content(tag_error)
+      expect(page).to have_text(tag_error)
     end
   end
 

@@ -12,7 +12,7 @@ RSpec.describe Labels::TubeLabelTractionCompatible, type: :model do
     it 'has the correct attributes' do
       attributes = label.attributes
       expect(attributes[:first_line]).to eq labware.parents[0].barcode.human
-      expect(attributes[:second_line]).to match(/, P/)
+      expect(attributes[:second_line]).to include(', P')
       expect(attributes[:third_line]).to eq labware.purpose.name
       expect(attributes[:fourth_line]).to eq Time.zone.today.strftime('%e-%^b-%Y')
       expect(attributes[:round_label_top_line]).to eq labware.barcode.prefix
@@ -27,7 +27,7 @@ RSpec.describe Labels::TubeLabelTractionCompatible, type: :model do
     it 'has the correct attributes' do
       attributes = label.attributes
       expect(attributes[:first_line]).to eq "#{labware.parents[0].barcode.human} #{labware.name.split.last}"
-      expect(attributes[:second_line]).to match(/, P/)
+      expect(attributes[:second_line]).to include(', P')
       expect(attributes[:third_line]).to eq labware.purpose.name
       expect(attributes[:fourth_line]).to eq Time.zone.today.strftime('%e-%^b-%Y')
       expect(attributes[:round_label_top_line]).to eq labware.barcode.prefix

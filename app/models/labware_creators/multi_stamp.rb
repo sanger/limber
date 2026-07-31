@@ -27,6 +27,14 @@ module LabwareCreators
 
     validates :transfers, presence: true
 
+    def require_active_library_requests?
+      params&.fetch('require_active_library_requests', false)
+    end
+
+    def transfer_all_wells?
+      false
+    end
+
     private
 
     def create_labware!

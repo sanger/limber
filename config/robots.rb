@@ -195,9 +195,63 @@ ROBOT_CONFIG =
       class: 'Robots::PoolingRobot'
     )
 
+    # Used for ISC and re-ISC pipelines
+    # Handles both LB Lib PCR-XP and LTN Lib PCR XP (for targeted nanoseq) source plates
+    # 4:1 pooling into the destination LB Lib PrePool plate
+    # Replacement robot for nx-8
+    custom_robot(
+      'i5-8-lib-pcr-xp-to-isch-lib-pool',
+      name: 'i5-8 Lib PCR-XP => LB Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: ['LB Lib PCR-XP', 'LTN Lib PCR XP'],
+          states: %w[passed qc_complete],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'LB Lib PrePool',
+          states: %w[pending started],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    # Deprecating nx-8 robot in favour of the i5-8 version
     simple_robot('nx-8') do
       from 'LB Lib PrePool', bed(2)
       to 'LB Hyb', bed(4)
+    end
+
+    # ISC pipeline
+    # Beckman i5-8 bed verification
+    # LB Hyb source to LB Cap Lib destination
+    # 1:1 transfer
+    simple_robot('i5-8') do
+      from 'LB Lib PrePool', bed(5)
+      to 'LB Hyb', bed(9)
     end
 
     bravo_robot do
@@ -208,11 +262,6 @@ ROBOT_CONFIG =
     bravo_robot do
       from 'LB Cap Lib', bed(4)
       to 'LB Cap Lib PCR', car('4,5')
-    end
-
-    simple_robot('nx-96') do
-      from 'LB Cap Lib PCR', bed(1)
-      to 'LB Cap Lib PCR-XP', bed(9)
     end
 
     custom_robot(
@@ -252,9 +301,13 @@ ROBOT_CONFIG =
       to 'LB Cap Lib Pool', bed(2)
     end
 
-    simple_robot('nx-8') do
-      from 'LB Cap Lib PCR-XP', bed(4)
-      to 'LB Cap Lib Pool', bed(2)
+    # ISC pipeline
+    # Beckman i5-8 bed verification
+    # LB Cap Lib PCR-XP source to LB Cap Lib Pool destination
+    # 1:1 transfer
+    simple_robot('i5-8') do
+      from 'LB Cap Lib PCR-XP', bed(5)
+      to 'LB Cap Lib Pool', bed(9)
     end
 
     bravo_robot do
@@ -271,61 +324,6 @@ ROBOT_CONFIG =
       from 'PF Post Shear', bed(4)
       to 'PF Post Shear XP', car('2,3')
     end
-
-    custom_robot(
-      'nx-96-pf-post-shear-to-pf-post-shear-xp',
-      name: 'nx-96 PF Post-Shear => PF Post-Shear XP',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 1'
-        },
-        bed(9).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 9',
-          parent: bed(1).barcode,
-          target_state: 'started'
-        },
-        bed(2).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 2'
-        },
-        bed(10).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 10',
-          parent: bed(2).barcode,
-          target_state: 'started'
-        },
-        bed(3).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 3'
-        },
-        bed(11).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 11',
-          parent: bed(3).barcode,
-          target_state: 'started'
-        },
-        bed(4).barcode => {
-          purpose: 'PF Post Shear',
-          states: ['passed'],
-          label: 'Bed 4'
-        },
-        bed(12).barcode => {
-          purpose: 'PF Post Shear XP',
-          states: ['pending'],
-          label: 'Bed 12',
-          parent: bed(4).barcode,
-          target_state: 'started'
-        }
-      }
-    )
 
     bravo_robot transition_to: 'started' do
       from 'scRNA Stock', bed(4)
@@ -827,11 +825,13 @@ ROBOT_CONFIG =
     custom_robot(
       'bravo-ribo-hyb-setup',
       name: 'Bravo Ribo Hyb Setup',
+      require_robot: true,
       beds: {
         bed(6).barcode => {
           purpose: 'LBR Cherrypick',
           states: ['passed'],
-          label: 'Bed 6'
+          label: 'Bed 6',
+          target_state: 'passed'
         },
         car('4,3').barcode => {
           purpose: 'LBR Ribo DNase',
@@ -1532,243 +1532,69 @@ ROBOT_CONFIG =
       class: 'Robots::PoolingRobot'
     )
 
-    # For scRNA Core pipeline aggregate to cherrypick
+    # For scRNA Core pipeline
+    # LRC GEM-X 5p cDNA PCR XP or LRC GEM-X 5p cDNA Input to LRC GEM-X 5p Cherrypick
+    # Allows for pooling of 1-10 source plates of either type into 1 destination cherrypick plate
     custom_robot(
-      'hamilton-lrc-gem-x-5p-aggregate-to-lrc-gem-x-5p-cherrypick',
-      name: 'Hamilton LRC GEM-X 5p Aggregate => LRC GEM-X 5p Cherrypick',
+      'hamilton-lrc-gem-x-5p-cdna-input-or-pcr-xp-to-lrc-gem-x-5p-cherrypick',
+      name: 'Hamilton LRC GEM-X 5p cDNA Input or PCR XP => LRC GEM-X 5p Cherrypick',
       beds: {
         bed(1).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 1'
         },
         bed(2).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 2'
         },
         bed(3).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 3'
         },
         bed(4).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 4'
         },
         bed(5).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 5'
         },
         bed(6).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 6'
         },
         bed(7).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 7'
         },
         bed(8).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 8'
         },
         bed(9).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 9'
         },
         bed(10).barcode => {
-          purpose: 'LRC GEM-X 5p Aggregate',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 10'
-        },
-        bed(13).barcode => {
-          purpose: 'LRC GEM-X 5p Cherrypick',
-          states: %w[pending started],
-          parents: [
-            bed(1).barcode,
-            bed(2).barcode,
-            bed(3).barcode,
-            bed(4).barcode,
-            bed(5).barcode,
-            bed(6).barcode,
-            bed(7).barcode,
-            bed(8).barcode,
-            bed(9).barcode,
-            bed(10).barcode
-          ],
-          target_state: 'passed',
-          label: 'Bed 13'
-        }
-      },
-      destination_bed: bed(13).barcode,
-      class: 'Robots::PoolingRobot'
-    )
-
-    # For scRNA Core pipeline LRC GEM-X 5p cDNA Input to Cherrypick (bypass aggregation)
-    custom_robot(
-      'hamilton-lrc-gem-x-5p-cdna-input-to-lrc-gem-x-5p-cherrypick',
-      name: 'Hamilton LRC GEM-X 5p cDNA Input => LRC GEM-X 5p Cherrypick',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 1'
-        },
-        bed(2).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 2'
-        },
-        bed(3).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 3'
-        },
-        bed(4).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 4'
-        },
-        bed(5).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 5'
-        },
-        bed(6).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 6'
-        },
-        bed(7).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 7'
-        },
-        bed(8).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 8'
-        },
-        bed(9).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 9'
-        },
-        bed(10).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA Input',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 10'
-        },
-        bed(13).barcode => {
-          purpose: 'LRC GEM-X 5p Cherrypick',
-          states: %w[pending started],
-          parents: [
-            bed(1).barcode,
-            bed(2).barcode,
-            bed(3).barcode,
-            bed(4).barcode,
-            bed(5).barcode,
-            bed(6).barcode,
-            bed(7).barcode,
-            bed(8).barcode,
-            bed(9).barcode,
-            bed(10).barcode
-          ],
-          target_state: 'passed',
-          label: 'Bed 13'
-        }
-      },
-      destination_bed: bed(13).barcode,
-      class: 'Robots::PoolingRobot'
-    )
-
-    # For scRNA Core pipeline LRC GEM-X 5p cDNA PCR XP to Cherrypick (bypass aggregation
-    custom_robot(
-      'hamilton-lrc-gem-x-5p-cdna-pcr-xp-to-lrc-gem-x-5p-cherrypick',
-      name: 'Hamilton LRC GEM-X 5p cDNA PCR XP => LRC GEM-X 5p Cherrypick',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 1'
-        },
-        bed(2).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 2'
-        },
-        bed(3).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 3'
-        },
-        bed(4).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 4'
-        },
-        bed(5).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 5'
-        },
-        bed(6).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 6'
-        },
-        bed(7).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 7'
-        },
-        bed(8).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 8'
-        },
-        bed(9).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
-          states: %w[passed qc_complete],
-          child: bed(13).barcode,
-          label: 'Bed 9'
-        },
-        bed(10).barcode => {
-          purpose: 'LRC GEM-X 5p cDNA PCR XP',
+          purpose: ['LRC GEM-X 5p cDNA Input', 'LRC GEM-X 5p cDNA PCR XP'],
           states: %w[passed qc_complete],
           child: bed(13).barcode,
           label: 'Bed 10'
@@ -1972,6 +1798,26 @@ ROBOT_CONFIG =
           label: 'Bed 3',
           target_state: 'passed',
           parent: bed(13).barcode
+        }
+      }
+    )
+
+    # For scRNA Core pipeline SPRI and PCR verification
+    custom_robot(
+      'hamilton-lrc-gem-x-5p-ge-ligxp-to-lrc-gem-x-5p-ge-pcr-2xp',
+      name: 'Hamilton LRC GEM-X 5p GE LigXP => LRC GEM-X 5p GE PCR 2XP',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LRC GEM-X 5p GE LigXP',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(10).barcode => {
+          purpose: 'LRC GEM-X 5p GE PCR 2XP',
+          states: ['pending'],
+          label: 'Bed 10',
+          target_state: 'passed',
+          parent: bed(7).barcode
         }
       }
     )
@@ -2268,51 +2114,6 @@ ROBOT_CONFIG =
           label: 'Bed 6',
           target_state: 'passed',
           parent: bed(9).barcode
-        }
-      }
-    )
-
-    custom_robot(
-      'nx-96-lhr-pcr-1-and-2-to-lhr-xp',
-      name: 'NX-96 LHR PCR 1 and 2 => LHR XP',
-      beds: {
-        bed(1).barcode => {
-          purpose: 'LHR PCR 1',
-          states: ['passed'],
-          label: 'Bed 1',
-          child: bed(9).barcode
-        },
-        bed(2).barcode => {
-          purpose: 'LHR PCR 2',
-          states: ['passed'],
-          label: 'Bed 2',
-          child: bed(9).barcode
-        },
-        bed(3).barcode => {
-          purpose: 'LHR PCR 1',
-          states: ['passed'],
-          label: 'Bed 3',
-          child: bed(11).barcode
-        },
-        bed(4).barcode => {
-          purpose: 'LHR PCR 2',
-          states: ['passed'],
-          label: 'Bed 4',
-          child: bed(11).barcode
-        },
-        bed(9).barcode => {
-          purpose: 'LHR XP',
-          label: 'Bed 9',
-          states: ['pending'],
-          target_state: 'passed',
-          parents: [bed(1).barcode, bed(2).barcode]
-        },
-        bed(11).barcode => {
-          purpose: 'LHR XP',
-          label: 'Bed 11',
-          states: ['pending'],
-          target_state: 'passed',
-          parents: [bed(3).barcode, bed(4).barcode]
         }
       }
     )
@@ -3725,6 +3526,7 @@ ROBOT_CONFIG =
       }
     )
 
+    # Deprecating this in favor of the i5 version
     custom_robot(
       'beckman-rvi-lib-pcr-xp-to-rvi-lib-prepool',
       name: 'Beckman RVI Lib PCR XP => RVI Lib PrePool',
@@ -3762,6 +3564,50 @@ ROBOT_CONFIG =
         }
       },
       destination_bed: bed(4).barcode,
+      class: 'Robots::PoolingRobot'
+    )
+
+    # RVI pipeline
+    # Beckman i5-8 bed verification
+    # RVI Lib PCR XP source to RVI Lib PrePool destination
+    # 4:1 transfer
+    custom_robot(
+      'i5-8-rvi-lib-pcr-xp-to-rvi-lib-prepool',
+      name: 'i5-8 RVI Lib PCR XP => RVI Lib PrePool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 6'
+        },
+        bed(7).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 7'
+        },
+        bed(8).barcode => {
+          purpose: 'RVI Lib PCR XP',
+          states: %w[passed],
+          child: bed(9).barcode,
+          label: 'Bed 8'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Lib PrePool',
+          states: %w[pending],
+          parents: [bed(5).barcode, bed(6).barcode, bed(7).barcode, bed(8).barcode],
+          target_state: 'passed',
+          label: 'Bed 9'
+        }
+      },
+      destination_bed: bed(9).barcode,
       class: 'Robots::PoolingRobot'
     )
 
@@ -3834,6 +3680,7 @@ ROBOT_CONFIG =
       }
     )
 
+    # Deprecating in favour of the i5 version
     custom_robot(
       'beckman-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
       name: 'Beckman RVI Cap Lib PCR XP => RVI Cap Lib Pool',
@@ -3848,6 +3695,29 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Bed 2',
           parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # RVI pipeline
+    # Beckman i5-8 bed verification
+    # RVI Cap Lib PCR XP source to RVI Cap Lib Pool destination
+    # 1:1 transfer
+    custom_robot(
+      'i5-8-rvi-cap-lib-pcr-xp-to-rvi-cap-lib-pool',
+      name: 'i5-8 RVI Cap Lib PCR XP => RVI Cap Lib Pool',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'RVI Cap Lib PCR XP',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(9).barcode => {
+          purpose: 'RVI Cap Lib Pool',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }
@@ -5345,6 +5215,342 @@ ROBOT_CONFIG =
         },
         bed(14).barcode => {
           purpose: 'UPF Lib XP2',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Cherrypicked => UPF2 Shear
+    custom_robot(
+      'bravo-upf2-cherrypicked-to-upf2-shear',
+      name: 'UPF2 Cherrypicked => UPF2 Shear',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF2 Cherrypicked',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF2 Shear',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Shear => UPF2 Post Shear
+    custom_robot(
+      'bravo-upf2-shear-to-upf2-post-shear',
+      name: 'UPF2 Shear => UPF2 Post Shear',
+      beds: {
+        bed(9).barcode => {
+          purpose: 'UPF2 Shear',
+          states: ['passed'],
+          label: 'Bed 9'
+        },
+        bed(7).barcode => {
+          purpose: 'UPF2 Post Shear',
+          states: ['pending'],
+          label: 'Bed 7',
+          parent: bed(9).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Post Shear => UPF2 End Prep
+    custom_robot(
+      'bravo-upf2-post-shear-to-upf2-end-prep-xp1',
+      name: 'UPF2 Post Shear => UPF2 End Prep',
+      beds: {
+        bed(4).barcode => {
+          purpose: 'UPF2 Post Shear',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF2 End Prep',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(4).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 End Prep => UPF2 Lib
+    custom_robot(
+      'bravo-upf2-end-prep-xp1-to-upf2-lib',
+      name: 'Bravo UPF2 End Prep => UPF2 Lib',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'UPF2 End Prep',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['pending'],
+          label: 'Bed 6',
+          target_state: 'passed',
+          parent: bed(5).barcode
+        }
+      }
+    )
+
+    # Ultima UG200 bed verification
+    # UPF2 Lib => UPF2 Lib XP2
+    custom_robot(
+      'hamilton-upf2-lib-to-upf2-lib-xp2',
+      name: 'Hamilton UPF2 Lib => UPF2 Lib XP2',
+      beds: {
+        bed(7).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['passed'],
+          label: 'Bed 7'
+        },
+        bed(9).barcode => {
+          purpose: 'UPF2 Lib XP2',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'UPF2 Lib',
+          states: ['passed'],
+          label: 'Bed 12'
+        },
+        bed(14).barcode => {
+          purpose: 'UPF2 Lib XP2',
+          states: ['pending'],
+          label: 'Bed 14',
+          parent: bed(12).barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCM Triomics RNAseq pipeline bed verification
+    # Verify initial positions
+    custom_robot(
+      'bravo-lcmt-rnaseq-verify-initial-setup',
+      name: 'Bravo LCMT RNAseq Verify Initial Setup',
+      require_robot: true, # Robot barcode must be scanned in.
+      verify_robot: false, # First robot step; no previous robot.
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT Lysate',
+          states: ['passed'],
+          label: 'Bed 5'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMT RNA OdT Beads',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(5).barcode,
+          target_state: 'started'
+        },
+        car('2,3').barcode => {
+          purpose: 'LCMT RNA Denat/Hyb',
+          states: ['pending'],
+          label: 'Carousel 2,3',
+          parent: bed(6).barcode,
+          target_state: 'started'
+        },
+        car('3,5').barcode => {
+          purpose: 'LCMT RNA RT',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: car('2,3').barcode,
+          target_state: 'started'
+        },
+        car('3,4').barcode => {
+          purpose: 'LCMT RNA Preamp',
+          states: ['pending'],
+          label: 'Carousel 3,4',
+          parent: car('3,5').barcode,
+          target_state: 'started'
+        }
+      }
+    )
+    # LCMT RNA OdT beads Verification
+    custom_robot(
+      'bravo-rnaseq-odt-beads-first-verification',
+      name: 'Bravo LCMT RNA OdT Beads First Verification',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LCMT RNA OdT Beads',
+          states: ['started'],
+          label: 'Bed 8',
+          target_state: 'processed'
+        }
+      }
+    )
+    custom_robot(
+      'bravo-rnaseq-odt-beads-second-verification',
+      name: 'Bravo LCMT RNA OdT Beads Second Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT RNA OdT Beads Second Verification',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LCMT RNA OdT Beads',
+          states: ['processed'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMT RNA Denat/Hyb Verification
+    custom_robot(
+      'bravo-rnaseq-denat-hyb-verification',
+      name: 'Bravo LCMT RNA Denat/Hyb Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT RNA Denat/Hyb Verification',
+      beds: {
+        bed(8).barcode => {
+          purpose: 'LCMT RNA Denat/Hyb',
+          states: ['started'],
+          label: 'Bed 8',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMT RNA RT Verification
+    custom_robot(
+      'bravo-rnaseq-rt-verification',
+      name: 'Bravo LCMT RNA RT Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT RNA RT Verification',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT RNA RT',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+    # Verify day 2 starting positions before preamp
+    custom_robot(
+      'bravo-lcmt-rnaseq-verify-positions-day-2-setup',
+      name: 'Bravo LCMT RNA Verify Initial Setup Day 2',
+      require_robot: true,
+      verify_robot: false,
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LCMT RNA Preamp',
+          states: ['started'],
+          label: 'Bed 4',
+          target_state: 'passed'
+        },
+        car('4,3').barcode => {
+          purpose: 'LCMT cDNA Reserve',
+          states: ['pending'],
+          label: 'Carousel 4,3',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        car('1,4').barcode => {
+          purpose: 'LCMT cDNA Frag/ER',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        car('3,5').barcode => {
+          purpose: 'LCMT cDNA ADP Lig',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: car('1,4').barcode,
+          target_state: 'started'
+        }
+      }
+    )
+
+    # LCMT cDNA Frag/ER Verification
+    custom_robot(
+      'bravo-rnaseq-cdna-frag-er-verification',
+      name: 'Bravo LCMT cDNA Frag/ER Verification',
+      require_robot: true,
+      verify_robot: true,
+      start_button_text: 'Finish Bravo LCMT cDNA Frag/ER Verification',
+      beds: {
+        bed(5).barcode => {
+          purpose: 'LCMT cDNA Frag/ER',
+          states: ['started'],
+          label: 'Bed 5',
+          target_state: 'passed'
+        }
+      }
+    )
+
+    # LCMT RNAseq CDNA Lib PCR Verification
+    custom_robot(
+      'bravo-rnaseq-cdna-lib-pcr-verification',
+      name: 'Bravo LCMT cDNA ADP Lig => LCMT cDNA Lib PCR',
+      require_robot: true,
+      verify_robot: true,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMT cDNA ADP Lig',
+          states: ['started'],
+          label: 'Bed 7',
+          target_state: 'passed'
+        },
+        bed(6).barcode => {
+          purpose: 'LCMT cDNA Lib PCR',
+          states: ['pending'],
+          label: 'Bed 6',
+          parent: bed(7).barcode,
+          target_state: 'started'
+        }
+      }
+    )
+    # LCMT RNAseq Library PCR Cleanup Verification
+    custom_robot(
+      'hamilton-lib-pcr-purification',
+      name: 'Hamilton LCMT cDNA Lib PCR => LCMT cDNA Lib PCR XP',
+      require_robot: true,
+      verify_robot: false,
+      beds: {
+        bed(7).barcode => {
+          purpose: 'LCMT cDNA Lib PCR',
+          states: ['started'],
+          label: 'Bed 7',
+          target_state: 'passed'
+        },
+        bed(9).barcode => {
+          purpose: 'LCMT cDNA Lib PCR XP',
+          states: ['pending'],
+          label: 'Bed 9',
+          parent: bed(7).barcode,
+          target_state: 'passed'
+        },
+        bed(12).barcode => {
+          purpose: 'LCMT cDNA Lib PCR',
+          states: ['started'],
+          label: 'Bed 12',
+          target_state: 'passed'
+        },
+        bed(14).barcode => {
+          purpose: 'LCMT cDNA Lib PCR XP',
           states: ['pending'],
           label: 'Bed 14',
           parent: bed(12).barcode,

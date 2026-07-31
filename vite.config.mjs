@@ -6,7 +6,7 @@ import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
 
 export default defineConfig({
   build: {
-    target: 'chrome65',
+    targets: ['chrome65', 'baseline-widely-available'],
   },
   css: {
     preprocessorOptions: {
@@ -32,6 +32,11 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['lcov', 'text'],
+      // Include covered and uncovered files matching this pattern:
+      include: ['app/frontend/**/**.{js,jsx,ts,tsx}'],
+      // Exclusion is applied for the files that match include pattern above
+      // No need to define root level *.config.ts files or node_modules, as we didn't add those in include
+      // exclude: ['**/some-pattern/**'],
     },
     // This hides the "Download the Vue Devtools extension" message from the console
     onConsoleLog(log) {

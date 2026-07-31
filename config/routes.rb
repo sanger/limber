@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     post '/qcables', action: :qcables, as: :qcables_search
   end
 
-  resource :sessions, only: %i[create delete] do
+  resource :sessions, only: %i[create destroy] do
     # Also map logout to destroy
     get 'logout', action: :destroy
   end
@@ -32,6 +32,9 @@ Rails.application.routes.draw do
   resources :qcables, controller: :tag_plates, only: [:show]
 
   resources :plates, controller: :plates do
+    collection do
+      get 'find_project_by_id', action: :find_project_by_id
+    end
     resources :child_plate_creations, controller: :plate_creation
     resources :child_tube_creations, controller: :tube_creation
     resources :child_tube_rack_creations, controller: :tube_rack_creation
