@@ -359,48 +359,4 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       expect(presenter.allow_new_submission?).to be true
     end
   end
-
-  context 'with active requests' do
-    it_behaves_like 'a labware presenter'
-    it_behaves_like 'a stock presenter'
-
-    let(:labware) do
-      create :stock_plate,
-             purpose_name: purpose_name,
-             barcode_number: 2,
-             well_count: 2,
-             direct_submissions: [],
-             outer_requests: outer_requests
-    end
-
-    let(:barcode_string) { 'DN2T' }
-    let(:purpose_name) { 'Test Plate' }
-    let(:title) { purpose_name }
-    let(:state) { 'passed' }
-    let(:sidebar_partial) { 'submission_default' }
-    let(:outer_requests) { Array.new(2) { |i| create :library_request, state: 'started', uuid: "request-p2-#{i}" } }
-    let(:summary_tab) do
-      [
-        %w[Barcode DN2T],
-        ['Number of wells', '2/96'],
-        ['Plate type', purpose_name],
-        ['Current plate state', state],
-        ['Input plate barcode', barcode_string],
-        ['Created on', '2017-06-29']
-      ]
-    end
-
-    it 'renders the submission options' do
-      expect { |b| presenter.each_submission_option(&b) }.to yield_successive_args(*template_options)
-    end
-
-    it 'has no pending submissions' do
-      # We have no submissions so this should return false
-      expect(presenter.pending_submissions?).to be false
-    end
-
-    it 'does not allow a new submission to be created' do
-      expect(presenter.allow_new_submission?).to be false
-    end
-  end
 end
