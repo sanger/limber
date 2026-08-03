@@ -26,6 +26,12 @@ module Presenters
     validates_with Validators::SuboptimalValidator
     validates_with Validators::ActiveRequestValidator
 
+    def submittable_pipelines
+      return [] if purpose_config[:presenter_class].is_a?(String)
+
+      purpose_config.dig(:presenter_class, :args, :submittable_pipelines) || []
+    end
+
     # Stock style class causes well state to inherit from plate state.
     self.style_class = 'stock'
 
