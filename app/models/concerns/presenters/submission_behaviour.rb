@@ -21,10 +21,20 @@ module Presenters::SubmissionBehaviour
 
   # Determine whether the Choose Workflow buttons should be displayed
   def allow_new_submission?
-    !(pending_submissions? || active_submissions?)
+    !(pending_submissions? || active_submissions? || !pipeline_submittable?)
   end
 
   private
+
+  # Determine whether the plate has any submittable pipelines configured and
+  # if so that at least one of those pipelines is active for the labware
+  def pipeline_submittable?
+    return true if submittable_pipelines.empty?
+
+    submittable_pipelines.any? do |pipeline|
+      Settings.pipelines.active_pipelines_for_in_progress_requests(labware).collect(&:name).include?(pipeline)
+    end
+  end
 
   def asset_groups
     @asset_groups ||=
