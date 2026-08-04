@@ -37,9 +37,8 @@ module Presenters::SubmissionBehaviour
   def pipeline_submittable?
     return true if submittable_pipelines.empty?
 
-    submittable_pipelines.any? do |pipeline|
-      Settings.pipelines.active_pipelines_for_in_progress_requests(labware).collect(&:name).include?(pipeline)
-    end
+    active_pipeline_names = Settings.pipelines.active_pipelines_for_in_progress_requests(labware).map(&:name)
+    submittable_pipelines.any? { |pipeline| active_pipeline_names.include?(pipeline) }
   end
 
   def asset_groups
