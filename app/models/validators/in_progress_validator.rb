@@ -12,7 +12,8 @@ module Validators
 
       presenter.errors.add(
         :submission,
-        "Requests of type #{first_request.request_type.name} have already been down the pipeline and were completed."
+        "Requests of type #{first_request.request_type.name} have already been completed. " \
+        'You may need a new Submission on this labware before you can continue.'
       )
     end
   end

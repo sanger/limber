@@ -118,7 +118,8 @@ RSpec.feature 'Viewing a plate', :js do
     scenario 'there is a warning' do
       fill_in_swipecard_and_barcode user_swipecard, plate_barcode
       expect(find('.asset-warnings')).to have_text(
-        'Submission Requests of type Limber WGS have already been down the pipeline and were completed.'
+        'Submission Requests of type Limber WGS have already been completed. ' \
+        'You may need a new Submission on this labware before you can continue.'
       )
     end
   end
