@@ -1,7 +1,7 @@
 const { defineConfig } = require('eslint/config')
 
 const globals = require('globals')
-const vitest = require('eslint-plugin-vitest')
+const vitest = require('@vitest/eslint-plugin')
 const vue = require('eslint-plugin-vue')
 const js = require('@eslint/js')
 
@@ -17,9 +17,9 @@ module.exports = defineConfig([
   {
     languageOptions: {
       globals: {
-        ...vitest.environments.env.globals,
         ...globals.browser,
         ...globals.node,
+        ...vitest.environments.env.globals,
       },
 
       ecmaVersion: 'latest',
@@ -27,17 +27,16 @@ module.exports = defineConfig([
 
       parserOptions: {
         requireConfigFile: false,
+        projectService: true
       },
     },
-
     plugins: {
-      vitest,
       vue,
+      vitest
     },
-
     extends: compat.extends('eslint:recommended', 'plugin:vue/recommended', 'prettier'),
-
     rules: {
+      ...vitest.configs.recommended.rules,
       'linebreak-style': ['error', 'unix'],
 
       'no-unused-vars': [
