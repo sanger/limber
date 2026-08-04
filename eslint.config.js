@@ -27,12 +27,12 @@ module.exports = defineConfig([
 
       parserOptions: {
         requireConfigFile: false,
-        projectService: true
+        projectService: true,
       },
     },
     plugins: {
       vue,
-      vitest
+      vitest,
     },
     extends: compat.extends('eslint:recommended', 'plugin:vue/recommended', 'prettier'),
     rules: {
