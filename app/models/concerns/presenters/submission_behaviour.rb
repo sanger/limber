@@ -26,6 +26,12 @@ module Presenters::SubmissionBehaviour
 
   private
 
+  def submittable_pipelines
+    return [] if purpose_config[:presenter_class].is_a?(String)
+
+    purpose_config.dig(:presenter_class, :args, :submittable_pipelines) || []
+  end
+
   # Determine whether the plate has any submittable pipelines configured and
   # if so that at least one of those pipelines is active for the labware
   def pipeline_submittable?
