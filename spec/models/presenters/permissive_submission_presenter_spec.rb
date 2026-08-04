@@ -7,13 +7,19 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
   subject(:presenter) { described_class.new(labware:) }
 
   let(:purpose_name) { 'Example purpose' }
+  let(:presenter_class) { 'Presenters::PermissiveSubmissionPlatePresenter' }
   let(:labware) { create :plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: 'Child purpose'
     create :purpose_config, uuid: 'other-purpose', name: 'Other purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
-    create(:purpose_config, uuid: labware.purpose.uuid, submission_options: submission_options)
+    create(
+      :purpose_config,
+      uuid: labware.purpose.uuid,
+      presenter_class: presenter_class,
+      submission_options: submission_options
+    )
     Settings.submission_templates = { 'example' => example_template_uuid, 'example2' => example2_template_uuid }
   end
 
@@ -357,6 +363,58 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
 
     it 'allows a new submission to be created' do
       expect(presenter.allow_new_submission?).to be true
+    end
+  end
+
+  context 'with active requests and submittable pipelines configured' do
+    let(:state) { 'pending' }
+    let(:purpose_name) { 'Test Plate' }
+    let(:submittable_pipeline) { 'Submittable pipeline' }
+    let(:presenter_class) do
+      {
+        name: 'Presenters::PermissiveSubmissionPlatePresenter',
+        args: { submittable_pipelines: [submittable_pipeline] }
+      }
+    end
+    let(:labware) do
+      create :stock_plate,
+             purpose_name: purpose_name,
+             barcode_number: 2,
+             well_count: 2,
+             state: state,
+             direct_submissions: [],
+             outer_requests: outer_requests
+    end
+    let(:request_type) { create :library_request_type, key: 'limber_wgs', name: 'Limber WGS' }
+    let(:outer_requests) do
+      Array.new(2) do |i|
+        create :library_request, state: 'pending', uuid: "request-p2-#{i}", request_type: request_type
+      end
+    end
+
+    before do
+      create(
+        :pipeline,
+        name: submittable_pipeline,
+        relationships: { purpose_name => 'Child purpose' },
+        filters: { request_type_key: [pipeline_request_type_key] }
+      )
+    end
+
+    context 'when the pipeline request type matches' do
+      let(:pipeline_request_type_key) { 'limber_wgs' }
+
+      it 'allows a new submission to be created' do
+        expect(presenter.allow_new_submission?).to be true
+      end
+    end
+
+    context 'when the pipeline request type does not match' do
+      let(:pipeline_request_type_key) { 'other_req_type' }
+
+      it 'does not allow a new submission to be created' do
+        expect(presenter.allow_new_submission?).to be false
+      end
     end
   end
 end
