@@ -366,7 +366,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     end
   end
 
-  context 'with active requests and submittable pipelines configured' do
+  context 'with submittable pipelines configured' do
     let(:state) { 'pending' }
     let(:purpose_name) { 'Test Plate' }
     let(:submittable_pipeline) { 'Submittable pipeline' }
@@ -401,7 +401,7 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       )
     end
 
-    context 'when the pipeline request type matches' do
+    context 'when active requests are present and the pipeline request type matches' do
       let(:pipeline_request_type_key) { 'limber_wgs' }
 
       it 'allows a new submission to be created' do
@@ -409,8 +409,21 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       end
     end
 
-    context 'when the pipeline request type does not match' do
+    context 'when active requests are present and the pipeline request type does not match' do
       let(:pipeline_request_type_key) { 'other_req_type' }
+
+      it 'does not allow a new submission to be created' do
+        expect(presenter.allow_new_submission?).to be false
+      end
+    end
+
+    context 'when there are inactive requests and the pipeline request type matches' do
+      let(:pipeline_request_type_key) { 'limber_wgs' }
+      let(:outer_requests) do
+        Array.new(2) do |i|
+          create :library_request, state: 'cancelled', uuid: "request-p2-#{i}", request_type: request_type
+        end
+      end
 
       it 'does not allow a new submission to be created' do
         expect(presenter.allow_new_submission?).to be false
