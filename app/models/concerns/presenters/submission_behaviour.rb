@@ -21,7 +21,7 @@ module Presenters::SubmissionBehaviour
 
   # Determine whether the Choose Workflow buttons should be displayed
   def allow_new_submission?
-    !(pending_submissions? || active_submissions? || !pipeline_submittable?)
+    !pending_submissions? && !active_submissions? && pipeline_submittable?
   end
 
   private
