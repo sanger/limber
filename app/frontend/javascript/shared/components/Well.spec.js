@@ -62,7 +62,7 @@ describe('Well', () => {
   it('renders a tooltip with the specified label', () => {
     const wrapperWithTooltipLabel = shallowMount(Well, {
       attachTo: createContainer(),
-      props: { position: 'A1', tooltip_label: 'Test', colour_index: 1 },
+      props: { position: 'A1', tooltipLabel: 'Test', colour_index: 1 },
     })
     expect(wrapperWithTooltipLabel.vm.tooltipText).toEqual('A1 - Test')
   })
