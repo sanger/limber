@@ -232,7 +232,8 @@ RSpec.describe LabwareCreators::MultiStampTubes do
         end
 
         let!(:multiple_study_submission) do
-          create(:submission, uuid: 'sub-uuid', orders: [{ uuid: 'order-uuid' }, { uuid: 'order-2-uuid' }])
+          create(:submission, uuid: 'sub-uuid',
+                              orders: [build(:order, uuid: 'order-uuid'), build(:order, uuid: 'order-2-uuid')])
         end
 
         it 'creates a plate!' do
