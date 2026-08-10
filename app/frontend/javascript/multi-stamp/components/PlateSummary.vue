@@ -15,6 +15,7 @@
 export default {
   name: 'PlateSummary',
   props: {
+    // eslint-disable-next-line vue/prop-name-casing
     pool_index: { default: null, type: Number },
     state: { default: 'empty', type: String },
     plate: {

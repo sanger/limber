@@ -21,6 +21,7 @@ module LabwareCreators
     self.default_transfer_template_name = 'Custom pooling'
 
     validates :purpose_uuid, :parent_uuid, :user_uuid, :tag_plate_barcode, :tag_plate, presence: true
+    validate :check_tag_plate_is_not_already_used
 
     delegate :size, :number_of_columns, :number_of_rows, to: :labware
 
@@ -36,6 +37,7 @@ module LabwareCreators
     end
 
     def create_plate!
+      # NOTE: passes the child to this method. Uses transfers.
       transfer_material_from_parent!(tag_plate.asset_uuid)
 
       yield(tag_plate.asset_uuid) if block_given?
@@ -62,6 +64,21 @@ module LabwareCreators
     end
 
     private
+
+    # Check that the tag plate is not already used (i.e. has aliquots in any wells).
+    # If it is already used, add an error to the model.
+    # Added to prevent creation of child with duplicate aliquots.
+    def check_tag_plate_is_not_already_used
+      return if tag_plate.blank?
+
+      tag_plate_in_db = Sequencescape::Api::V2::Plate.find_by(uuid: tag_plate.asset_uuid)
+      return if tag_plate_in_db.blank?
+
+      # tag plate should not already contain any aliquots in any wells
+      return if tag_plate_in_db.wells.none? { |well| well.aliquots.present? }
+
+      errors.add(:tag_plate_barcode, 'This tag plate appears to already have been used.')
+    end
 
     #
     # Convert the tag plate to the new purpose.

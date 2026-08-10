@@ -6,7 +6,7 @@ const transferPlatesToPlatesCreator = function (transfers, extraParams = (_) => 
       source_plate: transfers[i].plateObj.plate.uuid,
       pool_index: transfers[i].plateObj.index + 1,
       source_asset: transfers[i].well.uuid,
-      outer_request: transfers[i].request.uuid,
+      outer_request: transfers[i].request?.uuid ?? null,
       new_target: { location: transfers[i].targetWell },
       ...extraParams(transfers[i]),
     }
