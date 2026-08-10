@@ -12,7 +12,7 @@ module Presenters::SubmissionBehaviour
   end
 
   def submissions
-    labware.direct_submissions
+    labware.direct_submissions.includes(:orders)
   end
 
   def pending_submissions?
