@@ -598,11 +598,12 @@ Style/MultilineBlockChain:
     - 'app/controllers/pipelines_controller.rb'
     - 'app/models/labware_creators/tubes_from_plate_well.rb'
 
-# Offense count: 1
+# Offense count: 2
 # Configuration parameters: AllowedClasses.
 Style/OneClassPerFile:
   Exclude:
     - 'config/initializers/json_api_casters.rb'
+    - 'spec/models/concerns/presenters/statemachine/feature_in_states_spec.rb'
 
 # Offense count: 8
 # This cop supports unsafe autocorrection (--autocorrect-all).
