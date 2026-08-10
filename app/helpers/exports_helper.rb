@@ -74,10 +74,10 @@ module ExportsHelper
       next if cell_count.nil?
 
       required_volume = (
-          millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f
-        ).clamp(
-          minimum_sample_volume, maximum_sample_volume
-        )
+        millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f
+      ).clamp(
+        minimum_sample_volume, maximum_sample_volume
+      )
 
       transfer_request_data << [
         src_barcode,
