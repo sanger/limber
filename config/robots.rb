@@ -4083,7 +4083,7 @@ ROBOT_CONFIG =
           states: ['pending'],
           label: 'Carousel 3,5',
           parent: car('1,4').barcode,
-          target_state: 'started'
+          target_state: 'passed'
         }
       }
     )
