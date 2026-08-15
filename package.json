@@ -22,7 +22,7 @@
     "@prettier/plugin-ruby": "^4.0.0",
     "@vitejs/plugin-vue": "^6.0",
     "@vitest/coverage-v8": "^4.0",
-    "@vitest/eslint-plugin": "^1.6.26",
+    "@vitest/eslint-plugin": "^1.6.27",
     "@vue/test-utils": "^2.4.11",
     "autoprefixer": "^10.5.4",
     "eslint": "^9.39.2",
