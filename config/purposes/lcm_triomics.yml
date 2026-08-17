@@ -25,6 +25,13 @@ LCMT Lysate:
         library_type: 'Combined LCM RNA'
         fragment_size_required_from: '100'
         fragment_size_required_to: '500'
+    WGS Branch - Automated Submission:
+      template_name: 'Limber-Htp - LCM Triomics WGS'
+      allowed_extra_barcodes: false
+      request_options:
+        library_type: 'LCMB'
+        fragment_size_required_from: '450'
+        fragment_size_required_to: '450'
   :size: 96
 LCMT DNA Frag:
   :asset_type: plate
@@ -45,7 +52,13 @@ LCMT DNA Adp Lig:
   :stock_plate: false
   :cherrypickable_target: false
   :input_plate: false
-  :presenter_class: Presenters::PermissiveSubmissionPlatePresenter
+  :presenter_class:
+    name: Presenters::PermissiveSubmissionPlatePresenter
+    args:
+      # Adp Lig is used in both EM-seq and WGS only pipelines
+      # But we only want auto-submission from EMSeq
+      submittable_pipelines:
+        - 'LCM Triomics EMSeq'
   :submission_options:
     WGS Branch - Automated Submission:
       template_name: 'Limber-Htp - LCM Triomics WGS'
