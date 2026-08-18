@@ -304,6 +304,7 @@ const resources = [
       "uuid": "",
       "submission_template_uuid": "",
       "submission_template_attributes": "",
+      "template_name": "",
       "project": {
         "jsonApi": "hasOne",
         "type": "project"
@@ -315,6 +316,10 @@ const resources = [
       "user": {
         "jsonApi": "hasOne",
         "type": "user"
+      },
+      "submission": {
+        "jsonApi": "hasOne",
+        "type": "submission"
       }
     },
     "options": {}

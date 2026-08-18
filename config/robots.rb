@@ -4059,6 +4059,35 @@ ROBOT_CONFIG =
       }
     )
 
+    # LCM Triomics WGS verify initial setup
+    custom_robot(
+      'bravo-lcmt-wgs-verify-initial-setup',
+      name: 'Bravo LCMT WGS Verify Initial Setup',
+      require_robot: true, # Robot barcode must be scanned in.
+      verify_robot: false, # First robot step; no previous robot.
+      beds: {
+        bed(4).barcode => {
+          purpose: 'LCMT Lysate',
+          states: ['passed'],
+          label: 'Bed 4'
+        },
+        car('1,4').barcode => {
+          purpose: 'LCMT DNA Frag',
+          states: ['pending'],
+          label: 'Carousel 1,4',
+          parent: bed(4).barcode,
+          target_state: 'started'
+        },
+        car('3,5').barcode => {
+          purpose: 'LCMT DNA Adp Lig',
+          states: ['pending'],
+          label: 'Carousel 3,5',
+          parent: car('1,4').barcode,
+          target_state: 'passed'
+        }
+      }
+    )
+
     # LCM Triomics WGS and EMSeq bed verification
     # Bravo LCMT DNA Frag Verification
     custom_robot(

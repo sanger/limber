@@ -20,7 +20,7 @@ export default {
       validator(value) {
         try {
           JSON.parse(value)
-        } catch (e) {
+        } catch {
           return false
         }
         return true
