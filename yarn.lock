@@ -1362,10 +1362,10 @@ cytoscape-popper@^2.0.0:
   dependencies:
     "@popperjs/core" "^2.0.0"
 
-cytoscape@^3.34.0:
-  version "3.34.0"
-  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.34.0.tgz#5fbe2eb1cf76b070a8ecd5647c35f65aa097c9c6"
-  integrity sha512-62rNSrioXw93uliKFBwjukeQyeWwH2PqDrTac31r2P6464u3AUvTk0xS4LVvT251g7IgkFunrI48ZEZGjywSOg==
+cytoscape@^3.34.1:
+  version "3.34.1"
+  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.34.1.tgz#364923bb9598f5bc1ed1c849a1273671198275fc"
+  integrity sha512-Lr0RvH9H75y9ar8h9Toy6u4lxRSCcxUq+hHcQ26sVWo6BnaQp1gwEZOYqwuYTZhyW7npyKnNLP8oJ2p1/3OZ7g==
 
 data-urls@^5.0.0:
   version "5.0.0"
