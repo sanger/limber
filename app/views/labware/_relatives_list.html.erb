@@ -6,6 +6,10 @@
 <div id="relatives-information" class="list-group list-group-flush">
 
   <div class="list-group-item">
+    <%= link_to 'View pipeline visualiser', pipeline_visualiser_path(presenter.labware.barcode.machine), class: 'btn btn-outline-secondary btn-sm', target: '_blank' %>
+  </div>
+
+  <div class="list-group-item">
     <strong>Parents</strong>
     <%= content_tag :span, parent_labwares.size, class: 'badge rounded-pill bg-secondary' %>
   </div>

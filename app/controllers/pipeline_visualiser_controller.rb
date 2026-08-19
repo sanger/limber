@@ -32,10 +32,10 @@ class PipelineVisualiserController < ApplicationController
   def retrieve_labware_by_barcode(barcode)
     Sequencescape::Api::V2::Labware
       .select(
-        { plates: %w[uuid purpose labware_barcode state_changes updated_at ancestors] },
-        { tubes: %w[uuid purpose labware_barcode state_changes updated_at ancestors] }
+        { plates: %w[uuid purpose labware_barcode state_changes updated_at ancestors descendants] },
+        { tubes: %w[uuid purpose labware_barcode state_changes updated_at ancestors descendants] }
       )
-      .includes(:state_changes, :purpose, 'ancestors.purpose')
+      .includes(:state_changes, :purpose, 'ancestors.purpose', 'descendants.purpose')
       .where(barcode:)
       .first
   end
@@ -53,8 +53,9 @@ class PipelineVisualiserController < ApplicationController
     { elements: nodes + edges }
   end
 
+  # Oldest ancestor first, through to the searched labware, then its full descendant chain
   def build_labware_chain(labware)
-    (labware.ancestors || []).reverse + [labware]
+    (labware.ancestors || []).reverse + [labware] + (labware.descendants || [])
   end
 
   def build_node(item, searched: false)
