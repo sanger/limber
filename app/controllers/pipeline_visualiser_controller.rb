@@ -10,8 +10,7 @@ class PipelineVisualiserController < ApplicationController
 
     @labware_data = {
       record: labware,
-      state: decide_state(labware),
-      ancestors: labware.ancestors
+      state: decide_state(labware)
     }
 
     respond_to do |format|
@@ -32,30 +31,87 @@ class PipelineVisualiserController < ApplicationController
   def retrieve_labware_by_barcode(barcode)
     Sequencescape::Api::V2::Labware
       .select(
-        { plates: %w[uuid purpose labware_barcode state_changes updated_at ancestors descendants] },
-        { tubes: %w[uuid purpose labware_barcode state_changes updated_at ancestors descendants] }
+        { plates: %w[uuid purpose labware_barcode state_changes updated_at parents children] },
+        { tubes: %w[uuid purpose labware_barcode state_changes updated_at parents children] }
       )
-      .includes(:state_changes, :purpose, 'ancestors.purpose', 'descendants.purpose')
+      .includes(:state_changes, :purpose, :parents, :children)
       .where(barcode:)
       .first
   end
 
+  # Fetch a labware fresh by uuid so its parents/children associations are loaded
+  def fetch_with_relatives(uuid)
+    Sequencescape::Api::V2::Labware
+      .select(
+        { plates: %w[uuid purpose labware_barcode state_changes updated_at parents children] },
+        { tubes: %w[uuid purpose labware_barcode state_changes updated_at parents children] }
+      )
+      .includes(:state_changes, :purpose, :parents, :children)
+      .where(uuid:)
+      .first
+  end
+
   def decide_state(labware)
-    labware.state_changes&.max_by(&:id)&.target_state || 'pending'
+    changes = labware.state_changes
+    return 'unknown' unless changes.respond_to?(:max_by)
+
+    changes.max_by(&:id)&.target_state || 'pending'
+  rescue StandardError
+    'unknown'
   end
 
-  # Convert labware and ancestors into Cytoscape graph format
+  # Build a Cytoscape graph by walking the real parent/child relationships
+  # up (ancestors) and down (descendants) from the searched labware.
   def labware_to_cytoscape_graph(labware)
-    all_labware = build_labware_chain(labware)
-    nodes = all_labware.map { |item| build_node(item, searched: item.uuid == labware.uuid) }
-    edges = build_edges(all_labware)
+    nodes = {}
+    edges = {}
 
-    { elements: nodes + edges }
+    nodes[labware.uuid] = build_node(labware, searched: true)
+
+    walk_up(labware, nodes, edges)
+    walk_down(labware, nodes, edges)
+
+    { elements: nodes.values + edges.values }
   end
 
-  # Oldest ancestor first, through to the searched labware, then its full descendant chain
-  def build_labware_chain(labware)
-    (labware.ancestors || []).reverse + [labware] + (labware.descendants || [])
+  # Recursively walk parents, adding a node for each and an edge parent -> current
+  def walk_up(labware, nodes, edges)
+    safe_relatives(labware, :parents).each do |parent|
+      nodes[parent.uuid] ||= build_node(parent)
+      add_edge(edges, parent, labware)
+      full_parent = fetch_with_relatives(parent.uuid)
+      walk_up(full_parent, nodes, edges) if full_parent
+    end
+  end
+
+  # Recursively walk children, adding a node for each and an edge current -> child
+  def walk_down(labware, nodes, edges)
+    safe_relatives(labware, :children).each do |child|
+      nodes[child.uuid] ||= build_node(child)
+      add_edge(edges, labware, child)
+      full_child = fetch_with_relatives(child.uuid)
+      walk_down(full_child, nodes, edges) if full_child
+    end
+  end
+
+  # Safely fetch a relationship (parents/children), returning [] if it can't be loaded
+  def safe_relatives(labware, relationship)
+    result = labware.public_send(relationship)
+    result.respond_to?(:to_a) ? result.to_a : []
+  rescue StandardError
+    []
+  end
+
+  # Add a real parent -> child edge, keyed to avoid duplicates
+  def add_edge(edges, source, target)
+    key = "#{source.uuid}->#{target.uuid}"
+    edges[key] ||= {
+      data: {
+        source: source.uuid,
+        target: target.uuid,
+        pipeline: source.purpose&.name || 'unknown'
+      }
+    }
   end
 
   def build_node(item, searched: false)
@@ -63,7 +119,7 @@ class PipelineVisualiserController < ApplicationController
       data: {
         id: item.uuid,
         label: "#{item.labware_barcode&.human} (#{item.purpose&.name})",
-        type: item.class.name.demodulize.downcase,
+        type: item.respond_to?(:type) ? item.type&.singularize : 'plate',
         size: 96,
         barcode: item.labware_barcode&.human,
         purpose: item.purpose&.name,
@@ -71,22 +127,5 @@ class PipelineVisualiserController < ApplicationController
         searched: searched
       }
     }
-  end
-
-  def build_edges(all_labware)
-    return [] if all_labware.length < 2
-
-    Array.new(all_labware.length - 1) do |i|
-      source = all_labware[i]
-      target = all_labware[i + 1]
-
-      {
-        data: {
-          source: source.uuid,
-          target: target.uuid,
-          pipeline: source.purpose&.name || 'unknown'
-        }
-      }
-    end
   end
 end
