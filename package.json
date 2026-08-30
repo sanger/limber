@@ -29,7 +29,7 @@
     "eslint-config-prettier": "^8.10.0",
     "eslint-formatter-compact": "^9.0.1",
     "eslint-plugin-vue": "^9.33.0",
-    "globals": "^17.3.0",
+    "globals": "^17.11.0",
     "jsdom": "^24.1.2",
     "markdown-toc": "^1.2.0",
     "postcss": "^8.5.25",
