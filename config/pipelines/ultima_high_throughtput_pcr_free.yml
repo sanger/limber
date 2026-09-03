@@ -5,6 +5,7 @@ Ultima High Throughput PCR Free:
     request_type_key: limber_ultima_htp_pcr_free
     library_type:
       - Ultima High Throughput PCR Free 96
+      - Ultima High Throughput PCR Amplified 96
   library_pass: UPF Lib XP2
   relationships:
     UPF Cherrypicked: UPF Shear
