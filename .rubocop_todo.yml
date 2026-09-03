@@ -7,13 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowForAlignment, AllowBeforeTrailingComments, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Exclude:
-    - 'spec/lib/middleware/request_logger_spec.rb'
-
-# Offense count: 2
 # Configuration parameters: Max.
 Metrics/CollectionLiteralLength:
   Exclude:
