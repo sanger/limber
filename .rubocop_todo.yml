@@ -580,30 +580,6 @@ Rails/StrongParametersExpect:
     - 'app/controllers/tube_racks/tube_racks_exports_controller.rb'
     - 'app/controllers/tubes/tubes_exports_controller.rb'
 
-# Offense count: 23
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/DirectiveScope:
-  Exclude:
-    - 'app/controllers/qc_files_controller.rb'
-    - 'app/helpers/exports_helper.rb'
-    - 'app/integrations/sequencescape/api/v2/shared/has_workline_identifier.rb'
-    - 'app/models/labware_creators/multi_stamp_tubes_using_tube_rack_scan.rb'
-    - 'app/models/labware_creators/plate_split_to_tube_racks.rb'
-    - 'app/models/presenters/pcr_cycles_binned_plate_using_request_metadata_presenter.rb'
-    - 'app/models/presenters/plate_presenter.rb'
-    - 'app/models/presenters/presenter.rb'
-    - 'app/models/robots/robot.rb'
-    - 'app/models/sequencescape_submission.rb'
-    - 'lib/deployed_version.rb'
-    - 'spec/models/labware_creators/custom_pooled_tubes/csv_file_spec.rb'
-    - 'spec/models/labware_creators/final_tube_spec.rb'
-    - 'spec/models/presenters/donor_pooling_plate_presenter_spec.rb'
-    - 'spec/models/presenters/stock_plate_with_submission_presenter_spec.rb'
-    - 'spec/support/api_url_helper.rb'
-    - 'spec/views/exports/hamilton_lrc_pbmc_bank_to_cellaca_common.csv.erb_spec.rb'
-    - 'spec/views/exports/hamilton_pooling_plate_pbmc.csv.erb_spec.rb'
-    - 'spec/views/exports/pbmc_bank_tubes_content_report.csv.erb_spec.rb'
-
 # Offense count: 2
 Style/FileOpen:
   Exclude:

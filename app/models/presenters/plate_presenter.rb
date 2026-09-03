@@ -5,7 +5,7 @@ require_dependency 'presenters/presenter'
 module Presenters
   # Basic core presenter class for plates
   # Handles the display of plates in the view, not used directly
-  # rubocop:disable Metrics/ClassLength
+  # rubocop:disable-next Metrics/ClassLength
   class PlatePresenter
     include Presenters::Presenter
     include PlateWalking
@@ -221,5 +221,4 @@ module Presenters
       @labware_is_multiplexed ||= labware.active_requests.map(&:submission).uniq&.first&.multiplexed? || false
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end

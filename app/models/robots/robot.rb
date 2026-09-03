@@ -4,7 +4,7 @@ module Robots
   # Core robot class. Used when plates have a simple
   # 1:1 parent child relationship.
   # Todo: Improve class length by using rails error handling
-  # rubocop:disable Metrics/ClassLength
+  # rubocop:disable-next Metrics/ClassLength
   class Robot
     include Form
 
@@ -225,5 +225,4 @@ module Robots
       beds.select { |_barcode, bed| bed.recognised? }
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end

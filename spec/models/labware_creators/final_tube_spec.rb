@@ -133,9 +133,8 @@ RSpec.describe LabwareCreators::FinalTube do
       let(:exception_obj) { JsonApiClient::Errors::RecordNotSaved.new('test', tube_transfer) }
 
       it 'rescues RecordNotSaved and adds errors' do
-        # rubocop:disable RSpec/SubjectStub
+        # rubocop:disable-next RSpec/SubjectStub
         allow(subject).to receive(:transfer!).and_raise(exception_obj)
-        # rubocop:enable RSpec/SubjectStub
 
         expect(subject.create_labware!).to be false
         expect(subject.errors[:parent]).to include(['Destination can only be transferred to once from the source'])

@@ -33,7 +33,7 @@ module LabwareCreators
   # 7) The scan file must contain the tube that was scanned on the previous page. This is to check that the correct
   # file has been uploaded.
   #
-  # rubocop:disable Metrics/ClassLength
+  # rubocop:disable-next Metrics/ClassLength
   class MultiStampTubesUsingTubeRackScan < Base
     include LabwareCreators::CustomPage
     include CreatableFrom::TubeOnly
@@ -285,5 +285,4 @@ module LabwareCreators
       requests.first.uuid
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end

@@ -96,9 +96,8 @@ RSpec.describe 'exports/hamilton_pooling_plate_pbmc.csv.erb' do
     [
       %w[SourcePlate SourceWell DestinationPlate DestinationWell SampleVolume ResuspensionVolume],
       [ancestor_plate_barcode, 'A1', labware.labware_barcode.human, 'A1', '20.00', '20.00'],
-      # rubocop:todo Layout/LineLength
+      # rubocop:todo-next Layout/LineLength
       [ancestor_plate_barcode, 'B1', labware.labware_barcode.human, 'A1', '14.29', '20.00'], # Sample volume rounded up from 14.2857
-      # rubocop:enable Layout/LineLength
       [ancestor_plate_barcode, 'C1', labware.labware_barcode.human, 'B1', '10.81', '20.00'],
       [ancestor_plate_barcode, 'A2', labware.labware_barcode.human, 'C1', '10.81', '26.40'],
       [ancestor_plate_barcode, 'B2', labware.labware_barcode.human, 'C1', '10.81', '26.40'],

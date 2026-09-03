@@ -114,7 +114,6 @@ module DeployedVersion # rubocop:todo Style/Documentation
 
   require 'ostruct'
 
-  # rubocop:todo Style/OpenStructUse
+  # rubocop:todo-next Style/OpenStructUse
   DETAILS = OpenStruct.new(name: nil, version: VERSION_ID, environment: ENVIRONMENT)
-  # rubocop:enable Style/OpenStructUse
 end
