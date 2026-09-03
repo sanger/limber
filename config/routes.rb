@@ -103,6 +103,7 @@ Rails.application.routes.draw do
   resources :sequencescape_submissions
 
   resources :pipeline_visualiser, only: :show
+  get 'pipeline_visualiser', to: 'pipeline_visualiser#show'
 
   root to: 'search#new'
 end

@@ -4,27 +4,24 @@
 class PipelineVisualiserController < ApplicationController
   def show
     barcode = params[:id]
-    labware = retrieve_labware_by_barcode(barcode)
-
-    return render_not_found unless labware
-
-    @labware_data = {
-      record: labware,
-      state: decide_state(labware)
-    }
+    @labware = retrieve_labware_by_barcode(barcode) if barcode.present?
+    @labware_data = { record: @labware, state: decide_state(@labware) } if @labware
 
     respond_to do |format|
       format.html
-      format.json { render json: { graph_data: labware_to_cytoscape_graph(labware) } }
+      format.json { render_graph_json(barcode) }
     end
   end
 
   private
 
-  def render_not_found
-    respond_to do |format|
-      format.html { render status: :not_found }
-      format.json { render json: { error: 'Labware not found' }, status: :not_found }
+  def render_graph_json(barcode)
+    if barcode.blank?
+      render json: { graph_data: { elements: [] } }
+    elsif @labware
+      render json: { graph_data: labware_to_cytoscape_graph(@labware) }
+    else
+      render json: { error: 'Labware not found' }, status: :not_found
     end
   end
 
