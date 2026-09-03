@@ -62,7 +62,7 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
   #
   # @param selected_wells [Array<Well>] first or second replicate wells
   # @return [Array<Array<String>>] The expected CSV content.
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable-next Metrics/AbcSize
   def expected_content(selected_wells)
     header = [
       ['Workflow', workflow],
@@ -82,5 +82,4 @@ RSpec.describe 'Hamilton LRC PBMC Bank to Cellaca CSV Exports', type: :view do
       end
     header + rows
   end
-  # rubocop:enable Metrics/AbcSize
 end

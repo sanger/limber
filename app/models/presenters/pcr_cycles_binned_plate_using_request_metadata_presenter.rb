@@ -17,7 +17,7 @@ module Presenters
     private
 
     # This version of well details fetches the pcr cycles from the request poly_metadata
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:disable-next Metrics/AbcSize, Metrics/CyclomaticComplexity
     def well_details
       # For each well with aliquots on the plate select the pcr cycles metadata
       # { 'A1' => { 'pcr_cycles' => 16 }, 'B1' => etc. }
@@ -36,6 +36,5 @@ module Presenters
             details[well.location] = { 'pcr_cycles' => pcr_cycles }
         end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
   end
 end

@@ -316,9 +316,8 @@ RSpec.describe Presenters::DonorPoolingPlatePresenter do
     end
 
     it 'does not include worksheet csv link if csv is not present' do
-      # rubocop:disable RSpec/SubjectStub
+      # rubocop:disable-next RSpec/SubjectStub
       allow(subject).to receive(:csv).and_return(false)
-      # rubocop:enable RSpec/SubjectStub
 
       links = subject.csv_file_links
       expect(links).not_to include(['Download Worksheet CSV', { format: :csv }])
