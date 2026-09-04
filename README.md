@@ -24,6 +24,7 @@ A flexible front end to pipelines in Sequencescape.
 - [Note about the remainder of this document](#note-about-the-remainder-of-this-document)
 - [Docs](#docs)
 - [Configuring pipelines](#configuring-pipelines)
+- [Pipeline Visualiser](#pipeline-visualiser)
 - [Running Specs](#running-specs)
   - [RSpec](#rspec)
   - [Vitest](#vitest)
@@ -253,6 +254,21 @@ See {file:docs/configuring_new_pipelines.md Configuring new pipelines}
 This file is the start point for a set of files documenting how pipelines are configured in Limber.
 
 In Visual Code you can right click on the md files and Open Preview to see them with their markup formatting.
+
+## Pipeline Visualiser
+
+The Pipeline Visualiser helps you trace how a piece of labware moves through a pipeline.
+
+Open it from the Relatives tab on any labware page, or go directly to `/pipeline_visualiser/<barcode>`.
+
+Search for a barcode to see:
+
+- the selected labware highlighted in the graph
+- parent labware shown above it
+- downstream labware shown below it
+- coloured arrows showing which pipeline connects each step
+
+Use the Pipelines Key to match each arrow colour to its pipeline name.
 
 ## Running Specs
 
