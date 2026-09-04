@@ -197,11 +197,10 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
       assign(:workflow, workflow_name)
     end
 
-    # rubocop:disable RSpec/IteratedExpectation
+    # rubocop:disable-next RSpec/IteratedExpectation
     it 'renders the expected content row by row' do
       CSV.parse(render).each { |row| expect(row).to eq(expected_content.shift) }
     end
-    # rubocop:enable RSpec/IteratedExpectation
 
     context 'when some data is missing' do
       # qc results, no viability_qc
@@ -235,11 +234,10 @@ RSpec.describe 'exports/pbmc_bank_tubes_content_report.csv.erb', type: :view do
         ]
       end
 
-      # rubocop:disable RSpec/IteratedExpectation
+      # rubocop:disable-next RSpec/IteratedExpectation
       it 'shows blanks in the missing columns, row by row' do
         CSV.parse(render).each { |row| expect(row).to eq(expected_content.shift) }
       end
-      # rubocop:enable RSpec/IteratedExpectation
     end
 
     context 'when transfers are not done yet' do

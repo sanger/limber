@@ -146,7 +146,7 @@ class SequencescapeSubmission
   end
 
   # I think rubocop's suggestions make it less readable
-  # rubocop:disable Style/GuardClause
+  # rubocop:disable-next Style/GuardClause
   def check_extra_barcodes
     return unless extra_barcodes
 
@@ -162,5 +162,4 @@ class SequencescapeSubmission
       )
     end
   end
-  # rubocop:enable Style/GuardClause
 end
