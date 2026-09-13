@@ -37,7 +37,7 @@ RSpec.describe PipelineVisualiserController do
 
     def stub_fetch(controller, all_labware)
       lookup = all_labware.index_by(&:uuid)
-      allow(controller).to receive(:fetch_with_relatives) { |uuid| lookup[uuid] }
+      allow(controller).to receive(:retrieve_labware_by_uuid) { |uuid| lookup[uuid] }
     end
 
     context 'with a simple linear chain' do

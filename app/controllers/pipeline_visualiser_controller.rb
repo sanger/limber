@@ -25,27 +25,39 @@ class PipelineVisualiserController < ApplicationController
     end
   end
 
+  # Looks up the labware entered in the barcode search box, with its
+  # parents/children associations loaded so the graph can be walked.
+  #
+  # @param barcode [String] the barcode entered in the search box
+  # @return [Sequencescape::Api::V2::Labware, nil] the matching labware,
+  #   or nil if not found
   def retrieve_labware_by_barcode(barcode)
-    Sequencescape::Api::V2::Labware
-      .select(
-        { plates: %w[uuid purpose labware_barcode state_changes updated_at parents children] },
-        { tubes: %w[uuid purpose labware_barcode state_changes updated_at parents children] }
-      )
-      .includes(:state_changes, :purpose, :parents, :children)
-      .where(barcode:)
-      .first
+    labware_query.where(barcode:).first
   end
 
-  # Fetch a labware fresh by uuid so its parents/children associations are loaded
-  def fetch_with_relatives(uuid)
+  # Looks up a parent/child found while walking the graph, by its uuid, with
+  # its own parents/children associations loaded so the walk can continue to
+  # build relatives.
+  #
+  # @param uuid [String] the uuid of the parent/child labware
+  # @return [Sequencescape::Api::V2::Labware, nil] the matching labware,
+  #   or nil if not found
+  def retrieve_labware_by_uuid(uuid)
+    labware_query.where(uuid:).first
+  end
+
+  # Base query selecting the fields needed to build the graph and walk
+  # parents/children, without yet filtering to a specific piece of labware.
+  #
+  # @return [JsonApiClient::Query::Builder] an unfiltered query,
+  #   ready to be filtered by barcode or uuid
+  def labware_query
     Sequencescape::Api::V2::Labware
       .select(
         { plates: %w[uuid purpose labware_barcode state_changes updated_at parents children] },
         { tubes: %w[uuid purpose labware_barcode state_changes updated_at parents children] }
       )
       .includes(:state_changes, :purpose, :parents, :children)
-      .where(uuid:)
-      .first
   end
 
   def decide_state(labware)
@@ -76,7 +88,7 @@ class PipelineVisualiserController < ApplicationController
     safe_relatives(labware, :parents).each do |parent|
       nodes[parent.uuid] ||= build_node(parent)
       add_edge(edges, parent, labware)
-      full_parent = fetch_with_relatives(parent.uuid)
+      full_parent = retrieve_labware_by_uuid(parent.uuid)
       walk_up(full_parent, nodes, edges) if full_parent
     end
   end
@@ -86,7 +98,7 @@ class PipelineVisualiserController < ApplicationController
     safe_relatives(labware, :children).each do |child|
       nodes[child.uuid] ||= build_node(child)
       add_edge(edges, labware, child)
-      full_child = fetch_with_relatives(child.uuid)
+      full_child = retrieve_labware_by_uuid(child.uuid)
       walk_down(full_child, nodes, edges) if full_child
     end
   end
