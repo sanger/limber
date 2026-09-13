@@ -172,7 +172,8 @@ button#btnGroupWip {
   @extend .btn-lg;
 }
 
-#btnPipelinesOverview {
+#btnPipelinesOverview,
+#btnPipelineVisualiser {
   @extend .btn;
   @extend .btn-primary;
   @extend .btn-lg;
