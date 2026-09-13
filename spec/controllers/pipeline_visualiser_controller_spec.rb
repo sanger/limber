@@ -18,6 +18,62 @@ RSpec.describe PipelineVisualiserController do
       get :show, params: { id: labware.labware_barcode.human }
       expect(response).to have_http_status(:ok)
     end
+
+    context 'when requesting JSON with no barcode' do
+      before { get :show, format: :json }
+
+      it 'responds ok' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns an empty graph' do
+        expect(response.parsed_body).to eq('graph_data' => { 'elements' => [] })
+      end
+    end
+
+    context 'when requesting JSON with a barcode that matches labware' do
+      before { get :show, params: { id: labware.labware_barcode.human }, format: :json }
+
+      it 'responds ok' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the graph data for that labware' do
+        expect(response.parsed_body).to eq(
+          'graph_data' => {
+            'elements' => [
+              {
+                'data' => {
+                  'id' => labware.uuid,
+                  'label' => "#{labware.labware_barcode.human} (#{purpose.name})",
+                  'type' => 'labware',
+                  'size' => 96,
+                  'barcode' => labware.labware_barcode.human,
+                  'purpose' => purpose.name,
+                  'state' => 'unknown',
+                  'searched' => true
+                }
+              }
+            ]
+          }
+        )
+      end
+    end
+
+    context 'when requesting JSON with a barcode that does not match any labware' do
+      before do
+        allow(query).to receive(:first).and_return(nil)
+        get :show, params: { id: 'UNKNOWN-BARCODE' }, format: :json
+      end
+
+      it 'responds not found' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a not found error' do
+        expect(response.parsed_body).to eq('error' => 'Labware not found')
+      end
+    end
   end
 
   describe '#labware_to_cytoscape_graph' do
