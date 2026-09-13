@@ -118,6 +118,47 @@ RSpec.describe PipelineVisualiserController do
     end
   end
 
+  describe '#decide_state' do
+    let(:purpose) { create :purpose }
+    let(:labware) { create :labware, purpose: purpose, parents: [], children: [] }
+
+    context 'when state_changes has entries' do
+      before do
+        allow(labware).to receive(:state_changes).and_return(
+          [create(:state_change, id: 1, target_state: 'pending'), create(:state_change, id: 2, target_state: 'passed')]
+        )
+      end
+
+      it 'returns the target_state of the state_change with the highest id' do
+        expect(controller.send(:decide_state, labware)).to eq('passed')
+      end
+    end
+
+    context 'when state_changes is empty' do
+      before { allow(labware).to receive(:state_changes).and_return([]) }
+
+      it 'returns pending' do
+        expect(controller.send(:decide_state, labware)).to eq('pending')
+      end
+    end
+
+    context 'when state_changes does not respond to max_by' do
+      before { allow(labware).to receive(:state_changes).and_return(nil) }
+
+      it 'returns unknown' do
+        expect(controller.send(:decide_state, labware)).to eq('unknown')
+      end
+    end
+
+    context 'when reading state_changes raises an error' do
+      before { allow(labware).to receive(:state_changes).and_raise(StandardError, 'boom') }
+
+      it 'returns unknown' do
+        expect(controller.send(:decide_state, labware)).to eq('unknown')
+      end
+    end
+  end
+
   describe '#labware_to_cytoscape_graph' do
     let(:purpose) { create :purpose }
 
