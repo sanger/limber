@@ -159,6 +159,37 @@ RSpec.describe PipelineVisualiserController do
     end
   end
 
+  describe '#safe_relatives' do
+    let(:purpose) { create :purpose }
+    let(:labware) { create :labware, purpose: purpose, parents: [], children: [] }
+
+    context 'when the relationship is loaded' do
+      let(:parent) { create :labware, purpose: purpose, parents: [], children: [] }
+
+      before { allow(labware).to receive(:parents).and_return([parent]) }
+
+      it 'returns the relatives as an array' do
+        expect(controller.send(:safe_relatives, labware, :parents)).to eq([parent])
+      end
+    end
+
+    context 'when the relationship does not respond to to_a' do
+      before { allow(labware).to receive(:parents).and_return(nil) }
+
+      it 'returns an empty array' do
+        expect(controller.send(:safe_relatives, labware, :parents)).to eq([])
+      end
+    end
+
+    context 'when reading the relationship raises an error' do
+      before { allow(labware).to receive(:parents).and_raise(StandardError, 'boom') }
+
+      it 'returns an empty array' do
+        expect(controller.send(:safe_relatives, labware, :parents)).to eq([])
+      end
+    end
+  end
+
   describe '#labware_to_cytoscape_graph' do
     let(:purpose) { create :purpose }
 
