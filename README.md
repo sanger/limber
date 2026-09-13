@@ -259,16 +259,16 @@ In Visual Code you can right click on the md files and Open Preview to see them 
 
 The Pipeline Visualiser helps you trace how a piece of labware moves through a pipeline.
 
-Open it from the Relatives tab on any labware page, or go directly to `/pipeline_visualiser/<barcode>`.
+Open it from the "Pipeline Visualiser" button on the homepage, from the Relatives tab on any labware page, or go directly to `/pipeline_visualiser/<barcode>`.
 
 Search for a barcode to see:
 
 - the selected labware highlighted in the graph
 - parent labware shown above it
 - downstream labware shown below it
-- coloured arrows showing which pipeline connects each step
+- coloured arrows showing which purpose produced each step
 
-Use the Pipelines Key to match each arrow colour to its pipeline name.
+Use the Purpose Types key to match each arrow colour to its purpose.
 
 ## Running Specs
 
