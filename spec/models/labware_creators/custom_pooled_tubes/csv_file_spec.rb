@@ -78,15 +78,13 @@ RSpec.describe LabwareCreators::CustomPooledTubes::CsvFile, with: :uploader do
       it { is_expected.to be false }
 
       let(:row2_error) do
-        # rubocop:todo Layout/LineLength
+        # rubocop:todo-next Layout/LineLength
         'Transfers volume is 0 in row 2 [A1] but a destination has been specified. Either supply a positive volume, or remove the destination.'
-        # rubocop:enable Layout/LineLength
       end
 
       let(:row3_error) do
-        # rubocop:todo Layout/LineLength
+        # rubocop:todo-next Layout/LineLength
         'Transfers volume is blank in row 3 [B1] but a destination has been specified. Either supply a positive volume, or remove the destination.'
-        # rubocop:enable Layout/LineLength
       end
 
       it 'reports the errors' do

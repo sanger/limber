@@ -9,14 +9,14 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
 
   it_behaves_like 'it only allows creation from plates'
 
-  let(:plate_uuid) { 'example-plate-uuid' }
-  let(:plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
+  let(:parent_plate_uuid) { 'parent-plate-uuid' }
+  let(:parent_plate_barcode) { SBCF::SangerBarcode.new(prefix: 'DN', number: 2).machine_barcode.to_s }
   let(:pools) { 0 }
   let(:plate) do
     create(
       :plate,
       :has_pooling_metadata,
-      uuid: plate_uuid,
+      uuid: parent_plate_uuid,
       barcode_number: 2,
       pool_sizes: [8, 8],
       submission_pools_count: pools
@@ -43,18 +43,18 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
   end
 
   context 'on new' do
-    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: plate_uuid } }
+    let(:form_attributes) { { purpose_uuid: child_purpose_uuid, parent_uuid: parent_plate_uuid } }
 
     it 'can be created' do
       expect(subject).to be_a described_class
     end
 
     it 'describes the parent barcode' do
-      expect(subject.parent.barcode.ean13).to eq(plate_barcode)
+      expect(subject.parent.barcode.ean13).to eq(parent_plate_barcode)
     end
 
     it 'describes the parent uuid' do
-      expect(subject.parent_uuid).to eq(plate_uuid)
+      expect(subject.parent_uuid).to eq(parent_plate_uuid)
     end
 
     it 'describes the purpose uuid' do
@@ -139,7 +139,8 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
     let(:tag_template_uuid) { 'tag-layout-template' }
 
     let(:plate_conversions_attributes) do
-      [{ parent_uuid: plate_uuid, purpose_uuid: child_purpose_uuid, target_uuid: tag_plate_uuid, user_uuid: user_uuid }]
+      [{ parent_uuid: parent_plate_uuid, purpose_uuid: child_purpose_uuid, target_uuid: tag_plate_uuid,
+         user_uuid: user_uuid }]
     end
 
     let(:state_changes_attributes) do
@@ -169,7 +170,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
         {
           arguments: {
             user_uuid: user_uuid,
-            source_uuid: plate_uuid,
+            source_uuid: parent_plate_uuid,
             destination_uuid: tag_plate_uuid,
             transfer_template_uuid: transfer_template_uuid,
             transfers: expected_transfers
@@ -182,7 +183,7 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
       let(:form_attributes) do
         {
           purpose_uuid: child_purpose_uuid,
-          parent_uuid: plate_uuid,
+          parent_uuid: parent_plate_uuid,
           user_uuid: user_uuid,
           tag_plate_barcode: tag_plate_barcode,
           tag_plate: {
@@ -192,30 +193,56 @@ RSpec.describe LabwareCreators::TaggedPlate, :tag_plate do
         }
       end
 
-      it_behaves_like 'it has a custom page', 'tagged_plate'
+      context 'which has not been used' do
+        let(:tag_plate) { create(:plate, size: 384, uuid: tag_plate_uuid, barcode: tag_plate_barcode) }
 
-      it 'can be created' do
-        expect(subject).to be_a described_class
-      end
-
-      context 'on save' do
-        it 'creates a tag plate' do
-          expect_plate_conversion_creation
-          expect_state_change_creation
-          expect_tag_layout_creation
-          expect_transfer_creation
-
-          expect(subject.save).to be true
+        before do
+          stub_plate(tag_plate)
         end
 
-        it 'has the correct child (and uuid)' do
-          expect_plate_conversion_creation # We need the return value and this expectation mocks it for us.
-          stub_post('StateChange')
-          stub_post('TagLayout')
-          stub_post('Transfer')
+        it_behaves_like 'it has a custom page', 'tagged_plate'
 
-          expect(subject.save).to be true
-          expect(subject.child.uuid).to eq(tag_plate_uuid)
+        it 'can be created' do
+          expect(subject).to be_a described_class
+        end
+
+        context 'on save' do
+          it 'creates a tagged child plate' do
+            expect_plate_conversion_creation
+            expect_state_change_creation
+            expect_tag_layout_creation
+            expect_transfer_creation
+
+            expect(subject.save).to be true
+          end
+
+          it 'has the correct child (and uuid)' do
+            expect_plate_conversion_creation # We need the return value and this expectation mocks it for us.
+            stub_post('StateChange')
+            stub_post('TagLayout')
+            stub_post('Transfer')
+
+            expect(subject.save).to be true
+            expect(subject.child.uuid).to eq(tag_plate_uuid)
+          end
+        end
+      end
+
+      context 'which has already been used' do
+        let(:tag_plate) do
+          create(:plate_for_submission,
+                 size: 384,
+                 uuid: tag_plate_uuid,
+                 barcode: tag_plate_barcode)
+        end
+
+        before do
+          stub_plate(tag_plate)
+        end
+
+        it 'cannot be created' do
+          expect(subject.save).to be false
+          expect(subject.errors[:tag_plate_barcode]).to include('This tag plate appears to already have been used.')
         end
       end
     end

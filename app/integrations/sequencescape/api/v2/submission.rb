@@ -9,6 +9,8 @@ class Sequencescape::Api::V2::Submission < Sequencescape::Api::V2::Base
   property :lanes_of_sequencing, type: :integer
   property :multiplexed?, type: :boolean
 
+  has_many :orders, class_name: 'Sequencescape::Api::V2::Order'
+
   delegate :building?, :pending?, :processing?, :ready?, :failed?, :cancelled?, to: :state
 
   # In practice the transaction tends to hide submissions in the processing state,

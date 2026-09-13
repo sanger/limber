@@ -245,6 +245,7 @@ describe('PoolXPTubeSubmitPanel', () => {
     expect(wrapper.exists()).toBe(true)
   })
 
+  // eslint-disable-next-line vitest/expect-expect
   it.each([
     'ready_to_export',
     'checking_tube_status',

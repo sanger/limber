@@ -7,13 +7,19 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
   subject(:presenter) { described_class.new(labware:) }
 
   let(:purpose_name) { 'Example purpose' }
+  let(:presenter_class) { 'Presenters::PermissiveSubmissionPlatePresenter' }
   let(:labware) { create :plate, state: state, purpose_name: purpose_name, pool_sizes: [1] }
 
   before(:each) do
     create :purpose_config, uuid: 'child-purpose', name: 'Child purpose'
     create :purpose_config, uuid: 'other-purpose', name: 'Other purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
-    create(:purpose_config, uuid: labware.purpose.uuid, submission_options: submission_options)
+    create(
+      :purpose_config,
+      uuid: labware.purpose.uuid,
+      presenter_class: presenter_class,
+      submission_options: submission_options
+    )
     Settings.submission_templates = { 'example' => example_template_uuid, 'example2' => example2_template_uuid }
   end
 
@@ -275,16 +281,19 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       create :stock_plate,
              purpose_name: purpose_name,
              barcode_number: 2,
-             pool_sizes: [2],
+             well_count: 2,
              direct_submissions: submissions,
-             state: state
+             state: state,
+             outer_requests: outer_requests
     end
+
     let(:submissions) { create_list :submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
     let(:state) { 'cancelled' }
     let(:sidebar_partial) { 'default' }
+    let(:outer_requests) { Array.new(2) { |i| create :library_request, state: 'cancelled', uuid: "request-p2-#{i}" } }
     let(:summary_tab) do
       [
         %w[Barcode DN2T],
@@ -312,8 +321,6 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
   end
 
   context 'with failed submissions' do
-    # If our requests have been failed, then we're back at square 1
-
     it_behaves_like 'a labware presenter'
     it_behaves_like 'a stock presenter'
 
@@ -321,16 +328,19 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
       create :stock_plate,
              purpose_name: purpose_name,
              barcode_number: 2,
-             pool_sizes: [2],
+             well_count: 2,
              direct_submissions: submissions,
-             state: state
+             state: state,
+             outer_requests: outer_requests
     end
+
     let(:submissions) { create_list :submission, 1, state: }
     let(:barcode_string) { 'DN2T' }
     let(:purpose_name) { 'Test Plate' }
     let(:title) { purpose_name }
     let(:state) { 'failed' }
     let(:sidebar_partial) { 'default' }
+    let(:outer_requests) { Array.new(2) { |i| create :library_request, state: 'failed', uuid: "request-p2-#{i}" } }
     let(:summary_tab) do
       [
         %w[Barcode DN2T],
@@ -347,13 +357,77 @@ RSpec.describe Presenters::PermissiveSubmissionPlatePresenter do
     end
 
     it 'has no pending submissions' do
-      # We have submissions, but they are built. pending_submissions? controls aspects like the
-      # refresh, that would be a nightmare if you were trying to set up a submission
+      # We have failed submissions but they are built
       expect(presenter.pending_submissions?).to be false
     end
 
     it 'allows a new submission to be created' do
       expect(presenter.allow_new_submission?).to be true
+    end
+  end
+
+  context 'with submittable pipelines configured' do
+    let(:state) { 'pending' }
+    let(:purpose_name) { 'Test Plate' }
+    let(:submittable_pipeline) { 'Submittable pipeline' }
+    let(:presenter_class) do
+      {
+        name: 'Presenters::PermissiveSubmissionPlatePresenter',
+        args: { submittable_pipelines: [submittable_pipeline] }
+      }
+    end
+    let(:labware) do
+      create :stock_plate,
+             purpose_name: purpose_name,
+             barcode_number: 2,
+             well_count: 2,
+             state: state,
+             direct_submissions: [],
+             outer_requests: outer_requests
+    end
+    let(:request_type) { create :library_request_type, key: 'limber_wgs', name: 'Limber WGS' }
+    let(:outer_requests) do
+      Array.new(2) do |i|
+        create :library_request, state: 'pending', uuid: "request-p2-#{i}", request_type: request_type
+      end
+    end
+
+    before do
+      create(
+        :pipeline,
+        name: submittable_pipeline,
+        relationships: { purpose_name => 'Child purpose' },
+        filters: { request_type_key: [pipeline_request_type_key] }
+      )
+    end
+
+    context 'when active requests are present and the pipeline request type matches' do
+      let(:pipeline_request_type_key) { 'limber_wgs' }
+
+      it 'allows a new submission to be created' do
+        expect(presenter.allow_new_submission?).to be true
+      end
+    end
+
+    context 'when active requests are present and the pipeline request type does not match' do
+      let(:pipeline_request_type_key) { 'other_req_type' }
+
+      it 'does not allow a new submission to be created' do
+        expect(presenter.allow_new_submission?).to be false
+      end
+    end
+
+    context 'when there are inactive requests and the pipeline request type matches' do
+      let(:pipeline_request_type_key) { 'limber_wgs' }
+      let(:outer_requests) do
+        Array.new(2) do |i|
+          create :library_request, state: 'cancelled', uuid: "request-p2-#{i}", request_type: request_type
+        end
+      end
+
+      it 'does not allow a new submission to be created' do
+        expect(presenter.allow_new_submission?).to be false
+      end
     end
   end
 end

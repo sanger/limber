@@ -297,8 +297,6 @@ describe('LabwareCustomMetadataAddForm', () => {
       })
     })
 
-    // TODO: Y24-248 - add this test suite
-    // describe('#buildPayload', () => {
-    // })
+    // TODO: Y24-248 - add buildPayload to this test suite
   })
 })

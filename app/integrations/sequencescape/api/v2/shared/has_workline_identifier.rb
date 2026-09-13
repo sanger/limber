@@ -14,7 +14,7 @@ module Sequencescape::Api::V2::Shared
     # NB. the config value can be an array, in the case where there is more than one possible purpose ancestor.
     # In this case, the first one found is used.
     #
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable-next Metrics/MethodLength
     def workline_reference
       alternative_workline_identifier_purpose = SearchHelper.alternative_workline_reference_name(self)
       return stock_plate if alternative_workline_identifier_purpose.nil?
@@ -32,7 +32,6 @@ module Sequencescape::Api::V2::Shared
         ancestors.where(purpose_name: alternative_workline_identifier_purpose).last
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def workline_identifier
       workline_reference&.barcode&.human

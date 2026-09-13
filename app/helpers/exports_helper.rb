@@ -53,7 +53,7 @@ module ExportsHelper
   # Used in the following exports:
   # - Hamilton LRC PBMC Aliquot to LRC PBMC Pools CSV
   # - Hamilton LRC PBMC Defrost PBS 1ml to LRC PBMC Pools CSV
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:disable-next Metrics/AbcSize, Metrics/MethodLength
   def pbmc_transfer_request_rows(plate, ancestor_plate_list)
     scrna_config = Rails.application.config.scrna_config
     required_number_of_cells_per_sample_in_pool = scrna_config[:required_number_of_cells_per_sample_in_pool]
@@ -74,10 +74,10 @@ module ExportsHelper
       next if cell_count.nil?
 
       required_volume = (
-          millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f
-        ).clamp(
-          minimum_sample_volume, maximum_sample_volume
-        )
+        millilitres_to_microlitres * required_number_of_cells_per_sample_in_pool / cell_count.value.to_f
+      ).clamp(
+        minimum_sample_volume, maximum_sample_volume
+      )
 
       transfer_request_data << [
         src_barcode,
@@ -104,5 +104,4 @@ module ExportsHelper
     end
     rows_array.sort_by { |a| [a[0], WellHelpers.well_coordinate(a[1])] }
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 end

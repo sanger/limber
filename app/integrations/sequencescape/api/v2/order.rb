@@ -5,4 +5,6 @@
 class Sequencescape::Api::V2::Order < Sequencescape::Api::V2::Base
   property :created_at, type: :time
   property :updated_at, type: :time
+
+  has_one :submission, class_name: 'Sequencescape::Api::V2::Submission'
 end

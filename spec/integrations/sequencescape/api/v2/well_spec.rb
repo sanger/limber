@@ -3,6 +3,35 @@
 require 'rails_helper'
 
 RSpec.describe Sequencescape::Api::V2::Well do
+  describe '#tagged?' do
+    context 'when all aliquots are tagged' do
+      let(:well) { create(:well, aliquots: [create(:tagged_aliquot), create(:tagged_aliquot)]) }
+
+      it 'returns true' do
+        expect(well.tagged?).to be(true)
+      end
+    end
+
+    context 'when only some aliquots are tagged' do
+      let(:well) { create(:well, aliquots: [create(:tagged_aliquot), create(:aliquot)]) }
+
+      it 'raises an error' do
+        expect { well.tagged? }.to raise_error(
+          RuntimeError,
+          'Detected a mixture of tagged and untagged aliquots in well A1'
+        )
+      end
+    end
+
+    context 'when there are no aliquots' do
+      let(:well) { create(:well, aliquot_count: 0) }
+
+      it 'returns false' do
+        expect(well.tagged?).to be(false)
+      end
+    end
+  end
+
   describe '#contains_control?' do
     let(:well) { create :well }
 

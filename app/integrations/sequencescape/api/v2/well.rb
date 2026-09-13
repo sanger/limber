@@ -70,7 +70,14 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
   end
 
   def tagged?
-    aliquots.any?(&:tagged?)
+    return false if aliquots.blank?
+
+    # checking for a mixture of tagged and untagged aliquots in the same well, this is not allowed
+    if aliquots.any?(&:tagged?) && aliquots.any? { |aliquot| !aliquot.tagged? }
+      raise "Detected a mixture of tagged and untagged aliquots in well #{location}"
+    end
+
+    aliquots.all?(&:tagged?)
   end
 
   def empty?

@@ -34,6 +34,8 @@ LCM Triomics WGS:
     library_type: LCMB
   library_pass: LCMT DNA PCR XP
   relationships:
+    LCMT Lysate: LCMT DNA Frag
+    LCMT DNA Frag: LCMT DNA Adp Lig
     LCMT DNA Adp Lig: LCMT DNA Lib PCR
     LCMT DNA Lib PCR: LCMT DNA PCR XP
 LCM Triomics WGS Custom Pooling:
