@@ -76,6 +76,48 @@ RSpec.describe PipelineVisualiserController do
     end
   end
 
+  describe '#labware_query' do
+    let(:query) { instance_double(JsonApiClient::Query::Builder) }
+
+    before do
+      allow(query).to receive(:includes).and_return(query)
+      allow(Sequencescape::Api::V2::Labware).to receive(:select).and_return(query)
+    end
+
+    it 'selects the fields needed to build the graph and walk relatives' do
+      controller.send(:labware_query)
+      expect(Sequencescape::Api::V2::Labware).to have_received(:select).with(
+        { plates: %w[uuid purpose labware_barcode state_changes updated_at parents children] },
+        { tubes: %w[uuid purpose labware_barcode state_changes updated_at parents children] }
+      )
+    end
+
+    it 'includes the associations needed to build the graph and walk relatives' do
+      controller.send(:labware_query)
+      expect(query).to have_received(:includes).with(:state_changes, :purpose, :parents, :children)
+    end
+  end
+
+  describe '#retrieve_labware_by_uuid' do
+    let(:purpose) { create :purpose }
+    let(:labware) { create :labware, purpose: purpose, parents: [], children: [] }
+    let(:query) { instance_double(JsonApiClient::Query::Builder) }
+
+    before do
+      allow(query).to receive_messages(includes: query, where: query, first: labware)
+      allow(Sequencescape::Api::V2::Labware).to receive(:select).and_return(query)
+    end
+
+    it 'returns the labware matching the given uuid' do
+      expect(controller.send(:retrieve_labware_by_uuid, labware.uuid)).to eq(labware)
+    end
+
+    it 'looks it up by uuid' do
+      controller.send(:retrieve_labware_by_uuid, labware.uuid)
+      expect(query).to have_received(:where).with(uuid: labware.uuid)
+    end
+  end
+
   describe '#labware_to_cytoscape_graph' do
     let(:purpose) { create :purpose }
 
