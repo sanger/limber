@@ -87,6 +87,14 @@ RSpec.feature 'Multi plate pooling', :js do
     )
 
     stub_barcode_printers(create_list(:plate_barcode_printer, 3))
+
+    # Stub for find_labware_for_pooling: includes receptacle.aliquots then find by uuid
+    plate_with_aliquots_query = double('plate_with_aliquots_query')
+    allow(Sequencescape::Api::V2::Plate).to receive(:includes).with('wells.aliquots').and_return(
+      plate_with_aliquots_query
+    )
+    allow(plate_with_aliquots_query).to receive(:find).with(uuid: plate_uuid).and_return([example_plate])
+    allow(plate_with_aliquots_query).to receive(:find).with(uuid: plate_uuid_2).and_return([example_plate_2])
   end
 
   scenario 'creates multiple plates' do
@@ -96,6 +104,7 @@ RSpec.feature 'Multi plate pooling', :js do
     fill_in_swipecard_and_barcode(user_swipecard, plate_barcode_1)
     plate_title = find_by_id('plate-title')
     expect(plate_title).to have_text('Pooled example')
+
     click_on('Add an empty Pool Plate plate')
     scan_in('Plate 1', with: plate_barcode_1)
     expect(page).to have_text('DN1: A1')
