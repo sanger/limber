@@ -8,7 +8,7 @@ module ApiUrlHelper
 
   # Expectations for the V2 API.
   # All methods here generate an expectation that the endpoint will be called with the correct arguments.
-  # rubocop:todo Metrics/ModuleLength
+  # rubocop:todo-next Metrics/ModuleLength
   module V2Expectations
     def expect_posts(klass, args_list, return_values = [], method: :create!)
       # Expects the specified `method` for any class beginning with
@@ -147,11 +147,10 @@ module ApiUrlHelper
       do_not_expect_posts('WorkCompletion', work_completions_attributes, [], method: :create!)
     end
   end
-  # rubocop:enable Metrics/ModuleLength
 
   # Stubs for the V2 API.
   # None of the methods here generate an expectation that the endpoint will be called.
-  # rubocop:todo Metrics/ModuleLength
+  # rubocop:todo-next Metrics/ModuleLength
   module V2Stubs
     def stub_patch(klass)
       # intercepts the 'update' and 'update!' method for any instance of the class beginning with
@@ -200,7 +199,7 @@ module ApiUrlHelper
       end
     end
 
-    # rubocop:todo Metrics/AbcSize
+    # rubocop:todo-next Metrics/AbcSize
     def stub_tube_rack(tube_rack, stub_search: true, custom_query: nil, custom_includes: nil)
       stub_barcode_search(tube_rack.barcode.machine, tube_rack) if stub_search
 
@@ -221,7 +220,6 @@ module ApiUrlHelper
       arguments = [{ uuid: tube_rack.uuid }]
       allow(Sequencescape::Api::V2::TubeRack).to receive(:find).with(*arguments).and_return([tube_rack])
     end
-    # rubocop:enable Metrics/AbcSize
 
     def stub_tube_rack_purpose(tube_rack_purpose)
       arguments = [{ name: tube_rack_purpose[:name] }]
@@ -318,7 +316,6 @@ module ApiUrlHelper
       stub_post('PooledPlateCreation', pooled_plate_creation)
     end
   end
-  # rubocop:enable Metrics/ModuleLength
 end
 
 RSpec.configure do |config|

@@ -1,6 +1,6 @@
 ---
 scRNA Core Chromium GEM-X 5p BCR:
-  pipeline_group: scRNA Core BCR Library Prep
+  pipeline_group: scRNA Core
   filters:
     request_type_key: limber_scrna_core_library_prep
     library_type: Chromium single cell GEM-X 5p v3 BCR
@@ -13,7 +13,7 @@ scRNA Core Chromium GEM-X 5p BCR:
     LRC GEM-X 5p BCR Dil 2: LRC GEM-X 5p BCR Post Lig 1XSPRI
     LRC GEM-X 5p BCR Post Lig 1XSPRI: LRC GEM-X 5p BCR Post PCR
 scRNA Core Chromium GEM-X 5p BCR Pool Norm:
-  pipeline_group: scRNA Core Library Prep
+  pipeline_group: scRNA Core
   filters:
     request_type_key:
       - scrna_core_pool_norm

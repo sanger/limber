@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'presenters'
-# rubocop:disable Metrics/ModuleLength
+# rubocop:disable-next Metrics/ModuleLength
 module Presenters::Presenter # rubocop:todo Style/Documentation
   extend ActiveSupport::Concern
 
@@ -172,4 +172,3 @@ module Presenters::Presenter # rubocop:todo Style/Documentation
     metadata.present? ? metadata.fetch('stock_barcode', barcode) : 'N/A'
   end
 end
-# rubocop:enable Metrics/ModuleLength

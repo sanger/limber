@@ -39,7 +39,7 @@ module LabwareCreators
   #    transferred. e.g. if there are 20 distinct samples in the parent and 40 additional copies (60 wells
   #    total), then there must be 20 tubes in the first rack and 40 in the second rack.
   #
-  # rubocop:disable Metrics/ClassLength
+  # rubocop:disable-next Metrics/ClassLength
   class PlateSplitToTubeRacks < Base
     include LabwareCreators::CustomPage
     include CreatableFrom::PlateOnly
@@ -866,5 +866,4 @@ module LabwareCreators
       { source_asset: source_well_uuid, target_asset: target_tube_uuid }.merge(additional_parameters)
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end
