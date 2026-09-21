@@ -11,13 +11,13 @@ ROBOT_CONFIG =
     # Custom robots are configured manually
 
     bravo_robot do
-      from 'LB Cherrypick', bed(7)
-      to 'LB Shear', bed(9)
+      from 'LB Cherrypick', bed(8)
+      to 'LB Shear', bed(7)
     end
 
     bravo_robot do
-      from 'LB Shear', bed(9)
-      to 'LB Post Shear', bed(7)
+      from 'LB Shear', bed(7)
+      to 'LB Post Shear', bed(8)
     end
 
     bravo_robot transition_to: 'started' do
