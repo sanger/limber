@@ -8,9 +8,15 @@ describe('QcInformation', () => {
     return mount(QcInformation, {
       props: {
         assetUuid: 'test',
+        sequencescapeApiKey: 'test-api-key',
       },
     })
   }
+
+  it('sends the sequencescape api key on its axios instance', () => {
+    let wrapper = wrapperFactory()
+    expect(wrapper.vm.axiosInstance.defaults.headers['X-Sequencescape-Client-Id']).toEqual('test-api-key')
+  })
 
   it('updates its data as values change', async () => {
     let wrapper = wrapperFactory()

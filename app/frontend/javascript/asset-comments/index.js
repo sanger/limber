@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       headers: {
         Accept: 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
+        'X-Sequencescape-Client-Id': sequencescapeApiKey,
       },
     })
 
