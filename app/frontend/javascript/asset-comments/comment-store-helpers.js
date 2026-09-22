@@ -20,6 +20,7 @@ const createCommentFactory = (props) => {
     headers: {
       Accept: 'application/vnd.api+json',
       'Content-Type': 'application/vnd.api+json',
+      'X-Sequencescape-Client-Id': sequencescapeApiKey,
     },
   })
   const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources, sequencescapeApiKey)
