@@ -133,7 +133,13 @@ $('.labware-box').each(function () {
       return $(this).closest('.labware-container')
     },
     checkLabware: function (data, status, scanned_barcode) {
+      // response from search_controller#create
       let response = data[this.dataset.labwareType]
+      if (response === undefined) {
+        this.badLabware()
+        SCAPE.message(`Scanned labware is not a ${this.dataset.labwareType} as expected.`, 'invalid')
+        return
+      }
       if (SOURCE_STATES.indexOf(response.state) === -1) {
         this.badLabware()
         const msg = `Scanned ${this.dataset.labwareType}s are currently in a '${response.state}' state when they should be in one of: ${SOURCE_STATES.join(', ')}.`
