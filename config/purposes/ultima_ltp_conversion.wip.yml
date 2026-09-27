@@ -1,0 +1,25 @@
+---
+ULTP XP Norm:
+  :asset_type: plate
+  :creator_class: LabwareCreators::ConcentrationNormalisedPlate
+  :dilutions:
+    :target_amount_ng: 10
+    :target_volume: 20
+    :minimum_source_volume: 0.2
+ULTP PCR:
+  :asset_type: plate
+  :presenter_class: Presenters::StandardPresenter
+  :creator_class: LabwareCreators::CustomTaggedPlate
+  :default_printer_type: :ultima_lib_plate
+ULTP PCR XP:
+  :asset_type: plate
+  :default_printer_type: :plate_xp2
+ULTP Lib Norm:
+  :asset_type: plate
+ULTP Lib Pool Norm:
+  :asset_type: tube
+  :target: MultiplexedLibraryTube
+  :type: IlluminaHtp::MxTubePurpose
+  :creator_class: LabwareCreators::FinalTubeFromPlate
+  :presenter_class: Presenters::FinalTubePresenter
+  :default_printer_type: :ultima_balanced_norm_tube
