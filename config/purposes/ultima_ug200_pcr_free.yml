@@ -19,8 +19,11 @@ UPF2 Lib:
   :presenter_class: Presenters::StandardPresenter
   :creator_class: LabwareCreators::TaggedPlate
   :tag_layout_templates:
+    - 'Ultima P1'
+    - 'Ultima P2'
     - 'Ultima P3'
     - 'UG-RD-1916 (Solaris 2.0 V1 PCR-Free Adapters for Ultima Genomics P4)'
+    - 'UG-RD-1940 (Solaris 2.0 PCR-Free Adapters for Ultima Genomics P1)'
   :default_printer_type: :ultima_lib_plate
 UPF2 Lib XP2:
   :asset_type: plate
