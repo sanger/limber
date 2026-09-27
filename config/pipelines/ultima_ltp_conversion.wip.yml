@@ -1,0 +1,22 @@
+---
+Ultima LTP Conversion:
+  pipeline_group: Ultima LTP
+  filters:
+    request_type_key: limber_ultima_ltp_conversion
+  library_pass: ULTP PCR XP
+  relationships:
+    LB Lib PCR-XP: ULTP XP Norm
+    LTN Lib PCR XP: ULTP XP Norm
+    RVI Lib PCR XP: ULTP XP Norm
+    RVIG Lib PCR XP: ULTP XP Norm
+    LBB Lib PCR-XP: ULTP XP Norm
+    LBB Lib PCR-XP Norm: ULTP XP Norm
+    ULTP XP Norm: ULTP PCR
+    ULTP PCR: ULTP PCR XP
+Ultima LTP Multiplexing:
+  pipeline_group: Ultima LTP
+  filters:
+    request_type_key: limber_multiplexing_ultima_ltp
+  relationships:
+    ULTP PCR XP: ULTP Lib Norm
+    ULTP Lib Norm: ULTP Lib Pool Norm
