@@ -311,13 +311,13 @@ ROBOT_CONFIG =
     end
 
     bravo_robot do
-      from 'PF Cherrypicked', bed(7)
-      to 'PF Shear', bed(9)
+      from 'PF Cherrypicked', bed(8)
+      to 'PF Shear', bed(7)
     end
 
     bravo_robot do
-      from 'PF Shear', bed(9)
-      to 'PF Post Shear', bed(7)
+      from 'PF Shear', bed(7)
+      to 'PF Post Shear', bed(8)
     end
 
     bravo_robot(transition_to: 'started') do
@@ -2058,17 +2058,17 @@ ROBOT_CONFIG =
       'bravo-ltn-cherrypick-to-ltn-shear',
       name: 'bravo LTN Cherrypick => LTN Shear',
       beds: {
-        bed(7).barcode => {
+        bed(8).barcode => {
           purpose: 'LTN Cherrypick',
           states: ['passed'],
-          label: 'Bed 7'
+          label: 'Bed 8'
         },
-        bed(9).barcode => {
+        bed(7).barcode => {
           purpose: 'LTN Shear',
           states: ['pending'],
-          label: 'Bed 9',
+          label: 'Bed 7',
           target_state: 'passed',
-          parent: bed(7).barcode
+          parent: bed(8).barcode
         }
       }
     )
@@ -2077,17 +2077,17 @@ ROBOT_CONFIG =
       'bravo-ltn-shear-to-ltn-post-shear',
       name: 'bravo LTN Shear => LTN Post Shear',
       beds: {
-        bed(9).barcode => {
+        bed(7).barcode => {
           purpose: 'LTN Shear',
           states: ['passed'],
-          label: 'Bed 9'
+          label: 'Bed 7'
         },
-        bed(7).barcode => {
+        bed(8).barcode => {
           purpose: 'LTN Post Shear',
           states: ['pending'],
-          label: 'Bed 7',
+          label: 'Bed 8',
           target_state: 'passed',
-          parent: bed(9).barcode
+          parent: bed(7).barcode
         }
       }
     )
@@ -4356,16 +4356,16 @@ ROBOT_CONFIG =
     # Bravo bed verification
     # BGE Cherrypick to BGE Shear
     bravo_robot do
-      from 'BGE Cherrypick', bed(7)
-      to 'BGE Shear', bed(9)
+      from 'BGE Cherrypick', bed(8)
+      to 'BGE Shear', bed(7)
     end
 
     # BGE Pipeline 1 - PCR Free library prep
     # Bravo bed verification
     # BGE Shear to BGE Post Shear
     bravo_robot do
-      from 'BGE Shear', bed(9)
-      to 'BGE Post Shear', bed(7)
+      from 'BGE Shear', bed(7)
+      to 'BGE Post Shear', bed(8)
     end
 
     # BGE Pipeline 1 - PCR Free library prep
@@ -5145,16 +5145,16 @@ ROBOT_CONFIG =
       'bravo-upf-cherrypicked-to-upf-shear',
       name: 'UPF Cherrypicked => UPF Shear',
       beds: {
-        bed(7).barcode => {
+        bed(8).barcode => {
           purpose: 'UPF Cherrypicked',
           states: ['passed'],
-          label: 'Bed 7'
+          label: 'Bed 8'
         },
-        bed(9).barcode => {
+        bed(7).barcode => {
           purpose: 'UPF Shear',
           states: ['pending'],
-          label: 'Bed 9',
-          parent: bed(7).barcode,
+          label: 'Bed 7',
+          parent: bed(8).barcode,
           target_state: 'passed'
         }
       }
@@ -5165,16 +5165,16 @@ ROBOT_CONFIG =
       'bravo-upf-shear-to-upf-post-shear',
       name: 'UPF Shear => UPF Post Shear',
       beds: {
-        bed(9).barcode => {
+        bed(7).barcode => {
           purpose: 'UPF Shear',
           states: ['passed'],
-          label: 'Bed 9'
+          label: 'Bed 7'
         },
-        bed(7).barcode => {
+        bed(8).barcode => {
           purpose: 'UPF Post Shear',
           states: ['pending'],
-          label: 'Bed 7',
-          parent: bed(9).barcode,
+          label: 'Bed 8',
+          parent: bed(7).barcode,
           target_state: 'passed'
         }
       }
@@ -5258,16 +5258,16 @@ ROBOT_CONFIG =
       'bravo-upf2-cherrypicked-to-upf2-shear',
       name: 'UPF2 Cherrypicked => UPF2 Shear',
       beds: {
-        bed(7).barcode => {
+        bed(8).barcode => {
           purpose: 'UPF2 Cherrypicked',
           states: ['passed'],
-          label: 'Bed 7'
+          label: 'Bed 8'
         },
-        bed(9).barcode => {
+        bed(7).barcode => {
           purpose: 'UPF2 Shear',
           states: ['pending'],
-          label: 'Bed 9',
-          parent: bed(7).barcode,
+          label: 'Bed 7',
+          parent: bed(8).barcode,
           target_state: 'passed'
         }
       }
@@ -5279,16 +5279,16 @@ ROBOT_CONFIG =
       'bravo-upf2-shear-to-upf2-post-shear',
       name: 'UPF2 Shear => UPF2 Post Shear',
       beds: {
-        bed(9).barcode => {
+        bed(7).barcode => {
           purpose: 'UPF2 Shear',
           states: ['passed'],
-          label: 'Bed 9'
+          label: 'Bed 7'
         },
-        bed(7).barcode => {
+        bed(8).barcode => {
           purpose: 'UPF2 Post Shear',
           states: ['pending'],
-          label: 'Bed 7',
-          parent: bed(9).barcode,
+          label: 'Bed 8',
+          parent: bed(7).barcode,
           target_state: 'passed'
         }
       }
