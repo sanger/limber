@@ -5,6 +5,8 @@ Ultima LTP Conversion:
     request_type_key: limber_ultima_ltp_conversion
   library_pass: ULTP PCR XP
   relationships:
+    ULTP Cherrypick: ULTP XP Norm
+    Library Stock Plate: ULTP XP Norm
     LB Lib PCR-XP: ULTP XP Norm
     LTN Lib PCR XP: ULTP XP Norm
     RVI Lib PCR XP: ULTP XP Norm
