@@ -36,11 +36,9 @@ class SearchController < ApplicationController
   def create
     raise 'You have not supplied a labware barcode' if params[:plate_barcode].blank?
 
-    result = find_labware(params[:plate_barcode])
-
     respond_to do |format|
-      format.html { redirect_to result }
-      format.json { redirect_to result }
+      format.html { redirect_to find_labware(params[:plate_barcode]) }
+      format.json { render json: find_labware_for_pooling(params[:plate_barcode]) }
     end
   rescue StandardError => e
     handle_create_error(e)
@@ -50,6 +48,40 @@ class SearchController < ApplicationController
     Sequencescape::Api::V2
       .minimal_labware_by_barcode(barcode)
       .tap { |labware| raise "Sorry, could not find labware with the barcode '#{barcode}'." if labware.nil? }
+  end
+
+  def find_labware_for_pooling(barcode)
+    labware = find_labware(barcode)
+
+    case labware.type
+    when 'tubes'
+      tube =
+        Sequencescape::Api::V2::Tube.includes('receptacle.aliquots').find(uuid: labware.uuid).first
+      raise "Sorry, could not find labware with the barcode '#{barcode}'." if tube.nil?
+
+      { 'tube' => {
+          'barcode' => tube.human_barcode,
+          'uuid' => tube.uuid,
+          'state' => tube.state,
+          'tags' => (tube.aliquots || []).map(&:tag_pair)
+        }
+      }
+    when 'plates'
+      plate =
+        Sequencescape::Api::V2::Plate.includes('wells.aliquots').find(uuid: labware.uuid).first
+      raise "Sorry, could not find labware with the barcode '#{barcode}'." if plate.nil?
+
+      {
+        'plate' => {
+          'barcode' => plate.human_barcode,
+          'uuid' => plate.uuid,
+          'state' => plate.state,
+          'tags' => plate.wells_in_columns.flat_map { |w| w.aliquots.map(&:tag_pair) }
+        }
+      }
+    else
+      raise "Sorry, labware type '#{labware.type}' is not supported for pooling."
+    end
   end
 
   def find_qcable(barcode)
