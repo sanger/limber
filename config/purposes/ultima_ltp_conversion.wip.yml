@@ -1,17 +1,40 @@
 ---
-ULTP Cherrypick:
+# Only used when there are more than 10 source plates (the robot has 10 source
+# slots). Up to 10 of these are then aggregated into ULTP DNA Norm.
+ULTP Aggregate:
   :asset_type: plate
-  :stock_plate: true
-  :cherrypickable_target: true
-  :input_plate: true
-  :presenter_class: Presenters::StockPlatePresenter
-ULTP XP Norm:
+  :creator_class:
+    name: LabwareCreators::TenStamp
+    args:
+      acceptable_purposes:
+        - LB Lib PCR-XP
+        - LTN Lib PCR XP
+        - RVI Lib PCR XP
+        - RVIG Lib PCR XP
+        - LBB Lib PCR-XP
+        - LBB Lib PCR-XP Norm
+        - Library Stock Plate
+# Aggregates the submitted wells of Illumina library plates, or ULTP Aggregate
+# plates. The conversion submission is made on this plate.
+# Normalisation is done outside LIMS for the MVP, so TenStamp records one
+# volume for all wells.
+ULTP DNA Norm:
   :asset_type: plate
-  :creator_class: LabwareCreators::ConcentrationNormalisedPlate
-  :dilutions:
-    :target_amount_ng: 10
-    :target_volume: 20
-    :minimum_source_volume: 0.2
+  :creator_class:
+    name: LabwareCreators::TenStamp
+    args:
+      acceptable_purposes:
+        - LB Lib PCR-XP
+        - LTN Lib PCR XP
+        - RVI Lib PCR XP
+        - RVIG Lib PCR XP
+        - LBB Lib PCR-XP
+        - LBB Lib PCR-XP Norm
+        - Library Stock Plate
+        - ULTP Aggregate
+  :state_changer_class: StateChangers::AutomaticPlateStateChanger
+  :work_completion_request_type: 'limber_ultima_ltp_aggregation'
+# TODO: Interim. Same physical plate as ULTP DNA Norm; tag in place and remove.
 ULTP PCR:
   :asset_type: plate
   :presenter_class: Presenters::StandardPresenter
