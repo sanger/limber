@@ -34,12 +34,6 @@ ULTP DNA Norm:
         - ULTP Aggregate
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_ultima_ltp_aggregation'
-# TODO: Interim. Same physical plate as ULTP DNA Norm; tag in place and remove.
-ULTP PCR:
-  :asset_type: plate
-  :presenter_class: Presenters::StandardPresenter
-  :creator_class: LabwareCreators::CustomTaggedPlate
-  :default_printer_type: :ultima_lib_plate
 ULTP PCR XP:
   :asset_type: plate
   :default_printer_type: :plate_xp2
