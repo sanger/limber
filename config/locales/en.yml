@@ -22,12 +22,9 @@ en:
     ultima_conversion:
       transitions:
         processed_1: 'Manual Transfer' # shown when pending
-        # TODO: Replace with Ultima tagging on the plate.
-        processed_2: 'Add Ultima Tags' # shown when processed_1
         passed: 'Perform PCR' # shown when processed_2
       transitioning:
         processed_1: 'Transferring...'
-        processed_2: 'Adding Ultima Tags...'
         passed: 'Performing PCR'
   robots:
     instruction_summary:

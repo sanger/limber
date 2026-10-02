@@ -62,12 +62,24 @@ RSpec.describe Presenters::UltimaConversionPresenter do
 
     it_behaves_like 'a step before the PCR is done'
 
-    it 'changes to processed_2 with the default state change' do
-      expect(default_target_state).to eq('processed_2')
+    it 'does not have a default state change, as the tags are added on the tagging page' do
+      expect { |b| subject.default_state_change(&b) }.not_to yield_control
+    end
+
+    it 'allows tagging when there is a submission for the next step' do
+      expect(subject).to be_tagging_allowed
     end
 
     it 'shows a reminder for the tagging' do
       expect(subject.info_messages).to contain_exactly(described_class::STATE_MESSAGES['processed_1'])
+    end
+
+    context 'without a submission for the next step' do
+      before { Settings.pipelines = PipelineList.new }
+
+      it 'does not allow tagging' do
+        expect(subject).not_to be_tagging_allowed
+      end
     end
   end
 
@@ -75,6 +87,10 @@ RSpec.describe Presenters::UltimaConversionPresenter do
     let(:state) { 'processed_2' }
 
     it_behaves_like 'a step before the PCR is done'
+
+    it 'does not allow tagging again' do
+      expect(subject).not_to be_tagging_allowed
+    end
 
     it 'changes to passed with the default state change' do
       expect(default_target_state).to eq('passed')
@@ -114,7 +130,8 @@ RSpec.describe Presenters::UltimaConversionPresenter do
   end
 
   describe 'button labels' do
-    let(:default_target_states) { %w[processed_1 processed_2 passed] }
+    let(:state) { 'processed_1' }
+    let(:default_target_states) { %w[processed_1 passed] }
 
     %w[transitions transitioning].each do |label_type|
       it "has #{label_type} labels for each default state change" do
@@ -123,6 +140,10 @@ RSpec.describe Presenters::UltimaConversionPresenter do
         end
         expect(labels).to all(be_present)
       end
+    end
+
+    it 'has a label for the tagging link' do
+      expect(subject.tagging_label).to eq('Add Ultima Tags')
     end
   end
 end
