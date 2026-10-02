@@ -14,6 +14,13 @@
     <%= render presenter.suggested_purposes, parent: presenter.labware %>
   <% end %>
 
+  <%# For plates where the tags are added to the plate itself; see Plates::TagLayoutsController %>
+  <% if presenter.respond_to?(:tagging_allowed?) && presenter.tagging_allowed? %>
+    <div class="d-grid gap-2">
+      <%= link_to presenter.tagging_label, new_plate_tag_layout_path(presenter.labware), class: 'btn btn-lg btn-success logged_in_only' %>
+    </div>
+  <% end %>
+
   <% presenter.csv_file_links.each do |link_name, link_target| %>
     <%= link_to(link_name, link_target, rel: 'external', class: 'csv-link') %>
   <% end %>

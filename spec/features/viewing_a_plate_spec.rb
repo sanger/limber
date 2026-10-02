@@ -73,6 +73,20 @@ RSpec.feature 'Viewing a plate', :js do
     end
   end
 
+  context 'a plate where the tags are added to the plate itself' do
+    let(:state) { 'processed_1' }
+    let(:purpose_config) do
+      create :purpose_config, presenter_class: 'Presenters::UltimaConversionPresenter', uuid: purpose_uuid
+    end
+
+    scenario 'the tagging link is in the suggested actions' do
+      fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+      within('.suggested-actions') do
+        expect(page).to have_link('Add Ultima Tags', href: "/plates/#{plate_uuid}/tag_layouts/new")
+      end
+    end
+  end
+
   context 'a started plate' do
     let(:state) { 'started' }
 
