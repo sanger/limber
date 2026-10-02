@@ -40,6 +40,14 @@
       <b-container fluid>
         <b-row>
           <b-col>
+            <slot
+              name="tag-layout-controls"
+              :api="devourApi"
+              :number-of-tags="numberOfTags"
+              :number-of-target-wells="numberOfTargetWells"
+              :tags-per-well="tagsPerWellAsNumber"
+              :update-tag-params="tagParamsUpdated"
+            >
             <lb-tag-layout-manipulations-multiple
               v-if="isMultipleTaggedPlate"
               :api="devourApi"
@@ -57,6 +65,7 @@
               :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
               @tagparamsupdated="tagParamsUpdated"
             />
+            </slot>
             <div class="form-group form-row d-grid">
               <b-button
                 id="custom_tagged_plate_submit_button"
