@@ -7,6 +7,7 @@ describe('LabwareCustomMetadataAddForm', () => {
   let labwareId = '123'
   let userId = '456'
   let sequencescapeApi = 'http://example.com/v2'
+  let sequencescapeApiKey = 'test-api-key'
   let sequencescapeUrl = 'http://example.com'
   let customMetadata = {}
   let customMetadatumCollectionsId
@@ -47,6 +48,7 @@ describe('LabwareCustomMetadataAddForm', () => {
         labwareId,
         userId,
         sequencescapeApi,
+        sequencescapeApiKey,
         sequencescapeUrl,
       },
     })
@@ -152,6 +154,9 @@ describe('LabwareCustomMetadataAddForm', () => {
         await flushPromises()
 
         expect(global.fetch).toHaveBeenCalledTimes(1)
+        expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
+          headers: { 'X-Sequencescape-Client-Id': sequencescapeApiKey },
+        })
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
         expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': 'a value' })
@@ -277,6 +282,13 @@ describe('LabwareCustomMetadataAddForm', () => {
         await flushPromises()
 
         expect(global.fetch).toHaveBeenCalledTimes(2) // 1 on mount
+        expect(global.fetch).toHaveBeenLastCalledWith(
+          expect.any(String),
+          expect.objectContaining({
+            method: 'PATCH',
+            headers: expect.objectContaining({ 'X-Sequencescape-Client-Id': sequencescapeApiKey }),
+          }),
+        )
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
         expect(wrapper.vm.state).toEqual('success')
       })
@@ -292,6 +304,13 @@ describe('LabwareCustomMetadataAddForm', () => {
         await flushPromises()
 
         expect(global.fetch).toHaveBeenCalledTimes(2) // 1 on mount
+        expect(global.fetch).toHaveBeenLastCalledWith(
+          expect.any(String),
+          expect.objectContaining({
+            method: 'POST',
+            headers: expect.objectContaining({ 'X-Sequencescape-Client-Id': sequencescapeApiKey }),
+          }),
+        )
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
         expect(wrapper.vm.state).toEqual('success')
       })
