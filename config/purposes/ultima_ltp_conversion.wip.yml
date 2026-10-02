@@ -32,6 +32,7 @@ ULTP DNA Norm:
         - LBB Lib PCR-XP Norm
         - Library Stock Plate
         - ULTP Aggregate
+  :presenter_class: Presenters::UltimaConversionPresenter
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_ultima_ltp_aggregation'
 ULTP PCR XP:
