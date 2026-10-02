@@ -26,9 +26,11 @@ class Plates::TagLayoutsController < ApplicationController
 
   private
 
+  # The new tags replace the existing tags of the plate: without a tag2 group,
+  # the existing tag2 is removed instead of kept.
   def add_tags
     Sequencescape::Api::V2::TagLayout.create!(
-      tag_layout_params.merge(plate_uuid: plate.uuid, user_uuid: current_user_uuid)
+      tag_layout_params.merge(plate_uuid: plate.uuid, user_uuid: current_user_uuid, replace_tags: true)
     )
   end
 
