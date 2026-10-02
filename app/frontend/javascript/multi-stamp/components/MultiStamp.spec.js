@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 
 import MultiStamp from './MultiStamp.vue'
 import itBehavesLikeMultiStamp from './shared_examples/multi_stamp_instance.shared_spec'
@@ -366,6 +366,68 @@ describe('MultiStamp', () => {
 
         const validation = aggregate(wrapper.vm.scanValidation, plate1.plate)
         expect(validation.valid).toEqual(true)
+      })
+    })
+
+    describe('with the request type filter', () => {
+      it('passes the request type keys to the filter', () => {
+        const wrapper = wrapperFactory({ requestsFilter: 'request-type', requestTypeKeys: '["aggregation_key"]' })
+
+        expect(wrapper.vm.requestsFilterProps).toEqual({ requestTypeKeys: ['aggregation_key'] })
+      })
+
+      it('passes no extra props to the other filters', () => {
+        const wrapper = wrapperFactory({ requestTypeKeys: '["aggregation_key"]' })
+
+        expect(wrapper.vm.requestsFilterProps).toEqual({})
+      })
+
+      // A well of an XP plate with an aggregation request and a pending
+      // multiplexing request of the Illumina pipeline. The real filter component
+      // is rendered, so the requests reach the transfers as they do on the page.
+      const aggregation = requestFactory({ uuid: 'aggregation', request_type: { key: 'aggregation_key' } })
+      const multiplexing = requestFactory({ uuid: 'multiplexing', request_type: { key: 'multiplexing_key' } })
+      const plateWithTwoActiveRequestsInAWell = () => {
+        const well = wellFactory({ uuid: 'well-uuid', requests_as_source: [aggregation, multiplexing] })
+        return { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', wells: [well] }) }
+      }
+      const wrapperRenderingTheFilter = (options = {}) =>
+        mount(MultiStamp, {
+          props: {
+            targetRows: '8',
+            targetColumns: '12',
+            sourcePlates: '10',
+            purposeUuid: 'test',
+            requestsFilter: 'null',
+            targetUrl: 'example/example',
+            transfersLayout: 'sequential',
+            transfersCreator: 'with-volume',
+            requireActiveLibraryRequests: 'false',
+            ...options,
+          },
+          global: {
+            stubs: { 'lb-plate-scan': true, 'lb-plate': true, 'lb-plate-summary': true, 'lb-loading-modal': true },
+          },
+        })
+
+      it('reports a well with two active requests as a duplicate without the request type filter', async () => {
+        const wrapper = wrapperRenderingTheFilter()
+        wrapper.vm.updatePlate(1, plateWithTwoActiveRequestsInAWell())
+        await flushPromises()
+
+        expect(wrapper.vm.duplicatedTransfers.length).toEqual(1)
+      })
+
+      it('transfers a well with two active requests once, keeping the request types given', async () => {
+        const wrapper = wrapperRenderingTheFilter({
+          requestsFilter: 'request-type',
+          requestTypeKeys: '["aggregation_key"]',
+        })
+        wrapper.vm.updatePlate(1, plateWithTwoActiveRequestsInAWell())
+        await flushPromises()
+
+        expect(wrapper.vm.duplicatedTransfers).toEqual([])
+        expect(wrapper.vm.validTransfers.map((transfer) => transfer.request.uuid)).toEqual(['aggregation'])
       })
     })
   })

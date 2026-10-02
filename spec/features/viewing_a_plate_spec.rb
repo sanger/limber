@@ -73,6 +73,67 @@ RSpec.feature 'Viewing a plate', :js do
     end
   end
 
+  # Normalisation, tagging and PCR are done on the same plate, e.g. ULTP DNA Norm.
+  # Each state offers only the action for the next step.
+  context 'a plate where the tags are added to the plate itself' do
+    let(:purpose_config) do
+      create :purpose_config, presenter_class: 'Presenters::UltimaConversionPresenter', uuid: purpose_uuid
+    end
+    let(:actions) { ['Manual Transfer', 'Add Ultima Tags', 'Perform PCR', 'Add an empty Child Purpose 0 plate'] }
+
+    shared_examples 'it only offers' do |action|
+      scenario "only #{action} is offered" do
+        fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+        within('.suggested-actions') do
+          expect(page).to have_selector(:link_or_button, action)
+          (actions - [action]).each { |other| expect(page).to have_no_selector(:link_or_button, other) }
+        end
+      end
+    end
+
+    context 'when pending' do
+      let(:state) { 'pending' }
+
+      it_behaves_like 'it only offers', 'Manual Transfer'
+    end
+
+    context 'when processed_1 (normalised)' do
+      let(:state) { 'processed_1' }
+
+      it_behaves_like 'it only offers', 'Add Ultima Tags'
+
+      scenario 'the tagging link opens the tagging page for this plate' do
+        fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+        expect(page).to have_link('Add Ultima Tags', href: "/plates/#{plate_uuid}/tag_layouts/new")
+      end
+    end
+
+    context 'when processed_1 without a submission for the next step' do
+      let(:state) { 'processed_1' }
+
+      before { Settings.pipelines = PipelineList.new }
+
+      scenario 'no action is offered' do
+        fill_in_swipecard_and_barcode user_swipecard, plate_barcode
+        within('.suggested-actions') do
+          actions.each { |action| expect(page).to have_no_selector(:link_or_button, action) }
+        end
+      end
+    end
+
+    context 'when processed_2 (tagged)' do
+      let(:state) { 'processed_2' }
+
+      it_behaves_like 'it only offers', 'Perform PCR'
+    end
+
+    context 'when passed (PCR done)' do
+      let(:state) { 'passed' }
+
+      it_behaves_like 'it only offers', 'Add an empty Child Purpose 0 plate'
+    end
+  end
+
   context 'a started plate' do
     let(:state) { 'started' }
 

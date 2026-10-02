@@ -204,10 +204,15 @@ FactoryBot.define do
     end
 
     factory :aggregation_purpose_with_args_config do
-      transient { acceptable_purposes { %w[Purpose1 Purpose2] } }
+      transient do
+        acceptable_purposes { %w[Purpose1 Purpose2] }
+        request_type_keys { nil }
+      end
 
       state_changer_class { 'StateChangers::AutomaticPlateStateChanger' }
-      creator_class { { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes: } } }
+      creator_class do
+        { name: 'LabwareCreators::TenStamp', args: { acceptable_purposes:, request_type_keys: }.compact }
+      end
       work_completion_request_type { 'limber_bespoke_aggregation' }
     end
 
