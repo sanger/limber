@@ -106,6 +106,22 @@ RSpec.describe StateChangers do
       end
     end
 
+    # e.g. a later state change of a plate whose requests were completed by an
+    # earlier state change
+    context 'when the matching requests are already passed' do
+      let!(:plate) do
+        create :plate_for_aggregation, uuid: plate_uuid, state: plate_state, library_state: %w[passed passed]
+      end
+
+      before { create :aggregation_purpose_config, uuid: plate.purpose.uuid, name: plate_purpose_name }
+
+      it 'changes plate state but does not trigger a work completion again' do
+        do_not_expect_work_completion_creation
+
+        subject.move_to!(target_state, reason, customer_accepts_responsibility)
+      end
+    end
+
     context 'when config request type does not match in progress submissions' do
       before do
         create :aggregation_purpose_config,
