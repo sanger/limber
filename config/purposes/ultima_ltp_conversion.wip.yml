@@ -14,6 +14,9 @@ ULTP Aggregate:
         - LBB Lib PCR-XP
         - LBB Lib PCR-XP Norm
         - Library Stock Plate
+      # Ignore other active requests, e.g. pending Illumina multiplexing
+      request_type_keys:
+        - limber_ultima_ltp_aggregation
 # Aggregates the submitted wells of Illumina library plates, or ULTP Aggregate
 # plates. The conversion submission is made on this plate.
 # Normalisation is done outside LIMS for the MVP, so TenStamp records one
@@ -32,6 +35,11 @@ ULTP DNA Norm:
         - LBB Lib PCR-XP Norm
         - Library Stock Plate
         - ULTP Aggregate
+      # Ignore other active requests, e.g. pending Illumina multiplexing. The
+      # conversion requests are for Library Stock Plates without aggregation.
+      request_type_keys:
+        - limber_ultima_ltp_aggregation
+        - limber_ultima_ltp_conversion
   :presenter_class: Presenters::UltimaConversionPresenter
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_ultima_ltp_aggregation'
