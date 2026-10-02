@@ -1,14 +1,13 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
 
 describe('ManualUltimaTagLayout', () => {
   const makeWrapper = () =>
-    shallowMount(ManualUltimaTagLayout, {
+    mount(ManualUltimaTagLayout, {
       props: { api: {} },
       global: {
-        renderStubDefaultSlot: true,
         stubs: {
-          'lb-tag-sets-lookup': {
+          TagSetsLookup: {
             name: 'TagSetsLookup',
             props: ['filter'],
             template: '<div />',
