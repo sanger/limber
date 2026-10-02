@@ -52,6 +52,10 @@ RSpec.describe Presenters::UltimaConversionPresenter do
       expect(default_target_state).to eq('processed_1')
     end
 
+    it 'shows the wells without tags' do
+      expect(subject.aliquot_partial).to eq('standard_aliquot')
+    end
+
     it 'shows a reminder for the normalisation' do
       expect(subject.info_messages).to contain_exactly(described_class::STATE_MESSAGES['pending'])
     end
@@ -92,6 +96,10 @@ RSpec.describe Presenters::UltimaConversionPresenter do
       expect(subject).not_to be_tagging_allowed
     end
 
+    it 'shows the tags in the wells' do
+      expect(subject.aliquot_partial).to eq('tagged_aliquot')
+    end
+
     it 'changes to passed with the default state change' do
       expect(default_target_state).to eq('passed')
     end
@@ -114,6 +122,10 @@ RSpec.describe Presenters::UltimaConversionPresenter do
 
     it 'does not have a default state change' do
       expect { |b| subject.default_state_change(&b) }.not_to yield_control
+    end
+
+    it 'shows the tags in the wells' do
+      expect(subject.aliquot_partial).to eq('tagged_aliquot')
     end
 
     it 'shows no reminders' do
