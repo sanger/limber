@@ -38,6 +38,7 @@ ULTP DNA Norm:
         - limber_ultima_ltp_aggregation
         - limber_ultima_ltp_conversion
   :presenter_class: Presenters::UltimaConversionPresenter
+  :tag_group_adapter_type_name_filter: 'Ultima'
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_ultima_ltp_aggregation'
 ULTP PCR XP:
