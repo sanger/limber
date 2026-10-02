@@ -33,6 +33,7 @@
         <component
           :is="requestsFilterComponent"
           :requests-with-plates="requestsWithPlates"
+          v-bind="requestsFilterProps"
           @change="requestsWithPlatesFiltered = $event"
         />
         <component
@@ -73,6 +74,7 @@ import MultiStampTransfers from './MultiStampTransfers.vue'
 import NullFilter from './NullFilter.vue'
 import PlateSummary from './PlateSummary.vue'
 import PrimerPanelFilter from './PrimerPanelFilter.vue'
+import RequestTypeFilter from './RequestTypeFilter.vue'
 import VolumeTransfers from './VolumeTransfers.vue'
 import filterProps from './filterProps.js'
 import transfersCreatorsComponentsMap from './transfersCreatorsComponentsMap.js'
@@ -86,6 +88,7 @@ export default {
     'lb-loading-modal': LoadingModal,
     'lb-primer-panel-filter': PrimerPanelFilter,
     'lb-null-filter': NullFilter,
+    'lb-request-type-filter': RequestTypeFilter,
     'lb-multi-stamp-transfers': MultiStampTransfers,
     'lb-volume-transfers': VolumeTransfers,
   },
@@ -148,6 +151,11 @@ export default {
     // a plate of the correct type.
     acceptablePurposes: { type: String, required: false, default: '[]' },
 
+    // Keys of the request types to transfer, as a JSON array string, used by the
+    // 'request-type' requests filter. Other active requests on the source wells
+    // are then ignored. See computed method requestTypeKeysArray.
+    requestTypeKeys: { type: String, required: false, default: '[]' },
+
     // Flag to determine whether we should check if the scanned plates have active library requests. It is optional and
     // defaults to 'false' if not provided.
     // Also referenced as require-active-library-requests and require_active_library_requests
@@ -208,6 +216,13 @@ export default {
     },
     targetColumnsNumber() {
       return Number.parseInt(this.targetColumns)
+    },
+    requestTypeKeysArray() {
+      return JSON.parse(this.requestTypeKeys)
+    },
+    // Props for the requests filter component, in addition to the requests
+    requestsFilterProps() {
+      return this.requestsFilter === 'request-type' ? { requestTypeKeys: this.requestTypeKeysArray } : {}
     },
     acceptablePurposesArray() {
       return JSON.parse(this.acceptablePurposes)
