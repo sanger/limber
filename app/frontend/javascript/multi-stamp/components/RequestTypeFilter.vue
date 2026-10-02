@@ -1,11 +1,13 @@
 <template><span /></template>
 
 <script>
-// Keeps only the requests of the given request types, so that other active
-// requests on the source wells are not transferred. For example, pending
-// Illumina multiplexing requests on an XP plate that is aggregated for the
-// Ultima conversion. Without it, a well with two active requests could not be
-// transferred.
+// Keeps only the requests of the given request types. Each kept request is a
+// transfer of its well; the other active requests on the wells are ignored.
+// For example, a well of an XP plate with an aggregation request and a pending
+// Illumina multiplexing request is transferred once, for the aggregation
+// request. Wells without a request of the given types are not transferred.
+// Without the filter, both requests count, and the well is reported as having
+// multiple transfers.
 export default {
   name: 'RequestTypeFilter',
   props: {
