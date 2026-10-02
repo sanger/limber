@@ -48,23 +48,23 @@
               :tags-per-well="tagsPerWellAsNumber"
               :update-tag-params="tagParamsUpdated"
             >
-            <lb-tag-layout-manipulations-multiple
-              v-if="isMultipleTaggedPlate"
-              :api="devourApi"
-              :number-of-tags="numberOfTags"
-              :number-of-target-wells="numberOfTargetWells"
-              :tags-per-well="tagsPerWellAsNumber"
-              @tagparamsupdated="tagParamsUpdated"
-            />
-            <lb-tag-layout-manipulations
-              v-else
-              :api="devourApi"
-              :number-of-tags="numberOfTags"
-              :number-of-target-wells="numberOfTargetWells"
-              :tags-per-well="tagsPerWellAsNumber"
-              :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
-              @tagparamsupdated="tagParamsUpdated"
-            />
+              <lb-tag-layout-manipulations-multiple
+                v-if="isMultipleTaggedPlate"
+                :api="devourApi"
+                :number-of-tags="numberOfTags"
+                :number-of-target-wells="numberOfTargetWells"
+                :tags-per-well="tagsPerWellAsNumber"
+                @tagparamsupdated="tagParamsUpdated"
+              />
+              <lb-tag-layout-manipulations
+                v-else
+                :api="devourApi"
+                :number-of-tags="numberOfTags"
+                :number-of-target-wells="numberOfTargetWells"
+                :tags-per-well="tagsPerWellAsNumber"
+                :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
+                @tagparamsupdated="tagParamsUpdated"
+              />
             </slot>
             <div class="form-group form-row d-grid">
               <b-button

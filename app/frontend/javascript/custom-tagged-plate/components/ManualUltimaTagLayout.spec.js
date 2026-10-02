@@ -2,19 +2,20 @@ import { shallowMount } from '@vue/test-utils'
 import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
 
 describe('ManualUltimaTagLayout', () => {
-  const makeWrapper = () => shallowMount(ManualUltimaTagLayout, {
-    props: { api: {} },
-    global: {
-      renderStubDefaultSlot: true,
-      stubs: {
-        'lb-tag-sets-lookup': {
-          name: 'TagSetsLookup',
-          props: ['filter'],
-          template: '<div />',
+  const makeWrapper = () =>
+    shallowMount(ManualUltimaTagLayout, {
+      props: { api: {} },
+      global: {
+        renderStubDefaultSlot: true,
+        stubs: {
+          'lb-tag-sets-lookup': {
+            name: 'TagSetsLookup',
+            props: ['filter'],
+            template: '<div />',
+          },
         },
       },
-    },
-  })
+    })
 
   it('filters tag sets by Ultima adapter type and has no scan control', () => {
     const wrapper = makeWrapper()
