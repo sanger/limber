@@ -11,6 +11,7 @@ module Presenters
   #
   # The tags are added on the custom tagged plate page for this plate (see
   # Plates::TagLayoutsController), which then moves the plate to processed_2.
+  # Once tagged, the wells show their tags, as on a PCR plate (PcrPresenter).
   # Child creation is only allowed when passed, i.e. once the PCR is done.
   # Sequencescape allows these transitions, and failing or cancelling the plate
   # at each step. The plate does not use the 'started' and 'processed' states
@@ -62,11 +63,19 @@ module Presenters
       state :processed_2 do
         include Statemachine::StateDoesNotAllowChildCreation
         include Statemachine::DoesNotAllowLibraryPassing
+
+        def aliquot_partial
+          'tagged_aliquot'
+        end
       end
 
       state :passed do
         include Statemachine::StateAllowsChildCreation
         include Statemachine::DoesNotAllowLibraryPassing
+
+        def aliquot_partial
+          'tagged_aliquot'
+        end
       end
 
       state :cancelled do
