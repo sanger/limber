@@ -25,10 +25,29 @@ RSpec.describe Plates::TagLayoutsController do
   end
 
   describe '#new' do
+    render_views
+
     context 'when tags can be added' do
+      before { get :new, params: { plate_id: plate_uuid }, session: { user_uuid: } }
+
       it 'renders the tagging page' do
-        get :new, params: { plate_id: plate_uuid }, session: { user_uuid: }
         expect(response).to have_http_status(:ok)
+      end
+
+      it 'mounts the manual Ultima component' do
+        expect(response.body).to include('id=\'manual-ultima-tagged-plate-page\'')
+      end
+
+      it 'filters tag sets by Ultima adapter type' do
+        expect(response.body).to include('data-tag-group-adapter-type-name-filter="Ultima"')
+      end
+
+      it 'enables in-place tagging' do
+        expect(response.body).to include('data-in-place="true"')
+      end
+
+      it 'submits to the plate tag layouts endpoint' do
+        expect(response.body).to include("data-target-url=\"#{plate_tag_layouts_path(plate_uuid)}\"")
       end
     end
 
