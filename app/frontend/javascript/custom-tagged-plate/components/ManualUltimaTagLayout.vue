@@ -7,7 +7,7 @@
       includes="tag_group,tag2_group"
       @change="tagSetsLookupUpdated"
     />
-    <b-form-group label="Ultima tag set" label-for="ultima_tag_set" class="mb-3">
+    <b-form-group label="Ultima Tag Set" label-for="ultima_tag_set" class="mb-3">
       <b-form-select
         id="ultima_tag_set"
         v-model="tagSetId"
@@ -23,7 +23,7 @@
         <dd>{{ tag2Group.name }}</dd>
       </template>
     </dl>
-    <b-form-group label="Layout" label-for="ultima_walking_by" class="mb-3">
+    <b-form-group label="Walking By Options:" label-for="ultima_walking_by" class="mb-3">
       <b-form-select
         id="ultima_walking_by"
         v-model="walkingBy"
