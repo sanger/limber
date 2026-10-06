@@ -72,6 +72,10 @@ export default {
       type: String,
       required: true,
     },
+    sequencescapeApiKey: {
+      type: String,
+      required: true,
+    },
     sequencescapeUrl: {
       type: String,
       required: true,
@@ -136,7 +140,9 @@ export default {
       let url = `${this.sequencescapeApi}/labware/${this.labwareId}?include=custom_metadatum_collection`
       let metadata = {}
 
-      await fetch(url)
+      await fetch(url, {
+        headers: { 'X-Sequencescape-Client-Id': this.sequencescapeApiKey },
+      })
         .then((response) => {
           return response.json()
         })
@@ -187,7 +193,10 @@ export default {
       await fetch(url, {
         method,
         body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/vnd.api+json' },
+        headers: {
+          'Content-Type': 'application/vnd.api+json',
+          'X-Sequencescape-Client-Id': this.sequencescapeApiKey,
+        },
       })
         .then((response) => response.json())
         .then((data) => {
