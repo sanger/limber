@@ -44,6 +44,9 @@ ULTP DNA Norm:
 ULTP PCR XP:
   :asset_type: plate
   :default_printer_type: :plate_xp2
+  :file_links:
+    - name: Tag transfer Picklist
+      id: tag_transfer_picklist
 ULTP Lib Norm:
   :asset_type: plate
 ULTP Lib Pool Norm:
