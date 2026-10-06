@@ -86,7 +86,9 @@ RSpec.describe Plates::TagLayoutsController do
     context 'when tags can be added' do
       before { post_tag_layout }
 
-      it 'adds the tags to the plate itself' do
+      # The new tags replace the existing tags of the plate, e.g. Illumina tags.
+      # Without a tag2 group, the existing tag2 is removed.
+      it 'adds the tags to the plate itself, replacing its existing tags' do
         expect(Sequencescape::Api::V2::TagLayout).to have_received(:create!).with(
           'tag_group_uuid' => 'tag-group-uuid',
           'direction' => 'column',
@@ -94,7 +96,8 @@ RSpec.describe Plates::TagLayoutsController do
           'initial_tag' => '0',
           'tags_per_well' => '1',
           plate_uuid: plate_uuid,
-          user_uuid: user_uuid
+          user_uuid: user_uuid,
+          replace_tags: true
         )
       end
 

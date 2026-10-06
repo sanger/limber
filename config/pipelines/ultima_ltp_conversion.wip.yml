@@ -34,7 +34,6 @@ Ultima LTP Conversion:
   library_pass: ULTP PCR XP
   relationships:
     Library Stock Plate: ULTP DNA Norm
-    # TODO: Ultima tagging and PCR are to be done on ULTP DNA Norm before this.
     ULTP DNA Norm: ULTP PCR XP
 Ultima LTP Multiplexing:
   pipeline_group: Ultima LTP

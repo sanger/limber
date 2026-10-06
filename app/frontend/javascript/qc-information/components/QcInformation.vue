@@ -38,6 +38,7 @@ export default {
     },
     assetUuid: { type: String, required: true },
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
+    sequencescapeApiKey: { type: String, default: '' },
   },
   data() {
     return {
@@ -48,6 +49,7 @@ export default {
         headers: {
           Accept: 'application/vnd.api+json',
           'Content-Type': 'application/vnd.api+json',
+          'X-Sequencescape-Client-Id': this.sequencescapeApiKey,
         },
       }),
       state: 'pending',

@@ -49,9 +49,15 @@ module StateChangers
 
     # rubocop:enable Style/OptionalBooleanParameter
 
+    # Completes only the requests that are not completed yet, so that a later
+    # state change of the labware does not complete them again.
     def complete_outstanding_requests
       in_prog_submissions =
-        labware.in_progress_submission_uuids(request_types_to_complete: work_completion_request_types)
+        labware
+          .requests_in_progress(request_types_to_complete: work_completion_request_types)
+          .select(&:passable?)
+          .map(&:submission_uuid)
+          .uniq
       return if in_prog_submissions.blank?
 
       Sequencescape::Api::V2::WorkCompletion.create!(

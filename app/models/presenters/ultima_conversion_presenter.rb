@@ -9,13 +9,15 @@ module Presenters
   #   processed_1 -> Add Ultima Tags -> processed_2 (tags, PCR mix and primer added)
   #   processed_2 -> Perform PCR     -> passed
   #
-  # The tags are added on the custom tagged plate page for this plate (see
-  # Plates::TagLayoutsController), which then moves the plate to processed_2.
+  # The Add Ultima Tags link opens the tagging page that the CustomTaggedPlate
+  # creator uses, but for this plate instead of a new child plate. Saving it
+  # (Plates::TagLayoutsController) adds the tags to this plate and moves it to
+  # processed_2.
   # Once tagged, the wells show their tags, as on a PCR plate (PcrPresenter).
   # Child creation is only allowed when passed, i.e. once the PCR is done.
   # Sequencescape allows these transitions, and failing or cancelling the plate
-  # at each step. The plate does not use the 'started' and 'processed' states
-  # because Sequencescape does not allow failing or cancelling from 'processed'.
+  # at each step. A started -> processed chain is not used because Sequencescape
+  # does not allow failing or cancelling from 'processed'.
   class UltimaConversionPresenter < PlatePresenter
     include Statemachine::Shared
 
