@@ -1,5 +1,5 @@
 <template>
-  <custom-tagged-plate v-bind="$attrs" tags-per-well="1">
+  <custom-tagged-plate v-bind="$attrs">
     <template #tag-layout-controls="controls">
       <manual-ultima-tag-layout
         :api="controls.api"
