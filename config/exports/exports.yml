@@ -310,3 +310,8 @@ ultima_balancing:
   tube_includes: receptacle.aliquots.poly_metadata
   filename:
     handler: UltimaBalancing
+tag_transfer_picklist:
+  csv: tag_transfer_picklist
+  plate_includes:
+
+
