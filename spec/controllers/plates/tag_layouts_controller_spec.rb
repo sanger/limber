@@ -18,7 +18,8 @@ RSpec.describe Plates::TagLayoutsController do
            uuid: purpose_uuid,
            name: purpose_name,
            presenter_class: 'Presenters::UltimaConversionPresenter',
-           tags_per_well: 1
+           tags_per_well: 1,
+           tag_group_adapter_type_name_filter: 'Ultima'
     create :purpose_config, uuid: 'child-purpose-uuid', name: 'Child purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
     stub_plate(plate, stub_search: false)
