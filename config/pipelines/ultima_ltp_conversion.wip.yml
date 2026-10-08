@@ -1,0 +1,44 @@
+---
+# For more than 10 source plates (the robot has 10 source slots)
+Ultima LTP Aggregation:
+  pipeline_group: Ultima LTP
+  filters:
+    request_type_key: limber_ultima_ltp_aggregation
+  relationships:
+    LB Lib PCR-XP: ULTP Aggregate
+    LTN Lib PCR XP: ULTP Aggregate
+    RVI Lib PCR XP: ULTP Aggregate
+    RVIG Lib PCR XP: ULTP Aggregate
+    LBB Lib PCR-XP: ULTP Aggregate
+    LBB Lib PCR-XP Norm: ULTP Aggregate
+    Library Stock Plate: ULTP Aggregate
+    ULTP Aggregate: ULTP DNA Norm
+# Directly create ULTP DNA Norm from the source plates, bypassing the
+# Aggregate stage.
+Ultima LTP Aggregation Bypass:
+  pipeline_group: Ultima LTP
+  filters:
+    request_type_key: limber_ultima_ltp_aggregation
+  relationships:
+    LB Lib PCR-XP: ULTP DNA Norm
+    LTN Lib PCR XP: ULTP DNA Norm
+    RVI Lib PCR XP: ULTP DNA Norm
+    RVIG Lib PCR XP: ULTP DNA Norm
+    LBB Lib PCR-XP: ULTP DNA Norm
+    LBB Lib PCR-XP Norm: ULTP DNA Norm
+    Library Stock Plate: ULTP DNA Norm
+Ultima LTP Conversion:
+  pipeline_group: Ultima LTP
+  filters:
+    request_type_key: limber_ultima_ltp_conversion
+  library_pass: ULTP PCR XP
+  relationships:
+    Library Stock Plate: ULTP DNA Norm
+    ULTP DNA Norm: ULTP PCR XP
+Ultima LTP Multiplexing:
+  pipeline_group: Ultima LTP
+  filters:
+    request_type_key: limber_multiplexing_ultima_ltp
+  relationships:
+    ULTP PCR XP: ULTP Lib Norm
+    ULTP Lib Norm: ULTP Lib Pool Norm

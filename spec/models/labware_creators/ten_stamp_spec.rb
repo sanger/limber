@@ -53,4 +53,39 @@ RSpec.describe LabwareCreators::TenStamp do
       expect(subject.acceptable_purposes).to eq([])
     end
   end
+
+  context 'when purpose_config has request_type_keys' do
+    let!(:purpose_config) do
+      create :aggregation_purpose_with_args_config,
+             name: child_purpose_name,
+             uuid: child_purpose_uuid,
+             request_type_keys: %w[request_type_1 request_type_2]
+    end
+
+    before { purpose_config }
+
+    it 'returns the request_type_keys array' do
+      expect(subject.request_type_keys).to eq(%w[request_type_1 request_type_2])
+    end
+
+    it 'uses the request type filter' do
+      expect(subject.request_filter).to eq('request-type')
+    end
+  end
+
+  context 'when purpose_config does not have request_type_keys' do
+    let!(:purpose_config) do
+      create :aggregation_purpose_with_args_config, name: child_purpose_name, uuid: child_purpose_uuid
+    end
+
+    before { purpose_config }
+
+    it 'returns an empty array' do
+      expect(subject.request_type_keys).to eq([])
+    end
+
+    it 'uses the null filter' do
+      expect(subject.request_filter).to eq('null')
+    end
+  end
 end

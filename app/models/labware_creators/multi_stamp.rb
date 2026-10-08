@@ -35,6 +35,25 @@ module LabwareCreators
       false
     end
 
+    # Keys of the request types to transfer, from the purpose config:
+    #   :creator_class:
+    #     name: LabwareCreators::TenStamp
+    #     args:
+    #       request_type_keys:
+    #         - limber_ultima_ltp_aggregation
+    # Other active requests on the source wells are then ignored, e.g. pending
+    # multiplexing requests of a previous pipeline. If not configured, all active
+    # requests are transferred.
+    def request_type_keys
+      creator_config = purpose_config[:creator_class]
+      creator_config.is_a?(Hash) ? Array(creator_config.dig(:args, :request_type_keys)) : []
+    end
+
+    # The requests filter of the page, see filterProps.js
+    def request_filter
+      request_type_keys.present? ? 'request-type' : self.class.request_filter
+    end
+
     private
 
     def create_labware!

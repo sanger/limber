@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :qc_files
     resources :exports, only: :show
     resources :work_completions, only: :create, module: :plates
+    resources :tag_layouts, only: %i[new create], module: :plates
   end
 
   post '/fail_wells/:id', controller: :plates, action: 'fail_wells', as: :fail_wells

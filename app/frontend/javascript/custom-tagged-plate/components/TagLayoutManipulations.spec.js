@@ -148,6 +148,19 @@ describe('TagLayoutManipulations', () => {
       wrapper.vm.tagGroupChanged()
     })
 
+    it('emits the tag groups of a tag set selected before the tag groups are loaded', () => {
+      const wrapper = wrapperFactory()
+
+      wrapper.setData({ tagSetList: exampleTagSetList, tagSetId: 1 })
+      wrapper.vm.tagSetChanged()
+      wrapper.vm.tagGroupsLookupUpdated({ state: 'valid', results: exampleTagGroupsList })
+
+      const emitted = wrapper.emitted().tagparamsupdated
+      const lastEmitted = emitted[emitted.length - 1][0]
+      expect(lastEmitted.tag1Group).toEqual(exampleTagGroupsList[1])
+      expect(lastEmitted.tag2Group).toEqual(exampleTagGroupsList[2])
+    })
+
     it('emits a call to the parent container on a change of the form data', () => {
       const wrapper = wrapperFactory()
 
