@@ -46,7 +46,7 @@ RSpec.describe Plates::TagLayoutsController do
       end
 
       it 'passes the configured tag sets as JSON to the page' do
-        page = Nokogiri::HTML(response.body).at_css('#manual-ultima-tagged-plate-page')
+        page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
         expect(JSON.parse(page['data-tag-sets'])).to eq(tag_sets)
       end
 
@@ -54,7 +54,7 @@ RSpec.describe Plates::TagLayoutsController do
         let(:tag_sets) { nil }
 
         it 'passes null so the dropdown remains unrestricted' do
-          page = Nokogiri::HTML(response.body).at_css('#manual-ultima-tagged-plate-page')
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
           expect(JSON.parse(page['data-tag-sets'])).to be_nil
         end
       end
