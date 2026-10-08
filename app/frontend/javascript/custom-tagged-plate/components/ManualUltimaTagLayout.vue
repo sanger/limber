@@ -50,11 +50,6 @@ export default {
       default: 'Ultima',
     },
   },
-  data() {
-    return {
-      walkingBy: 'manual by plate',
-    }
-  },
   computed: {
     coreTagSetOptions() {
       if (this.tagSets !== null) {
@@ -76,13 +71,6 @@ export default {
     },
     tag2Group() {
       return this.selectedTagSet.tag2_group || this.nullTagGroup
-    },
-    walkingByOptions() {
-      return [
-        { value: 'manual by plate', text: 'By Plate (Sequential)' },
-        { value: 'manual by pool', text: 'By Pool' },
-        { value: 'wells of plate', text: 'By Plate (Fixed)' },
-      ]
     },
   },
 }
