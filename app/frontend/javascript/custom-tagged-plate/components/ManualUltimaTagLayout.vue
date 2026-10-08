@@ -1,6 +1,7 @@
 <template>
   <b-container fluid>
     <lb-tag-sets-lookup
+      v-if="tagSets === null"
       :api="api"
       resource-name="tag_set"
       :filter="tagSetFilter"
@@ -15,7 +16,7 @@
         @update:model-value="updateTagParams"
       />
     </b-form-group>
-    <dl v-if="tagSetId" class="small">
+    <dl v-if="tag1Group.uuid" class="small">
       <dt>Tag group</dt>
       <dd>{{ tag1Group.name }}</dd>
       <template v-if="tag2Group.uuid">
@@ -23,22 +24,7 @@
         <dd>{{ tag2Group.name }}</dd>
       </template>
     </dl>
-    <b-form-group label="Walking By Options:" label-for="ultima_walking_by" class="mb-3">
-      <b-form-select
-        id="ultima_walking_by"
-        v-model="walkingBy"
-        :options="walkingByOptions"
-        @update:model-value="updateTagParams"
-      />
-    </b-form-group>
-    <b-form-group label="Direction" label-for="ultima_direction" class="mb-3">
-      <b-form-select
-        id="ultima_direction"
-        v-model="direction"
-        :options="directionOptions"
-        @update:model-value="updateTagParams"
-      />
-    </b-form-group>
+
     <lb-tag-offset
       :number-of-tags="numberOfTags"
       :number-of-target-wells="numberOfTargetWells"
@@ -55,6 +41,10 @@ export default {
   name: 'ManualUltimaTagLayout',
   mixins: [TagLayout],
   props: {
+    tagSets: {
+      type: Array,
+      default: null,
+    },
     tagGroupAdapterTypeNameFilter: {
       type: String,
       default: 'Ultima',
@@ -66,6 +56,18 @@ export default {
     }
   },
   computed: {
+    coreTagSetOptions() {
+      if (this.tagSets !== null) {
+        return this.tagSets.map((name) => ({ value: name, text: name }))
+      }
+
+      return Object.values(this.tagSetList)
+        .map((tagSet) => ({ value: tagSet.id, text: tagSet.name }))
+        .sort((first, second) => first.text.localeCompare(second.text))
+    },
+    selectedTagSet() {
+      return this.tagSets === null ? this.tagSetList?.[this.tagSetId] || this.nullTagSet : this.nullTagSet
+    },
     tagSetFilter() {
       return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
     },
