@@ -50,6 +50,11 @@ export default {
       default: 'Ultima',
     },
   },
+  data() {
+    return {
+      walkingBy: 'manual by plate',
+    }
+  },
   computed: {
     coreTagSetOptions() {
       if (this.tagSets !== null) {
