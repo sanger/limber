@@ -8,6 +8,7 @@ RSpec.describe Plates::TagLayoutsController do
   let(:purpose_uuid) { 'tagged-in-place-purpose-uuid' }
   let(:purpose_name) { 'Tagged in place purpose' }
   let(:state) { 'processed_1' }
+  let(:tag_sets) { ['Ultima P1 v1', 'Ultima P1 v2'] }
   let(:plate) do
     create :plate, uuid: plate_uuid, state: state, purpose_uuid: purpose_uuid, purpose_name: purpose_name,
                    pool_sizes: [2]
@@ -18,7 +19,9 @@ RSpec.describe Plates::TagLayoutsController do
            uuid: purpose_uuid,
            name: purpose_name,
            presenter_class: 'Presenters::UltimaConversionPresenter',
-           tags_per_well: 1
+           tags_per_well: 1,
+           tag_group_adapter_type_name_filter: 'Ultima',
+           tag_sets: tag_sets
     create :purpose_config, uuid: 'child-purpose-uuid', name: 'Child purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
     stub_plate(plate, stub_search: false)
@@ -40,6 +43,20 @@ RSpec.describe Plates::TagLayoutsController do
 
       it 'filters tag sets by Ultima adapter type' do
         expect(response.body).to include('data-tag-group-adapter-type-name-filter="Ultima"')
+      end
+
+      it 'passes the configured tag sets as JSON to the page' do
+        page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+        expect(JSON.parse(page['data-tag-sets'])).to eq(tag_sets)
+      end
+
+      context 'without a configured tag set list' do
+        let(:tag_sets) { nil }
+
+        it 'passes null so the dropdown remains unrestricted' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-tag-sets'])).to be_nil
+        end
       end
 
       it 'enables in-place tagging' do

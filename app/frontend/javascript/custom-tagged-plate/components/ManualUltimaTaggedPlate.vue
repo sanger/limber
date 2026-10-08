@@ -1,5 +1,5 @@
 <template>
-  <custom-tagged-plate v-bind="$attrs" tags-per-well="1">
+  <custom-tagged-plate v-bind="$attrs">
     <template #tag-layout-controls="controls">
       <manual-ultima-tag-layout
         :api="controls.api"
@@ -7,6 +7,7 @@
         :number-of-target-wells="controls.numberOfTargetWells"
         :tags-per-well="controls.tagsPerWell"
         :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
+        :tag-sets="configuredTagSets"
         @tagparamsupdated="controls.updateTagParams"
       />
     </template>
@@ -22,9 +23,18 @@ export default {
   inheritAttrs: false,
   components: { CustomTaggedPlate, ManualUltimaTagLayout },
   props: {
+    tagSets: {
+      type: String,
+      default: 'null',
+    },
     tagGroupAdapterTypeNameFilter: {
       type: String,
       default: 'Ultima',
+    },
+  },
+  computed: {
+    configuredTagSets() {
+      return JSON.parse(this.tagSets)
     },
   },
 }
