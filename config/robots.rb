@@ -3732,16 +3732,16 @@ ROBOT_CONFIG =
       name: 'Hamilton STAR LRC PBMC Defrost PBS 1ml => LRC PBMC Pools',
       require_robot: true,
       beds: {
-        bed(15).barcode => {
+        bed(5).barcode => {
           purpose: 'LRC PBMC Defrost PBS 1ml',
           states: ['passed'],
-          label: 'Bed 15'
+          label: 'Bed 5'
         },
-        bed(13).barcode => {
+        bed(4).barcode => {
           purpose: 'LRC PBMC Pools',
           states: ['pending'],
-          label: 'Bed 13',
-          parent: bed(15).barcode,
+          label: 'Bed 4',
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }
@@ -3756,16 +3756,16 @@ ROBOT_CONFIG =
       name: 'Hamilton STAR LRC PBMC Aliquot => LRC PBMC Pools',
       require_robot: true,
       beds: {
-        bed(15).barcode => {
+        bed(5).barcode => {
           purpose: 'LRC PBMC Aliquot',
           states: ['passed'],
-          label: 'Bed 15'
+          label: 'Bed 5'
         },
-        bed(13).barcode => {
+        bed(4).barcode => {
           purpose: 'LRC PBMC Pools',
           states: ['pending'],
-          label: 'Bed 13',
-          parent: bed(15).barcode,
+          label: 'Bed 4',
+          parent: bed(5).barcode,
           target_state: 'passed'
         }
       }
