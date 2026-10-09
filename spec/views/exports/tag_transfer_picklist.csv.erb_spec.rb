@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe 'exports/tag_transfer_picklist.csv.erb' do
-  let(:tag_group) { create(:tag_group, name: 'Ultima P1 v1') }
+  let(:tag_group) { create(:tag_group, name: 'Ultima P1') }
   let(:tag) { create(:tag, tag_group:) }
   let(:indices) { [1, 8, 9, 10, 96] }
   let(:wells) do
@@ -19,12 +19,12 @@ RSpec.describe 'exports/tag_transfer_picklist.csv.erb' do
   it 'maps saved indices in column order without duplicating pooled aliquot transfers' do
     expect(CSV.parse(render)).to eq(
       [
-        ['Source Plate', 'Source Well', 'Destination Barcode', 'Destination Well'],
-        ['Ultima P1 v1', 'A1', plate.labware_barcode.human, 'A1'],
-        ['Ultima P1 v1', 'H1', plate.labware_barcode.human, 'B1'],
-        ['Ultima P1 v1', 'A2', plate.labware_barcode.human, 'C1'],
-        ['Ultima P1 v1', 'B2', plate.labware_barcode.human, 'D1'],
-        ['Ultima P1 v1', 'H12', plate.labware_barcode.human, 'E1']
+        ['Tag Set', 'Tag Plate Well', 'Destination Barcode', 'Destination Well'],
+        ['Ultima P1', 'A1', plate.labware_barcode.human, 'A1'],
+        ['Ultima P1', 'H1', plate.labware_barcode.human, 'B1'],
+        ['Ultima P1', 'A2', plate.labware_barcode.human, 'C1'],
+        ['Ultima P1', 'B2', plate.labware_barcode.human, 'D1'],
+        ['Ultima P1', 'H12', plate.labware_barcode.human, 'E1']
       ]
     )
   end
@@ -33,7 +33,7 @@ RSpec.describe 'exports/tag_transfer_picklist.csv.erb' do
     let(:wells) { [create(:well, location: 'A1', aliquots: [])] }
 
     it 'outputs only the header' do
-      expect(CSV.parse(render)).to eq([['Source Plate', 'Source Well', 'Destination Barcode', 'Destination Well']])
+      expect(CSV.parse(render)).to eq([['Tag Set', 'Tag Plate Well', 'Destination Barcode', 'Destination Well']])
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe 'exports/tag_transfer_picklist.csv.erb' do
     it 'outputs a transfer for each source tag group' do
       expect(CSV.parse(render).drop(1)).to eq(
         [
-          ['Ultima P1 v1', 'E2', plate.labware_barcode.human, 'C3'],
+          ['Ultima P1', 'E2', plate.labware_barcode.human, 'C3'],
           ['Ultima P2', 'H3', plate.labware_barcode.human, 'C3']
         ]
       )
