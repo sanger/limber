@@ -312,4 +312,4 @@ ultima_balancing:
     handler: UltimaBalancing
 tag_transfer_picklist:
   csv: tag_transfer_picklist
-  plate_includes:
+  plate_includes: wells.aliquots.tag.tag_group,wells.aliquots.tag2.tag_group

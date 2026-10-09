@@ -1,1 +1,27 @@
-<%= CSV.generate_line ['Source Barcode', 'Source Well', 'Destination Barcode', 'Destination Well'], row_sep: "" %>
+<%=
+	source_wells = WellHelpers.column_order(96)
+	CSV.generate do |csv|
+		csv << ['Tag Set', 'Tag Plate Well', 'Destination Barcode', 'Destination Well']
+		@plate.wells_in_columns.each do |well|
+			next if well.empty?
+
+			transfers = well.aliquots.flat_map do |aliquot|
+				raise "Missing tag for destination well #{well.location}" if aliquot.tag.nil?
+
+				[[aliquot.tag, aliquot.tag_index], [aliquot.tag2, aliquot.tag2_index]].filter_map do |tag, index|
+					next if tag.nil?
+
+					unless index.is_a?(Integer) && index.between?(1, source_wells.length)
+						raise "Invalid tag index #{index.inspect} for destination well #{well.location}"
+					end
+					if tag.tag_group&.name.blank?
+						raise "Missing tag group name for destination well #{well.location}"
+					end
+
+					[tag.tag_group.name, source_wells.fetch(index - 1), @plate.labware_barcode.human, well.location]
+				end
+			end
+			transfers.uniq.each { |transfer| csv << transfer }
+		end
+	end
+%>

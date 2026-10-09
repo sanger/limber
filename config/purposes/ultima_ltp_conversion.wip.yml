@@ -40,8 +40,7 @@ ULTP DNA Norm:
   :presenter_class: Presenters::UltimaConversionPresenter
   :tag_group_adapter_type_name_filter: 'Ultima'
   :tag_sets:
-    - Ultima P1 v1
-    - Ultima P1 v2
+    - Ultima P1
     - Ultima P2
     - Ultima P3
     - UG-RD-1916
