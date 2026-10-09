@@ -38,6 +38,8 @@ module LabwareCreators
 
     def transfer_request_attributes
       pools.each_with_object([]) do |(pool_identifier, pool), transfer_requests|
+        next if parent.pooling_metadata&.dig(pool_identifier, 'pool_complete') == true
+
         # this currently assumes that pool_identifier will be the submission_uuid
         # (it would have always been, historically)
         pool.each do |location|
