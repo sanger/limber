@@ -23,7 +23,9 @@ LB Cap Lib:
 LB Cap Lib PCR:
   :asset_type: plate
   :default_printer_type: :plate_b
+# NB: uses a custom purpose type to enable loop backs for new multiplex pooling
 LB Cap Lib PCR-XP:
+  :type: PoolingSourcePlatePurpose
   :asset_type: plate
   :default_printer_type: :plate_b
 LB Cap Lib Pool:
