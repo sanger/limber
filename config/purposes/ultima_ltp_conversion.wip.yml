@@ -46,6 +46,9 @@ ULTP DNA Norm:
     - Ultima P3
     - UG-RD-1916
     - UG-RD-1940
+  :file_links:
+    - name: Download Tag transfer Picklist
+      id: tag_transfer_picklist
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_ultima_ltp_aggregation'
 ULTP PCR XP:
@@ -53,9 +56,6 @@ ULTP PCR XP:
   :default_printer_type: :plate_xp2
 ULTP Lib Norm:
   :asset_type: plate
-  :file_links:
-    - name: Download Tag transfer Picklist
-      id: tag_transfer_picklist
 ULTP Lib Pool Norm:
   :asset_type: tube
   :target: MultiplexedLibraryTube
