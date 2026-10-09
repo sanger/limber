@@ -5,7 +5,7 @@
       <div class="card-body mb-2">
         <h2 id="plate-title" class="card-title">
           {{ childPurposeName }}
-          <span class="state-badge pending">Pending</span>
+          <span v-if="!isInPlace" class="state-badge pending">Pending</span>
         </h2>
       </div>
       <lb-parent-plate-view
@@ -178,6 +178,13 @@ export default {
         return {}
       },
     },
+    inPlace: {
+      // 'true' if the tags are added to the parent plate itself rather than to a
+      // new child plate. Only the wording on the page changes.
+      type: String,
+      required: false,
+      default: 'false',
+    },
   },
   data() {
     return {
@@ -185,7 +192,7 @@ export default {
       progressMessage: 'Fetching parent details...', // holds message displayed by page modal
       parentPlate: null, // the parent plate retrieved using the parentUuid prop
       devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources, this.sequencescapeApiKey), // devour API object
-      plateViewCaption: 'Modify the tag layout for the new plate using options on the right', // caption for plate view
+      plateViewCaption: `Modify the tag layout for ${this.inPlace === 'true' ? 'this' : 'the new'} plate using options on the right`, // caption for plate view
       creationRequestInProgress: null, // flag to indicate plate creation underway
       creationRequestSuccessful: null, // flag to indicate success of plate creation
       tagPlate: null, // scanned tag plate
@@ -208,6 +215,9 @@ export default {
   computed: {
     childPurposeName() {
       return this.purposeName
+    },
+    isInPlace() {
+      return this.inPlace === 'true'
     },
     childWells() {
       this.tagLayout
@@ -297,6 +307,15 @@ export default {
       }[this.createButtonState]
     },
     createButtonText() {
+      if (this.isInPlace) {
+        return {
+          setup: 'Set up plate tag layout...',
+          pending: 'Add tags to this plate',
+          busy: 'Sending...',
+          success: 'Tags successfully added',
+          failure: 'Failed to add tags, retry?',
+        }[this.createButtonState]
+      }
       return {
         setup: 'Set up plate tag layout...',
         pending: 'Create new Custom Tagged plate',
@@ -581,7 +600,7 @@ export default {
       }
     },
     createPlate() {
-      this.progressMessage = 'Creating plate...'
+      this.progressMessage = this.isInPlace ? 'Adding tags...' : 'Creating plate...'
       this.loading = true
       this.creationRequestInProgress = true
 

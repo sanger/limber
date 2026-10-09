@@ -19,7 +19,7 @@ import {
 
 describe('CustomTaggedPlate', () => {
   const mockLocation = {}
-  const wrapperFactory = function () {
+  const wrapperFactory = function (extraProps = {}) {
     return shallowMount(CustomTaggedPlate, {
       props: {
         sequencescapeApi: 'http://localhost:3000/api/v2',
@@ -30,6 +30,7 @@ describe('CustomTaggedPlate', () => {
         parentUuid: plateUuid,
         tagsPerWell: '1',
         locationObj: mockLocation,
+        ...extraProps,
       },
     })
   }
@@ -523,6 +524,21 @@ describe('CustomTaggedPlate', () => {
 
         expect(wrapper.vm.createButtonStyle).toEqual('primary')
         expect(wrapper.vm.createButtonDisabled).toBe(false)
+      })
+
+      it('returns the text for adding tags to the plate itself when in place', async () => {
+        const wrapper = wrapperFactory({ inPlace: 'true' })
+
+        await wrapper.setData({
+          parentPlate: exampleParentTag1Only,
+          tag1Group: exampleTag1Group,
+          walkingBy: 'manual by plate',
+          direction: 'column',
+        })
+
+        expect(wrapper.vm.createButtonState).toEqual('pending')
+        expect(wrapper.vm.createButtonText).toEqual('Add tags to this plate')
+        expect(wrapper.vm.plateViewCaption).toEqual('Modify the tag layout for this plate using options on the right')
       })
     })
 

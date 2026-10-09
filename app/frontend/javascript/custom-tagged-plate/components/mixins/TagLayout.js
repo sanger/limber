@@ -119,6 +119,12 @@ export default {
       if (data.state === 'valid' && data.results) {
         this.tagGroupsList = data.results
       }
+      // A tag set can be selected, or a tag plate scanned, before the tag groups
+      // are loaded. Pass the selected tag groups to the parent now that they are
+      // found, so that the tag layout is updated.
+      if (this.tag1GroupId || this.tag2GroupId) {
+        this.updateTagParams()
+      }
     },
     tagSetsLookupUpdated(data) {
       this.tagSetList = {}
