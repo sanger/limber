@@ -1,5 +1,5 @@
-<%# Custom tagged plate page for adding tags to the plate itself; see Plates::TagLayoutsController %>
-<div id='custom-tagged-plate-page'
+<%# Manual Ultima tagging page for adding tags to the plate itself; see Plates::TagLayoutsController %>
+<div id='manual-ultima-tagged-plate-page'
      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
      data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
      data-purpose-uuid="<%= @plate.purpose.uuid %>"
@@ -8,6 +8,7 @@
      data-parent-uuid="<%= @plate.uuid %>"
      data-tags-per-well="<%= @tags_per_well %>"
      data-tag-group-adapter-type-name-filter="<%= @tag_group_adapter_type_name_filter %>"
+    data-tag-sets="<%= @tag_sets.to_json %>"
      data-in-place="true">
   <div class="spinner-dark">Loading...</div>
 </div>

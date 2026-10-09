@@ -14,6 +14,7 @@ class Plates::TagLayoutsController < ApplicationController
   def new
     @tags_per_well = purpose_config.fetch(:tags_per_well, 1)
     @tag_group_adapter_type_name_filter = purpose_config.fetch(:tag_group_adapter_type_name_filter, nil)
+    @tag_sets = purpose_config.fetch(:tag_sets, nil)
   end
 
   # Responds to the custom tagged plate page with the page to redirect to.
