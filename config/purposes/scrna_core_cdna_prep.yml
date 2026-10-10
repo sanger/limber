@@ -112,6 +112,8 @@ LRC PBMC Pools:
       parent: 'LRC PBMC Aliquot'
     - name: 'Download Cellaca Count CSV'
       id: 'hamilton_lrc_pbmc_pools_to_cellaca_count'
+    - name: 'Download final pooling strategy CSV'
+      id: 'scrna_core_final_pooling_strategy'
 # Plate containing pooled PBMCs from different donors.
 # This plate has come from faculty and is entering the SeqOps pipeline for the first time here.
 LRC GEM-X 5p GEMs Input:

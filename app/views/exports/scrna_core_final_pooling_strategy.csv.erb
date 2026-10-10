@@ -1,0 +1,71 @@
+<%
+  csv_rows = [
+    [
+      'DONOR ID',
+      'SAMPLE DESCRIPTION',
+      'SANGER TUBE ID',
+      'SANGER SAMPLE ID',
+      'LRC PBMC Defrost 1ml or Aliquot ID',
+      'Source Well',
+      'LRC PBMC Defrost 1ml/ Aliquot plate Total Cells/mL',
+      'LRC PBMC Defrost 1ml/ Aliquot plate Viability',
+      'LRC PBMC Defrost 1ml/Aliquot plate Status',
+      'LRC PBMC Pools plate ID',
+      'Destination Well',
+      'LRC PBMC Pools plate Total Cells/mL',
+      'LRC PBMC Pools plate Viability',
+      'Requested scRNA Core Cells per Chip Well',
+      'Actual scRNA Core Cells per Chip Well']
+  ]
+
+  # Get parent plates using parents association, which brings back Sequencescape::Api::V2::Asset objects.
+  parent_plate_barcodes = @plate.parents.map { |parent_plate| parent_plate.barcode&.human }
+  # Requery parent plates as Sequencescape::Api::V2::Plate to get access to wells and samples
+  parent_plates = Sequencescape::Api::V2::Plate.where(barcode: parent_plate_barcodes)
+
+  parent_plates.each do |parent_plate|
+    parent_plate.wells_in_columns.each do |parent_well|
+      sample = parent_well.aliquots.first&.sample
+      next unless sample
+
+      # binding.pry
+
+      pools_plate_well = parent_well.downstream_wells.first
+
+      donor_id = sample.sample_metadata.donor_id
+      sample_description = sample.sample_metadata.sample_description
+      sanger_tube_id = parent_well.upstream_tubes.first.human_barcode if parent_well.upstream_tubes.any? # sample.sample_metadata.supplier_name
+      sanger_sample_id = sample.sanger_sample_id
+      lrc_pbmc_defrost_1ml_or_aliquot_id = parent_plate.barcode.human
+      source_well = parent_well.position['name']
+      lrc_pbmc_defrost_1ml_or_aliquot_plate_total_cells_per_ml = parent_well.latest_total_cell_count&.value
+      lrc_pbmc_defrost_1ml_or_aliquot_plate_viability = parent_well.latest_cell_viability&.value
+      lrc_pbmc_defrost_1ml_or_aliquot_plate_status = nil # TODO - what did we decide for this?
+      lrc_pbmc_pools_plate_id = @plate.barcode.human
+      destination_well = pools_plate_well.position['name']
+      lrc_pbmc_pools_plate_total_cells_per_ml = pools_plate_well.latest_total_cell_count&.value
+      lrc_pbmc_pools_plate_viability = pools_plate_well.latest_cell_viability&.value
+      requested_scrna_core_cells_per_chip_well = pools_plate_well.aliquots.first.request.first.request_metadata.cells_per_chip_well
+      actual_scrna_core_cells_per_chip_well = pools_plate_well.poly_metadata.detect { |pm| pm.key == 'scrna_core_pbmc_donor_pooling_number_of_cells_per_chip_well' }&.value
+
+      csv_rows << [
+        donor_id,
+        sample_description,
+        sanger_tube_id,
+        sanger_sample_id,
+        lrc_pbmc_defrost_1ml_or_aliquot_id,
+        source_well,
+        lrc_pbmc_defrost_1ml_or_aliquot_plate_total_cells_per_ml,
+        lrc_pbmc_defrost_1ml_or_aliquot_plate_viability,
+        lrc_pbmc_defrost_1ml_or_aliquot_plate_status,
+        lrc_pbmc_pools_plate_id,
+        destination_well,
+        lrc_pbmc_pools_plate_total_cells_per_ml,
+        lrc_pbmc_pools_plate_viability,
+        requested_scrna_core_cells_per_chip_well,
+        actual_scrna_core_cells_per_chip_well
+      ]
+    end
+  end
+%>
+<%= csv_rows.map(&:to_csv).join %>

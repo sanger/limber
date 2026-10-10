@@ -6,6 +6,7 @@ module Exports
     class UltimaBalancing
       def self.build_filename(labware, _page, _export)
         batch_ids = labware.aliquots.collect do |aliquot|
+          # TODO: change (and other uses) to 'detect' - 'find' just brings back .all
           aliquot.poly_metadata.find { |pm| pm.key == 'batch_id' }&.value
         end
 
