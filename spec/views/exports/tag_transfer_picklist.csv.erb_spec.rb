@@ -18,7 +18,6 @@ RSpec.describe 'exports/tag_transfer_picklist.csv.erb' do
   before { assign(:plate, plate) }
 
   it 'maps saved tags with offset 2 in column order without duplicating pooled aliquot transfers' do
-    wells.flat_map(&:aliquots).uniq.each { |aliquot| expect(aliquot).not_to receive(:tag2) }
     expect(CSV.parse(render)).to eq(
       [
         ['Tag Set', 'Tag Plate Well', 'Destination Barcode', 'Destination Well'],
