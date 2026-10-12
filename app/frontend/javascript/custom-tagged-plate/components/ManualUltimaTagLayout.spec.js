@@ -88,23 +88,23 @@ describe('ManualUltimaTagLayout', () => {
     expect(wrapper.vm.coreTagSetOptions).toEqual([{ value: 'Missing tag set', text: 'Missing tag set' }])
   })
 
-  it('resolves a configured selection when lookup results arrive and emits both tag groups', async () => {
+  it('resolves a configured selection when lookup results arrive without a second tag group', async () => {
     const wrapper = makeWrapper({ tagSets: ['Ultima P1 v2', 'Missing tag set'] })
     await wrapper.find('#ultima_tag_set').setValue('Ultima P1 v2')
     const tagGroup = { uuid: 'p1-v2', name: 'P1 v2', tags: [{ index: 1, oligo: 'ACGT' }] }
-    const tag2Group = { uuid: 'p2', name: 'P2', tags: [{ index: 1, oligo: 'TGCA' }] }
     wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', {
       state: 'valid',
       results: {
         first: { id: 'first', name: 'Ultima P1 v1', tag_group: { ...tagGroup, uuid: 'p1-v1' } },
-        second: { id: 'second', name: 'Ultima P1 v2', tag_group: tagGroup, tag2_group: tag2Group },
+        second: { id: 'second', name: 'Ultima P1 v2', tag_group: tagGroup },
       },
     })
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0]).toMatchObject({
       tag1Group: tagGroup,
-      tag2Group: tag2Group,
+      tag2Group: { uuid: null, tags: [] },
       walkingBy: 'manual by plate',
     })
+    expect(wrapper.text()).not.toContain('Second tag group')
     expect(wrapper.vm.coreTagSetOptions).toEqual([
       { value: 'Ultima P1 v2', text: 'Ultima P1 v2' },
       { value: 'Missing tag set', text: 'Missing tag set' },
