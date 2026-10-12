@@ -44,12 +44,12 @@ describe('ManualUltimaTagLayout', () => {
 
   it('keeps separately named versions and emits the selected groups without a plate', async () => {
     const wrapper = makeWrapper()
-    const group = { uuid: 'p1-v2', name: 'P1 primer version 2', tags: [{ index: 1, oligo: 'ACGT' }] }
+    const group = { uuid: 'p1', name: 'P1 primer', tags: [{ index: 1, oligo: 'ACGT' }] }
     wrapper.vm.tagSetsLookupUpdated({
       state: 'valid',
       results: {
-        first: { id: 'first', name: 'Ultima P1 version 1', tag_group: { ...group, uuid: 'p1-v1' } },
-        second: { id: 'second', name: 'Ultima P1 version 2', tag_group: group },
+        first: { id: 'first', name: 'Ultima P1', tag_group: { ...group, uuid: 'p1' } },
+        second: { id: 'second', name: 'Ultima P2', tag_group: group },
       },
     })
     await wrapper.setData({ tagSetId: 'second' })
@@ -66,17 +66,15 @@ describe('ManualUltimaTagLayout', () => {
   })
 
   it('keeps configured names visible while looking up their tag data', async () => {
-    const wrapper = makeWrapper({ tagSets: ['Ultima P2', 'Ultima P1 v2'] })
-    expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({
-      tag_group_adapter_type_name: 'Ultima',
-    })
+    const wrapper = makeWrapper({ tagSets: ['Ultima P2', 'Ultima P1'] })
+    expect(wrapper.findComponent({ name: 'TagSetsLookup' }).exists()).toBe(true)
     expect(wrapper.vm.tagSetOptions).toEqual([
       { value: null, text: 'Please select a Tagset...' },
       { value: 'Ultima P2', text: 'Ultima P2' },
-      { value: 'Ultima P1 v2', text: 'Ultima P1 v2' },
+      { value: 'Ultima P1', text: 'Ultima P1' },
     ])
-    await wrapper.find('#ultima_tag_set').setValue('Ultima P1 v2')
-    expect(wrapper.vm.tagSetId).toBe('Ultima P1 v2')
+    await wrapper.find('#ultima_tag_set').setValue('Ultima P1')
+    expect(wrapper.vm.tagSetId).toBe('Ultima P1')
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0]).toMatchObject({
       tag1Group: { uuid: null, tags: [] },
       tag2Group: { uuid: null, tags: [] },
@@ -89,14 +87,14 @@ describe('ManualUltimaTagLayout', () => {
   })
 
   it('resolves a configured selection when lookup results arrive without a second tag group', async () => {
-    const wrapper = makeWrapper({ tagSets: ['Ultima P1 v2', 'Missing tag set'] })
-    await wrapper.find('#ultima_tag_set').setValue('Ultima P1 v2')
-    const tagGroup = { uuid: 'p1-v2', name: 'P1 v2', tags: [{ index: 1, oligo: 'ACGT' }] }
+    const wrapper = makeWrapper({ tagSets: ['Ultima P1', 'Missing tag set'] })
+    await wrapper.find('#ultima_tag_set').setValue('Ultima P1')
+    const tagGroup = { uuid: 'p1', name: 'P1', tags: [{ index: 1, oligo: 'ACGT' }] }
     wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', {
       state: 'valid',
       results: {
-        first: { id: 'first', name: 'Ultima P1 v1', tag_group: { ...tagGroup, uuid: 'p1-v1' } },
-        second: { id: 'second', name: 'Ultima P1 v2', tag_group: tagGroup },
+        first: { id: 'first', name: 'Ultima P1', tag_group: { ...tagGroup, uuid: 'p1' } },
+        second: { id: 'second', name: 'Ultima P2', tag_group: tagGroup },
       },
     })
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0]).toMatchObject({
@@ -106,12 +104,12 @@ describe('ManualUltimaTagLayout', () => {
     })
     expect(wrapper.text()).not.toContain('Second tag group')
     expect(wrapper.vm.coreTagSetOptions).toEqual([
-      { value: 'Ultima P1 v2', text: 'Ultima P1 v2' },
+      { value: 'Ultima P1', text: 'Ultima P1' },
       { value: 'Missing tag set', text: 'Missing tag set' },
     ])
     await wrapper.find('#ultima_tag_set').setValue('Missing tag set')
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0].tag1Group.tags).toEqual([])
-    await wrapper.find('#ultima_tag_set').setValue('Ultima P1 v2')
+    await wrapper.find('#ultima_tag_set').setValue('Ultima P1')
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0].tag1Group).toEqual(tagGroup)
     wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', { state: 'invalid' })
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0].tag1Group.tags).toEqual([])

@@ -39,7 +39,7 @@ ULTP DNA Norm:
         - limber_ultima_ltp_conversion
   :presenter_class: Presenters::UltimaConversionPresenter
   :tag_group_adapter_type_name_filter: 'Ultima'
-  :tag_sets:
+  :tag_sets: # this is temporary list of tag sets for ultima LTP conversion
     - Ultima P1
     - Ultima P2
     - Ultima P3
