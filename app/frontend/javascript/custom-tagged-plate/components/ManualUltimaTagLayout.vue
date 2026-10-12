@@ -1,7 +1,6 @@
 <template>
   <b-container fluid>
     <lb-tag-sets-lookup
-      v-if="tagSets === null"
       :api="api"
       resource-name="tag_set"
       :filter="tagSetFilter"
@@ -66,7 +65,11 @@ export default {
         .sort((first, second) => first.text.localeCompare(second.text))
     },
     selectedTagSet() {
-      return this.tagSets === null ? this.tagSetList?.[this.tagSetId] || this.nullTagSet : this.nullTagSet
+      if (this.tagSets !== null) {
+        return Object.values(this.tagSetList).find((tagSet) => tagSet.name === this.tagSetId) || this.nullTagSet
+      }
+
+      return this.tagSetList?.[this.tagSetId] || this.nullTagSet
     },
     tagSetFilter() {
       return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
@@ -76,6 +79,14 @@ export default {
     },
     tag2Group() {
       return this.selectedTagSet.tag2_group || this.nullTagGroup
+    },
+  },
+  methods: {
+    tagSetsLookupUpdated(data) {
+      this.tagSetList = data.state === 'valid' && data.results ? data.results : {}
+      if (this.tagSetId) {
+        this.updateTagParams()
+      }
     },
   },
 }

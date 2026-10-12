@@ -1,23 +1,5 @@
-import { mount, shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
-import ManualUltimaTaggedPlate from './ManualUltimaTaggedPlate.vue'
-
-describe('ManualUltimaTaggedPlate tag set configuration', () => {
-  it('decodes the page configuration and passes it to the manual controls', () => {
-    const wrapper = shallowMount(ManualUltimaTaggedPlate, {
-      props: { tagSets: JSON.stringify(['Ultima P1 v1', 'Ultima P1 v2']) },
-      global: {
-        stubs: {
-          CustomTaggedPlate: {
-            template:
-              '<slot name="tag-layout-controls" :api="{}" :number-of-tags="0" :number-of-target-wells="0" :tags-per-well="1" />',
-          },
-        },
-      },
-    })
-    expect(wrapper.findComponent(ManualUltimaTagLayout).props('tagSets')).toEqual(['Ultima P1 v1', 'Ultima P1 v2'])
-  })
-})
 
 describe('ManualUltimaTagLayout', () => {
   const makeWrapper = (props = {}) =>
@@ -65,9 +47,9 @@ describe('ManualUltimaTagLayout', () => {
     expect(wrapper.vm.tag1Group.tags).toEqual([])
   })
 
-  it('uses configured names as placeholder options without looking up tag sets', async () => {
+  it('keeps configured names visible while looking up their tag data', async () => {
     const wrapper = makeWrapper({ tagSets: ['Ultima P2', 'Ultima P1'] })
-    expect(wrapper.findComponent({ name: 'TagSetsLookup' }).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: 'TagSetsLookup' }).exists()).toBe(true)
     expect(wrapper.vm.tagSetOptions).toEqual([
       { value: null, text: 'Please select a Tagset...' },
       { value: 'Ultima P2', text: 'Ultima P2' },
@@ -80,6 +62,24 @@ describe('ManualUltimaTagLayout', () => {
       tag2Group: { uuid: null, tags: [] },
     })
     expect(wrapper.find('dl').exists()).toBe(false)
+
+    const tagGroup = { uuid: 'p1', name: 'P1', tags: [{ index: 1, oligo: 'ACGT' }] }
+    wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', {
+      state: 'valid',
+      results: {
+        first: { id: 'first', name: 'Ultima P1', tag_group: tagGroup },
+        second: { id: 'second', name: 'Unconfigured tag set', tag_group: { ...tagGroup, uuid: 'other' } },
+      },
+    })
+    expect(wrapper.emitted('tagparamsupdated').at(-1)[0]).toMatchObject({
+      tag1Group: tagGroup,
+      tag2Group: { uuid: null, tags: [] },
+    })
+    expect(wrapper.vm.coreTagSetOptions).toEqual([
+      { value: 'Ultima P2', text: 'Ultima P2' },
+      { value: 'Ultima P1', text: 'Ultima P1' },
+    ])
+
     await wrapper.setProps({ tagSets: [] })
     expect(wrapper.vm.coreTagSetOptions).toEqual([])
     await wrapper.setProps({ tagSets: ['Missing tag set'] })

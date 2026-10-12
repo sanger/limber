@@ -20,8 +20,8 @@ import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
 
 export default {
   name: 'ManualUltimaTaggedPlate',
-  inheritAttrs: false,
   components: { CustomTaggedPlate, ManualUltimaTagLayout },
+  inheritAttrs: false,
   props: {
     tagSets: {
       type: String,
@@ -29,7 +29,7 @@ export default {
     },
     tagGroupAdapterTypeNameFilter: {
       type: String,
-      default: 'Ultima',
+      default: 'null',
     },
   },
   computed: {
