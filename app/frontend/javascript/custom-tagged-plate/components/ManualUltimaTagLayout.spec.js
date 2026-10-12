@@ -44,12 +44,12 @@ describe('ManualUltimaTagLayout', () => {
 
   it('keeps separately named versions and emits the selected groups without a plate', async () => {
     const wrapper = makeWrapper()
-    const group = { uuid: 'p1-v2', name: 'P1 primer version 2', tags: [{ index: 1, oligo: 'ACGT' }] }
+    const group = { uuid: 'p1', name: 'P1 primer', tags: [{ index: 1, oligo: 'ACGT' }] }
     wrapper.vm.tagSetsLookupUpdated({
       state: 'valid',
       results: {
-        first: { id: 'first', name: 'Ultima P1 version 1', tag_group: { ...group, uuid: 'p1-v1' } },
-        second: { id: 'second', name: 'Ultima P1 version 2', tag_group: group },
+        first: { id: 'first', name: 'Ultima P1', tag_group: { ...group, uuid: 'p1' } },
+        second: { id: 'second', name: 'Ultima P2', tag_group: group },
       },
     })
     await wrapper.setData({ tagSetId: 'second' })
@@ -66,15 +66,15 @@ describe('ManualUltimaTagLayout', () => {
   })
 
   it('uses configured names as placeholder options without looking up tag sets', async () => {
-    const wrapper = makeWrapper({ tagSets: ['Ultima P2', 'Ultima P1 v2'] })
+    const wrapper = makeWrapper({ tagSets: ['Ultima P2', 'Ultima P1'] })
     expect(wrapper.findComponent({ name: 'TagSetsLookup' }).exists()).toBe(false)
     expect(wrapper.vm.tagSetOptions).toEqual([
       { value: null, text: 'Please select a Tagset...' },
       { value: 'Ultima P2', text: 'Ultima P2' },
-      { value: 'Ultima P1 v2', text: 'Ultima P1 v2' },
+      { value: 'Ultima P1', text: 'Ultima P1' },
     ])
-    await wrapper.find('#ultima_tag_set').setValue('Ultima P1 v2')
-    expect(wrapper.vm.tagSetId).toBe('Ultima P1 v2')
+    await wrapper.find('#ultima_tag_set').setValue('Ultima P1')
+    expect(wrapper.vm.tagSetId).toBe('Ultima P1')
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0]).toMatchObject({
       tag1Group: { uuid: null, tags: [] },
       tag2Group: { uuid: null, tags: [] },
