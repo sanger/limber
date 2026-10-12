@@ -48,6 +48,9 @@ ULTP DNA Norm:
   :file_links:
     - name: Download Tag transfer Picklist
       id: tag_transfer_picklist
+      states:
+        - processed_2
+
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_ultima_ltp_aggregation'
 ULTP PCR XP:

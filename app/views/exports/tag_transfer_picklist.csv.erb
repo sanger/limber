@@ -5,21 +5,19 @@
 		@plate.wells_in_columns.each do |well|
 			next if well.empty?
 
-			transfers = well.aliquots.flat_map do |aliquot|
-				raise "Missing tag for destination well #{well.location}" if aliquot.tag.nil?
+			transfers = well.aliquots.map do |aliquot|
+				tag = aliquot.tag
+				index = aliquot.tag_index
+				raise "Missing tag for destination well #{well.location}" if tag.nil?
 
-				[[aliquot.tag, aliquot.tag_index], [aliquot.tag2, aliquot.tag2_index]].filter_map do |tag, index|
-					next if tag.nil?
-
-					unless index.is_a?(Integer) && index.between?(1, source_wells.length)
-						raise "Invalid tag index #{index.inspect} for destination well #{well.location}"
-					end
-					if tag.tag_group&.name.blank?
-						raise "Missing tag group name for destination well #{well.location}"
-					end
-
-					[tag.tag_group.name, source_wells.fetch(index - 1), @plate.labware_barcode.human, well.location]
+				unless index.is_a?(Integer) && index.between?(1, source_wells.length)
+					raise "Invalid tag index #{index.inspect} for destination well #{well.location}"
 				end
+				if tag.tag_group&.name.blank?
+					raise "Missing tag group name for destination well #{well.location}"
+				end
+
+				[tag.tag_group.name, source_wells.fetch(index - 1), @plate.labware_barcode.human, well.location]
 			end
 			transfers.uniq.each { |transfer| csv << transfer }
 		end
