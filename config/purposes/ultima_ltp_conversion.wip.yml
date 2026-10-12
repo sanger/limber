@@ -46,7 +46,7 @@ ULTP DNA Norm:
     - UG-RD-1916
     - UG-RD-1940
   :file_links:
-    - name: Download Tag transfer Picklist
+    - name: Download Tag Transfer Picklist
       id: tag_transfer_picklist
       states:
         - processed_2
