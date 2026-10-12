@@ -160,7 +160,7 @@ RSpec.describe Presenters::UltimaConversionPresenter do
         it 'shows the picklist only after tagging' do
           link_names = subject.csv_file_links.map(&:first)
           expect(link_names.include?('Download Tag transfer Picklist')).to eq(
-            %w[processed_2 passed].include?(plate_state)
+            plate_state == 'processed_2'
           )
         end
       end
