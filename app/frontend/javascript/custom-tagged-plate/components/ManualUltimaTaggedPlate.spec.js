@@ -1,4 +1,4 @@
-import { mount, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
 import ManualUltimaTaggedPlate from './ManualUltimaTaggedPlate.vue'
 
