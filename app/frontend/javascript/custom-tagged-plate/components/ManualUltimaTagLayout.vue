@@ -46,12 +46,16 @@ export default {
     },
     tagGroupAdapterTypeNameFilter: {
       type: String,
-      default: 'Ultima',
+      default: 'null',
     },
   },
   data() {
     return {
+      // Fixed layout for the MVP (Y26-274): tags are in column order on the
+      // tag plate. Consecutive tags go to the wells with samples, in column
+      // order, starting from the offset.
       walkingBy: 'manual by plate',
+      direction: 'column',
     }
   },
   computed: {

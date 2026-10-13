@@ -42,6 +42,7 @@ describe('ManualUltimaTagLayout', () => {
       tag1Group: group,
       offsetTagsBy: 2,
       walkingBy: 'manual by plate',
+      direction: 'column',
     })
     await wrapper.setData({ tagSetId: null })
     expect(wrapper.vm.tag1Group.tags).toEqual([])
