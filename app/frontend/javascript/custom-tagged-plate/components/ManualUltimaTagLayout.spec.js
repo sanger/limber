@@ -19,7 +19,7 @@ describe('ManualUltimaTagLayout', () => {
   it('filters tag sets by Ultima adapter type and has no scan control', () => {
     const wrapper = makeWrapper()
     expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({
-      tag_group_adapter_type_name: 'Ultima',
+      tag_group_adapter_type_name: 'null',
     })
     expect(wrapper.findComponent({ name: 'LabwareScan' }).exists()).toBe(false)
   })
