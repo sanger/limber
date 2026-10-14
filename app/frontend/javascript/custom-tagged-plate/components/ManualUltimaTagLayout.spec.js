@@ -16,6 +16,20 @@ describe('ManualUltimaTagLayout', () => {
       },
     })
 
+  it('shows application names in the tag layout section as text', async () => {
+    const wrapper = makeWrapper({ ultimaApplications: ['Application A', 'Application <B> & C'] })
+    expect(wrapper.findAll('#ultima-applications li').map((item) => item.text())).toEqual([
+      'Application A',
+      'Application <B> & C',
+    ])
+    expect(wrapper.find('#ultima-applications b').exists()).toBe(false)
+    expect(wrapper.find('#ultima-applications dt').text()).toBe('Applications')
+    await wrapper.setProps({ ultimaApplications: ['Application A'] })
+    expect(wrapper.find('#ultima-applications dt').text()).toBe('Application')
+    await wrapper.setProps({ ultimaApplications: [] })
+    expect(wrapper.find('#ultima-applications').exists()).toBe(false)
+  })
+
   it('filters tag sets by Ultima adapter type and has no scan control', () => {
     const wrapper = makeWrapper()
     expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({

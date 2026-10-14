@@ -5,7 +5,10 @@ import ManualUltimaTaggedPlate from './ManualUltimaTaggedPlate.vue'
 describe('ManualUltimaTaggedPlate tag set configuration', () => {
   it('decodes the page configuration and passes it to the manual controls', () => {
     const wrapper = shallowMount(ManualUltimaTaggedPlate, {
-      props: { tagSets: JSON.stringify(['Ultima P1', 'Ultima P2']) },
+      props: {
+        tagSets: JSON.stringify(['Ultima P1', 'Ultima P2']),
+        ultimaApplications: JSON.stringify(['Application A']),
+      },
       global: {
         stubs: {
           CustomTaggedPlate: {
@@ -16,5 +19,6 @@ describe('ManualUltimaTaggedPlate tag set configuration', () => {
       },
     })
     expect(wrapper.findComponent(ManualUltimaTagLayout).props('tagSets')).toEqual(['Ultima P1', 'Ultima P2'])
+    expect(wrapper.findComponent(ManualUltimaTagLayout).props('ultimaApplications')).toEqual(['Application A'])
   })
 })

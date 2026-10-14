@@ -8,6 +8,7 @@
         :tags-per-well="controls.tagsPerWell"
         :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
         :tag-sets="configuredTagSets"
+        :ultima-applications="applicationNames"
         @tagparamsupdated="controls.updateTagParams"
       />
     </template>
@@ -23,6 +24,10 @@ export default {
   components: { CustomTaggedPlate, ManualUltimaTagLayout },
   inheritAttrs: false,
   props: {
+    ultimaApplications: {
+      type: String,
+      default: '[]',
+    },
     tagSets: {
       type: String,
       default: 'null',
@@ -33,6 +38,9 @@ export default {
     },
   },
   computed: {
+    applicationNames() {
+      return JSON.parse(this.ultimaApplications)
+    },
     configuredTagSets() {
       return JSON.parse(this.tagSets)
     },

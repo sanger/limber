@@ -9,6 +9,7 @@ RSpec.describe Plates::TagLayoutsController do
   let(:purpose_name) { 'Tagged in place purpose' }
   let(:state) { 'processed_1' }
   let(:tag_sets) { ['Ultima P1 v1', 'Ultima P1 v2'] }
+  let(:application_requests) { [] }
   let(:plate) do
     create :plate, uuid: plate_uuid, state: state, purpose_uuid: purpose_uuid, purpose_name: purpose_name,
                    pool_sizes: [2]
@@ -24,6 +25,7 @@ RSpec.describe Plates::TagLayoutsController do
            tag_sets: tag_sets
     create :purpose_config, uuid: 'child-purpose-uuid', name: 'Child purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
+    allow(plate.wells.first).to receive(:requests_as_source).and_return(application_requests)
     stub_plate(plate, stub_search: false)
   end
 
@@ -39,6 +41,33 @@ RSpec.describe Plates::TagLayoutsController do
 
       it 'mounts the manual Ultima component' do
         expect(response.body).to include('id=\'manual-ultima-tagged-plate-page\'')
+      end
+
+      it 'passes an empty application list when no names are available' do
+        page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+        expect(JSON.parse(page['data-ultima-applications'])).to eq([])
+      end
+
+      context 'with application names on the requests' do
+        let(:application_requests) do
+          [
+            create(:library_request, options: { 'ultima_application' => 'Application A' }),
+            create(:library_request, options: { 'ultima_application' => 'Application A' }),
+            create(:library_request, options: { 'ultima_application' => 'Application <B> & C' }),
+            create(:library_request, options: { 'ultima_application' => '' }),
+            create(:library_request, options: {}),
+            create(:library_request, state: 'cancelled', options: { 'ultima_application' => 'Cancelled application' })
+          ]
+        end
+
+        it 'passes distinct application names and excludes blank or cancelled entries' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-ultima-applications'])).to eq(['Application A', 'Application <B> & C'])
+        end
+
+        it 'leaves application rendering to the tag layout controls' do
+          expect(response.parsed_body.at_css('#ultima-applications')).to be_nil
+        end
       end
 
       it 'filters tag sets by Ultima adapter type' do

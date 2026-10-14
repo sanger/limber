@@ -35,6 +35,10 @@ class Sequencescape::Api::V2::Request < Sequencescape::Api::V2::Base
     options['library_type']
   end
 
+  def ultima_application
+    options['ultima_application']
+  end
+
   def fragment_size
     FragmentSize.new(options['fragment_size_required_from'], options['fragment_size_required_to'])
   end

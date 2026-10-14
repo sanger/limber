@@ -7,7 +7,15 @@
       includes="tag_group,tag2_group"
       @change="tagSetsLookupUpdated"
     />
-    <b-form-group label="Ultima Tag Set" label-for="ultima_tag_set" class="mb-3">
+    <dl v-if="ultimaApplications.length" id="ultima-applications" class="mb-3">
+      <dt>{{ ultimaApplications.length === 1 ? 'Application' : 'Applications' }}</dt>
+      <dd>
+        <ul class="list-unstyled mb-0">
+          <li v-for="application in ultimaApplications" :key="application">{{ application }}</li>
+        </ul>
+      </dd>
+    </dl>
+    <b-form-group label="Ultima Tag Set:" label-for="ultima_tag_set" class="mb-3">
       <b-form-select
         id="ultima_tag_set"
         v-model="tagSetId"
@@ -40,6 +48,10 @@ export default {
   name: 'ManualUltimaTagLayout',
   mixins: [TagLayout],
   props: {
+    ultimaApplications: {
+      type: Array,
+      default: () => [],
+    },
     tagSets: {
       type: Array,
       default: null,
