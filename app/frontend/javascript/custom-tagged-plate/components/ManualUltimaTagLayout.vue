@@ -72,21 +72,13 @@ export default {
   },
   computed: {
     coreTagSetOptions() {
-      if (this.tagSets !== null) {
-        return this.tagSets.map((name) => ({ value: name, text: name }))
+      const options = Object.values(this.tagSetList).map((tagSet) => ({ value: tagSet.id, text: tagSet.name }))
+      if (this.tagSets === null) {
+        return options.sort((first, second) => first.text.localeCompare(second.text))
       }
-
-      return Object.values(this.tagSetList)
-        .map((tagSet) => ({ value: tagSet.id, text: tagSet.name }))
-        .sort((first, second) => first.text.localeCompare(second.text))
-    },
-    selectedTagSet() {
-      if (this.tagSets !== null) {
-        return Object.values(this.tagSetList).find((tagSet) => tagSet.name === this.tagSetId) || this.nullTagSet
-      }
-
-      return this.tagSetList?.[this.tagSetId] || this.nullTagSet
-    },
+      // Only the configured tag sets, in the configured order
+      return this.tagSets.flatMap((name) => options.filter((option) => option.text === name))
+    },  
     tagSetFilter() {
       return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
     },
