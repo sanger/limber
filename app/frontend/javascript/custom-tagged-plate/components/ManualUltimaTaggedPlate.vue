@@ -7,7 +7,8 @@
         :number-of-target-wells="controls.numberOfTargetWells"
         :tags-per-well="controls.tagsPerWell"
         :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
-        :tag-sets="configuredTagSets"
+        :allowed-tag-set-names="configuredAllowedTagSetNames"
+        :ultima-applications="applicationNames"
         @tagparamsupdated="controls.updateTagParams"
       />
     </template>
@@ -20,21 +21,28 @@ import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
 
 export default {
   name: 'ManualUltimaTaggedPlate',
-  inheritAttrs: false,
   components: { CustomTaggedPlate, ManualUltimaTagLayout },
+  inheritAttrs: false,
   props: {
-    tagSets: {
+    ultimaApplications: {
       type: String,
-      default: 'null',
+      default: '[]',
     },
     tagGroupAdapterTypeNameFilter: {
       type: String,
-      default: 'Ultima',
+      default: null,
+    },
+    allowedTagSetNames: {
+      type: String,
+      default: null,
     },
   },
   computed: {
-    configuredTagSets() {
-      return JSON.parse(this.tagSets)
+    applicationNames() {
+      return JSON.parse(this.ultimaApplications)
+    },
+    configuredAllowedTagSetNames() {
+      return JSON.parse(this.allowedTagSetNames)
     },
   },
 }
