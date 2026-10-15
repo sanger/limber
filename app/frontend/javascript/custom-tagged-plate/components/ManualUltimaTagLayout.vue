@@ -78,7 +78,7 @@ export default {
       }
       // Only the configured tag sets, in the configured order
       return this.tagSets.flatMap((name) => options.filter((option) => option.text === name))
-    },  
+    },
     tagSetFilter() {
       return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
     },
