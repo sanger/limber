@@ -58,7 +58,7 @@ export default {
     },
     tagGroupAdapterTypeNameFilter: {
       type: String,
-      default: 'null',
+      default: null,
     },
   },
   data() {

@@ -30,11 +30,11 @@ export default {
     },
     tagGroupAdapterTypeNameFilter: {
       type: String,
-      default: 'null',
+      default: null,
     },
     allowedTagSetNames: {
       type: String,
-      default: 'null',
+      default: null,
     },
   },
   computed: {
