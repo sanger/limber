@@ -31,9 +31,9 @@ describe('ManualUltimaTagLayout', () => {
   })
 
   it('filters tag sets by Ultima adapter type and has no scan control', () => {
-    const wrapper = makeWrapper()
+    const wrapper = makeWrapper({ tagGroupAdapterTypeNameFilter: 'Ultima' })
     expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({
-      tag_group_adapter_type_name: 'null',
+      tag_group_adapter_type_name: 'Ultima',
     })
     expect(wrapper.findComponent({ name: 'LabwareScan' }).exists()).toBe(false)
   })
@@ -63,7 +63,7 @@ describe('ManualUltimaTagLayout', () => {
   })
 
   it('lists matching API tag sets in config order and selects their tag data by id', async () => {
-    const wrapper = makeWrapper({ tagSets: ['Ultima P2', 'Ultima P1'] })
+    const wrapper = makeWrapper({ allowedTagSetNames: ['Ultima P2', 'Ultima P1'] })
     expect(wrapper.findComponent({ name: 'TagSetsLookup' }).exists()).toBe(true)
     expect(wrapper.vm.tagSetOptions).toEqual([{ value: null, text: 'Please select a Tagset...' }])
     expect(wrapper.find('dl').exists()).toBe(false)
@@ -91,9 +91,15 @@ describe('ManualUltimaTagLayout', () => {
       tag2Group: { uuid: null, tags: [] },
     })
 
-    await wrapper.setProps({ tagSets: [] })
+    await wrapper.setProps({ allowedTagSetNames: [] })
     expect(wrapper.vm.coreTagSetOptions).toEqual([])
-    await wrapper.setProps({ tagSets: ['Missing tag set'] })
+    await wrapper.setProps({ allowedTagSetNames: ['Missing tag set'] })
     expect(wrapper.vm.coreTagSetOptions).toEqual([])
+    await wrapper.setProps({ allowedTagSetNames: null })
+    expect(wrapper.vm.coreTagSetOptions).toEqual([
+      { value: 'first', text: 'Ultima P1' },
+      { value: 'second', text: 'Ultima P2' },
+      { value: 'third', text: 'Unconfigured tag set' },
+    ])
   })
 })

@@ -8,7 +8,7 @@ RSpec.describe Plates::TagLayoutsController do
   let(:purpose_uuid) { 'tagged-in-place-purpose-uuid' }
   let(:purpose_name) { 'Tagged in place purpose' }
   let(:state) { 'processed_1' }
-  let(:tag_sets) { ['Ultima P1 v1', 'Ultima P1 v2'] }
+  let(:allowed_tag_sets_by_application) { { '10x Flex v2' => ['Ultima P1', 'Ultima P2'] } }
   let(:application_requests) { [] }
   let(:plate) do
     create :plate, uuid: plate_uuid, state: state, purpose_uuid: purpose_uuid, purpose_name: purpose_name,
@@ -22,7 +22,7 @@ RSpec.describe Plates::TagLayoutsController do
            presenter_class: 'Presenters::UltimaConversionPresenter',
            tags_per_well: 1,
            tag_group_adapter_type_name_filter: 'Ultima',
-           tag_sets: tag_sets
+           allowed_tag_sets_by_application: allowed_tag_sets_by_application
     create :purpose_config, uuid: 'child-purpose-uuid', name: 'Child purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
     allow(plate.wells.first).to receive(:requests_as_source).and_return(application_requests)
@@ -74,17 +74,64 @@ RSpec.describe Plates::TagLayoutsController do
         expect(response.body).to include('data-tag-group-adapter-type-name-filter="Ultima"')
       end
 
-      it 'passes the configured tag sets as JSON to the page' do
+      it 'leaves the Ultima lookup unrestricted when no application is present' do
         page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
-        expect(JSON.parse(page['data-tag-sets'])).to eq(tag_sets)
+        expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
       end
 
-      context 'without a configured tag set list' do
-        let(:tag_sets) { nil }
+      context 'with the 10x Flex v2 application' do
+        let(:application_requests) do
+          [create(:library_request, options: { 'ultima_application' => '10x Flex v2' })]
+        end
 
-        it 'passes null so the dropdown remains unrestricted' do
+        it 'passes its configured allowed names in config order' do
           page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
-          expect(JSON.parse(page['data-tag-sets'])).to be_nil
+          expect(JSON.parse(page['data-allowed-tag-set-names'])).to eq(['Ultima P1', 'Ultima P2'])
+        end
+
+        context 'without a configured application mapping' do
+          let(:allowed_tag_sets_by_application) { {} }
+
+          it 'leaves the Ultima lookup unrestricted' do
+            page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+            expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
+          end
+        end
+
+        context 'with an empty allowed list' do
+          let(:allowed_tag_sets_by_application) { { '10x Flex v2' => [] } }
+
+          it 'passes an empty list rather than allowing every set' do
+            page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+            expect(JSON.parse(page['data-allowed-tag-set-names'])).to eq([])
+          end
+        end
+      end
+
+      context 'with another application' do
+        let(:application_requests) do
+          [create(:library_request, options: { 'ultima_application' => 'Other application' })]
+        end
+
+        it 'passes null so all Ultima API records can be listed' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
+        end
+      end
+
+      context 'with multiple mapped applications' do
+        let(:allowed_tag_sets_by_application) do
+          { '10x Flex v2' => ['Ultima P1', 'Ultima P2'], 'Other application' => ['Ultima P2', 'Ultima P3'] }
+        end
+        let(:application_requests) do
+          ['10x Flex v2', 'Other application'].map do |application|
+            create(:library_request, options: { 'ultima_application' => application })
+          end
+        end
+
+        it 'allows only sets shared by the applications' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-allowed-tag-set-names'])).to eq(['Ultima P2'])
         end
       end
 

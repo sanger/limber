@@ -3,22 +3,25 @@ import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
 import ManualUltimaTaggedPlate from './ManualUltimaTaggedPlate.vue'
 
 describe('ManualUltimaTaggedPlate tag set configuration', () => {
-  it('decodes the page configuration and passes it to the manual controls', () => {
-    const wrapper = shallowMount(ManualUltimaTaggedPlate, {
-      props: {
-        tagSets: JSON.stringify(['Ultima P1', 'Ultima P2']),
-        ultimaApplications: JSON.stringify(['Application A']),
-      },
-      global: {
-        stubs: {
-          CustomTaggedPlate: {
-            template:
-              '<slot name="tag-layout-controls" :api="{}" :number-of-tags="0" :number-of-target-wells="0" :tags-per-well="1" />',
+  it.each([{ names: ['Ultima P1', 'Ultima P2'] }, { names: null }, { names: [] }])(
+    'passes allowed tag set names $names to the manual controls',
+    ({ names }) => {
+      const wrapper = shallowMount(ManualUltimaTaggedPlate, {
+        props: {
+          allowedTagSetNames: JSON.stringify(names),
+          ultimaApplications: JSON.stringify(['Application A']),
+        },
+        global: {
+          stubs: {
+            CustomTaggedPlate: {
+              template:
+                '<slot name="tag-layout-controls" :api="{}" :number-of-tags="0" :number-of-target-wells="0" :tags-per-well="1" />',
+            },
           },
         },
-      },
-    })
-    expect(wrapper.findComponent(ManualUltimaTagLayout).props('tagSets')).toEqual(['Ultima P1', 'Ultima P2'])
-    expect(wrapper.findComponent(ManualUltimaTagLayout).props('ultimaApplications')).toEqual(['Application A'])
-  })
+      })
+      expect(wrapper.findComponent(ManualUltimaTagLayout).props('allowedTagSetNames')).toEqual(names)
+      expect(wrapper.findComponent(ManualUltimaTagLayout).props('ultimaApplications')).toEqual(['Application A'])
+    },
+  )
 })

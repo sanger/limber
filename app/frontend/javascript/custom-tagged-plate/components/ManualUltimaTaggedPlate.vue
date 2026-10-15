@@ -7,7 +7,7 @@
         :number-of-target-wells="controls.numberOfTargetWells"
         :tags-per-well="controls.tagsPerWell"
         :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
-        :tag-sets="configuredTagSets"
+        :allowed-tag-set-names="configuredAllowedTagSetNames"
         :ultima-applications="applicationNames"
         @tagparamsupdated="controls.updateTagParams"
       />
@@ -28,11 +28,11 @@ export default {
       type: String,
       default: '[]',
     },
-    tagSets: {
+    tagGroupAdapterTypeNameFilter: {
       type: String,
       default: 'null',
     },
-    tagGroupAdapterTypeNameFilter: {
+    allowedTagSetNames: {
       type: String,
       default: 'null',
     },
@@ -41,8 +41,8 @@ export default {
     applicationNames() {
       return JSON.parse(this.ultimaApplications)
     },
-    configuredTagSets() {
-      return JSON.parse(this.tagSets)
+    configuredAllowedTagSetNames() {
+      return JSON.parse(this.allowedTagSetNames)
     },
   },
 }

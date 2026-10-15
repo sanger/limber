@@ -52,7 +52,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    tagSets: {
+    allowedTagSetNames: {
       type: Array,
       default: null,
     },
@@ -73,11 +73,11 @@ export default {
   computed: {
     coreTagSetOptions() {
       const options = Object.values(this.tagSetList).map((tagSet) => ({ value: tagSet.id, text: tagSet.name }))
-      if (this.tagSets === null) {
+      if (this.allowedTagSetNames === null) {
         return options.sort((first, second) => first.text.localeCompare(second.text))
       }
       // Only the configured tag sets, in the configured order
-      return this.tagSets.flatMap((name) => options.filter((option) => option.text === name))
+      return this.allowedTagSetNames.flatMap((name) => options.filter((option) => option.text === name))
     },
     tagSetFilter() {
       return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
