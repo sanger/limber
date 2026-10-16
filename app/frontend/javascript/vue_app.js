@@ -12,6 +12,7 @@ import AssetCommentsCounter from '@/javascript/asset-comments/components/AssetCo
 import AssetCommentsAddForm from '@/javascript/asset-comments/components/AssetCommentsAddForm.vue'
 import BlendedTube from '@/javascript/blended-tube/components/BlendedTube.vue'
 import CustomTaggedPlate from '@/javascript/custom-tagged-plate/components/CustomTaggedPlate.vue'
+import ManualUltimaTaggedPlate from '@/javascript/custom-tagged-plate/components/ManualUltimaTaggedPlate.vue'
 import FileList from '@/javascript/file-list/components/FileList.vue'
 import LabwareCustomMetadataAddForm from '@/javascript/labware-custom-metadata/components/LabwareCustomMetadataAddForm.vue'
 import MultiStamp from '@/javascript/multi-stamp/components/MultiStamp.vue'
@@ -102,6 +103,10 @@ const elements = [
   {
     id: 'custom-tagged-plate-page',
     component: CustomTaggedPlate,
+  },
+  {
+    id: 'manual-ultima-tagged-plate-page',
+    component: ManualUltimaTaggedPlate,
   },
   {
     id: 'files-list',
