@@ -30,7 +30,7 @@ class Plates::TagLayoutsController < ApplicationController
   private
 
   def allowed_tag_set_names
-    mapping = purpose_config.fetch(:allowed_tag_sets_by_application, {}).with_indifferent_access
+    mapping = (purpose_config[:allowed_tag_sets_by_application] || {}).with_indifferent_access
     lists = @ultima_applications.filter_map { |application| mapping[application] }
     lists.reduce { |allowed, names| allowed & names }
   end
