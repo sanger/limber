@@ -102,6 +102,10 @@ describe('ManualUltimaTagLayout', () => {
       { value: 'third', text: 'Unconfigured tag set' },
     ])
   })
+  it('does not filter tag sets by adapter type when none is configured', () => {
+    const wrapper = makeWrapper({ tagGroupAdapterTypeNameFilter: '' })
+    expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({})
+  })
 
   it('resolves a configured selection by API id without a second tag group', async () => {
     const wrapper = makeWrapper({ allowedTagSetNames: ['Ultima P1', 'Missing tag set'] })
@@ -132,10 +136,5 @@ describe('ManualUltimaTagLayout', () => {
     expect(wrapper.vm.coreTagSetOptions).toEqual([])
     wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', { state: 'invalid' })
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0].tag1Group.tags).toEqual([])
-  })
-
-  it('does not filter tag sets by adapter type when none is configured', () => {
-    const wrapper = makeWrapper({ tagGroupAdapterTypeNameFilter: '' })
-    expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({})
   })
 })
