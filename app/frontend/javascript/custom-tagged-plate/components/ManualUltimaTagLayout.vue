@@ -80,7 +80,10 @@ export default {
       return this.allowedTagSetNames.flatMap((name) => options.filter((option) => option.text === name))
     },
     tagSetFilter() {
-      return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
+      if (this.tagGroupAdapterTypeNameFilter) {
+        return { tag_group_adapter_type_name: this.tagGroupAdapterTypeNameFilter }
+      }
+      return {}
     },
     tag1Group() {
       return this.selectedTagSet.tag_group || this.nullTagGroup

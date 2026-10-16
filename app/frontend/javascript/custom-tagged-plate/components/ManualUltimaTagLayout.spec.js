@@ -102,4 +102,8 @@ describe('ManualUltimaTagLayout', () => {
       { value: 'third', text: 'Unconfigured tag set' },
     ])
   })
+  it('does not filter tag sets by adapter type when none is configured', () => {
+    const wrapper = makeWrapper({ tagGroupAdapterTypeNameFilter: '' })
+    expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({})
+  })
 })
