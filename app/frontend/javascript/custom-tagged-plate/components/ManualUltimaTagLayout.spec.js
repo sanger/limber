@@ -133,7 +133,7 @@ describe('ManualUltimaTagLayout', () => {
     wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', { state: 'invalid' })
     expect(wrapper.emitted('tagparamsupdated').at(-1)[0].tag1Group.tags).toEqual([])
   })
-  
+
   it('does not filter tag sets by adapter type when none is configured', () => {
     const wrapper = makeWrapper({ tagGroupAdapterTypeNameFilter: '' })
     expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({})
