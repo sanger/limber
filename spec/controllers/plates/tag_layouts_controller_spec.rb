@@ -216,5 +216,14 @@ RSpec.describe Plates::TagLayoutsController do
         expect(response).to have_http_status(:bad_request)
       end
     end
+
+    context 'with the mapping key present but empty' do
+      let(:allowed_tag_sets_by_application) { nil }
+
+      it 'leaves the Ultima lookup unrestricted' do
+        page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+        expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
+      end
+    end
   end
 end
