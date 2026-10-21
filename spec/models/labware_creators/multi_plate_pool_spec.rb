@@ -106,6 +106,48 @@ RSpec.describe LabwareCreators::MultiPlatePool do
       end
     end
 
+    context 'when the bulk transfer fails validation' do
+      let(:error_message) do
+        "Aliquot::TagClash: SQPD-9395:E1 contains aliquots which can't be transferred due to tag clash"
+      end
+      let(:bulk_transfer) { Sequencescape::Api::V2::BulkTransfer.new }
+      let(:api_errors) do
+        JsonApiClient::ErrorCollector.new([{ title: 'Tag clash', detail: error_message }])
+      end
+      let(:result_set) { JsonApiClient::ResultSet.new.tap { |set| set.errors = api_errors } }
+
+      before do
+        expect_pooled_plate_creation
+        bulk_transfer.errors.add(:base, 'Tag clash')
+        allow(bulk_transfer).to receive(:last_result_set).and_return(result_set)
+        allow(Sequencescape::Api::V2::BulkTransfer).to receive(:create!).and_raise(
+          JsonApiClient::Errors::RecordNotSaved.new('Transfer failed', bulk_transfer)
+        )
+      end
+
+      it 'returns false and exposes the API message to the creation failure handler', :aggregate_failures do
+        expect(subject.save).to be(false)
+        expect(subject.errors.full_messages).to eq([error_message])
+      end
+
+      it 'raises a resource error containing the API message when saved with a bang' do
+        expect { subject.save! }.to raise_error(LabwareCreators::ResourceInvalid, error_message)
+      end
+    end
+
+    context 'when the bulk transfer has an unexpected server error' do
+      before do
+        expect_pooled_plate_creation
+        allow(Sequencescape::Api::V2::BulkTransfer).to receive(:create!).and_raise(
+          JsonApiClient::Errors::InternalServerError.new(Faraday::Env.new(status: 500))
+        )
+      end
+
+      it 'does not treat the server error as a validation failure' do
+        expect { subject.save }.to raise_error(JsonApiClient::Errors::InternalServerError)
+      end
+    end
+
     context 'with active requests on parent plates' do
       let(:plate) { create(:plate) }
       let(:plate_b) { create(:plate) }

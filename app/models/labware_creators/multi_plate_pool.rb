@@ -30,6 +30,14 @@ module LabwareCreators
 
       yield(@child) if block_given?
       true
+    rescue JsonApiClient::Errors::RecordNotSaved => e
+      # Rescue errors from the API and add them to the creator's errors.
+      add_api_errors(e.record.last_result_set.errors)
+      false
+    end
+
+    def add_api_errors(api_errors)
+      api_errors.each { |api_error| errors.add(:base, api_error.detail.presence || api_error.title) }
     end
 
     # Checks whether labware can be created based on active requests
