@@ -14,6 +14,9 @@ class Plates::TagLayoutsController < ApplicationController
   def new
     @tags_per_well = purpose_config.fetch(:tags_per_well, 1)
     @tag_group_adapter_type_name_filter = purpose_config.fetch(:tag_group_adapter_type_name_filter, nil)
+    @ultima_applications =
+      plate.wells.flat_map(&:all_requests).reject(&:cancelled?).filter_map(&:ultima_application).compact_blank.uniq
+    @allowed_tag_set_names = allowed_tag_set_names
   end
 
   # Responds to the custom tagged plate page with the page to redirect to.
@@ -25,6 +28,12 @@ class Plates::TagLayoutsController < ApplicationController
   end
 
   private
+
+  def allowed_tag_set_names
+    mapping = (purpose_config[:allowed_tag_sets_by_application] || {}).with_indifferent_access
+    lists = @ultima_applications.filter_map { |application| mapping[application] }
+    lists.reduce { |allowed, names| allowed & names }
+  end
 
   # The new tags replace the existing tags of the plate: without a tag2 group,
   # the existing tag2 is removed instead of kept.

@@ -1,7 +1,7 @@
 // Import the component being tested
 import { mount, shallowMount, flushPromises } from '@vue/test-utils'
 import CustomTaggedPlate from './CustomTaggedPlate.vue'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 
 import {
   plateUuid,
@@ -684,6 +684,54 @@ describe('CustomTaggedPlate', () => {
   })
 
   describe('#rendering tests:', () => {
+    it('renders the tag-layout-controls slot in place of the default tag controls and accepts its tag params', async () => {
+      let slotProps
+      const tagParams = {
+        tagPlate: null,
+        tag1Group: exampleTag1Group,
+        tag2Group: null,
+        walkingBy: 'manual by plate',
+        direction: 'column',
+        offsetTagsBy: 0,
+      }
+      const wrapper = shallowMount(CustomTaggedPlate, {
+        props: {
+          sequencescapeApi: 'http://localhost:3000/api/v2',
+          sequencescapeApiKey: 'development',
+          purposeUuid: '',
+          purposeName: 'Custom Tagged Plate',
+          targetUrl: '',
+          parentUuid: plateUuid,
+          tagsPerWell: '1',
+          locationObj: mockLocation,
+        },
+        global: {
+          renderStubDefaultSlot: true,
+        },
+        slots: {
+          'tag-layout-controls': (props) => {
+            slotProps = props
+            return h('div', { id: 'custom-tag-controls' })
+          },
+        },
+      })
+
+      await wrapper.setData({ parentPlate: exampleParentTag1Only })
+      await nextTick()
+
+      expect(wrapper.find('#custom-tag-controls').exists()).toBe(true)
+      expect(wrapper.find('lb-tag-layout-manipulations-stub').exists()).toBe(false)
+      expect(slotProps.api).toBe(wrapper.vm.devourApi)
+      expect(slotProps.numberOfTags).toBe(0)
+      expect(slotProps.tagsPerWell).toBe(wrapper.vm.tagsPerWellAsNumber)
+
+      slotProps.updateTagParams(tagParams)
+      await nextTick()
+
+      expect(slotProps.numberOfTags).toBe(exampleTag1Group.tags.length)
+      expect(wrapper.vm.isChildWellsValid).toBe(true)
+    })
+
     it('renders child components for single tag per well', async () => {
       const wrapper = mount(CustomTaggedPlate, {
         props: {
