@@ -39,10 +39,11 @@ ULTP DNA Norm:
         - limber_ultima_ltp_conversion
   :presenter_class: Presenters::UltimaConversionPresenter
   :tag_group_adapter_type_name_filter: 'Ultima'
-  :allowed_tag_sets_by_application:
-    '10x Flex v2': # the list is for testing purposes, real tag sets will replace this once available
-      - Ultima P1
-      - Ultima P2
+  # TODO(Y26-300): Replace with the allowed tag set config for 10x Flex v2 Application
+  # :allowed_tag_sets_by_application:
+  #   '10x Flex v2':
+  #     - Ultima P1
+  #     - Ultima P2
   :file_links:
     - name: Download Tag Transfer Picklist
       id: tag_transfer_picklist
