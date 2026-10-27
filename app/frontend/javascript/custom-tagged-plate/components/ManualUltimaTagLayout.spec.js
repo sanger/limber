@@ -16,16 +16,22 @@ describe('ManualUltimaTagLayout', () => {
       },
     })
 
-  it('shows application names in the tag layout section as text', async () => {
-    const wrapper = makeWrapper({ ultimaApplications: ['Application A', 'Application <B> & C'] })
-    expect(wrapper.findAll('#ultima-applications li').map((item) => item.text())).toEqual([
-      'Application A',
-      'Application <B> & C',
+  it('shows the applications and primers in a table as text', async () => {
+    const wrapper = makeWrapper({
+      ultimaApplications: [
+        { name: '10x Flex v2', uga_primer: 'UG-CE-tR1', ugb_primer: 'UG-srR2' },
+        { name: 'Application <B> & C', uga_primer: null, ugb_primer: null },
+      ],
+    })
+    const textOf = (elements) => elements.map((element) => element.text())
+    const headings = textOf(wrapper.findAll('#ultima-applications th'))
+    expect(headings).toEqual(['Application', 'UGA Primer', 'UGB Primer'])
+    const rows = wrapper.findAll('#ultima-applications tbody tr')
+    expect(rows.map((row) => textOf(row.findAll('td')))).toEqual([
+      ['10x Flex v2', 'UG-CE-tR1', 'UG-srR2'],
+      ['Application <B> & C', '', ''],
     ])
     expect(wrapper.find('#ultima-applications b').exists()).toBe(false)
-    expect(wrapper.find('#ultima-applications dt').text()).toBe('Applications')
-    await wrapper.setProps({ ultimaApplications: ['Application A'] })
-    expect(wrapper.find('#ultima-applications dt').text()).toBe('Application')
     await wrapper.setProps({ ultimaApplications: [] })
     expect(wrapper.find('#ultima-applications').exists()).toBe(false)
   })
