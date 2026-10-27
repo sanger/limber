@@ -3,13 +3,21 @@ import ManualUltimaTagLayout from './ManualUltimaTagLayout.vue'
 import ManualUltimaTaggedPlate from './ManualUltimaTaggedPlate.vue'
 
 describe('ManualUltimaTaggedPlate tag set configuration', () => {
+  const applications = [
+    {
+      name: '10x Flex v2',
+      uga_primer: 'UG-CE-tR1',
+      ugb_primer: 'UG-srR2',
+    },
+  ]
+
   it.each([{ names: ['Ultima P1', 'Ultima P2'] }, { names: null }, { names: [] }])(
     'passes allowed tag set names $names to the manual controls',
     ({ names }) => {
       const wrapper = shallowMount(ManualUltimaTaggedPlate, {
         props: {
           allowedTagSetNames: JSON.stringify(names),
-          ultimaApplications: JSON.stringify(['Application A']),
+          ultimaApplications: JSON.stringify(applications),
         },
         global: {
           stubs: {
@@ -20,8 +28,9 @@ describe('ManualUltimaTaggedPlate tag set configuration', () => {
           },
         },
       })
-      expect(wrapper.findComponent(ManualUltimaTagLayout).props('allowedTagSetNames')).toEqual(names)
-      expect(wrapper.findComponent(ManualUltimaTagLayout).props('ultimaApplications')).toEqual(['Application A'])
+      const controls = wrapper.findComponent(ManualUltimaTagLayout)
+      expect(controls.props('allowedTagSetNames')).toEqual(names)
+      expect(controls.props('ultimaApplications')).toEqual(applications)
     },
   )
 })
