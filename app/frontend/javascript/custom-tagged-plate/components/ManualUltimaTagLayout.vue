@@ -7,14 +7,22 @@
       includes="tag_group,tag2_group"
       @change="tagSetsLookupUpdated"
     />
-    <dl v-if="ultimaApplications.length" id="ultima-applications" class="mb-3">
-      <dt>{{ ultimaApplications.length === 1 ? 'Application' : 'Applications' }}</dt>
-      <dd>
-        <ul class="list-unstyled mb-0">
-          <li v-for="application in ultimaApplications" :key="application">{{ application }}</li>
-        </ul>
-      </dd>
-    </dl>
+    <table v-if="ultimaApplications.length" id="ultima-applications" class="table table-sm mb-3">
+      <thead>
+        <tr>
+          <th scope="col">Application</th>
+          <th scope="col">UGA Primer</th>
+          <th scope="col">UGB Primer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="application in ultimaApplications" :key="application.name">
+          <td>{{ application.name }}</td>
+          <td>{{ application.uga_primer }}</td>
+          <td>{{ application.ugb_primer }}</td>
+        </tr>
+      </tbody>
+    </table>
     <b-form-group label="Ultima Tag Set:" label-for="ultima_tag_set" class="mb-3">
       <b-form-select
         id="ultima_tag_set"
@@ -48,6 +56,8 @@ export default {
   name: 'ManualUltimaTagLayout',
   mixins: [TagLayout],
   props: {
+    // The applications of the plate's requests, each with name, uga_primer
+    // and ugb_primer, in the column order of the wells
     ultimaApplications: {
       type: Array,
       default: () => [],

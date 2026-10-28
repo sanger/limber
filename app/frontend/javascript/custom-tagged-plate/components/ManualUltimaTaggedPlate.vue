@@ -8,7 +8,7 @@
         :tags-per-well="controls.tagsPerWell"
         :tag-group-adapter-type-name-filter="tagGroupAdapterTypeNameFilter"
         :allowed-tag-set-names="configuredAllowedTagSetNames"
-        :ultima-applications="applicationNames"
+        :ultima-applications="applications"
         @tagparamsupdated="controls.updateTagParams"
       />
     </template>
@@ -38,7 +38,7 @@ export default {
     },
   },
   computed: {
-    applicationNames() {
+    applications() {
       return JSON.parse(this.ultimaApplications)
     },
     configuredAllowedTagSetNames() {
