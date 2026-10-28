@@ -1,0 +1,45 @@
+HTTP/1.1 200 OK
+Content-Type: application/vnd.api+json
+
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "ultima_applications",
+      "attributes": {
+        "name": "10x Flex v2",
+        "description": "10x Genomics GEM-X Flex v2 Gene Expression"
+      },
+      "relationships": {
+        "uga_primer": {
+          "data": {
+            "type": "ultima_primers",
+            "id": "1"
+          }
+        },
+        "ugb_primer": {
+          "data": {
+            "type": "ultima_primers",
+            "id": "2"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "1",
+      "type": "ultima_primers",
+      "attributes": {
+        "name": "UG-CE-tR1"
+      }
+    },
+    {
+      "id": "2",
+      "type": "ultima_primers",
+      "attributes": {
+        "name": "UG-srR2"
+      }
+    }
+  ]
+}

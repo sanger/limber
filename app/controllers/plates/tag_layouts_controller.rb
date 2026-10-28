@@ -14,6 +14,8 @@ class Plates::TagLayoutsController < ApplicationController
   def new
     @tags_per_well = purpose_config.fetch(:tags_per_well, 1)
     @tag_group_adapter_type_name_filter = purpose_config.fetch(:tag_group_adapter_type_name_filter, nil)
+    @ultima_applications = ultima_applications
+    @allowed_tag_set_names = allowed_tag_set_names
   end
 
   # Responds to the custom tagged plate page with the page to redirect to.
@@ -25,6 +27,44 @@ class Plates::TagLayoutsController < ApplicationController
   end
 
   private
+
+  # The names of the Ultima applications of the plate's requests, in the
+  # column order of the wells
+  def application_names
+    @application_names ||=
+      plate
+        .wells_in_columns
+        .flat_map(&:all_requests)
+        .reject(&:cancelled?)
+        .filter_map(&:ultima_application)
+        .compact_blank
+        .uniq
+  end
+
+  # The applications with their UGA and UGB primers, so the lab can check
+  # which primers to use. The primers are nil if Sequencescape does not
+  # return the application.
+  def ultima_applications
+    return [] if application_names.empty?
+
+    found = Sequencescape::Api::V2::UltimaApplication.find_all(
+      { name: application_names }
+    )
+    application_names.map do |name|
+      application = found.find { |record| record.name == name }
+      {
+        name: name,
+        uga_primer: application&.uga_primer&.name,
+        ugb_primer: application&.ugb_primer&.name
+      }
+    end
+  end
+
+  def allowed_tag_set_names
+    mapping = (purpose_config[:allowed_tag_sets_by_application] || {}).with_indifferent_access
+    lists = application_names.filter_map { |application| mapping[application] }
+    lists.reduce { |allowed, names| allowed & names }
+  end
 
   # The new tags replace the existing tags of the plate: without a tag2 group,
   # the existing tag2 is removed instead of kept.
