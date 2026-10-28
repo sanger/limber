@@ -11,7 +11,7 @@ class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
       third_line: labware.purpose_name,
       fourth_line: date_today,
       round_label_top_line: labware.barcode.prefix,
-      round_label_bottom_line: labware.barcode.number,
+      round_label_bottom_line: labware.barcode.number_or_human,
       barcode: labware.barcode.ean13
     }
   end
@@ -36,6 +36,6 @@ class Labels::TubeLabel < Labels::Base # rubocop:todo Style/Documentation
 
   def second_line
     pools_size = @options[:pool_size] || labware.aliquots.count
-    "#{labware.barcode.number}, P#{pools_size}"
+    "#{labware.barcode.number_or_human}, P#{pools_size}"
   end
 end
