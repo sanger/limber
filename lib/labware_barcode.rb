@@ -59,6 +59,8 @@ class LabwareBarcode
     @sbcf ||= SBCF::SangerBarcode.from_human(@human)
   end
 
+  # Letters, an optional dash, then digits, at the start of the human barcode,
+  # such as DN and 123 in DN123H; anything after the digits is ignored
   def extracted
     /\A(?<prefix>[a-zA-Z]*)-?(?<number>\d+)/.match(human)
   end
