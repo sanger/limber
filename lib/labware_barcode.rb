@@ -18,6 +18,22 @@ class LabwareBarcode
     extracted && extracted[:prefix]
   end
 
+  # The prefix and number, such as DN123 for DN123H, or the human barcode when
+  # it has no number, such as an external barcode from a supplier
+  #
+  # @return [String]
+  def prefix_and_number_or_human
+    number ? "#{prefix}#{number}" : human
+  end
+
+  # The number, such as 123 for DN123H, or the human barcode when it has no
+  # number
+  #
+  # @return [String]
+  def number_or_human
+    number || human
+  end
+
   def to_s
     @human
   end
