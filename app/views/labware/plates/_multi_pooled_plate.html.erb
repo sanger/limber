@@ -1,10 +1,8 @@
 <h2>Source Plates</h2>
 <% presenter.labware.transfers_as_destination.each_with_index do |transfer,i| %>
-  <% stock_barcode = transfer.source.stock_plate.barcode %>
-  <% source_barcode = transfer.source.barcode %>
-  <h3><%= "#{@presenter.bed_prefix}#{i + 1}: " \
-          "#{stock_barcode.prefix_and_number_or_human} " \
-          "(#{source_barcode.prefix_and_number_or_human})" %></h3>
+  <% stock = transfer.source.stock_plate.barcode.prefix_and_number_or_human %>
+  <% source = transfer.source.barcode.prefix_and_number_or_human %>
+  <h3><%= "#{@presenter.bed_prefix}#{i + 1}: #{stock} (#{source})" %></h3>
   <%= render partial: 'pooled_plate', locals: { plate_presenter: presenter, walker: presenter.walk_source, transfers: transfer.transfers } %>
 <% end %>
 <br />
