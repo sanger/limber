@@ -10,7 +10,6 @@ describe('LabwareCustomMetadataAddForm', () => {
   let labwareId = '123'
   let userId = '456'
   let sequencescapeApi = 'http://example.com/v2'
-  let sequencescapeApiKey = 'test-api-key'
   let sequencescapeUrl = 'http://example.com'
   let customMetadata = {}
   let customMetadatumCollectionsId
@@ -52,7 +51,6 @@ describe('LabwareCustomMetadataAddForm', () => {
         labwareId,
         userId,
         sequencescapeApi,
-        sequencescapeApiKey,
         sequencescapeUrl,
       },
     })
@@ -158,9 +156,7 @@ describe('LabwareCustomMetadataAddForm', () => {
         await flushPromises()
 
         expect(axios.get).toHaveBeenCalledTimes(1)
-        expect(axios.get).toHaveBeenCalledWith(expect.any(String), {
-          headers: { 'X-Sequencescape-Client-Id': sequencescapeApiKey },
-        })
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/labware/123'))
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
         expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': 'a value' })
@@ -290,7 +286,7 @@ describe('LabwareCustomMetadataAddForm', () => {
           expect.objectContaining({
             url: expect.any(String),
             method: 'PATCH',
-            headers: expect.objectContaining({ 'X-Sequencescape-Client-Id': sequencescapeApiKey }),
+            headers: { 'Content-Type': 'application/vnd.api+json' },
           }),
         )
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
@@ -312,7 +308,7 @@ describe('LabwareCustomMetadataAddForm', () => {
           expect.objectContaining({
             url: expect.any(String),
             method: 'POST',
-            headers: expect.objectContaining({ 'X-Sequencescape-Client-Id': sequencescapeApiKey }),
+            headers: { 'Content-Type': 'application/vnd.api+json' },
           }),
         )
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)

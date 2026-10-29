@@ -73,10 +73,6 @@ export default {
       type: String,
       required: true,
     },
-    sequencescapeApiKey: {
-      type: String,
-      required: true,
-    },
     sequencescapeUrl: {
       type: String,
       required: true,
@@ -142,9 +138,7 @@ export default {
       let metadata = {}
 
       try {
-        const { data } = await axios.get(url, {
-          headers: { 'X-Sequencescape-Client-Id': this.sequencescapeApiKey },
-        })
+        const { data } = await axios.get(url)
         if (data && data.included) {
           this.customMetadatumCollectionsId = data.included[0].id
           metadata = data.included[0].attributes.metadata
@@ -192,10 +186,7 @@ export default {
           method,
           url,
           data: body,
-          headers: {
-            'Content-Type': 'application/vnd.api+json',
-            'X-Sequencescape-Client-Id': this.sequencescapeApiKey,
-          },
+          headers: { 'Content-Type': 'application/vnd.api+json' },
         })
         if (data.errors) {
           throw data.errors

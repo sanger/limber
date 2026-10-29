@@ -1,6 +1,5 @@
 <div id='multi-stamp-library-splitter-page'
-     data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-     data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+     data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>"
      data-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
      data-children-library-type-to-purpose-mapping-json="<%= @labware_creator.children_library_type_to_purpose_mapping.to_json %>"
      data-target-url="<%= plate_child_plate_creations_path(@labware_creator.parent) %>"

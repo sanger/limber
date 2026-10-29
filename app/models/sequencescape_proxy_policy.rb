@@ -18,6 +18,7 @@ class SequencescapeProxyPolicy
     custom_metadatum_collections
     qc_assays
     qc_results
+    qcables
   ].freeze
 
   # Resources the browser may create or modify, by verb
