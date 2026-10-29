@@ -14,7 +14,7 @@
 <%= card title: 'QC Information' do %>
   <div id="qc-information"
         data-asset-uuid="<%= @presenter.uuid %>"
-        data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>">
+        data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>">
   </div>
 <% end %>
 
@@ -61,7 +61,7 @@
 <%= card title: 'Adding a Comment' do %>
   <div id="asset-comments-add-form"
     data-comment-title="<%= presenter.comment_title %>"
-    data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>"
+    data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>"
     data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
     data-asset-id="<%= presenter.id %>">
   </div>
@@ -70,7 +70,7 @@
 <%= card title: 'Adding Custom Metadata', css_class: 'logged_in_only' do %>
   <div id="labware-custom-metadata-add-form"
     data-custom-metadata-fields="<%= presenter.custom_metadata_fields %>"
-    data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>"
+    data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>"
     data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
     data-labware-id="<%= presenter.id %>">
   </div>

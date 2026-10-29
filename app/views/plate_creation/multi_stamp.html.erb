@@ -1,5 +1,5 @@
 <div id='multi-stamp-page'
-     data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>"
+     data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>"
      data-purpose-uuid="<%= @labware_creator.purpose_uuid %>"
      data-target-url="<%= plate_child_plate_creations_path(@labware_creator.parent) %>"
      data-requests-filter="<%= @labware_creator.request_filter %>"

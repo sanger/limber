@@ -1,6 +1,6 @@
 <%# Manual Ultima tagging page for adding tags to the plate itself; see Plates::TagLayoutsController %>
 <div id='manual-ultima-tagged-plate-page'
-     data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>"
+     data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>"
      data-purpose-uuid="<%= @plate.purpose.uuid %>"
      data-purpose-name="<%= @plate.purpose.name %>"
      data-target-url="<%= plate_tag_layouts_path(@plate) %>"

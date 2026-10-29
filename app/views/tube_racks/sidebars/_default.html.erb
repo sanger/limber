@@ -29,7 +29,7 @@
   <%= card title: 'Adding a Comment', css_class: 'logged_in_only' do %>
     <div id="asset-comments-add-form"
       data-comment-title="<%= presenter.comment_title %>"
-      data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>"
+      data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>"
       data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
       data-asset-id="<%= presenter.id %>">
     </div>
