@@ -11,12 +11,19 @@ RSpec.describe SequencescapeProxyController do
   end
 
   context 'when not logged in' do
-    before { get '/sequencescape_proxy/labware/1' }
+    it 'rejects writes with 401 without calling Sequencescape', :aggregate_failures do
+      post '/sequencescape_proxy/comments', params: '{}', headers: { 'Content-Type' => 'application/vnd.api+json' }
 
-    it { expect(response).to have_http_status(:unauthorized) }
-
-    it 'does not call Sequencescape' do
+      expect(response).to have_http_status(:unauthorized)
       expect(a_request(:any, /example.com/)).not_to have_been_made
+    end
+
+    it 'allows reads, so read-only pages work for guests' do
+      stub = stub_request(:get, "#{upstream}/labware/1").to_return(status: 200, body: '{}')
+
+      get '/sequencescape_proxy/labware/1'
+
+      expect(stub).to have_been_requested
     end
   end
 

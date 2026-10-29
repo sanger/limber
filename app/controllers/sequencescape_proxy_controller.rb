@@ -2,7 +2,8 @@
 
 # Forwards browser requests to the Sequencescape v2 API, adding the API key on the server
 # so that it never has to be exposed to the browser. Only requests permitted by
-# SequencescapeProxyPolicy from logged-in users are forwarded.
+# SequencescapeProxyPolicy are forwarded, and anything other than a read needs a logged-in user
+# (read-only Limber pages are viewable without logging in).
 class SequencescapeProxyController < ApplicationController
   # Reject (rather than silently null the session of) state-changing requests lacking a valid CSRF token
   protect_from_forgery with: :exception
@@ -30,7 +31,7 @@ class SequencescapeProxyController < ApplicationController
   private
 
   def check_for_login_or_unauthorized!
-    head :unauthorized unless logged_in?
+    head :unauthorized unless request.get? || logged_in?
   end
 
   def upstream_request(path)

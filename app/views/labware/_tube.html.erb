@@ -11,8 +11,7 @@
         <a class="nav-link" href="#relatives_tab" data-bs-toggle="tab" role="tab" data-plate-view="pools-view">Relatives</a>
       </li>
       <% data_attributes = {
-           sequencescape_api: Limber::Application.config.api.v2.connection_options.js_url,
-           sequencescape_api_key: Limber::Application.config.api.v2.connection_options.authorisation,
+           sequencescape_api: Limber::Application.config.api.v2.connection_options.proxy_url,
            asset_id: presenter.id
          } %>
       <li class="nav-item">
@@ -32,8 +31,7 @@
       <%= render partial: 'relatives_list', locals: { presenter: } %>
     </div>
     <div class="tab-pane" id='comments_tab' role="tabpanel">
-      <div id='asset-comments' data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-                               data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+      <div id='asset-comments' data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.proxy_url %>"
                                data-asset-id="<%= presenter.id %>">
       </div>
     </div>

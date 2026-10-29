@@ -4,7 +4,6 @@ import eventBus from '@/javascript/shared/eventBus.js'
 
 const commentProps = {
   sequencescapeApi: 'http://example.com/api',
-  sequencescapeApiKey: 'test-api-key',
   assetId: '123',
   userId: 'user_id',
 }
