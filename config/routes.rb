@@ -94,7 +94,8 @@ Rails.application.routes.draw do
   # rubocop:enable Layout/LineLength
 
   # Proxies browser requests to the Sequencescape API, adding the API key server-side
-  match 'sequencescape_proxy/*path', to: 'sequencescape_proxy#forward', via: %i[get post patch], format: false, as: :sequencescape_proxy
+  match 'sequencescape_proxy/*path', to: 'sequencescape_proxy#forward', via: %i[get post patch], format: false,
+                                     as: :sequencescape_proxy
 
   # Printing can do individual or multiple labels
   scope 'print', controller: :barcode_labels, via: :post do
