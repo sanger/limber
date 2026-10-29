@@ -70,9 +70,6 @@ export default {
     // Sequencescape API V2 URL.
     sequencescapeApi: { type: String, default: 'http://localhost:3000/api/v2' },
 
-    // Sequencescape API V2 API key
-    sequencescapeApiKey: { type: String, default: 'development' },
-
     // Purpose config JSON string of objects keyed by purpose UUIDs.
     purposeConfigJson: { type: String, required: true },
   },
@@ -80,7 +77,7 @@ export default {
     return {
       // Devour API object to deserialise assets from sequencescape API.
       // (See ../../shared/resources.js for details)
-      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources, this.sequencescapeApiKey),
+      devourApi: devourApi({ apiUrl: this.sequencescapeApi }, resources),
 
       // Flag for toggling loading screen
       loading: false,

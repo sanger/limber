@@ -1,17 +1,23 @@
 import { flushPromises } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
+import axios from 'axios'
 import LabwareCustomMetadataAddForm from './LabwareCustomMetadataAddForm.vue'
+
+vi.mock('axios')
 
 describe('LabwareCustomMetadataAddForm', () => {
   let customMetadataFields = '[]'
   let labwareId = '123'
   let userId = '456'
   let sequencescapeApi = 'http://example.com/v2'
-  let sequencescapeApiKey = 'test-api-key'
   let sequencescapeUrl = 'http://example.com'
   let customMetadata = {}
   let customMetadatumCollectionsId
   let mockFetchData = {}
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
 
   const wrapperFactory = function (data) {
     const parent = {
@@ -25,11 +31,8 @@ describe('LabwareCustomMetadataAddForm', () => {
       },
     }
 
-    global.fetch = vi.fn().mockReturnValue(
-      Promise.resolve({
-        json: () => Promise.resolve(data),
-      }),
-    )
+    axios.get = vi.fn().mockResolvedValue({ data })
+    axios.mockResolvedValue({ data })
 
     // This is a workaround for the following warning:
     // [BootstrapVue warn]: tooltip - The provided target is no valid HTML element.
@@ -48,7 +51,6 @@ describe('LabwareCustomMetadataAddForm', () => {
         labwareId,
         userId,
         sequencescapeApi,
-        sequencescapeApiKey,
         sequencescapeUrl,
       },
     })
@@ -153,10 +155,8 @@ describe('LabwareCustomMetadataAddForm', () => {
 
         await flushPromises()
 
-        expect(global.fetch).toHaveBeenCalledTimes(1)
-        expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
-          headers: { 'X-Sequencescape-Client-Id': sequencescapeApiKey },
-        })
+        expect(axios.get).toHaveBeenCalledTimes(1)
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/labware/123'))
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
         expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': 'a value' })
@@ -170,7 +170,7 @@ describe('LabwareCustomMetadataAddForm', () => {
 
         await flushPromises()
 
-        expect(global.fetch).toHaveBeenCalledTimes(1)
+        expect(axios.get).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(undefined)
         expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': '' })
@@ -186,7 +186,7 @@ describe('LabwareCustomMetadataAddForm', () => {
 
         await flushPromises()
 
-        expect(global.fetch).toHaveBeenCalledTimes(1)
+        expect(axios.get).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
         expect(wrapper.vm.form).toEqual({ a_value_that_is_not_config: 'a value' })
@@ -207,7 +207,7 @@ describe('LabwareCustomMetadataAddForm', () => {
 
         await flushPromises()
 
-        expect(global.fetch).toHaveBeenCalledTimes(1)
+        expect(axios.get).toHaveBeenCalledTimes(1)
 
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
         expect(wrapper.vm.form).toEqual({ 'RT LunaScript Super Mix': '', a_value_that_is_not_config: 'a value' })
@@ -281,12 +281,12 @@ describe('LabwareCustomMetadataAddForm', () => {
 
         await flushPromises()
 
-        expect(global.fetch).toHaveBeenCalledTimes(2) // 1 on mount
-        expect(global.fetch).toHaveBeenLastCalledWith(
-          expect.any(String),
+        expect(axios).toHaveBeenCalledTimes(1)
+        expect(axios).toHaveBeenCalledWith(
           expect.objectContaining({
+            url: expect.any(String),
             method: 'PATCH',
-            headers: expect.objectContaining({ 'X-Sequencescape-Client-Id': sequencescapeApiKey }),
+            headers: { 'Content-Type': 'application/vnd.api+json' },
           }),
         )
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
@@ -303,12 +303,12 @@ describe('LabwareCustomMetadataAddForm', () => {
 
         await flushPromises()
 
-        expect(global.fetch).toHaveBeenCalledTimes(2) // 1 on mount
-        expect(global.fetch).toHaveBeenLastCalledWith(
-          expect.any(String),
+        expect(axios).toHaveBeenCalledTimes(1)
+        expect(axios).toHaveBeenCalledWith(
           expect.objectContaining({
+            url: expect.any(String),
             method: 'POST',
-            headers: expect.objectContaining({ 'X-Sequencescape-Client-Id': sequencescapeApiKey }),
+            headers: { 'Content-Type': 'application/vnd.api+json' },
           }),
         )
         expect(wrapper.vm.customMetadatumCollectionsId).toEqual(labwareId)
