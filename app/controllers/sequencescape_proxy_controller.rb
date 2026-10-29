@@ -4,6 +4,9 @@
 # so that it never has to be exposed to the browser. Only requests permitted by
 # SequencescapeProxyPolicy from logged-in users are forwarded.
 class SequencescapeProxyController < ApplicationController
+  # Reject (rather than silently null the session of) state-changing requests lacking a valid CSRF token
+  protect_from_forgery with: :exception
+
   before_action :check_for_login_or_unauthorized!
 
   FORWARDED_RESPONSE_HEADERS = %w[Content-Type].freeze

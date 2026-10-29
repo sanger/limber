@@ -49,6 +49,7 @@
 // onSubmit remove any fields that have no data
 // Send a patch or post request, depending whether metadata already exists
 // All metadata should be either created or overwrited
+import axios from 'axios'
 import BoxArrowUpRight from '@/javascript/icons/BoxArrowUpRight.vue'
 export default {
   name: 'LabwareCustomMetadataAddForm',
@@ -140,21 +141,17 @@ export default {
       let url = `${this.sequencescapeApi}/labware/${this.labwareId}?include=custom_metadatum_collection`
       let metadata = {}
 
-      await fetch(url, {
-        headers: { 'X-Sequencescape-Client-Id': this.sequencescapeApiKey },
-      })
-        .then((response) => {
-          return response.json()
+      try {
+        const { data } = await axios.get(url, {
+          headers: { 'X-Sequencescape-Client-Id': this.sequencescapeApiKey },
         })
-        .then((data) => {
-          if (data && data.included) {
-            this.customMetadatumCollectionsId = data.included[0].id
-            metadata = data.included[0].attributes.metadata
-          }
-        })
-        .catch((error) => {
-          console.error('Error:', error)
-        })
+        if (data && data.included) {
+          this.customMetadatumCollectionsId = data.included[0].id
+          metadata = data.included[0].attributes.metadata
+        }
+      } catch (error) {
+        console.error('Error:', error)
+      }
       return metadata
     },
     populateForm(metadata) {
@@ -190,26 +187,25 @@ export default {
       let method = this.customMetadatumCollectionsId ? 'PATCH' : 'POST'
       let body = this.buildPayload(method, this.customMetadatumCollectionsId, metadata)
 
-      await fetch(url, {
-        method,
-        body: JSON.stringify(body),
-        headers: {
-          'Content-Type': 'application/vnd.api+json',
-          'X-Sequencescape-Client-Id': this.sequencescapeApiKey,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.errors) {
-            throw data.errors
-          }
-          this.customMetadatumCollectionsId = data.data.id
-          this.state = 'success'
+      try {
+        const { data } = await axios({
+          method,
+          url,
+          data: body,
+          headers: {
+            'Content-Type': 'application/vnd.api+json',
+            'X-Sequencescape-Client-Id': this.sequencescapeApiKey,
+          },
         })
-        .catch((error) => {
-          console.error('Error:', error)
-          this.state = 'failure'
-        })
+        if (data.errors) {
+          throw data.errors
+        }
+        this.customMetadatumCollectionsId = data.data.id
+        this.state = 'success'
+      } catch (error) {
+        console.error('Error:', error)
+        this.state = 'failure'
+      }
     },
     buildUrl(customMetadatumCollectionsId) {
       let path = customMetadatumCollectionsId
