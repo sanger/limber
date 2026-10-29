@@ -37,4 +37,39 @@ RSpec.describe LabwareBarcode do
 
     it_behaves_like 'a labware barcode', { ean13: nil, machine: 'HT-111123', human: 'HT-111123' }
   end
+
+  # A barcode whose human and machine forms are the same, as for foreign ones
+  def barcode(human)
+    described_class.new(human: human, machine: human)
+  end
+
+  describe '#prefix_and_number_or_human' do
+    it 'gives the prefix and number of a Sanger barcode' do
+      expect(barcode('DN123H').prefix_and_number_or_human).to eq('DN123')
+    end
+
+    it 'gives the prefix and number of another barcode with a number' do
+      expect(barcode('HT-111123').prefix_and_number_or_human)
+        .to eq('HT111123')
+    end
+
+    it 'gives the whole barcode when it has no number' do
+      expect(barcode('SAPIO-PLATE').prefix_and_number_or_human)
+        .to eq('SAPIO-PLATE')
+    end
+  end
+
+  describe '#number_or_human' do
+    it 'gives the number of a Sanger barcode' do
+      expect(barcode('DN123H').number_or_human).to eq('123')
+    end
+
+    it 'gives the number of another barcode with a number' do
+      expect(barcode('HT-111123').number_or_human).to eq('111123')
+    end
+
+    it 'gives the whole barcode when it has no number' do
+      expect(barcode('SAPIO-PLATE').number_or_human).to eq('SAPIO-PLATE')
+    end
+  end
 end
