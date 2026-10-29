@@ -3,23 +3,8 @@
 # Decides which requests the browser may make to Sequencescape via the proxy.
 # Paths are relative to the Sequencescape v2 API root, e.g. 'labware/1?include=comments'.
 class SequencescapeProxyPolicy
-  READ_RESOURCES = %w[
-    labware
-    plates
-    tubes
-    tube_racks
-    wells
-    receptacles
-    purposes
-    tag_groups
-    tag_sets
-    comments
-    users
-    custom_metadatum_collections
-    qc_assays
-    qc_results
-    qcables
-  ].freeze
+  # Only what the browser-side code actually queries
+  READ_RESOURCES = %w[labware plates tubes qcables tag_groups tag_sets].freeze
 
   # Resources the browser may create or modify, by verb
   WRITE_RESOURCES = {

@@ -10,7 +10,7 @@ class SequencescapeProxyController < ApplicationController
 
   before_action :check_for_login_or_unauthorized!
 
-  FORWARDED_RESPONSE_HEADERS = %w[Content-Type].freeze
+  JSON_API = 'application/vnd.api+json'
   OPEN_TIMEOUT = 10
   READ_TIMEOUT = 300
 
@@ -21,7 +21,7 @@ class SequencescapeProxyController < ApplicationController
     response = upstream_request(path)
     render body: response.body,
            status: response.status,
-           content_type: response.headers['Content-Type'] || 'application/vnd.api+json'
+           content_type: JSON_API
   rescue Faraday::TimeoutError
     head :gateway_timeout
   rescue Faraday::Error
@@ -45,8 +45,8 @@ class SequencescapeProxyController < ApplicationController
   # attempt to supply its own API key are dropped.
   def upstream_headers
     {
-      'Accept' => request.headers['Accept'].presence || 'application/vnd.api+json',
-      'Content-Type' => request.content_type.presence || 'application/vnd.api+json',
+      'Accept' => JSON_API,
+      'Content-Type' => JSON_API,
       'X-Sequencescape-Client-Id' => api_options.authorisation
     }
   end

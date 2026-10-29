@@ -8,6 +8,7 @@ RSpec.describe SequencescapeProxyPolicy do
       %w[GET labware],
       %w[get labware/12],
       %w[GET labware/12/comments],
+      %w[GET tubes],
       %w[GET plates?filter[barcode]=DN1&include=wells],
       %w[GET tag_sets],
       %w[GET tag_groups],
