@@ -112,4 +112,24 @@ describe('ManualUltimaTagLayout', () => {
     const wrapper = makeWrapper({ tagGroupAdapterTypeNameFilter: '' })
     expect(wrapper.findComponent({ name: 'TagSetsLookup' }).props('filter')).toEqual({})
   })
+
+  it('clears selected tag data when lookup becomes invalid after filtering out configured sets', async () => {
+    const wrapper = makeWrapper({ allowedTagSetNames: ['Ultima P1'] })
+    const tagGroup = { uuid: 'p1', name: 'P1', tags: [{ index: 1, oligo: 'ACGT' }] }
+
+    wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', {
+      state: 'valid',
+      results: {
+        first: { id: 'first', name: 'Ultima P1', tag_group: tagGroup },
+      },
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.find('#ultima_tag_set').setValue('first')
+
+    await wrapper.setProps({ allowedTagSetNames: ['Missing tag set'] })
+    expect(wrapper.vm.coreTagSetOptions).toEqual([])
+
+    wrapper.findComponent({ name: 'TagSetsLookup' }).vm.$emit('change', { state: 'invalid' })
+    expect(wrapper.emitted('tagparamsupdated').at(-1)[0].tag1Group.tags).toEqual([])
+  })
 })

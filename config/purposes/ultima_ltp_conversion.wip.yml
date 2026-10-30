@@ -44,6 +44,11 @@ ULTP DNA Norm:
   #   '10x Flex v2':
   #     - Ultima P1
   #     - Ultima P2
+  :file_links:
+    - name: Download Tag Transfer Picklist
+      id: tag_transfer_picklist
+      states:
+        - processed_2
   :state_changer_class: StateChangers::AutomaticPlateStateChanger
   :work_completion_request_type: 'limber_ultima_ltp_aggregation'
 ULTP PCR XP:
