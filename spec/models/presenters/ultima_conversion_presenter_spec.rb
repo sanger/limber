@@ -141,6 +141,32 @@ RSpec.describe Presenters::UltimaConversionPresenter do
     end
   end
 
+  describe 'tag transfer picklist link' do
+    before do
+      config = YAML.load_file(
+        Rails.root.join('config/purposes/ultima_ltp_conversion.wip.yml'),
+        permitted_classes: [Symbol]
+      ).fetch('ULTP DNA Norm')
+      create :purpose_config,
+             uuid: labware.purpose.uuid,
+             name: purpose_name,
+             file_links: config.fetch(:file_links)
+    end
+
+    %w[pending processed_1 processed_2 passed].each do |plate_state|
+      context "when #{plate_state}" do
+        let(:state) { plate_state }
+
+        it 'shows the picklist only after tagging' do
+          link_names = subject.csv_file_links.map(&:first)
+          expect(link_names.include?('Download Tag Transfer Picklist')).to eq(
+            plate_state == 'processed_2'
+          )
+        end
+      end
+    end
+  end
+
   describe 'button labels' do
     let(:state) { 'processed_1' }
     let(:default_target_states) { %w[processed_1 passed] }
