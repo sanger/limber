@@ -5,6 +5,24 @@ require 'rails_helper'
 RSpec.describe Sequencescape::Api::V2::Request do
   subject(:request) { create :library_request_with_poly_metadata }
 
+  describe '#ultima_application' do
+    subject(:application) { create(:library_request, options:).ultima_application }
+
+    let(:options) { { 'ultima_application' => 'Ultima application A' } }
+
+    it 'reads the application name from the request options' do
+      expect(application).to eq('Ultima application A')
+    end
+
+    context 'without an application' do
+      let(:options) { {} }
+
+      it 'returns nil' do
+        expect(application).to be_nil
+      end
+    end
+  end
+
   describe '#poly_metadata' do
     # In reality, we will not pass metadatable into the initializer as this factory makes it appear.
     # To use this we found we had to do these steps:

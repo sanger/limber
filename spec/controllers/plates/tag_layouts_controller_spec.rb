@@ -8,6 +8,10 @@ RSpec.describe Plates::TagLayoutsController do
   let(:purpose_uuid) { 'tagged-in-place-purpose-uuid' }
   let(:purpose_name) { 'Tagged in place purpose' }
   let(:state) { 'processed_1' }
+  let(:allowed_tag_sets_by_application) { { '10x Flex v2' => ['Ultima P1', 'Ultima P2'] } }
+  let(:application_requests) { [] }
+  # The Ultima applications Sequencescape returns, with their primers
+  let(:found_applications) { [] }
   let(:plate) do
     create :plate, uuid: plate_uuid, state: state, purpose_uuid: purpose_uuid, purpose_name: purpose_name,
                    pool_sizes: [2]
@@ -18,17 +22,214 @@ RSpec.describe Plates::TagLayoutsController do
            uuid: purpose_uuid,
            name: purpose_name,
            presenter_class: 'Presenters::UltimaConversionPresenter',
-           tags_per_well: 1
+           tags_per_well: 1,
+           tag_group_adapter_type_name_filter: 'Ultima',
+           allowed_tag_sets_by_application: allowed_tag_sets_by_application
     create :purpose_config, uuid: 'child-purpose-uuid', name: 'Child purpose'
     create :pipeline, relationships: { purpose_name => 'Child purpose' }
+    allow(plate.wells.first).to receive(:requests_as_source).and_return(application_requests)
+    allow(Sequencescape::Api::V2::UltimaApplication)
+      .to receive(:find_all).and_return(found_applications)
     stub_plate(plate, stub_search: false)
   end
 
   describe '#new' do
+    render_views
+
     context 'when tags can be added' do
+      before { get :new, params: { plate_id: plate_uuid }, session: { user_uuid: } }
+
       it 'renders the tagging page' do
-        get :new, params: { plate_id: plate_uuid }, session: { user_uuid: }
         expect(response).to have_http_status(:ok)
+      end
+
+      it 'mounts the manual Ultima component' do
+        expect(response.body).to include('id=\'manual-ultima-tagged-plate-page\'')
+      end
+
+      it 'passes an empty application list when no names are available' do
+        page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+        expect(JSON.parse(page['data-ultima-applications'])).to eq([])
+      end
+
+      it 'does not look up primers when no names are available' do
+        expect(Sequencescape::Api::V2::UltimaApplication)
+          .not_to have_received(:find_all)
+      end
+
+      context 'with application names on the requests' do
+        let(:application_requests) do
+          [
+            create(:library_request, options: { 'ultima_application' => 'Application A' }),
+            create(:library_request, options: { 'ultima_application' => 'Application A' }),
+            create(:library_request, options: { 'ultima_application' => 'Application <B> & C' }),
+            create(:library_request, options: { 'ultima_application' => '' }),
+            create(:library_request, options: {}),
+            create(:library_request, state: 'cancelled', options: { 'ultima_application' => 'Cancelled application' })
+          ]
+        end
+
+        it 'passes distinct application names and excludes blank or cancelled entries' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          names = JSON.parse(page['data-ultima-applications']).pluck('name')
+          expect(names).to eq(['Application A', 'Application <B> & C'])
+        end
+
+        it 'looks up the primers of those applications by name' do
+          expect(Sequencescape::Api::V2::UltimaApplication)
+            .to have_received(:find_all)
+            .with({ name: ['Application A', 'Application <B> & C'] })
+        end
+
+        it 'passes no primers for applications Sequencescape does not return' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          applications = JSON.parse(page['data-ultima-applications'])
+          expect(applications.pluck('uga_primer', 'ugb_primer'))
+            .to eq([[nil, nil], [nil, nil]])
+        end
+
+        it 'leaves application rendering to the tag layout controls' do
+          expect(response.parsed_body.at_css('#ultima-applications')).to be_nil
+        end
+      end
+
+      context 'with the primers of the application in Sequencescape' do
+        let(:application_requests) do
+          [
+            create(:library_request,
+                   options: { 'ultima_application' => '10x Flex v2' })
+          ]
+        end
+        let(:found_applications) do
+          [
+            create(:ultima_application,
+                   name: '10x Flex v2',
+                   uga_primer: create(:ultima_primer, name: 'UG-CE-tR1'),
+                   ugb_primer: create(:ultima_primer, name: 'UG-srR2'))
+          ]
+        end
+
+        it 'passes the application with its primers' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-ultima-applications'])).to eq(
+            [
+              {
+                'name' => '10x Flex v2',
+                'uga_primer' => 'UG-CE-tR1',
+                'ugb_primer' => 'UG-srR2'
+              }
+            ]
+          )
+        end
+      end
+
+      it 'filters tag sets by Ultima adapter type' do
+        expect(response.body).to include('data-tag-group-adapter-type-name-filter="Ultima"')
+      end
+
+      it 'leaves the Ultima lookup unrestricted when no application is present' do
+        page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+        expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
+      end
+
+      context 'with the 10x Flex v2 application' do
+        let(:application_requests) do
+          [create(:library_request, options: { 'ultima_application' => '10x Flex v2' })]
+        end
+
+        it 'passes its configured allowed names in config order' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-allowed-tag-set-names'])).to eq(['Ultima P1', 'Ultima P2'])
+        end
+
+        context 'without a configured application mapping' do
+          let(:allowed_tag_sets_by_application) { {} }
+
+          it 'leaves the Ultima lookup unrestricted' do
+            page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+            expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
+          end
+        end
+
+        context 'with an empty allowed list' do
+          let(:allowed_tag_sets_by_application) { { '10x Flex v2' => [] } }
+
+          it 'passes an empty list rather than allowing every set' do
+            page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+            expect(JSON.parse(page['data-allowed-tag-set-names'])).to eq([])
+          end
+        end
+      end
+
+      context 'with another application' do
+        let(:application_requests) do
+          [create(:library_request, options: { 'ultima_application' => 'Other application' })]
+        end
+
+        it 'passes null so all Ultima API records can be listed' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
+        end
+      end
+
+      context 'with multiple mapped applications' do
+        let(:allowed_tag_sets_by_application) do
+          { '10x Flex v2' => ['Ultima P1', 'Ultima P2'], 'Other application' => ['Ultima P2', 'Ultima P3'] }
+        end
+        let(:application_requests) do
+          ['10x Flex v2', 'Other application'].map do |application|
+            create(:library_request, options: { 'ultima_application' => application })
+          end
+        end
+
+        it 'allows only sets shared by the applications' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-allowed-tag-set-names'])).to eq(['Ultima P2'])
+        end
+      end
+
+      context 'with the mapping key present but empty' do
+        let(:allowed_tag_sets_by_application) { nil }
+
+        it 'leaves the Ultima lookup unrestricted' do
+          page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+          expect(JSON.parse(page['data-allowed-tag-set-names'])).to be_nil
+        end
+      end
+
+      it 'enables in-place tagging' do
+        expect(response.body).to include('data-in-place="true"')
+      end
+
+      it 'submits to the plate tag layouts endpoint' do
+        expect(response.body).to include("data-target-url=\"#{plate_tag_layouts_path(plate_uuid)}\"")
+      end
+    end
+
+    context 'with applications on wells whose row and column order differ' do
+      # Walking the wells by row reaches A2 before B1; by column, B1 first.
+      def well_at(location)
+        plate.wells.find { |well| well.location == location }
+      end
+
+      def requests_for(application)
+        options = { 'ultima_application' => application }
+        [create(:library_request, options:)]
+      end
+
+      before do
+        allow(well_at('A2')).to receive(:requests_as_source)
+          .and_return(requests_for('Converted TruSeq'))
+        allow(well_at('B1')).to receive(:requests_as_source)
+          .and_return(requests_for('10x Flex v2'))
+        allow(plate).to receive(:wells).and_return(plate.wells_in_rows)
+        get :new, params: { plate_id: plate_uuid }, session: { user_uuid: }
+      end
+
+      it 'lists the applications in the column order of the wells' do
+        page = response.parsed_body.at_css('#manual-ultima-tagged-plate-page')
+        names = JSON.parse(page['data-ultima-applications']).pluck('name')
+        expect(names).to eq(['10x Flex v2', 'Converted TruSeq'])
       end
     end
 

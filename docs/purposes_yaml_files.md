@@ -592,6 +592,32 @@ Used in:
 
 Default: 1
 
+#### :allowed_tag_sets_by_application
+
+Optional hash mapping application names to the tag set names allowed for that
+application. Application names are read from the requests associated with the
+plate. Each configured tag set name must exactly match a tag set returned by
+Sequencescape.
+
+The tagging page first looks up tag sets using `:tag_group_adapter_type_name_filter`,
+then restricts the dropdown to the configured names, preserving their order. If
+no application on the plate has a mapping, the dropdown is not restricted by
+this option. If multiple applications have mappings, only tag sets present in
+every mapped list are allowed, in the order of the first mapped list.
+
+An explicitly empty list allows no tag sets for that application.
+
+```yaml
+:allowed_tag_sets_by_application:
+  '10x Flex v2':
+    - Ultima P1
+    - Ultima P2
+```
+
+If an application is not included in this hash, it does not contribute an
+additional restriction. When none of the plate's applications are configured,
+all tag sets matching the adapter-type filter are available.
+
 #### :work_completion_request_type
 
 String, used by {StateChangers::AutomaticPlateStateChanger} to determine which
