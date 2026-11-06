@@ -59,10 +59,13 @@ RSpec.describe SearchController, type: :controller do
         expect(response).to redirect_to('/labware/ABC123')
       end
 
-      it 'returns a JSON response with the labware location' do
+      it 'returns a JSON response with the labware data' do
+        labware_json = { 'tube' => { 'barcode' => 'DN123K', 'uuid' => 'some-uuid', 'state' => 'passed', 'tags' => [] } }
+        allow(controller).to receive(:find_labware_for_pooling).with(barcode).and_return(labware_json)
+
         post :create, params: { plate_barcode: barcode }, format: :json
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to('/labware/ABC123')
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to eq(labware_json)
       end
     end
 
