@@ -27,8 +27,8 @@ import Page from '@/javascript/shared/components/Page.vue'
 import Sidebar from '@/javascript/shared/components/Sidebar.vue'
 
 export const missingUserIdError = `
-    Unfortunately Limber can't find your user id, which is required to add custom metadata.
-    Click log out and swipe in again to resolve this.
+    Unfortunately Limber can't find your user id, which is required to perform this action.
+    Log in to resolve this.
     If this problem occurs repeatedly, let us know.`
 
 /**
@@ -137,6 +137,7 @@ const elements = [
   {
     id: 'qc-information',
     component: QcInformation,
+    userIdRequired: true,
   },
   {
     id: 'tubes-to-rack',

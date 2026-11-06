@@ -20,7 +20,7 @@
           </span>
           <%= session_switcher %>
         <% else %>
-          <span class='navbar-text'>Not logged in</span>
+          <%= link_to 'Login', :root, class: "navbar-text" %>
         <% end %>
     </div>
   </div>
