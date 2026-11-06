@@ -44,7 +44,6 @@ describe('commentFactory', () => {
   it('creates a new commentFactory and stores it', () => {
     const props = {
       sequencescapeApi: 'http://example.com/api',
-      sequencescapeApiKey: 'test-api-key',
       assetId: '123',
       userId: 'user_id',
     }
@@ -57,10 +56,9 @@ describe('commentFactory', () => {
       headers: {
         Accept: 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'X-Sequencescape-Client-Id': props.sequencescapeApiKey,
       },
     })
-    expect(devourApi).toHaveBeenCalledWith({ apiUrl: props.sequencescapeApi }, resources, props.sequencescapeApiKey)
+    expect(devourApi).toHaveBeenCalledWith({ apiUrl: props.sequencescapeApi }, resources)
     expect(commentStoreFactory).toHaveBeenCalledWith(mockAxiosInstance, mockDevourApi, props.assetId, props.userId)
     expect(result).toBe(mockCommentFactory)
     expect(commentFactoryStores[props.assetId]).toEqual({ commentFactory: mockCommentFactory, refCount: 1 })
@@ -69,7 +67,6 @@ describe('commentFactory', () => {
   it('returns an existing commentFactory and increments the refCount', () => {
     const props = {
       sequencescapeApi: 'http://example.com/api',
-      sequencescapeApiKey: 'test-api-key',
       assetId: '123',
       userId: 'user_id',
     }
