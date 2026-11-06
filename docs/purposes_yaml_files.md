@@ -610,8 +610,7 @@ An explicitly empty list allows no tag sets for that application.
 ```yaml
 :allowed_tag_sets_by_application:
   '10x Flex v2':
-    - Ultima P1
-    - Ultima P2
+    - UG-RD-1929
 ```
 
 If an application is not included in this hash, it does not contribute an
