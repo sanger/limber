@@ -4,7 +4,7 @@
   <% source_well, destination_well = transfer -%>
   <% last_in_pool = @presenter.last_in_pool?(source_well) -%>
   <% value = [
-    @presenter.labware.stock_plate.barcode.number,                                                  # PLATE
+    @presenter.labware.stock_plate.barcode.number_or_human,                                         # PLATE
     "Post Capture XP",                                                                              # Bed
     @presenter.bait_library_for(destination_well),                                                  # Bait Type
     source_well,                                                                                    # Sample Well

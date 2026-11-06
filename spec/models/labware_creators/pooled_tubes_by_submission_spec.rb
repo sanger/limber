@@ -101,6 +101,28 @@ RSpec.describe LabwareCreators::PooledTubesBySubmission do
       end
     end
 
+    # Its only barcode is an external one without a number, as Sapio
+    # reception creates (Y26-283)
+    context 'with a stock plate whose barcode has no number' do
+      let(:child_1_name) { 'SAPIO-PLATE A1:C1' }
+      let(:child_2_name) { 'SAPIO-PLATE D1:A2' }
+      let(:stock_plate) do
+        create(:stock_plate_for_plate,
+               labware_barcode: { 'ean13_barcode' => nil,
+                                  'human_barcode' => 'SAPIO-PLATE',
+                                  'machine_barcode' => 'SAPIO-PLATE' })
+      end
+
+      it 'names the tubes after its whole barcode' do
+        expect_specific_tube_creation
+        expect_transfer_request_collection_creation
+
+        expect(subject.save!).to be_truthy
+        expect(subject.child_stock_tubes.keys)
+          .to contain_exactly(child_1_name, child_2_name)
+      end
+    end
+
     context 'with parent metadata' do
       let(:child_1_name) { 'DN8 A1:C1' }
       let(:child_2_name) { 'DN8 D1:A2' }
