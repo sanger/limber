@@ -24,12 +24,21 @@ jobs:
       - name: Setup Node
         uses: sanger/.github/.github/actions/setup/node@master
 
+      - name: Remove image-bundled Chrome
+        run: sudo apt-get purge google-chrome-stable
+
       - name: Setup stable Chrome
-        uses: sanger/.github/.github/actions/tests/setup-chrome@master
+        id: setup_chrome
+        uses: browser-actions/setup-chrome@v2
         with:
           chrome-version: 128
           install-chromedriver: true
           install-dependencies: true
+
+      - name: Set Chrome binary path
+        env:
+          CHROME_PATH: ${{ steps.setup_chrome.outputs.chrome-path }}
+        run: echo "CHROME_BINARY_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
 
       - name: Additional setup
         run: bin/setup --skip-server
