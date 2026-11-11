@@ -5,7 +5,6 @@
 <%= card title: 'Export to Traction' do %>
       <div id="pool-xp-tube-submit-panel"
         data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-        data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
         data-traction-service-url="<%= Limber::Application.config.traction_service_uri %>"
         data-traction-ui-url="<%= Limber::Application.config.traction_ui_uri %>"
         data-barcode="<%= presenter.labware.barcode %>">
@@ -15,8 +14,7 @@
 <%= card title: 'QC Information' do %>
   <div id="qc-information"
         data-asset-uuid="<%= @presenter.uuid %>"
-        data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-        data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>">
+        data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>">
   </div>
 <% end %>
 
@@ -63,8 +61,7 @@
 <%= card title: 'Adding a Comment' do %>
   <div id="asset-comments-add-form"
     data-comment-title="<%= presenter.comment_title %>"
-    data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-    data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+    data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>"
     data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
     data-asset-id="<%= presenter.id %>">
   </div>
@@ -73,8 +70,7 @@
 <%= card title: 'Adding Custom Metadata', css_class: 'logged_in_only' do %>
   <div id="labware-custom-metadata-add-form"
     data-custom-metadata-fields="<%= presenter.custom_metadata_fields %>"
-    data-sequencescape-api="<%= Limber::Application.config.api.v2.connection_options.js_url %>"
-    data-sequencescape-api-key="<%= Limber::Application.config.api.v2.connection_options.authorisation %>"
+    data-sequencescape-api="<%= Limber::Application.config.sequencescape_proxy_url %>"
     data-sequencescape-url="<%= Limber::Application.config.sequencescape_url %>"
     data-labware-id="<%= presenter.id %>">
   </div>
