@@ -22,4 +22,22 @@ RSpec.describe Labels::TubeLabel, type: :model do
       end
     end
   end
+
+  # Its only barcode is an external one without a number, as Sapio
+  # reception creates (Y26-283)
+  context 'when the tube barcode has no number' do
+    let(:labware) do
+      create :tube, labware_barcode: { 'ean13_barcode' => nil,
+                                       'human_barcode' => 'SAPIO-TUBE',
+                                       'machine_barcode' => 'SAPIO-TUBE' }
+    end
+
+    it 'shows the whole barcode in place of its number' do
+      expect(described_class.new(labware).attributes).to include(
+        second_line: start_with('SAPIO-TUBE, P'),
+        round_label_top_line: nil,
+        round_label_bottom_line: 'SAPIO-TUBE'
+      )
+    end
+  end
 end
