@@ -13,17 +13,15 @@ const createCommentFactory = (props) => {
   }
 
   const sequencescapeApiUrl = props.sequencescapeApi
-  const sequencescapeApiKey = props.sequencescapeApiKey
   const axiosInstance = axios.create({
     baseURL: sequencescapeApiUrl,
     timeout: 10000,
     headers: {
       Accept: 'application/vnd.api+json',
       'Content-Type': 'application/vnd.api+json',
-      'X-Sequencescape-Client-Id': sequencescapeApiKey,
     },
   })
-  const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources, sequencescapeApiKey)
+  const api = devourApi({ apiUrl: sequencescapeApiUrl }, resources)
   const commentFactory = commentStoreFactory(axiosInstance, api, props.assetId, props.userId)
 
   commentFactoryStores[props.assetId] = { commentFactory, refCount: 1 }

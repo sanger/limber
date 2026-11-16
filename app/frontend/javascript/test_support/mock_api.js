@@ -12,7 +12,6 @@ import sequencescapeResources from '@/javascript/shared/resources.js'
 import isEqual from 'fast-deep-equal'
 
 const dummyApiUrl = 'http://www.example.com'
-const dummyApiKey = 'mock_api_key'
 
 // Nice user readable summary of the request object
 const requestFormatter = function (request) {
@@ -41,7 +40,7 @@ const raiseUnexpectedRequest = (request, expectedRequests) => {
 }
 
 const mockApi = function (resources = sequencescapeResources) {
-  const devour = devourApi({ apiUrl: dummyApiUrl }, resources, dummyApiKey)
+  const devour = devourApi({ apiUrl: dummyApiUrl }, resources)
   const mockedRequests = []
   // Find a request in the mockedRequests array that matches the request
   // object. If no match is found, return undefined.

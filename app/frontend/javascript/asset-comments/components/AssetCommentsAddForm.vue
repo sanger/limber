@@ -43,10 +43,6 @@ export default {
       type: String,
       required: true,
     },
-    sequencescapeApiKey: {
-      type: String,
-      required: true,
-    },
     userId: {
       type: String,
       required: true,
@@ -93,7 +89,6 @@ export default {
     const commentFactory = createCommentFactory({
       sequencescapeApi: this.sequencescapeApi,
       assetId: this.assetId,
-      sequencescapeApiKey: this.sequencescapeApiKey,
       userId: this.userId,
     })
     this.commentFactory = commentFactory

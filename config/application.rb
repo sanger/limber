@@ -71,5 +71,9 @@ module Limber
 
     # Bioscan mBrave tag layout templates
     config.mbrave = config_for(:mbrave)
+
+    # Path of Limber's SequencescapeProxyController route (see config/routes.rb)
+    # that forwards browser requests to the Sequencescape v2 API.
+    config.sequencescape_proxy_url = '/sequencescape_proxy'
   end
 end
