@@ -8,10 +8,12 @@ ARG yarnFlags="--production"
 
 # Install required software:
 #  - build-essential: to have a compiling environment for building gems
+#  - libyaml-dev, zlib1g-dev: headers needed to build the psych and zlib gems
 #  - curl: for setting Node version and healthcheck
 #  - git is a rails gems dependency
 RUN apt-get update
 RUN apt-get install -y build-essential
+RUN apt-get install -y libyaml-dev zlib1g-dev
 RUN apt-get install -y curl
 RUN apt-get install -y git
 
