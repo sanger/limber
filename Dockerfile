@@ -38,7 +38,7 @@ WORKDIR /code
 
 # Install build tools
 RUN npm install --global yarn
-RUN gem install bundler
+RUN gem install bundler -v 2.7.2
 
 # Install bundler based dependencies
 COPY Gemfile .
