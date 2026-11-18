@@ -46,7 +46,8 @@ RUN gem install bundler -v 2.7.2
 COPY Gemfile .
 COPY Gemfile.lock .
 RUN bundle config set without "${bundlerWithout}"
-RUN bundle install
+# Fail the build if Gemfile.lock is out of date or missing this platform
+RUN BUNDLE_FROZEN=true bundle install
 
 # Install yarn based dependencies
 COPY package.json .
