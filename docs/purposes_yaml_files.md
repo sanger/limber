@@ -610,6 +610,7 @@ An explicitly empty list allows no tag sets for that application.
 ```yaml
 :allowed_tag_sets_by_application:
   '10x Flex v2':
+    - UG-RD-1928
     - UG-RD-1929
 ```
 
