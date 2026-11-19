@@ -3,7 +3,7 @@
     "@popperjs/core": "^2.0.0",
     "@rails/ujs": "^7.1.600",
     "axios": "^1.21.0",
-    "bootstrap": "^5.3.8",
+    "bootstrap": "^5.3.9",
     "bootstrap-vue-next": "^0.26.28",
     "cytoscape": "^3.34.4",
     "cytoscape-elk": "^2.3.0",
