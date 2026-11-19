@@ -1,4 +1,4 @@
-FROM ruby:3.4.12-slim
+FROM ruby:3.4.13-slim
 
 # Major version of Node.js to install
 ARG nodeVersion=22
@@ -8,10 +8,12 @@ ARG yarnFlags="--production"
 
 # Install required software:
 #  - build-essential: to have a compiling environment for building gems
+#  - libyaml-dev, zlib1g-dev: headers needed to build the psych and zlib gems
 #  - curl: for setting Node version and healthcheck
 #  - git is a rails gems dependency
 RUN apt-get update
 RUN apt-get install -y build-essential
+RUN apt-get install -y libyaml-dev zlib1g-dev
 RUN apt-get install -y curl
 RUN apt-get install -y git
 
@@ -38,13 +40,14 @@ WORKDIR /code
 
 # Install build tools
 RUN npm install --global yarn
-RUN gem install bundler
+RUN gem install bundler -v 2.7.2
 
 # Install bundler based dependencies
 COPY Gemfile .
 COPY Gemfile.lock .
 RUN bundle config set without "${bundlerWithout}"
-RUN bundle install
+# Fail the build if Gemfile.lock is out of date or missing this platform
+RUN BUNDLE_FROZEN=true bundle install
 
 # Install yarn based dependencies
 COPY package.json .
