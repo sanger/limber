@@ -83,7 +83,9 @@ module LabwareCreators
     end
 
     def legacy_barcode
-      ("#{parent.stock_plate.barcode.prefix}#{parent.stock_plate.barcode.number}" if parent.stock_plate) || nil
+      return unless parent.stock_plate
+
+      parent.stock_plate.barcode.prefix_and_number_or_human
     end
 
     def stock_plate_barcode
