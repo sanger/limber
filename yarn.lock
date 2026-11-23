@@ -787,9 +787,9 @@
     eslint-visitor-keys "^5.0.0"
 
 "@vitejs/plugin-vue@^6.0":
-  version "6.0.10"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-6.0.10.tgz#fa58b9f63a6062d537a7db5040de0f7a873d8de3"
-  integrity sha512-b80aUQh3n+qEzzZm5oQp3rT2QImeCx58K6eFl/RkJ3d65KW0kTuv5lNsLRVAjbW9YRUpo/wzmvzMgV34bTAItA==
+  version "6.0.11"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-6.0.11.tgz#a4003b3e34f9a3d6808143778545b6c1fc1b69eb"
+  integrity sha512-m48lskIUJGlB6qUiYhDMI8nd2ngeidz2U4nKTjqI13cFMu5rH8JeEILPkDtK9Fk/TjBA2pkj8AlbenqDaKu+ww==
   dependencies:
     "@rolldown/pluginutils" "^1.0.1"
 
@@ -1359,10 +1359,10 @@ csstype@^3.2.3:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.2.3.tgz#ec48c0f3e993e50648c86da559e2610995cf989a"
   integrity sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==
 
-cytoscape-elk@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/cytoscape-elk/-/cytoscape-elk-2.3.0.tgz#3f107d914f39119a9680f03593d7e56a1823124f"
-  integrity sha512-1h2ZmPOy5HD2+mrfF3P2ICxfnDyPCWg/xLVs7fIjTOzdQu51ydrMtm6Sb7KnhFwLBzhGIVYI2Gbns0njggBarQ==
+cytoscape-elk@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/cytoscape-elk/-/cytoscape-elk-2.4.0.tgz#13e77998109cb318d34611b33d4193d414ee5025"
+  integrity sha512-r92FRISDqTTgvxYwGDUAjW6Zu2Lfl0nq7tezQQ5FA5tsWy6iL7gfVqvfZiYUsYO3GSb+dSbVImHgWRQxAYWy5Q==
   dependencies:
     elkjs "^0.9.3"
 
@@ -3001,10 +3001,10 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier@^3.9.10:
-  version "3.9.10"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.9.10.tgz#ac378e432f1a7381518f2e080816bbaefa38d585"
-  integrity sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==
+prettier@^3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.10.1.tgz#00b1c1872f9650ec22093d5bdafdca0fe6760f77"
+  integrity sha512-70vp3ZUYoPlFbF9uiTdXHUUCGEIp7d4+6p+8DYbkm2jP7x/3i/paXVF6dopSI3zd/CEitrZN1rc4i85xWmmXlg==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
