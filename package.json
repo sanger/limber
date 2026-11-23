@@ -6,7 +6,7 @@
     "bootstrap": "^5.3.9",
     "bootstrap-vue-next": "^0.26.28",
     "cytoscape": "^3.35.0",
-    "cytoscape-elk": "^2.3.0",
+    "cytoscape-elk": "^2.4.0",
     "cytoscape-popper": "^2.0.0",
     "devour-client": "^2.1.2",
     "jquery": "^3.5.1",
