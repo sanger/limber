@@ -23,7 +23,7 @@
     "@vitejs/plugin-vue": "^6.0",
     "@vitest/coverage-v8": "^4.0",
     "@vitest/eslint-plugin": "^1.6.28",
-    "@vue/test-utils": "^2.5.1",
+    "@vue/test-utils": "^2.6.0",
     "autoprefixer": "^10.6.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^8.10.0",
