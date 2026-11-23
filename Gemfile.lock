@@ -1,14 +1,14 @@
 GIT
   remote: https://github.com/sanger/json_api_client.git
-  revision: efd4c46b04bd8344c4ff0f318b5642baeeba6a01
-  tag: v1.23.0-sanger.1
+  revision: 04c3da26fb38b21100be06fb615982392a78de9a
+  tag: v1.23.0-sanger.2
   specs:
-    json_api_client (1.23.0.pre.sanger.1)
+    json_api_client (1.23.0.pre.sanger.2)
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
       addressable (~> 2.2)
       faraday (>= 1.10, < 3.0)
-      faraday-gzip (>= 1.0, < 3.0)
+      faraday-gzip (>= 1.0, < 4.0)
       rack (>= 0.2)
 
 GIT
@@ -166,8 +166,8 @@ GEM
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
-    faraday-gzip (2.0.1)
-      faraday (>= 1.0)
+    faraday-gzip (3.2.0)
+      faraday (>= 2.0, < 3)
       zlib (~> 3.0)
     faraday-net_http (3.4.4)
       net-http (~> 0.5)
