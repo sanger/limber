@@ -12,6 +12,7 @@ group :default do
 
   # Packages removed from the standard Ruby library
   gem 'csv' # removed from Ruby 3.4.0
+  gem 'ostruct' # removed from Ruby 4.0.0
 
   # Build dependencies
   gem 'vite_rails'
