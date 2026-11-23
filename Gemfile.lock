@@ -258,6 +258,7 @@ GEM
       shellany (~> 0.0)
     oj (3.17.8)
       bigdecimal (>= 3.0)
+    ostruct (0.6.3)
     parallel (2.3.0)
     parser (3.3.13.0)
       ast (~> 2.4.1)
@@ -486,6 +487,7 @@ DEPENDENCIES
   json_api_client!
   launchy
   oj
+  ostruct
   pmb-client (= 0.1.0)!
   prettier_print
   pry
