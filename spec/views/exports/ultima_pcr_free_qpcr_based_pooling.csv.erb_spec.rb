@@ -11,7 +11,12 @@ RSpec.describe 'exports/ultima_pcr_free_qpcr_based_pooling.csv.erb' do
   let(:well_b1) do
     create(:well, position: { 'name' => 'B1' }, qc_results: create_list(:qc_result, 1, qc_result_options))
   end
-  let(:labware) { create(:plate, wells: [well_a1, well_b1], pool_sizes: [1, 1]) }
+  let(:well_c1) do
+    create(:well, position: { 'name' => 'C1' }, qc_results: create_list(:qc_result, 1, qc_result_options),
+                  state: 'failed')
+  end
+
+  let(:labware) { create(:plate, wells: [well_a1, well_b1, well_c1], pool_sizes: [1, 1]) }
 
   before { assign(:plate, labware) }
 
