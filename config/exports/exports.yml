@@ -310,6 +310,9 @@ ultima_balancing:
   tube_includes: receptacle.aliquots.poly_metadata
   filename:
     handler: UltimaBalancing
+ultima_pcr_free_qpcr_based_pooling:
+  csv: ultima_pcr_free_qpcr_based_pooling
+  plate_includes: wells.qc_results
 tag_transfer_picklist:
   csv: tag_transfer_picklist
   plate_includes: wells.aliquots.tag.tag_group
