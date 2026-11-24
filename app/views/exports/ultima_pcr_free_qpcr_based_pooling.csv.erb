@@ -1,8 +1,8 @@
 <%= CSV.generate_line ['Plate Barcode', @plate.labware_barcode.human], row_sep: "" %>
 
-<%= CSV.generate_line ['Well', 'Concentration (nM)', 'Sanger Sample Id', 'Supplier Sample Name', 'Input amount available (fmol)', 'Input amount desired', 'Sample volume', 'Diluent volume'], row_sep: "" %>
+<%= CSV.generate_line ['Well', 'Concentration (nM)', 'Sanger Sample Id', 'Supplier Sample Name', 'Volume available', 'Input amount available (fmol)', 'Input amount desired', 'Volume to transfer', 'Diluent volume'], row_sep: "" %>
 <% @plate.wells_in_columns.each do |well| %>
   <% unless well.empty? || well.failed? %>
-<%= CSV.generate_line [well.location, well.latest_molarity&.value, well.sanger_sample_id, well.supplier_name, nil, nil, nil, nil], row_sep: "" %>
+<%= CSV.generate_line [well.location, well.latest_molarity&.value, well.sanger_sample_id, well.supplier_name, well.default_input_volume_available, well.input_amount_available, nil, nil, nil], row_sep: "" %>
   <% end %>
 <% end %>

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation
+class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo Style/Documentation, Metrics/ClassLength
   include Sequencescape::Api::V2::Shared::HasRequests
   include Sequencescape::Api::V2::Shared::HasPolyMetadata
 
@@ -100,11 +100,18 @@ class Sequencescape::Api::V2::Well < Sequencescape::Api::V2::Base # rubocop:todo
     aliquots.first.sample.sample_metadata.supplier_name
   end
 
+  # Used for some driver files to define the default input volume available in a well
+  DEFAULT_INPUT_VOLUME_AVAILABLE = 25 # uL
+
+  def default_input_volume_available
+    DEFAULT_INPUT_VOLUME_AVAILABLE
+  end
+
   def input_amount_available
     molarity = latest_molarity&.value
     return unless molarity
 
-    molarity.to_f * 25
+    molarity.to_f * DEFAULT_INPUT_VOLUME_AVAILABLE
   end
 
   def contains_control?
