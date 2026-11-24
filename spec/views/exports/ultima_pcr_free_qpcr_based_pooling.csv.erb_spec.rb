@@ -34,8 +34,8 @@ RSpec.describe 'exports/ultima_pcr_free_qpcr_based_pooling.csv.erb' do
         'Sample volume',
         'Diluent volume'
       ],
-      ['A1', '1.5', well_a1_sanger_sample_id, well_a1_supplier_name, (1.5 * 25).to_s, nil, nil, nil],
-      ['B1', '1.5', well_b1_sanger_sample_id, well_b1_supplier_name, (1.5 * 25).to_s, nil, nil, nil]
+      ['A1', '1.5', well_a1_sanger_sample_id, well_a1_supplier_name, nil, nil, nil, nil],
+      ['B1', '1.5', well_b1_sanger_sample_id, well_b1_supplier_name, nil, nil, nil, nil]
     ]
   end
 
