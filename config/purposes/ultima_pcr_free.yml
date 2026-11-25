@@ -30,6 +30,9 @@ UPF Lib XP2:
     states:
       - 'pending'
   :default_printer_type: :plate_xp2
+  :file_links:
+    - name: 'Download qPCR-based pooling file'
+      id: 'ultima_pcr_free_qpcr_based_pooling'
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
