@@ -24,6 +24,9 @@ Ultima UG200 Multiplexing:
     UPF2 EqVol Pool: UPF2 EqVol Norm
 Ultima UG200 Balancing:
   pipeline_group: Ultima UG200 High Throughput PCR Free
+  filters:
+    request_type_key:
+      - limber_multiplexing_ultima_ug200
   relationships:
     UPF2 Lib XP2: UPF2 Balanced Pool
     UPF2 Balanced Pool: UPF2 Balanced Norm

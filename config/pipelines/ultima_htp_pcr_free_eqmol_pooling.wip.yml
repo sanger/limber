@@ -1,0 +1,18 @@
+---
+Limber Multiplexing Ultima EqMol HTP:
+  pipeline_group: Ultima High Throughput PCR Free
+  filters:
+    request_type_key:
+      - limber_multiplexing_ultima_eqmol_htp
+  relationships:
+    UPF Lib XP2: UPF EqMol Pool
+    UPF EqMol Pool: UPF EqMol Norm
+
+Limber Multiplexing Ultima UG200 EqMol HTP:
+  pipeline_group: Ultima High Throughput PCR Free
+  filters:
+    request_type_key:
+      - limber_multiplexing_ultima_ug200_eqmol_htp
+  relationships:
+    UPF2 Lib XP2: UPF2 EqMol Pool
+    UPF2 EqMol Pool: UPF2 EqMol Norm
