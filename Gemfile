@@ -12,6 +12,7 @@ group :default do
 
   # Packages removed from the standard Ruby library
   gem 'csv' # removed from Ruby 3.4.0
+  gem 'ostruct' # removed from Ruby 4.0.0
 
   # Build dependencies
   gem 'vite_rails'
@@ -24,7 +25,7 @@ group :default do
   gem 'hashie'
 
   # Communications with JSON APIs
-  gem 'json_api_client', github: 'sanger/json_api_client', tag: 'v1.23.0-sanger.1'
+  gem 'json_api_client', github: 'sanger/json_api_client', tag: 'v1.23.0-sanger.2'
 
   # Speed up json encoding/decoding with oj
   gem 'oj'
