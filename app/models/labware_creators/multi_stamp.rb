@@ -40,7 +40,7 @@ module LabwareCreators
     #     name: LabwareCreators::TenStamp
     #     args:
     #       request_type_keys:
-    #         - limber_ultima_ltp_aggregation
+    #         - limber_ultima_ltp_conversion
     # Other active requests on the source wells are then ignored, e.g. pending
     # multiplexing requests of a previous pipeline. If not configured, all active
     # requests are transferred.

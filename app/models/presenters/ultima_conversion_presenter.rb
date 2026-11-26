@@ -30,7 +30,7 @@ module Presenters
     # Reminders shown on the plate page, as the state names do not describe the steps
     STATE_MESSAGES = {
       'pending' => 'Click Manual Transfer when the normalisation is done.',
-      'processed_1' => 'Normalised. Make the conversion submission, then add the Ultima tags.',
+      'processed_1' => 'Normalised. Add the Ultima tags.',
       'processed_2' => 'Ultima tags added. Run the PCR, then click Perform PCR.'
     }.freeze
 
@@ -100,9 +100,9 @@ module Presenters
       @info_messages << message if message
     end
 
-    # Shows the tagging link in the sidebar. Tags can be added once there is a
-    # submission for the next step (the conversion submission), which offers the
-    # next child purpose.
+    # Shows the tagging link in the sidebar. Tags can be added once the plate
+    # has a submission for the next step: the conversion submission made on its
+    # source plates, which offers the next child purpose.
     def tagging_allowed?
       state == TAGGING_STATE && suggested_purposes.present?
     end

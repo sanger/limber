@@ -371,24 +371,24 @@ describe('MultiStamp', () => {
 
     describe('with the request type filter', () => {
       it('passes the request type keys to the filter', () => {
-        const wrapper = wrapperFactory({ requestsFilter: 'request-type', requestTypeKeys: '["aggregation_key"]' })
+        const wrapper = wrapperFactory({ requestsFilter: 'request-type', requestTypeKeys: '["conversion_key"]' })
 
-        expect(wrapper.vm.requestsFilterProps).toEqual({ requestTypeKeys: ['aggregation_key'] })
+        expect(wrapper.vm.requestsFilterProps).toEqual({ requestTypeKeys: ['conversion_key'] })
       })
 
       it('passes no extra props to the other filters', () => {
-        const wrapper = wrapperFactory({ requestTypeKeys: '["aggregation_key"]' })
+        const wrapper = wrapperFactory({ requestTypeKeys: '["conversion_key"]' })
 
         expect(wrapper.vm.requestsFilterProps).toEqual({})
       })
 
-      // A well of an XP plate with an aggregation request and a pending
+      // A well of an XP plate with a conversion request and a pending
       // multiplexing request of the Illumina pipeline. The real filter component
       // is rendered, so the requests reach the transfers as they do on the page.
-      const aggregation = requestFactory({ uuid: 'aggregation', request_type: { key: 'aggregation_key' } })
+      const conversion = requestFactory({ uuid: 'conversion', request_type: { key: 'conversion_key' } })
       const multiplexing = requestFactory({ uuid: 'multiplexing', request_type: { key: 'multiplexing_key' } })
       const plateWithTwoActiveRequestsInAWell = () => {
-        const well = wellFactory({ uuid: 'well-uuid', requests_as_source: [aggregation, multiplexing] })
+        const well = wellFactory({ uuid: 'well-uuid', requests_as_source: [conversion, multiplexing] })
         return { state: 'valid', plate: plateFactory({ uuid: 'plate-uuid', wells: [well] }) }
       }
       const wrapperRenderingTheFilter = (options = {}) =>
@@ -421,13 +421,13 @@ describe('MultiStamp', () => {
       it('transfers a well with two active requests once, keeping the request types given', async () => {
         const wrapper = wrapperRenderingTheFilter({
           requestsFilter: 'request-type',
-          requestTypeKeys: '["aggregation_key"]',
+          requestTypeKeys: '["conversion_key"]',
         })
         wrapper.vm.updatePlate(1, plateWithTwoActiveRequestsInAWell())
         await flushPromises()
 
         expect(wrapper.vm.duplicatedTransfers).toEqual([])
-        expect(wrapper.vm.validTransfers.map((transfer) => transfer.request.uuid)).toEqual(['aggregation'])
+        expect(wrapper.vm.validTransfers.map((transfer) => transfer.request.uuid)).toEqual(['conversion'])
       })
     })
   })
