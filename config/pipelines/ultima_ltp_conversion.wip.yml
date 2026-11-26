@@ -1,6 +1,6 @@
 ---
 # The conversion submission is made directly on XP plates or Library Stock
-# Plates, or on ULTP DNA Norm.
+# Plates.
 Ultima LTP Conversion:
   pipeline_group: Ultima LTP
   filters:
