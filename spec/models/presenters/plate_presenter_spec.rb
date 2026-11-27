@@ -482,7 +482,7 @@ RSpec.describe Presenters::PlatePresenter do
       end
 
       context 'when an active request has a matching request type' do
-        let(:requests) { [double('Request', request_type_key: 'eqmol_type')] }
+        let(:requests) { [create(:request, request_type: create(:request_type, key: 'eqmol_type'))] }
 
         it 'shows the link' do
           expect(presenter.csv_file_links.map(&:first)).to eq(['EqMol CSV'])
@@ -490,7 +490,7 @@ RSpec.describe Presenters::PlatePresenter do
       end
 
       context 'when no active request has a matching request type' do
-        let(:requests) { [double('Request', request_type_key: 'other_type')] }
+        let(:requests) { [create(:request, request_type: create(:request_type, key: 'other_type'))] }
 
         it 'hides the link' do
           expect(presenter.csv_file_links).to eq([])
