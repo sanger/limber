@@ -105,13 +105,15 @@ module Presenters
     alias child_assets child_plates
 
     # Returns the CSV file links for the plate based on the configured states.
+    # A link with a `request_types` list is only shown when the plate has an
+    # active request of one of those request type keys.
     #
     # @return [Array<Array<String, Array>>] the CSV file links
     def csv_file_links
       links =
         purpose_config
           .fetch(:file_links, [])
-          .select { |link| can_be_enabled?(link&.states) }
+          .select { |link| can_be_enabled?(link&.states) && request_type_matches?(link) }
           .map do |link|
             [link.name, [:plate, :export, { id: link.id, plate_id: human_barcode, format: :csv, **link.params || {} }]]
           end
@@ -207,6 +209,13 @@ module Presenters
 
     def number_of_filled_wells
       wells.count { |w| w.aliquots.present? }
+    end
+
+    def request_type_matches?(link)
+      request_types = link&.request_types
+      return true if request_types.blank?
+
+      labware.active_requests.any? { |request| request_types.include?(request.request_type_key) }
     end
 
     # Passable requests are those associated with aliquots,

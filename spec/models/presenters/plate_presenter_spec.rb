@@ -466,6 +466,44 @@ RSpec.describe Presenters::PlatePresenter do
       end
     end
 
+    context 'with a link restricted to request types' do
+      let(:file_links) { [{ name: 'EqMol CSV', id: 'eqmol_csv', request_types: ['eqmol_type'] }] }
+      let(:requests) { [] }
+
+      before do
+        create(
+          :purpose_config,
+          uuid: labware.purpose.uuid,
+          warnings: warnings,
+          label_class: label_class,
+          file_links: file_links
+        )
+        allow(labware).to receive(:active_requests).and_return(requests)
+      end
+
+      context 'when an active request has a matching request type' do
+        let(:requests) { [double('Request', request_type_key: 'eqmol_type')] }
+
+        it 'shows the link' do
+          expect(presenter.csv_file_links.map(&:first)).to eq(['EqMol CSV'])
+        end
+      end
+
+      context 'when no active request has a matching request type' do
+        let(:requests) { [double('Request', request_type_key: 'other_type')] }
+
+        it 'hides the link' do
+          expect(presenter.csv_file_links).to eq([])
+        end
+      end
+
+      context 'when there are no active requests' do
+        it 'hides the link' do
+          expect(presenter.csv_file_links).to eq([])
+        end
+      end
+    end
+
     context 'with a plate with additional parameters' do
       before do
         create(

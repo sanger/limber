@@ -33,6 +33,8 @@ UPF Lib XP2:
   :file_links:
     - name: 'Download qPCR-based pooling file'
       id: 'ultima_pcr_free_qpcr_based_pooling'
+      request_types:
+        - limber_multiplexing_ultima_eqmol_htp
 UPF EqVol Pool:
   :asset_type: tube
   :target: StockMultiplexedLibraryTube
